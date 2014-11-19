@@ -1,0 +1,12 @@
+phpunit.xml
+composer.lock
+composer.phar
+autoload.php
+/vendor/
+
+## generic files to ignore
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
