@@ -1,0 +1,48 @@
+{
+    "name": "kulasis/kulasis",
+    "type": "library",
+    "description": "Kula Student Information System",
+    "keywords": ["sis", "framework"],
+    "homepage": "http://kulasis.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Makoa Jacobsen",
+            "email": "makoa@makoajacobsen.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "twig/twig": "~1.12",
+        "psr/log": "~1.0"
+    },
+    "require": {
+        "php": ">=5.4",
+				"symfony/class-loader": "2.*",
+        "symfony/console": "2.*",
+				"symfony/http-foundation": "2.*",
+		    "symfony/config": "2.*",
+        "symfony/finder": "2.*",
+		    "symfony/framework-bundle": "2.*",
+				"symfony/routing": "2.*",
+				"symfony/http-kernel": "2.*",
+				"symfony/event-dispatcher": "2.*",
+				"symfony/dependency-injection": "2.*",
+				"symfony/debug": "2.*",
+				"symfony/validator": "2.*", 
+		    "symfony/yaml": "2.*",
+				"symfony/expression-language": "2.*",
+				"symfony/web-profiler-bundle": "2.*",
+				"symfony/twig-bundle": "2.*",
+        "symfony/assetic-bundle": "2.*",
+				"twig/twig": "1.*",
+				"ircmaxell/password-compat": "1.*",
+				"itbz/fpdf": "dev-master",
+        "symfony/monolog-bundle": "2.*",
+        "monolog/monolog": "1.*",
+				"google/apiclient": "1.0.*@beta"
+    },
+    "autoload": {
+        "psr-4": { "Kula\\": "src/" },
+    }
+}
