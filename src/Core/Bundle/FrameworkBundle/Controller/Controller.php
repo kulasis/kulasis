@@ -1,12 +1,15 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
+/**
+ * @author Makoa Jacobsen <makoa@makoajacobsen.com>
+ * @copyright Copyright (c) 2014, Oregon College of Art & Craft
+ * @license MIT. Based on Symfony's FrameworkBundle, MIT license.
  *
- * (c) Fabien Potencier <fabien@symfony.com>
+ * @package Kula SIS
+ * @subpackage Core
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * Base controller that includes all Kula SIS\Core functionality. May be extended
+ * further to include additional functionality.
  */
 
 namespace Kula\Bundle\Core\KulaFrameworkBundle\Controller;
