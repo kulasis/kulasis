@@ -17,9 +17,9 @@ use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension as Bas
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class FrameworkExtension extends BaseFrameworkExtension {
-	
+
   public function load(array $configs, ContainerBuilder $container) {
       parent::load($configs, $container);
   }
-	
+
 }

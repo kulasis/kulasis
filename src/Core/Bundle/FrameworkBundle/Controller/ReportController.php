@@ -19,16 +19,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ReportController extends BaseController {
 
-	public function pdfResponse($pdf) {
-		
-		$response = new Response($pdf, 200, array(
-			'Content-Type' => 'application/pdf',
-			'Content-Disposition' => 'inline; filename=""',
-			'Cache-Control' => 'private, max-age=0, must-revalidate',
-			'Pragma' => 'public',
-		));
-		return $response;
-		
-	}
-	
+  public function pdfResponse($pdf) {
+
+    $response = new Response($pdf, 200, array(
+      'Content-Type' => 'application/pdf',
+      'Content-Disposition' => 'inline; filename=""',
+      'Cache-Control' => 'private, max-age=0, must-revalidate',
+      'Pragma' => 'public',
+    ));
+    return $response;
+
+  }
+
 }
