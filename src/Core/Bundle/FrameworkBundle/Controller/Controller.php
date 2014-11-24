@@ -12,7 +12,7 @@
  * further to include additional functionality.
  */
 
-namespace Kula\Bundle\Core\KulaFrameworkBundle\Controller;
+namespace Kula\Core\Bundle\FrameworkBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 
