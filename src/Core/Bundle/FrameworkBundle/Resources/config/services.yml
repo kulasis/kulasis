@@ -1,0 +1,4 @@
+services:
+    db:
+        class:        Kula\Core\Component\DB\DB
+        arguments:    [ %kernel.root_dir% ]

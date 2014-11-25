@@ -640,7 +640,7 @@ abstract class Connection implements \Serializable {
       }
       else {
         // Fallback for Drupal 7 settings.php.
-        $driver_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\{$class}";
+        $driver_class = "Kula\\Core\\Component\\Database\\Driver\\{$driver}\\{$class}";
       }
       $this->driverClasses[$class] = class_exists($driver_class) ? $driver_class : $class;
     }
