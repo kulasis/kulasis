@@ -230,10 +230,14 @@ class DB {
    * @see entity_api
    * @see schemaapi
    */
-  public function __construct($root_dir) {
+  public function __construct($root_dir, $environment) {
     // Load database configuration
     $database_configuration = Yaml::parse($root_dir.'/config/databases.yml');
     Database::setMultipleConnectionInfo($database_configuration);
+    
+    if ($environment == 'dev') {
+      Database::startLog('request');
+    }
   }
 
   /**
@@ -272,9 +276,14 @@ class DB {
   public function query($query, array $args = array(), array $options = array()) {
     if (empty($options['target'])) {
       $options['target'] = 'default';
+      $options['fetch'] = \PDO::FETCH_ASSOC;
     }
     
     return Database::getConnection($options['target'])->query($query, $args, $options);
+  }
+  
+  public function getLogger($options = array()) {
+   return Database::getLog('request');
   }
 
   /**
@@ -304,6 +313,7 @@ class DB {
   public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
     if (empty($options['target'])) {
       $options['target'] = 'default';
+      $options['fetch'] = \PDO::FETCH_ASSOC;
     }
 
     return Database::getConnection($options['target'])->queryRange($query, $from, $count, $args, $options);
@@ -334,6 +344,7 @@ class DB {
   public function queryTemporary($query, array $args = array(), array $options = array()) {
     if (empty($options['target'])) {
       $options['target'] = 'default';
+      $options['fetch'] = \PDO::FETCH_ASSOC;
     }
 
     return Database::getConnection($options['target'])->queryTemporary($query, $args, $options);
@@ -446,6 +457,7 @@ class DB {
   public function select($table, $alias = NULL, array $options = array()) {
     if (empty($options['target'])) {
       $options['target'] = 'default';
+      $options['fetch'] = \PDO::FETCH_ASSOC;
     }
     return Database::getConnection($options['target'])->select($table, $alias, $options);
   }
@@ -465,6 +477,7 @@ class DB {
   public function transaction($name = NULL, array $options = array()) {
     if (empty($options['target'])) {
       $options['target'] = 'default';
+      $options['fetch'] = \PDO::FETCH_ASSOC;
     }
     return Database::getConnection($options['target'])->startTransaction($name);
   }

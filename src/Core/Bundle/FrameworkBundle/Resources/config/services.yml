@@ -1,4 +1,10 @@
 services:
     db:
         class:        Kula\Core\Component\DB\DB
-        arguments:    [ %kernel.root_dir% ]
+        arguments:    [ %kernel.root_dir% , %kernel.environment% ]
+    data_collector.database:
+            class: Kula\Core\Component\DB\DataCollector\DatabaseDataCollector
+            arguments: ["@db"]
+            priority: 255
+            tags:
+                - { name: data_collector, template: "FrameworkBundle:Collector:database.html.twig", id: "database" }
