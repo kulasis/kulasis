@@ -55,4 +55,16 @@ class DatabaseDataCollector extends DataCollector implements LateDataCollectorIn
     public function getQueryCount() {
       return count($this->data['queries']);
     }
+    
+    public function getTotalQueryTime() {
+      $time = 0.0;
+      
+      if ($this->data['queries']) {
+        foreach($this->data['queries'] as $query) {
+          $time += $query['time'];
+        }
+      }
+      
+      return $time;
+    }
 }
