@@ -6,6 +6,7 @@ use Symfony\Component\Yaml\Yaml;
 
 use Kula\Core\Component\Database\Database;
 use Kula\Core\Component\Database\Query\Condition;
+use Kula\Core\Component\DB\Proxy;
 
 class DB {
 
@@ -170,7 +171,7 @@ class DB {
    *
    * Example:
    * @code
-   * public function my_transaction_public function() {
+   * public function db_my_transaction_public function() {
    *   // The transaction opens here.
    *   $txn = db_transaction();
    *
@@ -197,7 +198,7 @@ class DB {
    *   // gets automatically committed here.
    * }
    *
-   * public function my_other_public function($id) {
+   * public function db_my_other_public function($id) {
    *   // The transaction is still open here.
    *
    *   if ($id % 2 == 0) {
@@ -211,7 +212,7 @@ class DB {
    *
    * @section sec_connection Database connection objects
    * The examples here all use public functions like db_select() and db_query(), which
-   * can be called from any Drupal method or public function code. In some classes, you
+   * can be called from any Drupal method or public function db_code. In some classes, you
    * may already have a database connection object in a member variable, or it may
    * be passed into a class constructor via dependency injection. If that is the
    * case, you can look at the code for db_select() and the other public functions to see
@@ -235,7 +236,7 @@ class DB {
     $database_configuration = Yaml::parse($root_dir.'/config/databases.yml');
     Database::setMultipleConnectionInfo($database_configuration);
     
-    if ($environment == 'dev') {
+    if (in_array($environment, array('dev', 'test'))) {
       Database::startLog('request');
     }
   }
@@ -249,11 +250,11 @@ class DB {
   /**
    * Executes an arbitrary query string against the active database.
    *
-   * Use this public function for SELECT queries if it is just a simple query string.
+   * Use this public function db_for SELECT queries if it is just a simple query string.
    * If the caller or other modules need to change the query, use db_select()
    * instead.
    *
-   * Do not use this public function for INSERT, UPDATE, or DELETE queries. Those should
+   * Do not use this public function db_for INSERT, UPDATE, or DELETE queries. Those should
    * be handled via db_insert(), db_update() and db_delete() respectively.
    *
    * @param $query
@@ -273,7 +274,7 @@ class DB {
    *
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
-  public function query($query, array $args = array(), array $options = array()) {
+  public function db_query($query, array $args = array(), array $options = array()) {
     if (empty($options['target'])) {
       $options['target'] = 'default';
       $options['fetch'] = \PDO::FETCH_ASSOC;
@@ -310,7 +311,7 @@ class DB {
    *
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
-  public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
+  public function db_query_range($query, $from, $count, array $args = array(), array $options = array()) {
     if (empty($options['target'])) {
       $options['target'] = 'default';
       $options['fetch'] = \PDO::FETCH_ASSOC;
@@ -341,7 +342,7 @@ class DB {
    *
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
-  public function queryTemporary($query, array $args = array(), array $options = array()) {
+  public function db_query_temporary($query, array $args = array(), array $options = array()) {
     if (empty($options['target'])) {
       $options['target'] = 'default';
       $options['fetch'] = \PDO::FETCH_ASSOC;
@@ -361,11 +362,11 @@ class DB {
    * @return \Drupal\Core\Database\Query\Insert
    *   A new Insert object for this connection.
    */
-  public function insert($table, array $options = array()) {
+  public function db_insert($table, array $options = array()) {
     if (empty($options['target']) || $options['target'] == 'replica') {
       $options['target'] = 'default';
     }
-    return Database::getConnection($options['target'])->insert($table, $options);
+    return new Proxy(Database::getConnection($options['target'])->insert($table, $options));
   }
 
   /**
@@ -379,7 +380,7 @@ class DB {
    * @return \Drupal\Core\Database\Query\Merge
    *   A new Merge object for this connection.
    */
-  public function merge($table, array $options = array()) {
+  public function db_merge($table, array $options = array()) {
     if (empty($options['target']) || $options['target'] == 'replica') {
       $options['target'] = 'default';
     }
@@ -397,11 +398,11 @@ class DB {
    * @return \Drupal\Core\Database\Query\Update
    *   A new Update object for this connection.
    */
-  public function update($table, array $options = array()) {
+  public function db_update($table, array $options = array()) {
     if (empty($options['target']) || $options['target'] == 'replica') {
       $options['target'] = 'default';
     }
-    return Database::getConnection($options['target'])->update($table, $options);
+    return new Proxy(Database::getConnection($options['target'])->update($table, $options));
   }
 
   /**
@@ -415,11 +416,11 @@ class DB {
    * @return \Drupal\Core\Database\Query\Delete
    *   A new Delete object for this connection.
    */
-  public function delete($table, array $options = array()) {
+  public function db_delete($table, array $options = array()) {
     if (empty($options['target']) || $options['target'] == 'replica') {
       $options['target'] = 'default';
     }
-    return Database::getConnection($options['target'])->delete($table, $options);
+    return new Proxy(Database::getConnection($options['target'])->delete($table, $options));
   }
 
   /**
@@ -433,7 +434,7 @@ class DB {
    * @return \Drupal\Core\Database\Query\Truncate
    *   A new Truncate object for this connection.
    */
-  public function truncate($table, array $options = array()) {
+  public function db_truncate($table, array $options = array()) {
     if (empty($options['target']) || $options['target'] == 'replica') {
       $options['target'] = 'default';
     }
@@ -454,12 +455,12 @@ class DB {
    * @return \Drupal\Core\Database\Query\Select
    *   A new Select object for this connection.
    */
-  public function select($table, $alias = NULL, array $options = array()) {
+  public function db_select($table, $alias = NULL, array $options = array()) {
     if (empty($options['target'])) {
       $options['target'] = 'default';
       $options['fetch'] = \PDO::FETCH_ASSOC;
     }
-    return Database::getConnection($options['target'])->select($table, $alias, $options);
+    return new Proxy(Database::getConnection($options['target'])->select($table, $alias, $options));
   }
 
   /**
@@ -474,7 +475,7 @@ class DB {
    * @return \Drupal\Core\Database\Transaction
    *   A new Transaction object for this connection.
    */
-  public function transaction($name = NULL, array $options = array()) {
+  public function db_transaction($name = NULL, array $options = array()) {
     if (empty($options['target'])) {
       $options['target'] = 'default';
       $options['fetch'] = \PDO::FETCH_ASSOC;
@@ -491,7 +492,7 @@ class DB {
    * @return
    *   The key of the formerly active database.
    */
-  public function setActive($key = 'default') {
+  public function db_set_active($key = 'default') {
     return Database::setActiveConnection($key);
   }
 
@@ -506,7 +507,7 @@ class DB {
    * @return
    *   The escaped table name as a string.
    */
-  public function escapeTable($table) {
+  public function db_escape_table($table) {
     return Database::getConnection()->escapeTable($table);
   }
 
@@ -521,7 +522,7 @@ class DB {
    * @return
    *   The escaped field name as a string.
    */
-  public function escapeField($field) {
+  public function db_escape_field($field) {
     return Database::getConnection()->escapeField($field);
   }
 
@@ -555,7 +556,7 @@ class DB {
    * @return
    *   The escaped string.
    */
-  public function like($string) {
+  public function db_like($string) {
     return Database::getConnection()->escapeLike($string);
   }
 
@@ -565,7 +566,7 @@ class DB {
    * @return
    *   The name of the currently active database driver.
    */
-  public function driver() {
+  public function db_driver() {
     return Database::getConnection()->driver();
   }
 
@@ -576,7 +577,7 @@ class DB {
    *   An array of options to control which connection is closed. Only the target
    *   key has any meaning in this case.
    */
-  public function close(array $options = array()) {
+  public function db_close(array $options = array()) {
     if (empty($options['target'])) {
       $options['target'] = NULL;
     }
@@ -586,7 +587,7 @@ class DB {
   /**
    * Retrieves a unique id.
    *
-   * Use this public function if for some reason you can't use a serial field. Using a
+   * Use this public function db_if for some reason you can't use a serial field. Using a
    * serial field is preferred, and InsertQuery::execute() returns the value of
    * the last ID inserted.
    *
@@ -598,7 +599,7 @@ class DB {
    * @return
    *   An integer number larger than any number returned before for this sequence.
    */
-  public function nextID($existing_id = 0) {
+  public function db_next_id($existing_id = 0) {
     return Database::getConnection()->nextId($existing_id);
   }
 
@@ -608,7 +609,7 @@ class DB {
    * @return \Drupal\Core\Database\Query\Condition
    *   A new Condition object, set to "OR" all conditions together.
    */
-  public function conditionOR() {
+  public function db_or() {
     return new Condition('OR');
   }
 
@@ -618,7 +619,7 @@ class DB {
    * @return \Drupal\Core\Database\Query\Condition
    *   A new Condition object, set to "AND" all conditions together.
    */
-  public function conditionAND() {
+  public function db_and() {
     return new Condition('AND');
   }
 
@@ -628,14 +629,14 @@ class DB {
    * @return \Drupal\Core\Database\Query\Condition
    *   A new Condition object, set to "XOR" all conditions together.
    */
-  public function conditionXOR() {
+  public function db_xor() {
     return new Condition('XOR');
   }
 
   /**
    * Returns a new DatabaseCondition, set to the specified conjunction.
    *
-   * Internal API public function call.  The db_and(), db_or(), and db_xor()
+   * Internal API public function db_call.  The db_and(), db_or(), and db_xor()
    * public functions are preferred.
    *
    * @param $conjunction
@@ -644,7 +645,7 @@ class DB {
    * @return \Drupal\Core\Database\Query\Condition
    *   A new Condition object, set to the specified conjunction.
    */
-  public function condition($conjunction) {
+  public function db_condition($conjunction) {
     return new Condition($conjunction);
   }
 
@@ -666,15 +667,15 @@ class DB {
    * @param $table
    *   A Schema API table definition array.
    */
-  public function createTable($name, $table) {
+  public function db_create_table($name, $table) {
     return Database::getConnection()->schema()->createTable($name, $table);
   }
 
   /**
    * Returns an array of field names from an array of key/index column specifiers.
    *
-   * This is usually an identity public function but if a key/index uses a column prefix
-   * specification, this public function extracts just the name.
+   * This is usually an identity public function db_but if a key/index uses a column prefix
+   * specification, this public function db_extracts just the name.
    *
    * @param $fields
    *   An array of key/index column specifiers.
@@ -682,7 +683,7 @@ class DB {
    * @return
    *   An array of field names.
    */
-  public function fieldNames($fields) {
+  public function db_field_names($fields) {
     return Database::getConnection()->schema()->fieldNames($fields);
   }
 
@@ -697,7 +698,7 @@ class DB {
    * @return
    *   TRUE if the given index exists, otherwise FALSE.
    */
-  public function indexExists($table, $name) {
+  public function db_index_exists($table, $name) {
     return Database::getConnection()->schema()->indexExists($table, $name);
   }
 
@@ -710,7 +711,7 @@ class DB {
    * @return
    *   TRUE if the given table exists, otherwise FALSE.
    */
-  public function tableExists($table) {
+  public function db_table_exists($table) {
     return Database::getConnection()->schema()->tableExists($table);
   }
 
@@ -725,7 +726,7 @@ class DB {
    * @return
    *   TRUE if the given column exists, otherwise FALSE.
    */
-  public function fieldExists($table, $field) {
+  public function db_field_exists($table, $field) {
     return Database::getConnection()->schema()->fieldExists($table, $field);
   }
 
@@ -739,11 +740,11 @@ class DB {
    * @return
    *   Array, both the keys and the values are the matching tables.
    */
-  public function findTables($table_expression) {
+  public function db_find_tables($table_expression) {
     return Database::getConnection()->schema()->findTables($table_expression);
   }
 
-  public function createKeysSQL($spec) {
+  public function _db_create_keys_sql($spec) {
     return Database::getConnection()->schema()->createKeysSql($spec);
   }
 
@@ -755,7 +756,7 @@ class DB {
    * @param $new_name
    *   The new name for the table.
    */
-  public function renameTable($table, $new_name) {
+  public function db_rename_table($table, $new_name) {
     return Database::getConnection()->schema()->renameTable($table, $new_name);
   }
 
@@ -772,7 +773,7 @@ class DB {
    *
    * @see \Drupal\Core\Database\Schema::copyTable()
    */
-  public function copyTableSchema($source, $destination) {
+  public function db_copy_table_schema($source, $destination) {
     return Database::getConnection()->schema()->copyTable($source, $destination);
   }
 
@@ -782,7 +783,7 @@ class DB {
    * @param $table
    *   The table to be dropped.
    */
-  public function dropTable($table) {
+  public function db_drop_table($table) {
     return Database::getConnection()->schema()->dropTable($table);
   }
 
@@ -807,7 +808,7 @@ class DB {
    *
    * @see db_change_field()
    */
-  public function addField($table, $field, $spec, $keys_new = array()) {
+  public function db_add_field($table, $field, $spec, $keys_new = array()) {
     return Database::getConnection()->schema()->addField($table, $field, $spec, $keys_new);
   }
 
@@ -819,7 +820,7 @@ class DB {
    * @param $field
    *   The field to be dropped.
    */
-  public function dropField($table, $field) {
+  public function db_drop_field($table, $field) {
     return Database::getConnection()->schema()->dropField($table, $field);
   }
 
@@ -833,7 +834,7 @@ class DB {
    * @param $default
    *   Default value to be set. NULL for 'default NULL'.
    */
-  public function fieldSetDefault($table, $field, $default) {
+  public function db_field_set_default($table, $field, $default) {
     return Database::getConnection()->schema()->fieldSetDefault($table, $field, $default);
   }
 
@@ -845,7 +846,7 @@ class DB {
    * @param $field
    *   The field to be altered.
    */
-  public function fieldSetNoDefault($table, $field) {
+  public function db_field_set_no_default($table, $field) {
     return Database::getConnection()->schema()->fieldSetNoDefault($table, $field);
   }
 
@@ -857,7 +858,7 @@ class DB {
    * @param $fields
    *   Array of fields for the primary key.
    */
-  public function addPrimaryKey($table, $fields) {
+  public function db_add_primary_key($table, $fields) {
     return Database::getConnection()->schema()->addPrimaryKey($table, $fields);
   }
 
@@ -867,7 +868,7 @@ class DB {
    * @param $table
    *   Name of the table to be altered.
    */
-  public function dropPrimaryKey($table) {
+  public function db_drop_primary_key($table) {
     return Database::getConnection()->schema()->dropPrimaryKey($table);
   }
 
@@ -881,7 +882,7 @@ class DB {
    * @param $fields
    *   An array of field names.
    */
-  public function addUniqueKey($table, $name, $fields) {
+  public function db_add_unique_key($table, $name, $fields) {
     return Database::getConnection()->schema()->addUniqueKey($table, $name, $fields);
   }
 
@@ -893,7 +894,7 @@ class DB {
    * @param $name
    *   The name of the key.
    */
-  public function dropUniqueKey($table, $name) {
+  public function db_drop_unique_key($table, $name) {
     return Database::getConnection()->schema()->dropUniqueKey($table, $name);
   }
 
@@ -907,7 +908,7 @@ class DB {
    * @param $fields
    *   An array of field names.
    */
-  public function addIndex($table, $name, $fields) {
+  public function db_add_index($table, $name, $fields) {
     return Database::getConnection()->schema()->addIndex($table, $name, $fields);
   }
 
@@ -919,7 +920,7 @@ class DB {
    * @param $name
    *   The name of the index.
    */
-  public function dropIndex($table, $name) {
+  public function db_drop_index($table, $name) {
     return Database::getConnection()->schema()->dropIndex($table, $name);
   }
 
@@ -983,7 +984,7 @@ class DB {
    *   with changing the field. The format is the same as a table specification
    *   but without the 'fields' element.
    */
-  public function changeField($table, $field, $field_new, $spec, $keys_new = array()) {
+  public function db_change_field($table, $field, $field_new, $spec, $keys_new = array()) {
     return Database::getConnection()->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
   }
 
@@ -998,7 +999,7 @@ class DB {
    * @see http://drupal.org/node/2275877
    */
   /*
-  public function ignore_replica() {
+  public function db_ignore_replica() {
     $connection_info = Database::getConnectionInfo();
     // Only set ignore_replica_server if there are replica servers being used,
     // which is assumed if there are more than one.
