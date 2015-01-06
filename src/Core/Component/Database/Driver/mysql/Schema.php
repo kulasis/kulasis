@@ -7,13 +7,13 @@
 
 namespace Kula\Core\Component\Database\Driver\mysql;
 
-use Drupal\Component\Utility\String;
+use Kula\Core\Component\Database\Utility\String;
 use Kula\Core\Component\Database\Database;
 use Kula\Core\Component\Database\Query\Condition;
 use Kula\Core\Component\Database\SchemaObjectExistsException;
 use Kula\Core\Component\Database\SchemaObjectDoesNotExistException;
 use Kula\Core\Component\Database\Schema as DatabaseSchema;
-use Drupal\Component\Utility\Unicode;
+use Kula\Core\Component\Database\Utility\Unicode;
 
 /**
  * @addtogroup schemaapi
@@ -206,7 +206,7 @@ class Schema extends DatabaseSchema {
       $field['mysql_type'] = $map[$field['type'] . ':' . $field['size']];
     }
 
-    if (isset($field['type']) && $field['type'] == 'serial') {
+    if (isset($field['type']) && $field['type'] == 'primary_serial') {
       $field['auto_increment'] = TRUE;
     }
 
@@ -233,6 +233,12 @@ class Schema extends DatabaseSchema {
       'serial:medium'   => 'MEDIUMINT',
       'serial:big'      => 'BIGINT',
       'serial:normal'   => 'INT',
+      
+      'primary_serial:tiny'     => 'TINYINT',
+      'primary_serial:small'    => 'SMALLINT',
+      'primary_serial:medium'   => 'MEDIUMINT',
+      'primary_serial:big'      => 'BIGINT',
+      'primary_serial:normal'   => 'INT',
 
       'int:tiny'        => 'TINYINT',
       'int:small'       => 'SMALLINT',
@@ -259,6 +265,14 @@ class Schema extends DatabaseSchema {
 
     if (!empty($spec['primary key'])) {
       $keys[] = 'PRIMARY KEY (' . $this->createKeysSqlHelper($spec['primary key']) . ')';
+    }
+    if (!empty($spec['foreign keys'])) {
+      foreach ($spec['foreign keys'] as $key => $foreign_key) {
+        
+        $table_column = key($foreign_key['columns']);
+        
+        $keys[] = 'CONSTRAINT '. $key .' FOREIGN KEY (`' . $table_column . '`) REFERENCES '. $foreign_key['table'].'(' . $foreign_key['columns'][$table_column] . ')';
+      }
     }
     if (!empty($spec['unique keys'])) {
       foreach ($spec['unique keys'] as $key => $fields) {

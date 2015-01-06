@@ -364,7 +364,7 @@ class DB {
    */
   public function db_insert($table, array $options = array()) {
     if (empty($options['target']) || $options['target'] == 'replica') {
-      $options['target'] = 'default';
+      $options['target'] = 'write';
     }
     return new Proxy(Database::getConnection($options['target'])->insert($table, $options));
   }
@@ -382,7 +382,7 @@ class DB {
    */
   public function db_merge($table, array $options = array()) {
     if (empty($options['target']) || $options['target'] == 'replica') {
-      $options['target'] = 'default';
+      $options['target'] = 'write';
     }
     return Database::getConnection($options['target'])->merge($table, $options);
   }
@@ -400,7 +400,7 @@ class DB {
    */
   public function db_update($table, array $options = array()) {
     if (empty($options['target']) || $options['target'] == 'replica') {
-      $options['target'] = 'default';
+      $options['target'] = 'write';
     }
     return new Proxy(Database::getConnection($options['target'])->update($table, $options));
   }
@@ -418,7 +418,7 @@ class DB {
    */
   public function db_delete($table, array $options = array()) {
     if (empty($options['target']) || $options['target'] == 'replica') {
-      $options['target'] = 'default';
+      $options['target'] = 'write';
     }
     return new Proxy(Database::getConnection($options['target'])->delete($table, $options));
   }
@@ -436,7 +436,7 @@ class DB {
    */
   public function db_truncate($table, array $options = array()) {
     if (empty($options['target']) || $options['target'] == 'replica') {
-      $options['target'] = 'default';
+      $options['target'] = 'schema';
     }
     return Database::getConnection($options['target'])->truncate($table, $options);
   }
@@ -457,7 +457,7 @@ class DB {
    */
   public function db_select($table, $alias = NULL, array $options = array()) {
     if (empty($options['target'])) {
-      $options['target'] = 'default';
+      $options['target'] = 'read';
       $options['fetch'] = \PDO::FETCH_ASSOC;
     }
     return new Proxy(Database::getConnection($options['target'])->select($table, $alias, $options));
@@ -508,7 +508,7 @@ class DB {
    *   The escaped table name as a string.
    */
   public function db_escape_table($table) {
-    return Database::getConnection()->escapeTable($table);
+    return Database::getConnection('schema')->escapeTable($table);
   }
 
   /**
@@ -523,7 +523,7 @@ class DB {
    *   The escaped field name as a string.
    */
   public function db_escape_field($field) {
-    return Database::getConnection()->escapeField($field);
+    return Database::getConnection('schema')->escapeField($field);
   }
 
   /**
@@ -557,7 +557,7 @@ class DB {
    *   The escaped string.
    */
   public function db_like($string) {
-    return Database::getConnection()->escapeLike($string);
+    return Database::getConnection('schema')->escapeLike($string);
   }
 
   /**
@@ -567,7 +567,7 @@ class DB {
    *   The name of the currently active database driver.
    */
   public function db_driver() {
-    return Database::getConnection()->driver();
+    return Database::getConnection('schema')->driver();
   }
 
   /**
@@ -600,7 +600,7 @@ class DB {
    *   An integer number larger than any number returned before for this sequence.
    */
   public function db_next_id($existing_id = 0) {
-    return Database::getConnection()->nextId($existing_id);
+    return Database::getConnection('schema')->nextId($existing_id);
   }
 
   /**
@@ -668,7 +668,7 @@ class DB {
    *   A Schema API table definition array.
    */
   public function db_create_table($name, $table) {
-    return Database::getConnection()->schema()->createTable($name, $table);
+    return Database::getConnection('schema')->schema()->createTable($name, $table);
   }
 
   /**
@@ -684,7 +684,7 @@ class DB {
    *   An array of field names.
    */
   public function db_field_names($fields) {
-    return Database::getConnection()->schema()->fieldNames($fields);
+    return Database::getConnection('schema')->schema()->fieldNames($fields);
   }
 
   /**
@@ -699,7 +699,7 @@ class DB {
    *   TRUE if the given index exists, otherwise FALSE.
    */
   public function db_index_exists($table, $name) {
-    return Database::getConnection()->schema()->indexExists($table, $name);
+    return Database::getConnection('schema')->schema()->indexExists($table, $name);
   }
 
   /**
@@ -712,7 +712,7 @@ class DB {
    *   TRUE if the given table exists, otherwise FALSE.
    */
   public function db_table_exists($table) {
-    return Database::getConnection()->schema()->tableExists($table);
+    return Database::getConnection('schema')->schema()->tableExists($table);
   }
 
   /**
@@ -727,7 +727,7 @@ class DB {
    *   TRUE if the given column exists, otherwise FALSE.
    */
   public function db_field_exists($table, $field) {
-    return Database::getConnection()->schema()->fieldExists($table, $field);
+    return Database::getConnection('schema')->schema()->fieldExists($table, $field);
   }
 
   /**
@@ -741,11 +741,11 @@ class DB {
    *   Array, both the keys and the values are the matching tables.
    */
   public function db_find_tables($table_expression) {
-    return Database::getConnection()->schema()->findTables($table_expression);
+    return Database::getConnection('schema')->schema()->findTables($table_expression);
   }
 
   public function _db_create_keys_sql($spec) {
-    return Database::getConnection()->schema()->createKeysSql($spec);
+    return Database::getConnection('schema')->schema()->createKeysSql($spec);
   }
 
   /**
@@ -757,7 +757,7 @@ class DB {
    *   The new name for the table.
    */
   public function db_rename_table($table, $new_name) {
-    return Database::getConnection()->schema()->renameTable($table, $new_name);
+    return Database::getConnection('schema')->schema()->renameTable($table, $new_name);
   }
 
   /**
@@ -774,7 +774,7 @@ class DB {
    * @see \Drupal\Core\Database\Schema::copyTable()
    */
   public function db_copy_table_schema($source, $destination) {
-    return Database::getConnection()->schema()->copyTable($source, $destination);
+    return Database::getConnection('schema')->schema()->copyTable($source, $destination);
   }
 
   /**
@@ -784,7 +784,7 @@ class DB {
    *   The table to be dropped.
    */
   public function db_drop_table($table) {
-    return Database::getConnection()->schema()->dropTable($table);
+    return Database::getConnection('schema')->schema()->dropTable($table);
   }
 
   /**
@@ -809,7 +809,7 @@ class DB {
    * @see db_change_field()
    */
   public function db_add_field($table, $field, $spec, $keys_new = array()) {
-    return Database::getConnection()->schema()->addField($table, $field, $spec, $keys_new);
+    return Database::getConnection('schema')->schema()->addField($table, $field, $spec, $keys_new);
   }
 
   /**
@@ -821,7 +821,7 @@ class DB {
    *   The field to be dropped.
    */
   public function db_drop_field($table, $field) {
-    return Database::getConnection()->schema()->dropField($table, $field);
+    return Database::getConnection('schema')->schema()->dropField($table, $field);
   }
 
   /**
@@ -835,7 +835,7 @@ class DB {
    *   Default value to be set. NULL for 'default NULL'.
    */
   public function db_field_set_default($table, $field, $default) {
-    return Database::getConnection()->schema()->fieldSetDefault($table, $field, $default);
+    return Database::getConnection('schema')->schema()->fieldSetDefault($table, $field, $default);
   }
 
   /**
@@ -847,7 +847,7 @@ class DB {
    *   The field to be altered.
    */
   public function db_field_set_no_default($table, $field) {
-    return Database::getConnection()->schema()->fieldSetNoDefault($table, $field);
+    return Database::getConnection('schema')->schema()->fieldSetNoDefault($table, $field);
   }
 
   /**
@@ -859,7 +859,7 @@ class DB {
    *   Array of fields for the primary key.
    */
   public function db_add_primary_key($table, $fields) {
-    return Database::getConnection()->schema()->addPrimaryKey($table, $fields);
+    return Database::getConnection('schema')->schema()->addPrimaryKey($table, $fields);
   }
 
   /**
@@ -869,7 +869,7 @@ class DB {
    *   Name of the table to be altered.
    */
   public function db_drop_primary_key($table) {
-    return Database::getConnection()->schema()->dropPrimaryKey($table);
+    return Database::getConnection('schema')->schema()->dropPrimaryKey($table);
   }
 
   /**
@@ -883,7 +883,7 @@ class DB {
    *   An array of field names.
    */
   public function db_add_unique_key($table, $name, $fields) {
-    return Database::getConnection()->schema()->addUniqueKey($table, $name, $fields);
+    return Database::getConnection('schema')->schema()->addUniqueKey($table, $name, $fields);
   }
 
   /**
@@ -895,7 +895,7 @@ class DB {
    *   The name of the key.
    */
   public function db_drop_unique_key($table, $name) {
-    return Database::getConnection()->schema()->dropUniqueKey($table, $name);
+    return Database::getConnection('schema')->schema()->dropUniqueKey($table, $name);
   }
 
   /**
@@ -909,7 +909,7 @@ class DB {
    *   An array of field names.
    */
   public function db_add_index($table, $name, $fields) {
-    return Database::getConnection()->schema()->addIndex($table, $name, $fields);
+    return Database::getConnection('schema')->schema()->addIndex($table, $name, $fields);
   }
 
   /**
@@ -921,7 +921,7 @@ class DB {
    *   The name of the index.
    */
   public function db_drop_index($table, $name) {
-    return Database::getConnection()->schema()->dropIndex($table, $name);
+    return Database::getConnection('schema')->schema()->dropIndex($table, $name);
   }
 
   /**
@@ -985,7 +985,7 @@ class DB {
    *   but without the 'fields' element.
    */
   public function db_change_field($table, $field, $field_new, $spec, $keys_new = array()) {
-    return Database::getConnection()->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
+    return Database::getConnection('schema')->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
   }
 
   /**

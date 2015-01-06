@@ -2,17 +2,12 @@
 
 namespace Kula\Core\Component\DB;
 
-use Symfony\Component\Yaml\Yaml;
-
-use Kula\Core\Component\Database\Database;
-use Kula\Core\Component\Database\Query\Condition;
-
 class Proxy {
   
   protected $db_object;
   
   public function __construct($object) {
-    $this->db_object = $object;
+    $this->setDBOBject($object);
   }
   
   public function __call($name, $arguments) {

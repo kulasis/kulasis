@@ -675,7 +675,7 @@ abstract class Schema implements PlaceholderInterface {
    */
   public function createTable($name, $table) {
     if ($this->tableExists($name)) {
-      throw new SchemaObjectExistsException(t('Table @name already exists.', array('@name' => $name)));
+      throw new SchemaObjectExistsException('Table ' . $name . ' already exists.');
     }
     $statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {
