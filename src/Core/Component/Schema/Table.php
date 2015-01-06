@@ -95,8 +95,10 @@ class Table {
     echo "<pre>";
     print_r($structure);
     echo "</pre>";
-    $db->db_create_table($this->db_tableName, $structure);
     
+    if (!$db->db_table_exists($this->db_tableName)) {
+      $db->db_create_table($this->db_tableName, $structure);
+    }
     $this->synchronizeDatabaseCatalog($db);
   }
   
@@ -117,7 +119,9 @@ class Table {
         $catalogFields['SCHEMA_CLASS'] = ($this->class) ? $this->class : null;
       if ($catalogTable['TIMESTAMPS'] != $this->timestamps) 
         $catalogFields['TIMESTAMPS'] = ($this->timestamps) ? 'Y' : 'N';
-      $db->db_update('CORE_SCHEMA_TABLES')->fields($catalogFields)->condition('TABLE_NAME', $this->name)->execute();
+      
+      if (count($catalogFields) > 0)
+        $db->db_update('CORE_SCHEMA_TABLES')->fields($catalogFields)->condition('TABLE_NAME', $this->name)->execute();
     } else {
       $catalogFields['TABLE_NAME'] = $this->name;
       if ($this->db_tableName) 

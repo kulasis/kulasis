@@ -168,7 +168,7 @@ class Field {
       if ($catalogField['DB_COLUMN_LENGTH'] != $this->db_columnLength) 
         $catalogFieldsForDB['DB_COLUMN_LENGTH'] = $this->db_columnLength;
       if ($catalogField['DB_COLUMN_PRIMARY'] != $this->db_columnPrimary) 
-        $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = if ($this->db_columnPrimary) ? 'Y' : 'N';
+        $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = ($this->db_columnPrimary) ? 'Y' : 'N';
       if ($this->parent) {
         // Lookup parent schema field ID
         $parentSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
@@ -204,7 +204,7 @@ class Field {
       if ($this->db_columnLength) 
         $catalogFieldsForDB['DB_COLUMN_LENGTH'] = $this->db_columnLength;
       if ($this->db_columnPrimary) 
-        $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = if ($this->db_columnPrimary) ? 'Y' : 'N';
+        $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = ($this->db_columnPrimary) ? 'Y' : 'N';
       if ($this->parent) {
         // Lookup parent schema field ID
         $parentSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
