@@ -91,12 +91,44 @@ class Table {
         
       }
       
-    }
+    }  // end foreach on fields
     echo "<pre>";
     print_r($structure);
     echo "</pre>";
     $db->db_create_table($this->db_tableName, $structure);
-      
+    
+    $this->synchronizeDatabaseCatalog($db);
+  }
+  
+  public function synchronizeDatabaseCatalog(\Kula\Core\Component\DB\DB $db) {
+    
+    // Check table exists in database
+    $catalogTable = $db->db_select('CORE_SCHEMA_TABLES', 'schema_tables')
+      ->fields('schema_tables')
+      ->condition('TABLE_NAME', $this->name)
+      ->execute()->fetch();
+    
+    $catalogFields = array();
+    
+    if ($catalogTable['TABLE_NAME']) {
+      if ($catalogTable['DB_TABLE_NAME'] != $this->db_tableName) 
+        $catalogFields['DB_TABLE_NAME'] = $this->db_tableName;
+      if ($catalogTable['SCHEMA_CLASS'] != $this->class) 
+        $catalogFields['SCHEMA_CLASS'] = ($this->class) ? $this->class : null;
+      if ($catalogTable['TIMESTAMPS'] != $this->timestamps) 
+        $catalogFields['TIMESTAMPS'] = ($this->timestamps) ? 'Y' : 'N';
+      $db->db_update('CORE_SCHEMA_TABLES')->fields($catalogFields)->condition('TABLE_NAME', $this->name)->execute();
+    } else {
+      $catalogFields['TABLE_NAME'] = $this->name;
+      if ($this->db_tableName) 
+        $catalogFields['DB_TABLE_NAME'] = $this->db_tableName;
+      if ($this->class)
+        $catalogFields['SCHEMA_CLASS'] = $this->class;
+      if ($this->timestamps)
+        $catalogFields['TIMESTAMPS'] = ($this->timestamps) ? 'Y' : 'N';
+      $db->db_insert('CORE_SCHEMA_TABLES')->fields($catalogFields)->execute();
+    }
+    
   }
   
 }

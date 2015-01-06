@@ -987,6 +987,10 @@ class DB {
   public function db_change_field($table, $field, $field_new, $spec, $keys_new = array()) {
     return Database::getConnection('schema')->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
   }
+  
+  public function db_schema() {
+    return Database::getConnection('schema')->schema();
+  }
 
   /**
    * @} End of "addtogroup schemaapi".

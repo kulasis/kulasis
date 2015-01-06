@@ -365,6 +365,22 @@ abstract class Schema implements PlaceholderInterface {
     // Don't use {} around information_schema.columns table.
     return (bool) $this->connection->query("SELECT 1 FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchField();
   }
+  
+  /**
+   * @author Makoa Jacobsen <makoa@makoajacobsen.com>
+   *
+   */
+  public function fieldInfo($table, $column) {
+    $condition = $this->buildTableNameCondition($table);
+    $condition->condition('column_name', $column);
+    $condition->compile($this->connection, $this);
+    // Normally, we would heartily discourage the use of string
+    // concatenation for conditionals like this however, we
+    // couldn't use db_select() here because it would prefix
+    // information_schema.tables and the query would fail.
+    // Don't use {} around information_schema.columns table.
+    return $this->connection->query("SELECT * FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetch();
+  }
 
   /**
    * Returns a mapping of Drupal schema field names to DB-native field types.

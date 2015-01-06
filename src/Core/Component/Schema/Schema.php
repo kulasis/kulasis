@@ -105,7 +105,7 @@ class Schema {
       
       if (!$this->schema[$tableName]->getField($name)) {
         
-        $field = new Field($name, $description);
+        $field = new Field($this->schema[$tableName], $name, $description);
         
         if ($primary) $field->setPrimary(true);
         if ($parent) $field->setParent($parent);

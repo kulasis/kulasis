@@ -4,6 +4,7 @@ namespace Kula\Core\Component\Schema;
 
 class Field {
   
+  private $table;
   private $name;
   private $description;
   private $primary;
@@ -27,7 +28,8 @@ class Field {
   private $updateField;
   private $log = array();
   
-  public function __construct($name, $description = null) {
+  public function __construct($table, $name, $description = null) {
+    $this->table = $table;
     $this->name = $name;
     $this->description = $description;
   }
@@ -147,4 +149,115 @@ class Field {
   public function log($bundlePath, $action) {
     $this->log[] = array('bundle_path' => $bundlePath, 'action' => $action);
   }
+  
+  public function synchronizeDatabaseCatalog(\Kula\Core\Component\DB\DB $db) {
+    
+    // Check field exists in database
+    $catalogField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
+      ->fields('schema_fields')
+      ->condition('FIELD_NAME', $this->table . '.' .$this->name)
+      ->execute()->fetch();
+    
+    $catalogFieldsForDB = array();
+    
+    if ($catalogField['FIELD_NAME']) {
+      if ($catalogField['DB_COLUMN_NAME'] != $this->db_columnName) 
+        $catalogFieldsForDB['DB_COLUMN_NAME'] = $this->db_columnName;
+      if ($catalogField['DB_COLUMN_TYPE'] != $this->db_columnType) 
+        $catalogFieldsForDB['DB_COLUMN_TYPE'] = $this->db_columnType;
+      if ($catalogField['DB_COLUMN_LENGTH'] != $this->db_columnLength) 
+        $catalogFieldsForDB['DB_COLUMN_LENGTH'] = $this->db_columnLength;
+      if ($catalogField['DB_COLUMN_PRIMARY'] != $this->db_columnPrimary) 
+        $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = if ($this->db_columnPrimary) ? 'Y' : 'N';
+      if ($this->parent) {
+        // Lookup parent schema field ID
+        $parentSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
+          ->fields('schema_fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
+          ->condition('FIELD_NAME', $this->parent)
+          ->execute()->fetch();
+        
+        $catalogFieldsForDB['PARENT_SCHEMA_FIELD_ID'] = ($parentSchemaField['SCHEMA_FIELD_ID'] AND $this->parent != $parentSchemaField['FIELD_NAME']) ? $parentSchemaField['SCHEMA_FIELD_ID'] : null;
+      }
+      if ($catalogField['FIELD_TYPE'] != $this->field_Type)
+        $catalogFieldsForDB['FIELD_TYPE'] = $this->field_Type;
+      if ($catalogField['FIELD_SIZE'] != $this->field_Size)
+        $catalogFieldsForDB['FIELD_SIZE'] = $this->field_Size;
+      if ($catalogField['LABEL_POSITION'] != $this->labelPosition)
+        $catalogFieldsForDB['LABEL_POSITION'] = $this->labelPosition;
+      if ($this->updateField) {
+        // Lookup parent schema field ID
+        $updateSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
+          ->fields('schema_fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
+          ->condition('FIELD_NAME', $this->updateField)
+          ->execute()->fetch();
+        
+        $catalogFieldsForDB['UPDATE_FIELD_ID'] = ($updateSchemaField['SCHEMA_FIELD_ID'] AND $this->updateField != $updateSchemaField['FIELD_NAME']) ? $updateSchemaField['SCHEMA_FIELD_ID'] : null;
+      }
+      
+      $db->db_update('CORE_SCHEMA_FIELDS')->fields($catalogFieldsForDB)->condition('FIELD_NAME', $this->table . '.' .$this->name)->execute();
+    } else {
+      $catalogFieldsForDB['TABLE_NAME'] = $this->name;
+      if ($this->db_columnName) 
+        $catalogFieldsForDB['DB_COLUMN_NAME'] = $this->db_columnName;
+      if ($this->db_columnType) 
+        $catalogFieldsForDB['DB_COLUMN_TYPE'] = $this->db_columnType;
+      if ($this->db_columnLength) 
+        $catalogFieldsForDB['DB_COLUMN_LENGTH'] = $this->db_columnLength;
+      if ($this->db_columnPrimary) 
+        $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = if ($this->db_columnPrimary) ? 'Y' : 'N';
+      if ($this->parent) {
+        // Lookup parent schema field ID
+        $parentSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
+          ->fields('schema_fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
+          ->condition('FIELD_NAME', $this->parent)
+          ->execute()->fetch();
+        
+        $catalogFieldsForDB['PARENT_SCHEMA_FIELD_ID'] = ($parentSchemaField['SCHEMA_FIELD_ID']) ? $parentSchemaField['SCHEMA_FIELD_ID'] : null;
+      }
+      if ($this->field_Type)
+        $catalogFieldsForDB['FIELD_TYPE'] = $this->field_Type;
+      if ($this->field_Size)
+        $catalogFieldsForDB['FIELD_SIZE'] = $this->field_Size;
+      if ($this->labelPosition)
+        $catalogFieldsForDB['LABEL_POSITION'] = $this->labelPosition;
+      if ($this->updateField) {
+        // Lookup parent schema field ID
+        $updateSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
+          ->fields('schema_fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
+          ->condition('FIELD_NAME', $this->updateField)
+          ->execute()->fetch();
+        
+        $catalogFieldsForDB['UPDATE_FIELD_ID'] = ($updateSchemaField['SCHEMA_FIELD_ID']) ? $updateSchemaField['SCHEMA_FIELD_ID'] : null;
+      }
+      $db->db_insert('CORE_SCHEMA_FIELDS')->fields($catalogFieldsForDB)->execute();
+    }
+    
+  }
+  /*
+  public function verifyDatabaseSchema($db) {
+    
+    $fieldInfo = $db->db_schema()->fieldInfo($table, $this->getDBColumnName());
+    
+    // VERIFY COLUMN TYPE
+    // Get field map
+    $map = $db->db_schema()->getFieldTypeMap();
+    
+    // Get expected value
+    if (!isset($this->db_columnSize)) {
+      $size = 'normal';
+    } else {
+      $size = $this->db_columnSize;
+    }
+    
+    $dbColumnType = $map[$this->db_columnType . ':' . $size];
+    
+    // VERIFY COLUMN LENGTH
+    
+    // VERIFY COLUMN NULLNESS
+    
+    // VERIFY COLUMN  
+    
+  }*/
+  
+  
 }
