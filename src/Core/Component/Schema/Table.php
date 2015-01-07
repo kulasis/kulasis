@@ -53,7 +53,38 @@ class Table {
     $this->log[] = array('bundle_path' => $bundlePath, 'action' => $action);
   }
   
+  private function addTimestamps() {
+    if ($this->timestamps) {
+      
+      $created_userstamp = new Field($this, 'CreatedUserstamp', 'Created Userstamp');
+      $created_userstamp->setDBColumnName('CREATED_USERSTAMP');
+      $created_userstamp->setDBColumnType('serial');
+      $created_userstamp->setDBColumnNull(true);
+      $this->addField($created_userstamp);
+      
+      $created_timestamp = new Field($this, 'CreatedTimestamp', 'Created Timestamp');
+      $created_timestamp->setDBColumnName('CREATED_TIMESTAMP');
+      $created_timestamp->setDBColumnType('datetime');
+      $created_timestamp->setDBColumnNull(true);
+      $this->addField($created_timestamp);
+      
+      $updated_userstamp = new Field($this, 'UpdatedUserstamp', 'Updated Userstamp');
+      $updated_userstamp->setDBColumnName('UPDATED_USERSTAMP');
+      $updated_userstamp->setDBColumnType('serial');
+      $updated_userstamp->setDBColumnNull(true);
+      $this->addField($updated_userstamp);
+      
+      $updated_timestamp = new Field($this, 'UpdatedTimestamp', 'Updated Timestamp');
+      $updated_timestamp->setDBColumnName('UPDATED_TIMESTAMP');
+      $updated_timestamp->setDBColumnType('datetime');
+      $updated_timestamp->setDBColumnNull(true);
+      $this->addField($updated_timestamp);
+    }
+  }
+  
   public function createTable(\Kula\Core\Component\DB\DB $db, $schema) {
+    
+    $this->addTimestamps();
     
     $structure = array(
         'description' => $this->description,
@@ -103,11 +134,15 @@ class Table {
     if (!$db->db_table_exists($this->db_tableName)) {
       $db->db_create_table($this->db_tableName, $structure);
     }
-    $this->synchronizeDatabaseCatalog($db);
+    
+    if ($db->db_table_exists('CORE_SCHEMA_TABLES') AND $db->db_table_exists('CORE_SCHEMA_FIELDS'))
+      $this->synchronizeDatabaseCatalog($db);
     
   }
   
   public function synchronizeDatabaseCatalog(\Kula\Core\Component\DB\DB $db) {
+    
+    $this->addTimestamps();
     
     // Check table exists in database
     $catalogTable = $db->db_select('CORE_SCHEMA_TABLES', 'schema_tables')

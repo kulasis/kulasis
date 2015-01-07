@@ -1,0 +1,103 @@
+Core.Lookup.Tables:
+  description: "Lookup tables"
+  db_table_name: CORE_LOOKUP_TABLE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: LOOKUP_TABLE_ID
+      db_column_type: primary_serial
+      field_type: text
+      field_size: 5
+      column_name: "Lookup Table ID"
+      label_name: "Lookup Table ID"
+    Name:
+      description: "Lookup Table Name"
+      db_column_name: LOOKUP_TABLE_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 30
+      column_name: "Lookup Table Name"
+      label_name: "Lookup Table Name"
+    Update:
+      description: "Update Lookup Table"
+      db_column_name: LOOKUP_TABLE_UPDATE
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Update Lookup Table"
+      label_name: "Update Lookup Table"
+Core.Lookup.Values:
+  description: "Lookup table values"
+  db_table_name: CORE_LOOKUP_VALUES
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: LOOKUP_VALUE_ID
+      db_column_type: primary_serial
+      field_type: text
+      field_size: 5
+      column_name: "Lookup Value ID"
+      label_name: "Lookup Value ID"
+    TableID:
+      description: "Lookup Table ID"
+      parent: Core.Lookup.Tables.ID
+      db_column_name: LOOKUP_TABLE_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Lookup Table ID"
+      label_name: "Lookup Table ID"
+    Code:
+      description: "Code"
+      db_column_name: CODE
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: false
+      field_type: text
+      field_size: 8
+      column_name: "Code"
+      label_name: "Code"
+    Description:
+      description: "Code Description"
+      db_column_name: DESCRIPTION
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Description"
+      label_name: "Description"
+    Sort:
+      description: "Sort Value"
+      db_column_name: SORT
+      db_column_type: int
+      db_column_size: tiny
+      db_column_null: true
+      field_type: text
+      field_size: 10
+      column_name: "Sort"
+      label_name: "Sort"
+    InactiveAfter:
+      description: "Inactive After"
+      db_column_name: INACTIVE_AFTER
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Date"
+      label_name: "Date"
+    Conversion:
+      description: "Conversion Field"
+      db_column_name: CONVERSION
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 10
+      column_name: "Conversion"
+      label_name: "Conversion"

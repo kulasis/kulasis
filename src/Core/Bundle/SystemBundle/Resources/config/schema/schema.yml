@@ -1,0 +1,179 @@
+Core.Schema.Tables:
+  description: "Schema tables"
+  db_table_name: CORE_SCHEMA_TABLES
+  timestamps: true
+  fields:
+    ID:
+      description: "Table ID"
+      primary: true
+      db_column_name: SCHEMA_TABLE_ID
+      db_column_type: primary_serial
+      field_type: text
+      field_size: 5
+      column_name: "Schema Table ID"
+      label_name: "Schema Table ID"
+    TableName:
+      description: "Table name"
+      db_column_name: TABLE_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      db_null: false
+      field_type: text
+      field_size: 30
+      column_name: "Schema Table Name"
+      label_name: "Schema Table Name"
+    db_TableName:
+      description: "Table name"
+      db_column_name: DB_TABLE_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      db_null: false
+      field_type: text
+      field_size: 30
+      column_name: "DB Table Name"
+      label_name: "DB Table Name"
+    Class:
+      description: "Class (model) for table"
+      db_column_name: SCHEMA_CLASS
+      db_column_type: text
+      db_column_null: true
+      field_type: text
+      field_size: 35
+      column_name: "Schema Class"
+      label_name: "Schema Class"
+    Timestamps:
+      description: "Table contains the timestamp fields"
+      db_column_name: TIMESTAMPS
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: false
+      db_column_default: "N"
+      field_type: checkbox
+      column_name: "Timestamps"
+      label_name: "Timestamps"
+Core.Schema.Fields:
+  description: "Schema fields"
+  db_table_name: CORE_SCHEMA_FIELDS
+  timestamps: true
+  fields:
+    ID:
+      description: "Field ID"
+      primary: true
+      db_column_name: SCHEMA_FIELD_ID
+      db_column_type: primary_serial
+      field_type: text
+      field_size: 5
+      column_name: "Schema Field ID"
+      label_name: "Schema Field ID"
+    TableID:
+      description: "Schema Table ID"
+      parent: Core.Schema.Tables.ID
+      db_column_name: SCHEMA_TABLE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: text
+      field_size: 5
+      column_name: "Schema Table ID"
+      label_name: "Schema Table ID"
+    db_column_Name:
+      description: "Column Name"
+      db_column_name: DB_COLUMN_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 25
+      column_name: "DB Column Name"
+      label_name: "DB Column Name"
+    db_column_Type:
+      description: "Column Type"
+      db_column_name: DB_COLUMN_TYPE
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: false
+      field_type: lookup
+      column_name: "DB Column Type"
+      label_name: "DB Column Type"
+      lookup: Core.Schema.DBColumnType
+    db_column_Length:
+      description: "Column Length"
+      db_column_name: DB_COLUMN_LENGTH
+      db_column_type: int
+      db_column_size: small
+      db_column_length: 6
+      db_column_null: true
+      field_type: text
+      column_name: "DB Column Length"
+      label_name: "DB Column Length"
+    db_column_Primary:
+      description: "DB Column Primary"
+      db_column_name: DB_COLUMN_PRIMARY
+      db_column_type: char
+      db_column_length: 1
+      db_column_default: "N"
+      db_column_null: false
+      field_type: checkbox
+      column_name: "DB Column Primary"
+      label_name: "DB Column Primary"
+    parentID:
+      description: "Parent Schema Field ID"
+      parent: Core.Schema.Fields.ID
+      db_column_name: PARENT_SCHEMA_FIELD_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser_class: Kula\Bundle\Core\SystemBundle\Chooser\PrimaryFieldsChooser
+      column_name: "Parent Schema Field"
+      label_name: "Parent Schema Field"
+    field_Name:
+      description: "Internal Field Name"
+      db_column_name: FIELD_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_length: 30
+      column_name: "Field Name"
+      label_name: "Field Name"
+    field_Type:
+      description: "Field Type for Display"
+      db_column_name: FIELD_TYPE
+      db_column_type: varchar
+      db_column_length: 15
+      db_column_null: true
+      field_type: lookup
+      lookup: Core.Schema.FieldType:
+      column_name: "Field Type"
+      label_name: "Field Type"
+    field_Size:
+      description: "Field Size for Display"
+      db_column_name: FIELD_SIZE
+      db_column_type: int
+      db_column_size: tiny
+      db_column_null: true
+      field_type: text
+      field_length: 5
+      column_name: "Field Length"
+      label_name: "Field Length"
+    LabelPosition:
+      description: "Position for Label"
+      db_column_name: LABEL_POSITION
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: true
+      field_type: lookup
+      lookup: Core.Schema.LabelPosition
+      column_name: "Label Position"
+      label_name: "Label Position"
+    UpdateFieldID:
+      description: "Field for Update"
+      parent: Core.Schema.Fields.ID
+      db_column_name: UPDATE_FIELD_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser_class: Kula\Bundle\Core\SystemBundle\Chooser\FieldChooser
+      column_name: "Update Field"
+      label_name: "Update Field"

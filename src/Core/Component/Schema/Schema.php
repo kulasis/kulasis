@@ -33,7 +33,21 @@ class Schema {
       if (file_exists($path)) {
         $bundledSchema = Yaml::parse($path);
         
-        $this->loadSchema($bundledSchema, $path);
+        if (isset($bundledSchema['imports'])) {
+          
+          foreach($bundledSchema['imports'] as $import) {
+            
+            $importPath = $bundle->getPath().'/Resources/config/' . $import['resource'];
+            
+            if (file_exists($importPath)) {
+              $this->loadSchema(Yaml::parse($importPath), $importPath);
+            }
+          }
+          
+        } else {
+          $this->loadSchema($bundledSchema, $path);
+        }
+          
         
       }
     }

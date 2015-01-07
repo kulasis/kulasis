@@ -256,6 +256,10 @@ class Schema extends DatabaseSchema {
 
       'blob:big'        => 'LONGBLOB',
       'blob:normal'     => 'BLOB',
+      
+      'date:normal'     => 'DATE',
+      'datetime:normal' => 'DATETIME',
+      'time:normal'     => 'TIME'
     );
     return $map;
   }

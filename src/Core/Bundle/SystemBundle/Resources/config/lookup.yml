@@ -1,0 +1,37 @@
+Core.Schema.DBColumnType:
+  description: "DB Column Types"
+  update: no
+  values:
+    - { code: VARCHAR, description: "VARCHAR" }
+    - { code: SMALLINT, description: "SMALLINT" }
+    - { code: TINYINT, description: "TINYINT" }
+    - { code: CHAR, description: "CHAR" }
+    - { code: INT, description: "INT" }
+    - { code: TEXT, description: "TEXT" }
+    - { code: DATE, description: "DATE" }
+    - { code: DATETIME, description: "DATETIME" }
+    - { code: CALCULATED, description: "CALCULATED" }
+    - { code: TIME, description: "TIME" }
+Core.Schema.FieldType:
+  description: "Field Type"
+  update: no
+  values:
+    - { code: TEXT, description: "Text" }
+    - { code: SELECT, description: "Select" }
+    - { code: LOOKUP, description: "Lookup" }
+    - { code: CHECKBOX, description: "Checkbox" }
+    - { code: CHOOSER, description: "Chooser" }
+    - { code: DATE, description: "Date" }
+    - { code: PASSWORD, description: "Password" }
+    - { code: RADIO, description: "Radio" }
+    - { code: TIME, description: "Time" }
+    - { code: MULTI_CHBX, description: "Multiple Checkbox" }
+    - { code: TEXTAREA, description: "Textarea" }
+Core.Schema.LabelPosition:
+  description: "Label Position"
+  update: no
+  values:
+    - { code: T, description: "Top", sort: 1 }
+    - { code: R, description: "Right", sort: 2 }
+    - { code: B, description: "Bottom", sort: 3 }
+    - { code: L, description: "Left", sort: 4 }
