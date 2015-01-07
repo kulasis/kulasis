@@ -27,6 +27,10 @@ class Table {
     $this->log($bundlePath, 'Created table object.');
   }
   
+  public function getName() {
+    return $this->name;
+  }
+  
   public function addField(Field $field) {
     $fieldName = $field->getName();
     
@@ -100,6 +104,7 @@ class Table {
       $db->db_create_table($this->db_tableName, $structure);
     }
     $this->synchronizeDatabaseCatalog($db);
+    
   }
   
   public function synchronizeDatabaseCatalog(\Kula\Core\Component\DB\DB $db) {
@@ -133,6 +138,12 @@ class Table {
       $db->db_insert('CORE_SCHEMA_TABLES')->fields($catalogFields)->execute();
     }
     
+    foreach($this->fields as $field) {
+      $field->synchronizeDatabaseCatalog($db);
+    }
+  
   }
+  
+  
   
 }
