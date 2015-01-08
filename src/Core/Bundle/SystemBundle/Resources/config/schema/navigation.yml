@@ -17,6 +17,7 @@ Core.Navigation:
       parent: Core.Navigation.ID
       db_column_name: PARENT_NAVIGATION_ID
       db_column_type: serial
+      db_column_null: true
       field_type: text
       field_size: 5
       column_name: "Parent Navigation ID"
@@ -26,6 +27,7 @@ Core.Navigation:
       db_column_name: NAVIGATION_TYPE
       db_column_type: varchar
       db_column_length: 10
+      db_column_null: false
       field_type: lookup
       lookup: Core.Navigation.Type
       column_name: "Type"
@@ -35,6 +37,7 @@ Core.Navigation:
       db_column_name: PORTAL
       db_column_type: varchar
       db_column_length: 10
+      db_column_null: false
       field_type: lookup
       lookup: Core.Navigation.Portal
       column_name: "Portal"
@@ -44,6 +47,7 @@ Core.Navigation:
       db_column_name: SORT
       db_column_type: int
       db_column_size: tiny
+      db_column_null: true
       field_type: text
       field_size: 5
       column_name: "Sort"

@@ -12,7 +12,7 @@ Core.Navigation.Portal:
   description: "Portal List"
   allow_update: true
   values:
-    - { code: system, description: "System", sort: 1 }
+    - { code: core, description: "Core", sort: 1 }
     - { code: sis, description: "SIS", sort: 2 }
     - { code: teacher, description: "teacher", sort: 3 }
     - { code: student, description: "student", sort: 4 }
