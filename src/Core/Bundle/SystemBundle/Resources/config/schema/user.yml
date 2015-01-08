@@ -30,6 +30,8 @@ Core.User:
       field_size: 25
       column_name: "Password"
       label_name: "Password"
+  unique_keys:
+    Username: [ 'Core.User.Username' ]
 Core.Usergroup:
   description: "Usergroups Table"
   db_table_name: CORE_USERGROUP
@@ -62,6 +64,8 @@ Core.Usergroup:
       lookup: Core.Navigation.Portal
       column_name: "Portal"
       label_name: "Portal"
+  unique_keys:
+    Usergroups: [ 'Core.Usergroup.Name', 'Core.Usergroup.Portal' ]
 Core.User.Role:
   description: "User Roles Table"
   db_table_name: CORE_USER_ROLES
@@ -94,6 +98,8 @@ Core.User.Role:
       field_size: 5
       column_name: "Usergroup ID"
       label_name: "Usergroup ID"
+  unique_keys:
+    Users_Usergroups: [ 'Core.User.Role.UserID', 'Core.User.Role.UsergroupID' ]
 Core.System.LDAP:
   description: "LDAP Servers for Authentication"
   db_table_name: CORE_SYSTEM_LDAP
@@ -138,3 +144,5 @@ Core.System.LDAP:
       field_size: 50
       column_name: "Domain Append"
       label_name: "Domain Append"
+  unique_keys:
+    ServerName: [ 'Core.System.LDAP.ServerName' ]

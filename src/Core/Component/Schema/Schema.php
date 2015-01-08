@@ -48,7 +48,8 @@ class Schema {
                        isset($table['db_table_name']) ? $table['db_table_name'] : null, 
                        isset($table['class']) ? $table['class'] : null, 
                        isset($table['qualified']) ? $table['qualified'] : null, 
-                       isset($table['timestamps']) ? $table['timestamps'] : null);
+                       isset($table['timestamps']) ? $table['timestamps'] : null, 
+                       isset($table['unique_keys']) ? $table['unique_keys'] : null);
       
       if (isset($table['fields']) AND count($table['fields']) > 0) {
         
@@ -88,11 +89,11 @@ class Schema {
     
   }
   
-  private function loadTable($bundlePath, $name, $description, $db_tableName, $class, $qualified, $timestamps) {
+  private function loadTable($bundlePath, $name, $description, $db_tableName, $class, $qualified, $timestamps, $unique_keys) {
     
     if (!isset($this->schema[$name])) {
     
-      $this->schema[$name] = new Table($bundlePath, $name, $description, $db_tableName, $class, $qualified, $timestamps);
+      $this->schema[$name] = new Table($bundlePath, $name, $description, $db_tableName, $class, $qualified, $timestamps, $unique_keys);
     
     }
     

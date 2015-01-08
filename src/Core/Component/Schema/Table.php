@@ -12,10 +12,11 @@ class Table {
   private $class;
   private $qualified;
   private $timestamps;
+  private $uniqueKeys = array();
   private $fields = array();
   private $log = array();
   
-  public function __construct($bundlePath, $name, $description, $db_tableName, $class = null, $qualified = array(), $timestamps = null) {
+  public function __construct($bundlePath, $name, $description, $db_tableName, $class = null, $qualified = array(), $timestamps = null, $uniqueKeys = null) {
     
     $this->name = $name;
     $this->description = $description;
@@ -23,6 +24,7 @@ class Table {
     $this->class = $class;
     $this->qualified = $qualified;
     $this->timestamps = $timestamps;
+    $this->uniqueKeys = $uniqueKeys;
     
     $this->log($bundlePath, 'Created table object.');
   }
@@ -116,17 +118,57 @@ class Table {
         $parentTable = $schema->getTableForSchema($parentTableName);
         $parentField = $schema->getFieldForSchema($parentTableName, $parentFieldName);
         
+        $fkTableName = ''; // First letter
+        $tokenziedTableName = strtok($this->db_tableName, '_');
+        while ($tokenziedTableName !== false) {
+          $fkTableName .= substr($tokenziedTableName, 0, 1);
+          $tokenziedTableName = strtok('_');
+        }
         
-        $structure['foreign keys']['FK_'.$field->getDBColumnName()] = array(
+        $structure['foreign keys']['FK_'.$fkTableName.'_'.$field->getDBColumnName()] = array(
             'table' => $parentTable->db_tableName,
             'columns' => array($field->getDBColumnName() => $parentField->getDBColumnName()),
         );
         
-        
-        
       }
       
     }  // end foreach on fields
+    
+    // get unique keys
+    if (count($this->uniqueKeys) > 0) {
+      
+      foreach($this->uniqueKeys as $uniqueKeyName => $uniqueKeys) {
+        
+        $uniqueKeysForDB = array();
+        
+        // Look up db name
+        foreach($uniqueKeys as $field) {
+          
+          $tableName = substr($field, 0, strrpos($field, '.'));
+          $fieldName = substr($field, strrpos($field, '.')+1, strlen($field));
+          
+          if ($tableName == $this->name) {
+            $uniqueKeysForDB[] = $this->fields[$fieldName]->getDBColumnName();
+          }
+          
+        }
+        
+        if (count($uniqueKeysForDB) > 1) {
+          $ukTableName = '';
+          $tokenziedTableName = strtok(implode('_', $uniqueKeysForDB), '_');
+          while ($tokenziedTableName !== false) {
+            $ukTableName .= substr($tokenziedTableName, 0, 1);
+            $tokenziedTableName = strtok('_');
+          }
+        } else {
+          $ukTableName = implode('_', $uniqueKeysForDB);
+        }
+        
+        $structure['unique keys']['UK_'.$ukTableName] = $uniqueKeysForDB;
+        
+      }
+      
+    }
     
     if (!$db->db_table_exists($this->db_tableName)) {
       $db->db_create_table($this->db_tableName, $structure);
