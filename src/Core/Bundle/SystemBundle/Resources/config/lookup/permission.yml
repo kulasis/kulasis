@@ -1,0 +1,14 @@
+Core.Permission.Field:
+  description: "Field Permissions"
+  allow_update: false
+  values: 
+    - { code: F, description: "Full", sort: 1 }
+    - { code: W, description: "Write", sort: 2 }
+    - { code: R, description: "Read", sort: 3 }
+    - { code: N, description: "None", sort: 4 }
+Core.Permission.YesNo:
+  description: "Yes/No Permissionst"
+  allow_update: false
+  values:
+    - { code: Y, description: "Yes", sort: 1 }
+    - { code: N, description: "No", sort: 2 }

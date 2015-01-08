@@ -1,0 +1,43 @@
+Core.RecordType:
+  description: "Record Types"
+  db_table_name: CORE_RECORD_TYPES
+  timestamps: true
+  fields:
+    ID:
+      description: "Record Type ID"
+      primary: true
+      db_column_name: RECORD_TYPE_ID
+      db_column_type: primary_serial
+      field_type: text
+      field_size: 5
+      column_name: "Record Type ID"
+      label_name: "Record Type ID"
+    RecordName:
+      description: "Record Name"
+      db_column_name: RECORD_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Record Name"
+      label_name: "Record Name"
+    Portal:
+      description: "Portal"
+      db_column_name: PORTAL
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: false
+      field_type: text
+      field_size: 15
+      column_name: "Portal"
+      label_name: "Portal"
+    Class:
+      description: "Class File"
+      db_column_name: CLASS
+      db_column_type: text
+      db_column_null: false
+      field_type: text
+      field_size: 40
+      column_name: "Class File"
+      label_name: "Class File"

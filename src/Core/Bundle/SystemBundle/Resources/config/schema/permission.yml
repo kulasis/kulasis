@@ -1,0 +1,124 @@
+Core.Permission.Navigation:
+  description: "Navigation Permissions"
+  db_table_name: CORE_PERMISSION_NAVIGATION
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: NAVIGATION_PERMISSION_ID
+      db_column_type: primary_serial
+    NavigationID:
+      description: "Navigation ID"
+      parent: Core.Navigation.ID
+      db_column_name: NAVIGATION_ID
+      db_column_type: serial
+      db_column_null: false
+    UsergroupID:
+      description: "User Group ID"
+      parent: Core.Usergroup.ID
+      db_column_name: USERGROUP_ID
+      db_column_type: serial
+      db_column_null: true
+    RoleID:
+      description: "User Role ID"
+      parent: Core.User.Role.ID
+      db_column_name: ROLE_ID
+      db_column_type: serial
+      db_column_null: true
+    Permission:
+      description: "Permission"
+      db_column_name: PERMISSION
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: true
+      field_type: lookup
+      lookup: Core.Permission.YesNo
+Core.Permission.Schema.Table:
+  description: "Schema Tables Permissions"
+  db_table_name: CORE_PERMISSION_SCHEMA_TABLES
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: TABLE_PERMISSION_ID
+      db_column_type: primary_serial
+    SchemaTableID:
+      description: "Schema Table ID"
+      parent: Core.Schema.Table.ID
+      db_column_name: SCHEMA_TABLE_ID
+      db_column_type: serial
+      db_column_null: false
+    UsergroupID:
+      description: "Usergroup ID"
+      parent: Core.Usergroup.ID
+      db_column_name: USERGROUP_ID
+      db_column_type: serial
+      db_column_null: true
+    RoleID:
+      description: "Role ID"
+      parent: Core.User.Role.ID
+      db_column_name: ROLE_ID
+      db_column_type: serial
+      db_column_null: true
+    Permission.Add:
+      description: "Add Permission"
+      db_column_name: PERMISSION_ADD
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: true
+      field_type: lookup
+      lookup: Core.Permission.YesNo
+    Permission.Delete:
+      description: "Delete Permission"
+      db_column_name: PERMISSION_DELETE
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: true
+      field_type: lookup
+      lookup: Core.Permission.YesNo
+    Permission.Edit:
+      description: "Edit Permission"
+      db_column_name: PERMISSION_EDIT
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: true
+      field_type: lookup
+      lookup: Core.Permission.Field
+Core.Permission.Schema.Field:
+  description: "Schema Fields Permissions"
+  db_table_name: CORE_PERMISSION_SCHEMA_FIELDS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: FIELD_PERMISSION_ID
+      db_column_type: primary_serial
+    SchemaFieldID:
+      description: "Schema Field ID"
+      parent: Core.Schema.Field.ID
+      db_column_name: SCHEMA_FIELD_ID
+      db_column_type: serial
+      db_column_null: false
+    UsergroupID:
+      description: "User Group ID"
+      parent: Core.Usergroup.ID
+      db_column_name: USERGROUP_ID
+      db_column_type: serial
+      db_column_null: true
+    RoleID:
+      description: "User Role ID"
+      parent: Core.User.Role.ID
+      db_column_name: ROLE_ID
+      db_column_type: serial
+      db_column_null: true
+    Permission:
+      description: "Permission"
+      db_column_name: PERMISSION
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: true
+      field_type: lookup
+      lookup: Core.Permission.Field

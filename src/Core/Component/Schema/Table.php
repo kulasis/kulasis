@@ -127,9 +127,6 @@ class Table {
       }
       
     }  // end foreach on fields
-    echo "<pre>";
-    print_r($structure);
-    echo "</pre>";
     
     if (!$db->db_table_exists($this->db_tableName)) {
       $db->db_create_table($this->db_tableName, $structure);

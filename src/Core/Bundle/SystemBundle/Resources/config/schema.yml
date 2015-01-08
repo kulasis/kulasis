@@ -1,3 +1,7 @@
 imports:
     - { resource: schema/schema.yml }
     - { resource: schema/lookup.yml }
+    - { resource: schema/navigation.yml }
+    - { resource: schema/record.yml }
+    - { resource: schema/user.yml }
+    - { resource: schema/permission.yml }

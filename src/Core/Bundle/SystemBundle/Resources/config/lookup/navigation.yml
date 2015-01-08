@@ -1,0 +1,18 @@
+Core.Navigation.Type:
+  description: "Navigation Types"
+  allow_update: false
+  values: 
+    - { code: G, description: "Group", sort: 1 }
+    - { code: F, description: "Form", sort: 2 }
+    - { code: MA, description: "Action Menu", sort: 3 }
+    - { code: MR, description: "Report Menu", sort: 4 }
+    - { code: T, description: "Tab", sort: 5 }
+    - { code: R, description: "Report", sort: 6 }
+Core.Navigation.Portal:
+  description: "Portal List"
+  allow_update: true
+  values:
+    - { code: system, description: "System", sort: 1 }
+    - { code: sis, description: "SIS", sort: 2 }
+    - { code: teacher, description: "teacher", sort: 3 }
+    - { code: student, description: "student", sort: 4 }

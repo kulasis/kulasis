@@ -1,6 +1,6 @@
-Core.Lookup.Tables:
+Core.Lookup.Table:
   description: "Lookup tables"
-  db_table_name: CORE_LOOKUP_TABLE
+  db_table_name: CORE_LOOKUP_TABLES
   timestamps: true
   fields:
     ID:
@@ -22,6 +22,15 @@ Core.Lookup.Tables:
       field_size: 30
       column_name: "Lookup Table Name"
       label_name: "Lookup Table Name"
+    Description:
+      description: "Lookup Table Description"
+      db_column_name: LOOKUP_TABLE_DESCRIPTION
+      db_column_type: text
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Lookup Table Description"
+      label_name: "Lookup Table Description"
     Update:
       description: "Update Lookup Table"
       db_column_name: LOOKUP_TABLE_UPDATE
@@ -31,7 +40,7 @@ Core.Lookup.Tables:
       field_type: checkbox
       column_name: "Update Lookup Table"
       label_name: "Update Lookup Table"
-Core.Lookup.Values:
+Core.Lookup.Value:
   description: "Lookup table values"
   db_table_name: CORE_LOOKUP_VALUES
   timestamps: true
@@ -47,7 +56,7 @@ Core.Lookup.Values:
       label_name: "Lookup Value ID"
     TableID:
       description: "Lookup Table ID"
-      parent: Core.Lookup.Tables.ID
+      parent: Core.Lookup.Table.ID
       db_column_name: LOOKUP_TABLE_ID
       db_column_type: serial
       db_column_null: false

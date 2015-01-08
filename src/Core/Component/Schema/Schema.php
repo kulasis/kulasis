@@ -2,7 +2,7 @@
 
 namespace Kula\Core\Component\Schema;
 
-use Symfony\Component\Yaml\Yaml;
+use Kula\Core\Component\DefinitionLoader\DefinitionLoader;
 
 use Kula\Core\Component\Database\Database;
 use Kula\Core\Component\Database\Query\Condition;
@@ -28,27 +28,12 @@ class Schema {
   
   public function getSchemaFromBundles(array $bundles) {
     
-    foreach($bundles as $bundle) {
-      $path = $bundle->getPath().'/Resources/config/schema.yml';
-      if (file_exists($path)) {
-        $bundledSchema = Yaml::parse($path);
-        
-        if (isset($bundledSchema['imports'])) {
-          
-          foreach($bundledSchema['imports'] as $import) {
-            
-            $importPath = $bundle->getPath().'/Resources/config/' . $import['resource'];
-            
-            if (file_exists($importPath)) {
-              $this->loadSchema(Yaml::parse($importPath), $importPath);
-            }
-          }
-          
-        } else {
-          $this->loadSchema($bundledSchema, $path);
-        }
-          
-        
+    $schemas = DefinitionLoader::loadDefinitionsFromBundles($bundles, 'schema');
+    
+    if ($schemas) {
+      foreach($schemas as $path => $schema) {
+        if ($schema)
+          $this->loadSchema($schema, $path);
       }
     }
     
