@@ -40,6 +40,8 @@ class RecordLoader {
         ->condition('RECORD_NAME', $recordName)
         ->execute()->fetch();
       
+      $recordFields = array();
+      
       if ($catalogRecordTable['RECORD_TYPE_ID']) {
         
         if ($catalogRecordTable['CLASS'] != $record['class']) 
