@@ -15,6 +15,7 @@ class Field {
   private $db_columnLength;
   private $db_columnPrecision;
   private $db_columnNull;
+  private $db_columnDefault;
   private $class;
   private $field_type;
   private $field_size;
@@ -78,6 +79,10 @@ class Field {
     return $this->db_columnNull;
   }
   
+  public function getDBColumnDefault() {
+    return $this->db_columnDefault;
+  }
+  
   public function setColumnName($columnName) {
     $this->columnName = $columnName;
   }
@@ -104,6 +109,10 @@ class Field {
   
   public function setDBColumnPrecision($columnPrecision) {
     $this->db_columnPrecision = $columnPrecision;
+  }
+  
+  public function setDBColumnDefault($columnDefault) {
+    $this->db_columnDefault = $columnDefault;
   }
   
   public function setClass($class) {
@@ -212,6 +221,9 @@ class Field {
         $catalogFieldsForDB['DB_COLUMN_TYPE'] = $this->db_columnType;
       if ($this->db_columnLength) 
         $catalogFieldsForDB['DB_COLUMN_LENGTH'] = $this->db_columnLength;
+      if ($this->db_columnPrecision) 
+        $catalogFieldsForDB['DB_COLUMN_PRECISION'] = $this->db_columnPrecision;
+      $catalogFieldsForDB['DB_COLUMN_NULL'] = ($this->db_columnNull) ? 'Y' : 'N';
       $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = ($this->primary) ? 'Y' : 'N';
       if ($this->parent) {
         // Lookup parent schema field ID

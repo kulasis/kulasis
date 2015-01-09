@@ -104,6 +104,10 @@ class Table {
         'not null' => ($field->getDBColumnNull() == false) ? true : false
       );
       
+      if ($field->getDBColumnDefault()) {
+        $structure['fields'][$field->getDBColumnName()]['default'] = $field->getDBColumnName();
+      }
+      
       if ($field->getPrimary()) {
         $structure['primary key'][] = $field->getDBColumnName();
       }

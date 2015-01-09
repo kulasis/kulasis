@@ -82,7 +82,7 @@ Core.Schema.Field:
       db_column_name: DB_COLUMN_NAME
       db_column_type: varchar
       db_column_length: 255
-      db_column_null: false
+      db_column_null: true
       field_type: text
       field_size: 25
       column_name: "DB Column Name"
@@ -92,7 +92,7 @@ Core.Schema.Field:
       db_column_name: DB_COLUMN_TYPE
       db_column_type: varchar
       db_column_length: 50
-      db_column_null: false
+      db_column_null: true
       field_type: lookup
       column_name: "DB Column Type"
       label_name: "DB Column Type"
@@ -107,6 +107,36 @@ Core.Schema.Field:
       field_type: text
       column_name: "DB Column Length"
       label_name: "DB Column Length"
+    db_column_Precision:
+      description: "Column Precision"
+      db_column_name: DB_COLUMN_PRECISION
+      db_column_type: int
+      db_column_size: small
+      db_column_length: 6
+      db_column_null: true
+      field_type: text
+      column_name: "DB Column Precision"
+      label_name: "DB Column Precision"
+    db_column_Null:
+      description: "Allow Null"
+      db_column_name: DB_COLUMN_NULL
+      db_column_type: char
+      db_column_length: 1
+      db_column_default: "Y"
+      db_column_null: false
+      field_type: text
+      column_name: "DB Column Null"
+      label_name: "DB Column Null"
+    db_column_Default:
+      description: "Column Default"
+      db_column_name: DB_COLUMN_DEFAULT
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_length: 25
+      column_name: "DB Column Default"
+      label_name: "DB Column Default"
     db_column_Primary:
       description: "DB Column Primary"
       db_column_name: DB_COLUMN_PRIMARY
@@ -117,7 +147,7 @@ Core.Schema.Field:
       field_type: checkbox
       column_name: "DB Column Primary"
       label_name: "DB Column Primary"
-    parentID:
+    ParentID:
       description: "Parent Schema Field ID"
       parent: Core.Schema.Field.ID
       db_column_name: PARENT_SCHEMA_FIELD_ID
@@ -157,6 +187,64 @@ Core.Schema.Field:
       field_length: 5
       column_name: "Field Length"
       label_name: "Field Length"
+    field_ColumnLength:
+      description: "Field Columns for Display"
+      db_column_name: FIELD_COLUMN_LENGTH
+      db_column_type: int
+      db_column_size: tiny
+      db_column_null: true
+      field_type: text
+      field_length: 5
+      column_name: "Field Column Length"
+      label_name: "Field Column Length"
+    field_RowHeight:
+      description: "Field Rows for Display"
+      db_column_name: FIELD_ROW_HEIGHT
+      db_column_type: int
+      db_column_size: tiny
+      db_column_null: true
+      field_type: text
+      field_length: 5
+      column_name: "Field Row Height"
+      label_name: "Field Row Height"
+    Class:
+      description: "Class"
+      db_column_name: CLASS
+      db_column_type: text
+      db_column_null: true
+      field_type: text
+      field_length: 25
+      column_name: "Class"
+      label_name: "Class"
+    Lookup:
+      description: "Lookup"
+      db_column_name: LOOKUP
+      db_column_type: text
+      db_column_null: true
+      field_type: text
+      field_length: 25
+      column_name: "Lookup"
+      label_name: "Lookup"
+    ColumnName:
+      description: "Column Name for Query"
+      db_column_name: COLUMN_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_length: 25
+      column_name: "Column Name"
+      label_name: "Column Name"
+    LabelName:
+      description: "Label Name"
+      db_column_name: LABEL_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_length: 25
+      column_name: "Label Name"
+      label_name: "Label Name"
     LabelPosition:
       description: "Position for Label"
       db_column_name: LABEL_POSITION

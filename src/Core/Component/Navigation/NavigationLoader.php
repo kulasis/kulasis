@@ -58,7 +58,7 @@ class NavigationLoader {
           $navFields['RECORD_LOADED'] = (isset($nav['record_loaded']) AND $nav['record_loaded']) ? 'Y' : 'N';
         if (isset($nav['route']) AND $catalogNavigationTable['ROUTE'] != $nav['route']) 
           $navFields['ROUTE'] = $nav['route'];
-        if (isset($nav['confirmation_message']) AND   $catalogNavigationTable['CONFIRMATION_MESSAGE'] != $nav['confirmation_message']) 
+        if (isset($nav['confirmation_message']) AND $catalogNavigationTable['CONFIRMATION_MESSAGE'] != $nav['confirmation_message']) 
           $navFields['CONFIRMATION_MESSAGE'] = $nav['confirmation_message'];
         
         if (count($navFields) > 0)
