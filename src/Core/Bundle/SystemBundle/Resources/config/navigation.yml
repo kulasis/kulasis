@@ -1,15 +1,18 @@
-pages:
-  Core.Pages.Home:
-    description: "Home Page"
-    display_name: "Home"
-form_groups:
-  Core.FormGroups.System:
-    description: "System"
-    display_name: "System"
-    sort: 1
-forms:
-  Core.Forms.System.Lookup:
-    parent: Core.FormGroups.System
-    description: "Lookup"
-    display_name: "Lookup"
-    sort: 1
+Core.Pages.Home:
+  description: "Home Page"
+  display_name: "Home"
+  type: page
+  portal: core
+Core.FormGroups.System:
+  description: "System"
+  display_name: "System"
+  type: form_group
+  portal: core
+  sort: 1
+Core.Forms.System.Lookup:
+  parent: Core.FormGroups.System
+  description: "Lookup"
+  display_name: "Lookup"
+  type: form
+  portal: core
+  sort: 1

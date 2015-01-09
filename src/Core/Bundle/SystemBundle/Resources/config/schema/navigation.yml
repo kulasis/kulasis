@@ -22,6 +22,16 @@ Core.Navigation:
       field_size: 5
       column_name: "Parent Navigation ID"
       label_name: "Parent Navigation ID"
+    Name:
+      description: "Name"
+      db_column_name: NAVIGATION_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 30
+      column_name: "Navigation Name"
+      label_name: "Navigation Name"
     Type:
       description: "Type"
       db_column_name: NAVIGATION_TYPE
@@ -52,16 +62,6 @@ Core.Navigation:
       field_size: 5
       column_name: "Sort"
       label_name: "Sort"
-    Name:
-      description: "Name"
-      db_column_name: NAVIGATION_NAME
-      db_column_type: varchar
-      db_column_length: 255
-      db_column_null: false
-      field_type: text
-      field_size: 30
-      column_name: "Lookup Table Name"
-      label_name: "Lookup Table Name"
     DisplayName:
       description: "Display Name"
       db_column_name: DISPLAY_NAME
