@@ -1,0 +1,40 @@
+{% extends 'KulaCoreFrameworkBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    {% stylesheets 
+			'@KulaCoreLoginBundle/Resources/public/css/*.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+<div id="login_form">
+<form action="{{ path( 'attempt_login') }}" method="post">
+  <div align="center" id="login_title">Oregon College of Art and Craft</div>
+  {% include 'KulaCoreFrameworkBundle::flash.html.twig' %}
+	<div class="group form-line">
+	<div class="form-field">
+	  <label>Username/Email</label>
+		<input type="text" name="username" />
+	</div>
+	</div>
+	<div class="group form-line">
+	<div class="form-field">
+		<label>Password</label>
+	  <input type="password" name="password" />
+	</div>
+	</div>
+	<div class="group form-line">
+	<div class="form-field">
+		<input type="submit" name="submit" value="Submit" />
+	</div>
+	</div>
+	<div class="group form-line">
+		<a href="{{ authurl }}" style="display:block;text-align:center;"><img src="{{ asset('images/google_login.png') }}" /></a>
+	</div>
+</form>
+</div>
+<br />
+<br />
+
+{% endblock %}

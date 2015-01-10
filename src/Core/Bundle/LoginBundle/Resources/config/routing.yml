@@ -1,0 +1,21 @@
+top:
+    path:     /
+    defaults: { _controller: KulaCoreLoginBundle:Login:login }
+
+login:
+    path:     /login
+    defaults: { _controller: KulaCoreLoginBundle:Login:login }
+    methods: [GET]
+
+attempt_login:
+    path:     /login
+    defaults: { _controller: KulaCoreLoginBundle:Login:doLogin }
+    methods: [POST]
+
+logout:
+    path:     /logout
+    defaults: { _controller: KulaCoreLoginBundle:Login:logout }
+
+focus_usergroup_change:
+    path:     /login/focus
+    defaults: { _controller: KulaCoreLoginBundle:Login:change_usergroup }

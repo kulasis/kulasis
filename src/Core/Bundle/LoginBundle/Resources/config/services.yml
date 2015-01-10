@@ -1,0 +1,20 @@
+parameters:
+  kula_login.class:      Kula\Core\Bundle\LoginBundle\Service\LoginService
+  kula_login_googleapi.class:      Kula\Core\Bundle\LoginBundle\Service\Authentication\GoogleAPI
+  kula_login_local.class:      Kula\Core\Bundle\LoginBundle\Service\Authentication\Local
+  kula_login_ldap.class:      Kula\Core\Bundle\LoginBundle\Service\Authentication\LDAP
+
+services:
+  kula.login.auth.googleapi:
+    class:        %kula_login_googleapi.class%
+    arguments:    ["@request_stack", "@router", "@session", %google_client_id%, %google_client_secret%]
+
+  kula.login.auth.local:
+    class:        %kula_login_local.class%
+
+  kula.login.auth.ldap:
+    class:        %kula_login_ldap.class%
+
+  kula.login:
+    class:        %kula_login.class%
+    arguments:    ["@kula.db", "@kula.login.auth.googleapi", "@kula.login.auth.ldap", "@kula.login.auth.local"]

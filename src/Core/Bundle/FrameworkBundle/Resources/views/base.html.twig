@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Kula SIS{% endblock %}</title>				
+		    {% stylesheets '@KulaCoreFrameworkBundle/Resources/public/css/lib/reset.css'
+				'@KulaCoreFrameworkBundle/Resources/public/css/lib/group.css'
+				'@KulaCoreFrameworkBundle/Resources/public/css/core.css'  %}
+		        <link rel="stylesheet" href="{{ asset_url }}" />
+		    {% endstylesheets %}
+        {% block stylesheets %}{% endblock %}
+				{% javascripts '@KulaCoreFrameworkBundle/Resources/public/js/lib/jquery-1.11.0.js'
+				%}
+				    <script type="text/javascript" src="{{ asset_url }}"></script>
+				{% endjavascripts %}
+        {% block javascripts %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {% block body_javascripts %}{% endblock %}
+    </body>
+</html>

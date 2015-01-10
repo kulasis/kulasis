@@ -83,7 +83,7 @@ class Schema {
         
       }  // end if tables
       
-      $this->schema[$tableName]->createTable($GLOBALS['kernel']->getContainer()->get('db'), $this);
+      $this->schema[$tableName]->createTable($GLOBALS['kernel']->getContainer()->get('kula.db'), $this);
       
     } // end foreach tables
     
