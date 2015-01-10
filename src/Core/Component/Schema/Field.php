@@ -191,6 +191,18 @@ class Field {
         $catalogFieldsForDB['FIELD_TYPE'] = $this->field_type;
       if ($catalogField['FIELD_SIZE'] != $this->field_size)
         $catalogFieldsForDB['FIELD_SIZE'] = $this->field_size;
+      if ($catalogField['FIELD_COLUMN_LENGTH'] != $this->field_cols)
+        $catalogFieldsForDB['FIELD_COLUMN_LENGTH'] = $this->field_cols;
+      if ($catalogField['FIELD_ROW_HEIGHT'] != $this->field_rows)
+        $catalogFieldsForDB['FIELD_ROW_HEIGHT'] = $this->field_rows;
+      if ($catalogField['CLASS'] != $this->class)
+        $catalogFieldsForDB['CLASS'] = $this->class;
+      if ($catalogField['LOOKUP'] != $this->lookup)
+        $catalogFieldsForDB['LOOKUP'] = $this->lookup;
+      if ($catalogField['COLUMN_NAME'] != $this->columnName)
+        $catalogFieldsForDB['COLUMN_NAME'] = $this->columnName;
+      if ($catalogField['LABEL_NAME'] != $this->labelName)
+        $catalogFieldsForDB['LABEL_NAME'] = $this->labelName;
       if ($catalogField['LABEL_POSITION'] != $this->labelPosition)
         $catalogFieldsForDB['LABEL_POSITION'] = $this->labelPosition;
       if ($this->updateField) {
@@ -224,6 +236,8 @@ class Field {
       if ($this->db_columnPrecision) 
         $catalogFieldsForDB['DB_COLUMN_PRECISION'] = $this->db_columnPrecision;
       $catalogFieldsForDB['DB_COLUMN_NULL'] = ($this->db_columnNull) ? 'Y' : 'N';
+      if ($this->db_columnDefault) 
+        $catalogFieldsForDB['DB_COLUMN_DEFAULT'] = $this->db_columnDefault;
       $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = ($this->primary) ? 'Y' : 'N';
       if ($this->parent) {
         // Lookup parent schema field ID
@@ -238,6 +252,18 @@ class Field {
         $catalogFieldsForDB['FIELD_TYPE'] = $this->field_type;
       if ($this->field_size)
         $catalogFieldsForDB['FIELD_SIZE'] = $this->field_size;
+      if ($this->field_cols)
+        $catalogFieldsForDB['FIELD_COLUMN_LENGTH'] = $this->field_cols;
+      if ($this->field_rows)
+        $catalogFieldsForDB['FIELD_ROW_HEIGHT'] = $this->field_rows;
+      if ($this->class)
+        $catalogFieldsForDB['CLASS'] = $this->class;
+      if ($this->lookup)
+        $catalogFieldsForDB['LOOKUP'] = $this->lookup;
+      if ($this->columnName)
+        $catalogFieldsForDB['COLUMN_NAME'] = $this->columnName;
+      if ($this->labelName)
+        $catalogFieldsForDB['LABEL_NAME'] = $this->labelName;
       if ($this->labelPosition)
         $catalogFieldsForDB['LABEL_POSITION'] = $this->labelPosition;
       if ($this->updateField) {
@@ -253,31 +279,6 @@ class Field {
     }
     
   }
-  /*
-  public function verifyDatabaseSchema($db) {
-    
-    $fieldInfo = $db->db_schema()->fieldInfo($table, $this->getDBColumnName());
-    
-    // VERIFY COLUMN TYPE
-    // Get field map
-    $map = $db->db_schema()->getFieldTypeMap();
-    
-    // Get expected value
-    if (!isset($this->db_columnSize)) {
-      $size = 'normal';
-    } else {
-      $size = $this->db_columnSize;
-    }
-    
-    $dbColumnType = $map[$this->db_columnType . ':' . $size];
-    
-    // VERIFY COLUMN LENGTH
-    
-    // VERIFY COLUMN NULLNESS
-    
-    // VERIFY COLUMN  
-    
-  }*/
   
   
 }
