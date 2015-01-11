@@ -12,12 +12,12 @@ class LoginController extends Controller {
 	public function loginAction() {
 
 		$google = $this->get('kula.login.auth.googleapi');
-		
+    
     try { 
       $google->authenticate();
     } catch (\Google_Auth_Exception $e) {
       $this->get('kula.login')->logout();
-  		$this->get('session.flash_bag')->add('info', 'You have been logged out.');
+  		$this->addFlash('info', 'You have been logged out.');
   		return $this->redirect('login');
     }
 		
@@ -32,7 +32,7 @@ class LoginController extends Controller {
 	public function logoutAction() {
 		$this->get('kula.login')->logout();
 		
-		$this->get('session.flash_bag')->add('info', 'You have been successfully logged out.');
+		$this->addFlash('info', 'You have been successfully logged out.');
 		return $this->redirect('login');
 	}
 	
@@ -48,17 +48,17 @@ class LoginController extends Controller {
 				if ($first_route)
 					return $this->redirect($this->get('router')->generate($first_route));
 				else {
-					$this->get('session.flash_bag')->add('error', 'Unable to determine first route.  You have been logged out.');
+					$this->addFlash('error', 'Unable to determine first route.  You have been logged out.');
 					return $this->redirect('login');
 				}
 				
 			} else {
 				$this->get('session')->set('google_stop', true);
-				$this->get('session.flash_bag')->add('error', 'Invalid Username/Password combination.');
+				$this->addFlash('error', 'Invalid Username/Password combination.');
 				return $this->redirect('login');
 			}
 		} else {
-			$this->get('session.flash_bag')->add('error', 'Missing username and/or password.');	
+			$this->addFlash('error', 'Missing username and/or password.');	
 			return $this->redirect('login');
 		}
 	}
@@ -73,7 +73,7 @@ class LoginController extends Controller {
 			return $this->redirect($this->get('router')->generate($first_route));
 		} else {
 			$this->get('kula.login')->logout();
-			$this->get('session.flash_bag')->add('error', 'Unable to determine first route.  You have been logged out.');
+			$this->addFlash('error', 'Unable to determine first route.  You have been logged out.');
 			return $this->redirect('/login');
 		}
 	}

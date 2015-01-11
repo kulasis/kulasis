@@ -25,4 +25,8 @@ class Proxy {
     return $this->db_object->execute();
   }
   
+  public function __toString() {
+    return (string) $this->db_object;
+  }
+  
 }

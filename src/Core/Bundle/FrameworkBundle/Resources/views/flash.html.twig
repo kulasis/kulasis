@@ -1,4 +1,3 @@
-<div id="window_window_num_tab_{% if navigation_info.NAVIGATION_TYPE == 'T' %}{{navigation_info.NAVIGATION_ID}}{% else %}{{ tabsToDisplay[0]['NAVIGATION_ID'] }}{% endif %}_alert">
 {% for flashMessage in app.session.flashbag.get('error') %}
 	 <div class="alert alert-error">
 	 {{ flashMessage| raw }}
@@ -16,4 +15,3 @@
 	 {{ flashMessage| raw }}
 	 </div>
 {% endfor %}
-</div>

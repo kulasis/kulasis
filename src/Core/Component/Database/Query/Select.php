@@ -710,7 +710,7 @@ class Select extends Query implements SelectInterface {
       'arguments' => $arguments,
     );
 
-    return $alias;
+    return $this;
   }
 
   /**

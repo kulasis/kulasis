@@ -1,3 +1,34 @@
+Constituent.Constituent:
+  description: "Constituent Table"
+  db_table_name: CONS_CONSTITUENT
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: CONSTITUENT_ID
+      db_column_type: primary_serial
+      column_name: "Constituent ID"
+      label_name: "Constituent ID"
+    LastName:
+      description: "Last Name"
+      db_column_name: LAST_NAME
+      db_column_type: varchar
+      db_column_length: 200
+      field_type: text
+      field_size: 30
+      column_name: "Last Name"
+      label_name: "Last Name"
+    FirstName:
+      description: "First Name"
+      db_column_name: FIRST_NAME
+      db_column_type: varchar
+      db_column_length: 200
+      field_type: text
+      field_size: 30
+      column_name: "First Name"
+      label_name: "First Name"
+
 Core.User:
   description: "Users Table"
   db_table_name: CORE_USER
@@ -7,7 +38,8 @@ Core.User:
       description: "ID"
       primary: true
       db_column_name: USER_ID
-      db_column_type: primary_serial
+      db_column_type: serial
+      parent: Constituent.Constituent.ID
       field_type: text
       field_size: 5
       column_name: "User ID"

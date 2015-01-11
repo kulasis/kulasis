@@ -10,7 +10,7 @@
 {% block body %}
 <div id="login_form">
 <form action="{{ path( 'attempt_login') }}" method="post">
-  <div align="center" id="login_title">Oregon College of Art and Craft</div>
+  <div align="center" id="login_title">{{ instance_name }}</div>
   {% include 'KulaCoreFrameworkBundle::flash.html.twig' %}
 	<div class="group form-line">
 	<div class="form-field">

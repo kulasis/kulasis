@@ -4,7 +4,7 @@ namespace Kula\Core\Bundle\LoginBundle\Service;
 
 class LoginService {
 	
-	protected $database;
+	protected $db;
 	protected $poster_factory;
 	protected $session;
 	protected $flash;
@@ -16,11 +16,11 @@ class LoginService {
 	
 	
 	
-	public function __construct(\Kula\Component\Database\Connection $db, 
+	public function __construct(\Kula\Core\Component\DB\DB $db, 
 															$auth_google,
 															$auth_ldap,
 															$auth_local) {
-		$this->database = $db;
+		$this->db = $db;
 		$this->auth_google = $auth_google;
 		$this->auth_ldap = $auth_ldap;
 		$this->auth_local = $auth_local;
@@ -28,19 +28,20 @@ class LoginService {
 	
 	public function login($username, $password = null) {
 		
-		$or_predicate = new \Kula\Component\Database\Query\Predicate('OR');
-		$or_predicate = $or_predicate->predicate('USERNAME', $username);
-		$or_predicate = $or_predicate->predicate('USERNAME', $username.'@ocac.edu');
-		$or_predicate = $or_predicate->predicate('USERNAME', $this->auth_google->getEmailAddress());
+		$or_predicate = $this->db->db_or();
+		$or_predicate = $or_predicate->condition('USERNAME', $username);
+		$or_predicate = $or_predicate->condition('USERNAME', $username.'@ocac.edu');
+		$or_predicate = $or_predicate->condition('USERNAME', $this->auth_google->getEmailAddress());
 		
 		// check if both username and password fields completed
 		if (($username && $password) || $this->auth_google->getEmailAddress()) {
 			// get password for username
-			$result = $this->database->select('CORE_USER', 'user')
+			$result = $this->db->db_select('CORE_USER', 'user')
 				->fields('user', array('USER_ID', 'USERNAME', 'PASSWORD', 'ALLOW_AUTH_LOCAL', 'ALLOW_AUTH_LDAP', 'ALLOW_AUTH_GOOGLE'))
-				->left_join('CORE_SYSTEM_LDAP', 'ldap', array('SERVER_NAME', 'SERVER_ADDRESS', 'DOMAIN_APPEND'), 'ldap.LDAP_ID = user.LDAP_ID')
-				->predicate($or_predicate)
-				->execute()->fetch();
+				->leftJoin('CORE_SYSTEM_LDAP', 'ldap', 'ldap.LDAP_ID = user.LDAP_ID')
+        ->fields('ldap', array('SERVER_NAME', 'SERVER_ADDRESS', 'DOMAIN_APPEND'))
+				->condition($or_predicate)
+        ->execute()->fetch();
 			
 			// Make sure username exists
 			if ($result['USERNAME']) {
