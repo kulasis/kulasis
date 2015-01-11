@@ -14,7 +14,21 @@ class Schema {
   
   public $schema = array();
   
-  public function synchronize() {
+  public function synchronizeDatabaseCatalog(\Kula\Core\Component\DB\DB $db) {
+    
+    foreach($this->schema as $tableName => $table) {
+      
+      // create table
+      $this->schema[$tableName]->createTable($db, $table);
+      
+      // sync the 
+      
+    }
+    
+    // Parent keys
+    foreach($this->schema as $tableName => $table) {
+      $this->schema[$tableName]->synchronizeDatabaseCatalogParentKeys($db, $this);
+    }
     
   }
   
@@ -82,8 +96,6 @@ class Schema {
         } // end foreach fields
         
       }  // end if tables
-      
-      $this->schema[$tableName]->createTable($GLOBALS['kernel']->getContainer()->get('kula.db'), $this);
       
     } // end foreach tables
     

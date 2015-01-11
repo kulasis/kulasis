@@ -381,6 +381,15 @@ abstract class Schema implements PlaceholderInterface {
     // Don't use {} around information_schema.columns table.
     return $this->connection->query("SELECT * FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetch();
   }
+  
+  public function keyExists($table, $name) {
+    $condition = $this->buildTableNameCondition($table);
+    $condition->condition('CONSTRAINT_NAME', $name);
+    $condition->compile($this->connection, $this);
+
+    return (bool) $this->connection->query('SELECT 1 FROM information_schema.key_column_usage WHERE ' . (string) $condition, $condition->arguments())->fetchField();
+    
+  }
 
   /**
    * Returns a mapping of Drupal schema field names to DB-native field types.

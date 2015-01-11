@@ -447,6 +447,18 @@ class Schema extends DatabaseSchema {
     $this->connection->query('ALTER TABLE {' . $table . '} ADD UNIQUE KEY `' . $name . '` (' . $this->createKeySql($fields) . ')');
   }
 
+  public function addForeignKey($table, $name, $spec) {
+    if (!$this->tableExists($table)) {
+      throw new SchemaObjectDoesNotExistException("Cannot add foreign key @name to table @table: table doesn't exist.", array('@table' => $table, '@name' => $name));
+    }
+    if ($this->indexExists($table, $name)) {
+      throw new SchemaObjectExistsException("Cannot add foreign key @name to table @table: foreign key already exists.", array('@table' => $table, '@name' => $name));
+    }
+
+    $table_column = key($spec['columns']);
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT '. $name .' FOREIGN KEY (`' . $table_column . '`) REFERENCES '. $spec['table'].'(`' . $spec['columns'][$table_column] . '`)');
+  }
+
   public function dropUniqueKey($table, $name) {
     if (!$this->indexExists($table, $name)) {
       return FALSE;

@@ -1,0 +1,186 @@
+Core.User:
+  description: "Users Table"
+  db_table_name: CORE_USER
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: USER_ID
+      db_column_type: primary_serial
+      field_type: text
+      field_size: 5
+      column_name: "User ID"
+      label_name: "User ID"
+    Username:
+      description: "Username"
+      db_column_name: USERNAME
+      db_column_type: varchar
+      db_column_length: 255
+      field_type: text
+      field_size: 25
+      column_name: "Username"
+      label_name: "Username"
+    Password:
+      description: "Password"
+      db_column_name: PASSWORD
+      db_column_type: varchar
+      db_column_length: 255
+      field_type: text
+      field_size: 25
+      column_name: "Password"
+      label_name: "Password"
+    LastRoleID:
+      description: "Last Role ID"
+      db_column_name: LAST_ROLE_ID
+      db_column_type: serial
+      parent: Core.User.Role.ID
+      column_name: "Last Role ID"
+      label_name: "Last Role ID"
+    AllowAuthLocal:
+      description: "Allow Auth Local"
+      db_column_name: ALLOW_AUTH_LOCAL
+      db_column_type: char
+      db_column_length: 1
+      db_column_default: "N"
+      db_column_null: false
+      field_type: checkbox
+    AllowAuthLDAP:
+      description: "Allow Auth LDAP"
+      db_column_name: ALLOW_AUTH_LDAP
+      db_column_type: char
+      db_column_length: 1
+      db_column_default: "N"
+      db_column_null: false
+      field_type: checkbox
+    LDAPID:
+      description: "LDAP Server"
+      parent: Core.System.LDAP.ID
+      db_column_name: LDAP_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: select
+    AllowAuthGoogle:
+      description: "Allow Auth Google"
+      db_column_name: ALLOW_AUTH_GOOGLE
+      db_column_type: char
+      db_column_length: 1
+      db_column_default: "N"
+      db_column_null: false
+      field_type: checkbox
+  unique_keys:
+    Username: [ 'Core.User.Username' ]
+Core.Usergroup:
+  description: "Usergroups Table"
+  db_table_name: CORE_USERGROUP
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: USERGROUP_ID
+      db_column_type: primary_serial
+      field_type: text
+      field_size: 5
+      column_name: "Usergroup ID"
+      label_name: "Usergroup ID"
+    Name:
+      description: "Usergroup Name"
+      db_column_name: USERGROUP_NAME
+      db_column_type: varchar
+      db_column_length: 50
+      field_type: text
+      field_size: 30
+      column_name: "Usergroup Name"
+      label_name: "Usergroup Name"
+    Portal:
+      description: "Portal"
+      db_column_name: PORTAL
+      db_column_type: varchar
+      db_column_length: 10
+      field_type: lookup
+      lookup: Core.Navigation.Portal
+      column_name: "Portal"
+      label_name: "Portal"
+  unique_keys:
+    Usergroups: [ 'Core.Usergroup.Name', 'Core.Usergroup.Portal' ]
+Core.User.Role:
+  description: "User Roles Table"
+  db_table_name: CORE_USER_ROLES
+  timestamps: true
+  fields:
+    ID: 
+      description: "ID"
+      primary: true
+      db_column_name: ROLE_ID
+      db_column_type: primary_serial
+      field_type: text
+      field_size: 5
+      column_name: "Role ID"
+      label_name: "Role ID"
+    UserID:
+      description: "User ID"
+      parent: Core.User.ID
+      db_column_name: USER_ID
+      db_column_type: serial
+      field_type: text
+      field_size: 5
+      column_name: "User ID"
+      label_name: "User ID"
+    UsergroupID:
+      description: "Usergroup ID"
+      parent: Core.Usergroup.ID
+      db_column_name: USERGROUP_ID
+      db_column_type: serial
+      field_type: text
+      field_size: 5
+      column_name: "Usergroup ID"
+      label_name: "Usergroup ID"
+  unique_keys:
+    Users_Usergroups: [ 'Core.User.Role.UserID', 'Core.User.Role.UsergroupID' ]
+Core.System.LDAP:
+  description: "LDAP Servers for Authentication"
+  db_table_name: CORE_SYSTEM_LDAP
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: LDAP_ID
+      db_column_type: primary_serial
+      field_type: text
+      field_size: 5
+      column_name: "LDAP ID"
+      label_name: "LDAP ID"
+    ServerName:
+      description: "Server Name"
+      db_column_name: SERVER_NAME
+      db_column_type: varchar
+      db_column_length: 25
+      db_column_null: false
+      field_type: text
+      field_size: 15
+      column_name: "Server Name"
+      label_name: "Server Name"
+    ServerAddress:
+      description: "Server Address"
+      db_column_name: SERVER_ADDRESS
+      db_column_type: varchar
+      db_column_length: 15
+      db_column_null: false
+      field_type: text
+      field_size: 15
+      column_name: "Server Address"
+      label_name: "Server Address"
+    DomainAppend:
+      description: "Append Username for Domain Authentication"
+      db_column_name: DOMAIN_APPEND
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: true
+      field_type: text
+      field_size: 50
+      column_name: "Domain Append"
+      label_name: "Domain Append"
+  unique_keys:
+    ServerName: [ 'Core.System.LDAP.ServerName' ]

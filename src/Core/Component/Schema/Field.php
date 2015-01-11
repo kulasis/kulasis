@@ -178,15 +178,6 @@ class Field {
         $catalogFieldsForDB['DB_COLUMN_LENGTH'] = $this->db_columnLength;
       if ($catalogField['DB_COLUMN_PRIMARY'] != $this->primary) 
         $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = ($this->primary) ? 'Y' : 'N';
-      if ($this->parent) {
-        // Lookup parent schema field ID
-        $parentSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
-          ->fields('schema_fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
-          ->condition('FIELD_NAME', $this->parent)
-          ->execute()->fetch();
-        
-        $catalogFieldsForDB['PARENT_SCHEMA_FIELD_ID'] = ($parentSchemaField['SCHEMA_FIELD_ID'] AND $this->parent != $parentSchemaField['FIELD_NAME']) ? $parentSchemaField['SCHEMA_FIELD_ID'] : null;
-      }
       if ($catalogField['FIELD_TYPE'] != $this->field_type)
         $catalogFieldsForDB['FIELD_TYPE'] = $this->field_type;
       if ($catalogField['FIELD_SIZE'] != $this->field_size)
@@ -239,15 +230,6 @@ class Field {
       if ($this->db_columnDefault) 
         $catalogFieldsForDB['DB_COLUMN_DEFAULT'] = $this->db_columnDefault;
       $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = ($this->primary) ? 'Y' : 'N';
-      if ($this->parent) {
-        // Lookup parent schema field ID
-        $parentSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
-          ->fields('schema_fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
-          ->condition('FIELD_NAME', $this->parent)
-          ->execute()->fetch();
-        
-        $catalogFieldsForDB['PARENT_SCHEMA_FIELD_ID'] = ($parentSchemaField['SCHEMA_FIELD_ID']) ? $parentSchemaField['SCHEMA_FIELD_ID'] : null;
-      }
       if ($this->field_type)
         $catalogFieldsForDB['FIELD_TYPE'] = $this->field_type;
       if ($this->field_size)
@@ -280,5 +262,21 @@ class Field {
     
   }
   
+  public function synchronizeDatabaseCatalogParentKeys(\Kula\Core\Component\DB\DB $db) {
+    
+    if ($this->parent) {
+      // Lookup parent schema field ID
+      $parentSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
+        ->fields('schema_fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
+        ->condition('FIELD_NAME', $this->parent)
+        ->execute()->fetch();
+      
+      $catalogFieldsForDB['PARENT_SCHEMA_FIELD_ID'] = ($parentSchemaField['SCHEMA_FIELD_ID']) ? $parentSchemaField['SCHEMA_FIELD_ID'] : null;
+
+      $db->db_update('CORE_SCHEMA_FIELDS')->fields($catalogFieldsForDB)->condition('FIELD_NAME', $this->table->getName() . '.' .$this->name)->execute();
+    }
+    
+    
+  }
   
 }
