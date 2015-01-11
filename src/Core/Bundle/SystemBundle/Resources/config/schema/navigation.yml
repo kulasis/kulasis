@@ -75,20 +75,18 @@ Core.Navigation:
     DividerBefore:
       description: "Divider Before"
       db_column_name: DIVIDER_BEFORE
-      db_column_type: char
-      db_column_length: 1
+      db_column_type: bool
+      db_column_default: 0
       db_column_null: false
-      db_column_default: "N"
       field_type: checkbox
       column_name: "Divider Before"
       label_name: "Divider Before"
     RecordLoaded:
       description: "Record Loaded"
       db_column_name: RECORD_LOADED
-      db_column_type: char
-      db_column_length: 1
+      db_column_type: bool
+      db_column_default: 0
       db_column_null: false
-      db_column_default: "N"
       field_type: checkbox
       column_name: "Record Loaded"
       label_name: "Record Loaded"

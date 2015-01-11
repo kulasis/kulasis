@@ -259,7 +259,9 @@ class Schema extends DatabaseSchema {
       
       'date:normal'     => 'DATE',
       'datetime:normal' => 'DATETIME',
-      'time:normal'     => 'TIME'
+      'time:normal'     => 'TIME',
+      
+      'bool:normal'     => 'BOOLEAN'
     );
     return $map;
   }

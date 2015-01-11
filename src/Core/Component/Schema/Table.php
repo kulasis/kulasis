@@ -104,8 +104,9 @@ class Table {
         'not null' => ($field->getDBColumnNull() == false) ? true : false
       );
       
-      if ($field->getDBColumnDefault()) {
-        $structure['fields'][$field->getDBColumnName()]['default'] = $field->getDBColumnName();
+      $default = $field->getDBColumnDefault();      
+      if (isset($default)) {
+        $structure['fields'][$field->getDBColumnName()]['default'] = $field->getDBColumnDefault();
       }
       
       if ($field->getPrimary()) {
@@ -141,7 +142,7 @@ class Table {
       if ($catalogTable['SCHEMA_CLASS'] != $this->class) 
         $catalogFields['SCHEMA_CLASS'] = ($this->class) ? $this->class : null;
       if ($catalogTable['TIMESTAMPS'] != $this->timestamps) 
-        $catalogFields['TIMESTAMPS'] = ($this->timestamps) ? 'Y' : 'N';
+        $catalogFields['TIMESTAMPS'] = ($this->timestamps) ? 1 : 0;
       
       if (count($catalogFields) > 0)
         $db->db_update('CORE_SCHEMA_TABLES')->fields($catalogFields)->condition('TABLE_NAME', $this->name)->execute();
@@ -152,7 +153,7 @@ class Table {
       if ($this->class)
         $catalogFields['SCHEMA_CLASS'] = $this->class;
       if ($this->timestamps)
-        $catalogFields['TIMESTAMPS'] = ($this->timestamps) ? 'Y' : 'N';
+        $catalogFields['TIMESTAMPS'] = ($this->timestamps) ? 1 : 0;
       $db->db_insert('CORE_SCHEMA_TABLES')->fields($catalogFields)->execute();
     }
     

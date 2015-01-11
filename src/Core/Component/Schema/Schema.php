@@ -80,6 +80,7 @@ class Schema {
                            isset($field['db_column_length']) ? $field['db_column_length'] : null,
                            isset($field['db_column_precision']) ? $field['db_column_precision'] : null,
                            isset($field['db_column_null']) ? $field['db_column_null'] : null,
+                           isset($field['db_column_default']) ? $field['db_column_default'] : null,
                            isset($field['class']) ? $field['class'] : null,
                            isset($field['field_type']) ? $field['field_type'] : null,
                            isset($field['field_size']) ? $field['field_size'] : null,
@@ -111,7 +112,7 @@ class Schema {
     
   }
   
-  private function loadField($bundlePath, $tableName, $name, $description, $primary, $parent, $db_columnName, $db_columnType, $db_columnSize, $db_columnLength, $db_columnPrecision, $db_columnNull, $class, $field_type, $field_size, $field_cols, $field_rows, $chooserClass, $lookup, $columnName, $labelName, $labelPosition, $updateField) {
+  private function loadField($bundlePath, $tableName, $name, $description, $primary, $parent, $db_columnName, $db_columnType, $db_columnSize, $db_columnLength, $db_columnPrecision, $db_columnNull, $db_columnDefault, $class, $field_type, $field_size, $field_cols, $field_rows, $chooserClass, $lookup, $columnName, $labelName, $labelPosition, $updateField) {
     
     if (isset($this->schema[$tableName])) {
       
@@ -127,6 +128,7 @@ class Schema {
         if ($db_columnLength) $field->setDBColumnLength($db_columnLength);
         if ($db_columnPrecision) $field->setDBColumnPrecision($db_columnPrecision);
         if ($db_columnNull) $field->setDBColumnNull($db_columnNull);
+        if (isset($db_columnDefault)) $field->setDBColumnDefault($db_columnDefault);
         if ($class) $field->setClass($class);
         if ($field_type) $field->setFieldType($field_type);
         if ($field_size) $field->setFieldSIze($field_size);

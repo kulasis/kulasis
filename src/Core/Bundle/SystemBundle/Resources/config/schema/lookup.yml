@@ -34,9 +34,8 @@ Core.Lookup.Table:
     Update:
       description: "Update Lookup Table"
       db_column_name: LOOKUP_TABLE_UPDATE
-      db_column_type: char
-      db_column_length: 1
-      db_column_null: false
+      db_column_type: bool
+      db_column_default: 0
       field_type: checkbox
       column_name: "Update Lookup Table"
       label_name: "Update Lookup Table"

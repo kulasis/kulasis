@@ -46,10 +46,9 @@ Core.Schema.Table:
     Timestamps:
       description: "Table contains the timestamp fields"
       db_column_name: TIMESTAMPS
-      db_column_type: char
-      db_column_length: 1
+      db_column_type: bool
+      db_column_default: 0
       db_column_null: false
-      db_column_default: "N"
       field_type: checkbox
       column_name: "Timestamps"
       label_name: "Timestamps"
@@ -120,9 +119,8 @@ Core.Schema.Field:
     db_column_Null:
       description: "Allow Null"
       db_column_name: DB_COLUMN_NULL
-      db_column_type: char
-      db_column_length: 1
-      db_column_default: "Y"
+      db_column_type: bool
+      db_column_default: 0
       db_column_null: false
       field_type: text
       column_name: "DB Column Null"
@@ -140,9 +138,8 @@ Core.Schema.Field:
     db_column_Primary:
       description: "DB Column Primary"
       db_column_name: DB_COLUMN_PRIMARY
-      db_column_type: char
-      db_column_length: 1
-      db_column_default: "N"
+      db_column_type: bool
+      db_column_default: 0
       db_column_null: false
       field_type: checkbox
       column_name: "DB Column Primary"

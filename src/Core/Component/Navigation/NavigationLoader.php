@@ -53,9 +53,9 @@ class NavigationLoader {
         if ($catalogNavigationTable['DISPLAY_NAME'] != $nav['display_name']) 
           $navFields['DISPLAY_NAME'] = $nav['display_name'];
         if (isset($nav['divider_before']) AND $catalogNavigationTable['DIVIDER_BEFORE'] != $nav['divider_before']) 
-          $navFields['DIVIDER_BEFORE'] = (isset($nav['divider_before']) AND $nav['divider_before']) ? 'Y' : 'N';
+          $navFields['DIVIDER_BEFORE'] = (isset($nav['divider_before']) AND $nav['divider_before']) ? 1 : 0;
         if (isset($nav['record_loaded']) AND $catalogNavigationTable['RECORD_LOADED'] != $nav['record_loaded']) 
-          $navFields['RECORD_LOADED'] = (isset($nav['record_loaded']) AND $nav['record_loaded']) ? 'Y' : 'N';
+          $navFields['RECORD_LOADED'] = (isset($nav['record_loaded']) AND $nav['record_loaded']) ? 1 : 0;
         if (isset($nav['route']) AND $catalogNavigationTable['ROUTE'] != $nav['route']) 
           $navFields['ROUTE'] = $nav['route'];
         if (isset($nav['confirmation_message']) AND $catalogNavigationTable['CONFIRMATION_MESSAGE'] != $nav['confirmation_message']) 
@@ -85,8 +85,8 @@ class NavigationLoader {
         $navFields['PORTAL'] = $nav['portal'];
         $navFields['SORT'] = (isset($nav['sort'])) ? $nav['sort'] : null;
         $navFields['DISPLAY_NAME'] = $nav['display_name'];
-        $navFields['DIVIDER_BEFORE'] = (isset($nav['divider_before']) AND $nav['divider_before']) ? 'Y' : 'N';
-        $navFields['RECORD_LOADED'] = (isset($nav['record_loaded']) AND $nav['record_loaded']) ? 'Y' : 'N';
+        $navFields['DIVIDER_BEFORE'] = (isset($nav['divider_before']) AND $nav['divider_before']) ? 1 : 0;
+        $navFields['RECORD_LOADED'] = (isset($nav['record_loaded']) AND $nav['record_loaded']) ? 1 : 0;
         $navFields['ROUTE'] = (isset($nav['route'])) ? $nav['route'] : null;
         $navFields['CONFIRMATION_MESSAGE'] = (isset($nav['confirmation_message'])) ? $nav['confirmation_message'] : null;
         $navID = $db->db_insert('CORE_NAVIGATION')->fields($navFields)->execute();

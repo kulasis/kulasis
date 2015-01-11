@@ -34,23 +34,22 @@ Core.User:
       description: "Last Role ID"
       db_column_name: LAST_ROLE_ID
       db_column_type: serial
+      db_column_null: true
       parent: Core.User.Role.ID
       column_name: "Last Role ID"
       label_name: "Last Role ID"
     AllowAuthLocal:
       description: "Allow Auth Local"
       db_column_name: ALLOW_AUTH_LOCAL
-      db_column_type: char
-      db_column_length: 1
-      db_column_default: "N"
+      db_column_type: bool
+      db_column_default: 0
       db_column_null: false
       field_type: checkbox
     AllowAuthLDAP:
       description: "Allow Auth LDAP"
       db_column_name: ALLOW_AUTH_LDAP
-      db_column_type: char
-      db_column_length: 1
-      db_column_default: "N"
+      db_column_type: bool
+      db_column_default: 0
       db_column_null: false
       field_type: checkbox
     LDAPID:
@@ -63,9 +62,8 @@ Core.User:
     AllowAuthGoogle:
       description: "Allow Auth Google"
       db_column_name: ALLOW_AUTH_GOOGLE
-      db_column_type: char
-      db_column_length: 1
-      db_column_default: "N"
+      db_column_type: bool
+      db_column_default: 0
       db_column_null: false
       field_type: checkbox
   unique_keys:
@@ -184,3 +182,77 @@ Core.System.LDAP:
       label_name: "Domain Append"
   unique_keys:
     ServerName: [ 'Core.System.LDAP.ServerName' ]
+Log.Session:
+  description: "Log Session"
+  db_table_name: LOG_SESSION
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SESSION_ID
+      db_column_type: primary_serial
+      field_type: text
+      field_size: 5
+      column_name: "Session ID"
+      label_name: "Session ID"
+    UserID:
+      description: "User ID"
+      db_column_name: USER_ID
+      db_column_type: serial
+      parent: Core.User.ID
+      field_type: text
+      field_size: 5
+      column_name: "User ID"
+      label_name: "User ID"
+    RoleID:
+      description: "Role ID"
+      db_column_name: ROLE_ID
+      db_column_type: serial
+      parent: Core.User.Role.ID
+      field_type: text
+      field_size: 5
+      column_name: "Role ID"
+      label_name: "Role ID"
+    InTime:
+      description: "In Time"
+      db_column_name: IN_TIME
+      db_column_type: datetime
+      field_type: datetime
+      field_size: 8
+      column_name: "In Time"
+      label_name: "In Time"
+    OutTime:
+      description: "Out Time"
+      db_column_name: OUT_TIME
+      db_column_type: datetime
+      field_type: datetime
+      field_size: 8
+      column_name: "Out Time"
+      label_name: "Out Time"
+    IPAddress:
+      description: "IP Address"
+      db_column_name: IP_ADDRESS
+      db_column_type: varchar
+      db_column_length: 15
+      db_column_null: true
+      field_type: text
+      field_size: 10
+      column_name: "IP Address"
+      label_name: "IP Address"
+    AuthMethod:
+      description: "Auth Method"
+      db_column_name: AUTH_METHOD
+      db_column_type: varchar
+      db_column_length: 20
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Auth Method"
+      label_name: "Auth Method"
+    Impersonated:
+      description: "Impersonated"
+      db_column_name: IMPERSONATED
+      db_column_type: bool
+      db_column_default: 0
+      column_name: "Impersonated"
+      label_name: "Impersonated"

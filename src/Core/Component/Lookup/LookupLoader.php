@@ -61,12 +61,14 @@ class LookupLoader {
       
       $lookupTableID = $catalogLookupTable['LOOKUP_TABLE_ID'];
       
+      $lookupTableFields = array();
+      
       if ($catalogLookupTable['LOOKUP_TABLE_NAME']) {
         
         if ($catalogLookupTable['LOOKUP_TABLE_DESCRIPTION'] != $lookupTable['description']) 
           $lookupTableFields['LOOKUP_TABLE_DESCRIPTION'] = $lookupTable['description'];
         if ($catalogLookupTable['LOOKUP_TABLE_UPDATE'] != $lookupTable['allow_update'])
-          $lookupTableFields['LOOKUP_TABLE_UPDATE'] = ($lookupTable['allow_update']) ? 'Y' : 'N';
+          $lookupTableFields['LOOKUP_TABLE_UPDATE'] = ($lookupTable['allow_update']) ? 1 : 0;
         if (count($lookupTableFields) > 0)
           $db->db_update('CORE_LOOKUP_TABLES')->fields($lookupTableFields)->condition('LOOKUP_TABLE_NAME', $lookupTableName)->execute();
         
@@ -74,7 +76,7 @@ class LookupLoader {
         
         $lookupTableFields['LOOKUP_TABLE_NAME'] = $lookupTableName;
         $lookupTableFields['LOOKUP_TABLE_DESCRIPTION'] = $lookupTable['description'];
-        $lookupTableFields['LOOKUP_TABLE_UPDATE'] = ($lookupTable['allow_update']) ? 'Y' : 'N';
+        $lookupTableFields['LOOKUP_TABLE_UPDATE'] = ($lookupTable['allow_update']) ? 1 : 0;
         $lookupTableID = $db->db_insert('CORE_LOOKUP_TABLES')->fields($lookupTableFields)->execute();
         
       }

@@ -177,7 +177,9 @@ class Field {
       if ($catalogField['DB_COLUMN_LENGTH'] != $this->db_columnLength) 
         $catalogFieldsForDB['DB_COLUMN_LENGTH'] = $this->db_columnLength;
       if ($catalogField['DB_COLUMN_PRIMARY'] != $this->primary) 
-        $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = ($this->primary) ? 'Y' : 'N';
+        $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = ($this->primary) ? 1 : 0;
+      if ($catalogField['DB_COLUMN_DEFAULT'] != $this->db_columnDefault) 
+        $catalogFieldsForDB['DB_COLUMN_DEFAULT'] = $this->db_columnDefault;
       if ($catalogField['FIELD_TYPE'] != $this->field_type)
         $catalogFieldsForDB['FIELD_TYPE'] = $this->field_type;
       if ($catalogField['FIELD_SIZE'] != $this->field_size)
@@ -226,10 +228,10 @@ class Field {
         $catalogFieldsForDB['DB_COLUMN_LENGTH'] = $this->db_columnLength;
       if ($this->db_columnPrecision) 
         $catalogFieldsForDB['DB_COLUMN_PRECISION'] = $this->db_columnPrecision;
-      $catalogFieldsForDB['DB_COLUMN_NULL'] = ($this->db_columnNull) ? 'Y' : 'N';
+      $catalogFieldsForDB['DB_COLUMN_NULL'] = ($this->db_columnNull) ? 1 : 0;
       if ($this->db_columnDefault) 
         $catalogFieldsForDB['DB_COLUMN_DEFAULT'] = $this->db_columnDefault;
-      $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = ($this->primary) ? 'Y' : 'N';
+      $catalogFieldsForDB['DB_COLUMN_PRIMARY'] = ($this->primary) ? 1 : 0;
       if ($this->field_type)
         $catalogFieldsForDB['FIELD_TYPE'] = $this->field_type;
       if ($this->field_size)
