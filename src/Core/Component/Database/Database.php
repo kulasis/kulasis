@@ -109,8 +109,8 @@ abstract class Database {
         }
       }
     }
-
     self::$logs[$key]->start($logging_key);
+
     return self::$logs[$key];
   }
 
@@ -137,7 +137,7 @@ abstract class Database {
       return NULL;
     }
     $queries = self::$logs[$key]->get($logging_key);
-    self::$logs[$key]->end($logging_key);
+    //self::$logs[$key]->end($logging_key);  // COMMENTED OUT BY MAKOA JACOBSEN.  SYMFONY CALLS THE METHOD TWICE FOR LOGGING.
     return $queries;
   }
 
