@@ -7,8 +7,8 @@ use Kula\Core\Component\DefinitionLoader\DefinitionLoader;
 use Kula\Core\Component\Database\Database;
 use Kula\Core\Component\Database\Query\Condition;
 
-use Kula\Core\Component\Schema\Table;
-use Kula\Core\Component\Schema\Field;
+use Kula\Core\Component\Schema\TableLoader;
+use Kula\Core\Component\Schema\FieldLoader;
 
 class SchemaLoader {
   
@@ -106,7 +106,7 @@ class SchemaLoader {
     
     if (!isset($this->schema[$name])) {
     
-      $this->schema[$name] = new Table($bundlePath, $name, $description, $db_tableName, $class, $qualified, $timestamps, $unique_keys);
+      $this->schema[$name] = new TableLoader($bundlePath, $name, $description, $db_tableName, $class, $qualified, $timestamps, $unique_keys);
     
     }
     
@@ -118,7 +118,7 @@ class SchemaLoader {
       
       if (!$this->schema[$tableName]->getField($name)) {
         
-        $field = new Field($this->schema[$tableName], $name, $description);
+        $field = new FieldLoader($this->schema[$tableName], $name, $description);
         
         if ($primary) $field->setPrimary(true);
         if ($parent) $field->setParent($parent);

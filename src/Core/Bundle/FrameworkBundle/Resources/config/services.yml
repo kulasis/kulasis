@@ -1,15 +1,29 @@
+parameters:
+  kula.schema.options.cache_class: kula%kernel.environment%SchemaCache
+
 services:
   kula.db:
     class:        Kula\Core\Component\DB\DB
     arguments:    [ %kernel.root_dir% , %kernel.environment% ]
-  data_collector.database:
+  kula.data_collector.database:
     class: Kula\Core\Component\DB\DataCollector\DatabaseDataCollector
     arguments: ["@kula.db"]
     priority: 255
     tags:
       - { name: data_collector, template: "KulaCoreFrameworkBundle:Collector:database.html.twig", id: "database" }
-  kula_listener_authenticated_user:
+  kula.listener.authenticated_user:
     class: Kula\Core\Bundle\FrameworkBundle\EventListener\AuthenticatedUserListener
     arguments: ["@router", "@service_container"]
     tags:
       - { name: kernel.event_subscriber }
+  
+  kula.schema.cache:
+    class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\SchemaCacheWarmer
+    public: false
+    arguments: ["@kula.schema"]
+    tags:
+      - { name: kernel.cache_warmer }
+  
+  kula.schema:
+    class: Kula\Core\Component\Schema\SchemaStore
+    arguments: ["@kula.db", %kula.schema.options.cache_class%, %kernel.cache_dir%, %kernel.debug%]

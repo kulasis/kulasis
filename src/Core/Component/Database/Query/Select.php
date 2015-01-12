@@ -625,6 +625,13 @@ class Select extends Query implements SelectInterface {
 
     return $this;
   }
+  
+  public function expression($expression, $alias = NULL, $arguments = array()) {
+    
+    $this->addExpression($expression, $alias, $arguments);
+    
+    return $this;
+  }
 
   /**
    * {@inheritdoc}
