@@ -604,7 +604,7 @@ class Select extends Query implements SelectInterface {
       'table' => $table_alias,
       'alias' => $alias,
     );
-
+    
     return $alias;
   }
 
@@ -613,9 +613,12 @@ class Select extends Query implements SelectInterface {
    */
   public function fields($table_alias, array $fields = array()) {
     if ($fields) {
-      foreach ($fields as $field) {
+      foreach ($fields as $key => $field) {
         // We don't care what alias was assigned.
-        $this->addField($table_alias, $field);
+        if (is_string($key))
+          $this->addField($table_alias, $key, $field);
+        else
+          $this->addField($table_alias, $field);
       }
     }
     else {

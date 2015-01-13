@@ -1,0 +1,20 @@
+parameters:
+  kula.schema.options.cache_class: kula%kernel.environment%SchemaCache
+
+services:
+  kula.schema.cache:
+    class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\SchemaCacheWarmer
+    public: false
+    arguments: ["@kula.schema_store"]
+    tags:
+      - { name: kernel.cache_warmer }
+  
+  kula.schema_store:
+    class: Kula\Core\Component\Schema\SchemaStore
+    arguments: ["@kula.db", %kula.schema.options.cache_class%, %kernel.cache_dir%, %kernel.debug%] 
+    
+  kula.schema:
+    class: Kula\Core\Component\Schema\Schema
+    factory_service: kula.schema_store
+    factory_method: getSchema
+    arguments: ["@kula.db"] 

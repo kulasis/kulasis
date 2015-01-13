@@ -4,6 +4,7 @@ namespace Kula\Core\Component\Schema;
 
 use Kula\Core\Component\Cache\DBCacheConfig;
 use Kula\Core\Component\Schema\Table;
+use Kula\Core\Component\Schema\Field;
 
 class Schema {
   
@@ -28,9 +29,22 @@ class Schema {
     
   }
   
-  private function loadFields() {
+  public function loadFields() {
     
-    
+    $fieldResults = $this->db->db_select('CORE_SCHEMA_FIELDS', 'fields')
+      ->fields('fields')
+      ->join('CORE_SCHEMA_TABLES', 'tables', 'tables.SCHEMA_TABLE_ID = fields.SCHEMA_TABLE_ID')
+      ->fields('tables', array('TABLE_NAME'))
+      ->leftJoin('CORE_SCHEMA_FIELDS', 'parentfield', 'parentfield.SCHEMA_FIELD_ID = fields.PARENT_SCHEMA_FIELD_ID')
+      ->fields('parentfield', array('FIELD_NAME' => 'parentfield_FIELD_NAME'))
+      ->leftJoin('CORE_SCHEMA_FIELDS', 'updatefield', 'updatefield.SCHEMA_FIELD_ID = fields.UPDATE_FIELD_ID')
+      ->fields('updatefield', array('FIELD_NAME' => 'updatefield_FIELD_NAME'))
+      ->execute();
+    while ($fieldRow = $fieldResults->fetch()) {
+      
+      $this->fields[$fieldRow['FIELD_NAME']] = new Field($fieldRow['FIELD_NAME'], $fieldRow['SCHEMA_FIELD_ID'], $fieldRow['DB_COLUMN_NAME'], $fieldRow['DB_COLUMN_TYPE'], $fieldRow['DB_COLUMN_LENGTH'], $fieldRow['DB_COLUMN_PRECISION'], $fieldRow['DB_COLUMN_NULL'], $fieldRow['DB_COLUMN_DEFAULT'], $fieldRow['DB_COLUMN_PRIMARY'], $fieldRow['parentfield_FIELD_NAME'], $fieldRow['FIELD_NAME'], $fieldRow['FIELD_TYPE'], $fieldRow['FIELD_SIZE'], $fieldRow['FIELD_COLUMN_LENGTH'], $fieldRow['FIELD_ROW_HEIGHT'], $fieldRow['CLASS'], $fieldRow['LOOKUP'], $fieldRow['COLUMN_NAME'], $fieldRow['LABEL_NAME'], $fieldRow['LABEL_POSITION'], $fieldRow['updatefield_FIELD_NAME']);
+      
+    }
     
   }
   

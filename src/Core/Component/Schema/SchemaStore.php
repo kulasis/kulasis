@@ -25,6 +25,7 @@ class SchemaStore implements WarmableInterface {
 
       $schema = new Schema($this->db);
       $schema->loadTables();
+      $schema->loadFields();
       $cache->write(serialize($schema));
       
     }
@@ -34,9 +35,9 @@ class SchemaStore implements WarmableInterface {
   }
   
   public function getSchema() {
-    
     if (!$this->schema)
       $this->warmUp($this->cacheDir);
+    return $this->schema;
   }
     
   

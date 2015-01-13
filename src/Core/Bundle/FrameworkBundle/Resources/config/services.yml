@@ -1,6 +1,3 @@
-parameters:
-  kula.schema.options.cache_class: kula%kernel.environment%SchemaCache
-
 services:
   kula.db:
     class:        Kula\Core\Component\DB\DB
@@ -16,14 +13,3 @@ services:
     arguments: ["@router", "@service_container"]
     tags:
       - { name: kernel.event_subscriber }
-  
-  kula.schema.cache:
-    class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\SchemaCacheWarmer
-    public: false
-    arguments: ["@kula.schema"]
-    tags:
-      - { name: kernel.cache_warmer }
-  
-  kula.schema:
-    class: Kula\Core\Component\Schema\SchemaStore
-    arguments: ["@kula.db", %kula.schema.options.cache_class%, %kernel.cache_dir%, %kernel.debug%]
