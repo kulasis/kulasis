@@ -16,10 +16,7 @@ class LoginService {
   
   
   
-  public function __construct(\Kula\Core\Component\DB\DB $db, 
-                              $auth_google,
-                              $auth_ldap,
-                              $auth_local) {
+  public function __construct(\Kula\Core\Component\DB\DB $db, $auth_google, $auth_ldap, $auth_local) {
     $this->db = $db;
     $this->auth_google = $auth_google;
     $this->auth_ldap = $auth_ldap;

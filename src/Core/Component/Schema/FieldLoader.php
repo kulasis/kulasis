@@ -2,7 +2,7 @@
 
 namespace Kula\Core\Component\Schema;
 
-class Field {
+class FieldLoader {
   
   private $table;
   private $name;

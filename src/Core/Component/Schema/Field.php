@@ -2,6 +2,7 @@
 
 namespace Kula\Core\Component\Schema;
 
+use Kula\Core\Component\Schema\Table;
 
 class Field {
   
@@ -26,8 +27,12 @@ class Field {
   private $labelName;
   private $labelPosition;
   private $updateField;
+  
+  private $table;
 
-  public function __construct($name, $db_ID, $db_Name, $db_Type, $db_Length, $db_Precision, $db_Null, $db_Default, $db_Primary, $db_ParentField, $field_Name, $field_Type, $field_Size, $field_ColumnLength, $field_RowHeight, $field_Class, $lookup, $columnName, $labelName, $labelPosition, $updateField) {
+  public function __construct(Table $table, $name, $db_ID, $db_Name, $db_Type, $db_Length, $db_Precision, $db_Null, $db_Default, $db_Primary, $db_ParentField, $field_Name, $field_Type, $field_Size, $field_ColumnLength, $field_RowHeight, $field_Class, $lookup, $columnName, $labelName, $labelPosition, $updateField) {
+    
+    $this->table = $table;
     
     $this->name = $name;
     $this->db_ID = $db_ID;
@@ -53,8 +58,21 @@ class Field {
     
   }
   
+  public function getClass() {
+    return $this->field_Class;
+  }
+  
   public function getName() {
     return $this->name;
+  }
+  
+  public function getDBName() {
+    return $this->db_Name;
+  }
+  
+  public function isPrimary() {
+    if ($this->db_Primary)
+      return true;
   }
   
 }

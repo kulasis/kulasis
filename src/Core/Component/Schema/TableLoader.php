@@ -4,7 +4,7 @@ namespace Kula\Core\Component\Schema;
 
 use Kula\Core\Component\Schema\FieldLoader;
 
-class Table {
+class TableLoader {
   
   private $name;
   private $description;

@@ -1,20 +1,64 @@
-parameters:
-  kula.schema.options.cache_class: kula%kernel.environment%SchemaCache
-
-services:
-  kula.schema.cache:
-    class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\SchemaCacheWarmer
-    public: false
-    arguments: ["@kula.schema_store"]
-    tags:
-      - { name: kernel.cache_warmer }
-  
-  kula.schema_store:
-    class: Kula\Core\Component\Schema\SchemaStore
-    arguments: ["@kula.db", %kula.schema.options.cache_class%, %kernel.cache_dir%, %kernel.debug%] 
-    
-  kula.schema:
-    class: Kula\Core\Component\Schema\Schema
-    factory_service: kula.schema_store
-    factory_method: getSchema
-    arguments: ["@kula.db"] 
+Log.Audit.Changes:
+  description: "Audit Change Log"
+  db_table_name: LOG_AUDIT_CHANGES
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: AUDIT_ID
+      db_column_type: primary_serial
+      column_name: "Audit Log ID"
+      label_name: "Audit Log ID"
+    UserID:
+      description: "User ID"
+      db_column_name: USER_ID
+      db_column_type: serial
+      db_column_null: false
+      parent: Core.User.ID
+      column_name: "User ID"
+      label_name: "User ID"
+    SessionID:
+      description: "Session ID"
+      db_column_name: LOG_SESSION
+      db_column_type: serial
+      db_column_null: true
+      parent: Log.Session.ID
+      column_name: "Session Log ID"
+      label_name: "Session Log ID"
+    CRUDOperation:
+      description: "CRUD Operation"
+      db_column_name: CRUD_OPERATION
+      db_column_type: char
+      db_column_length: 1
+      column_name: "CRUD Operation"
+      label_name: "CRUD Operation"
+    TableName:
+      description: "Table Name"
+      db_column_name: TABLE_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      column_name: "Table Name"
+      label_name: "Table Name"
+    RecordID:
+      description: "Record ID"
+      db_column_name: RECORD_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Record ID"
+      label_name: "Record ID"
+    OldRecord:
+      description: "Old Record"
+      db_column_name: OLD_RECORD
+      db_column_type: text
+      db_column_null: true
+      column_name: "Old Record"
+      label_name: "Old Record"
+    NewRecord:
+      description: "New Record"
+      db_column_name: NEW_RECORD
+      db_column_type: text
+      db_column_null: true
+      column_name: "New Record"
+      label_name: "New Record"
