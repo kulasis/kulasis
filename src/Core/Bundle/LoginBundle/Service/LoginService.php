@@ -16,8 +16,10 @@ class LoginService {
   
   
   
-  public function __construct(\Kula\Core\Component\DB\DB $db, $auth_google, $auth_ldap, $auth_local) {
+  public function __construct(\Kula\Core\Component\DB\DB $db, $schema, $session, $auth_google, $auth_ldap, $auth_local) {
     $this->db = $db;
+    $this->schema = $schema;
+    $this->session = $session;
     $this->auth_google = $auth_google;
     $this->auth_ldap = $auth_ldap;
     $this->auth_local = $auth_local;
@@ -92,7 +94,7 @@ class LoginService {
   }
   
   public function establishSession($user_id) {
-    $this->kula_session->loadUser($user_id);
+    $this->session->loadUser($user_id);
   }
   
 }

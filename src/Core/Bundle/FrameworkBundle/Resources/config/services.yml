@@ -28,4 +28,4 @@ services:
     
   kula.core.session:
     class: Kula\Core\Bundle\FrameworkBundle\Service\Session
-    arguments: ["@kula.core.db", "@session", "@request_stack"]
+    arguments: ["@session", "@kula.core.db", "@request_stack"]

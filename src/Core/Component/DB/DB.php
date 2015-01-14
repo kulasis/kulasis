@@ -366,6 +366,7 @@ class DB {
     if (empty($options['target']) || $options['target'] == 'replica') {
       $options['target'] = 'write';
     }
+    $options['return'] = Database::RETURN_INSERT_ID;
     return new Proxy(Database::getConnection($options['target'])->insert($table, $options));
   }
 
@@ -402,6 +403,7 @@ class DB {
     if (empty($options['target']) || $options['target'] == 'replica') {
       $options['target'] = 'write';
     }
+    $options['return'] = Database::RETURN_AFFECTED;
     return new Proxy(Database::getConnection($options['target'])->update($table, $options));
   }
 

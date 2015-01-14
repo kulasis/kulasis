@@ -10,7 +10,7 @@ class Session {
   private $request;
   
   public function __construct(\Symfony\Component\HttpFoundation\Session\Session $session,
-                              \Kula\Core\Component\Database\DB $db, 
+                              \Kula\Core\Component\DB\DB $db, 
                               $request) {
       $this->db = $db;
       $this->session = $session;
@@ -41,19 +41,21 @@ class Session {
   public function loadRole($user_id, $role_id = null) {
     
     // Load Role
-    $role_info = $this->db->select('CORE_USER_ROLES', 'roles')
+    $role_info = $this->db->db_select('CORE_USER_ROLES', 'roles')
       ->fields('roles', array('ROLE_ID', 'ORGANIZATION_ID', 'TERM_ID', 'ADMINISTRATOR', 'LAST_ORGANIZATION_ID', 'LAST_TERM_ID'))
-      ->join('CORE_USERGROUP', 'usergroups', array('USERGROUP_ID','USERGROUP_NAME', 'PORTAL'), 'usergroups.USERGROUP_ID = roles.USERGROUP_ID')
-      ->join('CORE_USER', 'user', array('USERNAME', 'USER_ID'), 'roles.USER_ID = user.USER_ID')
-      ->join('CONS_CONSTITUENT', 'constituent', array('EMAIL', 'FIRST_NAME', 'LAST_NAME'), 'user.USER_ID = constituent.CONSTITUENT_ID')
-      ->predicate('roles.USER_ID', $user_id);
+      ->join('CORE_USERGROUP', 'usergroups', 'usergroups.USERGROUP_ID = roles.USERGROUP_ID')
+      ->fields('usergroups', array('USERGROUP_ID','USERGROUP_NAME', 'PORTAL'))
+      ->join('CORE_USER', 'user', 'roles.USER_ID = user.USER_ID')
+      ->fields('user', array('USERNAME', 'USER_ID'))
+      ->join('CONS_CONSTITUENT', 'constituent', 'user.USER_ID = constituent.CONSTITUENT_ID')
+      ->fields('constituent', array('EMAIL', 'FIRST_NAME', 'LAST_NAME'))
+      ->condition('roles.USER_ID', $user_id);
     if ($role_id) {
-      $role_info = $role_info->predicate('roles.ROLE_ID', $role_id);
+      $role_info = $role_info->condition('roles.ROLE_ID', $role_id);
     }
-    $role_info = $role_info->order_by('ROLE_DEFAULT', 'DESC', 'roles');
+    $role_info = $role_info->orderBy('ROLE_DEFAULT', 'DESC');
     
-    $role_info = $role_info
-      ->execute()->fetch();
+    $role_info = $role_info->execute()->fetch();
       
     $role = array(
         'username' => $role_info['USERNAME'],
@@ -166,28 +168,26 @@ class Session {
       'IN_TIME' => date('Y-m-d H:i:s'),
       'IP_ADDRESS' => isset($this->request->server) ? $this->request->server->get('REMOTE_ADDR') : null,
     );
-    $session_poster = $this->poster_factory->newPoster(array('LOG_SESSION' => array('new' => $session_data)));
-    $session_id = $session_poster->getResultForTable('insert', 'LOG_SESSION')['new'];
+    $session_id = $this->db->db_insert('LOG_SESSION')->fields($session_data)->execute();
     return $session_id;
   }
   
   private function logClosedSession($session_id) {
     try {
-      $this->poster_factory->newPoster(null, array('LOG_SESSION' => array($session_id => array('OUT_TIME' => date('Y-m-d H:i:s')))));
-      return true;
+      return $this->db->db_update('LOG_SESSION')->fields(array('OUT_TIME' => date('Y-m-d H:i:s')))->condition('SESSION_ID', $session_id)->execute();
     } catch (\Exception $e) {
       return false;
     }
   }
   
   private function currentTermForOrganization($organization_ids) {
-    $term_results = $this->db->select('CORE_TERM', 'terms')
+    $term_results = $this->db->db_select('CORE_TERM', 'terms')
       ->fields('terms', array('TERM_ID', 'TERM_ABBREVIATION', 'TERM_NAME', 'FINANCIAL_AID_YEAR'))
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', null, 'orgterm.TERM_ID = terms.TERM_ID')
-      ->predicate('orgterm.ORGANIZATION_ID', $organization_ids)
-      ->predicate('END_DATE', date('Y-m-d', strtotime('-7 days')), '>=')
-      ->order_by('START_DATE', 'ASC')
-      ->order_by('END_DATE', 'ASC')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.TERM_ID = terms.TERM_ID')
+      ->condition('orgterm.ORGANIZATION_ID', $organization_ids)
+      ->condition('END_DATE', date('Y-m-d', strtotime('-7 days')), '>=')
+      ->orderBy('START_DATE', 'ASC')
+      ->orderBy('END_DATE', 'ASC')
       ->execute()
       ->fetch();
     return $term_results;

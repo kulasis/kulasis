@@ -17,4 +17,4 @@ services:
 
   kula.login:
     class:        %kula_login.class%
-    arguments:    ["@kula.core.db", "@kula.core.schema", "@kula.login.auth.googleapi", "@kula.login.auth.ldap", "@kula.login.auth.local"]
+    arguments:    ["@kula.core.db", "@kula.core.schema", "@kula.core.session", "@kula.login.auth.googleapi", "@kula.login.auth.ldap", "@kula.login.auth.local"]
