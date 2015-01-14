@@ -1,11 +1,10 @@
+parameters:
+  kula.core.poster_factory.class: Kula\Core\Component\DB\PosterFactory
+
 services:
   kula.core.db:
     class:        Kula\Core\Component\DB\DB
     arguments:    [ %kernel.root_dir% , %kernel.environment% ]
-  kula.core.poster:
-    class: Kula\Core\Component\DB\Poster
-    arguments: ["@kula.core.db", "@request_stack", "@kula.core.schema"]
-    scope: prototype
   kula.core.data_collector.database:
     class: Kula\Core\Component\DB\DataCollector\DatabaseDataCollector
     arguments: ["@kula.core.db"]
@@ -17,3 +16,16 @@ services:
     arguments: ["@router", "@service_container"]
     tags:
       - { name: kernel.event_subscriber }
+
+  kula.core.poster_factory:
+    class: Kula\Core\Component\DB\PosterFactory
+    public: false
+  
+  kula.core.poster:
+    class: Kula\Core\Component\DB\Poster
+    factory: ["%kula.core.poster_factory.class%", "getPoster"]
+    arguments: ["@kula.core.db", "@request_stack", "@kula.core.schema"]
+    
+  kula.core.session:
+    class: Kula\Core\Bundle\FrameworkBundle\Service\Session
+    arguments: ["@kula.core.db", "@session", "@request_stack"]

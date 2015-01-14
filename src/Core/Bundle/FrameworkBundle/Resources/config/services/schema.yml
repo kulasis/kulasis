@@ -12,6 +12,7 @@ services:
   kula.core.schema_store:
     class: Kula\Core\Component\Schema\SchemaStore
     arguments: ["@kula.core.db", %kula.schema.options.cache_class%, %kernel.cache_dir%, %kernel.debug%] 
+    public: false
     
   kula.core.schema:
     class: Kula\Core\Component\Schema\Schema

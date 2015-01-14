@@ -58,6 +58,10 @@ class Field {
     
   }
   
+  public function getFieldType() {
+    return $this->field_Type;
+  }
+  
   public function getClass() {
     return $this->field_Class;
   }

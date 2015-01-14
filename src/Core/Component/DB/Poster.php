@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\Component\DB;
+namespace Kula\Core\Component\DB;
 
 use Kula\Core\Component\DB\DB as DB;
 use Kula\Core\Component\Schema\Schema as Schema;

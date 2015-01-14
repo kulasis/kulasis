@@ -1,0 +1,196 @@
+<?php
+
+namespace Kula\Core\Bundle\FrameworkBundle\Service;
+
+class Session {
+  
+  private $db;
+  private $poster_factory;
+  private $session;
+  private $request;
+  
+  public function __construct(\Symfony\Component\HttpFoundation\Session\Session $session,
+                              \Kula\Core\Component\Database\DB $db, 
+                              $request) {
+      $this->db = $db;
+      $this->session = $session;
+      $this->request = $request;
+  }
+  
+  /**
+   *  This method loads the passed in user ID into the session.  If a session is already established for a user,
+   *  then another user is added to the end of the array.
+   *  @param int User ID of user to load
+   */
+  public function loadUser($user_id) {
+    
+    // Load user's first role
+    $role = $this->loadRole($user_id);
+    
+    // if initial role isn't set, set to key
+    if ($this->session->get('initial_role') == null AND $role != null) {
+      $this->session->set('initial_role', $role);
+    }
+    
+    if ($role) {
+      return true;
+    }
+    
+  }
+  
+  public function loadRole($user_id, $role_id = null) {
+    
+    // Load Role
+    $role_info = $this->db->select('CORE_USER_ROLES', 'roles')
+      ->fields('roles', array('ROLE_ID', 'ORGANIZATION_ID', 'TERM_ID', 'ADMINISTRATOR', 'LAST_ORGANIZATION_ID', 'LAST_TERM_ID'))
+      ->join('CORE_USERGROUP', 'usergroups', array('USERGROUP_ID','USERGROUP_NAME', 'PORTAL'), 'usergroups.USERGROUP_ID = roles.USERGROUP_ID')
+      ->join('CORE_USER', 'user', array('USERNAME', 'USER_ID'), 'roles.USER_ID = user.USER_ID')
+      ->join('CONS_CONSTITUENT', 'constituent', array('EMAIL', 'FIRST_NAME', 'LAST_NAME'), 'user.USER_ID = constituent.CONSTITUENT_ID')
+      ->predicate('roles.USER_ID', $user_id);
+    if ($role_id) {
+      $role_info = $role_info->predicate('roles.ROLE_ID', $role_id);
+    }
+    $role_info = $role_info->order_by('ROLE_DEFAULT', 'DESC', 'roles');
+    
+    $role_info = $role_info
+      ->execute()->fetch();
+      
+    $role = array(
+        'username' => $role_info['USERNAME'],
+        'email' => $role_info['EMAIL'],
+        'first_name' => $role_info['FIRST_NAME'],
+        'last_name' => $role_info['LAST_NAME'],
+        'name' => $role_info['FIRST_NAME'].' '.$role_info['LAST_NAME'],
+        'user_id' => $role_info['USER_ID'],
+        'role_id' => $role_info['ROLE_ID'],
+        'organization_id' => $role_info['ORGANIZATION_ID'],
+        'term_id' => $role_info['TERM_ID'],
+        'usergroup_id' => $role_info['USERGROUP_ID'],
+        'usergroup_name' => $role_info['USERGROUP_NAME'],
+        'portal' => $role_info['PORTAL'],
+        'administrator' => $role_info['ADMINISTRATOR'],
+        'last_organization_id' => $role_info['LAST_ORGANIZATION_ID'],
+        'last_term_id' => $role_info['LAST_TERM_ID']
+      );
+    
+    $role['focus'] = array(
+      'organization_id' => ($role_info['LAST_ORGANIZATION_ID'] != '') ? $role_info['LAST_ORGANIZATION_ID'] : $role_info['ORGANIZATION_ID'],
+    );
+    
+    if ($role_info['LAST_TERM_ID'] != '') {
+      $role['focus']['term_id'] = $role_info['LAST_TERM_ID'];
+    } else {
+      // Load latest term
+      $latest_term = $this->currentTermForOrganization($role['focus']['organization_id']);
+      $role['focus']['term_id'] = $latest_term['TERM_ID'];
+    }
+    
+    // Log session and get session ID and token
+    $role['session_id'] = $this->logOpenedSession($role['user_id'], $role['role_id'], $role['focus']['organization_id'], $role['focus']['term_id']);
+    
+    // Generate random string
+    $role_key = time() . \Kula\Core\Component\Utility\RandomGenerator::string(5);
+    
+    // Append to session
+    $session_roles = $this->session->get('roles');
+    $session_roles[$role_key] = $role;
+    $this->session->set('roles', $session_roles);
+    
+    return $role_key;
+  }
+  
+  public function changeRole($new_role_id, $role_token = null) {
+    
+    if ($role_token === null) {
+      $role_token = $this->session->get('initial_role');
+    }
+
+    $current_role = $this->session->get('roles')[$role_token];
+    
+    // Close session
+    $this->logClosedSession($current_role['session_id']);
+    
+    // Load new role
+    $new_role = $this->loadRole($current_role['user_id'], $new_role_id);
+    
+    // Remove old role
+    $this->session->set('initial_role', $new_role);
+    // Get roles first
+    $roles = $this->session->get('roles');
+    unset($roles[$role_token]);
+    $this->session->set('roles', $roles);
+
+  }
+  
+  public function get($key, $role_token = null) {
+    
+    $roles = $this->session->get('roles');
+    
+    if ($role_token === null) {
+      $role_token = $this->session->get('initial_role');
+    }
+
+    if (isset($roles[$role_token][$key])) {
+      return $roles[$role_token][$key];
+    } else {
+      return $this->session->get($key);
+    }
+  }
+  
+  public function getFocus($key, $role_token = null) {
+    $focus = $this->get('focus', $role_token);
+    if (isset($focus[$key])) {
+      return $focus[$key];
+    }
+  }
+  
+  public function setFocus($key, $value, $role_token = null) {
+    if ($role_token === null) {
+      $role_token = $this->session->get('initial_role');
+    }
+    $roles = $this->session->get('roles');
+    $roles[$role_token]['focus'][$key] = $value;
+    $this->session->set('roles', $roles);
+  }
+  
+  public function set($key, $value) {
+    $this->session->set($key, $value);
+  }
+  
+  private function logOpenedSession($user_id, $role_id, $organization_id, $term_id = null) {
+    $session_data = array(
+      'USER_ID' => $user_id,
+      'ROLE_ID' => $role_id,
+      'ORGANIZATION_ID' => $organization_id,
+      'TERM_ID' => $term_id,
+      'IN_TIME' => date('Y-m-d H:i:s'),
+      'IP_ADDRESS' => isset($this->request->server) ? $this->request->server->get('REMOTE_ADDR') : null,
+    );
+    $session_poster = $this->poster_factory->newPoster(array('LOG_SESSION' => array('new' => $session_data)));
+    $session_id = $session_poster->getResultForTable('insert', 'LOG_SESSION')['new'];
+    return $session_id;
+  }
+  
+  private function logClosedSession($session_id) {
+    try {
+      $this->poster_factory->newPoster(null, array('LOG_SESSION' => array($session_id => array('OUT_TIME' => date('Y-m-d H:i:s')))));
+      return true;
+    } catch (\Exception $e) {
+      return false;
+    }
+  }
+  
+  private function currentTermForOrganization($organization_ids) {
+    $term_results = $this->db->select('CORE_TERM', 'terms')
+      ->fields('terms', array('TERM_ID', 'TERM_ABBREVIATION', 'TERM_NAME', 'FINANCIAL_AID_YEAR'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', null, 'orgterm.TERM_ID = terms.TERM_ID')
+      ->predicate('orgterm.ORGANIZATION_ID', $organization_ids)
+      ->predicate('END_DATE', date('Y-m-d', strtotime('-7 days')), '>=')
+      ->order_by('START_DATE', 'ASC')
+      ->order_by('END_DATE', 'ASC')
+      ->execute()
+      ->fetch();
+    return $term_results;
+  }
+  
+}

@@ -34,6 +34,16 @@ class PosterRecord {
     $this->getOriginalRecord();
     $this->processConfirmation();
     $this->processSynthetic();
+    $this->processCheckboxes();
+    $this->processDateFields();
+    $this->processTimeFields();
+    $this->processChoosers();
+    
+    $this->processBlankValues();
+    if ($this->crud == self::EDIT) {
+      $this->processSameValues();
+    }
+    
     
   }
   
@@ -73,91 +83,81 @@ class PosterRecord {
   // TO DO EDIT THE FOLLOWING
   
   private function processBlankValues() {
-    
-    // turn all blank values to null
-    if (!is_array($this->edit[$table][$row_id][$key]) && trim($this->edit[$table][$row_id][$key]) == '') {
-      $this->edit[$table][$row_id][$key] = null;
+    foreach($this->fields as $fieldName => $field) {
+      if (!is_array($field) AND trim($field) == '') {
+        $this->fields[$fieldName] = null;
+      }
     }
-    
   }
   
   private function processSameValues() {
-    
-    if (strpos($key, 'CALC_') !== false || (array_key_exists($key, $db_data[$row_id]) && 
-        !in_array($key, $checkbox_fields) && 
-        $db_data[$row_id][$key] == $this->edit[$table][$row_id][$key])) {
-      unset($this->edit[$table][$row_id][$key]);
+    foreach($this->fields as $fieldName => $field) {
+      if (isset($this->originalRecord[$fieldName]) AND $this->originalRecord[$fieldName] == $this->fields[$fieldName]) {
+        unset($this->fields[$fieldName]);
+      }
     }
-    
   }
   
   private function processCheckboxFields() {
-    
-   
-    
-    // check for unchecked checkboxes
-    if ($checkbox_fields) {
-      foreach($checkbox_fields as $checkbox_field) {
-        
-        if (array_key_exists($checkbox_field, $this->edit[$table][$row_id]) AND 
-            isset($this->edit[$table][$row_id][$checkbox_field]['checkbox_hidden']) AND
-            $db_data[$row_id][$checkbox_field] != 'Y' AND 
-            isset($this->edit[$table][$row_id][$checkbox_field]['checkbox']) AND
-            $this->edit[$table][$row_id][$checkbox_field]['checkbox'] == 'Y') {
-          $this->edit[$table][$row_id][$checkbox_field] = 'Y';
-        } elseif (array_key_exists($checkbox_field, $this->edit[$table][$row_id]) AND 
-            isset($this->edit[$table][$row_id][$checkbox_field]['checkbox_hidden']) AND
-            $db_data[$row_id][$checkbox_field] == 'Y' AND 
-            !isset($this->edit[$table][$row_id][$checkbox_field]['checkbox'])) {
-          $this->edit[$table][$row_id][$checkbox_field] = 'N';
-        } else {
-          unset($this->edit[$table][$row_id][$checkbox_field]);
+    foreach($this->fields as $fieldName => $field) {
+      if ($this->schema->getFieldType($fieldName) == 'checkbox') {
+        if (isset($field['checkbox_hidden']) OR isset($field['checkbox'])) {
+          // Checkbox originally unchecked, now checked.
+          if ($field['checkbox_hidden'] == '' AND $field['checkbox'] == 1) {
+            $this->fields[$fieldName] = 1;
+          }
+          // Checkbox originally checked, now unchecked.
+          if ($field['checkbox_hidden'] == '1' AND !isset($field['checkbox'])) {
+            $this->fields[$fieldName] = 0;
+          }
         }
       }
     }
-    
   }
   
   private function processDateFields() {
-    
-    if (in_array($key, $date_fields)) {
-      if (isset($this->edit[$table][$row_id][$key]) AND $this->edit[$table][$row_id][$key] != '') {
-        
-        // Check if slashes or dashes in place
-        $value = $this->edit[$table][$row_id][$key];
-        if (strpos($value, '/') === false AND strpos($value, '-') === false) {
-          // split string and use mktime to determine date
-          $new_date = mktime(0, 0, 0, substr($value, 0, 2), substr($value, 2, 2), substr($value, 4, strlen($value)-4));
-        } else {
-          $new_date = strtotime($value);
+    foreach($this->fields as $fieldName => $field) {
+      if ($this->schema->getFieldType($fieldName) == 'date') {
+        if ($field != '') {
+          // Check if slashes or dashes in place
+          if (strpos($field, '/') === false AND strpos($field, '-') === false) {
+            // split string and use mktime to determine date
+            $newDate = mktime(0, 0, 0, substr($field, 0, 2), substr($field, 2, 2), substr($field, 4, strlen($field)-4));
+          } else {
+            $newDate = strtotime($field);
+          }
+          $this->fields[$fieldName] = date('Y-m-d', $newDate);
         }
-        $this->edit[$table][$row_id][$key] = date('Y-m-d', $new_date);
       }
     }
   }
   
   private function processTimeFields() {
-    if (in_array($key, $time_fields)) {
-      if (isset($this->edit[$table][$row_id][$key]) AND $this->edit[$table][$row_id][$key] != '') {
-        $this->edit[$table][$row_id][$key] = date('H:i:s', strtotime($this->edit[$table][$row_id][$key]));
+    foreach($this->fields as $fieldName => $field) {
+      if ($this->schema->getFieldType($fieldName) == 'time') {
+        if ($field != '') {
+          $this->fields[$fieldName] = date('H:i:s', strtotime($field));
+        }
       }
     }
-    
   }
   
   private function processDateTimeFields() {
-    
+    foreach($this->fields as $fieldName => $field) {
+      if ($this->schema->getFieldType($fieldName) == 'datetime') {
+        if ($field != '') {
+          $this->fields[$fieldName] = date('Y-m-d H:i:s', strtotime($field));
+        }
+      }
+    }
   }
   
   private function processChoosers() {
-    
-    if (isset($this->edit[$table][$row_id][$key]['value'])) {
-      $this->edit[$table][$row_id][$key] = $this->edit[$table][$row_id][$key]['value'];
+    foreach($this->fields as $fieldName => $field) {
+      if ($this->schema->getFieldType($fieldName) == 'chooser') {
+        $this->fields[$fieldName] = $field['value'];
+      }
     }
-    if (isset($this->edit[$table][$row_id][$key]['chooser'])) {
-      unset($this->edit[$table][$row_id][$key]['chooser']);
-    }
-    
   }
   
   

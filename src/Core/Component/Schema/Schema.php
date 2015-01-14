@@ -54,6 +54,10 @@ class Schema {
     return $this->fields[$fieldName]->getClass();
   }
   
+  public function getFieldType($fieldName) {
+    return $this->fields[$fieldName]->getFieldType();
+  }
+  
   public function getDBTable($tableName) {
     return $this->tables[$tableName]->getDBName();
   }
