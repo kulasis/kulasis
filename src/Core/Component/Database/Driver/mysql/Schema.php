@@ -458,7 +458,7 @@ class Schema extends DatabaseSchema {
     }
 
     $table_column = key($spec['columns']);
-    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT '. $name .' FOREIGN KEY (`' . $table_column . '`) REFERENCES '. $spec['table'].'(`' . $spec['columns'][$table_column] . '`)');
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT '. $name .' FOREIGN KEY (`' . $table_column . '`) REFERENCES `'. $spec['table'].'` (`' . $spec['columns'][$table_column] . '`)');
   }
 
   public function dropUniqueKey($table, $name) {

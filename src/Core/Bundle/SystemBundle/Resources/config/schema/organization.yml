@@ -1,0 +1,156 @@
+Core.Organization:
+  description: "Organization Table"
+  db_table_name: CORE_ORGANIZATION
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: ORGANIZATION_ID
+      db_column_type: primary_serial
+      column_name: "Organization ID"
+      label_name: "Organization ID"
+    ParentOrganizationID:
+      description: "Parent Organization ID"
+      parent: Core.Organization.ID
+      db_column_name: PARENT_ORGANIZATION_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Parent Organization ID"
+      label_name: "Parent Organization ID"
+    Name:
+      description: "Organization Name"
+      db_column_name: ORGANIZATION_NAME
+      db_column_type: varchar
+      db_column_length: 70
+      db_column_null: false
+      field_type: text
+      field_size: 30
+      column_name: "Organization Name"
+      label_name: "Organization Name"
+    Abbreviation:
+      description: "Organization Abbreviation"
+      db_column_name: ORGANIZATION_ABBREVIATION
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: false
+      field_type: text
+      field_size: 15
+      column_name: "Organization Abbreviation"
+      label_name: "Organization Abbreviation"
+    Type:
+      description: "Organization Type"
+      db_column_name: ORGANIZATION_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: lookup
+      lookup: Core.Organization.Type
+      column_name: "Organization Type"
+      label_name: "Organization Type"
+    Active:
+      description: "Active"
+      db_column_name: ACTIVE
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Active"
+      label_name: "Active"
+Core.Term:
+  description: "Terms Table"
+  db_table_name: CORE_TERM
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: TERM_ID
+      db_column_type: primary_serial
+      column_name: "Term ID"
+      label_name: "Term ID"
+    Name:
+      description: "Term Name"
+      db_column_name: TERM_NAME
+      db_column_type: varchar
+      db_column_length: 20
+      db_column_null: false
+      field_type: text
+      field_length: 15
+      column_name: "Term Name"
+      label_name: "Term Name"
+    Abbreviation:
+      description: "Term Abbreviation"
+      db_column_name: TERM_ABBREVIATION
+      db_column_type: varchar
+      db_column_length: 6
+      db_column_null: false
+      field_type: text
+      field_length: 8
+      column_name: "Term Abbreviation"
+      label_name: "Term Abbreviation"
+    StartDate:
+      description: "Term Start Date"
+      db_column_name: START_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "Term Start Date"
+      label_name: "Term Start Date"
+    EndDate:
+      description: "Term End Date"
+      db_column_name: END_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "Term End Date"
+      label_name: "Term End Date"
+    FinancialAidYear:
+      description: "Financial Aid Year"
+      db_column_name: FINANCIAL_AID_YEAR
+      db_column_type: int
+      db_column_length: 4
+      db_column_null: true
+      field_type: text
+      field_length: 6
+      column_name: "Financial Aid Year"
+      label_name: "Financial Aid Year"
+    ConversionTerm:
+      description: "Conversion Term"
+      db_column_name: CONV_TERM
+      db_column_type: varchar
+      db_column_length: 255
+      field_type: text
+      field_length: 20
+      column_name: "Conversion Term"
+      label_name: "Conversion Term"
+Core.Organization.Terms:
+  description: "Organization Terms Table"
+  db_table_name: CORE_ORGANIZATION_TERMS
+  timestamps: true
+  fields:
+    ID: 
+      description: "ID"
+      primary: true
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: primary_serial
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    OrganizationID:
+      description: "Organization ID"
+      parent: Core.Organization.ID
+      db_column_name: ORGANIZATION_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization ID"
+      label_name: "Organization ID"
+    TermID:
+      description: "Term ID"
+      parent: Core.Term.ID
+      db_column_name: TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Term ID"
+      label_name: "Term ID"
+  unique_keys:
+    OrganizationTerms: [ 'Core.Organization.Terms.OrganizationID', 'Core.Organization.Terms.TermID' ]

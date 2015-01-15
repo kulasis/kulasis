@@ -1,0 +1,8 @@
+Core.Organization.Type:
+  description: "Organization Types"
+  allow_update: true
+  values: 
+    - { code: I, description: "Institution" }
+    - { code: C, description: "Campus" }
+    - { code: D, description: "District" }
+    - { code: S, description: "School" }

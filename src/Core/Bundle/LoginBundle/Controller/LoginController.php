@@ -31,7 +31,7 @@ class LoginController extends Controller {
 	
 	public function logoutAction() {
 		$this->get('kula.login')->logout();
-		
+		echo 'here';
 		$this->addFlash('info', 'You have been successfully logged out.');
 		return $this->redirect('login');
 	}

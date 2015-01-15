@@ -2,3 +2,4 @@ imports:
     - { resource: lookup/schema.yml }
     - { resource: lookup/navigation.yml }
     - { resource: lookup/permission.yml }
+    - { resource: lookup/organization.yml }

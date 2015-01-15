@@ -166,6 +166,65 @@ Core.User.Role:
       field_size: 5
       column_name: "Usergroup ID"
       label_name: "Usergroup ID"
+    OrganizationID:
+      description: "Organization ID"
+      parent: Core.Organization.ID
+      db_column_name: ORGANIZATION_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Organization ID"
+      label_name: "Organization ID"
+    TermID:
+      description: "Term ID"
+      parent: Core.Term.ID
+      db_column_name: TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Term ID"
+      label_name: "Term ID"
+    TermAll:
+      description: "Term All"
+      db_column_name: TERM_ALL
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Term All"
+      label_name: "Term All"
+    DefaultRole:
+      description: "Default Role"
+      db_column_name: DEFAULT_ROLE
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Default Role"
+      label_name: "Default Role"
+    Administrator:
+      description: "Administrator"
+      db_column_name: ADMINISTRATOR
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Administrator"
+      label_name: "Administrator"
+    LastOrganizationID:
+      description: "Last Organization ID"
+      parent: Core.Organization.ID
+      db_column_name: LAST_ORGANIZATION_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Last Organization ID"
+      label_name: "Last Organization ID"
+    LastTermID:
+      description: "Last Term ID"
+      parent: Core.Term.ID
+      db_column_name: LAST_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Last Term ID"
+      label_name: "Last Term ID"
   unique_keys:
     Users_Usergroups: [ 'Core.User.Role.UserID', 'Core.User.Role.UsergroupID' ]
 Core.System.LDAP:
@@ -213,7 +272,7 @@ Core.System.LDAP:
       column_name: "Domain Append"
       label_name: "Domain Append"
   unique_keys:
-    ServerName: [ 'Core.System.LDAP.ServerName' ]
+    ServerName: [ "Core.System.LDAP.ServerName" ]
 Log.Session:
   description: "Log Session"
   db_table_name: LOG_SESSION
@@ -245,10 +304,27 @@ Log.Session:
       field_size: 5
       column_name: "Role ID"
       label_name: "Role ID"
+    OrganizationID:
+      description: "Organization ID"
+      db_column_name: ORGANIZATION_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Organization.ID
+      column_name: "Organization ID"
+      label_name: "Organization ID"
+    TermID:
+      description: "Term ID"
+      db_column_name: TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Term.ID
+      column_name: "Term ID"
+      label_name: "Term ID"
     InTime:
       description: "In Time"
       db_column_name: IN_TIME
       db_column_type: datetime
+      db_column_null: false
       field_type: datetime
       field_size: 8
       column_name: "In Time"
@@ -257,6 +333,7 @@ Log.Session:
       description: "Out Time"
       db_column_name: OUT_TIME
       db_column_type: datetime
+      db_column_null: true
       field_type: datetime
       field_size: 8
       column_name: "Out Time"

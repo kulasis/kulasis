@@ -5,7 +5,6 @@ namespace Kula\Core\Bundle\FrameworkBundle\Service;
 class Session {
   
   private $db;
-  private $poster_factory;
   private $session;
   private $request;
   
@@ -48,18 +47,17 @@ class Session {
       ->join('CORE_USER', 'user', 'roles.USER_ID = user.USER_ID')
       ->fields('user', array('USERNAME', 'USER_ID'))
       ->join('CONS_CONSTITUENT', 'constituent', 'user.USER_ID = constituent.CONSTITUENT_ID')
-      ->fields('constituent', array('EMAIL', 'FIRST_NAME', 'LAST_NAME'))
+      ->fields('constituent', array('FIRST_NAME', 'LAST_NAME'))
       ->condition('roles.USER_ID', $user_id);
     if ($role_id) {
       $role_info = $role_info->condition('roles.ROLE_ID', $role_id);
     }
-    $role_info = $role_info->orderBy('ROLE_DEFAULT', 'DESC');
+    $role_info = $role_info->orderBy('DEFAULT_ROLE', 'DESC');
     
     $role_info = $role_info->execute()->fetch();
       
     $role = array(
         'username' => $role_info['USERNAME'],
-        'email' => $role_info['EMAIL'],
         'first_name' => $role_info['FIRST_NAME'],
         'last_name' => $role_info['LAST_NAME'],
         'name' => $role_info['FIRST_NAME'].' '.$role_info['LAST_NAME'],
@@ -158,12 +156,16 @@ class Session {
   public function set($key, $value) {
     $this->session->set($key, $value);
   }
+
+  public function invalidate() {
+    $this->session->invalidate();
+  }
   
   private function logOpenedSession($user_id, $role_id, $organization_id, $term_id = null) {
     $session_data = array(
       'USER_ID' => $user_id,
-      'ROLE_ID' => $role_id,
-      'ORGANIZATION_ID' => $organization_id,
+      'ROLE_ID' => $role_id ? $role_id : null,
+      'ORGANIZATION_ID' => $organization_id ? $organization_id : null,
       'TERM_ID' => $term_id,
       'IN_TIME' => date('Y-m-d H:i:s'),
       'IP_ADDRESS' => isset($this->request->server) ? $this->request->server->get('REMOTE_ADDR') : null,

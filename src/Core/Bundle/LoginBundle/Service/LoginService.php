@@ -78,13 +78,13 @@ class LoginService {
   }
   
   public function changeRole($new_role_id) {
-    $this->kula_session->changeRole($new_role_id);
+    $this->session->changeRole($new_role_id);
   }
   
   public function logout() {
-    if ($this->kula_session->get('session_id') != '') {
+    if ($this->session->get('session_id') != '') {
       try {
-      new \Kula\Component\Database\Poster(null, array('LOG_SESSION' => array($this->kula_session->get('session_id') => array('OUT_TIME' => date('Y-m-d H:i:s')))));
+        $this->db->db_update('LOG_SESSION')->fields(array('OUT_TIME' => date('Y-m-d H:i:s')))->condition('SESSION_ID', $this->session->get('session_id'))->execute();
       } catch (\Exception $e) {  }
     }
     
