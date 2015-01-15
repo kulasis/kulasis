@@ -30,6 +30,9 @@ class KulaCoreFrameworkExtension extends BaseFrameworkExtension {
       $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
       $loader->load('services.yml');
       $loader->load('services/schema.yml');
+      $loader->load('services/navigation.yml');
+      $loader->load('services/record.yml');
+      $loader->load('services/lookup.yml');
   }
 
 }

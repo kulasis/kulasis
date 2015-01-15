@@ -18,4 +18,4 @@ services:
     class: Kula\Core\Component\Schema\Schema
     factory_service: kula.core.schema_store
     factory_method: getSchema
-    arguments: ["@kula.core.db"] 
+    arguments: ["@kula.core.db"]

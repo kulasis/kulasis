@@ -1,0 +1,21 @@
+parameters:
+  kula.lookup.options.cache_class: kula%kernel.environment%LookupCache
+
+services:
+  kula.core.lookup.cache:
+    class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\RecordCacheWarmer
+    public: false
+    arguments: ["@kula.core.lookup_store"]
+    tags:
+      - { name: kernel.cache_warmer }
+  
+  kula.core.lookup_store:
+    class: Kula\Core\Component\Lookup\LookupStore
+    arguments: ["@kula.core.db", %kula.lookup.options.cache_class%, %kernel.cache_dir%, %kernel.debug%] 
+    public: false
+    
+  kula.core.lookup:
+    class: Kula\Core\Component\Lookup\Lookup
+    factory_service: kula.core.lookup_store
+    factory_method: getLookup
+    arguments: ["@kula.core.db"] 

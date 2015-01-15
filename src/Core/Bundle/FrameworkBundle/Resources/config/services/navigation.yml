@@ -1,0 +1,21 @@
+parameters:
+  kula.navigation.options.cache_class: kula%kernel.environment%NavigationCache
+
+services:
+  kula.core.schema.cache:
+    class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\NavigationCacheWarmer
+    public: false
+    arguments: ["@kula.core.navigation_store"]
+    tags:
+      - { name: kernel.cache_warmer }
+  
+  kula.core.navigation_store:
+    class: Kula\Core\Component\Navigation\NavigationStore
+    arguments: ["@kula.core.db", %kula.navigation.options.cache_class%, %kernel.cache_dir%, %kernel.debug%] 
+    public: false
+    
+  kula.core.navigation:
+    class: Kula\Core\Component\Navigation\Navigation
+    factory_service: kula.core.navigation_store
+    factory_method: getNavigation
+    arguments: ["@kula.core.db"] 

@@ -3,6 +3,7 @@
 namespace Kula\Core\Bundle\LoginBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
+use Kula\Core\Component\Navigation\Navigation;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,7 +32,6 @@ class LoginController extends Controller {
 	
 	public function logoutAction() {
 		$this->get('kula.login')->logout();
-		echo 'here';
 		$this->addFlash('info', 'You have been successfully logged out.');
 		return $this->redirect('login');
 	}
@@ -44,7 +44,7 @@ class LoginController extends Controller {
 			if ($this->get('kula.login')->login(($username !== null ) ? $username : $this->getRequest()->get('username'), $this->getRequest()->get('password'))) {
 			
 				// Determine first route that can be used
-				$first_route = \Kula\Component\Navigation\Navigation::getFirstAvailableRouteForm($this->get('kula.session')->get('portal'));
+				$first_route = Navigation::getFirstAvailableRouteForm($this->get('kula.session')->get('portal'));
 				if ($first_route)
 					return $this->redirect($this->get('router')->generate($first_route));
 				else {
@@ -68,7 +68,7 @@ class LoginController extends Controller {
 		
 		$this->get('kula.login')->changeRole($new_usergroup);
 		// Determine first route that can be used
-		$first_route = \Kula\Component\Navigation\Navigation::getFirstAvailableRouteForm($this->get('kula.session')->get('portal'));
+		$first_route = Navigation::getFirstAvailableRouteForm($this->get('kula.session')->get('portal'));
 		if ($first_route) {
 			return $this->redirect($this->get('router')->generate($first_route));
 		} else {

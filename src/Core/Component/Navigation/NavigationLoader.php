@@ -4,7 +4,6 @@ namespace Kula\Core\Component\Navigation;
 
 use Kula\Core\Component\DefinitionLoader\DefinitionLoader;
 
-
 class NavigationLoader {
   
   private $navigation = array();
