@@ -1,0 +1,92 @@
+{% extends 'KulaCoreFrameworkBundle:Base:kula.html.twig' %}
+
+{% block focus %}
+  <span>
+    <label for="focus_term">Term:</label>
+    {{ form_select(focus_terms, 'focus_term', focus.getTermID, { id : 'focus_term' }) }}
+  </span>
+  <span>
+    <label for="focus_school">Organization:</label>
+    {{ form_select(focus_organization, 'focus_organization', focus.getOrganizationID, { id : 'focus_organization' }) }}
+  </span>
+{% endblock %}
+
+{% block navigation_bar %}
+  <div id="nav_bar_navigation">
+    <ul>
+      <li id="nav_bar_navigation_favorites" data-nav-panel="nav_favorites"><a href="#"><img src="{{ asset('images/favorites_regular.png') }}" /></a></li>
+      <li id="nav_bar_navigation_forms" data-nav-panel="nav_forms" class="nav-bar-navigation-open"><a href="#"><img src="{{ asset('images/forms_regular.png') }}" /></a></li>
+      <li id="nav_bar_navigation_reports" data-nav-panel="nav_reports"><a href="#"><img src="{{ asset('images/reports_regular.png') }}" /></a></li>
+      <li id="nav_bar_navigation_filters" data-nav-panel="nav_filters"><a href="#"><img src="{{ asset('images/filters_regular.png') }}" /></a></li>
+      <li id="nav_bar_navigation_queries" data-nav-panel="nav_queries"><a href="#"><img src="{{ asset('images/query_regular.png') }}" /></a></li>
+    </ul>
+  </div>
+{% endblock %}
+
+{% block navigation_pane %}
+  <div id="nav_favorites" style="display:none;">Favorites</div>
+  <div id="nav_forms">
+    {% set nav_groups = getNavigation() %}
+    {% for group_id, group_row in nav_groups %}
+      <div id="drawer-{{ group_id }}" class="navigation-drawer navigation-forms">
+        <div class="drawer-header navigation-forms" data-category="forms-{{ group_id }}">{{ group_row.name }}</div>
+        <div id="drawer-contents-forms-{{ group_id }}" class="drawer-contents navigation-forms" style="{% if group_row.selected_group == 'Y' %}display:block;{% else %}display:none;{% endif %}">
+          <ul>
+          {% for form_id, form_row in group_row.forms %}
+            {% if form_row.name %}
+              <li><a href="{% if form_row.route %}{{ path(form_row.route) }}{% endif %}" class="navigation-link-new-window" data-panel-name="{{ form_row.name }}">+</a><a href="{% if form_row.route %}{{ path(form_row.route) }}{% endif %}" class="navigation-link">{{ form_row.name }}</a></li>
+            {% else %}
+              <li class="none">None</li>
+            {% endif %}
+          {% endfor %}
+          </ul>
+        </div>
+      </div>  
+    {% endfor %}
+  </div>
+  <div id="nav_reports"{% if navigation_info.NAVIGATION_TYPE != 'R' %} style="display:none;"{% endif %}>
+    {% set nav_groups = getReports() %}
+    {% for group_id, group_row in nav_groups %}
+      <div id="drawer-reports-{{ group_id }}" class="navigation-drawer navigation-reports">
+        <div class="drawer-header navigation-reports" data-category="reports-{{ group_id }}">{{ group_row.name }}</div>
+        <div id="drawer-contents-reports-{{ group_id }}" class="drawer-contents navigation-reports" style="{% if group_row.selected_group == 'Y' %}display:block;{% else %}display:none;{% endif %}">
+          <ul>
+          {% for report_id, report_row in group_row.reports %}
+            {% if report_row.name %}
+              <li><a href="{% if report_row.route %}{{ path(report_row.route) }}{% endif %}" class="navigation-link-new-window" data-panel-name="{{ report_row.name }}">+</a><a href="{% if report_row.route %}{{ path(report_row.route) }}{% endif %}" class="navigation-link">{{ report_row.name }}</a></li>
+            {% else %}
+              <li class="none">None</li>
+            {% endif %}
+          {% endfor %}
+          </ul>
+        </div>
+      </div>  
+    {% endfor %}
+  </div>
+  <div id="nav_filters" style="display:none;">Filters</div>
+  <div id="nav_queries" style="display:none;">Queries</div>
+{% endblock %}
+
+{% block main %}
+  <div id="window_bar">
+      <ul>
+        <li id="windowTitle_1" data-window="1" class="selected-window-element" data-window-url="{{ request.getBaseUrl()~request.getPathInfo() }}" data-focus-org="{{ session.getFocus('organization_id') }}" data-focus-term="{{ session.getFocus('term_id') }}"><div><span class="close-window">x</span>
+          {% if navigation_info.NAVIGATION_TYPE == 'T' %}
+            {{ navigation_info.form.DISPLAY_NAME }}
+          {% else %}
+            {{ navigation_info.DISPLAY_NAME }}
+          {% endif %}
+          {% block navigation_title %}{% endblock %}</div></li>
+      </ul>
+      <div id="nav_bar_status">
+        <span id="nav_bar_status_loading">Loading...<img src="{{ asset('images/loader.gif') }}" /></span>
+        <span id="nav_bar_status_success">Complete</span>
+        <span id="nav_bar_status_error">Error</span>
+        <span id="nav_bar_status_ready">Ready</span>
+      </div>
+  </div>
+  <div id="windows_container">
+    {% block window %}
+    {% endblock %}
+  </div>
+{% endblock %}

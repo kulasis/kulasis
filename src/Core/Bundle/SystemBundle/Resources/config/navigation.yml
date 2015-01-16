@@ -1,18 +1,43 @@
-Core.Pages.Home:
-  description: "Home Page"
-  display_name: "Home"
-  type: page
-  portal: core
 Core.FormGroups.System:
   description: "System"
   display_name: "System"
   type: form_group
   portal: core
   sort: 1
+
 Core.Forms.System.Lookup:
   parent: Core.FormGroups.System
   description: "Lookup"
   display_name: "Lookup"
   type: form
   portal: core
+  route: core_system_lookup
   sort: 1
+Core.MenuActions.System.Lookup.New:
+  parent: Core.Forms.System.Lookup
+  description: "New Lookup"
+  display_name: "New Lookup"
+  type: menu_action
+  portal: core
+  route: sis_system_lookup_add
+  sort: 1
+Core.MenuActions.System.Lookup.Delete:
+  parent: Core.Forms.System.Lookup
+  description: "Delete Lookup"
+  display_name: "Delete Lookup"
+  type: menu_action
+  divider_before: true
+  record_loaded: true
+  portal: core
+  route: sis_system_lookup_delete
+  confirmation_message: "Are you sure you want to delete lookup?"
+  sort: 2
+
+
+Core.Forms.System.Navigation:
+  parent: Core.FormGroups.System
+  description: "Navigation"
+  display_name: "Navigation"
+  type: form
+  portal: core
+  sort: 2

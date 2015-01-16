@@ -1,4 +1,4 @@
-{% extends 'KulaCoreFrameworkBundle::base.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle:Base:base.html.twig' %}
 
 {% block stylesheets %}
     {% stylesheets 
@@ -11,7 +11,7 @@
 <div id="login_form">
 <form action="{{ path( 'attempt_login') }}" method="post">
   <div align="center" id="login_title">{{ instance_name }}</div>
-  {% include 'KulaCoreFrameworkBundle::flash.html.twig' %}
+  {% include 'KulaCoreFrameworkBundle:Base:flash.html.twig' %}
 	<div class="group form-line">
 	<div class="form-field">
 	  <label>Username/Email</label>

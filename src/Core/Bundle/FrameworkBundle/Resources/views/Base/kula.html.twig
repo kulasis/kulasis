@@ -1,0 +1,69 @@
+{% extends 'KulaCoreFrameworkBundle:Base:base.html.twig' %}
+{% block stylesheets %}
+{% stylesheets 
+      '@KulaFrameworkBundle/Resources/public/css/sis.css' %}
+       <link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+{% endblock %}
+{% block javascripts %}
+        {% javascripts 
+        '@KulaFrameworkBundle/Resources/public/js/navigation.js'
+        '@KulaFrameworkBundle/Resources/public/js/form.js'
+        '@KulaFrameworkBundle/Resources/public/js/focus.js'
+        '@KulaFrameworkBundle/Resources/public/js/application.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+{% endblock %}
+{% block body %}
+  <div id="focus_bar" class="group">
+    <div id="focus_bar_institution_name">
+      Oregon College of Art and Craft
+    </div>
+    <div id="focus_bar_focus">
+      <form id="focus_form" method="post" action="{{ path('focus_usergroup_change') }}">
+        {% block focus %}
+        {% endblock %}
+        <span>
+          <label for="focus_role">Role:</label>
+          {{ form_select(focus_usergroups, 'focus_usergroup', session.get('role_id'), { id : 'focus_usergroup' }) }}
+        </span>
+      </form>
+    </div>
+  </div>
+  <div id="nav_bar" class="group">
+    {% block navigation_bar %}
+    {% endblock %}
+    <div id="nav_bar_user">
+      Hi, {{ session.get('name') }} | {{ linkTo('Logout', 'logout') }}
+    </div>
+  </div>
+  <div id="nav_pane">
+    {% block navigation_pane %}
+    {% endblock %}
+  </div>
+  <div id="main_container">
+    {% block main %}
+      {% block window %}
+      {% endblock %w}
+    {% endblock %}
+  </div><!-- main_container -->
+  
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">Debug Error</h4>
+        </div>
+        <div class="modal-body">
+          <iframe id="modal_iframe" width="100%" height="100%"></iframe>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+{% endblock %}

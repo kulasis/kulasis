@@ -1,0 +1,102 @@
+{% extends partial == "window" ? 'KulaCoreFrameworkBundle:Core:window_partial.html.twig' : 'KulaCoreFrameworkBundle:Core:page.html.twig' %}
+
+{% block navigation_title %}
+{% if navigation_info.NAVIGATION_TYPE == 'F' %}
+{{ navigation_info.NAME }}
+{% else %}
+{{ navigation_info.form.NAME }}
+{% endif %}
+{% endblock %}
+
+{% block window %}
+{#  or navigation_info.NAVIGATION_TYPE == 'MA' or navigation_info.NAVIGATION_TYPE == 'MR'  #}
+      {% if navigation_info.NAVIGATION_TYPE == 'T' %}
+        {% set tabParent = navigation_info.PARENT_NAVIGATION_ID %}
+      {% else %}
+        {% set tabParent = navigation_info.NAVIGATION_ID %}
+      {% endif %}
+      <!-- window menu bar -->
+      {% set menuActions = getActionsMenu(tabParent) %}
+      {% set menuReports = getReportsMenu(tabParent) %}
+      <form id="window_window_num_form" method="post" action="{{ form_action }}" data-navigation-type="{{navigation_info.NAVIGATION_TYPE}}"{% if navigation_info.NAVIGATION_TYPE == 'R' or navigation_info.NAVIGATION_TYPE == 'MR' %} target="_blank"{% endif %}>
+      <div id="window_window_num_menu_bar" class="window_menu_bar group">
+        <div id="window_window_num_menu_bar_left" class="window_menu_bar_left">
+          {% if menuActions %}
+            <div id="window_window_num_menu_actions" class="dropdown">
+                <a href="#" data-toggle="dropdown" class="menu-button"><img src="{{ asset('images/actions_menu.png') }}" /> <span class="caret"></span></a>
+              <ul id="window_window_num_menu_actions_contents" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                {% for menuAction in menuActions %}
+                {% if menuAction.DIVIDER_BEFORE == 'Y' %}
+                <li role="presentation" class="divider"></li>
+                {% endif %}
+                <li role="presentation">{% if menuAction.RECORD_LOADED == '' or menuAction.RECORD_LOADED == 'N' or (menuAction.RECORD_LOADED == 'Y' and record_obj.getSelectedRecordID() != '') %}<a role="menuitem" tabindex="-1" href="{{ path(menuAction.ROUTE, { record_type: record_obj.getRecordType(), record_id: record_obj.getSelectedRecordID() } ) }}" 
+                  data-http-method="{% if getMethodsForRoute(menuAction.ROUTE) %}{{ getMethodsForRoute(menuAction.ROUTE).0 }}{% else %}GET{% endif %}"
+                  data-confirm="{{ menuAction.CONFIRMATION }}">{{ menuAction.DISPLAY_NAME }}</a>{% else %}<div role="menuitem" tabindex="-1" class="disabled">{{ menuAction.DISPLAY_NAME }}</div>{% endif %}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+            {% if menuReports %}
+            <div id="window_window_num_menu_reports" class="dropdown">
+                <a href="#" data-toggle="dropdown" class="menu-button"><img src="{{ asset('images/reports_menu.png') }}" /> <span class="caret"></span></a>
+              <ul id="window_window_num_menu_reports_contents" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                {% for menuReport in menuReports %}
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path(menuReport.ROUTE) }}">{{ menuReport.DISPLAY_NAME }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+           <div class="window_menu_bar_record"{% if record_obj.getRecordType() == '' %} style="display:none;"{% endif %}>
+            <span id="window_window_num_menu_bar_record_prev" data-scrubber="previous" data-record-type="{{ record_obj.getRecordType() }}" data-record-id="{{ record_obj.getSelectedRecordID() }}"><img src="{{ asset('images/left_record.png') }}" /></span>
+            <span id="window_window_num_menu_bar_record_search" data-scrubber="search"><img src="{{ asset('images/search_record.png') }}" /></span>
+            <span id="window_window_num_menu_bar_record_next" data-scrubber="next" data-record-type="{{ record_obj.getRecordType() }}" data-record-id="{{ record_obj.getSelectedRecordID() }}"><img src="{{ asset('images/right_record.png') }}" /></span>
+           </div>
+           <div class="window_menu_bar_form_buttons" data-form-id="window_window_num_form">
+             <input id="window_window_num_form_mode" type="hidden" name="mode" value="{{ mode }}" />
+              <input id="window_window_num_form_submit" type="submit" name="submit" value="{% if mode == 'search' %}Search{% else %}Submit{% endif %}" />
+              <button id="window_window_num_button_reload" class="button-reload">Reload</button>
+           </div>
+           <div id="window_window_num_form_status" class="window_menu_bar_form_status"></div>
+        </div>
+      </div>
+      {% if selected_record_bar_template_path %}
+      {% if record_obj.getSelectedRecord() %}
+      <!-- window selected record bar -->
+      <div id="window_window_num_selected_record_bar" class="window_selected_record_bar group">
+        {% include selected_record_bar_template_path %}
+      </div>
+      {% endif %}
+      {% endif %}
+      {% set tabsToDisplay = getTabs(tabParent) %}
+      {% if tabsToDisplay %}
+      <!-- window tab bar -->
+      <div id="window_window_num_tab_bar" class="window_tab_bar">
+        <ul class="tabs">
+          {% for tab in tabsToDisplay %}
+            <li{% if tab.ROUTE == request.get('_route') %} class="active"{% endif %}><a id="window_window_num_tab_{{tab.NAVIGATION_ID}}" href="{{ path(tab.ROUTE) }}" class="window-tab-link" data-window="window_num">{{ tab.DISPLAY_NAME }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      <!-- content -->
+      <div id="window_window_num_content">
+        <div id="window_window_num_tab_{% if navigation_info.NAVIGATION_TYPE == 'T' %}{{navigation_info.NAVIGATION_ID}}{% else %}{{ tabsToDisplay[0]['NAVIGATION_ID'] }}{% endif %}_content" class="tab_content" data-window-url="{{ request.getBaseUrl()~request.getPathInfo() }}">
+          <div class="record_bar_tab_menu_data" style="display:none;" data-mode="{{ mode }}" data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}"></div>
+          {% if record_type %}
+          <div class="record_bar group">
+          {% include record_bar_template_path %}
+          </div>
+          {% endif %}
+          <div class="window_content">
+            {% include 'KulaFrameworkBundle::flash.html.twig' %}
+          {% block content %}
+          {% endblock %}
+          <div id="window_window_num_tab_{% if navigation_info.NAVIGATION_TYPE == 'T' %}{{navigation_info.NAVIGATION_ID}}{% else %}{{ tabsToDisplay[0]['NAVIGATION_ID'] }}{% endif %}_detail">
+          {% block detail %}
+          {% endblock %}
+          </div>
+          </div>
+        </div>
+      </div>
+      </form>
+{% endblock %}

@@ -1,0 +1,3 @@
+_system:
+    resource: "@KulaCoreSystemBundle/Resources/config/routing_core.yml"
+    prefix: core
