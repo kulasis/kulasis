@@ -36,3 +36,7 @@ services:
     public: false
     tags:
       - { name: twig.extension }
+  
+  kula.core.permission:
+    class: Kula\Core\Component\Permission\Permission
+    arguments: ["@kula.core.db", "@kula.core.session"]
