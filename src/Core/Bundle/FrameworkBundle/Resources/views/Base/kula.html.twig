@@ -1,16 +1,12 @@
 {% extends 'KulaCoreFrameworkBundle:Base:base.html.twig' %}
 {% block stylesheets %}
 {% stylesheets 
-      '@KulaFrameworkBundle/Resources/public/css/sis.css' %}
+      '@KulaCoreFrameworkBundle/Resources/public/css/core.css' %}
        <link rel="stylesheet" href="{{ asset_url }}" />
 {% endstylesheets %}
 {% endblock %}
 {% block javascripts %}
         {% javascripts 
-        '@KulaFrameworkBundle/Resources/public/js/navigation.js'
-        '@KulaFrameworkBundle/Resources/public/js/form.js'
-        '@KulaFrameworkBundle/Resources/public/js/focus.js'
-        '@KulaFrameworkBundle/Resources/public/js/application.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
@@ -45,7 +41,7 @@
   <div id="main_container">
     {% block main %}
       {% block window %}
-      {% endblock %w}
+      {% endblock %}
     {% endblock %}
   </div><!-- main_container -->
   

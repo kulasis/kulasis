@@ -29,3 +29,10 @@ services:
   kula.core.session:
     class: Kula\Core\Bundle\FrameworkBundle\Service\Session
     arguments: ["@session", "@kula.core.db", "@request_stack"]
+    
+  kula.core.twig.extension:
+    class: Kula\Core\Bundle\FrameworkBundle\Extension\TwigExtension
+    arguments: ["@kula.core.db", "@request_stack", "@kula.core.session"]
+    public: false
+    tags:
+      - { name: twig.extension }
