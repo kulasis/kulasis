@@ -8,10 +8,13 @@ class TwigExtension extends \Twig_Extension {
   private $request;
   private $session;
   
-  public function __construct($db, $request, $session) {
+  public function __construct($db, $request, $session, $flash, $navigation, $router) {
     $this->db = $db;
     $this->request = $request;
     $this->session = $session;
+    $this->flash = $flash;
+    $this->navigation = $navigation;
+    $this->router = $router;
   }
   
   public function getFunctions() {
@@ -29,34 +32,34 @@ class TwigExtension extends \Twig_Extension {
       new \Twig_SimpleFunction('table_row_form', array('Kula\Core\Component\Twig\Table', 'rowForm'), array('is_safe' => array('html'))),
       new \Twig_SimpleFunction('table_tbody_open', array('Kula\Core\Component\Twig\Table', 'openTBody'), array('is_safe' => array('html'))),
       new \Twig_SimpleFunction('table_tbody_close', array('Kula\Core\Component\Twig\Table', 'closeTBody'), array('is_safe' => array('html'))),
-      new \Twig_SimpleFunction('getNavigation', array('Kula\Core\Component\Navigation\Navigation', 'getFormsWithGroups'), array('is_safe' => array('html'))),
+      /*new \Twig_SimpleFunction('getNavigation', array('Kula\Core\Component\Navigation\Navigation', 'getFormsWithGroups'), array('is_safe' => array('html'))),
       new \Twig_SimpleFunction('getReports', array('Kula\Core\Component\Navigation\Navigation', 'getReportsWithGroups'), array('is_safe' => array('html'))),
       new \Twig_SimpleFunction('getTabs', array('Kula\Core\Component\Navigation\Navigation', 'getTabsForNavigation'), array('is_safe' => array('html'))),
       new \Twig_SimpleFunction('getActionsMenu', array('Kula\Core\Component\Navigation\Navigation', 'getActionsMenuForNavigation'), array('is_safe' => array('html'))),
-      new \Twig_SimpleFunction('getReportsMenu', array('Kula\Core\Component\Navigation\Navigation', 'getReportsMenuForNavigation'), array('is_safe' => array('html'))),
-      new \Twig_SimpleFunction('getMethodsForRoute', array('Kula\Core\Component\Navigation\Navigation', 'getMethodsForRoute'), array('is_safe' => array('html')))
+      new \Twig_SimpleFunction('getReportsMenu', array('Kula\Core\Component\Navigation\Navigation', 'getReportsMenuForNavigation'), array('is_safe' => array('html'))),*/
+      new \Twig_SimpleFunction('getMethodsForRoute', array('Kula\Core\Component\Utility\Router', 'getMethodsForRoute'), array('is_safe' => array('html'))) 
     );
   }
   
   public function getGlobals() {
     $current_request = $this->request->getCurrentRequest();
     $globals_array = array();
-    /*
-    $navigation_info = \Kula\Core\Component\Navigation\Navigation::getNavigationInfoFromPath($current_request->attributes->get('_route'));
+    
+    //$navigation_info = \Kula\Core\Component\Navigation\Navigation::getNavigationInfoFromPath($current_request->attributes->get('_route'));
     
     $globals_array = array(
       'session' => $this->session,
-      'focus' => $container->get('kula.focus'),
-      'flash' => $container->get('session.flash_bag'),
+      //'focus' => $container->get('kula.focus'),
+      'flash' => $this->flash,
       'request' => $current_request,
-      
-      'navigation_info' => $navigation_info,
+      'kula_core_navigation' => $this->navigation,
+      //'navigation_info' => $navigation_info,
       'partial' => $current_request->query->get('partial'),
-      
+      'router' => $this->router,
       'mode' => 'edit',
       'form_action' => $current_request->getBaseUrl().$current_request->getPathInfo(),
     );
-    */
+    /*
     if ($this->session->get('user_id')) {
       $globals_array += array(
         'focus_usergroups' => Focus::usergroups($this->session->get('user_id')),
@@ -74,7 +77,7 @@ class TwigExtension extends \Twig_Extension {
         );
       }
       
-    }
+    }*/
     
     return $globals_array;
   }

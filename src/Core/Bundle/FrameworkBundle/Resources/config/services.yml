@@ -32,7 +32,7 @@ services:
     
   kula.core.twig.extension:
     class: Kula\Core\Bundle\FrameworkBundle\Extension\TwigExtension
-    arguments: ["@kula.core.db", "@request_stack", "@kula.core.session"]
+    arguments: ["@kula.core.db", "@request_stack", "@kula.core.session", "@session.flash_bag", "@kula.core.navigation", "@router"]
     public: false
     tags:
       - { name: twig.extension }

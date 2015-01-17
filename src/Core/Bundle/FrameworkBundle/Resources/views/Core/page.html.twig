@@ -26,15 +26,15 @@
 {% block navigation_pane %}
   <div id="nav_favorites" style="display:none;">Favorites</div>
   <div id="nav_forms">
-    {% set nav_groups = getNavigation() %}
-    {% for group_id, group_row in nav_groups %}
-      <div id="drawer-{{ group_id }}" class="navigation-drawer navigation-forms">
-        <div class="drawer-header navigation-forms" data-category="forms-{{ group_id }}">{{ group_row.name }}</div>
-        <div id="drawer-contents-forms-{{ group_id }}" class="drawer-contents navigation-forms" style="{% if group_row.selected_group == 'Y' %}display:block;{% else %}display:none;{% endif %}">
+    {% set navFormGroups = kula_core_navigation.getFormGroups() %}
+    {% for group_id, group_row in navFormGroups %}
+      <div id="drawer-{{ group_row.getName() }}" class="navigation-drawer navigation-forms">
+        <div class="drawer-header navigation-forms" data-category="forms-{{ group_id }}">{{ group_row.getDisplayName() }}</div>
+        <div id="drawer-contents-forms-{{ group_row.getName() }}" class="drawer-contents navigation-forms" style="{% if kula_core_navigation.getRequestedForm().getParent() == group_row.getName() %}display:block;{% else %}display:none;{% endif %}">
           <ul>
-          {% for form_id, form_row in group_row.forms %}
-            {% if form_row.name %}
-              <li><a href="{% if form_row.route %}{{ path(form_row.route) }}{% endif %}" class="navigation-link-new-window" data-panel-name="{{ form_row.name }}">+</a><a href="{% if form_row.route %}{{ path(form_row.route) }}{% endif %}" class="navigation-link">{{ form_row.name }}</a></li>
+          {% for form_id, form_row in group_row.getForms() %}
+            {% if form_row.getName() %}
+              <li><a href="{% if form_row.getRoute() %}{{ path(form_row.getRoute()) }}{% endif %}" class="navigation-link">{{ form_row.getDisplayName() }}</a></li>
             {% else %}
               <li class="none">None</li>
             {% endif %}
@@ -45,15 +45,15 @@
     {% endfor %}
   </div>
   <div id="nav_reports"{% if navigation_info.NAVIGATION_TYPE != 'R' %} style="display:none;"{% endif %}>
-    {% set nav_groups = getReports() %}
-    {% for group_id, group_row in nav_groups %}
-      <div id="drawer-reports-{{ group_id }}" class="navigation-drawer navigation-reports">
-        <div class="drawer-header navigation-reports" data-category="reports-{{ group_id }}">{{ group_row.name }}</div>
-        <div id="drawer-contents-reports-{{ group_id }}" class="drawer-contents navigation-reports" style="{% if group_row.selected_group == 'Y' %}display:block;{% else %}display:none;{% endif %}">
+    {% set navReportGroups = kula_core_navigation.getReportGroups() %}
+    {% for group_id, group_row in navReportGroups %}
+      <div id="drawer-reports-{{ group_row.getName() }}" class="navigation-drawer navigation-reports">
+        <div class="drawer-header navigation-reports" data-category="reports-{{ group_row.getName() }}">{{ group_row.getDisplayName() }}</div>
+        <div id="drawer-contents-reports-{{ group_row.getName() }}" class="drawer-contents navigation-reports" style="{% if group_row.selected_group == 'Y' %}display:block;{% else %}display:none;{% endif %}">
           <ul>
-          {% for report_id, report_row in group_row.reports %}
-            {% if report_row.name %}
-              <li><a href="{% if report_row.route %}{{ path(report_row.route) }}{% endif %}" class="navigation-link-new-window" data-panel-name="{{ report_row.name }}">+</a><a href="{% if report_row.route %}{{ path(report_row.route) }}{% endif %}" class="navigation-link">{{ report_row.name }}</a></li>
+          {% for report_id, report_row in group_row.getReports() %}
+            {% if report_row.getName() %}
+              <li><a href="{% if report_row.getRoute() %}{{ path(report_row.getRoute()) }}{% endif %}" class="navigation-link">{{ report_row.getDisplayName() }}</a></li>
             {% else %}
               <li class="none">None</li>
             {% endif %}

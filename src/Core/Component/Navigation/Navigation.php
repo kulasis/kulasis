@@ -8,6 +8,7 @@ class Navigation {
   private $reportGroups = array();
   private $formGroups = array();
   private $pages = array();
+  private $navigationByRoutes = array();
   
   private $db;
   
@@ -97,21 +98,56 @@ class Navigation {
       
       $this->navigation[$navRow['NAVIGATION_NAME']] = $navigationItem;
       
+      if ($navRow['ROUTE']) {
+        $this->navigationByRoutes[$navRow['ROUTE']] = $navigationItem;
+      }
+      
       unset($navigationItem);
       
     }
   }
   
-  public function getNavigationForPortal($portal, $type) {
+  public function awake($session, $permission, $request) {
+    $this->session = $session;
+    $this->permission = $permission;
+    $this->request = $request;
+  }
+  
+  public function getFormGroups() {
+    if (isset($this->formGroups[$this->session->get('portal')])) {
+      $groups = array();
+      foreach($this->formGroups[$this->session->get('portal')] as $name => $group) {
+        if ($this->permission->getPermissionForNavigationObject($name)) {
+          $groups[] = $group;
+        }
+      }
+      return $groups;
+    }
+  }
+  
+  public function getReportGroups() {
+    if (isset($this->reportGroups[$this->session->get('portal')]))
+      return $this->reportGroups[$this->session->get('portal')];
+  }
+  
+  public function getRequestedForm() {
+    $route = $this->request->getCurrentRequest()->attributes->get('_route');
+
+    $routeNav = $this->navigationByRoutes[$route];
     
-    return $this->navigationArranged[$portal][$type];
+    if ($routeNav instanceof Form) {
+      return $routeNav;
+    }
     
+    if ($routeNav instanceof Tab) {
+      return $this->navigation[$routeNav->getParent()];
+    } 
   }
   
   public function __sleep() {
     $this->db = null;
     
-    return array('navigation', 'reportGroups', 'formGroups');
+    return array('navigation', 'reportGroups', 'formGroups', 'navigationByRoutes');
   }
   
 }

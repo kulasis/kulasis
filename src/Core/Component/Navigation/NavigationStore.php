@@ -10,11 +10,14 @@ class NavigationStore {
   
   private $navigation;
   
-  public function __construct($db, $fileName, $cacheDir, $debug) {
+  public function __construct($db, $fileName, $cacheDir, $debug, $session, $permission, $request) {
     $this->db = $db;
     $this->cacheDir = $cacheDir;
     $this->fileName = $fileName;
     $this->debug = $debug;
+    $this->session = $session;
+    $this->permission = $permission;
+    $this->request = $request;
   }
   
   public function warmUp($cacheDir) {
@@ -30,7 +33,7 @@ class NavigationStore {
     }
     
     $this->navigation = unserialize(file_get_contents((string) $cache));
-    
+    $this->navigation->awake($this->session, $this->permission, $this->request);
   }
   
   public function getNavigation() {

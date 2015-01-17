@@ -20,4 +20,16 @@ class Form extends Item {
     $this->tabs[] = $menu;
   }
   
+  public function getMenuActions() {
+    return $this->menuActions;
+  }
+  
+  public function getMenuReports() {
+    return $this->menuReports;
+  }
+  
+  public function getTabs() {
+    return $this->tabs;
+  }
+  
 }

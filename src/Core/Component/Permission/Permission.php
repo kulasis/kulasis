@@ -23,13 +23,13 @@ class Permission {
   
   public function getPermissionForNavigationObject($navigation_name) {
     
-    $this->_loadNavigationPermissionObject();
+    $this->loadNavigationPermissionObject();
     
     // If item not set in array, full permissions to object
-    if (!isset($this->$navigation[$navigation_name]) OR $this->$navigation[$navigation_name] == '')
+    if (!isset($this->navigation[$navigation_name]) OR $this->navigation[$navigation_name] == '')
       return true;
     else {
-      if ($this->$navigation[$navigation_name] == 'Y')
+      if ($this->navigation[$navigation_name] == 'Y')
         return true;
       else
         return false;
@@ -38,25 +38,25 @@ class Permission {
   
   public function getPermissionForSchemaObject($db_table, $db_field, $permission) {
     
-    $this->_loadSchemaPermissionObject();
+    $this->loadSchemaPermissionObject();
     
     if ($permission == self::ADD) {
       
       // if add permission not set
-      if (!isset($this->$tables[$db_table]['add']) AND $permission == self::ADD)
+      if (!isset($this->tables[$db_table]['add']) AND $permission == self::ADD)
         return true;
       
-      if (self::ADD AND $this->$tables[$db_table]['add'] == 'Y')
+      if (self::ADD AND $this->tables[$db_table]['add'] == 'Y')
         return true;
       else
         return false;
     
     } elseif ($permission == self::DELETE) {
       // if delete permission not set
-      if (!isset($this->$tables[$db_table]['delete']) AND $permission == self::DELETE)
+      if (!isset($this->tables[$db_table]['delete']) AND $permission == self::DELETE)
         return true;
       
-      if (self::DELETE AND $this->$tables[$db_table]['delete'] == 'Y')
+      if (self::DELETE AND $this->tables[$db_table]['delete'] == 'Y')
         return true;
       else
         return false;
@@ -64,31 +64,31 @@ class Permission {
     } else {
     
       // If item not set in array, full permissions to object
-      if (!isset($this->$fields[$db_table][$db_field]) AND !isset($this->$tables[$db_table]['edit']))
+      if (!isset($this->fields[$db_table][$db_field]) AND !isset($this->tables[$db_table]['edit']))
         return true;
       else {
         // Check for field first
-        if (isset($this->$fields[$db_table][$db_field]))
-          return $this->_checkSchemaPermission($this->$fields[$db_table][$db_field], $permission);
+        if (isset($this->fields[$db_table][$db_field]))
+          return $this->checkSchemaPermission($this->fields[$db_table][$db_field], $permission);
         else
-          return $this->_checkSchemaPermission($this->$tables[$db_table]['edit'], $permission);
+          return $this->checkSchemaPermission($this->tables[$db_table]['edit'], $permission);
         }
       }
   }
   
-  private function _loadSchemaPermissionObject() {
-    if (!$this->$tables)
-      $this->_loadTablePermissions();
-    if (!$this->$fields)
-      $this->_loadFieldPermissions();
+  private function loadSchemaPermissionObject() {
+    if (!$this->tables)
+      $this->loadTablePermissions();
+    if (!$this->fields)
+      $this->loadFieldPermissions();
   }
   
-  private function _loadNavigationPermissionObject() {
-    if (!$this->$navigation)
-      $this->_loadNavigationPermissions();
+  private function loadNavigationPermissionObject() {
+    if (!$this->navigation)
+      $this->loadNavigationPermissions();
   }
 
-  private function _loadNavigationPermissions() {
+  private function loadNavigationPermissions() {
 
     $usergroup_condition = $this->db->db_or('OR');
     $usergroup_condition = $usergroup_condition->condition('USERGROUP_ID', $this->session->get('usergroup_id'));
@@ -105,28 +105,29 @@ class Permission {
     // schema table query
     $result = $this->db->db_select('CORE_PERMISSION_NAVIGATION')
       ->fields('CORE_PERMISSION_NAVIGATION', array('USERGROUP_ID', 'ROLE_ID', 'PERMISSION'))
-      ->join('CORE_NAVIGATION', 'CORE_NAVIGATION', array('NAVIGATION_NAME'), 'CORE_NAVIGATION.NAVIGATION_ID = CORE_PERMISSION_NAVIGATION.NAVIGATION_ID')
+      ->join('CORE_NAVIGATION', 'CORE_NAVIGATION', 'CORE_NAVIGATION.NAVIGATION_ID = CORE_PERMISSION_NAVIGATION.NAVIGATION_ID')
+      ->fields('CORE_NAVIGATION', array('NAVIGATION_NAME'))
       ->condition($usergroup_condition)
       ->condition($role_condition)
       ->condition($public_condition)
-      ->order_by('ROLE_ID', 'DESC')
-      ->order_by('USERGROUP_ID', 'DESC');
+      ->orderBy('ROLE_ID', 'DESC')
+      ->orderBy('USERGROUP_ID', 'DESC');
     //echo $table_result->sql();
     $result =  $result->execute();
     while ($row = $result->fetch()) {
       
-      if (!isset($this->$navigation[$row['NAVIGATION_NAME']]) && $row['ROLE_ID'] && $row['PERMISSION'] != '') {
-        $this->$navigation[$row['NAVIGATION_NAME']] = $row['PERMISSION'];
-      } elseif (!isset($this->$navigation[$row['NAVIGATION_NAME']]) && $row['USERGROUP_ID'] && $row['PERMISSION'] != '') {
-        $this->$navigation[$row['NAVIGATION_NAME']] = $row['PERMISSION'];
-      } elseif (!isset($this->$navigation[$row['NAVIGATION_NAME']]) && $row['PERMISSION'] != '') {
-        $this->$navigation[$row['NAVIGATION_NAME']] = $row['PERMISSION'];
+      if (!isset($this->navigation[$row['NAVIGATION_NAME']]) && $row['ROLE_ID'] && $row['PERMISSION'] != '') {
+        $this->navigation[$row['NAVIGATION_NAME']] = $row['PERMISSION'];
+      } elseif (!isset($this->navigation[$row['NAVIGATION_NAME']]) && $row['USERGROUP_ID'] && $row['PERMISSION'] != '') {
+        $this->navigation[$row['NAVIGATION_NAME']] = $row['PERMISSION'];
+      } elseif (!isset($this->navigation[$row['NAVIGATION_NAME']]) && $row['PERMISSION'] != '') {
+        $this->navigation[$row['NAVIGATION_NAME']] = $row['PERMISSION'];
       }
       
     }
   }
   
-  private function _loadTablePermissions() {
+  private function loadTablePermissions() {
     
     $usergroup_condition = $this->db->db_or('OR');
     $usergroup_condition = $usergroup_condition->condition('USERGROUP_ID', $this->session->get('usergroup_id'));
@@ -143,34 +144,35 @@ class Permission {
     // schema table query
     $result = $this->db->db_select('CORE_PERMISSION_SCHEMA_TABLES')
       ->fields('CORE_PERMISSION_SCHEMA_TABLES', array('USERGROUP_ID', 'ROLE_ID', 'PERMISSION_ADD', 'PERMISSION_DELETE', 'PERMISSION_EDIT'))
-      ->join('CORE_SCHEMA_TABLES', 'CORE_SCHEMA_TABLES', array('SCHEMA_TABLE_NAME'), 'CORE_SCHEMA_TABLES.SCHEMA_TABLE_ID = CORE_PERMISSION_SCHEMA_TABLES.SCHEMA_TABLE_ID')
+      ->join('CORE_SCHEMA_TABLES', 'CORE_SCHEMA_TABLES', 'CORE_SCHEMA_TABLES.SCHEMA_TABLE_ID = CORE_PERMISSION_SCHEMA_TABLES.SCHEMA_TABLE_ID')
+      ->fields('CORE_SCHEMA_TABLES', array('SCHEMA_TABLE_NAME'))
       ->condition($usergroup_condition)
       ->condition($role_condition)
       ->condition($public_condition)
-      ->order_by('ROLE_ID', 'DESC')
-      ->order_by('USERGROUP_ID', 'DESC');
+      ->orderBy('ROLE_ID', 'DESC')
+      ->orderBy('USERGROUP_ID', 'DESC');
     //echo $table_result->sql();
     $result =  $result->execute();
     while ($row = $result->fetch()) {
       
-      if (!isset($this->$tables[$row['SCHEMA_TABLE_NAME']]) && $row['ROLE_ID']) {
-        $this->$tables[$row['SCHEMA_TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
-        $this->$tables[$row['SCHEMA_TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
-        $this->$tables[$row['SCHEMA_TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
-      } elseif (!isset($this->$tables[$row['SCHEMA_TABLE_NAME']]) && $row['USERGROUP_ID']) {
-        $this->$tables[$row['SCHEMA_TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
-        $this->$tables[$row['SCHEMA_TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
-        $this->$tables[$row['SCHEMA_TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
-      } elseif (!isset($this->$tables[$row['SCHEMA_TABLE_NAME']])) {
-        $this->$tables[$row['SCHEMA_TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
-        $this->$tables[$row['SCHEMA_TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
-        $this->$tables[$row['SCHEMA_TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
+      if (!isset($this->tables[$row['SCHEMA_TABLE_NAME']]) && $row['ROLE_ID']) {
+        $this->tables[$row['SCHEMA_TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
+        $this->tables[$row['SCHEMA_TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
+        $this->tables[$row['SCHEMA_TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
+      } elseif (!isset($this->tables[$row['SCHEMA_TABLE_NAME']]) && $row['USERGROUP_ID']) {
+        $this->tables[$row['SCHEMA_TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
+        $this->tables[$row['SCHEMA_TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
+        $this->tables[$row['SCHEMA_TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
+      } elseif (!isset($this->tables[$row['SCHEMA_TABLE_NAME']])) {
+        $this->tables[$row['SCHEMA_TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
+        $this->tables[$row['SCHEMA_TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
+        $this->tables[$row['SCHEMA_TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
       }
       
     }
   }
   
-  private function _loadFieldPermissions() {
+  private function loadFieldPermissions() {
     
     $usergroup_condition = $this->db->db_or('OR');
     $usergroup_condition = $usergroup_condition->condition('USERGROUP_ID', $this->session->get('usergroup_id'));
@@ -187,28 +189,30 @@ class Permission {
     // schema field query
     $result = $this->db->db_select('CORE_PERMISSION_SCHEMA_FIELDS')
       ->fields('CORE_PERMISSION_SCHEMA_FIELDS', array('USERGROUP_ID', 'ROLE_ID', 'PERMISSION'))
-      ->join('CORE_SCHEMA_FIELDS', 'CORE_SCHEMA_FIELDS', array('DB_FIELD_NAME'), 'CORE_SCHEMA_FIELDS.SCHEMA_FIELD_ID = CORE_PERMISSION_SCHEMA_FIELDS.SCHEMA_FIELD_ID')
-      ->join('CORE_SCHEMA_TABLES', 'CORE_SCHEMA_TABLES', array('SCHEMA_TABLE_NAME'), 'CORE_SCHEMA_TABLES.SCHEMA_TABLE_ID = CORE_SCHEMA_FIELDS.SCHEMA_TABLE_ID')
+      ->join('CORE_SCHEMA_FIELDS', 'CORE_SCHEMA_FIELDS', 'CORE_SCHEMA_FIELDS.SCHEMA_FIELD_ID = CORE_PERMISSION_SCHEMA_FIELDS.SCHEMA_FIELD_ID')
+      ->fields('CORE_SCHEMA_FIELDS', array('DB_FIELD_NAME'))
+      ->join('CORE_SCHEMA_TABLES', 'CORE_SCHEMA_TABLES', 'CORE_SCHEMA_TABLES.SCHEMA_TABLE_ID = CORE_SCHEMA_FIELDS.SCHEMA_TABLE_ID')
+      ->fields('CORE_SCHEMA_FIELDS', array('SCHEMA_TABLE_NAME'))
       ->condition($usergroup_condition)
       ->condition($role_condition)
       ->condition($public_condition)
-      ->order_by('ROLE_ID', 'DESC')
-      ->order_by('USERGROUP_ID', 'DESC');
+      ->orderBy('ROLE_ID', 'DESC')
+      ->orderBy('USERGROUP_ID', 'DESC');
     $result =  $result->execute();
     while ($row = $result->fetch()) {
       
-      if (!isset($this->$fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']]) && $row['ROLE_ID'] && $row['PERMISSION'] != '') {
-        $this->$fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']] = $row['PERMISSION'];
-      } elseif (!isset($this->$fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']]) && $row['USERGROUP_ID'] && $row['PERMISSION'] != '') {
-        $this->$fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']] = $row['PERMISSION'];
-      } elseif (!isset($this->$fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']]) && $row['PERMISSION'] != '') {
-        $this->$fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']] = $row['PERMISSION'];
+      if (!isset($this->fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']]) && $row['ROLE_ID'] && $row['PERMISSION'] != '') {
+        $this->fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']] = $row['PERMISSION'];
+      } elseif (!isset($this->fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']]) && $row['USERGROUP_ID'] && $row['PERMISSION'] != '') {
+        $this->fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']] = $row['PERMISSION'];
+      } elseif (!isset($this->fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']]) && $row['PERMISSION'] != '') {
+        $this->fields[$row['SCHEMA_TABLE_NAME']][$row['DB_FIELD_NAME']] = $row['PERMISSION'];
       }
       
     }
   }
   
-  private function _checkSchemaPermission($db_permission, $permission) {
+  private function checkSchemaPermission($db_permission, $permission) {
     
     // No permission
     if ($db_permission == 'N')

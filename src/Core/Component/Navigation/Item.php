@@ -26,4 +26,20 @@ class Item {
     
   }
   
+  public function getDisplayName() {
+    return $this->displayName;
+  }
+  
+  public function getName() {
+    return $this->name;
+  }
+  
+  public function getRoute() {
+    return $this->route;
+  }
+  
+  public function getParent() {
+    return $this->parent;
+  }
+  
 }

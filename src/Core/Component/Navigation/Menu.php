@@ -17,5 +17,19 @@ class Menu extends Item {
     $this->confirmationMessage = $confirmationMessage;
     
   }
+  
+  public function getDividerBefore() {
+    if ($this->dividerBefore == 1)
+      return true;
+  }
+  
+  public function getRecordLoaded() {
+    if ($this->recordLoaded == 1)
+      return true;
+  }
+  
+  public function getConfirmationMessage() {
+    return $this->confirmationMessage;
+  }
 
 }
