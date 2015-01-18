@@ -1,16 +1,5 @@
 {% extends 'KulaCoreFrameworkBundle:Base:kula.html.twig' %}
 
-{% block focus %}
-  <span>
-    <label for="focus_term">Term:</label>
-    {{ form_select(focus_terms, 'focus_term', focus.getTermID, { id : 'focus_term' }) }}
-  </span>
-  <span>
-    <label for="focus_school">Organization:</label>
-    {{ form_select(focus_organization, 'focus_organization', focus.getOrganizationID, { id : 'focus_organization' }) }}
-  </span>
-{% endblock %}
-
 {% block navigation_bar %}
   <div id="nav_bar_navigation">
     <ul>

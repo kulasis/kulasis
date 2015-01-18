@@ -2,7 +2,23 @@
 
 namespace Kula\Core\Component\Twig;
 
+use Kula\Core\Component\Permission\Permission;
+
 class Field {
+  
+  private static $permission;
+  private static $focus;
+  private static $record;
+  private static $poster;
+  private static $schema;
+  
+  public static function setDependencies($permission, $focus, $record, $poster, $schema) {
+    self::$permission = $permission;
+    self::$focus = $focus;
+    self::$record = $record;
+    self::$poster = $poster;
+    self::$schema = $schema;
+  }
   
   public static function fieldName($param = array()) {
     $default_param = array('db_table' => '', 'db_field' => '', 'add' => false, 'edit' => false, 'delete' => false, 'prepend_html' => '', 'append_html' => '', 'school_term_only' => false);
@@ -10,13 +26,12 @@ class Field {
     
     $html = '';
     
-    $container = $GLOBALS['kernel']->getContainer();
-    $org_term_ids = $container->get('kula.focus')->getOrganizationTermIDs();
+    $org_term_ids = self::$focus->getOrganizationTermIDs();
     
     if (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1)) {
     
     if ($param['delete']) {
-      if (\Kula\Component\Permission\Permission::getPermissionForSchemaObject($param['db_table'], null, \Kula\Component\Permission\Permission::DELETE)) {
+      if (self::$permission->getPermissionForSchemaObject($param['db_table'], null, Permission::DELETE)) {
         if (isset($param['field_name_override'])) {
           $html = $param['field_name_override'];
         } else {
@@ -29,7 +44,7 @@ class Field {
           $html = $html . $param['append_html'];
       }
     } elseif (self::_displayValue($param)) {
-      $field = self::_getFieldInfo($param['db_table'], $param['db_field']);
+      $field = self::getFieldInfo($param['field']);
       
       if (isset($param['field_name_override'])) {
         $html = $param['field_name_override'];
@@ -54,11 +69,10 @@ class Field {
     $default_param = array('school_term_only' => false);
     $param = array_merge($default_param, $param);
     
-    $container = $GLOBALS['kernel']->getContainer();
-    $org_term_ids = $container->get('kula.focus')->getOrganizationTermIDs();
+    $org_term_ids = self::$focus->getOrganizationTermIDs();
     
-    $record_object = \Kula\Component\Record\Record::recordObject();
-    if (\Kula\Component\Permission\Permission::getPermissionForSchemaObject($db_table, null, \Kula\Component\Permission\Permission::ADD) AND
+    $record_object = self::$record->recordObject();
+    if (self::$permission->getPermissionForSchemaObject($db_table, null, Permission::ADD) AND
         (!isset($record_object) OR $record_object->getSubmitMode() == 'edit') AND 
       (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1))    )
     return GenericField::button(array('name' => 'Add', 'attributes_html' => array('class' => 'data-table-button-add', 'data-table' => $data_table_name)));
@@ -80,8 +94,8 @@ class Field {
     
     $html = '';
     if (
-         ($param['delete'] AND \Kula\Component\Permission\Permission::getPermissionForSchemaObject($param['db_table'], null, \Kula\Component\Permission\Permission::DELETE)) OR
-         ($param['add'] AND \Kula\Component\Permission\Permission::getPermissionForSchemaObject($param['db_table'], null, \Kula\Component\Permission\Permission::ADD))
+         ($param['delete'] AND self::$permission->getPermissionForSchemaObject($param['db_table'], null, Permission::DELETE)) OR
+         ($param['add'] AND self::$permission->etPermissionForSchemaObject($param['db_table'], null, Permission::ADD))
         ) {
       if ($param['prepend_html'])
         $html = $param['prepend_html'] . $html;
@@ -106,8 +120,7 @@ class Field {
    */
   public static function field($param = array()) {
     $default_param = 
-      array('db_table' => '', // db table
-            'db_field' => '',  // db field
+      array('field' => '', // db table
             'db_row_id' => '', // db row ID to update
             'table_row' => true, // adding to a table row 
             'value' => '', // current value for field
@@ -133,22 +146,21 @@ class Field {
     $param = array_merge($default_param, $param);
     
     // get schema field info
-    $field = self::_getFieldInfo($param['db_table'], $param['db_field']);
+    $field = self::getFieldInfo($param['field']);
     
-    $field_name = self::_getNameForField($param); // to delete
+    $field_name = self::getNameForField($param); // to delete
     
     // if failed, swap value for posted value
-    $container = $GLOBALS['kernel']->getContainer();
-    if ($container->has('kula.poster')) {
-      $poster_object = $container->get('kula.poster');
-      if (isset($poster_object) AND $poster_object->hasViolations()) {
-        $posted_value = $poster_object->getPostedValue($field_name);
-        if (!is_array($posted_value)) {
-          $param['value'] = $posted_value;
-          $param['attributes_html']['class'] = $param['attributes_html']['class'] . ' field_error';
-        }
+    $poster_object = self::$poster;
+    /*
+    if (isset($poster_object) AND $poster_object->hasViolations()) {
+      $posted_value = $poster_object->getPostedValue($field_name);
+      if (!is_array($posted_value)) {
+        $param['value'] = $posted_value;
+        $param['attributes_html']['class'] = $param['attributes_html']['class'] . ' field_error';
       }
     }
+    */
     
     // hidden flag takes presidence
     if ($param['hidden']) {
@@ -157,17 +169,17 @@ class Field {
     
     $html = '';
     
-    if ($param['add'] AND !\Kula\Component\Permission\Permission::getPermissionForSchemaObject($param['db_table'], null, \Kula\Component\Permission\Permission::ADD)) {
+    if ($param['add'] AND !self::$permission->getPermissionForSchemaObject($param['db_table'], null, Permission::ADD)) {
       return null;
     }
     
     // generate checkboxes for deleting
-    $org_term_ids = $container->get('kula.focus')->getOrganizationTermIDs();
+    $org_term_ids = self::$focus->getOrganizationTermIDs();
     if ($param['delete'] AND 
-    \Kula\Component\Permission\Permission::getPermissionForSchemaObject($param['db_table'], null, \Kula\Component\Permission\Permission::DELETE) AND 
+    self::$permission->getPermissionForSchemaObject($param['db_table'], null, Permission::DELETE) AND 
     (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1))) {
       
-      if ($param['add'] AND \Kula\Component\Permission\Permission::getPermissionForSchemaObject($param['db_table'], null, \Kula\Component\Permission\Permission::ADD))
+      if ($param['add'] AND self::$permission->getPermissionForSchemaObject($param['db_table'], null, Permission::ADD))
         $param['attributes_html']['class'] = 'form-delete-checkbox-add';
       else   
         $param['attributes_html']['class'] = 'form-delete-checkbox';
@@ -185,51 +197,51 @@ class Field {
     }
     
     // generate text field
-    if ($field['FIELD_TYPE'] == 'TEXT') {
+    if ($field->getFieldType()  == 'text') {
       $html .= self::_textField($param);
     }
     
-    if ($field['FIELD_TYPE'] == 'TEXTAREA') {
+    if ($field->getFieldType() == 'TEXTAREA') {
       $html .= self::_textArea($param);
     }
     
-    if ($field['FIELD_TYPE'] == 'PASSWORD') {
+    if ($field->getFieldType() == 'PASSWORD') {
       $html .= self::_password($param);
     }
     
-    if ($field['FIELD_TYPE'] == 'DATE') {
+    if ($field->getFieldType() == 'DATE') {
       $html .= self::_date($param);
     }
     
-    if ($field['FIELD_TYPE'] == 'TIME') {
+    if ($field->getFieldType() == 'TIME') {
       $html .= self::_time($param);
     }
     
-    if ($field['FIELD_TYPE'] == 'CHECKBOX') {
+    if ($field->getFieldType() == 'CHECKBOX') {
       $html .= self::_checkbox($param);
     }
     
-    if ($field['FIELD_TYPE'] == 'MULTI_CHBX') {
+    if ($field->getFieldType() == 'MULTI_CHBX') {
       $html .= self::_multipleCheckbox($param);
     }
     
-    if ($field['FIELD_TYPE'] == 'RADIO') {
+    if ($field->getFieldType() == 'RADIO') {
       $html .= self::_radio($param);
     }
     
-    if ($field['FIELD_TYPE'] == 'LOOKUP') {
+    if ($field->getFieldType() == 'LOOKUP') {
       $html .= self::_lookup($param);
     }
     
-    if ($field['FIELD_TYPE'] == 'CHOOSER') {
+    if ($field->getFieldType() == 'CHOOSER') {
       $html .= self::_chooser($param);
     }
     
-    if ($field['FIELD_TYPE'] == 'SELECT') {
+    if ($field->getFieldType() == 'SELECT') {
       $html .= self::_select($param);
     }
     
-    if ($field['FIELD_TYPE'] == '') {
+    if ($field->getFieldType() == '') {
       $html .= $param['value'];
     }
     
@@ -262,26 +274,26 @@ class Field {
   private static function _textField($param) {
 
     if (self::_displayField($param)) {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-      $field_name = self::_getNameForField($param);
-      $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
-      if (isset($schema['CALCULATED_FIELD_LOGIC_CLASS'])) {
-        $class = $schema['CALCULATED_FIELD_LOGIC_CLASS'];
+      $schema = self::getFieldInfo($param['field']);
+      $field_name = self::getNameForField($param);
+      $param['attributes_html']['size'] = $schema->getFieldSize();
+      $class = $schema->getClass();
+      if ($class) {
         $param['value'] = $class::calculate($param['value']);
       }
       return GenericField::text($field_name, $param['value'], $param['attributes_html']);
     } elseif (self::_displayValue($param) AND !$param['input']) {
-      if (isset($schema['CALCULATED_FIELD_LOGIC_CLASS'])) {
-        $class = $schema['CALCULATED_FIELD_LOGIC_CLASS'];
+      $class = $schema->getClass();
+      if ($class) {
         $param['value'] = $class::calculate($param['value']);
       }
       return $param['value'];
     } elseif (self::_displayValue($param)) {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-      $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
+      $schema = self::getFieldInfo($param['field']);
+      $param['attributes_html']['size'] = $schema->getFieldSize();
       $param['attributes_html']['disabled'] = 'disabled';
-      if (isset($schema['CALCULATED_FIELD_LOGIC_CLASS'])) {
-        $class = $schema['CALCULATED_FIELD_LOGIC_CLASS'];
+      $class = $schema->getClass();
+      if ($class) {
         $param['value'] = $class::calculate($param['value']);
       }
       return GenericField::text(null, $param['value'], $param['attributes_html']);
@@ -291,15 +303,15 @@ class Field {
   private static function _textArea($param) {
 
     if (self::_displayField($param)) {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-      $field_name = self::_getNameForField($param);
+      $schema = self::getFieldInfo($param['field']);
+      $field_name = self::getNameForField($param);
       $param['attributes_html']['cols'] = $schema['DISPLAY_SIZE'];
       if (!isset($param['attributes_html']['rows'])) $param['attributes_html']['rows'] = 5;
       return GenericField::textArea($field_name, $param['value'], $param['attributes_html']);
     } elseif (self::_displayValue($param) AND !$param['input']) {
       return $param['value'];
     } elseif (self::_displayValue($param)) {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
+      $schema = self::getFieldInfo($param['field']);
       $param['attributes_html']['cols'] = $schema['DISPLAY_SIZE'];
       $param['attributes_html']['disabled'] = 'disabled';
       if (!isset($param['attributes_html']['rows'])) $param['attributes_html']['rows'] = 5;
@@ -309,8 +321,8 @@ class Field {
   
   private static function _password($param) {
     if (self::_displayField($param)) {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-      $field_name = self::_getNameForField($param);
+      $schema = self::getFieldInfo($param['field']);
+      $field_name = self::getNameForField($param);
       $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
       return GenericField::password($field_name, $param['value'], $param['attributes_html']);
     } 
@@ -325,8 +337,8 @@ class Field {
       $param['value'] = date($date_format, strtotime($param['value']));
     }
     if (self::_displayField($param)) {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-      $field_name = self::_getNameForField($param);
+      $schema = self::getFieldInfo($param['field']);
+      $field_name = self::getNameForField($param);
       if ($schema['DISPLAY_SIZE'])
         $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
       else
@@ -335,7 +347,7 @@ class Field {
     } elseif (self::_displayValue($param) AND !$param['input']) {
       return $param['value'];
     } else {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
+      $schema = self::getFieldInfo($param['field']);
       if ($schema['DISPLAY_SIZE'])
         $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
       else
@@ -354,8 +366,8 @@ class Field {
       $param['value'] = date($date_format, strtotime($param['value']));
     }
     if (self::_displayField($param)) {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-      $field_name = self::_getNameForField($param);
+      $schema = self::getFieldInfo($param['field']);
+      $field_name = self::getNameForField($param);
       if ($schema['DISPLAY_SIZE'])
         $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
       else
@@ -364,7 +376,7 @@ class Field {
     } elseif (self::_displayValue($param) AND !$param['input']) {
       return $param['value'];
     } else {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
+      $schema = self::getFieldInfo($param['field']);
       if ($schema['DISPLAY_SIZE'])
         $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
       else
@@ -376,8 +388,8 @@ class Field {
   
   private static function _multipleCheckbox($param) {
     $html = '';
-    $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-    $field_name = self::_getNameForField($param) . '[]';
+    $schema = self::getFieldInfo($param['field']);
+    $field_name = self::getNameForField($param) . '[]';
     
     $html .= GenericField::checkbox($field_name, $param['value'], $param['attributes_html']);
     return $html;
@@ -386,10 +398,10 @@ class Field {
   private static function _checkbox($param) {
     if (self::_displayField($param)) {
       $html = '';
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-      $field_name = self::_getNameForField($param);
+      $schema = self::getFieldInfo($param['field']);
+      $field_name = self::getNameForField($param);
       
-      $record_object = \Kula\Component\Record\Record::recordObject();
+      $record_object = self::$record;
       if (isset($record_object) AND $record_object->getSubmitMode() == 'search') {
         $html .= '';
       } else {
@@ -408,8 +420,8 @@ class Field {
   
   private static function _radio($param) {
     if (self::_displayField($param)) {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-      $field_name = self::_getNameForField($param);
+      $schema = self::getFieldInfo($param['field']);
+      $field_name = self::getNameForField($param);
       if ($param['value'] == $param['value_to_compare']) $param['attributes_html']['checked'] = 'checked';
       return GenericField::radio($field_name, $param['value'], $param['attributes_html']);
     } elseif (self::_displayValue($param)) {
@@ -418,17 +430,17 @@ class Field {
   }
   
   private static function _lookup($param) {
-    $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
+    $schema = self::getFieldInfo($param['field']);
     $lookup = array('' => '');
     
     if (self::_displayField($param)) {
-      $field_name = self::_getNameForField($param);
+      $field_name = self::getNameForField($param);
       $lookup += \Kula\Component\Lookup\Lookup::getLookupMenu($schema['LOOKUP_ID'], $param['lookup']);
       return GenericField::select($lookup, $field_name, $param['value'], $param['attributes_html']);  
     } elseif (self::_displayValue($param) AND !$param['input']) {
       return \Kula\Component\Lookup\Lookup::getLookupValue($schema['LOOKUP_ID'], $param['value'], $param['lookup'], true);
     } elseif (self::_displayValue($param)) {
-      $field_name = self::_getNameForField($param);
+      $field_name = self::getNameForField($param);
       $lookup += \Kula\Component\Lookup\Lookup::getLookupMenu($schema['LOOKUP_ID'], $param['lookup'], true);
       $param['attributes_html']['disabled'] = 'disabled';
       return GenericField::select($lookup, $field_name, $param['value'], $param['attributes_html']);  
@@ -436,8 +448,8 @@ class Field {
   }
   
   private static function _chooser($param) {
-    $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-    $field_name = self::_getNameForField($param);
+    $schema = self::getFieldInfo($param['field']);
+    $field_name = self::getNameForField($param);
     $chooser_class = $schema['CHOOSER_CLASS'];
     $current_choice_menu = '';
     
@@ -473,8 +485,8 @@ class Field {
   
   private static function _select($param) {
     if (self::_displayField($param)) {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-      $field_name = self::_getNameForField($param);
+      $schema = self::getFieldInfo($param['field']);
+      $field_name = self::getNameForField($param);
       $select_options = array('' => '');
       // check if field is calculated
       if (isset($schema['CALCULATED_FIELD_LOGIC_CLASS'])) {
@@ -483,7 +495,7 @@ class Field {
       }
       return GenericField::select($select_options, $field_name, $param['value'], $param['attributes_html']);
     } elseif (self::_displayValue($param) AND !$param['input']) {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
+      $schema = self::getFieldInfo($param['field']);
       $select_options = array('' => '');
       // check if field is calculated
       if (isset($schema['CALCULATED_FIELD_LOGIC_CLASS'])) {
@@ -493,7 +505,7 @@ class Field {
       }
       return $select_options[$param['value']];
     } elseif (self::_displayValue($param)) {
-      $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
+      $schema = self::getFieldInfo($param['field']);
       $select_options = array('' => '');
       // check if field is calculated
       if (isset($schema['CALCULATED_FIELD_LOGIC_CLASS'])) {
@@ -506,12 +518,13 @@ class Field {
   }
   
   private static function _label($param) {
+    
     if (self::_displayField($param) || self::_displayValue($param)) {
       if (isset($param['field_name_override'])) {
         $label_name = $param['field_name_override'];
       } else {
-        $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
-        $label_name = $schema['DISPLAY_NAME'];
+        $schema = self::getFieldInfo($param['field']);
+        $label_name = $schema->getLabelName();
       }
       return GenericField::label($label_name);
     } 
@@ -519,9 +532,9 @@ class Field {
   
   /* HELPER METHODS */
   
-  private static function _getNameForField($param) {
+  private static function getNameForField($param) {
     
-    $schema = self::_getFieldInfo($param['db_table'], $param['db_field']);
+    $schema = self::getFieldInfo($param['field']);
     $db_action = '';
     if ($param['add'])
       $db_action = 'add';
@@ -537,15 +550,17 @@ class Field {
       $db_action = $param['post_type'];
       
     // if controller set to search mode, set db_action to search
-    $record_object = \Kula\Component\Record\Record::recordObject();
+    $record_object = self::$record;
     if (isset($record_object) AND $record_object->getSubmitMode() == 'search' AND !$param['add']) {
       $db_action = 'search';
     }
     
-    if ($schema AND $schema['DB_FIELD_TYPE'] == 'CALCULATED') {
+    
+    if ($schema->getFieldType()  == 'CALCULATED') {
       $class = $schema['CALCULATED_FIELD_LOGIC_CLASS'];
-      $name = \Kula\Component\Schema\Schema::getFieldNameForRowID($param['db_table'], $schema['CALCULATED_FIELD_UPDATE_FIELD_ID']); 
+      $name = self::$schema->getFieldNameForRowID($param['db_table'], $schema['CALCULATED_FIELD_UPDATE_FIELD_ID']); 
     }
+    
     
     if (isset($record_object) AND $record_object->getAddMode()) {
       $field_name = 'add';
@@ -553,53 +568,54 @@ class Field {
       $field_name = strtolower($db_action);
     }
 
-    $field_name .= '[' . $schema['SCHEMA_TABLE_NAME'] . ']';
+    $field_name .= '[' . $schema->getTable()->getDBName() . ']';
     if ($db_action == 'add' AND $param['table_row']) $field_name .= '[new_num]';
     if ($db_action == 'add' AND !$param['table_row'] AND !isset($param['add_remove'])) $field_name .= '[new]';
     if ($db_action == 'edit' AND isset($record_object) AND $record_object->getAddMode()) $field_name .= '[0]'; 
     if ($param['db_row_id']) $field_name .= '[' . $param['db_row_id'] . ']';
     if ($param['hidden']) $field_name .= '[hidden]';
-    if ($schema['DB_FIELD_TYPE'] == 'CALCULATED')
+    if ($schema->getFieldType() == 'CALCULATED')
       $field_name .= '[' . $name. ']';
     elseif ($db_action == 'delete') {
       $field_name .= '[delete_row]';
     } else {
       if ($param['confirmation_field']) $confirm = '_confirmation'; else $confirm = '';
-      $field_name .= '[' . $schema['DB_FIELD_NAME'] . $confirm . ']';
+      $field_name .= '[' . $schema->getDBName() . $confirm . ']';
     }
     
     return $field_name;
   }
   
-  private static function _getFieldInfo($db_table, $db_field) {
-    $schema = \Kula\Component\Schema\Schema::getSchemaObject();
+  private static function getFieldInfo($field) {
+    $schema = self::$schema->getField($field);
     
-    if (!isset($schema[$db_table][$db_field]))
-      throw new \Exception('Field ' . $db_field . ' does not exist in table ' . $db_table . ' in Kula SIS Schema.');
+    //if (!isset($schema[$db_table][$db_field]))
+    //  throw new \Exception('Field ' . $db_field . ' does not exist in table ' . $db_table . ' in Kula SIS Schema.');
     
-    return $schema[$db_table][$db_field];
+    return $schema;
   }
   
   private static function _getSubmitMode() {
-    $record_obj = \Kula\Component\Record\Record::recordObject();
+    $record_obj = self::$record;
     if ($record_obj)
       return $record_obj->getSubmitMode();
   }
   
   private static function _displayField($param) {
-    $container = $GLOBALS['kernel']->getContainer();
-    $org_term_ids = $container->get('kula.focus')->getOrganizationTermIDs();
+    $org_term_ids = self::$focus->getOrganizationTermIDs();
+    
+    $schema = self::getFieldInfo($param['field']);
     if (
          (
           ($param['add'] OR $param['edit'] OR $param['non']) AND 
             (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1)) AND 
-            \Kula\Component\Permission\Permission::getPermissionForSchemaObject($param['db_table'], $param['db_field'], \Kula\Component\Permission\Permission::WRITE)
+            self::$permission->getPermissionForSchemaObject($schema->getTable()->getDBName(), $schema->getDBName(), Permission::WRITE)
               
         )
          OR
         (
           ($param['search'] OR self::_getSubmitMode() == 'search' OR $param['report']) AND 
-          \Kula\Component\Permission\Permission::getPermissionForSchemaObject($param['db_table'], $param['db_field'], \Kula\Component\Permission\Permission::READ)
+          self::$permission->getPermissionForSchemaObject($schema->getTable()->getDBName(), $schema->getDBName(), Permission::READ)
         )
       ) {
           return true;
@@ -607,7 +623,7 @@ class Field {
   }
   
   private static function _displayValue($param) {
-    if (\Kula\Component\Permission\Permission::getPermissionForSchemaObject($param['db_table'], $param['db_field'], \Kula\Component\Permission\Permission::READ)
+    if (self::$permission->getPermissionForSchemaObject($schema->getTable()->getDBName(), $schema->getDBName(), Permission::READ)
         ) {
           return true;
     }      

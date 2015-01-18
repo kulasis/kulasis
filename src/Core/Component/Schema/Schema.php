@@ -50,6 +50,10 @@ class Schema {
     
   }
   
+  public function getField($fieldName) {
+    return $this->fields[$fieldName];
+  }
+  
   public function getClass($fieldName) {
     return $this->fields[$fieldName]->getClass();
   }

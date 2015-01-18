@@ -18,11 +18,10 @@ class SchemaStore implements WarmableInterface {
   }
   
   public function warmUp($cacheDir) {
-    
     $cache = new DBConfigCache($cacheDir.'/'.$this->fileName.'.php', $this->debug, $this->db, array('CORE_SCHEMA_TABLES', 'CORE_SCHEMA_FIELDS'));
 
     if (!$cache->isFresh()) {
-
+      
       $schema = new Schema($this->db);
       $schema->loadTables();
       $schema->loadFields();

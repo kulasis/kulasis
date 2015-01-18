@@ -5,7 +5,7 @@ namespace Kula\Core\Component\DB;
 use Kula\Core\Component\DB\DB as DB;
 use Kula\Core\Component\Schema\Schema as Schema;
 use Symfony\Component\HttpFoundation\RequestStack as RequestStack;
-use Kula\Core\Component\DB\Poster
+use Kula\Core\Component\DB\Poster;
 
 class PosterFactory {
   

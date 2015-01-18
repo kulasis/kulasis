@@ -134,7 +134,7 @@ class Navigation {
     $route = $this->request->getCurrentRequest()->attributes->get('_route');
 
     $routeNav = $this->navigationByRoutes[$route];
-    
+
     if ($routeNav instanceof Form) {
       return $routeNav;
     }

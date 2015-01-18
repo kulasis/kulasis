@@ -3,7 +3,7 @@ parameters:
 
 services:
   kula.core.lookup.cache:
-    class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\RecordCacheWarmer
+    class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\RecordTypeCacheWarmer
     public: false
     arguments: ["@kula.core.lookup_store"]
     tags:

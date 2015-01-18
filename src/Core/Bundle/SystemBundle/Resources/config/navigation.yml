@@ -4,6 +4,7 @@ Core.FormGroups.System:
   type: form_group
   portal: core
   sort: 1
+  
 
 Core.Forms.System.Lookup:
   parent: Core.FormGroups.System
@@ -19,7 +20,7 @@ Core.MenuActions.System.Lookup.New:
   display_name: "New Lookup"
   type: menu_action
   portal: core
-  route: sis_system_lookup_add
+  route: core_system_lookup_add
   sort: 1
 Core.MenuActions.System.Lookup.Delete:
   parent: Core.Forms.System.Lookup
@@ -29,7 +30,7 @@ Core.MenuActions.System.Lookup.Delete:
   divider_before: true
   record_loaded: true
   portal: core
-  route: sis_system_lookup_delete
+  route: core_system_lookup_delete
   confirmation_message: "Are you sure you want to delete lookup?"
   sort: 2
 
@@ -41,3 +42,69 @@ Core.Forms.System.Navigation:
   type: form
   portal: core
   sort: 2
+Core.Tabs.System.Navigation.Form:
+  parent: Core.Forms.System.Navigation
+  description: "Forms"
+  display_name: "Form"
+  type: tab
+  portal: core
+  route: core_system_navigation_forms
+  sort: 1
+Core.Tabs.System.Navigation.Reports:
+  parent: Core.Forms.System.Navigation
+  description: "Reports"
+  display_name: "Reports"
+  type: tab
+  portal: core
+  route: core_system_navigation_reports
+  sort: 3
+Core.Tabs.System.Navigation.Groups:
+  parent: Core.Forms.System.Navigation
+  description: "Groups"
+  display_name: "Groups"
+  type: tab
+  portal: core
+  route: core_system_navigation_groups
+  sort: 3
+Core.MenuActions.System.Navigation.Form.New:
+  parent: Core.Forms.System.Navigation
+  description: "New Form"
+  display_name: "New Form"
+  type: menu_action
+  divider_before: false
+  record_loaded: false
+  portal: core
+  route: core_system_navigation_forms_new
+  sort: 1
+Core.MenuActions.System.Navigation.Form.Delete:
+  parent: Core.Forms.System.Navigation
+  description: "Delete Form"
+  display_name: "Delete Form"
+  type: menu_action
+  divider_before: true
+  record_loaded: true
+  portal: core
+  route: core_system_navigation_forms_delete
+  confirmation_message: "Are you sure you want to delete form?"
+  sort: 3
+Core.MenuActions.System.Navigation.Report.New:
+  parent: Core.Forms.System.Navigation
+  description: "New Report"
+  display_name: "New Report"
+  type: menu_action
+  divider_before: false
+  record_loaded: false
+  portal: core
+  route: core_system_navigation_reports_new
+  sort: 2
+Core.MenuActions.System.Navigation.Report.Delete:
+  parent: Core.Forms.System.Navigation
+  description: "Delete Report"
+  display_name: "Delete Report"
+  type: menu_action
+  divider_before: true
+  record_loaded: true
+  portal: core
+  route: core_system_navigation_reports_delete
+  confirmation_message: "Are you sure you want to delete report?"
+  sort: 4

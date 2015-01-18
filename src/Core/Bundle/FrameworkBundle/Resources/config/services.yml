@@ -2,6 +2,10 @@ parameters:
   kula.core.poster_factory.class: Kula\Core\Component\DB\PosterFactory
 
 services:
+  flash:
+    class: Symfony\Component\HttpFoundation\Session\Flash\FlashBag
+    factory: ["@session", "getFlashBag"]
+    
   kula.core.db:
     class:        Kula\Core\Component\DB\DB
     arguments:    [ %kernel.root_dir% , %kernel.environment% ]
@@ -24,7 +28,7 @@ services:
   kula.core.poster:
     class: Kula\Core\Component\DB\Poster
     factory: ["%kula.core.poster_factory.class%", "getPoster"]
-    arguments: ["@kula.core.db", "@request_stack", "@kula.core.schema"]
+    arguments: ["@kula.core.db", "@kula.core.schema", "@request_stack"]
     
   kula.core.session:
     class: Kula\Core\Bundle\FrameworkBundle\Service\Session
@@ -32,7 +36,7 @@ services:
     
   kula.core.twig.extension:
     class: Kula\Core\Bundle\FrameworkBundle\Extension\TwigExtension
-    arguments: ["@kula.core.db", "@request_stack", "@kula.core.session", "@session.flash_bag", "@kula.core.navigation", "@router"]
+    arguments: ["@service_container"]
     public: false
     tags:
       - { name: twig.extension }
@@ -40,3 +44,11 @@ services:
   kula.core.permission:
     class: Kula\Core\Component\Permission\Permission
     arguments: ["@kula.core.db", "@kula.core.session"]
+    
+  kula.core.focus:
+    class:        Kula\Core\Bundle\FrameworkBundle\Service\Focus
+    arguments:    ["@kula.core.session", "@kula.core.db", "@kula.core.poster"]
+    
+  kula.core.record:
+    class: Kula\Core\Bundle\FrameworkBundle\Service\Record
+    arguments: ["@kula.core.db", "@kula.core.session", "@kula.core.focus", "@request_stack", "@flash", "@kula.core.record_type"]

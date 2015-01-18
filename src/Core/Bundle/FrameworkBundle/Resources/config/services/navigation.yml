@@ -2,7 +2,7 @@ parameters:
   kula.navigation.options.cache_class: kula%kernel.environment%NavigationCache
 
 services:
-  kula.core.schema.cache:
+  kula.core.navigation.cache:
     class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\NavigationCacheWarmer
     public: false
     arguments: ["@kula.core.navigation_store"]

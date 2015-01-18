@@ -2,20 +2,20 @@ parameters:
   kula.record.options.cache_class: kula%kernel.environment%RecordCache
 
 services:
-  kula.core.record.cache:
-    class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\RecordCacheWarmer
+  kula.core.record_type.cache:
+    class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\RecordTypeCacheWarmer
     public: false
-    arguments: ["@kula.core.record_store"]
+    arguments: ["@kula.core.record_type_store"]
     tags:
       - { name: kernel.cache_warmer }
   
-  kula.core.record_store:
-    class: Kula\Core\Component\Record\RecordStore
+  kula.core.record_type_store:
+    class: Kula\Core\Component\Record\RecordTypesStore
     arguments: ["@kula.core.db", %kula.record.options.cache_class%, %kernel.cache_dir%, %kernel.debug%] 
     public: false
     
-  kula.core.record:
-    class: Kula\Core\Component\Record\Record
-    factory_service: kula.core.record_store
-    factory_method: getRecord
+  kula.core.record_type:
+    class: Kula\Core\Component\Record\RecordType
+    factory_service: kula.core.record_type_store
+    factory_method: getRecordTypes
     arguments: ["@kula.core.db"] 

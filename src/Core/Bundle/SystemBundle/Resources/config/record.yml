@@ -1,6 +1,6 @@
 Core.NavigationForm:
-  class: Kula\Bundle\Core\SystemBundle\Record\NavigationFormRecord
+  class: Kula\Core\Bundle\SystemBundle\Record\NavigationFormRecord
 Core.SchemaTable:
-  class: Kula\Bundle\Core\SystemBundle\Record\SchemaTableRecord
+  class: Kula\Core\Bundle\SystemBundle\Record\SchemaTableRecord
 Core.Lookup:
-  class: Kula\Bundle\Core\SystemBundle\Record\LookupRecord
+  class: Kula\Core\Bundle\SystemBundle\Record\LookupRecord

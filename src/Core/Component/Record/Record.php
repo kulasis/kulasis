@@ -2,24 +2,15 @@
 
 namespace Kula\Core\Component\Record;
 
-class Record {
-  
-  private $record = array();
-  
-  private $db;
-  
-  public function __construct($db) {
+abstract class Record {
+	
+	protected $session;
+	protected $focus;
+	
+	public function __construct($db, $session, $focus) {
     $this->db = $db;
-  }
-  
-  public function loadRecord() {
-    return array();
-  }
-  
-  public function __sleep() {
-    $this->db = null;
-    
-    return array('record');
-  }
-  
+    $this->session = $session;
+    $this->focus = $focus;
+	}
+	
 }

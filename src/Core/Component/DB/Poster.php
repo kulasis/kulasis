@@ -24,8 +24,8 @@ class Poster {
   private $isPosted = false;
   
 
-  public function __construct(DB $db, RequestStack $requestStack, Schema $schema) {
-    $this->db = $database;
+  public function __construct(DB $db, Schema $schema, RequestStack $requestStack) {
+    $this->db = $db;
     $this->requestStack = $requestStack;
     $this->schema = $schema;
     

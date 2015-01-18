@@ -58,8 +58,16 @@ class Field {
     
   }
   
+  public function getTable() {
+    return $this->table;
+  }
+  
   public function getFieldType() {
     return $this->field_Type;
+  }
+  
+  public function getFieldSize() {
+    return $this->field_Size;
   }
   
   public function getClass() {
@@ -72,6 +80,10 @@ class Field {
   
   public function getDBName() {
     return $this->db_Name;
+  }
+  
+  public function getLabelName() {
+    return $this->labelName;
   }
   
   public function isPrimary() {

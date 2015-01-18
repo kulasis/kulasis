@@ -80,6 +80,10 @@ class Condition implements ConditionInterface, \Countable {
     if (empty($value) && is_array($value)) {
       throw new InvalidQueryException(sprintf("Query condition '%s %s ()' cannot be empty.", $field, $operator));
     }
+    
+    if ($value === null) {
+      $operator = 'IS NULL';
+    }
 
     $this->conditions[] = array(
       'field' => $field,
