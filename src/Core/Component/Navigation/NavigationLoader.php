@@ -3,10 +3,12 @@
 namespace Kula\Core\Component\Navigation;
 
 use Kula\Core\Component\DefinitionLoader\DefinitionLoader;
+use Symfony\Component\Config\Resource\FileResource;
 
 class NavigationLoader {
   
   private $navigation = array();
+  private $resources = array();
   
   public function getNavigationFromBundles(array $bundles) {
     
@@ -15,9 +17,14 @@ class NavigationLoader {
     if ($navigation) {
       foreach($navigation as $path => $nav) {
         $this->loadNavigation($nav, $path);
+        $this->resources[] = new FileResource($path);
       }
     }
     
+  }
+  
+  public function getResources() {
+    return $this->resources;
   }
   
   public function loadNavigation($navigation, $path) {

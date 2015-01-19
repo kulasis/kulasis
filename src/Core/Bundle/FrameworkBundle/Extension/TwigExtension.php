@@ -2,6 +2,8 @@
 
 namespace Kula\Core\Bundle\FrameworkBundle\Extension;
 
+use Kula\Core\Component\Twig\Focus;
+
 class TwigExtension extends \Twig_Extension {
   
   private $db;
@@ -9,6 +11,7 @@ class TwigExtension extends \Twig_Extension {
   private $session;
   
   public function __construct($container) {
+    $this->container = $container;
     $this->db = $container->get('kula.core.db');
     $this->request = $container->get('request_stack');
     $this->session = $container->get('kula.core.session');
@@ -43,6 +46,7 @@ class TwigExtension extends \Twig_Extension {
     $globals_array = array();
     
     $globals_array = array(
+      'kula_instance_name' => $this->container->getParameter('instance_name'),
       'session' => $this->session,
       //'focus' => $container->get('kula.focus'),
       'flash' => $this->flash,
@@ -53,16 +57,16 @@ class TwigExtension extends \Twig_Extension {
       'mode' => 'edit',
       'form_action' => $current_request->getBaseUrl().$current_request->getPathInfo(),
     );
-    /*
+    
     if ($this->session->get('user_id')) {
       $globals_array += array(
-        'focus_usergroups' => Focus::usergroups($this->session->get('user_id')),
-        'focus_organization' => Focus::getOrganizationMenu($this->session->get('organization_id')),
-        'focus_terms' => Focus::terms($this->session->get('portal'), $this->session->get('administrator'), $this->session->get('user_id'))
+        'focus_usergroups' => Focus::usergroups($this->db, $this->session->get('user_id')),
+        //'focus_organization' => Focus::getOrganizationMenu($this->session->get('organization_id')),
+        //'focus_terms' => Focus::terms($this->session->get('portal'), $this->session->get('administrator'), $this->session->get('user_id'))
       );
       
       if ($this->session->get('portal') == 'teacher' OR $this->session->get('portal') == 'student') {
-        $organization = new \Kula\Component\Focus\Organization;
+        $organization = new \Kula\Core\Component\Focus\Organization;
         $organization->setOrganization($this->session->get('organization_id'));
         $globals_array += array(
           'focus_schools' => Focus::getSchoolsMenu($organization->getSchoolOrganizationIDs()),
@@ -71,7 +75,7 @@ class TwigExtension extends \Twig_Extension {
         );
       }
       
-    }*/
+    }
     
     return $globals_array;
   }

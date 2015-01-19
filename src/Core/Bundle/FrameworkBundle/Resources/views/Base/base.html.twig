@@ -10,7 +10,8 @@
       <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
     {% block stylesheets %}{% endblock %}
-    {% javascripts '@KulaCoreFrameworkBundle/Resources/public/js/lib/jquery-1.11.0.js'
+    {% javascripts  '@KulaCoreFrameworkBundle/Resources/public/js/lib/jquery-1.11.0.js'
+                    '@KulaCoreFrameworkBundle/Resources/public/js/lib/bootstrap.min.js'
     %}
       <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

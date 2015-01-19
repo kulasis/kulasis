@@ -108,3 +108,18 @@ Core.MenuActions.System.Navigation.Report.Delete:
   route: core_system_navigation_reports_delete
   confirmation_message: "Are you sure you want to delete report?"
   sort: 4
+  
+Core.FormGroups.User:
+  description: "User"
+  display_name: "User"
+  type: form_group
+  portal: core
+  sort: 1
+Core.Forms.User.UserGroup:
+  parent: Core.FormGroups.User
+  description: "User Groups"
+  display_name: "User Groups"
+  type: form
+  portal: core
+  route: core_system_users
+  sort: 1

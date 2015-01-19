@@ -32,4 +32,15 @@ class Form extends Item {
     return $this->tabs;
   }
   
+  public function getRoute() {
+    
+    if (parent::getRoute() == '' AND count($this->tabs) > 0) {
+      $first = key($this->tabs);
+      return $this->tabs[$first]->getRoute();
+    } else {
+      return parent::getRoute();
+    }
+    
+  }
+  
 }

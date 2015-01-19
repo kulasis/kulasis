@@ -24,20 +24,20 @@ class DBCacheConfig extends BaseConfigCache {
     
     // if file doesn't exist, always false
     if (!is_file($this->file)) {
-        return false;
+       return false;
     }
-    
+
     // if production, always true
     if (!$this->debug) {
-        return true;
+       return true;
     }
-    
+
     $time = filemtime($this->file);
-    
+
     if ($time < $this->getLastUpdatestamp()) {
-      return false;
+     return false;
     }
-    
+
     return true;
   }
   

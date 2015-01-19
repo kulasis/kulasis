@@ -11,15 +11,20 @@ class Focus {
   
   private static $organization_ids;
   
-  public static function usergroups($user_id) {
-    $results = \Kula\Component\Database\DB::connect('read')->select('CORE_USER_ROLES', 'roles')
+  public static function usergroups($db, $user_id) {
+    $results = $db->db_select('CORE_USER_ROLES', 'roles')
       ->fields('roles', array('ROLE_ID'))
-      ->join('CORE_USERGROUP', 'usergroups', array('USERGROUP_ID','USERGROUP_NAME'), 'usergroups.USERGROUP_ID = roles.USERGROUP_ID')
-      ->join('CORE_ORGANIZATION', 'organization', array('ORGANIZATION_ABBREVIATION'), 'roles.ORGANIZATION_ID = organization.ORGANIZATION_ID')
-      ->predicate('roles.USER_ID', $user_id)
+      ->join('CORE_USERGROUP', 'usergroups', 'usergroups.USERGROUP_ID = roles.USERGROUP_ID')
+      ->fields('usergroups', array('USERGROUP_ID','USERGROUP_NAME'))
+      ->leftJoin('CORE_ORGANIZATION', 'organization', 'roles.ORGANIZATION_ID = organization.ORGANIZATION_ID')
+      ->fields('organization', array('ORGANIZATION_ABBREVIATION'))
+      ->condition('roles.USER_ID', $user_id)
       ->execute();
     while ($row = $results->fetch()) {
-      self::$usergroups[$row['ROLE_ID']] = $row['ORGANIZATION_ABBREVIATION'].' - '.$row['USERGROUP_NAME'];
+      self::$usergroups[$row['ROLE_ID']] = $row['USERGROUP_NAME'];
+      if ($row['ORGANIZATION_ABBREVIATION']) {
+        self::$usergroups[$row['ROLE_ID']] .= ' - '.$row['ORGANIZATION_ABBREVIATION'];
+      }
     }
     
     return self::$usergroups;  

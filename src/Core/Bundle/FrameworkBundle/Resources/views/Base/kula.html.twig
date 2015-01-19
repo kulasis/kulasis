@@ -6,7 +6,9 @@
 {% endstylesheets %}
 {% endblock %}
 {% block javascripts %}
+    {{ parent() }}
         {% javascripts 
+          '@KulaCoreFrameworkBundle/Resources/public/js/kula.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
@@ -14,16 +16,16 @@
 {% block body %}
   <div id="focus_bar" class="group">
     <div id="focus_bar_institution_name">
-      Oregon College of Art and Craft
+      {{ kula_instance_name }}
     </div>
     <div id="focus_bar_focus">
-      <form id="focus_form" method="post" action="{{ path('focus_usergroup_change') }}">
-        {% block focus %}
-        {% endblock %}
+      <form id="role_form" method="post" action="{{ path('focus_usergroup_change') }}">
+        {{ session.get('name') }}
         <span>
-          <label for="focus_role">Role:</label>
+          <label for="role_select">Role:</label>
           {{ form_select(focus_usergroups, 'focus_usergroup', session.get('role_id'), { id : 'focus_usergroup' }) }}
         </span>
+        {{ linkTo('Logout', 'logout') }}
       </form>
     </div>
   </div>
@@ -31,7 +33,10 @@
     {% block navigation_bar %}
     {% endblock %}
     <div id="nav_bar_user">
-      Hi, {{ session.get('name') }} | {{ linkTo('Logout', 'logout') }}
+      <form id="focus_form" method="post" action="{{ path('focus_usergroup_change') }}">
+        {% block focus %}
+        {% endblock %}
+      </form>
     </div>
   </div>
   <div id="nav_pane">

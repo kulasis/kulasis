@@ -62,7 +62,7 @@ class Record {
         // if searching, process search, load first record returned
         if ($this->request->request->get('mode') == 'search' AND $this->selected_record_id == ''
         ) {
-          $post_data = \Kula\Component\Database\Searcher::startProcessing();
+          $post_data = \Kula\Core\Component\DB\Searcher::startProcessing();
           $this->selected_record_id = $this->_search($post_data);
         } else {
       

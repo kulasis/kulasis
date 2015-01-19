@@ -2,5 +2,42 @@
 {% block content %}
 <div class="data-table-header-div">
 Lookup Values
-
+<span class="data-table-header-buttons">
+	{{ kula_table_add('window_window_num_data_table_tabs', 'CORE_LOOKUP_VALUES') }}
+</span>
+</div>
+<table id="window_window_num_data_table_tabs" class="data-table">
+<thead>
+	{{ kula_field_name({ delete: true, field: 'Core.Lookup.Value.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ edit: true, field: 'Core.Lookup.Value.Sort', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ edit: true, field: 'Core.Lookup.Value.Code', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ edit: true, field: 'Core.Lookup.Value.Description', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ edit: true, field: 'Core.Lookup.Value.Conversion', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ edit: true, field: 'Core.Lookup.Value.InactiveAfter', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+	  {{ kula_display_html({ add: true, field: 'Core.Lookup.Value.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+		{{ kula_field({ add: true, field: 'Core.Lookup.Value.TableID', value: record_obj.getSelectedRecord.LOOKUP_ID, hidden: true }) }}
+		{{ kula_field({ add: true, delete: true, field: 'Core.Lookup.Value.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		{{ kula_display_html({ add: true, field: 'Core.Lookup.Value.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+		{{ kula_field({ add: true, field: 'Core.Lookup.Value.Sort', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ add: true, field: 'Core.Lookup.Value.Code', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ add: true, field: 'Core.Lookup.Value.Description', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ add: true, field: 'Core.Lookup.Value.Conversion', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ add: true, field: 'Core.Lookup.Value.InactiveAfter', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+		{{ kula_display_html({ add: true, field: 'Core.Lookup.Value.ID', prepend_html: '</tr>' }) }}
+	{% for value in values %}
+	<tr>
+		{{ kula_field({ delete: true, field: 'Core.Lookup.Value.ID', db_row_id: value.LOOKUP_VALUE_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ edit: true, field: 'Core.Lookup.Value.Sort', db_row_id: value.LOOKUP_VALUE_ID, value: value.SORT, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, field: 'Core.Lookup.Value.Code', db_row_id: value.LOOKUP_VALUE_ID, value: value.CODE, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, field: 'Core.Lookup.Value.Description', db_row_id: value.LOOKUP_VALUE_ID, value: value.DESCRIPTION, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, field: 'Core.Lookup.Value.Conversion', db_row_id: value.LOOKUP_VALUE_ID, value: value.CONVERSION, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, field: 'Core.Lookup.Value.InactiveAfter', db_row_id: value.LOOKUP_VALUE_ID, value: value.INACTIVE_AFTER, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
 {% endblock %}

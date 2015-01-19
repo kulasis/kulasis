@@ -1,5 +1,21 @@
 {% extends 'KulaCoreFrameworkBundle:Base:kula.html.twig' %}
 
+{% block javascripts %}
+  {{ parent() }}
+        {% javascripts 
+  				'@KulaCoreFrameworkBundle/Resources/public/js/lib/quickselect/quicksilver.js' 
+  				'@KulaCoreFrameworkBundle/Resources/public/js/lib/quickselect/jquery.quickselect.js'
+          '@KulaCoreFrameworkBundle/Resources/public/js/lib/contextMenu.js'
+          '@KulaCoreFrameworkBundle/Resources/public/js/core.js'
+          '@KulaCoreFrameworkBundle/Resources/public/js/focus.js'
+          '@KulaCoreFrameworkBundle/Resources/public/js/form.js'
+          '@KulaCoreFrameworkBundle/Resources/public/js/application.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        
+{% endblock %}
+
 {% block navigation_bar %}
   <div id="nav_bar_navigation">
     <ul>
@@ -10,6 +26,10 @@
       <li id="nav_bar_navigation_queries" data-nav-panel="nav_queries"><a href="#"><img src="{{ asset('images/query_regular.png') }}" /></a></li>
     </ul>
   </div>
+<ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
+    <li><a tabindex="-1" data-action="newtab">Open in New Tab</a></li>
+    <li><div role="menuitem" tabindex="-1" class="disabled">Open in New Window</div></li>
+</ul>
 {% endblock %}
 
 {% block navigation_pane %}
@@ -17,9 +37,9 @@
   <div id="nav_forms">
     {% set navFormGroups = kula_core_navigation.getFormGroups() %}
     {% for group_id, group_row in navFormGroups %}
-      <div id="drawer-{{ group_row.getName() }}" class="navigation-drawer navigation-forms">
+      <div id="drawer-{{ group_id }}" class="navigation-drawer navigation-forms">
         <div class="drawer-header navigation-forms" data-category="forms-{{ group_id }}">{{ group_row.getDisplayName() }}</div>
-        <div id="drawer-contents-forms-{{ group_row.getName() }}" class="drawer-contents navigation-forms" style="{% if kula_core_navigation.getRequestedForm().getParent() == group_row.getName() %}display:block;{% else %}display:none;{% endif %}">
+        <div id="drawer-contents-forms-{{ group_id }}" class="drawer-contents navigation-forms" style="{% if kula_core_navigation.getRequestedForm().getParent() == group_row.getName() %}display:block;{% else %}display:none;{% endif %}">
           <ul>
           {% for form_id, form_row in group_row.getForms() %}
             {% if form_row.getName() %}
@@ -60,11 +80,7 @@
   <div id="window_bar">
       <ul>
         <li id="windowTitle_1" data-window="1" class="selected-window-element" data-window-url="{{ request.getBaseUrl()~request.getPathInfo() }}" data-focus-org="{{ session.getFocus('organization_id') }}" data-focus-term="{{ session.getFocus('term_id') }}"><div><span class="close-window">x</span>
-          {% if navigation_info.NAVIGATION_TYPE == 'T' %}
-            {{ navigation_info.form.DISPLAY_NAME }}
-          {% else %}
-            {{ navigation_info.DISPLAY_NAME }}
-          {% endif %}
+          {{ kula_core_navigation.getRequestedForm().getDisplayName() }}
           {% block navigation_title %}{% endblock %}</div></li>
       </ul>
       <div id="nav_bar_status">

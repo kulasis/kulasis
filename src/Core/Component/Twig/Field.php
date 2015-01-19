@@ -31,7 +31,8 @@ class Field {
     if (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1)) {
     
     if ($param['delete']) {
-      if (self::$permission->getPermissionForSchemaObject($param['db_table'], null, Permission::DELETE)) {
+      $field = self::getFieldInfo($param['field']);
+      if (self::$permission->getPermissionForSchemaObject($field->getTable()->getDBName(), null, Permission::DELETE)) {
         if (isset($param['field_name_override'])) {
           $html = $param['field_name_override'];
         } else {
@@ -49,7 +50,7 @@ class Field {
       if (isset($param['field_name_override'])) {
         $html = $param['field_name_override'];
       } else {
-        $html = $field['DISPLAY_NAME'];
+        $html = $field->getLabelName();
       }
       
       if ($param['prepend_html'] AND $html != '')
@@ -71,7 +72,7 @@ class Field {
     
     $org_term_ids = self::$focus->getOrganizationTermIDs();
     
-    $record_object = self::$record->recordObject();
+    $record_object = self::$record;
     if (self::$permission->getPermissionForSchemaObject($db_table, null, Permission::ADD) AND
         (!isset($record_object) OR $record_object->getSubmitMode() == 'edit') AND 
       (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1))    )
@@ -95,7 +96,7 @@ class Field {
     $html = '';
     if (
          ($param['delete'] AND self::$permission->getPermissionForSchemaObject($param['db_table'], null, Permission::DELETE)) OR
-         ($param['add'] AND self::$permission->etPermissionForSchemaObject($param['db_table'], null, Permission::ADD))
+         ($param['add'] AND self::$permission->getPermissionForSchemaObject($param['db_table'], null, Permission::ADD))
         ) {
       if ($param['prepend_html'])
         $html = $param['prepend_html'] . $html;
@@ -169,17 +170,17 @@ class Field {
     
     $html = '';
     
-    if ($param['add'] AND !self::$permission->getPermissionForSchemaObject($param['db_table'], null, Permission::ADD)) {
+    if ($param['add'] AND !self::$permission->getPermissionForSchemaObject($field->getTable()->getDBName(), null, Permission::ADD)) {
       return null;
     }
     
     // generate checkboxes for deleting
     $org_term_ids = self::$focus->getOrganizationTermIDs();
     if ($param['delete'] AND 
-    self::$permission->getPermissionForSchemaObject($param['db_table'], null, Permission::DELETE) AND 
+    self::$permission->getPermissionForSchemaObject($field->getTable()->getDBName(), null, Permission::DELETE) AND 
     (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1))) {
       
-      if ($param['add'] AND self::$permission->getPermissionForSchemaObject($param['db_table'], null, Permission::ADD))
+      if ($param['add'] AND self::$permission->getPermissionForSchemaObject($field->getTable()->getDBName(), null, Permission::ADD))
         $param['attributes_html']['class'] = 'form-delete-checkbox-add';
       else   
         $param['attributes_html']['class'] = 'form-delete-checkbox';
@@ -623,6 +624,7 @@ class Field {
   }
   
   private static function _displayValue($param) {
+    $schema = self::getFieldInfo($param['field']);
     if (self::$permission->getPermissionForSchemaObject($schema->getTable()->getDBName(), $schema->getDBName(), Permission::READ)
         ) {
           return true;

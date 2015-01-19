@@ -23,7 +23,7 @@
     {% if menuAction.getDividerBefore() %}
     <li role="presentation" class="divider"></li>
     {% endif %}
-    <li role="presentation">{% if menuAction.getRecordLoaded() or (menuAction.getRecordLoaded() == 'Y' and record_obj.getSelectedRecordID() != '') %}<a role="menuitem" tabindex="-1" href="{{ path(menuAction.getRoute(), { record_type: record_obj.getRecordType(), record_id: record_obj.getSelectedRecordID() } ) }}" 
+    <li role="presentation">{% if menuAction.getRecordLoaded() == false or (menuAction.getRecordLoaded() == true and record_obj.getSelectedRecordID() != '') %}<a role="menuitem" tabindex="-1" href="{{ path(menuAction.getRoute(), { record_type: record_obj.getRecordType(), record_id: record_obj.getSelectedRecordID() } ) }}" 
 data-http-method="{% if getMethodsForRoute(router, menuAction.getRoute()) %}{{ getMethodsForRoute(router, menuAction.getRoute()).0 }}{% else %}GET{% endif %}"
 data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDisplayName() }}</a>{% else %}<div role="menuitem" tabindex="-1" class="disabled">{{ menuAction.getDisplayName() }}</div>{% endif %}</li>
     {% endfor %}

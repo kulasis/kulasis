@@ -32,8 +32,8 @@ class Controller extends BaseController {
     $this->record = $this->container->get('kula.core.record');
   }
 
-  protected function db($action_type = 'read') {
-    return \Kula\Component\Database\DB::connect($action_type);
+  protected function db() {
+    return $this->container->get('kula.core.db');
   }
   
   protected function processForm() {
@@ -43,9 +43,7 @@ class Controller extends BaseController {
       if ($this->request->request->get('mode') == 'search') {
         $result = \Kula\Component\Database\Searcher::startProcessing();  
       } else {
-        $poster = new \Kula\Component\Database\Poster();
-        $this->poster = $poster;
-        $this->container->set('kula.poster', $poster);
+        $this->poster = $this->container->get('kula.core.poster');
       }
     }
   }
