@@ -16,6 +16,7 @@ namespace Kula\Core\Bundle\FrameworkBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\DependencyInjection\ContainerInterface as ContainerInterface;
+use Kula\Core\Bundle\FrameworkBundle\Exception\NotAuthorizedException;
 
 class Controller extends BaseController {
   
@@ -41,9 +42,16 @@ class Controller extends BaseController {
     // Check if HTTP method is post for Poster processing
     if ($this->request->getMethod() == 'POST') {
       if ($this->request->request->get('mode') == 'search') {
-        $result = \Kula\Component\Database\Searcher::startProcessing();  
+        $result = \Kula\Core\Component\DB\Searcher::startProcessing();  
       } else {
         $this->poster = $this->container->get('kula.core.poster');
+        if ($this->poster->addMultiple($this->request->request->get('add')))
+          $this->poster->addMultiple($this->request->request->get('add'));
+        if ($this->request->request->get('edit'))
+          $this->poster->editMultiple($this->request->request->get('edit'));
+        if ($this->request->request->get('delete'))
+          $this->poster->deleteMultiple($this->request->request->get('delete'));
+        $this->poster->process();
       }
     }
   }
@@ -76,7 +84,7 @@ class Controller extends BaseController {
     $this->record->setRecordType($record_type, $add_mode, $eager_search_data);
     
     $this->twig->addGlobal('record_type', $this->record->getRecordType());
-    $this->twig->addGlobal('record_obj', $this->record);
+    $this->twig->addGlobal('kula_core_record', $this->record);
     
     $this->twig->addGlobal('record_bar_template_path', $this->record->getRecordBarTemplate());
     
@@ -86,10 +94,9 @@ class Controller extends BaseController {
   }
   
   public function authorize($tables = array()) {
-		if ($this->session->get('initial_role') > 0) {
-			return true;
+		if (!($this->session->get('initial_role') > 0)) {
+			throw new NotAuthorizedException();
 		}
-    
   }
 
 }

@@ -569,7 +569,7 @@ class Field {
       $field_name = strtolower($db_action);
     }
 
-    $field_name .= '[' . $schema->getTable()->getDBName() . ']';
+    $field_name .= '[' . $schema->getTable()->getName() . ']';
     if ($db_action == 'add' AND $param['table_row']) $field_name .= '[new_num]';
     if ($db_action == 'add' AND !$param['table_row'] AND !isset($param['add_remove'])) $field_name .= '[new]';
     if ($db_action == 'edit' AND isset($record_object) AND $record_object->getAddMode()) $field_name .= '[0]'; 
@@ -581,7 +581,7 @@ class Field {
       $field_name .= '[delete_row]';
     } else {
       if ($param['confirmation_field']) $confirm = '_confirmation'; else $confirm = '';
-      $field_name .= '[' . $schema->getDBName() . $confirm . ']';
+      $field_name .= '[' . $schema->getName() . $confirm . ']';
     }
     
     return $field_name;

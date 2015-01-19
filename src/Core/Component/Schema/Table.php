@@ -30,8 +30,16 @@ class Table {
     return $this->name;
   }
   
+  public function getDBTimestamps() {
+    return $this->db_Timestamps;
+  }
+  
   public function getDBName() {
     return $this->db_Name;
+  }
+  
+  public function getDBClass() {
+    return $this->db_Class;
   }
   
   public function getDBPrimaryColumnName() {

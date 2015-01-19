@@ -10,6 +10,7 @@ class Schema {
   
   private $tables = array();
   private $fields = array();
+  private $db_tables = array();
   
   private $db;
   
@@ -23,8 +24,11 @@ class Schema {
       ->fields('tables')
       ->execute();
     while ($tableRow = $tableResults->fetch()) {
+      $table = new Table($tableRow['TABLE_NAME'], $tableRow['SCHEMA_TABLE_ID'], $tableRow['DB_TABLE_NAME'], $tableRow['SCHEMA_CLASS'], $tableRow['TIMESTAMPS']);
       
-      $this->tables[$tableRow['TABLE_NAME']] = new Table($tableRow['TABLE_NAME'], $tableRow['SCHEMA_TABLE_ID'], $tableRow['DB_TABLE_NAME'], $tableRow['SCHEMA_CLASS'], $tableRow['TIMESTAMPS']);
+      $this->tables[$tableRow['TABLE_NAME']] = $table;
+      $this->db_tables[$tableRow['DB_TABLE_NAME']] = $table;
+      unset($table);
     }
     
   }
@@ -54,6 +58,10 @@ class Schema {
     return $this->fields[$fieldName];
   }
   
+  public function getTable($tableName) {
+    return $this->tables[$tableName];
+  }
+  
   public function getClass($fieldName) {
     return $this->fields[$fieldName]->getClass();
   }
@@ -74,10 +82,14 @@ class Schema {
     return $this->tables[$tableName]->getDBPrimaryColumnName();
   }
   
+  public function getDBPrimaryColumnForDBTable($tableName) {
+    return $this->db_tables[$tableName]->getDBPrimaryColumnName();
+  }
+  
   public function __sleep() {
     $this->db = null;
     
-    return array('tables', 'fields');
+    return array('tables', 'fields', 'db_tables');
   }
   
 }

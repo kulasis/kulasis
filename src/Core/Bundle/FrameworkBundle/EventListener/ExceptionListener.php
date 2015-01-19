@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Kula\Bundle\Core\KulaFrameworkBundle\EventListener;
+namespace Kula\Core\Bundle\FrameworkBundle\EventListener;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +24,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
+use Kula\Core\Bundle\FrameworkBundle\Exception\NotAuthorizedException;
 
 /**
  * ExceptionListener.
@@ -44,7 +46,7 @@ class ExceptionListener implements EventSubscriberInterface
       $exception = $event->getException();
       $request = $event->getRequest();
       
-      if ($exception instanceof \Kula\Component\Authorizer\NotAuthorizedException) {
+      if ($exception instanceof NotAuthorizedException) {
         $response = new RedirectResponse('/login');
       } 
       

@@ -241,6 +241,13 @@ class DB {
     }
   }
 
+  public function db_connection($options = null) {
+    if (empty($options['target'])) {
+      $options['target'] = 'default';
+    }
+    return Database::getConnection($options['target']);
+  }
+
   /**
    * The following utility public functions are simply convenience wrappers.
    *
@@ -479,7 +486,7 @@ class DB {
    */
   public function db_transaction($name = NULL, array $options = array()) {
     if (empty($options['target'])) {
-      $options['target'] = 'default';
+      $options['target'] = 'write';
       $options['fetch'] = \PDO::FETCH_ASSOC;
     }
     return Database::getConnection($options['target'])->startTransaction($name);

@@ -145,7 +145,7 @@ class Permission {
     $result = $this->db->db_select('CORE_PERMISSION_SCHEMA_TABLES')
       ->fields('CORE_PERMISSION_SCHEMA_TABLES', array('USERGROUP_ID', 'ROLE_ID', 'PERMISSION_ADD', 'PERMISSION_DELETE', 'PERMISSION_EDIT'))
       ->join('CORE_SCHEMA_TABLES', 'CORE_SCHEMA_TABLES', 'CORE_SCHEMA_TABLES.SCHEMA_TABLE_ID = CORE_PERMISSION_SCHEMA_TABLES.SCHEMA_TABLE_ID')
-      ->fields('CORE_SCHEMA_TABLES', array('DB_TABLE_NAME'))
+      ->fields('CORE_SCHEMA_TABLES', array('TABLE_NAME'))
       ->condition($usergroup_condition)
       ->condition($role_condition)
       ->condition($public_condition)
@@ -155,18 +155,18 @@ class Permission {
     $result =  $result->execute();
     while ($row = $result->fetch()) {
       
-      if (!isset($this->tables[$row['DB_TABLE_NAME']]) && $row['ROLE_ID']) {
-        $this->tables[$row['DB_TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
-        $this->tables[$row['DB_TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
-        $this->tables[$row['DB_TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
-      } elseif (!isset($this->tables[$row['DB_TABLE_NAME']]) && $row['USERGROUP_ID']) {
-        $this->tables[$row['DB_TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
-        $this->tables[$row['DB_TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
-        $this->tables[$row['DB_TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
-      } elseif (!isset($this->tables[$row['DB_TABLE_NAME']])) {
-        $this->tables[$row['DB_TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
-        $this->tables[$row['DB_TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
-        $this->tables[$row['DB_TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
+      if (!isset($this->tables[$row['TABLE_NAME']]) && $row['ROLE_ID']) {
+        $this->tables[$row['TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
+        $this->tables[$row['TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
+        $this->tables[$row['TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
+      } elseif (!isset($this->tables[$row['TABLE_NAME']]) && $row['USERGROUP_ID']) {
+        $this->tables[$row['TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
+        $this->tables[$row['TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
+        $this->tables[$row['TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
+      } elseif (!isset($this->tables[$row['TABLE_NAME']])) {
+        $this->tables[$row['TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
+        $this->tables[$row['TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
+        $this->tables[$row['TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
       }
       
     }
@@ -190,9 +190,9 @@ class Permission {
     $result = $this->db->db_select('CORE_PERMISSION_SCHEMA_FIELDS')
       ->fields('CORE_PERMISSION_SCHEMA_FIELDS', array('USERGROUP_ID', 'ROLE_ID', 'PERMISSION'))
       ->join('CORE_SCHEMA_FIELDS', 'CORE_SCHEMA_FIELDS', 'CORE_SCHEMA_FIELDS.SCHEMA_FIELD_ID = CORE_PERMISSION_SCHEMA_FIELDS.SCHEMA_FIELD_ID')
-      ->fields('CORE_SCHEMA_FIELDS', array('DB_COLUMN_NAME'))
+      ->fields('CORE_SCHEMA_FIELDS', array('FIELD_NAME'))
       ->join('CORE_SCHEMA_TABLES', 'CORE_SCHEMA_TABLES', 'CORE_SCHEMA_TABLES.SCHEMA_TABLE_ID = CORE_SCHEMA_FIELDS.SCHEMA_TABLE_ID')
-      ->fields('CORE_SCHEMA_TABLES', array('DB_TABLE_NAME'))
+      ->fields('CORE_SCHEMA_TABLES', array('TABLE_NAME'))
       ->condition($usergroup_condition)
       ->condition($role_condition)
       ->condition($public_condition)
@@ -201,12 +201,12 @@ class Permission {
     $result =  $result->execute();
     while ($row = $result->fetch()) {
       
-      if (!isset($this->fields[$row['DB_TABLE_NAME']][$row['DB_COLUMN_NAME']]) && $row['ROLE_ID'] && $row['PERMISSION'] != '') {
-        $this->fields[$row['DB_TABLE_NAME']][$row['DB_COLUMN_NAME']] = $row['PERMISSION'];
-      } elseif (!isset($this->fields[$row['SCHEMA_TABLE_NAME']][$row['DB_COLUMN_NAME']]) && $row['USERGROUP_ID'] && $row['PERMISSION'] != '') {
-        $this->fields[$row['DB_TABLE_NAME']][$row['DB_COLUMN_NAME']] = $row['PERMISSION'];
-      } elseif (!isset($this->fields[$row['SCHEMA_TABLE_NAME']][$row['DB_COLUMN_NAME']]) && $row['PERMISSION'] != '') {
-        $this->fields[$row['DB_TABLE_NAME']][$row['DB_COLUMN_NAME']] = $row['PERMISSION'];
+      if (!isset($this->fields[$row['TABLE_NAME']][$row['FIELD_NAME']]) && $row['ROLE_ID'] && $row['PERMISSION'] != '') {
+        $this->fields[$row['TABLE_NAME']][$row['FIELD_NAME']] = $row['PERMISSION'];
+      } elseif (!isset($this->fields[$row['TABLE_NAME']][$row['FIELD_NAME']]) && $row['USERGROUP_ID'] && $row['PERMISSION'] != '') {
+        $this->fields[$row['TABLE_NAME']][$row['FIELD_NAME']] = $row['PERMISSION'];
+      } elseif (!isset($this->fields[$row['TABLE_NAME']][$row['FIELD_NAME']]) && $row['PERMISSION'] != '') {
+        $this->fields[$row['TABLE_NAME']][$row['FIELD_NAME']] = $row['PERMISSION'];
       }
       
     }

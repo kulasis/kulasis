@@ -61,7 +61,7 @@ class Searcher {
     
     $post_data = self::cleanSearchVariable($post_data);
     
-    $select_obj = \Kula\Component\Database\DB::connect('read')->select($base_table);
+    $select_obj = \Kula\Core\Component\Database\DB::connect('read')->select($base_table);
     $select_obj->add_field($base_table, $base_field);
     // Get fields from base_table in array
     if (isset($post_data[$base_table])) {

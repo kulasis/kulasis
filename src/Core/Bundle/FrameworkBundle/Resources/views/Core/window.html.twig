@@ -23,7 +23,7 @@
     {% if menuAction.getDividerBefore() %}
     <li role="presentation" class="divider"></li>
     {% endif %}
-    <li role="presentation">{% if menuAction.getRecordLoaded() == false or (menuAction.getRecordLoaded() == true and record_obj.getSelectedRecordID() != '') %}<a role="menuitem" tabindex="-1" href="{{ path(menuAction.getRoute(), { record_type: record_obj.getRecordType(), record_id: record_obj.getSelectedRecordID() } ) }}" 
+    <li role="presentation">{% if menuAction.getRecordLoaded() == false or (menuAction.getRecordLoaded() == true and kula_core_record.getSelectedRecordID() != '') %}<a role="menuitem" tabindex="-1" href="{{ path(menuAction.getRoute(), { record_type: kula_core_record.getRecordType(), record_id: kula_core_record.getSelectedRecordID() } ) }}" 
 data-http-method="{% if getMethodsForRoute(router, menuAction.getRoute()) %}{{ getMethodsForRoute(router, menuAction.getRoute()).0 }}{% else %}GET{% endif %}"
 data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDisplayName() }}</a>{% else %}<div role="menuitem" tabindex="-1" class="disabled">{{ menuAction.getDisplayName() }}</div>{% endif %}</li>
     {% endfor %}
@@ -40,10 +40,10 @@ data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDispla
   </ul>
 </div>
 {% endif %}
-     <div class="window_menu_bar_record"{% if record_obj.getRecordType() == '' %} style="display:none;"{% endif %}>
-<span id="window_window_num_menu_bar_record_prev" data-scrubber="previous" data-record-type="{{ record_obj.getRecordType() }}" data-record-id="{{ record_obj.getSelectedRecordID() }}"><img src="{{ asset('images/left_record.png') }}" /></span>
+     <div class="window_menu_bar_record"{% if kula_core_record.getRecordType() == '' %} style="display:none;"{% endif %}>
+<span id="window_window_num_menu_bar_record_prev" data-scrubber="previous" data-record-type="{{ kula_core_record.getRecordType() }}" data-record-id="{{ kula_core_record.getSelectedRecordID() }}"><img src="{{ asset('images/left_record.png') }}" /></span>
 <span id="window_window_num_menu_bar_record_search" data-scrubber="search"><img src="{{ asset('images/search_record.png') }}" /></span>
-<span id="window_window_num_menu_bar_record_next" data-scrubber="next" data-record-type="{{ record_obj.getRecordType() }}" data-record-id="{{ record_obj.getSelectedRecordID() }}"><img src="{{ asset('images/right_record.png') }}" /></span>
+<span id="window_window_num_menu_bar_record_next" data-scrubber="next" data-record-type="{{ kula_core_record.getRecordType() }}" data-record-id="{{ kula_core_record.getSelectedRecordID() }}"><img src="{{ asset('images/right_record.png') }}" /></span>
      </div>
      <div class="window_menu_bar_form_buttons" data-form-id="window_window_num_form">
  <input id="window_window_num_form_mode" type="hidden" name="mode" value="{{ mode }}" />
@@ -54,7 +54,7 @@ data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDispla
   </div>
 </div>
 {% if selected_record_bar_template_path %}
-{% if record_obj.getSelectedRecord() %}
+{% if kula_core_record.getSelectedRecord() %}
 <!-- window selected record bar -->
 <div id="window_window_num_selected_record_bar" class="window_selected_record_bar group">
   {% include selected_record_bar_template_path %}
@@ -75,7 +75,7 @@ data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDispla
 <!-- content -->
 <div id="window_window_num_content">
   <div id="window_window_num_tab_{% if navigation_info.NAVIGATION_TYPE == 'T' %}{{navigation_info.NAVIGATION_ID}}{% else %}{{ tabsToDisplay[0]['NAVIGATION_ID'] }}{% endif %}_content" class="tab_content" data-window-url="{{ request.getBaseUrl()~request.getPathInfo() }}">
-    <div class="record_bar_tab_menu_data" style="display:none;" data-mode="{{ mode }}" data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}"></div>
+    <div class="record_bar_tab_menu_data" style="display:none;" data-mode="{{ mode }}" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}"></div>
     {% if record_type %}
     <div class="record_bar group">
     {% include record_bar_template_path %}

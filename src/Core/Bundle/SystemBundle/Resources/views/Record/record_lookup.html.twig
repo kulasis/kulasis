@@ -1,2 +1,2 @@
-{{ kula_field({ edit: true, field: 'Core.Lookup.Table.Name', db_row_id: record_obj.getSelectedRecord.LOOKUP_ID, value: record_obj.getSelectedRecord.LOOKUP_TABLE_NAME, label: true }) }}
-{{ kula_field({ edit: true, field: 'Core.Lookup.Table.Description', db_row_id: record_obj.getSelectedRecord.LOOKUP_ID, value: record_obj.getSelectedRecord.LOOKUP_TABLE_DESCRIPTION, label: true }) }}
+{{ kula_field({ edit: true, field: 'Core.Lookup.Table.Name', db_row_id: kula_core_record.getSelectedRecord.LOOKUP_TABLE_ID, value: kula_core_record.getSelectedRecord.LOOKUP_TABLE_NAME, label: true }) }}
+{{ kula_field({ edit: true, field: 'Core.Lookup.Table.Description', db_row_id: kula_core_record.getSelectedRecord.LOOKUP_TABLE_ID, value: kula_core_record.getSelectedRecord.LOOKUP_TABLE_DESCRIPTION, label: true }) }}

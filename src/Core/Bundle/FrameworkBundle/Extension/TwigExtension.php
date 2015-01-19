@@ -48,7 +48,7 @@ class TwigExtension extends \Twig_Extension {
     $globals_array = array(
       'kula_instance_name' => $this->container->getParameter('instance_name'),
       'session' => $this->session,
-      //'focus' => $container->get('kula.focus'),
+      'focus' => $this->container->get('kula.core.focus'),
       'flash' => $this->flash,
       'request' => $current_request,
       'kula_core_navigation' => $this->navigation,
