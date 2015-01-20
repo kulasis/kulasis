@@ -139,7 +139,7 @@ class Navigation {
       return $routeNav;
     }
     
-    if ($routeNav instanceof Tab) {
+    if ($routeNav instanceof Tab OR $routeNav instanceof MenuAction OR $routeNav instanceof MenuReport) {
       return $this->navigation[$routeNav->getParent()];
     } 
   }

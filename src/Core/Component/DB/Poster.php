@@ -78,15 +78,17 @@ class Poster {
   }
   
   public function process() {
-    $transaction = $this->db->db_transaction('poster');
-    try {
-      foreach($this->records as $table => $tableRow) {
-        foreach($tableRow as $id => $record) {
-          $record->process();
+    if (count($this->records) > 0) {
+      $transaction = $this->db->db_transaction('poster');
+      try {
+        foreach($this->records as $table => $tableRow) {
+          foreach($tableRow as $id => $record) {
+            $record->process();
+          }
         }
+      } catch (Exception $e) {
+        $transaction->rollback();
       }
-    } catch (Exception $e) {
-      $transaction->rollback();
     }
   }
   

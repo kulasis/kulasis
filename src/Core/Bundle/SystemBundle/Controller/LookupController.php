@@ -45,7 +45,7 @@ class LookupController extends Controller {
     $this->setRecordType('Core.Lookup');
     
     $rows_affected = $this->db()->db_delete('CORE_LOOKUP_TABLES')
-        ->predicate('LOOKUP_TABLE_ID', $this->record->getSelectedRecordID())->execute();
+        ->condition('LOOKUP_TABLE_ID', $this->record->getSelectedRecordID())->execute();
     
     if ($rows_affected == 1) {
       $this->flash->add('success', 'Deleted lookup table.');

@@ -16,6 +16,7 @@ namespace Kula\Core\Bundle\FrameworkBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\DependencyInjection\ContainerInterface as ContainerInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Kula\Core\Bundle\FrameworkBundle\Exception\NotAuthorizedException;
 
 class Controller extends BaseController {
@@ -24,7 +25,6 @@ class Controller extends BaseController {
   
   public function setContainer(ContainerInterface $container = null){
     parent::setContainer($container);
-    
     $this->session = $this->container->get('kula.core.session');
     $this->flash = $this->container->get('session')->getFlashBag();
     $this->request = $this->container->get('request_stack')->getCurrentRequest();
@@ -45,7 +45,7 @@ class Controller extends BaseController {
         $result = \Kula\Core\Component\DB\Searcher::startProcessing($this->container->get('kula.core.db'), $this->container->get('kula.core.schema'), $this->container->get('kula.core.permission'), $this->request);  
       } else {
         $this->poster = $this->container->get('kula.core.poster');
-        if ($this->poster->addMultiple($this->request->request->get('add')))
+        if ($this->request->request->get('add'))
           $this->poster->addMultiple($this->request->request->get('add'));
         if ($this->request->request->get('edit'))
           $this->poster->editMultiple($this->request->request->get('edit'));
@@ -81,6 +81,7 @@ class Controller extends BaseController {
   }
   
   public function setRecordType($record_type, $add_mode = null, $eager_search_data = null) {
+
     $this->record->setRecordType($record_type, $add_mode, $eager_search_data);
     
     $this->twig->addGlobal('record_type', $this->record->getRecordType());
@@ -97,6 +98,29 @@ class Controller extends BaseController {
 		if (!($this->session->get('initial_role') > 0)) {
 			throw new NotAuthorizedException();
 		}
+  }
+  
+  /**
+   * Forwards the request to another controller.
+   *
+   * @param string $controller The controller name (a string like BlogBundle:Post:index)
+   * @param array  $path       An array of path parameters
+   * @param array  $query      An array of query parameters
+   *
+   * @return Response A Response instance
+   */
+  public function forward($routeName, array $query = array(), array $request = array())
+  {
+		if ($this->request->isXmlHttpRequest()) {
+			$query['partial'] = 'window';
+      $query['request'] = 'window';
+		}
+    
+      $path['_route'] = $this->request->attributes->get('_route');
+      $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate($query, $request, $path, null, null, array('REQUEST_URI' => $this->container->get('router')->generate($routeName, array())));
+      $subRequest->setMethod('GET');
+      
+      return $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
   }
 
 }

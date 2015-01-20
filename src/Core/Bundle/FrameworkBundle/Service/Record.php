@@ -22,6 +22,7 @@ class Record {
     $this->session = $session;
     $this->schema = $schema;
     $this->focus = $focus;
+    $this->requestService = $request;
     $this->request = $request->getCurrentRequest();
     $this->permission = $permission;
     $this->flash = $flash;
@@ -46,7 +47,7 @@ class Record {
       $this->setAddMode($add_mode);
     
       if (!$add_mode) {
-      
+        $this->request = $this->requestService->getCurrentRequest();
         // try and set through existing record
         // get selected ID either through POST or GET
         if ($this->request->request->get('record_id')) {

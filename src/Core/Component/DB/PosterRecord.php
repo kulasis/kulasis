@@ -41,23 +41,37 @@ class PosterRecord {
   
   public function process() {
     $this->getOriginalRecord();
-    $this->processConfirmation();
-    $this->processSynthetic();
-    $this->processCheckboxFields();
-    $this->processDateFields();
-    $this->processTimeFields();
-    $this->processChoosers();
     
-    $this->processBlankValues();
-    if ($this->crud == self::EDIT) {
-      $this->processSameValues();
-    }
-    if (count($this->fields) > 0) {
-      $this->verifyPermissions();
-      $this->validate();
+    if ($this->crud == self::DELETE) {
+      if ($this->fields['delete_row'] == 'Y') {
+        unset($this->fields['delete_row']);
+        $this->verifyPermissions();
+        if (!$this->hasViolations) {
+          $this->execute();
+        }
+        
+      } else {
+        return;
+      }
+    } else {
+      $this->processConfirmation();
+      $this->processSynthetic();
+      $this->processCheckboxFields();
+      $this->processDateFields();
+      $this->processTimeFields();
+      $this->processChoosers();
     
-      if (!$this->hasViolations) {
-        $this->execute();
+      $this->processBlankValues();
+      if ($this->crud == self::EDIT) {
+        $this->processSameValues();
+      }
+      if (count($this->fields) > 0) {
+        $this->verifyPermissions();
+        $this->validate();
+    
+        if (!$this->hasViolations) {
+          $this->execute();
+        }
       }
     }
   }
@@ -246,7 +260,7 @@ class PosterRecord {
     }
   }
   
-  private function auditLog($fields) {
+  private function auditLog($fields = null) {
     $audit = $this->db->db_connection(array('target' => 'write'))->prepare('INSERT INTO '.$this->schema->getTable('Log.Audit.Changes')->getDBName().' (USER_ID, LOG_SESSION, CRUD_OPERATION, TABLE_NAME, RECORD_ID, OLD_RECORD, NEW_RECORD, CREATED_USERSTAMP, CREATED_TIMESTAMP)
         VALUES (:user_id, :session_id, :crud, :table_name, :record_id, :old_record, :new_record, :created_userstamp, :created_timestamp)');
     $audit->execute(array(
