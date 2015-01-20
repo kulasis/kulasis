@@ -62,6 +62,10 @@ class PosterRecord {
     }
   }
   
+  public function getID() {
+    return $this->id;
+  }
+  
   private function getOriginalRecord() {
     if ($this->crud == self::ADD)
       return false;
@@ -178,10 +182,14 @@ class PosterRecord {
   
   private function validate() {
     // begin validation
-    // merge new data with existing row
-    $row_to_validate = array_merge($this->originalRecord, $this->fields);
     $schema = $this->schema->getTable($this->table);
     if ($validator = $schema->getDBClass()) {
+      // merge new data with existing row
+      if ($this->crud == self::EDIT) {
+        $row_to_validate = array_merge($this->originalRecord, $this->fields);
+      } else {
+        $row_to_validate = $this->fields;
+      }
       $validator_obj = new \Kula\Core\Bundle\FrameworkBundle\Service\Validator($validator, $row_to_validate);
       $violations = $validator_obj->getViolations();
       $this->violations->addAll($violations);

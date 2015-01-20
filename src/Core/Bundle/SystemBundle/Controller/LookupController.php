@@ -36,16 +36,16 @@ class LookupController extends Controller {
   public function createAction() {
     $this->authorize();
     $this->processForm();
-    $id = $this->poster->getResultForTable('insert', 'CORE_LOOKUP')[0];
-    return $this->forward('core_system_lookup', array('record_type' => 'LOOKUP', 'record_id' => $id), array('record_type' => 'LOOKUP', 'record_id' => $id));
+    $id = $this->poster->getPosterRecord('Core.Lookup.Table', 0)->getID();
+    return $this->forward('core_system_lookup', array('record_type' => 'Core.Lookup', 'record_id' => $id), array('record_type' => 'Core.Lookup', 'record_id' => $id));
   }
   
   public function deleteAction() {
     $this->authorize();
     $this->setRecordType('Core.Lookup');
     
-    $rows_affected = $this->db()->db_delete('CORE_LOOKUP')
-        ->predicate('LOOKUP_ID', $this->record->getSelectedRecordID())->execute();
+    $rows_affected = $this->db()->db_delete('CORE_LOOKUP_TABLES')
+        ->predicate('LOOKUP_TABLE_ID', $this->record->getSelectedRecordID())->execute();
     
     if ($rows_affected == 1) {
       $this->flash->add('success', 'Deleted lookup table.');
@@ -56,7 +56,7 @@ class LookupController extends Controller {
   
   public function chooserAction() {
     $this->authorize();
-    $data = \Kula\Bundle\Core\SystemBundle\Chooser\LookupChooser::createChooserMenu($this->request->query->get('q'));
+    $data = \Kula\Core\Bundle\SystemBundle\Chooser\LookupChooser::createChooserMenu($this->request->query->get('q'));
     return $this->JSONResponse($data);
   }
   
