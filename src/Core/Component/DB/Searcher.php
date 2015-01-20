@@ -2,17 +2,27 @@
 
 namespace Kula\Core\Component\DB;
 
+use Kula\Core\Component\Permission\Permission;
+
 class Searcher {
   
   private static $post;
   
   private static $result = array();
   
-  public static function startProcessing() {
+  private static $db;
+  private static $permission;
+  private static $request;
+  private static $schema;
+  
+  public static function startProcessing($db, $schema, $permission, $request) {
     
-    // get post values
-    $container = $GLOBALS['kernel']->getContainer();
-    self::$post = $container->get('request_stack')->getCurrentRequest()->request->get('search');
+    self::$db = $db;
+    self::$schema = $schema;
+    self::$permission = $permission;
+    self::$request = $request;
+    
+    self::$post = self::$request->request->get('search');
 
     self::$post = self::cleanSearchVariable(self::$post);
     
@@ -61,21 +71,21 @@ class Searcher {
     
     $post_data = self::cleanSearchVariable($post_data);
     
-    $select_obj = \Kula\Core\Component\Database\DB::connect('read')->select($base_table);
-    $select_obj->add_field($base_table, $base_field);
+    $select_obj = self::$db->db_select($base_table);
+    $select_obj->addField($base_table, $base_field);
     // Get fields from base_table in array
     if (isset($post_data[$base_table])) {
       $select_obj = $select_obj->fields($base_table, array_keys($post_data[$base_table]));
     // Create predicates
     foreach($post_data[$base_table] as $key => $value) {
       // check for permission
-      if (\Kula\Component\Permission\Permission::getPermissionForSchemaObject($base_table, $key, \Kula\Component\Permission\Permission::READ)) {
+      if (self::$permission->getPermissionForSchemaObject($base_table, $key, Permission::READ)) {
         if (is_array($value)) {  
-          $select_obj = $select_obj->predicate($key, $value, 'IN', $base_table);  
+          $select_obj = $select_obj->condition(self::$schema->getField($key)->getDBName(), $value, 'IN', $base_table);  
         } elseif (is_int($value)) { 
-          $select_obj = $select_obj->predicate($key, $value, '=', $base_table);  
+          $select_obj = $select_obj->condition(self::$schema->getField($key)->getDBName(), $value, '=', $base_table);  
         } else {
-          $select_obj = $select_obj->predicate($key, $value.'%', 'LIKE', $base_table);  
+          $select_obj = $select_obj->condition(self::$schema->getField($key)->getDBName(), $value.'%', 'LIKE', $base_table);  
         }
       } else {
         $container = $GLOBALS['kernel']->getContainer();
@@ -93,13 +103,13 @@ class Searcher {
         
         foreach($table_data as $field => $value) {
           // check for permission
-          if (\Kula\Component\Permission\Permission::getPermissionForSchemaObject($table, $field, \Kula\Component\Permission\Permission::READ)) {
+          if (self::$permission->getPermissionForSchemaObject($table, $field, Permission::READ)) {
             if (is_array($value)) {  
-              $select_obj = $select_obj->predicate($table.'.'.$field, $value);
+              $select_obj = $select_obj->condition(self::$schema->getTable($table)->getDBName().'.'.$field, $value);
             } elseif (is_int($value)) { 
-              $select_obj = $select_obj->predicate($table.'.'.$field, $value);
+              $select_obj = $select_obj->condition(self::$schema->getTable($table)->getDBName().'.'.$field, $value);
             } else {
-              $select_obj = $select_obj->predicate($table.'.'.$field, $value . '%', 'LIKE');
+              $select_obj = $select_obj->condition(self::$schema->getTable($table)->getDBName().'.'.$field, $value . '%', 'LIKE');
             }
           } else {
             $container = $GLOBALS['kernel']->getContainer();

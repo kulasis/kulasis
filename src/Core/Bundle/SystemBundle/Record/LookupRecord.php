@@ -36,11 +36,11 @@ class LookupRecord extends Record implements RecordDelegateInterface {
 	}
 	
 	public function getBaseTable() {
-		return 'CORE_LOOKUP_TABLES';
+		return 'Core.Lookup.Table';
 	}
 	
 	public function getBaseKeyFieldName() {
-		return 'LOOKUP_TABLE_ID';
+		return 'Core.Lookup.Table.ID';
 	}
 	
 	public function modifySearchDBOBject($db_obj) {

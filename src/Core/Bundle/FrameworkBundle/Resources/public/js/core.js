@@ -158,7 +158,7 @@ function navigation_updateWindow(num, html, title, url) {
 	   var quest_pos = url.indexOf('?');
 		 url = url.substring(0, quest_pos);
 	 } 
-		
+	
   // Update window url
 	$('#windowTitle_' + num).data('window-url', url);
 	$('#window_' + num).data('window-url', url);

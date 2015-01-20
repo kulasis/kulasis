@@ -29,7 +29,7 @@ class LookupController extends Controller {
   public function addAction() {
     $this->authorize();
     $this->formAction('core_system_lookup_create');
-    $this->setRecordType('LOOKUP', 'Y');
+    $this->setRecordType('Core.Lookup', 'Y');
     return $this->render('KulaCoreSystemBundle:Lookup:values.html.twig');
   }
   
@@ -42,9 +42,9 @@ class LookupController extends Controller {
   
   public function deleteAction() {
     $this->authorize();
-    $this->setRecordType('LOOKUP');
+    $this->setRecordType('Core.Lookup');
     
-    $rows_affected = $this->db()->delete('CORE_LOOKUP')
+    $rows_affected = $this->db()->db_delete('CORE_LOOKUP')
         ->predicate('LOOKUP_ID', $this->record->getSelectedRecordID())->execute();
     
     if ($rows_affected == 1) {

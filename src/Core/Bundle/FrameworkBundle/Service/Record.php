@@ -3,6 +3,7 @@
 namespace Kula\Core\Bundle\FrameworkBundle\Service;
 
 use \Kula\Core\Component\Record\RecordDelegateInterface;
+use \Kula\Core\Component\Permission\Permission;
 
 class Record {
   
@@ -16,11 +17,13 @@ class Record {
   private $selected_record_id;
   private $selected_record;
   
-  public function __construct($db, $session, $focus, $request, $flash, $recordType) {
+  public function __construct($db, $session, $schema, $focus, $request, $flash, $permission, $recordType) {
     $this->db = $db;
     $this->session = $session;
+    $this->schema = $schema;
     $this->focus = $focus;
     $this->request = $request->getCurrentRequest();
+    $this->permission = $permission;
     $this->flash = $flash;
     $this->recordType = $recordType;
   }
@@ -62,7 +65,7 @@ class Record {
         // if searching, process search, load first record returned
         if ($this->request->request->get('mode') == 'search' AND $this->selected_record_id == ''
         ) {
-          $post_data = \Kula\Core\Component\DB\Searcher::startProcessing();
+          $post_data = \Kula\Core\Component\DB\Searcher::startProcessing($this->db, $this->schema, $this->permission, $this->request);
           $this->selected_record_id = $this->_search($post_data);
         } else {
       
@@ -129,7 +132,7 @@ class Record {
   
   private function _setSelectedRecord($record_id) {
     $this->selected_record = $this->delegate->get($record_id);
-    $this->selected_record_id = $this->selected_record[$this->delegate->getBaseKeyFieldName()];
+    $this->selected_record_id = $this->selected_record[$this->schema->getField($this->delegate->getBaseKeyFieldName())->getDBName()];
     return $this->selected_record_id;
   }
   
@@ -210,32 +213,38 @@ class Record {
   }
   
   private function _search($post_data) {
-    
     // get base table
-    $base_table = $this->delegate->getBaseTable();
+    $base_table = $this->schema->getTable($this->delegate->getBaseTable())->getDBName();
     $base_field = $this->delegate->getBaseKeyFieldName();
 
-    $select_obj = \Kula\Component\Database\DB::connect('read')->select($base_table);
-    $select_obj->add_field($base_table, $base_field);
+    $select_obj = $this->db->db_select($base_table);
+    $select_obj->addField($base_table, $this->schema->getField($base_field)->getDBName());
     // Get fields from base_table in array
-    if (isset($post_data[$base_table])) {
-      $select_obj = $select_obj->fields($base_table, array_keys($post_data[$base_table]));
-    // Create conditions
-    foreach($post_data[$base_table] as $key => $value) {
-      // check for permission
-      if (\Kula\Component\Permission\Permission::getPermissionForSchemaObject($base_table, $key, \Kula\Component\Permission\Permission::READ)) {
-        if (is_array($value)) {  
-          $select_obj = $select_obj->condition($key, $value, 'IN', $base_table);  
-        } elseif (is_int($value)) { 
-          $select_obj = $select_obj->condition($key, $value, '=', $base_table);  
-        } else {
-          $select_obj = $select_obj->condition($key, $value.'%', 'LIKE', $base_table);  
-        }
-      } else {
-        $this->flash->add('error', 'Searching in ' . $base_table . '.' . $key . ' with no permission.');
+    if (isset($post_data[$this->delegate->getBaseTable()])) {
+      
+      $fields = array_keys($post_data[$this->delegate->getBaseTable()]);
+      $dbFields = array();
+      foreach($fields as $fieldName) {
+        $dbFields[] = $this->schema->getField($fieldName)->getDBName();
       }
-    }
-    unset($post_data[$base_table]);
+      
+      $select_obj = $select_obj->fields($base_table, $dbFields);
+      // Create conditions
+      foreach($post_data[$this->delegate->getBaseTable()] as $key => $value) {
+        // check for permission
+        if ($this->permission->getPermissionForSchemaObject($base_table, $key, Permission::READ)) {
+          if (is_array($value)) {  
+            $select_obj = $select_obj->condition($this->schema->getField($key)->getDBName(), $value, 'IN', $base_table);  
+          } elseif (is_int($value)) { 
+            $select_obj = $select_obj->condition($this->schema->getField($key)->getDBName(), $value, '=', $base_table);  
+          } else {
+            $select_obj = $select_obj->condition($this->schema->getField($key)->getDBName(), $value.'%', 'LIKE', $base_table);  
+          }
+        } else {
+          $this->flash->add('error', 'Searching in ' . $base_table . '.' . $key . ' with no permission.');
+        }
+      }
+    unset($post_data[$this->delegate->getBaseTable()]);
     }
     
     // Modify table first
@@ -249,13 +258,13 @@ class Record {
         
         foreach($table_data as $field => $value) {
           // check for permission
-          if (\Kula\Component\Permission\Permission::getPermissionForSchemaObject($table, $field, \Kula\Component\Permission\Permission::READ)) {
+          if ($this->permission->getPermissionForSchemaObject($table, $field, Permission::READ)) {
             if (is_array($value)) {  
-              $select_obj = $select_obj->condition($table.'.'.$field, $value);
+              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$field, $value);
             } elseif (is_int($value)) { 
-              $select_obj = $select_obj->condition($table.'.'.$field, $value);
+              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$field, $value);
             } else {
-              $select_obj = $select_obj->condition($table.'.'.$field, $value . '%', 'LIKE');
+              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$field, $value . '%', 'LIKE');
             }
           } else {
             $this->flash->add('error', 'Searching in ' . $table . '.' . $field . ' with no permission.');
@@ -273,11 +282,11 @@ class Record {
     
     
     $select_obj = $select_obj->range(0, 1);
-    //echo $select_obj->sql();
+
     $result = $select_obj->execute()->fetch();
     
-    if (isset($result[$base_field])) {
-      return $result[$base_field];
+    if (isset($result[$this->schema->getField($base_field)->getDBName()])) {
+      return $result[$this->schema->getField($base_field)->getDBName()];
     } else {
       $this->flash->add('info', 'No matches found.');
       return '';

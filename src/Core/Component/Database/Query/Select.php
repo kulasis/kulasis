@@ -605,7 +605,7 @@ class Select extends Query implements SelectInterface {
       'alias' => $alias,
     );
     
-    return $alias;
+    return $this;
   }
 
   /**

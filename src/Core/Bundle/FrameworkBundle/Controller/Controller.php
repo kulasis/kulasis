@@ -42,7 +42,7 @@ class Controller extends BaseController {
     // Check if HTTP method is post for Poster processing
     if ($this->request->getMethod() == 'POST') {
       if ($this->request->request->get('mode') == 'search') {
-        $result = \Kula\Core\Component\DB\Searcher::startProcessing();  
+        $result = \Kula\Core\Component\DB\Searcher::startProcessing($this->container->get('kula.core.db'), $this->container->get('kula.core.schema'), $this->container->get('kula.core.permission'), $this->request);  
       } else {
         $this->poster = $this->container->get('kula.core.poster');
         if ($this->poster->addMultiple($this->request->request->get('add')))

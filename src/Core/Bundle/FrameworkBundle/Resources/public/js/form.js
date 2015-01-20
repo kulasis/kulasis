@@ -76,7 +76,8 @@ function formSubmission(event) {
 		msg = navigation_replaceAllWindowIDPlaceholders(msg, $('#' + idOfDiv).data('window'));
 		navigation_updateWindow($('#' + idOfDiv).data('window'), msg, '', thisurl);
 		// disable submit and loading buttons
-		$('#' + idOfForm + '_submit').removeProp('disabled');
+		
+    $('#' + idOfForm + '_submit').removeProp('disabled');
 	
 		$('#nav_bar_status > span').hide();
 		$('#nav_bar_status_success').show();
@@ -96,6 +97,7 @@ function formSubmission(event) {
 			$('#nav_bar_status_ready').show();
 		}, 3000);
 	});
+  
 	} // end if on data
 }
 
