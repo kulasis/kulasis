@@ -20,7 +20,7 @@ Log.Audit.Changes:
       label_name: "User ID"
     SessionID:
       description: "Session ID"
-      db_column_name: LOG_SESSION
+      db_column_name: LOG_SESSION_ID
       db_column_type: serial
       db_column_null: true
       parent: Log.Session.ID

@@ -1,50 +1,67 @@
-Core.FormGroups.System:
+Core.System:
   description: "System"
   display_name: "System"
   type: form_group
   portal: core
   sort: 1
-  
-
-Core.Forms.System.Lookup:
-  parent: Core.FormGroups.System
-  description: "Lookup"
-  display_name: "Lookup"
-  type: form
-  portal: core
-  route: core_system_lookup
-  sort: 1
-Core.MenuActions.System.Lookup.New:
-  parent: Core.Forms.System.Lookup
-  description: "New Lookup"
-  display_name: "New Lookup"
-  type: menu_action
-  portal: core
-  route: core_system_lookup_add
-  sort: 1
-Core.MenuActions.System.Lookup.Delete:
-  parent: Core.Forms.System.Lookup
-  description: "Delete Lookup"
-  display_name: "Delete Lookup"
-  type: menu_action
-  divider_before: true
-  record_loaded: true
-  portal: core
-  route: core_system_lookup_delete
-  confirmation_message: "Are you sure you want to delete lookup?"
-  sort: 2
-
-Core.FormGroups.User:
+  forms: 
+    Lookup:
+      description: "Lookup"
+      display_name: "Lookup"
+      route: core_system_lookup
+      sort: 1
+      menu_actions:
+        New:
+          description: "New Lookup"
+          display_name: "New Lookup"
+          route: core_system_lookup_add
+          sort: 1
+        Delete:
+          description: "Delete Lookup"
+          display_name: "Delete Lookup"
+          divider_before: true
+          record_loaded: true
+          route: core_system_lookup_delete
+          confirmation_message: "Are you sure you want to delete lookup?"
+          sort: 2
+Core.User:
   description: "User"
   display_name: "User"
   type: form_group
   portal: core
   sort: 1
-Core.Forms.User.UserGroup:
-  parent: Core.FormGroups.User
-  description: "User Groups"
-  display_name: "User Groups"
-  type: form
-  portal: core
-  route: core_system_users
-  sort: 1
+  forms:
+    UserGroups:
+      description: "User Groups"
+      display_name: "User Groups"
+      route: core_system_users
+      sort: 1
+    Users:
+      description: "Users"
+      display_name: "Users"
+      sort: 2
+      tabs:
+        Information:
+          description: "User Information"
+          display_name: "Information"
+          sort: 1
+          route: core_system_users
+        UserGroups:
+          description: "Roles"
+          display_name: "Roles"
+          sort: 2
+          route: core_system_users_usergroups
+      menu_actions:
+        Add:
+          description: "Add User"
+          display_name: "Add User"
+          route: core_system_users_add
+          sort: 1
+        Delete:
+          description: "Delete User"
+          display_name: "Delete User"
+          route: core_system_users_delete
+          divider_before: true
+          record_loaded: true
+          confirmation_message: "Are you sure you want to delete user?"
+          sort: 2

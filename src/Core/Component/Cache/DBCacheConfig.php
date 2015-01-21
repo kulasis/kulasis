@@ -47,6 +47,9 @@ class DBCacheConfig extends BaseConfigCache {
     
     foreach($this->tables as $table) {
       
+      // check if table exists
+      if ($this->db->db_table_exists($table)) {
+      
       $result = $this->db->db_select($table, 'tables')
         ->expression('MAX(CREATED_TIMESTAMP)', 'max_created')
         ->expression('MAX(UPDATED_TIMESTAMP)', 'max_updated')
@@ -59,6 +62,8 @@ class DBCacheConfig extends BaseConfigCache {
         $latestTimestamp = $createdLatest;
       if ($latestTimestamp < $updatedLatest)
         $latestTimestamp = $updatedLatest;
+      
+      }
       
     }
     

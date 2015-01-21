@@ -7,7 +7,7 @@ Core.Permission.Field:
     - { code: R, description: "Read", sort: 3 }
     - { code: N, description: "None", sort: 4 }
 Core.Permission.YesNo:
-  description: "Yes/No Permissionst"
+  description: "Yes/No Permissions"
   allow_update: false
   values:
     - { code: Y, description: "Yes", sort: 1 }
