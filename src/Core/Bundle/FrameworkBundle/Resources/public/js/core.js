@@ -90,6 +90,7 @@ function navgiation_navigationBarListener(event) {
 
 function navigation_drawerItemListenerExistingWindow(event) {
   event.preventDefault();
+  
   url = $(this).attr('href');
 	
 	var options = new Array();
@@ -99,6 +100,12 @@ function navigation_drawerItemListenerExistingWindow(event) {
 	
 	// Get current window number
 	var windowNumber = $('#window_bar .selected-window-element').data('window');
+  
+  if (windowNumber == undefined) {
+    navigation_drawerItemListenerNewWindow($(this));
+    return;
+  }
+  
 	// Get current active tab 
 	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
 	
