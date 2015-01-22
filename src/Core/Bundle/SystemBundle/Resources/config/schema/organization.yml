@@ -122,6 +122,7 @@ Core.Term:
       db_column_name: CONV_TERM
       db_column_type: varchar
       db_column_length: 255
+      db_colunn_null: true
       field_type: text
       field_length: 20
       column_name: "Conversion Term"
