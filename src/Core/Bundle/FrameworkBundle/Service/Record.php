@@ -42,7 +42,7 @@ class Record {
     $this->record_type = $recordType->getName();
     
     if ($this->session->get('portal') == 'sis' OR $this->session->get('portal') == 'core') {
-    
+
       // set if in add mode
       $this->setAddMode($add_mode);
     

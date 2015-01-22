@@ -85,7 +85,7 @@ data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDispla
 {% include 'KulaCoreFrameworkBundle:Base:flash.html.twig' %}
     {% block content %}
     {% endblock %}
-    <div id="window_window_num_tab_{% if navigation_info.NAVIGATION_TYPE == 'T' %}{{navigation_info.NAVIGATION_ID}}{% else %}{{ tabsToDisplay[0]['NAVIGATION_ID'] }}{% endif %}_detail">
+    <div id="window_window_num_tab_{% if kula_core_navigation.getRequestedTab().getDBID() %}{{kula_core_navigation.getRequestedTab().getDBID()}}{% else %}{{ kula_core_navigation.getRequestedForm().getDBID() }}{% endif %}_detail">
     {% block detail %}
     {% endblock %}
     </div>

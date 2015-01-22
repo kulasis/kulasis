@@ -1,0 +1,16 @@
+{% if record_type %}
+<div class="record_bar_tab_menu_data" style="display:none;" data-mode="{{ mode }}" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}"></div>
+<div class="record_bar group">
+{% include record_bar_template_path %}
+</div>
+{% endif %}
+
+<div class="window_content">
+{% block content %}
+{% endblock %}
+</div>
+
+<div id="window_window_num_tab_{% if kula_core_navigation.getRequestedTab().getDBID() %}{{kula_core_navigation.getRequestedTab().getDBID()}}{% else %}{{ kula_core_navigation.getRequestedForm().getDBID() }}{% endif %}_detail">
+	{% block detail_content %}
+	{% endblock %}
+</div>
