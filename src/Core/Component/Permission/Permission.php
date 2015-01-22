@@ -9,6 +9,10 @@ class Permission {
   private $tables;
   private $fields;
   
+  private $navigationExists;
+  private $tablesExists;
+  private $fieldsExists;
+  
   const READ = 1; // field level
   const WRITE = 2; // field level
   const MASS_CHANGE = 3; // field level
@@ -19,6 +23,10 @@ class Permission {
   public function __construct($db, $session) {
     $this->db = $db;
     $this->session = $session;
+    
+    $this->navigationExists = true;
+    $this->tablesExists = true;
+    $this->fieldsExists = true;
   }
   
   public function getPermissionForNavigationObject($navigation_name) {
@@ -77,14 +85,14 @@ class Permission {
   }
   
   private function loadSchemaPermissionObject() {
-    if (!$this->tables)
+    if (!$this->tables AND $this->tablesExists === true)
       $this->loadTablePermissions();
-    if (!$this->fields)
+    if (!$this->fields AND $this->fieldsExists === true)
       $this->loadFieldPermissions();
   }
   
   private function loadNavigationPermissionObject() {
-    if (!$this->navigation)
+    if (!$this->navigation AND $this->navigationExists === true)
       $this->loadNavigationPermissions();
   }
 
@@ -124,7 +132,10 @@ class Permission {
         $this->navigation[$row['NAVIGATION_NAME']] = $row['PERMISSION'];
       }
       
-    }
+    } 
+    
+    if (!$this->navigation)
+      $this->navigationExists = false;
   }
   
   private function loadTablePermissions() {
@@ -169,7 +180,10 @@ class Permission {
         $this->tables[$row['TABLE_NAME']]['delete'] = $row['PERMISSION_DELETE'];
       }
       
-    }
+    } 
+    
+    if (!$this->tables)
+      $this->tablesExists = false;
   }
   
   private function loadFieldPermissions() {
@@ -210,6 +224,9 @@ class Permission {
       }
       
     }
+    
+    if (!$this->fields)
+      $this->fieldsExists = false;
   }
   
   private function checkSchemaPermission($db_permission, $permission) {
