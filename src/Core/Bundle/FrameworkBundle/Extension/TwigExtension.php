@@ -18,8 +18,9 @@ class TwigExtension extends \Twig_Extension {
     $this->flash = $container->get('flash');
     $this->navigation = $container->get('kula.core.navigation');
     $this->router = $container->get('router');
+    $this->lookup = $container->get('kula.core.lookup');
     
-    \Kula\Core\Component\Twig\Field::setDependencies($container->get('kula.core.permission'), $container->get('kula.core.focus'), $container->get('kula.core.record'), $container->get('kula.core.poster'), $container->get('kula.core.schema'), $container->get('kula.core.db'), $container->get('kula.core.session'), $container->get('kula.core.chooser'));
+    \Kula\Core\Component\Twig\Field::setDependencies($container->get('kula.core.permission'), $container->get('kula.core.focus'), $container->get('kula.core.record'), $container->get('kula.core.poster'), $container->get('kula.core.schema'), $container->get('kula.core.db'), $container->get('kula.core.session'), $container->get('kula.core.chooser'), $container->get('kula.core.lookup'));
   }
   
   public function getFunctions() {

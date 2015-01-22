@@ -14,8 +14,9 @@ class Field {
   private static $db;
   private static $session;
   private static $chooser;
+  private static $lookup;
   
-  public static function setDependencies($permission, $focus, $record, $poster, $schema, $db, $session, $chooser) {
+  public static function setDependencies($permission, $focus, $record, $poster, $schema, $db, $session, $chooser, $lookup) {
     self::$permission = $permission;
     self::$focus = $focus;
     self::$record = $record;
@@ -24,6 +25,7 @@ class Field {
     self::$db = $db;
     self::$session = $session;
     self::$chooser = $chooser;
+    self::$lookup = $lookup;
   }
   
   public static function fieldName($param = array()) {
@@ -443,13 +445,13 @@ class Field {
     
     if (self::_displayField($param)) {
       $field_name = self::getNameForField($param);
-      $lookup += \Kula\Component\Lookup\Lookup::getLookupMenu($schema['LOOKUP_ID'], $param['lookup']);
+      $lookup += self::$lookup->getLookupMenu($schema->getLookup(), $param['lookup']);
       return GenericField::select($lookup, $field_name, $param['value'], $param['attributes_html']);  
     } elseif (self::_displayValue($param) AND !$param['input']) {
-      return \Kula\Component\Lookup\Lookup::getLookupValue($schema['LOOKUP_ID'], $param['value'], $param['lookup'], true);
+      return self::$lookup->getLookupValue($schema->getLookup(), $param['value'], $param['lookup'], true);
     } elseif (self::_displayValue($param)) {
       $field_name = self::getNameForField($param);
-      $lookup += \Kula\Component\Lookup\Lookup::getLookupMenu($schema['LOOKUP_ID'], $param['lookup'], true);
+      $lookup += self::$lookup->getLookupMenu($schema->getLookup(), $param['lookup'], true);
       $param['attributes_html']['disabled'] = 'disabled';
       return GenericField::select($lookup, $field_name, $param['value'], $param['attributes_html']);  
     }
@@ -610,7 +612,6 @@ class Field {
   
   private static function _displayField($param) {
     $org_term_ids = self::$focus->getOrganizationTermIDs();
-    
     $schema = self::getFieldInfo($param['field']);
     if (
          (

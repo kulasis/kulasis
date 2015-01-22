@@ -24,12 +24,79 @@ Core.System:
           route: core_system_lookup_delete
           confirmation_message: "Are you sure you want to delete lookup?"
           sort: 2
+    Organization:
+      description: "Organization"
+      display_name: "Organization"
+      sort: 2
+      tabs:
+        OrganizationTerms:
+          description: "Organization Terms"
+          display_name: "Organization Terms"
+          route: core_system_organization_terms
+          sort: 1
+        Organization:
+          description: "Organization"
+          display_name: "Organization"
+          route: core_system_organization
+          sort: 2
+    Terms:
+      description: "Terms"
+      display_name: "Terms"
+      sort: 3
+      route: core_system_terms
+Core.Security:
+  description: "Security"
+  display_name: "Security"
+  type: form_group
+  portal: core
+  sort: 2
+  forms:
+    NavigationPermissions:
+      description: "Navigation Permissions"
+      display_name: "Navigation Permissions"
+      sort: 2
+      tabs:
+        UserGroup:
+          description: "User Group"
+          display_name: "User Group"
+          route: core_system_navpermissions_usergroup	
+          sort: 1
+        Public:
+          description: "Public"
+          display_name: "Public"
+          route: core_system_navpermissions_public
+          sort: 2
+        Role:
+          description: "Role"
+          display_name: "Role"
+          route: core_system_navpermissions_role
+          sort: 3
+    SchemaPermissions:
+      description: "Schema Permissions"
+      display_name: "Schema Permissions"
+      sort: 3
+      tabs:
+        UserGroup:
+          description: "User Group"
+          display_name: "User Group"
+          route: core_system_schemapermissions_usergroup
+          sort: 1
+        Public:
+          description: "Public"
+          display_name: "Public"
+          route: core_system_schemapermissions_public
+          sort: 2
+        Role:
+          description: "Role"
+          display_name: "Role"
+          route: core_system_schemapermissions_role
+          sort: 3
 Core.User:
   description: "User"
   display_name: "User"
   type: form_group
   portal: core
-  sort: 1
+  sort: 3
   forms:
     UserGroups:
       description: "User Groups"

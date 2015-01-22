@@ -1,4 +1,4 @@
-{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
 <div class="data-table-header-div">
@@ -9,30 +9,30 @@ Organizations
 </div>
 <table id="window_window_num_data_table_organization" class="data-table">
 <thead>
-  {{ kula_field_name({ delete: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ delete: true, field: 'Core.Organization.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   <th class="data-table-cell-row-header">#</th>
-  {{ kula_field_name({ edit: true, db_table: 'CORE_ORGANIZATION', db_field: 'CALC_PARENT_ORGANIZATION_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ edit: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ edit: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ABBREVIATION', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ edit: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_TYPE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Organization.ParentOrganizationID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Organization.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Organization.Abbreviation', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Organization.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </thead>
 <tbody>
-  {{ kula_display_html({ add: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ID', prepend_html: '<tr class="data-table-row-new">' }) }}
-    {{ kula_field({ delete: true, add: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-    {{ kula_display_html({ add: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
-    {{ kula_field({ add: true, db_table: 'CORE_ORGANIZATION', db_field: 'CALC_PARENT_ORGANIZATION_NAME', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ add: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_NAME', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ add: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ABBREVIATION', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ add: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_TYPE', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-  {{ kula_display_html({ add: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ID', prepend_html: '</tr>' }) }}
+  {{ kula_display_html({ add: true, field: 'Core.Organization.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+    {{ kula_field({ delete: true, add: true, field: 'Core.Organization.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    {{ kula_display_html({ add: true, field: 'Core.Organization.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+    {{ kula_field({ add: true, field: 'Core.Organization.ParentOrganizationID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.Organization.Name', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.Organization.Abbreviation', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.Organization.Type', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'Core.Organization.ID', prepend_html: '</tr>' }) }}
   {% for organization in organizations %}
   <tr>
-    {{ kula_field({ delete: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ID', db_row_id: organization.ORGANIZATION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    {{ kula_field({ delete: true, field: 'Core.Organization.ID', db_row_id: organization.ORGANIZATION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
-    {{ kula_field({ edit: true, db_table: 'CORE_ORGANIZATION', db_field: 'CALC_PARENT_ORGANIZATION_NAME', db_row_id: organization.ORGANIZATION_ID, value: organization.PARENT_ORGANIZATION_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_NAME', db_row_id: organization.ORGANIZATION_ID, value: organization.ORGANIZATION_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ABBREVIATION', db_row_id: organization.ORGANIZATION_ID, value: organization.ORGANIZATION_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_TYPE', db_row_id: organization.ORGANIZATION_ID, value: organization.ORGANIZATION_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Organization.ParentOrganizationID', db_row_id: organization.ORGANIZATION_ID, value: organization.PARENT_ORGANIZATION_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Organization.Name', db_row_id: organization.ORGANIZATION_ID, value: organization.ORGANIZATION_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Organization.Abbreviation', db_row_id: organization.ORGANIZATION_ID, value: organization.ORGANIZATION_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Organization.Type', db_row_id: organization.ORGANIZATION_ID, value: organization.ORGANIZATION_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
   {% endfor %}
 </tbody>

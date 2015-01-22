@@ -52,7 +52,7 @@ class RecordLoader {
       } else {
         
         $recordFields['RECORD_NAME'] = $recordName;
-        $recordFields['PORTAL'] = strtolower(substr($recordName, 0, strrpos($recordName, '.')));
+        $recordFields['PORTAL'] = strtolower(substr($recordName, 0, strpos($recordName, '.')));
         $recordFields['CLASS'] = (isset($record['class'])) ? $record['class'] : null;
         $recordID = $db->db_insert('CORE_RECORD_TYPES')->fields($recordFields)->execute();
         

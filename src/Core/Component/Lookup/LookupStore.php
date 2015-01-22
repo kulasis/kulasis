@@ -29,7 +29,7 @@ class LookupStore {
     }
     
     $this->lookup = unserialize(file_get_contents((string) $cache));
-    
+    $this->lookup->setDependencies($this->db);
   }
   
   public function getLookup() {

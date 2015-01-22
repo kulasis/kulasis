@@ -1,2 +1,4 @@
 Core.Term:
   class: Kula\Core\Bundle\SystemBundle\Chooser\TermChooser
+Core.Organization:
+  class: Kula\Core\Bundle\SystemBundle\Chooser\OrganizationChooser

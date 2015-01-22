@@ -1,6 +1,12 @@
-Core.NavigationForm:
-  class: Kula\Core\Bundle\SystemBundle\Record\NavigationFormRecord
-Core.SchemaTable:
-  class: Kula\Core\Bundle\SystemBundle\Record\SchemaTableRecord
 Core.Lookup:
   class: Kula\Core\Bundle\SystemBundle\Record\LookupRecord
+Core.UserGroup:
+  class: Kula\Core\Bundle\SystemBundle\Record\UserGroupRecord
+Core.User.Role:
+  class: Kula\Core\Bundle\SystemBundle\Record\RoleRecord
+Core.User:
+  class: Kula\Core\Bundle\SystemBundle\Record\UserRecord
+Core.Organization.School:
+  class: Kula\Core\Bundle\SystemBundle\Record\SchoolRecord
+Core.Organization.School.Term:
+  class: Kula\Core\Bundle\SystemBundle\Record\SchoolTermRecord

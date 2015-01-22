@@ -80,6 +80,10 @@ class Field {
     return $this->chooser;
   }
   
+  public function getLookup() {
+    return $this->lookup;
+  }
+  
   public function getName() {
     return $this->name;
   }
