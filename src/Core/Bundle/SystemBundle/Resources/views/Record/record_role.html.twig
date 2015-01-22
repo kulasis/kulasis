@@ -1,5 +1,5 @@
-{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', db_row_id: record_obj.getSelectedRecord.ROLE_ID, value: record_obj.getSelectedRecord.LAST_NAME, label: true, attributes_html: { 'size' : 30 } }) }}
-{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', db_row_id: record_obj.getSelectedRecord.ROLE_ID, value: record_obj.getSelectedRecord.FIRST_NAME, label: true, attributes_html: { 'size' : 30 } }) }}
-{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'MIDDLE_NAME', db_row_id: record_obj.getSelectedRecord.ROLE_ID, value: record_obj.getSelectedRecord.MIDDLE_NAME, label: true, attributes_html: { 'size' : 30 } }) }}
-{{ kula_field({ db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_NAME', db_row_id: record_obj.getSelectedRecord.ROLE_ID, value: record_obj.getSelectedRecord.USERGROUP_NAME, label: true, attributes_html: { 'size' : 30 } }) }}
-{{ kula_field({ db_table: 'CORE_USERGROUP', db_field: 'PORTAL', db_row_id: record_obj.getSelectedRecord.USER_ID, value: record_obj.getSelectedRecord.PORTAL, label: true }) }}
+{{ kula_field({ field: 'Constituent.Constituent.LastName', db_row_id: kula_core_record.getSelectedRecord.ROLE_ID, value: kula_core_record.getSelectedRecord.LAST_NAME, label: true, attributes_html: { 'size' : 30 } }) }}
+{{ kula_field({ field: 'Constituent.Constituent.FirstName', db_row_id: kula_core_record.getSelectedRecord.ROLE_ID, value: kula_core_record.getSelectedRecord.FIRST_NAME, label: true, attributes_html: { 'size' : 30 } }) }}
+{{ kula_field({ field: 'Constituent.Constituent.MiddleName', db_row_id: kula_core_record.getSelectedRecord.ROLE_ID, value: kula_core_record.getSelectedRecord.MIDDLE_NAME, label: true, attributes_html: { 'size' : 30 } }) }}
+{{ kula_field({ field: 'Core.Usergroup.Name', db_row_id: kula_core_record.getSelectedRecord.ROLE_ID, value: kula_core_record.getSelectedRecord.USERGROUP_NAME, label: true, attributes_html: { 'size' : 30 } }) }}
+{{ kula_field({ field: 'Core.Usergroup.Portal', db_row_id: kula_core_record.getSelectedRecord.USER_ID, value: kula_core_record.getSelectedRecord.PORTAL, label: true }) }}

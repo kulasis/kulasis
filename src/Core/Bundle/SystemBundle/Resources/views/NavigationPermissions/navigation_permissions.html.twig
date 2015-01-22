@@ -1,4 +1,4 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
 <div class="data-table-header-div">
@@ -7,29 +7,29 @@ Navigation Permissions
 </div>
 <table id="window_window_num_data_table_nonorganizations" class="data-table">
 <thead>
-	<tr>
-	<th class="data-table-cell-row-header">#</th>
-	{{ kula_field_name({ edit: true, db_table: 'CORE_PERMISSION_NAVIGATION', db_field: 'NAVIGATION_ID', field_name_override: 'Portal', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ edit: true, db_table: 'CORE_PERMISSION_NAVIGATION', db_field: 'NAVIGATION_ID', field_name_override: 'Navigation', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ edit: true, db_table: 'CORE_PERMISSION_NAVIGATION', db_field: 'NAVIGATION_ID', field_name_override: 'Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ edit: true, db_table: 'CORE_PERMISSION_NAVIGATION', db_field: 'PERMISSION', field_name_override: 'Permission', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <tr>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ edit: true, field: 'Core.Permission.Navigation.ID', field_name_override: 'Portal', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Permission.Navigation.ID', field_name_override: 'Navigation', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Permission.Navigation.ID', field_name_override: 'Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Permission.Navigation.Permission', field_name_override: 'Permission', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </tr>
 </thead>
 <tbody>
-	{% for nav_perm in nav_permissions %}
-	<tr>
-		<td class="data-table-cell-row-num">{{ loop.index }}</td>
-		{{ kula_field({ input: false, db_table: 'CORE_NAVIGATION', db_field: 'PORTAL', value: nav_perm.PORTAL, prepend_html: '<td>', append_html: '</td>' }) }}
-		{{ kula_field({ input: false, db_table: 'CORE_NAVIGATION', db_field: 'NAVIGATION_NAME', value: nav_perm.NAVIGATION_NAME, prepend_html: '<td>', append_html: '</td>' }) }}
-		{{ kula_field({ input: false, db_table: 'CORE_NAVIGATION', db_field: 'NAVIGATION_TYPE', value: nav_perm.NAVIGATION_TYPE, prepend_html: '<td>', append_html: '</td>' }) }}
-		{% if nav_perm.NAVIGATION_PERMISSION_ID %}
-		{{ kula_field({ edit: true, db_table: 'CORE_PERMISSION_NAVIGATION', db_field: 'PERMISSION', db_row_id: nav_perm.NAVIGATION_PERMISSION_ID, value: nav_perm.PERMISSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{% else %}
-		{{ kula_field({ add: true, post_type: 'add_perm', db_table: 'CORE_PERMISSION_NAVIGATION', db_field: 'PERMISSION', db_row_id: nav_perm.NAVIGATION_ID, value: nav_perm.PERMISSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{% endif %}
-		
-	</tr>
-	{% endfor %}
+  {% for nav_perm in nav_permissions %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, field: 'Core.Navigation.Portal', value: nav_perm.PORTAL, prepend_html: '<td>', append_html: '</td>' }) }}
+    {{ kula_field({ input: false, field: 'Core.Navigation.Name', value: nav_perm.NAVIGATION_NAME, prepend_html: '<td>', append_html: '</td>' }) }}
+    {{ kula_field({ input: false, field: 'Core.Navigation.Type', value: nav_perm.NAVIGATION_TYPE, prepend_html: '<td>', append_html: '</td>' }) }}
+    {% if nav_perm.NAVIGATION_PERMISSION_ID %}
+    {{ kula_field({ edit: true, field: 'Core.Permission.Navigation.Permission', db_row_id: nav_perm.NAVIGATION_PERMISSION_ID, value: nav_perm.PERMISSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% else %}
+    {{ kula_field({ add: true, post_type: 'add_perm', field: 'Core.Permission.Navigation.Permission', db_row_id: nav_perm.NAVIGATION_ID, value: nav_perm.PERMISSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% endif %}
+    
+  </tr>
+  {% endfor %}
 </tbody>
 </table>
 {% endblock %}

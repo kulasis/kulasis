@@ -1,2 +1,2 @@
-{{ kula_field({ db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_NAME', db_row_id: record_obj.getSelectedRecord.USERGROUP_ID, value: record_obj.getSelectedRecord.USERGROUP_NAME, label: true, attributes_html: { 'size' : 30 } }) }}
-{{ kula_field({ db_table: 'CORE_USERGROUP', db_field: 'PORTAL', db_row_id: record_obj.getSelectedRecord.USER_ID, value: record_obj.getSelectedRecord.PORTAL, label: true }) }}
+{{ kula_field({ field: 'Core.Usergroup.Name', db_row_id: kula_core_record.getSelectedRecord.USERGROUP_ID, value: kula_core_record.getSelectedRecord.USERGROUP_NAME, label: true, attributes_html: { 'size' : 30 } }) }}
+{{ kula_field({ field: 'Core.Usergroup.Portal', db_row_id: kula_core_record.getSelectedRecord.USER_ID, value: kula_core_record.getSelectedRecord.PORTAL, label: true }) }}

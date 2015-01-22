@@ -3,7 +3,7 @@
 namespace Kula\Core\Bundle\SystemBundle\Record;
 
 use Kula\Core\Component\Record\Record;
-use Kula\Core\Component\Record\RecordDelegateInterface
+use Kula\Core\Component\Record\RecordDelegateInterface;
 
 class UserGroupRecord extends Record implements RecordDelegateInterface {
   
@@ -14,7 +14,7 @@ class UserGroupRecord extends Record implements RecordDelegateInterface {
   }
   
   public function getRecordIDStack() {
-    $result = $this->db()->db_select('CORE_USERGROUP', 'CORE_USERGROUP')
+    $result = $this->db->db_select('CORE_USERGROUP', 'CORE_USERGROUP')
       ->fields('CORE_USERGROUP', array('USERGROUP_ID' => 'ID'))
       ->orderBy('USERGROUP_NAME', 'ASC')
       ->execute()->fetchAll();
@@ -22,18 +22,18 @@ class UserGroupRecord extends Record implements RecordDelegateInterface {
   }
   
   public function get($record_id) {
-    $result = $this->db()->db_select('CORE_USERGROUP', 'CORE_USERGROUP')
+    $result = $this->db->db_select('CORE_USERGROUP', 'CORE_USERGROUP')
       ->fields('CORE_USERGROUP', array('USERGROUP_ID', 'USERGROUP_NAME', 'PORTAL'))
       ->condition('USERGROUP_ID', $record_id)->execute()->fetch();
     return $result;
   }
   
   public function getBaseTable() {
-    return 'Core.UserGroup';
+    return 'Core.Usergroup';
   }
   
   public function getBaseKeyFieldName() {
-    return 'Core.UserGroup.ID';
+    return 'Core.Usergroup.ID';
   }
   
   public function modifySearchDBOBject($db_obj) {

@@ -28,7 +28,17 @@ Constituent.Constituent:
       field_size: 30
       column_name: "First Name"
       label_name: "First Name"
-
+    MiddleName:
+      description: "Middle Name"
+      db_column_name: MIDDLE_NAME
+      db_column_type: varchar
+      db_column_length: 200
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Middle Name"
+      label_name: "Middle Name"
+      
 Core.User:
   description: "Users Table"
   db_table_name: CORE_USER

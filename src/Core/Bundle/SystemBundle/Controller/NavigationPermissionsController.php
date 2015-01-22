@@ -34,10 +34,10 @@ class NavigationPermissionsController extends Controller {
     // Get table permissions
     $nav_permissions = $this->db()->db_select('CORE_NAVIGATION', 'nav')
       ->fields('nav', array('NAVIGATION_ID', 'NAVIGATION_NAME', 'NAVIGATION_TYPE', 'PORTAL'))
-      //->left_join('CORE_NAVIGATION', 'navparent', array('NAVIGATION_ID'), 'nav.PARENT_NAVIGATION_ID = navparent.NAVIGATION_ID')
-      ->left_join('CORE_PERMISSION_NAVIGATION', 'permnav', array('NAVIGATION_PERMISSION_ID', 'PERMISSION'), 'permnav.NAVIGATION_ID = nav.NAVIGATION_ID AND USERGROUP_ID = '.$this->record->getSelectedRecordID())
-        ->predicate('nav.PORTAL', $this->record->getSelectedRecord()['PORTAL'])
-      ->order_by('NAVIGATION_NAME', 'ASC')
+      ->leftJoin('CORE_PERMISSION_NAVIGATION', 'permnav', 'permnav.NAVIGATION_ID = nav.NAVIGATION_ID AND USERGROUP_ID = '.$this->record->getSelectedRecordID())
+      ->fields('permnav', array('NAVIGATION_PERMISSION_ID', 'PERMISSION'))
+      ->condition('nav.PORTAL', $this->record->getSelectedRecord()['PORTAL'])
+      ->orderBy('NAVIGATION_NAME', 'ASC')
       ->execute()->fetchAll();
     }
     
@@ -47,7 +47,7 @@ class NavigationPermissionsController extends Controller {
   public function public_permissionsAction() {
     $this->authorize();
     $this->processForm();
-    
+
     $perm_add = $this->request->request->get('add_perm');
     
     if (count($perm_add) > 0) {
@@ -68,8 +68,9 @@ class NavigationPermissionsController extends Controller {
     // Get table permissions
     $nav_permissions = $this->db()->db_select('CORE_NAVIGATION', 'nav')
       ->fields('nav', array('NAVIGATION_ID', 'NAVIGATION_NAME', 'NAVIGATION_TYPE', 'PORTAL'))
-      ->left_join('CORE_PERMISSION_NAVIGATION', 'permnav', array('NAVIGATION_PERMISSION_ID', 'PERMISSION'), 'permnav.NAVIGATION_ID = nav.NAVIGATION_ID AND USERGROUP_ID IS NULL AND ROLE_ID IS NULL')
-      ->order_by('NAVIGATION_NAME', 'ASC')
+      ->leftJoin('CORE_PERMISSION_NAVIGATION', 'permnav', 'permnav.NAVIGATION_ID = nav.NAVIGATION_ID AND USERGROUP_ID IS NULL AND ROLE_ID IS NULL')
+      ->fields('permnav', array('NAVIGATION_PERMISSION_ID', 'PERMISSION'))
+      ->orderBy('NAVIGATION_NAME', 'ASC')
       ->execute()->fetchAll();
 
     return $this->render('KulaCoreSystemBundle:NavigationPermissions:navigation_permissions.html.twig', array('nav_permissions' => $nav_permissions));
@@ -103,8 +104,9 @@ class NavigationPermissionsController extends Controller {
     // Get table permissions
     $nav_permissions = $this->db()->db_select('CORE_NAVIGATION', 'nav')
       ->fields('nav', array('NAVIGATION_ID', 'NAVIGATION_NAME', 'NAVIGATION_TYPE', 'PORTAL'))
-      ->left_join('CORE_PERMISSION_NAVIGATION', 'permnav', array('NAVIGATION_PERMISSION_ID', 'PERMISSION'), 'permnav.NAVIGATION_ID = nav.NAVIGATION_ID AND ROLE_ID ='.$this->record->getSelectedRecordID())
-      ->order_by('NAVIGATION_NAME', 'ASC')
+      ->leftJoin('CORE_PERMISSION_NAVIGATION', 'permnav', 'permnav.NAVIGATION_ID = nav.NAVIGATION_ID AND ROLE_ID ='.$this->record->getSelectedRecordID())
+      ->fields('permnav', array('NAVIGATION_PERMISSION_ID', 'PERMISSION'))
+      ->orderBy('NAVIGATION_NAME', 'ASC')
       ->execute()->fetchAll();
     }
     

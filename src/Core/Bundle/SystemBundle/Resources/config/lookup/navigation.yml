@@ -2,12 +2,13 @@ Core.Navigation.Type:
   description: "Navigation Types"
   allow_update: false
   values: 
-    - { code: G, description: "Group", sort: 1 }
-    - { code: F, description: "Form", sort: 2 }
-    - { code: MA, description: "Action Menu", sort: 3 }
-    - { code: MR, description: "Report Menu", sort: 4 }
-    - { code: T, description: "Tab", sort: 5 }
-    - { code: R, description: "Report", sort: 6 }
+    - { code: form_group, description: "From Group", sort: 1 }
+    - { code: form, description: "Form", sort: 2 }
+    - { code: menu_action, description: "Action Menu", sort: 3 }
+    - { code: menu_report, description: "Report Menu", sort: 4 }
+    - { code: tab, description: "Tab", sort: 5 }
+    - { code: report_group, description: "Report Group", sort: 6 }
+    - { code: report, description: "Report", sort: 7 }
 Core.Navigation.Portal:
   description: "Portal List"
   allow_update: true

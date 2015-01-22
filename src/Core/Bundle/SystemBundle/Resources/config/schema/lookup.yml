@@ -65,7 +65,7 @@ Core.Lookup.Value:
       description: "Code"
       db_column_name: CODE
       db_column_type: varchar
-      db_column_length: 10
+      db_column_length: 30
       db_column_null: false
       field_type: text
       field_size: 8

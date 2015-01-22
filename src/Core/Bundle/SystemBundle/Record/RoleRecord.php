@@ -15,14 +15,14 @@ class RoleRecord extends Record implements RecordDelegateInterface {
   
   public function getRecordIDStack() {
     
-    $result = $this->db()->db_select('CORE_USER_ROLES', 'userrole')
+    $result = $this->db->db_select('CORE_USER_ROLES', 'userrole')
     ->fields('userrole', array('ROLE_ID' => 'ID'))
     ->join('CORE_USERGROUP', 'usergroup', 'usergroup.USERGROUP_ID = userrole.USERGROUP_ID')
     ->fields('usergroup', array('USERGROUP_NAME'))
     ->join('CORE_USER', 'user', 'user.USER_ID = userrole.USER_ID')
     ->fields('user', array('USERNAME'))
     ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = user.USER_ID')
-    ->fields('cons', array('EMAIL', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'))
+    ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'))
     ->orderBy('cons.LAST_NAME', 'ASC')
     ->orderBy('cons.FIRST_NAME', 'ASC')
     ->orderBy('user.USERNAME', 'ASC')
@@ -33,14 +33,14 @@ class RoleRecord extends Record implements RecordDelegateInterface {
   }
   
   public function get($record_id) {
-    $result = $this->db()->db_select('CORE_USER_ROLES', 'userrole')
+    $result = $this->db->db_select('CORE_USER_ROLES', 'userrole')
     ->fields('userrole', array('ROLE_ID'))
-    ->join('CORE_USERGROUP', 'usergroup', 'usergroup.USERGROUP_ID = CORE_USER_ROLES.USERGROUP_ID')
+    ->join('CORE_USERGROUP', 'usergroup', 'usergroup.USERGROUP_ID = userrole.USERGROUP_ID')
     ->fields('usergroup', array('USERGROUP_NAME', 'PORTAL'))
-    ->join('CORE_USER', 'user', 'user.USER_ID = CORE_USER_ROLES.USER_ID')
+    ->join('CORE_USER', 'user', 'user.USER_ID = userrole.USER_ID')
     ->fields('user', array('USERNAME'))
     ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = user.USER_ID')
-    ->fields('cons', array('EMAIL', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'))
+    ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'))
     ->condition('ROLE_ID', $record_id)->execute()->fetch();
 
     return $result;
@@ -56,7 +56,7 @@ class RoleRecord extends Record implements RecordDelegateInterface {
   
   public function modifySearchDBOBject($db_obj) {
     $db_obj = $db_obj->join('CONS_CONSTITUENT', 'CONS_CONSTITUENT', 'CONSTITUENT_ID = CORE_USER_ROLES.USER_ID')
-      ->fields('CONS_CONSTITUENT', array('EMAIL', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'));
+      ->fields('CONS_CONSTITUENT', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'));
     $db_obj = $db_obj->join('CORE_USER', 'CORE_USER', 'CONS_CONSTITUENT.CONSTITUENT_ID = CORE_USER.USER_ID')
       ->fields('CORE_USER', array('USER_ID'));
     $db_obj = $db_obj->join('CORE_USERGROUP', 'CORE_USERGROUP', 'CORE_USER_ROLES.USERGROUP_ID = CORE_USERGROUP.USERGROUP_ID')
