@@ -18,7 +18,7 @@ class SchoolRecord extends Record implements RecordDelegateInterface {
   public function getRecordIDStack() {
     $result = $this->db->db_select('CORE_ORGANIZATION', 'CORE_ORGANIZATION')
       ->fields('CORE_ORGANIZATION', array('ORGANIZATION_ID' => 'ID'))
-      ->condition('ORGANIZATION_TYPE', 'SCHL')
+      ->condition('ORGANIZATION_TYPE', 'S')
       ->orderBy('ORGANIZATION_NAME', 'ASC')
       ->execute()->fetchAll();
     return $result;
@@ -28,7 +28,7 @@ class SchoolRecord extends Record implements RecordDelegateInterface {
     $result = $this->db->db_select('CORE_ORGANIZATION')
       ->fields('CORE_ORGANIZATION')
       ->condition('ORGANIZATION_ID', $record_id)
-      ->condition('ORGANIZATION_TYPE', 'SCHL')
+      ->condition('ORGANIZATION_TYPE', 'S')
       ->execute()->fetch();
     return $result;
   }
@@ -42,7 +42,7 @@ class SchoolRecord extends Record implements RecordDelegateInterface {
   }
   
   public function modifySearchDBOBject($db_obj) {
-    $db_obj = $db_obj->condition('ORGANIZATION_TYPE', 'SCHL');
+    $db_obj = $db_obj->condition('ORGANIZATION_TYPE', 'S');
     $db_obj = $db_obj->orderBy('ORGANIZATION_NAME', 'ASC');
     return $db_obj;
   }
