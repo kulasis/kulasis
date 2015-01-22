@@ -86,8 +86,9 @@ class Poster {
             $record->process();
           }
         }
-      } catch (Exception $e) {
+      } catch (\PDOException $e) {
         $transaction->rollback();
+        throw new \PDOException ($e);
       }
     }
   }

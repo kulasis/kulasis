@@ -286,39 +286,44 @@ class PosterRecord {
     }
 
     if ($this->crud == self::ADD) {
-      $transaction = $this->db->db_transaction('poster.add');
+      $transaction = $this->db->db_transaction('poster_add');
       try {
         $this->id = $this->db->db_insert($this->schema->getTable($this->table)->getDBName())
           ->fields($fields)
           ->execute();
         $this->auditLog($fields);
-      } catch (\Exception $e) {
+      } catch (\PDOException $e) {
         $transaction->rollback();
+        throw new \PDOException ($e);
       }
       return $this->id;
     }
     if ($this->crud == self::EDIT) {
-      $transaction = $this->db->db_transaction('poster.edit');
+      $transaction = $this->db->db_transaction('poster_edit');
+      $affectedRows = 0;
       try {
         $affectedRows = $this->db->db_update($this->schema->getTable($this->table)->getDBName())
           ->fields($fields)
           ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
           ->execute();
         $this->auditLog($fields);
-      } catch (\Exception $e) {
+      } catch (\PDOException $e) {
         $transaction->rollback();
+        throw new \PDOException ($e);
       }
       return $affectedRows;
     }
     if ($this->crud == self::DELETE) {
-      $transaction = $this->db->db_transaction('poster.delete');
+      $transaction = $this->db->db_transaction('poster_delete');
+      $affectedRows = 0;
       try {
         $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName())
           ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
             ->execute();
         $this->auditLog();
-      } catch (\Exception $e) {
+      } catch (\PDOException $e) {
         $transaction->rollback();
+        throw new \PDOException ($e);
       }
       return $affectedRows;
     }
