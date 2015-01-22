@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\DependencyInjection\ContainerInterface as ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Kula\Core\Bundle\FrameworkBundle\Exception\NotAuthorizedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Controller extends BaseController {
   
@@ -31,10 +32,15 @@ class Controller extends BaseController {
     $this->twig = $this->container->get('twig');
     $this->focus = $this->container->get('kula.core.focus');
     $this->record = $this->container->get('kula.core.record');
+    $this->chooser = $this->container->get('kula.core.chooser');
   }
 
   protected function db() {
     return $this->container->get('kula.core.db');
+  }
+  
+  protected function chooser($chooser) {
+    return $this->chooser->get($chooser);
   }
   
   protected function processForm() {
@@ -86,9 +92,8 @@ class Controller extends BaseController {
     
     $this->twig->addGlobal('record_type', $this->record->getRecordType());
     $this->twig->addGlobal('kula_core_record', $this->record);
-    
     $this->twig->addGlobal('record_bar_template_path', $this->record->getRecordBarTemplate());
-    
+
     $this->twig->addGlobal('selected_record_bar_template_path', $this->record->getSelectedRecordBarTemplate());
     $this->twig->addGlobal('mode', $this->getSubmitMode());  
     $this->twig->addGlobal('form_action', $this->getFormAction());
@@ -122,5 +127,11 @@ class Controller extends BaseController {
       
       return $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
   }
+  
+	public function JSONResponse($data) {
+		$response = new JsonResponse();
+		$response->setData($data);
+		return $response;
+	}
 
 }

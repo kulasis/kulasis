@@ -151,7 +151,7 @@ Core.Schema.Field:
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser_class: Kula\Bundle\Core\SystemBundle\Chooser\PrimaryFieldsChooser
+      chooser: Core.Schema.PrimaryField
       column_name: "Parent Schema Field"
       label_name: "Parent Schema Field"
     field_Name:
@@ -222,6 +222,15 @@ Core.Schema.Field:
       field_length: 25
       column_name: "Lookup"
       label_name: "Lookup"
+    Chooser:
+      description: "Chooser"
+      db_column_name: CHOOSER
+      db_column_type: text
+      db_column_null: true
+      field_type: text
+      field_length: 25
+      column_name: "Chooser"
+      label_name: "Chooser"
     ColumnName:
       description: "Column Name for Query"
       db_column_name: COLUMN_NAME
@@ -259,6 +268,6 @@ Core.Schema.Field:
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser_class: Kula\Bundle\Core\SystemBundle\Chooser\FieldChooser
+      chooser: Core.Schema.Field
       column_name: "Update Field"
       label_name: "Update Field"

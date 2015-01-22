@@ -11,13 +11,19 @@ class Field {
   private static $record;
   private static $poster;
   private static $schema;
+  private static $db;
+  private static $session;
+  private static $chooser;
   
-  public static function setDependencies($permission, $focus, $record, $poster, $schema) {
+  public static function setDependencies($permission, $focus, $record, $poster, $schema, $db, $session, $chooser) {
     self::$permission = $permission;
     self::$focus = $focus;
     self::$record = $record;
     self::$poster = $poster;
     self::$schema = $schema;
+    self::$db = $db;
+    self::$session = $session;
+    self::$chooser = $chooser;
   }
   
   public static function fieldName($param = array()) {
@@ -202,43 +208,43 @@ class Field {
       $html .= self::_textField($param);
     }
     
-    if ($field->getFieldType() == 'TEXTAREA') {
+    if ($field->getFieldType() == 'textarea') {
       $html .= self::_textArea($param);
     }
     
-    if ($field->getFieldType() == 'PASSWORD') {
+    if ($field->getFieldType() == 'password') {
       $html .= self::_password($param);
     }
     
-    if ($field->getFieldType() == 'DATE') {
+    if ($field->getFieldType() == 'date') {
       $html .= self::_date($param);
     }
     
-    if ($field->getFieldType() == 'TIME') {
+    if ($field->getFieldType() == 'time') {
       $html .= self::_time($param);
     }
     
-    if ($field->getFieldType() == 'CHECKBOX') {
+    if ($field->getFieldType() == 'checkbox') {
       $html .= self::_checkbox($param);
     }
     
-    if ($field->getFieldType() == 'MULTI_CHBX') {
+    if ($field->getFieldType() == 'multicheckbox') {
       $html .= self::_multipleCheckbox($param);
     }
     
-    if ($field->getFieldType() == 'RADIO') {
+    if ($field->getFieldType() == 'radio') {
       $html .= self::_radio($param);
     }
     
-    if ($field->getFieldType() == 'LOOKUP') {
+    if ($field->getFieldType() == 'lookup') {
       $html .= self::_lookup($param);
     }
     
-    if ($field->getFieldType() == 'CHOOSER') {
+    if ($field->getFieldType() == 'chooser') {
       $html .= self::_chooser($param);
     }
     
-    if ($field->getFieldType() == 'SELECT') {
+    if ($field->getFieldType() == 'select') {
       $html .= self::_select($param);
     }
     
@@ -284,6 +290,7 @@ class Field {
       }
       return GenericField::text($field_name, $param['value'], $param['attributes_html']);
     } elseif (self::_displayValue($param) AND !$param['input']) {
+      $schema = self::getFieldInfo($param['field']);
       $class = $schema->getClass();
       if ($class) {
         $param['value'] = $class::calculate($param['value']);
@@ -306,14 +313,14 @@ class Field {
     if (self::_displayField($param)) {
       $schema = self::getFieldInfo($param['field']);
       $field_name = self::getNameForField($param);
-      $param['attributes_html']['cols'] = $schema['DISPLAY_SIZE'];
+      $param['attributes_html']['cols'] = $schema->getFieldSize();
       if (!isset($param['attributes_html']['rows'])) $param['attributes_html']['rows'] = 5;
       return GenericField::textArea($field_name, $param['value'], $param['attributes_html']);
     } elseif (self::_displayValue($param) AND !$param['input']) {
       return $param['value'];
     } elseif (self::_displayValue($param)) {
       $schema = self::getFieldInfo($param['field']);
-      $param['attributes_html']['cols'] = $schema['DISPLAY_SIZE'];
+      $param['attributes_html']['cols'] = $schema->getFieldSize();
       $param['attributes_html']['disabled'] = 'disabled';
       if (!isset($param['attributes_html']['rows'])) $param['attributes_html']['rows'] = 5;
       return GenericField::textArea(null, $param['value'], $param['attributes_html']);
@@ -324,7 +331,7 @@ class Field {
     if (self::_displayField($param)) {
       $schema = self::getFieldInfo($param['field']);
       $field_name = self::getNameForField($param);
-      $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
+      $param['attributes_html']['size'] = $schema->getFieldSize();
       return GenericField::password($field_name, $param['value'], $param['attributes_html']);
     } 
   }
@@ -340,8 +347,8 @@ class Field {
     if (self::_displayField($param)) {
       $schema = self::getFieldInfo($param['field']);
       $field_name = self::getNameForField($param);
-      if ($schema['DISPLAY_SIZE'])
-        $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
+      if ($schema->getFieldSize())
+        $param['attributes_html']['size'] = $schema->getFieldSize();
       else
         $param['attributes_html']['size'] = 13;
       return GenericField::text($field_name, $param['value'], $param['attributes_html']);
@@ -349,8 +356,8 @@ class Field {
       return $param['value'];
     } else {
       $schema = self::getFieldInfo($param['field']);
-      if ($schema['DISPLAY_SIZE'])
-        $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
+      if ($schema->getFieldSize())
+        $param['attributes_html']['size'] = $schema->getFieldSize();
       else
         $param['attributes_html']['size'] = 13;
       $param['attributes_html']['disabled'] = 'disabled';
@@ -369,8 +376,8 @@ class Field {
     if (self::_displayField($param)) {
       $schema = self::getFieldInfo($param['field']);
       $field_name = self::getNameForField($param);
-      if ($schema['DISPLAY_SIZE'])
-        $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
+      if ($schema->getFieldSize())
+        $param['attributes_html']['size'] = $schema->getFieldSize();
       else
         $param['attributes_html']['size'] = 13;
       return GenericField::text($field_name, $param['value'], $param['attributes_html']);
@@ -378,8 +385,8 @@ class Field {
       return $param['value'];
     } else {
       $schema = self::getFieldInfo($param['field']);
-      if ($schema['DISPLAY_SIZE'])
-        $param['attributes_html']['size'] = $schema['DISPLAY_SIZE'];
+      if ($schema->getFieldSize())
+        $param['attributes_html']['size'] = $schema->getFieldSize();
       else
         $param['attributes_html']['size'] = 13;
       $param['attributes_html']['disabled'] = 'disabled';
@@ -451,22 +458,21 @@ class Field {
   private static function _chooser($param) {
     $schema = self::getFieldInfo($param['field']);
     $field_name = self::getNameForField($param);
-    $chooser_class = $schema['CHOOSER_CLASS'];
+    $chooser = self::$chooser->get($schema->getChooser());
     $current_choice_menu = '';
     
     if (self::_displayField($param)) {
       $data = array();
-      if (class_exists($chooser_class)) {
-        $chooser_search_route = $chooser_class::searchRoute();
-        if (isset($param['attributes_html']['class'])) {
-          $param['attributes_html']['class'] = $param['attributes_html']['class'] . ' chooser-search';
-        } else {
-          $param['attributes_html']['class'] = 'chooser-search';  
-        }
-        $container = $GLOBALS['kernel']->getContainer();
-        $data = array('data-search-url' => $container->get('router')->generate($chooser_search_route));
-        $current_choice_menu = $chooser_class::choice($param['value']);
+      $chooser_search_route = $chooser->searchRoute();
+      if (isset($param['attributes_html']['class'])) {
+        $param['attributes_html']['class'] = $param['attributes_html']['class'] . ' chooser-search';
+      } else {
+        $param['attributes_html']['class'] = 'chooser-search';  
       }
+      $container = $GLOBALS['kernel']->getContainer();
+      $data = array('data-search-url' => $container->get('router')->generate($chooser_search_route));
+      $current_choice_menu = $chooser->choice($param['value']);
+
       $params_text_field = array_merge($param['attributes_html'], $data, array('style' => 'display:none;', 'size' => '10'));
       $html = '';
       $html .= GenericField::text($field_name . '[chooser]', null, $params_text_field);
@@ -474,8 +480,8 @@ class Field {
       return $html;
     } elseif (self::_displayValue($param)) {
       $html = '';
-      if (class_exists($chooser_class)) {
-        $current_choice_menu = $chooser_class::choice($param['value']);
+      if ($chooser) {
+        $current_choice_menu = $chooser->choice($param['value']);
         $html .= $current_choice_menu[$param['value']];
       } else {
         $html .= $param['value'];

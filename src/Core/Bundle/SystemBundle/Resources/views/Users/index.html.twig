@@ -1,0 +1,36 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+
+<div class="group-box">
+<div class="group-box-header">User Info</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, db_table: 'CORE_USER', db_field: 'USERNAME', db_row_id: record_obj.getSelectedRecord.USER_ID, value: record_obj.getSelectedRecord.USERNAME, label: true }) }}
+</div>
+</div>
+
+<div class="group-box">
+<div class="group-box-header">Authentication</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, db_table: 'CORE_USER', db_field: 'ALLOW_AUTH_LOCAL', db_row_id: record_obj.getSelectedRecord.USER_ID, value: user.ALLOW_AUTH_LOCAL, label: true }) }}
+{{ kula_field({ edit: true, db_table: 'CORE_USER', db_field: 'ALLOW_AUTH_LDAP', db_row_id: record_obj.getSelectedRecord.USER_ID, value: user.ALLOW_AUTH_LDAP, label: true }) }}
+{{ kula_field({ edit: true, db_table: 'CORE_USER', db_field: 'ALLOW_AUTH_GOOGLE', db_row_id: record_obj.getSelectedRecord.USER_ID, value: user.ALLOW_AUTH_GOOGLE, label: true }) }}
+</div>
+</div>
+
+<div class="group-box">
+<div class="group-box-header">Local Authentication</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, db_table: 'CORE_USER', db_field: 'PASSWORD', db_row_id: record_obj.getSelectedRecord.USER_ID, label: true, attributes_html: { 'size' : 40 } }) }}
+{{ kula_field({ edit: true, db_table: 'CORE_USER', db_field: 'PASSWORD', db_row_id: record_obj.getSelectedRecord.USER_ID, label: true, field_name_override: 'Confirm Password', confirmation: true,  attributes_html: { 'size' : 40 } }) }}
+</div>
+</div>
+
+<div class="group-box">
+<div class="group-box-header">LDAP Authentication</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, db_table: 'CORE_USER', db_field: 'LDAP_ID', db_row_id: record_obj.getSelectedRecord.USER_ID, value: user.LDAP_ID, label: true }) }}
+</div>
+</div>
+
+{% endblock %}

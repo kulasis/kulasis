@@ -152,5 +152,7 @@ Core.Organization.Terms:
       db_column_null: false
       column_name: "Term ID"
       label_name: "Term ID"
+      field_type: chooser
+      chooser: Core.Term
   unique_keys:
     OrganizationTerms: [ 'Core.Organization.Terms.OrganizationID', 'Core.Organization.Terms.TermID' ]

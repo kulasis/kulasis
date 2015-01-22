@@ -1,0 +1,26 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+
+<div class="group-box">
+<div class="group-box-header">Add Constituent</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', table_row: false, label: true }) }}
+{{ kula_field({ add: true, db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', table_row: false, label: true }) }}
+{{ kula_field({ add: true, db_table: 'CONS_CONSTITUENT', db_field: 'MIDDLE_NAME', table_row: false, label: true }) }}
+</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, db_table: 'CONS_CONSTITUENT', db_field: 'EMAIL', table_row: false, label: true }) }}
+</div>
+</div>
+
+<div class="group-box">
+<div class="group-box-header">Add User</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, db_table: 'CORE_USER', db_field: 'USERNAME', table_row: false, label: true }) }}
+{{ kula_field({ add: true, db_table: 'CORE_USER', db_field: 'PASSWORD', table_row: false, label: true }) }}
+{{ kula_field({ add: true, db_table: 'CORE_USER', db_field: 'PASSWORD', table_row: false, field_name_override: 'Password Confirmation', label: true, confirmation: true}) }}
+</div>
+</div>
+
+{% endblock %}

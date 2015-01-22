@@ -1,0 +1,48 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+
+<div class="data-table-header-div">
+User Groups
+<span class="data-table-header-buttons">
+	{{ kula_table_add('window_window_num_data_table_terms', 'CORE_USER_ROLES') }}
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+	<tr>
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ delete: true, db_table: 'CORE_USER_ROLES', db_field: 'ROLE_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ edit: true, db_table: 'CORE_USER_ROLES', db_field: 'CALC_USERGROUP_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ edit: true, db_table: 'CORE_USER_ROLES', db_field: 'ORGANIZATION_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ edit: true, db_table: 'CORE_USER_ROLES', db_field: 'TERM_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ edit: true, db_table: 'CORE_USER_ROLES', db_field: 'ADMINISTRATOR', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ edit: true, db_table: 'CORE_USER_ROLES', db_field: 'ROLE_DEFAULT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</tr>
+</thead>
+<tbody>
+	{{ kula_display_html({ add: true, db_table: 'CORE_USER_ROLES', db_field: 'ROLE_ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+		{{ kula_field({ add: true, delete: true, db_table: 'CORE_USER_ROLES', db_field: 'ROLE_ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		{{ kula_display_html({ add: true, db_table: 'CORE_USER_ROLES', db_field: 'ROLE_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+		{{ kula_field({ add: true, db_table: 'CORE_USER_ROLES', db_field: 'USER_ID', value: record_obj.getSelectedRecord.USER_ID, hidden: true }) }}
+		{{ kula_field({ add: true, db_table: 'CORE_USER_ROLES', db_field: 'CALC_USERGROUP_NAME', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ add: true, db_table: 'CORE_USER_ROLES', db_field: 'ORGANIZATION_ID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ add: true, db_table: 'CORE_USER_ROLES', db_field: 'TERM_ID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ add: true, db_table: 'CORE_USER_ROLES', db_field: 'ADMINISTRATOR', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ add: true, db_table: 'CORE_USER_ROLES', db_field: 'ROLE_DEFAULT', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+	{{ kula_display_html({ add: true, db_table: 'CORE_USER_ROLES', db_field: 'ROLE_ID', prepend_html: '</tr>' }) }}
+	{% for usergroup in usergroups %}
+	<tr>
+		{{ kula_field({ delete: true, db_table: 'CORE_USER_ROLES', db_field: 'ROLE_ID', db_row_id: usergroup.ROLE_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ edit: true, db_table: 'CORE_USER_ROLES', db_field: 'CALC_USERGROUP_NAME', db_row_id: usergroup.ROLE_ID, value: usergroup.USERGROUP_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'CORE_USER_ROLES', db_field: 'ORGANIZATION_ID', db_row_id: usergroup.ROLE_ID, value: usergroup.ORGANIZATION_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'CORE_USER_ROLES', db_field: 'TERM_ID', db_row_id: usergroup.ROLE_ID, value: usergroup.TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'CORE_USER_ROLES', db_field: 'ADMINISTRATOR', db_row_id: usergroup.ROLE_ID, value: usergroup.ADMINISTRATOR, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'CORE_USER_ROLES', db_field: 'ROLE_DEFAULT', db_row_id: usergroup.ROLE_ID, value: usergroup.DEFAULT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

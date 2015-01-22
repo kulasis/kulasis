@@ -1,0 +1,44 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<p>
+<a class="normal-link"  data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="
+{% if record_obj.getRecordType() == 'ROLE' %}
+{{ path('sis_system_schemapermissions_role') }}
+{% elseif record_obj.getRecordType() == 'USERGROUP' %}
+{{ path('sis_system_schemapermissions_usergroup') }}
+{% else %}
+{{ path('sis_system_schemapermissions_public') }}
+{% endif %}
+">Back to Tables</a>
+</p>
+
+<div class="data-table-header-div">
+Field Table Permissions
+<span class="data-table-header-buttons"></span>
+</div>
+<table id="window_window_num_data_table_nonorganizations" class="data-table">
+<thead>
+	<tr>
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ edit: true, db_table: 'CORE_PERMISSION_SCHEMA_FIELDS', db_field: 'SCHEMA_FIELD_ID', field_name_override: 'Table', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ edit: true, db_table: 'CORE_PERMISSION_SCHEMA_FIELDS', db_field: 'PERMISSION', field_name_override: 'Edit', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</tr>
+</thead>
+<tbody>
+	{% for field_perm in field_permissions %}
+	<tr>
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ input: false, db_table: 'CORE_SCHEMA_FIELDS', db_field: 'FIELD_NAME', value: field_perm.FIELD_NAME, prepend_html: '<td>', append_html: '</td>' }) }}
+		
+		{% if field_perm.FIELD_PERMISSION_ID %}
+		{{ kula_field({ edit: true, db_table: 'CORE_PERMISSION_SCHEMA_FIELDS', db_field: 'PERMISSION', db_row_id: field_perm.FIELD_PERMISSION_ID, value: field_perm.PERMISSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{% else %}
+		{{ kula_field({ add: true, post_type: 'add_perm', db_table: 'CORE_PERMISSION_SCHEMA_FIELDS', db_field: 'PERMISSION', db_row_id: field_perm.SCHEMA_FIELD_ID, value: field_perm.PERMISSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{% endif %}
+		
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endblock %}

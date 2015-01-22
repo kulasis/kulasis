@@ -19,7 +19,7 @@ class TwigExtension extends \Twig_Extension {
     $this->navigation = $container->get('kula.core.navigation');
     $this->router = $container->get('router');
     
-    \Kula\Core\Component\Twig\Field::setDependencies($container->get('kula.core.permission'), $container->get('kula.core.focus'), $container->get('kula.core.record'), $container->get('kula.core.poster'), $container->get('kula.core.schema'));
+    \Kula\Core\Component\Twig\Field::setDependencies($container->get('kula.core.permission'), $container->get('kula.core.focus'), $container->get('kula.core.record'), $container->get('kula.core.poster'), $container->get('kula.core.schema'), $container->get('kula.core.db'), $container->get('kula.core.session'), $container->get('kula.core.chooser'));
   }
   
   public function getFunctions() {

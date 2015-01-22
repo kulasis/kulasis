@@ -26,6 +26,10 @@ class Item {
     
   }
   
+  public function getDBID() {
+    return $this->db_id;
+  }
+  
   public function getDisplayName() {
     return $this->displayName;
   }

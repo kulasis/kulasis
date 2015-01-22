@@ -6,3 +6,4 @@ imports:
     - { resource: schema/record.yml }
     - { resource: schema/user.yml }
     - { resource: schema/permission.yml }
+    - { resource: schema/chooser.yml }

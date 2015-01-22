@@ -67,14 +67,14 @@ data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDispla
 <div id="window_window_num_tab_bar" class="window_tab_bar">
   <ul class="tabs">
     {% for tab in tabsToDisplay %}
-<li{% if tab.getRoute() == request.get('_route') %} class="active"{% endif %}><a id="window_window_num_tab_{{tab.getName()}}" href="{{ path(tab.getRoute()) }}" class="window-tab-link" data-window="window_num">{{ tab.getDisplayName() }}</a></li>
+<li{% if tab.getRoute() == request.get('_route') %} class="active"{% endif %}><a id="window_window_num_tab_{{tab.getDBID()}}" href="{{ path(tab.getRoute()) }}" class="window-tab-link" data-window="window_num">{{ tab.getDisplayName() }}</a></li>
     {% endfor %}
   </ul>
 </div>
 {% endif %}
 <!-- content -->
 <div id="window_window_num_content">
-  <div id="window_window_num_tab_{% if navigation_info.NAVIGATION_TYPE == 'T' %}{{navigation_info.NAVIGATION_ID}}{% else %}{{ tabsToDisplay[0]['NAVIGATION_ID'] }}{% endif %}_content" class="tab_content" data-window-url="{{ request.getBaseUrl()~request.getPathInfo() }}">
+  <div id="window_window_num_tab_{{ kula_core_navigation.getRequestedTab().getDBID() }}_content" class="tab_content" data-window-url="{{ request.getBaseUrl()~request.getPathInfo() }}">
     <div class="record_bar_tab_menu_data" style="display:none;" data-mode="{{ mode }}" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}"></div>
     {% if record_type %}
     <div class="record_bar group">

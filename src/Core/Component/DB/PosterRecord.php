@@ -261,7 +261,7 @@ class PosterRecord {
   }
   
   private function auditLog($fields = null) {
-    $audit = $this->db->db_connection(array('target' => 'write'))->prepare('INSERT INTO '.$this->schema->getTable('Log.Audit.Changes')->getDBName().' (USER_ID, LOG_SESSION, CRUD_OPERATION, TABLE_NAME, RECORD_ID, OLD_RECORD, NEW_RECORD, CREATED_USERSTAMP, CREATED_TIMESTAMP)
+    $audit = $this->db->db_connection(array('target' => 'write'))->prepare('INSERT INTO '.$this->schema->getTable('Log.Audit.Changes')->getDBName().' (USER_ID, LOG_SESSION_ID, CRUD_OPERATION, TABLE_NAME, RECORD_ID, OLD_RECORD, NEW_RECORD, CREATED_USERSTAMP, CREATED_TIMESTAMP)
         VALUES (:user_id, :session_id, :crud, :table_name, :record_id, :old_record, :new_record, :created_userstamp, :created_timestamp)');
     $audit->execute(array(
         'user_id' => $this->session->get('user_id'), 
@@ -286,25 +286,40 @@ class PosterRecord {
     }
 
     if ($this->crud == self::ADD) {
-      $this->id = $this->db->db_insert($this->schema->getTable($this->table)->getDBName())
-        ->fields($fields)
-        ->execute();
-      $this->auditLog($fields);
+      $transaction = $this->db->db_transaction('poster.add');
+      try {
+        $this->id = $this->db->db_insert($this->schema->getTable($this->table)->getDBName())
+          ->fields($fields)
+          ->execute();
+        $this->auditLog($fields);
+      } catch (\Exception $e) {
+        $transaction->rollback();
+      }
       return $this->id;
     }
     if ($this->crud == self::EDIT) {
-      $affectedRows = $this->db->db_update($this->schema->getTable($this->table)->getDBName())
-        ->fields($fields)
-        ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
-        ->execute();
-      $this->auditLog($fields);
+      $transaction = $this->db->db_transaction('poster.edit');
+      try {
+        $affectedRows = $this->db->db_update($this->schema->getTable($this->table)->getDBName())
+          ->fields($fields)
+          ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
+          ->execute();
+        $this->auditLog($fields);
+      } catch (\Exception $e) {
+        $transaction->rollback();
+      }
       return $affectedRows;
     }
     if ($this->crud == self::DELETE) {
-      $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName())
-        ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
-        ->execute();
-      $this->auditLog();
+      $transaction = $this->db->db_transaction('poster.delete');
+      try {
+        $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName())
+          ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
+            ->execute();
+        $this->auditLog();
+      } catch (\Exception $e) {
+        $transaction->rollback();
+      }
       return $affectedRows;
     }
   }

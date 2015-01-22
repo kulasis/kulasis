@@ -33,6 +33,7 @@ class KulaCoreFrameworkExtension extends BaseFrameworkExtension {
       $loader->load('services/navigation.yml');
       $loader->load('services/record.yml');
       $loader->load('services/lookup.yml');
+      $loader->load('services/chooser.yml');
   }
 
 }

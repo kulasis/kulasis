@@ -589,7 +589,7 @@ function navigation_displayRecordBar() {
 		// not in tab
 		activeTabID = 'window_' + windowNumber + '_tab_';
 	}
-	
+
 	if ($('#' + activeTabID + '_content').find('.record_bar').length > 0) {
 		$('#window_' + windowNumber + '_menu_bar').find('.window_menu_bar_record').show();
 	} else {

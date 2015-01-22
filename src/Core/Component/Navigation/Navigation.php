@@ -144,6 +144,17 @@ class Navigation {
     } 
   }
   
+  public function getRequestedTab() {
+    $route = $this->request->getCurrentRequest()->attributes->get('_route');
+
+    $routeNav = $this->navigationByRoutes[$route];
+
+    if ($routeNav instanceof Tab) {
+      return $routeNav;
+    }
+    
+  }
+  
   public function __sleep() {
     $this->db = null;
     

@@ -86,7 +86,7 @@ class SchemaLoader {
                            isset($field['field_size']) ? $field['field_size'] : null,
                            isset($field['field_cols']) ? $field['field_cols'] : null,
                            isset($field['field_rows']) ? $field['field_rows'] : null,
-                           isset($field['chooser_class']) ? $field['chooser_class'] : null,
+                           isset($field['chooser']) ? $field['chooser'] : null,
                            isset($field['lookup']) ? $field['lookup'] : null,
                            isset($field['column_name']) ? $field['column_name'] : null,
                            isset($field['label_name']) ? $field['label_name'] : null,
@@ -112,7 +112,7 @@ class SchemaLoader {
     
   }
   
-  private function loadField($bundlePath, $tableName, $name, $description, $primary, $parent, $db_columnName, $db_columnType, $db_columnSize, $db_columnLength, $db_columnPrecision, $db_columnNull, $db_columnDefault, $class, $field_type, $field_size, $field_cols, $field_rows, $chooserClass, $lookup, $columnName, $labelName, $labelPosition, $updateField) {
+  private function loadField($bundlePath, $tableName, $name, $description, $primary, $parent, $db_columnName, $db_columnType, $db_columnSize, $db_columnLength, $db_columnPrecision, $db_columnNull, $db_columnDefault, $class, $field_type, $field_size, $field_cols, $field_rows, $chooser, $lookup, $columnName, $labelName, $labelPosition, $updateField) {
     
     if (isset($this->schema[$tableName])) {
       
@@ -134,7 +134,7 @@ class SchemaLoader {
         if ($field_size) $field->setFieldSIze($field_size);
         if ($field_cols) $field->setFieldCols($field_cols);
         if ($field_rows) $field->setFieldRows($field_rows);
-        if ($chooserClass) $field->setChooserClass($chooserClass);
+        if ($chooser) $field->setChooser($chooser);
         if ($lookup) $field->setLookup($lookup);
         if ($columnName) $field->setColumnName($columnName);
         if ($labelName) $field->setLabelName($labelName);

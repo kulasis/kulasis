@@ -21,7 +21,7 @@ class FieldLoader {
   private $field_size;
   private $field_cols;
   private $field_rows;
-  private $chooserClass;
+  private $chooser;
   private $lookup;
   private $columnName;
   private $labelName;
@@ -135,8 +135,8 @@ class FieldLoader {
     $this->field_rows = $field_rows;
   }
   
-  public function setChooserClass($chooserClass) {
-    $this->chooserClass = $chooserClass;
+  public function setChooser($chooser) {
+    $this->chooser = $chooser;
   }
   
   public function setLookup($lookup) {
@@ -192,6 +192,8 @@ class FieldLoader {
         $catalogFieldsForDB['CLASS'] = $this->class;
       if ($catalogField['LOOKUP'] != $this->lookup)
         $catalogFieldsForDB['LOOKUP'] = $this->lookup;
+      if ($catalogField['CHOOSER'] != $this->chooser)
+        $catalogFieldsForDB['CHOOSER'] = $this->chooser;
       if ($catalogField['COLUMN_NAME'] != $this->columnName)
         $catalogFieldsForDB['COLUMN_NAME'] = $this->columnName;
       if ($catalogField['LABEL_NAME'] != $this->labelName)
@@ -244,6 +246,8 @@ class FieldLoader {
         $catalogFieldsForDB['CLASS'] = $this->class;
       if ($this->lookup)
         $catalogFieldsForDB['LOOKUP'] = $this->lookup;
+      if ($this->chooser)
+        $catalogFieldsForDB['CHOOSER'] = $this->chooser;
       if ($this->columnName)
         $catalogFieldsForDB['COLUMN_NAME'] = $this->columnName;
       if ($this->labelName)

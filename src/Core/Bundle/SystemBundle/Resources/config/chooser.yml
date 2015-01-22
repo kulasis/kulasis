@@ -1,0 +1,2 @@
+Core.Term:
+  class: Kula\Core\Bundle\SystemBundle\Chooser\TermChooser
