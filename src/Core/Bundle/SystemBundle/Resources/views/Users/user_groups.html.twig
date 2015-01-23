@@ -24,7 +24,7 @@ User Groups
   {{ kula_display_html({ add: true, field: 'Core.User.Role.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
     {{ kula_field({ add: true, delete: true, field: 'Core.User.Role.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     {{ kula_display_html({ add: true, field: 'Core.User.Role.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
-    {{ kula_field({ add: true, field: 'Core.User.Role.UserID', value: record_obj.getSelectedRecord.USER_ID, hidden: true }) }}
+    {{ kula_field({ add: true, field: 'Core.User.Role.UserID', value: kula_core_record.getSelectedRecord.USER_ID, hidden: true }) }}
     {{ kula_field({ add: true, field: 'Core.User.Role.UsergroupID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ add: true, field: 'Core.User.Role.OrganizationID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ add: true, field: 'Core.User.Role.TermID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
