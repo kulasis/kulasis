@@ -67,7 +67,7 @@ Core.User:
       db_column_name: PASSWORD
       db_column_type: text
       db_column_null: true
-      field_type: text
+      field_type: password
       field_size: 25
       column_name: "Password"
       label_name: "Password"
