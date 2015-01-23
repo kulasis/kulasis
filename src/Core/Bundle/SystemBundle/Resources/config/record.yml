@@ -1,6 +1,6 @@
 Core.Lookup:
   class: Kula\Core\Bundle\SystemBundle\Record\LookupRecord
-Core.UserGroup:
+Core.Usergroup:
   class: Kula\Core\Bundle\SystemBundle\Record\UserGroupRecord
 Core.User.Role:
   class: Kula\Core\Bundle\SystemBundle\Record\RoleRecord
