@@ -31,11 +31,11 @@ class PrePoster implements \Iterator {
     return isset($this->records[$this->position]);
   }
   
-  public function load($form, $checkField) {
+  public function load($form, $checkField = null) {
     if (count($form) > 0) {
       foreach($form as $table => $table_row) {
         foreach($table_row as $table_id => $row) {
-          if (isset($row[$checkField]) AND trim($row[$checkField]) != '') {
+          if ($checkField === null OR (isset($row[$checkField]) AND trim($row[$checkField]) != '')) {
             $this->records[] = new PrePosterRecord($table, $table_id, $row);
           }
         }

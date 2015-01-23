@@ -1,4 +1,4 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
 <div class="data-table-header-div">
@@ -7,47 +7,47 @@ Schema Table Permissions
 </div>
 <table id="window_window_num_data_table_nonorganizations" class="data-table">
 <thead>
-	<tr>
-	<th class="data-table-cell-row-header">#</th>
-	{{ kula_field_name({ edit: true, db_table: 'CORE_PERMISSION_SCHEMA_TABLES', db_field: 'SCHEMA_TABLE_ID', field_name_override: 'Table', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ edit: true, db_table: 'CORE_PERMISSION_SCHEMA_TABLES', db_field: 'PERMISSION_ADD', field_name_override: 'Add', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ edit: true, db_table: 'CORE_PERMISSION_SCHEMA_TABLES', db_field: 'PERMISSION_DELETE', field_name_override: 'Delete', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ edit: true, db_table: 'CORE_PERMISSION_SCHEMA_TABLES', db_field: 'PERMISSION_EDIT', field_name_override: 'Edit', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	<th class="data-table-cell-row-header">...</th>
+  <tr>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ edit: true, field: 'Core.Permission.Schema.Table.SchemaTableID', field_name_override: 'Table', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Permission.Schema.Table.Permission.Add', field_name_override: 'Add', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Permission.Schema.Table.Permission.Delete', field_name_override: 'Delete', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Permission.Schema.Table.Permission.Edit', field_name_override: 'Edit', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">...</th>
 </tr>
 </thead>
 <tbody>
-	{% for table_perm in table_permissions %}
-	<tr>
-		<td class="data-table-cell-row-num">{{ loop.index }}</td>
-		{{ kula_field({ input: false, db_table: 'CORE_SCHEMA_TABLES', db_field: 'SCHEMA_TABLE_NAME', value: table_perm.SCHEMA_TABLE_NAME, prepend_html: '<td>', append_html: '</td>' }) }}
-		{% if table_perm.TABLE_PERMISSION_ID %}
-		{{ kula_field({ edit: true, db_table: 'CORE_PERMISSION_SCHEMA_TABLES', db_field: 'PERMISSION_ADD', db_row_id: table_perm.TABLE_PERMISSION_ID, value: table_perm.PERMISSION_ADD, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{% else %}
-		{{ kula_field({ add: true, post_type: 'add_perm', db_table: 'CORE_PERMISSION_SCHEMA_TABLES', db_field: 'PERMISSION_ADD', db_row_id: table_perm.SCHEMA_TABLE_ID, value: table_perm.PERMISSION_ADD, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{% endif %}
-		
-		{% if table_perm.TABLE_PERMISSION_ID %}
-		{{ kula_field({ edit: true, db_table: 'CORE_PERMISSION_SCHEMA_TABLES', db_field: 'PERMISSION_DELETE', db_row_id: table_perm.TABLE_PERMISSION_ID, value: table_perm.PERMISSION_DELETE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{% else %}
-		{{ kula_field({ add: true, post_type: 'add_perm', db_table: 'CORE_PERMISSION_SCHEMA_TABLES', db_field: 'PERMISSION_DELETE', db_row_id: table_perm.SCHEMA_TABLE_ID, value: table_perm.PERMISSION_DELETE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{% endif %}
-		
-		{% if table_perm.TABLE_PERMISSION_ID %}
-		{{ kula_field({ edit: true, db_table: 'CORE_PERMISSION_SCHEMA_TABLES', db_field: 'PERMISSION_EDIT', db_row_id: table_perm.TABLE_PERMISSION_ID, value: table_perm.PERMISSION_EDIT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{% else %}
-		{{ kula_field({ add: true, post_type: 'add_perm', db_table: 'CORE_PERMISSION_SCHEMA_TABLES', db_field: 'PERMISSION_EDIT', db_row_id: table_perm.SCHEMA_TABLE_ID, value: table_perm.PERMISSION_EDIT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{% endif %}
-		
-		{% if record_obj.getRecordType() == 'ROLE' %}
-		<td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_system_schemapermissions_field_role', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
-		{% elseif record_obj.getRecordType() == 'USERGROUP' %}
-		<td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_system_schemapermissions_field_usergroup', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
-		{% else %}
-		<td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_system_schemapermissions_field_public', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
-		{% endif %}
-	</tr>
-	{% endfor %}
+  {% for table_perm in table_permissions %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, field: 'Core.Schema.Table.TableName', value: table_perm.TABLE_NAME, prepend_html: '<td>', append_html: '</td>' }) }}
+    {% if table_perm.TABLE_PERMISSION_ID %}
+    {{ kula_field({ edit: true, field: 'Core.Permission.Schema.Table.Permission.Add', db_row_id: table_perm.TABLE_PERMISSION_ID, value: table_perm.PERMISSION_ADD, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% else %}
+    {{ kula_field({ add: true, post_type: 'add_perm', field: 'Core.Permission.Schema.Table.Permission.Add', db_row_id: table_perm.SCHEMA_TABLE_ID, value: table_perm.PERMISSION_ADD, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% endif %}
+    
+    {% if table_perm.TABLE_PERMISSION_ID %}
+    {{ kula_field({ edit: true, field: 'Core.Permission.Schema.Table.Permission.Delete', db_row_id: table_perm.TABLE_PERMISSION_ID, value: table_perm.PERMISSION_DELETE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% else %}
+    {{ kula_field({ add: true, post_type: 'add_perm', field: 'Core.Permission.Schema.Table.Permission.Delete', db_row_id: table_perm.SCHEMA_TABLE_ID, value: table_perm.PERMISSION_DELETE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% endif %}
+    
+    {% if table_perm.TABLE_PERMISSION_ID %}
+    {{ kula_field({ edit: true, field: 'Core.Permission.Schema.Table.Permission.Edit', db_row_id: table_perm.TABLE_PERMISSION_ID, value: table_perm.PERMISSION_EDIT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% else %}
+    {{ kula_field({ add: true, post_type: 'add_perm', field: 'Core.Permission.Schema.Table.Permission.Edit', db_row_id: table_perm.SCHEMA_TABLE_ID, value: table_perm.PERMISSION_EDIT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% endif %}
+    
+    {% if kula_core_record.getRecordType() == 'Core.User.Role' %}
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_system_schemapermissions_field_role', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
+    {% elseif kula_core_record.getRecordType() == 'Core.Usergroup' %}
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_system_schemapermissions_field_usergroup', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
+    {% else %}
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_system_schemapermissions_field_public', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
+    {% endif %}
+  </tr>
+  {% endfor %}
 </tbody>
 </table>
 {% endblock %}

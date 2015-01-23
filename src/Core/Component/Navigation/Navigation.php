@@ -132,7 +132,9 @@ class Navigation {
   
   public function getRequestedForm() {
     $route = $this->request->getCurrentRequest()->attributes->get('_route');
-
+    
+    if (isset($this->navigationByRoutes[$route])) {
+    
     $routeNav = $this->navigationByRoutes[$route];
 
     if ($routeNav instanceof Form) {
@@ -142,15 +144,21 @@ class Navigation {
     if ($routeNav instanceof Tab OR $routeNav instanceof MenuAction OR $routeNav instanceof MenuReport) {
       return $this->navigation[$routeNav->getParent()];
     } 
+    
+    }
   }
   
   public function getRequestedTab() {
     $route = $this->request->getCurrentRequest()->attributes->get('_route');
-
+    
+    if (isset($this->navigationByRoutes[$route])) {
+    
     $routeNav = $this->navigationByRoutes[$route];
 
     if ($routeNav instanceof Tab) {
       return $routeNav;
+    }
+    
     }
     
   }

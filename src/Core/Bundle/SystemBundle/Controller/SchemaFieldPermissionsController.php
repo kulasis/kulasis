@@ -9,107 +9,91 @@ class SchemaFieldPermissionsController extends Controller {
   public function usergroupAction($schema_table_id) {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('USERGROUP');
-
-    $perm_add = $this->request->request->get('add_perm');
+    $this->setRecordType('Core.Usergroup');
     
-    if (count($perm_add) > 0) {
-      $perm_poster = new \Kula\Component\Database\PosterFactory;
-      foreach($perm_add as $table => $table_row) {
-        foreach($table_row as $table_id => $row) {
-          if ($row['PERMISSION']) {
-          $return_charge_poster = $perm_poster->newPoster(array('CORE_PERMISSION_SCHEMA_FIELDS' => array('new' => array(
-            'SCHEMA_FIELD_ID' => $table_id,
-            'USERGROUP_ID' => $this->record->getSelectedRecordID(),
-            'PERMISSION' => $row['PERMISSION']
-          ))));
-          }
-        }
-      }
-      
+    $perm_preposter = $this->prePoster()->load($this->request->request->get('add_perm'), 'Core.Permission.Schema.Field.Permission');
+    $perm_poster = $this->poster();
+    foreach($perm_preposter as $record) {
+      $perm_poster->add('Core.Permission.Schema.Field', 'new', array(
+        'Core.Permission.Schema.Field.SchemaFieldID' => $record->getID(),
+        'Core.Permission.Schema.Field.UsergroupID' => $this->record->getSelectedRecordID(),
+        'Core.Permission.Schema.Field.Permission' => $record->getField('Core.Permission.Schema.Field.Permission')
+      ));
+      $return_charge_poster = $perm_poster->process();
     }
     
     $field_permissions = array();
     if ($this->record->getSelectedRecordID()) {
     // Get table permissions
-    $field_permissions = $this->db()->select('CORE_SCHEMA_FIELDS', 'fields')
+    $field_permissions = $this->db()->db_select('CORE_SCHEMA_FIELDS', 'fields')
       ->fields('fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
-      ->left_join('CORE_PERMISSION_SCHEMA_FIELDS', 'permfields', array('FIELD_PERMISSION_ID', 'PERMISSION'), 'permfields.SCHEMA_FIELD_ID = fields.SCHEMA_FIELD_ID AND USERGROUP_ID = '.$this->record->getSelectedRecordID())
-      ->predicate('fields.SCHEMA_TABLE_ID', $schema_table_id)
-      ->order_by('FIELD_NAME', 'ASC')
+      ->leftJoin('CORE_PERMISSION_SCHEMA_FIELDS', 'permfields', 'permfields.SCHEMA_FIELD_ID = fields.SCHEMA_FIELD_ID AND USERGROUP_ID = '.$this->record->getSelectedRecordID())
+      ->fields('permfields', array('FIELD_PERMISSION_ID', 'PERMISSION'))
+      ->condition('fields.SCHEMA_TABLE_ID', $schema_table_id)
+      ->orderBy('FIELD_NAME', 'ASC')
       ->execute()->fetchAll();
     }
     
-    return $this->render('KulaSystemBundle:SchemaFieldPermissions:field_permissions.html.twig', array('field_permissions' => $field_permissions));
+    return $this->render('KulaCoreSystemBundle:SchemaFieldPermissions:field_permissions.html.twig', array('field_permissions' => $field_permissions));
   }
   
   public function public_permissionsAction($schema_table_id) {
     $this->authorize();
     $this->processForm();
     
-    $perm_add = $this->request->request->get('add_perm');
-    
-    if (count($perm_add) > 0) {
-      $perm_poster = new \Kula\Component\Database\PosterFactory;
-      foreach($perm_add as $table => $table_row) {
-        foreach($table_row as $table_id => $row) {
-          if ($row['PERMISSION']) {
-          $return_charge_poster = $perm_poster->newPoster(array('CORE_PERMISSION_SCHEMA_FIELDS' => array('new' => array(
-            'SCHEMA_FIELD_ID' => $table_id,
-            'PERMISSION' => $row['PERMISSION']
-          ))));
-          }
-        }
-      }
-      
+    $perm_preposter = $this->prePoster()->load($this->request->request->get('add_perm'), 'Core.Permission.Schema.Field.Permission');
+    $perm_poster = $this->poster();
+    foreach($perm_preposter as $record) {
+      $perm_poster->add('Core.Permission.Schema.Field', 'new', array(
+        'Core.Permission.Schema.Field.SchemaFieldID' => $record->getID(),
+        'Core.Permission.Schema.Field.Permission' => $record->getField('Core.Permission.Schema.Field.Permission')
+      ));
+      $return_charge_poster = $perm_poster->process();
     }
     
     // Get table permissions
-    $field_permissions = $this->db()->select('CORE_SCHEMA_FIELDS', 'fields')
+    $field_permissions = $this->db()->db_select('CORE_SCHEMA_FIELDS', 'fields')
       ->fields('fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
-      ->left_join('CORE_PERMISSION_SCHEMA_FIELDS', 'permfields', array('FIELD_PERMISSION_ID', 'PERMISSION'), 'permfields.SCHEMA_FIELD_ID = fields.SCHEMA_FIELD_ID AND USERGROUP_ID IS NULL AND ROLE_ID IS NULL')
-        ->predicate('fields.SCHEMA_TABLE_ID', $schema_table_id)
-        ->order_by('FIELD_NAME', 'ASC')
+      ->leftJoin('CORE_PERMISSION_SCHEMA_FIELDS', 'permfields', 'permfields.SCHEMA_FIELD_ID = fields.SCHEMA_FIELD_ID AND USERGROUP_ID IS NULL AND ROLE_ID IS NULL')
+      ->fields('permfields', array('FIELD_PERMISSION_ID', 'PERMISSION'))
+      ->condition('fields.SCHEMA_TABLE_ID', $schema_table_id)
+      ->orderBy('FIELD_NAME', 'ASC')
       ->execute()->fetchAll();
 
-    return $this->render('KulaSystemBundle:SchemaFieldPermissions:field_permissions.html.twig', array('field_permissions' => $field_permissions));
+    return $this->render('KulaCoreSystemBundle:SchemaFieldPermissions:field_permissions.html.twig', array('field_permissions' => $field_permissions));
   }
   
   public function roleAction($schema_table_id) {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('ROLE');
+    $this->setRecordType('Core.User.Role');
     
     $perm_add = $this->request->request->get('add_perm');
     
-    if (count($perm_add) > 0) {
-      $perm_poster = new \Kula\Component\Database\PosterFactory;
-      foreach($perm_add as $table => $table_row) {
-        foreach($table_row as $table_id => $row) {
-          if ($row['PERMISSION']) {
-          $return_charge_poster = $perm_poster->newPoster(array('CORE_PERMISSION_SCHEMA_FIELDS' => array('new' => array(
-            'SCHEMA_FIELD_ID' => $table_id,
-            'ROLE_ID' => $this->record->getSelectedRecordID(),
-            'PERMISSION' => $row['PERMISSION']
-          ))));
-          }
-        }
-      }
-      
+    $perm_preposter = $this->prePoster()->load($this->request->request->get('add_perm'), 'Core.Permission.Schema.Field.Permission');
+    $perm_poster = $this->poster();
+    foreach($perm_preposter as $record) {
+      $perm_poster->add('Core.Permission.Schema.Field', 'new', array(
+        'Core.Permission.Schema.Field.SchemaFieldID' => $record->getID(),
+        'Core.Permission.Schema.Field.RoleID' => $this->record->getSelectedRecordID(),
+        'Core.Permission.Schema.Field.Permission' => $record->getField('Core.Permission.Schema.Field.Permission')
+      ));
+      $return_charge_poster = $perm_poster->process();
     }
     
     $field_permissions = array();
     if ($this->record->getSelectedRecordID()) {
     // Get table permissions
-    $field_permissions = $this->db()->select('CORE_SCHEMA_FIELDS', 'fields')
+    $field_permissions = $this->db()->db_select('CORE_SCHEMA_FIELDS', 'fields')
       ->fields('fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
-      ->left_join('CORE_PERMISSION_SCHEMA_FIELDS', 'permfields', array('FIELD_PERMISSION_ID', 'PERMISSION'), 'permfields.SCHEMA_FIELD_ID = fields.SCHEMA_FIELD_ID AND ROLE_ID = '.$this->record->getSelectedRecordID())
-        ->predicate('fields.SCHEMA_TABLE_ID', $schema_table_id)
-        ->order_by('FIELD_NAME', 'ASC')
+      ->leftJoin('CORE_PERMISSION_SCHEMA_FIELDS', 'permfields', 'permfields.SCHEMA_FIELD_ID = fields.SCHEMA_FIELD_ID AND ROLE_ID = '.$this->record->getSelectedRecordID())
+      ->fields('permfields', array('FIELD_PERMISSION_ID', 'PERMISSION'))
+      ->condition('fields.SCHEMA_TABLE_ID', $schema_table_id)
+      ->orderBy('FIELD_NAME', 'ASC')
       ->execute()->fetchAll();
     }
     
-    return $this->render('KulaSystemBundle:SchemaFieldPermissions:field_permissions.html.twig', array('field_permissions' => $field_permissions));
+    return $this->render('KulaCoreSystemBundle:SchemaFieldPermissions:field_permissions.html.twig', array('field_permissions' => $field_permissions));
   }
   
   
