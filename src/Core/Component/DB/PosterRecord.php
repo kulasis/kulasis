@@ -249,14 +249,16 @@ class PosterRecord {
   
   private function appendStamps() {
     if ($this->schema->getTable($this->table)->getDBTimestamps()) {
+      $fields = array();
       if ($this->crud == self::ADD) {
-        $this->fields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-        $this->fields['CREATED_USERSTAMP'] = $this->session->get('user_id');
+        $fields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
+        $fields['CREATED_USERSTAMP'] = $this->session->get('user_id');
       }
       if ($this->crud == self::EDIT) {
-        $this->fields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-        $this->fields['UPDATED_USERSTAMP'] = $this->session->get('user_id');
+        $fields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
+        $fields['UPDATED_USERSTAMP'] = $this->session->get('user_id');
       }
+      return $fields;
     }
   }
   
@@ -282,7 +284,7 @@ class PosterRecord {
       foreach($this->fields as $fieldName => $field) {
         $fields[$this->schema->getField($fieldName)->getDBName()] = $field;
       }
-      $this->appendStamps();
+      $fields += $this->appendStamps();
     }
 
     if ($this->crud == self::ADD) {
@@ -319,7 +321,7 @@ class PosterRecord {
       try {
         $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName())
           ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
-            ->execute();
+          ->execute();
         $this->auditLog();
       } catch (\PDOException $e) {
         $transaction->rollback();

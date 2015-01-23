@@ -39,6 +39,14 @@ class Controller extends BaseController {
     return $this->container->get('kula.core.db');
   }
   
+  protected function poster() {
+    return $this->container->get('kula.core.poster');
+  }
+  
+  protected function prePoster() {
+    return new \Kula\Core\Component\DB\PrePoster;
+  }
+  
   protected function chooser($chooser) {
     return $this->chooser->get($chooser);
   }
