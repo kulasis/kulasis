@@ -9,24 +9,17 @@ class NavigationPermissionsController extends Controller {
   public function usergroupAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('Core.UserGroup');
+    $this->setRecordType('Core.Usergroup');
     
-    $perm_add = $this->request->request->get('add_perm');
-    
-    if (count($perm_add) > 0) {
-      $perm_poster = new \Kula\Component\Database\PosterFactory;
-      foreach($perm_add as $table => $table_row) {
-        foreach($table_row as $table_id => $row) {
-          if ($row['PERMISSION']) {
-          $return_charge_poster = $perm_poster->newPoster(array('CORE_PERMISSION_NAVIGATION' => array('new' => array(
-            'NAVIGATION_ID' => $table_id,
-            'USERGROUP_ID' => $this->record->getSelectedRecordID(),
-            'PERMISSION' => $row['PERMISSION']
-          ))));
-          }
-        }
-      }
-      
+    $perm_preposter = $this->prePoster()->load($this->request->request->get('add_perm'), 'Core.Permission.Navigation.Permission');
+    $perm_poster = $this->poster();
+    foreach($perm_preposter as $record) {
+      $perm_poster->add('Core.Permission.Navigation', 'new', array(
+        'Core.Permission.Navigation.NavigationID' => $record->getID(),
+        'Core.Permission.Navigation.UsergroupID' => $this->record->getSelectedRecordID(),
+        'Core.Permission.Navigation.Permission' => $record->getField('Core.Permission.Navigation.Permission')
+      ));
+      $return_charge_poster = $perm_poster->process();
     }
     
     $nav_permissions = array();
@@ -47,22 +40,15 @@ class NavigationPermissionsController extends Controller {
   public function public_permissionsAction() {
     $this->authorize();
     $this->processForm();
-
-    $perm_add = $this->request->request->get('add_perm');
     
-    if (count($perm_add) > 0) {
-      $perm_poster = new \Kula\Component\Database\PosterFactory;
-      foreach($perm_add as $table => $table_row) {
-        foreach($table_row as $table_id => $row) {
-          if ($row['PERMISSION']) {
-          $return_charge_poster = $perm_poster->newPoster(array('CORE_PERMISSION_NAVIGATION' => array('new' => array(
-            'NAVIGATION_ID' => $table_id,
-            'PERMISSION' => $row['PERMISSION']
-          ))));
-          }
-        }
-      }
-      
+    $perm_preposter = $this->prePoster()->load($this->request->request->get('add_perm'), 'Core.Permission.Navigation.Permission');
+    $perm_poster = $this->poster();
+    foreach($perm_preposter as $record) {
+      $perm_poster->add('Core.Permission.Navigation', 'new', array(
+        'Core.Permission.Navigation.NavigationID' => $record->getID(),
+        'Core.Permission.Navigation.Permission' => $record->getField('Core.Permission.Navigation.Permission')
+      ));
+      $return_charge_poster = $perm_poster->process();
     }
     
     // Get table permissions
@@ -81,22 +67,15 @@ class NavigationPermissionsController extends Controller {
     $this->processForm();
     $this->setRecordType('Core.User.Role');
     
-    $perm_add = $this->request->request->get('add_perm');
-    
-    if (count($perm_add) > 0) {
-      $perm_poster = new \Kula\Component\Database\PosterFactory;
-      foreach($perm_add as $table => $table_row) {
-        foreach($table_row as $table_id => $row) {
-          if ($row['PERMISSION']) {
-          $return_charge_poster = $perm_poster->newPoster(array('CORE_PERMISSION_NAVIGATION' => array('new' => array(
-            'NAVIGATION_ID' => $table_id,
-            'ROLE_ID' => $this->record->getSelectedRecordID(),
-            'PERMISSION' => $row['PERMISSION']
-          ))));
-          }
-        }
-      }
-      
+    $perm_preposter = $this->prePoster()->load($this->request->request->get('add_perm'), 'Core.Permission.Navigation.Permission');
+    $perm_poster = $this->poster();
+    foreach($perm_preposter as $record) {
+      $perm_poster->add('Core.Permission.Navigation', 'new', array(
+        'Core.Permission.Navigation.NavigationID' => $record->getID(),
+        'Core.Permission.Navigation.RoleID' => $this->record->getSelectedRecordID(),
+        'Core.Permission.Navigation.Permission' => $record->getField('Core.Permission.Navigation.Permission')
+      ));
+      $return_charge_poster = $perm_poster->process();
     }
     
     $nav_permissions = array();
