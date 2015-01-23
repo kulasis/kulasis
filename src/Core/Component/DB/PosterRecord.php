@@ -145,13 +145,16 @@ class PosterRecord {
       if ($this->schema->getFieldType($fieldName) == 'checkbox') {
         if (isset($field['checkbox_hidden']) OR isset($field['checkbox'])) {
           // Checkbox originally unchecked, now checked.
-          if ($field['checkbox_hidden'] == '' AND $field['checkbox'] == 1) {
-            $this->fields[$fieldName] = 1;
-          }
+          if ($field['checkbox_hidden'] == '' AND isset($field['checkbox']) AND $field['checkbox'] == 'Y') {
+            $this->fields[$fieldName] = '1';
+          } elseif ($field['checkbox_hidden'] == '' OR ($field['checkbox_hidden'] == '1' AND !isset($field['checkbox']))) {
           // Checkbox originally checked, now unchecked.
-          if ($field['checkbox_hidden'] == '1' AND !isset($field['checkbox'])) {
-            $this->fields[$fieldName] = 0;
+            $this->fields[$fieldName] = '0';
+          } else {
+            $this->fields[$fieldName] = '1';
           }
+        } else {
+          $this->fields[$fieldName] = '0';
         }
       }
     }
