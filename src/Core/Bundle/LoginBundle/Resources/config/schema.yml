@@ -69,6 +69,7 @@ Core.User:
       db_column_null: true
       field_type: password
       field_size: 25
+      class: Kula\Core\Bundle\SystemBundle\Field\PasswordField
       column_name: "Password"
       label_name: "Password"
     LastRoleID:
