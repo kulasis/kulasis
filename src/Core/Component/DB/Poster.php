@@ -9,6 +9,8 @@ use Kula\Core\Component\DB\PosterRecord as PosterRecord;
 
 class Poster {
   
+  protected $container;
+  
   private $db;
   private $requestStack;
   private $schema;
@@ -24,12 +26,14 @@ class Poster {
   private $isPosted = false;
   
 
-  public function __construct(DB $db, Schema $schema, RequestStack $requestStack, $session, $permission) {
-    $this->db = $db;
-    $this->requestStack = $requestStack;
-    $this->schema = $schema;
-    $this->session = $session;
-    $this->permission = $permission;
+  public function __construct($container) {
+    
+    $this->container = $container;
+    $this->db = $this->container->get('kula.core.db');
+    $this->requestStack = $this->container->get('request_stack');
+    $this->schema = $this->container->get('kula.core.schema');
+    $this->session = $this->container->get('kula.core.session');
+    $this->permission = $this->container->get('kula.core.permission');
     
     $this->result = null;
     $this->hasViolations = false;
@@ -37,7 +41,7 @@ class Poster {
   }
   
   public function add($table, $id, $fields) {
-    $this->records[$table][$id] = new PosterRecord($this->db, $this->schema, $this->session, $this->permission, PosterRecord::ADD, $table, $id, $fields);
+    $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::ADD, $table, $id, $fields);
   }
   
   public function addMultiple(array $post) {
@@ -52,7 +56,7 @@ class Poster {
   }
   
   public function edit($table, $id, $fields) {
-    $this->records[$table][$id] = new PosterRecord($this->db, $this->schema, $this->session, $this->permission, PosterRecord::EDIT, $table, $id, $fields);
+    $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::EDIT, $table, $id, $fields);
   }
   
   public function editMultiple(array $post) {
@@ -65,7 +69,7 @@ class Poster {
   }
   
   public function delete($table, $id, $fields) {
-    $this->records[$table][$id] = new PosterRecord($this->db, $this->schema, $this->session, $this->permission, PosterRecord::DELETE, $table, $id, $fields);
+    $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::DELETE, $table, $id, $fields);
   }
   
   public function deleteMultiple(array $post) {

@@ -6,9 +6,13 @@ use Kula\Core\Component\DB\DB as DB;
 use Kula\Core\Component\Schema\Schema as Schema;
 use Symfony\Component\HttpFoundation\RequestStack as RequestStack;
 
+use Kula\Core\Component\Field\Field as Field;
+
 use Kula\Core\Component\Permission\Permission;
 
 class PosterRecord {
+  
+  protected $container;
   
   private $db;
   private $schema;
@@ -29,11 +33,12 @@ class PosterRecord {
   const EDIT = 'U';
   const DELETE = 'D';
   
-  public function __construct(DB $db, Schema $schema, $session, $permission, $crud, $table, $id, $fields) {
-    $this->db = $db;
-    $this->schema = $schema;
-    $this->session = $session;
-    $this->permission = $permission;
+  public function __construct($container, $crud, $table, $id, $fields) {
+    $this->container = $container;
+    $this->db = $this->container->get('kula.core.db');
+    $this->schema = $this->container->get('kula.core.schema');
+    $this->session = $this->container->get('kula.core.session');
+    $this->permission = $this->container->get('kula.core.permission');
     $this->crud = $crud;
     $this->table = $table;
     $this->id = $id;
@@ -114,8 +119,9 @@ class PosterRecord {
       if ($this->schema->getClass($fieldName)) {
       $class = '\\'.$this->schema->getClass($fieldName);
       if (method_exists($class, 'save')) {
-        $returnedValue = call_user_func_array($class.'::save', array($field, $this->id));
-        if ($returnedValue == 'remove_field')
+        $syntheticField = new $class($this->container);
+        $returnedValue = call_user_func_array(array($syntheticField, 'save'), array($field));
+        if ($returnedValue == Field::REMOVE_FIELD)
           unset($this->fields[$fieldName]);
         else
           $this->fields[$fieldName] = $returnedValue;
