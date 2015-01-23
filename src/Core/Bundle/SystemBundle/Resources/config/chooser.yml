@@ -2,3 +2,5 @@ Core.Term:
   class: Kula\Core\Bundle\SystemBundle\Chooser\TermChooser
 Core.Organization:
   class: Kula\Core\Bundle\SystemBundle\Chooser\OrganizationChooser
+Core.Usergroup:
+  class: Kula\Core\Bundle\SystemBundle\Chooser\UsergroupChooser

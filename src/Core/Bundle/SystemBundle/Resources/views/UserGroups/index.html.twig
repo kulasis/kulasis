@@ -1,36 +1,36 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
 <div class="data-table-header-div">
 User Groups
 <span class="data-table-header-buttons">
-	{{ kula_table_add('window_window_num_data_table_usergroups', 'CORE_USERGROUP') }}
+  {{ kula_table_add('window_window_num_data_table_usergroups', 'CORE_USERGROUP') }}
 </span>
 </div>
 <table id="window_window_num_data_table_usergroups" class="data-table">
 <thead>
-	<tr>
-	<th class="data-table-cell-row-header">#</th>
-	{{ kula_field_name({ delete: true, db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ edit: true, db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ edit: true, db_table: 'CORE_USERGROUP', db_field: 'PORTAL', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <tr>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ delete: true, field: 'Core.Usergroup.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Usergroup.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Usergroup.Portal', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </tr>
 </thead>
 <tbody>
-	{{ kula_display_html({ add: true, db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_ID', prepend_html: '<tr class="data-table-row-new">' }) }}
-		{{ kula_field({ add: true, delete: true, db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-		{{ kula_display_html({ add: true, db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
-		{{ kula_field({ add: true, db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_NAME', NEW: true, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ add: true, db_table: 'CORE_USERGROUP', db_field: 'PORTAL', NEW: true, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-	{{ kula_display_html({ add: true, db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_ID', prepend_html: '</tr>' }) }}
-	{% for usergroup in usergroups %}
-	<tr>
-		{{ kula_field({ delete: true, db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_ID', db_row_id: usergroup.USERGROUP_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-		<td class="data-table-cell-row-num">{{ loop.index }}</td>
-		{{ kula_field({ edit: true, db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_NAME', db_row_id: usergroup.USERGROUP_ID, value: usergroup.USERGROUP_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'CORE_USERGROUP', db_field: 'PORTAL', db_row_id: usergroup.USERGROUP_ID, value: usergroup.PORTAL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-	</tr>
-	{% endfor %}
+  {{ kula_display_html({ add: true, field: 'Core.Usergroup.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+    {{ kula_field({ add: true, delete: true, field: 'Core.Usergroup.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    {{ kula_display_html({ add: true, field: 'Core.Usergroup.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+    {{ kula_field({ add: true, field: 'Core.Usergroup.Name', NEW: true, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.Usergroup.Portal', NEW: true, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'Core.Usergroup.ID', prepend_html: '</tr>' }) }}
+  {% for usergroup in usergroups %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'Core.Usergroup.ID', db_row_id: usergroup.USERGROUP_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'Core.Usergroup.Name', db_row_id: usergroup.USERGROUP_ID, value: usergroup.USERGROUP_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Usergroup.Portal', db_row_id: usergroup.USERGROUP_ID, value: usergroup.PORTAL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
 </tbody>
 </table>
 

@@ -101,7 +101,7 @@ Core.User:
     UserGroups:
       description: "User Groups"
       display_name: "User Groups"
-      route: core_system_users
+      route: core_system_usergroups
       sort: 1
     Users:
       description: "Users"
