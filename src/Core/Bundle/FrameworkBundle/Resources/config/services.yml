@@ -29,13 +29,19 @@ services:
 
   kula.core.poster_factory:
     class: Kula\Core\Component\DB\PosterFactory
-    public: false
+    factory: ["%kula.core.poster_factory.class%", "getPoster"]
+    arguments: ["@kula.core.db", "@kula.core.schema", "@request_stack", "@kula.core.session", "@kula.core.permission"]
+    container: prototype
   
   kula.core.poster:
     class: Kula\Core\Component\DB\Poster
     factory: ["%kula.core.poster_factory.class%", "getPoster"]
     arguments: ["@kula.core.db", "@kula.core.schema", "@request_stack", "@kula.core.session", "@kula.core.permission"]
-    
+  
+  kula.core.searcher:
+    class: Kula\Core\Component\DB\Searcher
+    arguments: ["@kula.core.db", "@kula.core.schema", "@kula.core.permission", "@request_stack"]
+  
   kula.core.session:
     class: Kula\Core\Bundle\FrameworkBundle\Service\Session
     arguments: ["@session", "@kula.core.db", "@request_stack"]

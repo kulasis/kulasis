@@ -10,9 +10,7 @@ use Kula\Core\Component\DB\Poster;
 class PosterFactory {
   
   public static function getPoster(DB $db, Schema $schema, RequestStack $request_stack, $session, $permission) {
-    
     return new Poster($db, $schema, $request_stack, $session, $permission);
-    
   }
   
 }

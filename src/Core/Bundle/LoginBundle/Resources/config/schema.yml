@@ -50,8 +50,7 @@ Core.User:
       db_column_name: USER_ID
       db_column_type: serial
       parent: Constituent.Constituent.ID
-      field_type: text
-      field_size: 5
+      field_type: radio
       column_name: "User ID"
       label_name: "User ID"
     Username:
@@ -66,8 +65,8 @@ Core.User:
     Password:
       description: "Password"
       db_column_name: PASSWORD
-      db_column_type: varchar
-      db_column_length: 255
+      db_column_type: text
+      db_column_null: true
       field_type: text
       field_size: 25
       column_name: "Password"
@@ -88,7 +87,7 @@ Core.User:
       db_column_null: false
       field_type: checkbox
       column_name: "Allow Local Auth"
-      label_Name: "Local"
+      label_name: "Local"
     AllowAuthLDAP:
       description: "Allow Auth LDAP"
       db_column_name: ALLOW_AUTH_LDAP

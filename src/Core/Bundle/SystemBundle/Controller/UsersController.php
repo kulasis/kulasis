@@ -37,20 +37,22 @@ class UsersController extends Controller {
   
   public function addAction() {
     $this->authorize();
-    $this->setSubmitMode($this->tpl, 'search');
+    $this->setSubmitMode('search');
     $constituents = array();
     
-    if ($this->request->request->get('add')['CORE_USER']['new']['USER_ID']) {
+    $add = $this->request->request->get('add');
+    
+    if (isset($add['Core.User']['new']['Core.User.ID'])) {
       $this->processForm();
-      $user_id = $this->poster->getResultForTable('insert', 'CORE_USER')['new'];
-      return $this->forward('core_system_users', array('record_type' => 'USER', 'record_id' => $user_id), array('record_type' => 'USER', 'record_id' => $user_id));
+      $user_id = $this->poster->getPosterRecord('Core.User', 'new')->getField('Core.User.ID');
+      return $this->forward('core_system_users', array('record_type' => 'Core.User', 'record_id' => $user_id), array('record_type' => 'Core.User', 'record_id' => $user_id));
     }
     
     if ($this->request->request->get('search')) {
-      $query = \Kula\Component\Database\Searcher::prepareSearch($this->request->request->get('search'), 'CONS_CONSTITUENT', 'CONSTITUENT_ID');
+      $query = $this->searcher->prepareSearch($this->request->request->get('search'), 'CONS_CONSTITUENT', 'CONSTITUENT_ID');
       $query = $query->fields('CONS_CONSTITUENT', array('CONSTITUENT_ID', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'));
       $query = $query->leftJoin('CORE_USER', 'user', 'user.USER_ID = CONS_CONSTITUENT.CONSTITUENT_ID');
-      $query = $query->condition('user.USER_ID', null);
+      $query = $query->fields('user', array('USER_ID'));
       $query = $query->orderBy('LAST_NAME', 'ASC');
       $query = $query->orderBy('FIRST_NAME', 'ASC');
       $query = $query->range(0, 100);
@@ -68,28 +70,30 @@ class UsersController extends Controller {
   
   public function create_constituentAction() {
     $this->authorize();
-    $connect = \Kula\Component\Database\DB::connect('write');
     
-    $connect->beginTransaction();
-    // get constituent data
-    $constituent_addition = $this->request->request->get('add')['CONS_CONSTITUENT'];
-    // Post data
-    $constituent_poster = new \Kula\Component\Database\Poster(array('CONS_CONSTITUENT' => $constituent_addition));
-    // Get new constituent ID
-    $constituent_id = $constituent_poster->getResultForTable('insert', 'CONS_CONSTITUENT')['new'];
-    // get user data
-    $user_addition = $this->request->request->get('add')['CORE_USER'];
-    $user_addition['new']['USER_ID'] = $constituent_id;
-    // Post data
-    $user_poster = new \Kula\Component\Database\Poster(array('CORE_USER' => $user_addition));
-    // Get user ID
-    $user_id = $user_poster->getResultForTable('insert', 'CORE_USER')['new'];
-    if ($user_id) {
-      $connect->commit();
-      return $this->forward('core_system_users', array('record_type' => 'USER', 'record_id' => $user_id), array('record_type' => 'USER', 'record_id' => $user_id));
-    } else {
-      $connect->rollback();
-      throw new \Kula\Component\Database\PosterFormException('Changes not saved.');
+    $transaction = $this->db()->db_transaction('create_user');
+    
+    try {
+      // get constituent data
+      $constituentPoster = $this->poster();
+      $constituentPoster->add('Constituent.Constituent', 'new', $this->request->request->get('add')['Constituent.Constituent']['new']);
+      $constituentPoster->process();
+      $constituent_id = $constituentPoster->getPosterRecord('Constituent.Constituent', 'new')->getID();
+
+      // get user data
+      $user_addition = $this->request->request->get('add')['Core.User']['new'];
+      $user_addition['Core.User.ID'] = $constituent_id;
+      // Post data
+      $userPoster = $this->poster();
+      $userPoster->add('Core.User', 'new', $user_addition);
+      $userPoster->process();
+      // Get user ID
+      $user_id = $userPoster->getPosterRecord('Core.User', 'new')->getField('Core.User.ID');
+    
+      return $this->forward('core_system_users', array('record_type' => 'Core.User', 'record_id' => $user_id), array('record_type' => 'Core.User', 'record_id' => $user_id));
+    } catch (\Exception $e) {
+      $transaction->rollback();
+      throw new \Exception($e);
     }
   }
   

@@ -6,30 +6,32 @@ use Kula\Core\Component\Permission\Permission;
 
 class Searcher {
   
-  private static $post;
+  private $post;
   
-  private static $result = array();
+  private $result = array();
   
-  private static $db;
-  private static $permission;
-  private static $request;
-  private static $schema;
+  private $db;
+  private $permission;
+  private $request;
+  private $schema;
   
-  public static function startProcessing($db, $schema, $permission, $request) {
-    
-    self::$db = $db;
-    self::$schema = $schema;
-    self::$permission = $permission;
-    self::$request = $request;
-    
-    self::$post = self::$request->request->get('search');
-
-    self::$post = self::cleanSearchVariable(self::$post);
-    
-    return self::$post;
+  public function __construct($db, $schema, $permission, $request) {
+    $this->db = $db;
+    $this->schema = $schema;
+    $this->permission = $permission;
+    $this->request = $request;
   }
   
-  public static function cleanSearchVariable($search) {
+  public function startProcessing($db, $schema, $permission, $request) {
+
+    $this->post = $this->request->request->get('search');
+
+    $this->post = self::cleanSearchVariable($this->post);
+    
+    return $this->post;
+  }
+  
+  public function cleanSearchVariable($search) {
     foreach($search as $table => $table_row) {
       // remove key with new_num (template row)
       unset($search[$table]['new_num']);
@@ -67,11 +69,11 @@ class Searcher {
     return $search;
   }
   
-  public static function prepareSearch($post_data, $base_table, $base_field) {
+  public function prepareSearch($post_data, $base_table, $base_field) {
     
-    $post_data = self::cleanSearchVariable($post_data);
+    $post_data = $this->cleanSearchVariable($post_data);
     
-    $select_obj = self::$db->db_select($base_table);
+    $select_obj = $this->db->db_select($base_table);
     $select_obj->addField($base_table, $base_field);
     // Get fields from base_table in array
     if (isset($post_data[$base_table])) {
@@ -79,13 +81,13 @@ class Searcher {
     // Create predicates
     foreach($post_data[$base_table] as $key => $value) {
       // check for permission
-      if (self::$permission->getPermissionForSchemaObject($base_table, $key, Permission::READ)) {
+      if ($this->permission->getPermissionForSchemaObject($base_table, $key, Permission::READ)) {
         if (is_array($value)) {  
-          $select_obj = $select_obj->condition(self::$schema->getField($key)->getDBName(), $value, 'IN', $base_table);  
+          $select_obj = $select_obj->condition($this->schema->getField($key)->getDBName(), $value, 'IN', $base_table);  
         } elseif (is_int($value)) { 
-          $select_obj = $select_obj->condition(self::$schema->getField($key)->getDBName(), $value, '=', $base_table);  
+          $select_obj = $select_obj->condition($this->schema->getField($key)->getDBName(), $value, '=', $base_table);  
         } else {
-          $select_obj = $select_obj->condition(self::$schema->getField($key)->getDBName(), $value.'%', 'LIKE', $base_table);  
+          $select_obj = $select_obj->condition($this->schema->getField($key)->getDBName(), $value.'%', 'LIKE', $base_table);  
         }
       } else {
         $container = $GLOBALS['kernel']->getContainer();
@@ -103,13 +105,13 @@ class Searcher {
         
         foreach($table_data as $field => $value) {
           // check for permission
-          if (self::$permission->getPermissionForSchemaObject($table, $field, Permission::READ)) {
+          if ($this->permission->getPermissionForSchemaObject($table, $field, Permission::READ)) {
             if (is_array($value)) {  
-              $select_obj = $select_obj->condition(self::$schema->getTable($table)->getDBName().'.'.$field, $value);
+              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$this->schema->getField($field)->getDBName(), $value);
             } elseif (is_int($value)) { 
-              $select_obj = $select_obj->condition(self::$schema->getTable($table)->getDBName().'.'.$field, $value);
+              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$this->schema->getField($field)->getDBName(), $value);
             } else {
-              $select_obj = $select_obj->condition(self::$schema->getTable($table)->getDBName().'.'.$field, $value . '%', 'LIKE');
+              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$this->schema->getField($field)->getDBName(), $value . '%', 'LIKE');
             }
           } else {
             $container = $GLOBALS['kernel']->getContainer();

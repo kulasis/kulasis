@@ -33,6 +33,7 @@ class Controller extends BaseController {
     $this->focus = $this->container->get('kula.core.focus');
     $this->record = $this->container->get('kula.core.record');
     $this->chooser = $this->container->get('kula.core.chooser');
+    $this->searcher = $this->container->get('kula.core.searcher');
   }
 
   protected function db() {
@@ -40,7 +41,7 @@ class Controller extends BaseController {
   }
   
   protected function poster() {
-    return $this->container->get('kula.core.poster');
+    return $this->container->get('kula.core.poster_factory');
   }
   
   protected function prePoster() {
@@ -56,7 +57,7 @@ class Controller extends BaseController {
     // Check if HTTP method is post for Poster processing
     if ($this->request->getMethod() == 'POST') {
       if ($this->request->request->get('mode') == 'search') {
-        $result = \Kula\Core\Component\DB\Searcher::startProcessing($this->container->get('kula.core.db'), $this->container->get('kula.core.schema'), $this->container->get('kula.core.permission'), $this->request);  
+        $result = $this->searcher->startProcessing();
       } else {
         $this->poster = $this->container->get('kula.core.poster');
         if ($this->request->request->get('add'))

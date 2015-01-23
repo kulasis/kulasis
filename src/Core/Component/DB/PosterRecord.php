@@ -23,6 +23,8 @@ class PosterRecord {
   private $violations;
   private $hasViolations;
   
+  private $posted;
+  
   const ADD = 'C';
   const EDIT = 'U';
   const DELETE = 'D';
@@ -37,6 +39,7 @@ class PosterRecord {
     $this->id = $id;
     $this->fields = $fields;
     $this->hasViolations = false;
+    $this->posted = false;
   }
   
   public function process() {
@@ -71,6 +74,7 @@ class PosterRecord {
     
         if (!$this->hasViolations) {
           $this->execute();
+          $this->posted = true;
         }
       }
     }
@@ -78,6 +82,10 @@ class PosterRecord {
   
   public function getID() {
     return $this->id;
+  }
+  
+  public function getField($field) {
+    return $this->fields[$field];
   }
   
   private function getOriginalRecord() {
@@ -279,55 +287,57 @@ class PosterRecord {
   
   private function execute() {
     
-    if ($this->crud == self::ADD OR $this->crud == self::EDIT) {
-      $fields = array();
-      foreach($this->fields as $fieldName => $field) {
-        $fields[$this->schema->getField($fieldName)->getDBName()] = $field;
+    if ($this->posted === false) {
+      if ($this->crud == self::ADD OR $this->crud == self::EDIT) {
+        $fields = array();
+        foreach($this->fields as $fieldName => $field) {
+          $fields[$this->schema->getField($fieldName)->getDBName()] = $field;
+        }
+        $fields += $this->appendStamps();
       }
-      $fields += $this->appendStamps();
-    }
 
-    if ($this->crud == self::ADD) {
-      $transaction = $this->db->db_transaction('poster_add');
-      try {
-        $this->id = $this->db->db_insert($this->schema->getTable($this->table)->getDBName())
-          ->fields($fields)
-          ->execute();
-        $this->auditLog($fields);
-      } catch (\PDOException $e) {
-        $transaction->rollback();
-        throw new \PDOException ($e);
+      if ($this->crud == self::ADD) {
+        $transaction = $this->db->db_transaction('poster_add');
+        try {
+          $this->id = $this->db->db_insert($this->schema->getTable($this->table)->getDBName())
+            ->fields($fields)
+            ->execute();
+          $this->auditLog($fields);
+        } catch (\Exception $e) {
+          $transaction->rollback();
+          throw new \Exception ($e);
+        }
+        return $this->id;
       }
-      return $this->id;
-    }
-    if ($this->crud == self::EDIT) {
-      $transaction = $this->db->db_transaction('poster_edit');
-      $affectedRows = 0;
-      try {
-        $affectedRows = $this->db->db_update($this->schema->getTable($this->table)->getDBName())
-          ->fields($fields)
-          ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
-          ->execute();
-        $this->auditLog($fields);
-      } catch (\PDOException $e) {
-        $transaction->rollback();
-        throw new \PDOException ($e);
+      if ($this->crud == self::EDIT) {
+        $transaction = $this->db->db_transaction('poster_edit');
+        $affectedRows = 0;
+        try {
+          $affectedRows = $this->db->db_update($this->schema->getTable($this->table)->getDBName())
+            ->fields($fields)
+            ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
+            ->execute();
+          $this->auditLog($fields);
+        } catch (\Exception $e) {
+          $transaction->rollback();
+          throw new \Exception ($e);
+        }
+        return $affectedRows;
       }
-      return $affectedRows;
-    }
-    if ($this->crud == self::DELETE) {
-      $transaction = $this->db->db_transaction('poster_delete');
-      $affectedRows = 0;
-      try {
-        $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName())
-          ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
-          ->execute();
-        $this->auditLog();
-      } catch (\PDOException $e) {
-        $transaction->rollback();
-        throw new \PDOException ($e);
+      if ($this->crud == self::DELETE) {
+        $transaction = $this->db->db_transaction('poster_delete');
+        $affectedRows = 0;
+        try {
+          $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName())
+            ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
+            ->execute();
+          $this->auditLog();
+        } catch (\Exception $e) {
+          $transaction->rollback();
+          throw new \Exception ($e);
+        }
+        return $affectedRows;
       }
-      return $affectedRows;
     }
   }
 }
