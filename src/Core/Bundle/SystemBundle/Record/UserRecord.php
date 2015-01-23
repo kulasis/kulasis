@@ -17,8 +17,8 @@ class UserRecord extends Record implements RecordDelegateInterface {
     
     $result = $this->db->db_select('CORE_USER', 'user')
     ->fields('user', array('USER_ID' => 'ID'))
-    ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = CORE_USER.USER_ID')
-    ->fields('cons', array('EMAIL', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'))
+    ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = user.USER_ID')
+    ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'))
     ->orderBy('LAST_NAME', 'ASC', 'cons')
     ->orderBy('FIRST_NAME', 'ASC', 'cons')
     ->execute()->fetchAll();
@@ -31,8 +31,8 @@ class UserRecord extends Record implements RecordDelegateInterface {
     
     $result = $this->db->db_select('CORE_USER', 'user')
       ->fields('user', array('USER_ID', 'USERNAME'))
-      ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = CORE_USER.USER_ID')
-      ->fields('user', array('EMAIL', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'))
+      ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = user.USER_ID')
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'))
       ->condition('USER_ID', $record_id)
       ->execute()->fetch();
     

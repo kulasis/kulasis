@@ -419,7 +419,7 @@ class Field {
         $html .= GenericField::hidden($field_name_for_hidden, $param['value'], $param['attributes_html']);
       }
       $field_name = $field_name . '[checkbox]';
-      if ($param['value'] == 'Y')
+      if ($param['value'] == '1')
         $param['attributes_html']['checked'] = 'checked';
       $html .= GenericField::checkbox($field_name, null, $param['attributes_html']);
       return $html;
@@ -498,8 +498,8 @@ class Field {
       $field_name = self::getNameForField($param);
       $select_options = array('' => '');
       // check if field is calculated
-      if (isset($schema['CALCULATED_FIELD_LOGIC_CLASS'])) {
-        $class = $schema['CALCULATED_FIELD_LOGIC_CLASS'];
+      $class = $schema->getClass();
+      if (class_exists($class)) {
         $select_options += $class::select($schema, $param);
       }
       return GenericField::select($select_options, $field_name, $param['value'], $param['attributes_html']);
@@ -507,9 +507,9 @@ class Field {
       $schema = self::getFieldInfo($param['field']);
       $select_options = array('' => '');
       // check if field is calculated
-      if (isset($schema['CALCULATED_FIELD_LOGIC_CLASS'])) {
+      $class = $schema->getClass();
+      if (class_exists($class)) {
         $param['attributes_html']['disabled'] = 'disabled';
-        $class = $schema['CALCULATED_FIELD_LOGIC_CLASS'];
         $select_options += $class::select($schema, $param);
       }
       return $select_options[$param['value']];
@@ -517,9 +517,9 @@ class Field {
       $schema = self::getFieldInfo($param['field']);
       $select_options = array('' => '');
       // check if field is calculated
-      if (isset($schema['CALCULATED_FIELD_LOGIC_CLASS'])) {
+      $class = $schema->getClass();
+      if (class_exists($class)) {
         $param['attributes_html']['disabled'] = 'disabled';
-        $class = $schema['CALCULATED_FIELD_LOGIC_CLASS'];
         $select_options += $class::select($schema, $param);
       }
       return GenericField::select($select_options, null, $param['value'], $param['attributes_html']);

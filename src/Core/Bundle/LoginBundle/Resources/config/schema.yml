@@ -87,6 +87,8 @@ Core.User:
       db_column_default: 0
       db_column_null: false
       field_type: checkbox
+      column_name: "Allow Local Auth"
+      label_Name: "Local"
     AllowAuthLDAP:
       description: "Allow Auth LDAP"
       db_column_name: ALLOW_AUTH_LDAP
@@ -94,6 +96,8 @@ Core.User:
       db_column_default: 0
       db_column_null: false
       field_type: checkbox
+      column_name: "Allow LDAP Auth"
+      label_name: "LDAP"
     LDAPID:
       description: "LDAP Server"
       parent: Core.System.LDAP.ID
@@ -101,6 +105,8 @@ Core.User:
       db_column_type: serial
       db_column_null: true
       field_type: select
+      column_name: "LDAP Server"
+      label_name: "LDAP Server"
     AllowAuthGoogle:
       description: "Allow Auth Google"
       db_column_name: ALLOW_AUTH_GOOGLE
@@ -108,6 +114,8 @@ Core.User:
       db_column_default: 0
       db_column_null: false
       field_type: checkbox
+      column_name: "Allow Google Auth"
+      label_name: "Google"
   unique_keys:
     Username: [ 'Core.User.Username' ]
 Core.Usergroup:
@@ -172,8 +180,8 @@ Core.User.Role:
       parent: Core.Usergroup.ID
       db_column_name: USERGROUP_ID
       db_column_type: serial
-      field_type: text
-      field_size: 5
+      field_type: chooser
+      chooser: Core.Usergroup
       column_name: "Usergroup ID"
       label_name: "Usergroup ID"
     OrganizationID:
@@ -182,6 +190,8 @@ Core.User.Role:
       db_column_name: ORGANIZATION_ID
       db_column_type: serial
       db_column_null: true
+      field_type: chooser
+      chooser: Core.Organization
       column_name: "Organization ID"
       label_name: "Organization ID"
     TermID:
@@ -190,6 +200,8 @@ Core.User.Role:
       db_column_name: TERM_ID
       db_column_type: serial
       db_column_null: true
+      field_type: chooser
+      chooser: Core.Term
       column_name: "Term ID"
       label_name: "Term ID"
     TermAll:
