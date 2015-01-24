@@ -44,8 +44,7 @@ class LoginController extends Controller {
       if ($this->get('kula.login')->login(($username !== null ) ? $username : $this->getRequest()->get('username'), $this->getRequest()->get('password'))) {
       
         // Determine first route that can be used
-        //$first_route = Navigation::getFirstAvailableRouteForm($this->get('kula.session')->get('portal'));
-        $first_route = 'core_system_lookup';
+        $first_route = $this->get('kula.core.navigation')->getFirstRoute();
         if ($first_route)
           return $this->redirect($this->get('router')->generate($first_route));
         else {
@@ -69,7 +68,7 @@ class LoginController extends Controller {
     
     $this->get('kula.login')->changeRole($new_usergroup);
     // Determine first route that can be used
-    $first_route = Navigation::getFirstAvailableRouteForm($this->get('kula.session')->get('portal'));
+    $first_route = $this->get('kula.core.navigation')->getFirstRoute();
     if ($first_route) {
       return $this->redirect($this->get('router')->generate($first_route));
     } else {

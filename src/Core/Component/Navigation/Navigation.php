@@ -113,6 +113,39 @@ class Navigation {
     $this->request = $request;
   }
   
+  public function getFirstRoute() {
+    // check pages
+    $pages = $this->getPages();
+    if (count($pages) > 0) {
+      return current($pages)->getRoute();
+    }
+    
+    // check forms
+    if ($formGroups = $this->getFormGroups()) {
+    foreach($formGroups as $formGroup) {
+      foreach($formGroup->getForms() as $form) {
+        if (count($form->getTabs()) > 0) {
+          $tabs = $form->getTabs();
+          return current($tabs)->getRoute();
+        } else {
+          return $form->getRoute();
+        }
+      }
+    } }
+  }
+  
+  public function getPages() {
+    if (isset($this->pages[$this->session->get('portal')])) {
+      $pages = array();
+      foreach($this->pages[$this->session->get('portal')] as $name => $page) {
+        if ($this->permission->getPermissionForNavigationObject($name)) {
+          $pages[] = $page;
+        }
+      }
+      return $pages;
+    }
+  }
+  
   public function getFormGroups() {
     if (isset($this->formGroups[$this->session->get('portal')])) {
       $groups = array();
