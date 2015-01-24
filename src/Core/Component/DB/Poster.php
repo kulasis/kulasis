@@ -90,9 +90,10 @@ class Poster {
             $record->process();
           }
         }
-      } catch (\PDOException $e) {
+      } catch (\Exception $e) {
         $transaction->rollback();
-        throw new \PDOException ($e);
+        $class = get_class($e);
+        throw new $class($e);
       }
     }
   }

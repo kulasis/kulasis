@@ -314,7 +314,8 @@ class PosterRecord {
           $this->auditLog($fields);
         } catch (\Exception $e) {
           $transaction->rollback();
-          throw new \Exception ($e);
+          $class = get_class($e);
+          throw new $class($e);
         }
         return $this->id;
       }
@@ -329,7 +330,8 @@ class PosterRecord {
           $this->auditLog($fields);
         } catch (\Exception $e) {
           $transaction->rollback();
-          throw new \Exception ($e);
+          $class = get_class($e);
+          throw new $class($e);
         }
         return $affectedRows;
       }
@@ -343,7 +345,8 @@ class PosterRecord {
           $this->auditLog();
         } catch (\Exception $e) {
           $transaction->rollback();
-          throw new \Exception ($e);
+          $class = get_class($e);
+          throw new $class($e);
         }
         return $affectedRows;
       }
