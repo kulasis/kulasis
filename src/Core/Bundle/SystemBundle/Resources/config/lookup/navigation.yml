@@ -9,6 +9,7 @@ Core.Navigation.Type:
     - { code: tab, description: "Tab", sort: 5 }
     - { code: report_group, description: "Report Group", sort: 6 }
     - { code: report, description: "Report", sort: 7 }
+    - { code: page, description: "Page", sort: 8 }
 Core.Navigation.Portal:
   description: "Portal List"
   allow_update: true

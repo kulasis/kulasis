@@ -45,6 +45,8 @@ class NavigationLoader {
         $this->report($nav, $navName, $nav['parent'], $nav['portal']);
       } elseif ($nav['type'] == 'tab') {
         $this->tab($nav, $navName, $nav['parent'], $nav['portal']);
+      } elseif ($nav['type'] == 'page') {
+        $this->page($nav, $navName);
       }
       
       $this->navigation[$navName] = $nav;
@@ -61,8 +63,16 @@ class NavigationLoader {
     }
   }
   
+  private function page($nav, $name) {
+    $this->addNavigation($name, $nav);
+  }
+  
   private function reportGroup($nav, $name) {
     $this->addNavigation($name, $nav);
+    
+    foreach($nav['reports'] as $reportName => $report) {
+      $this->report($report, $reportmName, $name, $nav['portal']);
+    }
   }
   
   private function formMenuActions($nav, $name, $parent, $portal) {
