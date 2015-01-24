@@ -4,7 +4,7 @@ namespace Kula\Core\Bundle\SystemBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
-class UserGroupsController extends Controller {
+class CoreUserGroupsController extends Controller {
   
   public function indexAction() {
     $this->authorize();

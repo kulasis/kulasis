@@ -1,231 +1,150 @@
 core_system_lookup:
   path: /system/lookup
-  defaults: { _controller: KulaCoreSystemBundle:Lookup:index }
+  defaults: { _controller: KulaCoreSystemBundle:CoreLookup:index }
 
 core_system_lookup_add:
   path: /system/lookup/new
-  defaults: { _controller: KulaCoreSystemBundle:Lookup:add }
+  defaults: { _controller: KulaCoreSystemBundle:CoreLookup:add }
   methods: [GET]
 
 core_system_lookup_chooser:
   path: /system/lookup/chooser
-  defaults: { _controller: KulaCoreSystemBundle:Lookup:chooser }
+  defaults: { _controller: KulaCoreSystemBundle:CoreLookup:chooser }
   methods: [GET]
 
 core_system_lookup_create:
   path: /system/lookup/new
-  defaults: { _controller: KulaCoreSystemBundle:Lookup:create }
+  defaults: { _controller: KulaCoreSystemBundle:CoreLookup:create }
   methods: [POST]
 
 core_system_lookup_delete:
   path: /system/lookup/delete
-  defaults: { _controller: KulaCoreSystemBundle:Lookup:delete }
+  defaults: { _controller: KulaCoreSystemBundle:CoreLookup:delete }
   methods: [POST]
-
-core_system_navigation_forms:
-  path: /system/navigation/forms
-  defaults: { _controller: KulaCoreSystemBundle:Navigation:forms }
-
-core_system_navigation_forms_create:
-  path: /system/navigation/forms/new
-  defaults: { _controller: KulaCoreSystemBundle:Navigation:create_form }
-  methods: [POST]
-
-core_system_navigation_forms_delete:
-  path: /system/navigation/forms/delete
-  defaults: { _controller: KulaCoreSystemBundle:Navigation:form_delete }
-  methods: [POST]
-
-core_system_navigation_forms_new:
-  path: /system/navigation/forms/new
-  defaults: { _controller: KulaCoreSystemBundle:Navigation:new_form }
-  methods: [GET]
-
-core_system_navigation_groups:
-  path: /system/navigation/groups
-  defaults: { _controller: KulaCoreSystemBundle:Navigation:groups }
-
-core_system_navigation_menuaction_detail_edit:
-  path: /system/navigation/forms/{id}/menuaction/detail/{sub_id}
-  defaults: { _controller: KulaCoreSystemBundle:Navigation:action_menu_detail }
-  methods: [GET]
-
-core_system_navigation_reports:
-  path: /system/navigation/reports
-  defaults: { _controller: KulaCoreSystemBundle:Navigation:reports }
-
-core_system_navigation_reports_create:
-  path: /system/navigation/reports/create
-  defaults: { _controller: KulaCoreSystemBundle:Navigation:create_report }
-  methods: [POST]
-
-core_system_navigation_reports_delete:
-  path: /system/navigation/reports/delete
-  defaults: { _controller: KulaCoreSystemBundle:Navigation:report_delete }
-  methods: [POST]
-
-core_system_navigation_reports_new:
-  path: /system/navigation/reports/add
-  defaults: { _controller: KulaCoreSystemBundle:Navigation:add_report }
-  methods: [GET]
 
 core_system_navpermissions_public:
   path: /system/permissions/navigation/public
-  defaults: { _controller: KulaCoreSystemBundle:NavigationPermissions:public_permissions }
+  defaults: { _controller: KulaCoreSystemBundle:CoreNavigationPermissions:public_permissions }
 
 core_system_navpermissions_role:
   path: /system/permissions/navigation/role
-  defaults: { _controller: KulaCoreSystemBundle:NavigationPermissions:role }
+  defaults: { _controller: KulaCoreSystemBundle:CoreNavigationPermissions:role }
 
 core_system_navpermissions_usergroup:
   path: /system/permissions/navigation/usergroup
-  defaults: { _controller: KulaCoreSystemBundle:NavigationPermissions:usergroup }
+  defaults: { _controller: KulaCoreSystemBundle:CoreNavigationPermissions:usergroup }
 
 core_system_nonorganization:
   path: /system/nonorganization
-  defaults: { _controller: KulaCoreSystemBundle:NonOrganization:index }
+  defaults: { _controller: KulaCoreSystemBundle:CoreNonOrganization:index }
 
 core_system_nonorganization_chooser:
   path: /system/nonorganization/chooser
-  defaults: { _controller: KulaCoreSystemBundle:NonOrganization:chooser }
+  defaults: { _controller: KulaCoreSystemBundle:CoreNonOrganization:chooser }
 
 core_system_organization:
   path: /system/organization
-  defaults: { _controller: KulaCoreSystemBundle:Organization:index }
+  defaults: { _controller: KulaCoreSystemBundle:CoreOrganization:index }
 
 core_system_organization_chooser:
   path: /system/organization/chooser
-  defaults: { _controller: KulaCoreSystemBundle:Organization:chooser }
+  defaults: { _controller: KulaCoreSystemBundle:CoreOrganization:chooser }
   methods: [GET]
 
 core_system_organization_orgterm_chooser:
   path: /system/organization/terms/chooser
-  defaults: { _controller: KulaCoreSystemBundle:Organization:org_term_chooser }
+  defaults: { _controller: KulaCoreSystemBundle:CoreOrganization:org_term_chooser }
   methods: [GET]
 
 core_system_organization_terms:
   path: /system/organization/terms
-  defaults: { _controller: KulaCoreSystemBundle:Organization:orgterms_index }
+  defaults: { _controller: KulaCoreSystemBundle:CoreOrganization:orgterms_index }
 
 core_system_organization_terms_edit:
   path: /system/organization/{id}/terms
-  defaults: { _controller: KulaCoreSystemBundle:Organization:orgterms_index }
-
-core_system_schema:
-  path: /system/schema
-  defaults: { _controller: KulaCoreSystemBundle:Schema:index }
-
-core_system_schema_add:
-  path: /system/schema/new
-  defaults: { _controller: KulaCoreSystemBundle:Schema:add } 
-  methods: [GET]
-
-core_system_schema_create:
-  path: /system/schema/new
-  defaults: { _controller: KulaCoreSystemBundle:Schema:create } 
-  methods: [POST]
-
-core_system_schema_delete:
-  path: /system/schema/delete
-  defaults: { _controller: KulaCoreSystemBundle:Schema:delete } 
-  methods: [POST]
-
-core_system_schema_fields_chooser:
-  path: /system/schema/fields/chooser
-  defaults: { _controller: KulaCoreSystemBundle:Schema:fields_chooser } 
-  methods: [GET]
-
-core_system_schema_fields_detail_edit:
-  path: /system/schema/{id}/field/detail/{sub_id}
-  defaults: { _controller: KulaCoreSystemBundle:Schema:field_detail } 
-  methods: [GET]
-
-core_system_schema_primaryfields_chooser:
-  path: /system/schema/primaryfields/chooser
-  defaults: { _controller: KulaCoreSystemBundle:Schema:primaryfields_chooser } 
-  methods: [GET]
+  defaults: { _controller: KulaCoreSystemBundle:CoreOrganization:orgterms_index }
 
 core_system_schemapermissions_field_public:
   path: /system/permissions/schema/public/table/{schema_table_id}
-  defaults: { _controller: KulaCoreSystemBundle:SchemaFieldPermissions:public_permissions } 
+  defaults: { _controller: KulaCoreSystemBundle:CoreSchemaFieldPermissions:public_permissions } 
 
 core_system_schemapermissions_field_role:
   path: /system/permissions/schema/role/table/{schema_table_id}
-  defaults: { _controller: KulaCoreSystemBundle:SchemaFieldPermissions:role }
+  defaults: { _controller: KulaCoreSystemBundle:CoreSchemaFieldPermissions:role }
 
 core_system_schemapermissions_field_usergroup:
   path: /system/permissions/schema/usergroup/table/{schema_table_id}
-  defaults: { _controller: KulaCoreSystemBundle:SchemaFieldPermissions:usergroup }
+  defaults: { _controller: KulaCoreSystemBundle:CoreSchemaFieldPermissions:usergroup }
 
 core_system_schemapermissions_public:
   path: /system/permissions/schema/public
-  defaults: { _controller: KulaCoreSystemBundle:SchemaPermissions:public_permissions }
+  defaults: { _controller: KulaCoreSystemBundle:CoreSchemaPermissions:public_permissions }
 
 core_system_schemapermissions_role:
   path: /system/permissions/schema/role
-  defaults: { _controller: KulaCoreSystemBundle:SchemaPermissions:role }
+  defaults: { _controller: KulaCoreSystemBundle:CoreSchemaPermissions:role }
 
 core_system_schemapermissions_usergroup:
   path: /system/permissions/schema/usergroup
-  defaults: { _controller: KulaCoreSystemBundle:SchemaPermissions:usergroup }
+  defaults: { _controller: KulaCoreSystemBundle:CoreSchemaPermissions:usergroup }
 
 core_system_terms:
   path: /system/terms
-  defaults: { _controller: KulaCoreSystemBundle:Terms:index }
+  defaults: { _controller: KulaCoreSystemBundle:CoreTerms:index }
 
 core_system_terms_chooser:
   path: /system/terms/chooser
-  defaults: { _controller: KulaCoreSystemBundle:Terms:chooser }
+  defaults: { _controller: KulaCoreSystemBundle:CoreTerms:chooser }
   methods: [GET]
 
 core_system_usergroups:
   path: /system/usergroups
-  defaults: { _controller: KulaCoreSystemBundle:UserGroups:index }
+  defaults: { _controller: KulaCoreSystemBundle:CoreUserGroups:index }
 
 core_system_usergroups_chooser:
   path: /system/usergroups/chooser
-  defaults: { _controller: KulaCoreSystemBundle:UserGroups:chooser }
+  defaults: { _controller: KulaCoreSystemBundle:CoreUserGroups:chooser }
   methods: [GET]
 
 core_system_users:
   path: /system/users
-  defaults: { _controller: KulaCoreSystemBundle:Users:index }
+  defaults: { _controller: KulaCoreSystemBundle:CoreUsers:index }
 
 core_system_users_add:
   path: /system/users/add
-  defaults: { _controller: KulaCoreSystemBundle:Users:add }
+  defaults: { _controller: KulaCoreSystemBundle:CoreUsers:add }
 
 core_system_users_add_constituent:
   path: /system/users/add/constituent
-  defaults: { _controller: KulaCoreSystemBundle:Users:add_constituent }
+  defaults: { _controller: KulaCoreSystemBundle:CoreUsers:add_constituent }
   methods: [GET]
 
 core_system_users_create_constituent:
   path: /system/users/add/constituent
-  defaults: { _controller: KulaCoreSystemBundle:Users:create_constituent }
+  defaults: { _controller: KulaCoreSystemBundle:CoreUsers:create_constituent }
   methods: [POST]
 
 core_system_users_delete:
   path: /system/users/delete
-  defaults: { _controller: KulaCoreSystemBundle:Users:delete }
+  defaults: { _controller: KulaCoreSystemBundle:CoreUsers:delete }
   methods: [POST]
 
 core_system_users_edit_usergroups:
   path: /system/users/{id}/usergroups
-  defaults: { _controller: KulaCoreSystemBundle:Users:user_groups }
+  defaults: { _controller: KulaCoreSystemBundle:CoreUsers:user_groups }
 
 core_system_users_usergroups:
   path: /system/users/usergroups
-  defaults: { _controller: KulaCoreSystemBundle:Users:user_groups }
+  defaults: { _controller: KulaCoreSystemBundle:CoreUsers:user_groups }
 
 core_system_routes:
   path: /system/routes
-  defaults: { _controller: KulaCoreSystemBundle:Routes:index }
+  defaults: { _controller: KulaCoreSystemBundle:CoreRoutes:index }
 
 core_setup_system:
   path: /setup/system
-  defaults: { _controller: KulaCoreSystemBundle:Setup:index }
+  defaults: { _controller: KulaCoreSystemBundle:CoreSetup:index }
 
 core_setup_system_ldap:
   path: /setup/system/ldap
-  defaults: { _controller: KulaCoreSystemBundle:Setup:ldap }
+  defaults: { _controller: KulaCoreSystemBundle:CoreSetup:ldap }

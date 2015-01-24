@@ -4,7 +4,7 @@ namespace Kula\Core\Bundle\SystemBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
-class NavigationPermissionsController extends Controller {
+class CoreNavigationPermissionsController extends Controller {
   
   public function usergroupAction() {
     $this->authorize();

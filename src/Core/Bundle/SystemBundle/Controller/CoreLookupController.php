@@ -4,7 +4,7 @@ namespace Kula\Core\Bundle\SystemBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
-class LookupController extends Controller {
+class CoreLookupController extends Controller {
   
   public function indexAction() {
     $this->authorize();

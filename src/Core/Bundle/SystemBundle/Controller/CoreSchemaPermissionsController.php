@@ -4,7 +4,7 @@ namespace Kula\Core\Bundle\SystemBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
-class SchemaPermissionsController extends Controller {
+class CoreSchemaPermissionsController extends Controller {
   
   public function usergroupAction() {
     $this->authorize();
