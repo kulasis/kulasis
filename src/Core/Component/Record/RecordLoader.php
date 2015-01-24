@@ -3,11 +3,12 @@
 namespace Kula\Core\Component\Record;
 
 use Kula\Core\Component\DefinitionLoader\DefinitionLoader;
-
+use Symfony\Component\Config\Resource\FileResource;
 
 class RecordLoader {
   
   private $records = array();
+  public $paths = array();
   
   public function getRecordsFromBundles(array $bundles) {
     
@@ -16,6 +17,7 @@ class RecordLoader {
     if ($records) {
       foreach($records as $path => $record) {
         $this->loadRecord($record, $path);
+        $this->paths[] = new FileResource($path);
       }
     }
     

@@ -10,11 +10,12 @@ class NavigationStore {
   
   private $navigation;
   
-  public function __construct($db, $fileName, $cacheDir, $debug, $session, $permission, $request) {
+  public function __construct($db, $fileName, $cacheDir, $debug, $kernel, $session, $permission, $request) {
     $this->db = $db;
     $this->cacheDir = $cacheDir;
     $this->fileName = $fileName;
     $this->debug = $debug;
+    $this->kernel = $kernel;
     $this->session = $session;
     $this->permission = $permission;
     $this->request = $request;
@@ -25,10 +26,14 @@ class NavigationStore {
     $cache = new DBConfigCache($cacheDir.'/'.$this->fileName.'.php', $this->debug, $this->db, array('CORE_NAVIGATION'));
 
     if (!$cache->isFresh()) {
-
+      
+      $nav_obj = new \Kula\Core\Component\Navigation\NavigationLoader;
+      $nav_obj->getNavigationFromBundles($this->kernel->getBundles());
+      $nav_obj->synchronizeDatabaseCatalog($this->db);
+      
       $navigation = new Navigation($this->db);
       $navigation->loadNavigation();
-      $cache->write(serialize($navigation));
+      $cache->write(serialize($navigation), $nav_obj->paths);
       
     }
     

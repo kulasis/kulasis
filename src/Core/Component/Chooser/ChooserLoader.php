@@ -3,11 +3,12 @@
 namespace Kula\Core\Component\Chooser;
 
 use Kula\Core\Component\DefinitionLoader\DefinitionLoader;
-
+use Symfony\Component\Config\Resource\FileResource;
 
 class ChooserLoader {
   
   private $choosers = array();
+  public $paths = array();
   
   public function getChoosersFromBundles(array $bundles) {
     
@@ -16,6 +17,7 @@ class ChooserLoader {
     if ($choosers) {
       foreach($choosers as $path => $chooser) {
         $this->loadChooser($chooser, $path);
+        $this->paths[] = new FileResource($path);
       }
     }
     

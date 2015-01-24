@@ -3,11 +3,12 @@
 namespace Kula\Core\Component\Lookup;
 
 use Kula\Core\Component\DefinitionLoader\DefinitionLoader;
-
+use Symfony\Component\Config\Resource\FileResource;
 
 class LookupLoader {
   
   private $lookups = array();
+  public $paths = array();
   
   public function getLookupsFromBundles(array $bundles) {
     
@@ -16,6 +17,7 @@ class LookupLoader {
     if ($lookups) {
       foreach($lookups as $path => $lookup) {
         $this->loadLookup($lookup, $path);
+        $this->paths[] = new FileResource($path);
       }
     }
     
