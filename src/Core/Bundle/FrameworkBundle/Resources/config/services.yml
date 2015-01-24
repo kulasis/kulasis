@@ -6,6 +6,12 @@ services:
     class: Symfony\Component\HttpFoundation\Session\Flash\FlashBag
     factory: ["@session", "getFlashBag"]
    
+  kula.routing_loader:
+    class: Kula\Core\Bundle\FrameworkBundle\Routing\BundleLoader
+    arguments: ["@kernel"]
+    tags:
+      - { name: routing.loader }
+   
   kula.core.exception:
     class: Kula\Core\Bundle\FrameworkBundle\EventListener\ExceptionListener
     tags: 
