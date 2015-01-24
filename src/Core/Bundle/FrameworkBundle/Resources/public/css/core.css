@@ -31,12 +31,14 @@ body {
 	background-color: #DDDDDD;
 	border-bottom: 1px solid #CCCCCC;
 	padding: 5px;
+  height: 2em;
 }
 
 #nav_bar_navigation {
 	float: left;
 	width: 15em;
 	text-align: center;
+  margin-top: 0.3em;
 }
 
 #nav_bar_navigation ul li {
