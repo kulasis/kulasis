@@ -10,8 +10,8 @@
 
 {% block window %}
 <!-- window menu bar -->
-{% set menuActions = kula_core_navigation.getRequestedForm().getMenuActions() %}
-{% set menuReports = kula_core_navigation.getRequestedForm().getMenuReports() %}
+{% set menuActions = kula_core_navigation.getRequestedNavItem().getMenuActions() %}
+{% set menuReports = kula_core_navigation.getRequestedNavItem().getMenuReports() %}
 <form id="window_window_num_form" method="post" action="{{ form_action }}" data-navigation-type="{{navigation_info.NAVIGATION_TYPE}}"{% if navigation_info.NAVIGATION_TYPE == 'R' or navigation_info.NAVIGATION_TYPE == 'MR' %} target="_blank"{% endif %}>
 <div id="window_window_num_menu_bar" class="window_menu_bar group">
   <div id="window_window_num_menu_bar_left" class="window_menu_bar_left">
@@ -61,7 +61,7 @@ data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDispla
 </div>
 {% endif %}
 {% endif %}
-{% set tabsToDisplay = kula_core_navigation.getRequestedForm().getTabs() %}
+{% set tabsToDisplay = kula_core_navigation.getRequestedNavItem().getTabs() %}
 {% if tabsToDisplay %}
 <!-- window tab bar -->
 <div id="window_window_num_tab_bar" class="window_tab_bar">
@@ -85,7 +85,7 @@ data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDispla
 {% include 'KulaCoreFrameworkBundle:Base:flash.html.twig' %}
     {% block content %}
     {% endblock %}
-    <div id="window_window_num_tab_{% if kula_core_navigation.getRequestedTab().getDBID() %}{{kula_core_navigation.getRequestedTab().getDBID()}}{% else %}{{ kula_core_navigation.getRequestedForm().getDBID() }}{% endif %}_detail">
+    <div id="window_window_num_tab_{% if kula_core_navigation.getRequestedTab().getDBID() %}{{kula_core_navigation.getRequestedTab().getDBID()}}{% else %}{{ kula_core_navigation.getRequestedNavItem().getDBID() }}{% endif %}_detail">
     {% block detail %}
     {% endblock %}
     </div>

@@ -1,0 +1,14 @@
+Core.Home:
+  description: "Home"
+  display_name: "Home"
+  type: page
+  portal: core
+  route: core_home
+  sort: 1
+SIS.Home:
+  description: "Home"
+  display_name: "Home"
+  type: page
+  portal: sis
+  route: sis_home
+  sort: 1

@@ -33,13 +33,13 @@ class Navigation {
       unset($navigationItem);
     }
       
-    $navReportGroupsResults = $this->db->db_select('CORE_NAVIGATION', 'navigation')
+    $navFormGroupsResults = $this->db->db_select('CORE_NAVIGATION', 'navigation')
       ->fields('navigation')
       ->condition('navigation.NAVIGATION_TYPE', 'form_group')
       ->orderBy('navigation.PORTAL')
       ->orderBy('navigation.SORT')
       ->execute();
-    while ($navFormGroupsRow = $navReportGroupsResults->fetch()) {
+    while ($navFormGroupsRow = $navFormGroupsResults->fetch()) {
         $navigationItem = new Group($navFormGroupsRow['NAVIGATION_NAME'], null, $navFormGroupsRow['NAVIGATION_ID'], $navFormGroupsRow['PORTAL'], $navFormGroupsRow['SORT'], $navFormGroupsRow['DISPLAY_NAME'], $navFormGroupsRow['ROUTE']);
         
         $this->formGroups[$navFormGroupsRow['PORTAL']][$navFormGroupsRow['NAVIGATION_NAME']] = $navigationItem;
@@ -48,12 +48,30 @@ class Navigation {
       unset($navigationItem);
     }
     
+    $navPagesResults = $this->db->db_select('CORE_NAVIGATION', 'navigation')
+      ->fields('navigation')
+      ->condition('navigation.NAVIGATION_TYPE', 'page')
+      ->orderBy('navigation.PORTAL')
+      ->orderBy('navigation.SORT')
+      ->execute();
+    while ($navPagesRow = $navPagesResults->fetch()) {
+        $navigationItem = new Page($navPagesRow['NAVIGATION_NAME'], null, $navPagesRow['NAVIGATION_ID'], $navPagesRow['PORTAL'], $navPagesRow['SORT'], $navPagesRow['DISPLAY_NAME'], $navPagesRow['ROUTE']);
+        
+        $this->pages[$navPagesRow['PORTAL']][$navPagesRow['NAVIGATION_NAME']] = $navigationItem;
+        $this->navigation[$navPagesRow['NAVIGATION_NAME']] = $navigationItem;
+        
+        if ($navPagesRow['ROUTE']) {
+          $this->navigationByRoutes[$navPagesRow['ROUTE']] = $navigationItem;
+        }
+        
+      unset($navigationItem);
+    }
     
     $navResults = $this->db->db_select('CORE_NAVIGATION', 'navigation')
       ->fields('navigation')
       ->leftJoin('CORE_NAVIGATION', 'parent_nav', 'parent_nav.NAVIGATION_ID = navigation.PARENT_NAVIGATION_ID')
       ->fields('parent_nav', array('NAVIGATION_NAME' => 'parent_NAVIGATION_NAME'))
-      ->condition('navigation.NAVIGATION_TYPE', array('report_group', 'form_group'), 'NOT IN')
+      ->condition('navigation.NAVIGATION_TYPE', array('report_group', 'form_group', 'page'), 'NOT IN')
       ->orderBy('navigation.PORTAL')
       ->orderBy('navigation.NAVIGATION_TYPE')
       ->orderBy('navigation.SORT')
@@ -85,15 +103,9 @@ class Navigation {
       }
       
       if ($navRow['NAVIGATION_TYPE'] == 'report') {
-        $navigationItem = new Tab($navRow['NAVIGATION_NAME'], $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE']);
+        $navigationItem = new Report($navRow['NAVIGATION_NAME'], $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE']);
         
         $this->navigation[$navRow['parent_NAVIGATION_NAME']]->addReport($navigationItem);
-      }
-      
-      if ($navRow['NAVIGATION_TYPE'] == 'page') {
-        $navigationItem = new Page($navRow['NAVIGATION_NAME'], $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE']);
-        
-        $this->pages[$navRow['PORTAL']][$navRow['NAVIGATION_NAME']] = $navigationItem;
       }
       
       $this->navigation[$navRow['NAVIGATION_NAME']] = $navigationItem;
@@ -114,8 +126,10 @@ class Navigation {
   }
   
   public function getFirstRoute() {
+    
     // check pages
     $pages = $this->getPages();
+    
     if (count($pages) > 0) {
       return current($pages)->getRoute();
     }
@@ -163,13 +177,17 @@ class Navigation {
       return $this->reportGroups[$this->session->get('portal')];
   }
   
-  public function getRequestedForm() {
+  public function getRequestedNavItem() {
     $route = $this->request->getCurrentRequest()->attributes->get('_route');
-    
+
     if (isset($this->navigationByRoutes[$route])) {
     
     $routeNav = $this->navigationByRoutes[$route];
-
+    
+    if ($routeNav instanceof Page) {
+      return $routeNav;
+    }
+    
     if ($routeNav instanceof Form) {
       return $routeNav;
     }
@@ -199,7 +217,7 @@ class Navigation {
   public function __sleep() {
     $this->db = null;
     
-    return array('navigation', 'reportGroups', 'formGroups', 'navigationByRoutes');
+    return array('navigation', 'reportGroups', 'formGroups', 'navigationByRoutes', 'pages');
   }
   
 }

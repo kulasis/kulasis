@@ -2,17 +2,25 @@
 function navigation_documentReady() {
 	// start navigation listeners
 	navigation_startNavigationListeners();
-
 	// if no drawer set to show, show first drawer
-	if (!$('.navigation-forms.drawer-contents').css('display') == 'block')
-		$('.navigation-forms.drawer-contents:first').show({ duration: 200, queue: false });
-	
-	if (!$('.navigation-reports.drawer-contents').css('display') == 'block')
+	if ($('.navigation-forms.drawer-contents').css('display') == 'none') {
+    $('.navigation-forms.drawer-contents:first').show({ duration: 200, queue: false });
+	}
+	if ($('.navigation-reports.drawer-contents').css('display') == 'none')
 		$('.navigation-reports.drawer-contents:first').show({ duration: 200, queue: false });
 	
 	navigation_windowListeners();
   
   $(".navigation-link").contextMenu({
+      menuSelector: "#contextMenu",
+      menuSelected: function (invokedOn, selectedMenu) {
+        if (selectedMenu.data('action') == 'newtab') {
+          navigation_drawerItemListenerNewWindow(invokedOn);
+        }
+      }
+  });
+  
+  $(".navigation-link-page").contextMenu({
       menuSelector: "#contextMenu",
       menuSelected: function (invokedOn, selectedMenu) {
         if (selectedMenu.data('action') == 'newtab') {
@@ -30,6 +38,7 @@ function navigation_startNavigationListeners() {
 	$('#nav_bar_navigation ul li').on('click', navgiation_navigationBarListener);
 	// Make items in navigation drawer clickable
 	$("#nav_pane").on("click", ".navigation-link", navigation_drawerItemListenerExistingWindow);
+  $("#nav_pane").on("click", ".navigation-link-page", navigation_drawerItemListenerExistingWindow);
 	//$("#nav_pane").on("click", ".navigation-link-new-window", navigation_drawerItemListenerNewWindow);
 }
 

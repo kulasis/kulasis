@@ -1,0 +1,7 @@
+core_home:
+    path:     /core/home
+    defaults: { _controller: KulaCoreHomeBundle:Home:home }
+
+sis_home:
+    path:     /sis/home
+    defaults: { _controller: KulaCoreHomeBundle:Home:home }

@@ -58,7 +58,7 @@ body {
 #nav_pane {
 	position: absolute;
 	width: 15em;
-	background-image: linear-gradient(to bottom, #efefef 0%, #ffffff 90%);
+	/*background-image: linear-gradient(to bottom, #efefef 0%, #ffffff 90%);*/
 	min-height: 500px;
 }
 
@@ -217,6 +217,19 @@ body {
 	padding: 5px 5px 5px 10px;
 	font-size: 12px;
 	font-style: italic;
+}
+
+.navigation-link-page {
+	font-size: 16px;
+	text-decoration: none;
+	color: black;
+	display: block;
+	padding: 7px 5px 7px 10px;
+  border-right: 1px solid #BBBBBB;
+}
+
+#nav_pages ul li a:hover {
+  background-color: #DDDDDD;
 }
 
 .navigation-link {
