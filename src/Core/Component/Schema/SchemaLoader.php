@@ -10,9 +10,12 @@ use Kula\Core\Component\Database\Query\Condition;
 use Kula\Core\Component\Schema\TableLoader;
 use Kula\Core\Component\Schema\FieldLoader;
 
+use Symfony\Component\Config\Resource\FileResource;
+
 class SchemaLoader {
   
   public $schema = array();
+  public $paths = array();
   
   public function synchronizeDatabaseCatalog(\Kula\Core\Component\DB\DB $db) {
     
@@ -20,8 +23,6 @@ class SchemaLoader {
       
       // create table
       $this->schema[$tableName]->createTable($db, $table);
-      
-      // sync the 
       
     }
     
@@ -46,8 +47,10 @@ class SchemaLoader {
     
     if ($schemas) {
       foreach($schemas as $path => $schema) {
-        if ($schema)
+        if ($schema) {
+          $this->paths[] = new FileResource($path);
           $this->loadSchema($schema, $path);
+        }
       }
     }
     

@@ -22,20 +22,16 @@ class DBCacheConfig extends BaseConfigCache {
   
   public function isFresh() {
     
-    // if file doesn't exist, always false
-    if (!is_file($this->file)) {
+    $parentResult = parent::isFresh();
+    
+    if ($parentResult === true) {
+      $time = filemtime($this->file);
+
+      if ($time < $this->getLastUpdatestamp()) {
        return false;
-    }
-
-    // if production, always true
-    if (!$this->debug) {
-       return true;
-    }
-
-    $time = filemtime($this->file);
-
-    if ($time < $this->getLastUpdatestamp()) {
-     return false;
+      }
+    } else {
+      return false;
     }
 
     return true;

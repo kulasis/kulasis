@@ -10,11 +10,12 @@ class SchemaStore implements WarmableInterface {
   
   private $schema;
   
-  public function __construct($db, $fileName, $cacheDir, $debug) {
+  public function __construct($db, $fileName, $cacheDir, $debug, $kernel) {
     $this->db = $db;
     $this->cacheDir = $cacheDir;
     $this->fileName = $fileName;
     $this->debug = $debug;
+    $this->kernel = $kernel;
   }
   
   public function warmUp($cacheDir) {
@@ -22,11 +23,14 @@ class SchemaStore implements WarmableInterface {
 
     if (!$cache->isFresh()) {
       
+      $schema_obj = new \Kula\Core\Component\Schema\SchemaLoader;
+      $schema_obj->getSchemaFromBundles($this->kernel->getBundles());
+      $schema_obj->synchronizeDatabaseCatalog($this->db);
+      
       $schema = new Schema($this->db);
       $schema->loadTables();
       $schema->loadFields();
-      $cache->write(serialize($schema));
-      
+      $cache->write(serialize($schema), $schema_obj->paths);
     }
     
     $this->schema = unserialize(file_get_contents((string) $cache));
