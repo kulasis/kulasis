@@ -144,8 +144,10 @@ class TableLoader {
       if ($catalogTable['TIMESTAMPS'] != $this->timestamps) 
         $catalogFields['TIMESTAMPS'] = ($this->timestamps) ? 1 : 0;
       
-      if (count($catalogFields) > 0)
+      if (count($catalogFields) > 0) {
+        $catalogFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
         $db->db_update('CORE_SCHEMA_TABLES')->fields($catalogFields)->condition('TABLE_NAME', $this->name)->execute();
+      }
     } else {
       $catalogFields['TABLE_NAME'] = $this->name;
       if ($this->db_tableName) 
@@ -154,6 +156,7 @@ class TableLoader {
         $catalogFields['SCHEMA_CLASS'] = $this->class;
       if ($this->timestamps)
         $catalogFields['TIMESTAMPS'] = ($this->timestamps) ? 1 : 0;
+      $catalogFields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
       $db->db_insert('CORE_SCHEMA_TABLES')->fields($catalogFields)->execute();
     }
     

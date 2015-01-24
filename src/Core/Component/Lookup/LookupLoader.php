@@ -69,14 +69,16 @@ class LookupLoader {
           $lookupTableFields['LOOKUP_TABLE_DESCRIPTION'] = $lookupTable['description'];
         if ($catalogLookupTable['LOOKUP_TABLE_UPDATE'] != $lookupTable['allow_update'])
           $lookupTableFields['LOOKUP_TABLE_UPDATE'] = ($lookupTable['allow_update']) ? 1 : 0;
-        if (count($lookupTableFields) > 0)
+        if (count($lookupTableFields) > 0) {
+          $lookupTableFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
           $db->db_update('CORE_LOOKUP_TABLES')->fields($lookupTableFields)->condition('LOOKUP_TABLE_NAME', $lookupTableName)->execute();
-        
+        }
       } else {
         
         $lookupTableFields['LOOKUP_TABLE_NAME'] = $lookupTableName;
         $lookupTableFields['LOOKUP_TABLE_DESCRIPTION'] = $lookupTable['description'];
         $lookupTableFields['LOOKUP_TABLE_UPDATE'] = ($lookupTable['allow_update']) ? 1 : 0;
+        $lookupTableFields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
         $lookupTableID = $db->db_insert('CORE_LOOKUP_TABLES')->fields($lookupTableFields)->execute();
         
       }
@@ -103,9 +105,10 @@ class LookupLoader {
             $lookupTableValueFields['INACTIVE_AFTER'] = (isset($value['inactive_date'])) ? $value['inactive_date'] : null;
           if (isset($value['conversion']) AND $catalogLookupValue['CONVERSION'] != $value['conversion'])
             $lookupTableValueFields['CONVERSION'] = (isset($value['conversion'])) ? $value['conversion'] : null;
-          if (count($lookupTableValueFields) > 0)
+          if (count($lookupTableValueFields) > 0) {
+            $lookupTableValueFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
             $db->db_update('CORE_LOOKUP_VALUES')->fields($lookupTableValueFields)->condition('CODE', $value['code'])->execute();
-          
+          }
         } else {
           
           $lookupTableValueFields['LOOKUP_TABLE_ID'] = $lookupTableID;
@@ -114,6 +117,7 @@ class LookupLoader {
           $lookupTableValueFields['SORT'] = (isset($value['sort'])) ? $value['sort'] : null;
           $lookupTableValueFields['INACTIVE_AFTER'] = (isset($value['inactive_date'])) ? $value['inactive_date'] : null;
           $lookupTableValueFields['CONVERSION'] = (isset($value['conversion'])) ? $value['conversion'] : null;
+          $lookupTableValueFields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
           $db->db_insert('CORE_LOOKUP_VALUES')->fields($lookupTableValueFields)->execute();
           
         }

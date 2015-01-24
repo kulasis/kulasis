@@ -210,8 +210,10 @@ class FieldLoader {
         $catalogFieldsForDB['UPDATE_FIELD_ID'] = ($updateSchemaField['SCHEMA_FIELD_ID'] AND $this->updateField != $updateSchemaField['FIELD_NAME']) ? $updateSchemaField['SCHEMA_FIELD_ID'] : null;
       }
       
-      if (count($catalogFieldsForDB) > 0)
+      if (count($catalogFieldsForDB) > 0) {
+        $catalogFieldsForDB['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
         $db->db_update('CORE_SCHEMA_FIELDS')->fields($catalogFieldsForDB)->condition('FIELD_NAME', $this->table->getName() . '.' .$this->name)->execute();
+      }
     } else {
       
       // Lookup table ID
@@ -263,6 +265,7 @@ class FieldLoader {
         
         $catalogFieldsForDB['UPDATE_FIELD_ID'] = ($updateSchemaField['SCHEMA_FIELD_ID']) ? $updateSchemaField['SCHEMA_FIELD_ID'] : null;
       }
+      $catalogFieldsForDB['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
       $db->db_insert('CORE_SCHEMA_FIELDS')->fields($catalogFieldsForDB)->execute();
     }
     

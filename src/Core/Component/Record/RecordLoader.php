@@ -46,14 +46,16 @@ class RecordLoader {
         
         if ($catalogRecordTable['CLASS'] != $record['class']) 
           $recordFields['CLASS'] = $record['class'];
-        if (count($recordFields) > 0)
+        if (count($recordFields) > 0) {
+          $recordFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
           $db->db_update('CORE_RECORD_TYPES')->fields($recordFields)->condition('RECORD_NAME', $recordName)->execute();
-        
+        }
       } else {
         
         $recordFields['RECORD_NAME'] = $recordName;
         $recordFields['PORTAL'] = strtolower(substr($recordName, 0, strpos($recordName, '.')));
         $recordFields['CLASS'] = (isset($record['class'])) ? $record['class'] : null;
+        $recordFields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
         $recordID = $db->db_insert('CORE_RECORD_TYPES')->fields($recordFields)->execute();
         
       }

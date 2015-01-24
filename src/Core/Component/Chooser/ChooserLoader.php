@@ -46,13 +46,15 @@ class ChooserLoader {
         
         if ($catalogRecordTable['CLASS'] != $chooser['class']) 
           $chooserFields['CLASS'] = $chooser['class'];
-        if (count($chooserFields) > 0)
+        if (count($chooserFields) > 0) {
+          $chooserFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
           $db->db_update('CORE_CHOOSER')->fields($chooserFields)->condition('CHOOSER_NAME', $chooserName)->execute();
-        
+        }
       } else {
         
         $chooserFields['CHOOSER_NAME'] = $chooserName;
         $chooserFields['CLASS'] = (isset($chooser['class'])) ? $chooser['class'] : null;
+        $chooserFields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
         $chooserID = $db->db_insert('CORE_CHOOSER')->fields($chooserFields)->execute();
         
       }

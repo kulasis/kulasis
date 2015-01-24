@@ -175,8 +175,10 @@ class NavigationLoader {
         if (isset($nav['confirmation_message']) AND $catalogNavigationTable['CONFIRMATION_MESSAGE'] != $nav['confirmation_message']) 
           $navFields['CONFIRMATION_MESSAGE'] = $nav['confirmation_message'];
         
-        if (count($navFields) > 0)
+        if (count($navFields) > 0) {
+          $navFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
           $db->db_update('CORE_NAVIGATION')->fields($navFields)->condition('NAVIGATION_NAME', $navName)->execute();
+        }
         
       } else {
         
@@ -203,6 +205,7 @@ class NavigationLoader {
         $navFields['RECORD_LOADED'] = (isset($nav['record_loaded']) AND $nav['record_loaded']) ? 1 : 0;
         $navFields['ROUTE'] = (isset($nav['route'])) ? $nav['route'] : null;
         $navFields['CONFIRMATION_MESSAGE'] = (isset($nav['confirmation_message'])) ? $nav['confirmation_message'] : null;
+        $navFields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
         $navID = $db->db_insert('CORE_NAVIGATION')->fields($navFields)->execute();
         
       }
