@@ -1,0 +1,7 @@
+teacher_HEd_student_information:
+  path: /student/information
+  defaults: { _controller: KulaHEdStudentBundle:Information:index_teacher }
+
+teacher_HEd_student_student_chooser:
+  path: /student/student/chooser
+  defaults: { _controller: KulaHEdStudentBundle:Information:chooser }

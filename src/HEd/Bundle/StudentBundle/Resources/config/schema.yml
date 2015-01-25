@@ -1,0 +1,90 @@
+HEd.Student:
+  description: "Students"
+  db_table_name: STUD_STUDENT
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      parent: Constituent.Constituent.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      column_name: "Student ID"
+      label_name: "Student ID"
+    ConversionStudentNumber:
+      description: "Conversion Student Number"
+      db_column_name: CONV_STUDENT_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Conv Student Number"
+      label_name: "Conv Student Number"
+    AlternateNumber1:
+      description: "Alternate Student Number 1"
+      db_column_name: ALTERNATE_NUMBER_1
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Alternate Number 1"
+      label_name: "Alternate Number 1"
+    AlternateNumber2:
+      description: "Alternate Student Number 2"
+      db_column_name: ALTERNATE_NUMBER_2
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Alternate Number 2"
+      label_name: "Alternate Number 2"
+    OriginalEnterDate:
+      description: "Original Enter Date"
+      db_column_name: ORIGINAL_ENTER_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Original Enter Date"
+      label_name: "Original Enter Date"
+    OriginalEnterCode:
+      description: "Original Enter Code"
+      db_column_name: ORIGINAL_ENTER_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.EnterCode
+      column_name: "Original Enter Code"
+      label_name: "Original Enter Code"
+    OriginalEnterTerm:
+      description: "Original Enter Term"
+      db_column_name: ORIGINAL_ENTER_TERM
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Term.ID
+      field_type: chooser
+      chooser: Kula\Core\Bundle\SystemBundle\Chooser\TermChooser
+      column_name: "Original Enter Term"
+      label_name: "Original Enter Term"
+    DiplomaName:
+      description: "Diploma Name"
+      db_column_name: DIPLOMA_NAME
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Diploma Name"
+      label_name: "Diploma Name"
+    HighSchoolGraduationDate:
+      description: "High School Graduation Date"
+      db_column_name: HIGH_SCHOOL_GRADUATION_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "High School Graduation Date"
+      label_name: "High School Grad Date"
+    HighSchoolState:
+      description: "High School State"
+      db_

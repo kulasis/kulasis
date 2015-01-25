@@ -53,7 +53,6 @@ class SchemaLoader {
         }
       }
     }
-    
   }
   
   private function loadSchema(array $schemaArray, $bundlePath) {

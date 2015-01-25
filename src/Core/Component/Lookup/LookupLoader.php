@@ -36,6 +36,7 @@ class LookupLoader {
         $firstRound = true;
       }
       
+      if (isset($lookupTable['values'])) {
       foreach($lookupTable['values'] as $value) {
         
         if ($firstRound ||
@@ -46,6 +47,7 @@ class LookupLoader {
           
         }
         
+      }
       }
       
     }
@@ -86,7 +88,7 @@ class LookupLoader {
       }
       
       //print_r($lookupTable['values']);
-      
+      if (isset($lookupTable['values'])) {
       foreach($lookupTable['values'] as $value) {
         
         $catalogLookupValue = $db->db_select('CORE_LOOKUP_VALUES', 'lookup_values')
@@ -125,6 +127,7 @@ class LookupLoader {
         }
         
         
+      }
       }
       
     }

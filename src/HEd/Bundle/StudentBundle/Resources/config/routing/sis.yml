@@ -1,0 +1,99 @@
+sis_HEd_student_information_add:
+  path: /student/information/add
+  defaults: { _controller: KulaHEdStudentBundle:Information:add }
+
+sis_HEd_student_information_add_constituent:
+  path: /student/information/add/constituent
+  defaults: { _controller: KulaHEdStudentBundle:Information:add_constituent }
+  methods: [GET]
+
+sis_HEd_student_information_addresses:
+  path: /student/information/addresses
+  defaults: { _controller: KulaHEdStudentBundle:ContactInfo:addresses }
+
+sis_HEd_student_information_addresses_detail:
+  path: /student/{id}/information/addresses/detail/{sub_id}
+  defaults: { _controller: KulaHEdStudentBundle:ContactInfo:detail }
+
+sis_HEd_student_information_basic:
+  path: /student/information/basic
+  defaults: { _controller: KulaHEdStudentBundle:Information:basic }
+
+sis_HEd_student_information_create_constituent:
+  path: /student/information/add/constituent
+  defaults: { _controller: KulaHEdStudentBundle:Information:create_constituent }
+  methods: [POST]
+
+sis_HEd_student_information_demographic:
+  path: /student/information/demographic
+  defaults: { _controller: KulaHEdStudentBundle:Information:demographic }
+
+sis_HEd_student_information_emailaddres:
+  path: /student/information/emailaddresses
+  defaults: { _controller: KulaHEdStudentBundle:ContactInfo:emailAddresses }
+
+sis_HEd_student_information_emergencycontacts:
+  path: /student/information/emergencycontacts
+  defaults: { _controller: KulaHEdStudentBundle:ContactInfo:emergencyContacts }
+
+sis_HEd_student_information_enrollment:
+  path: /student/information/enrollment
+  defaults: { _controller: KulaHEdStudentBundle:Information:enrollment }
+
+sis_HEd_student_information_otherinfo:
+  path: /student/information/otherinfo
+  defaults: { _controller: KulaHEdStudentBundle:Information:other_info }
+
+sis_HEd_student_information_phones:
+  path: /student/information/phones
+  defaults: { _controller: KulaHEdStudentBundle:ContactInfo:phones }
+
+sis_HEd_student_information_addresses_add:
+  path: /student/information/addresses/add
+  defaults: { _controller: KulaHEdStudentBundle:ContactInfo:add_address }
+
+sis_HEd_student_holds:
+  path: /student/holds
+  defaults: { _controller: KulaHEdStudentBundle:Holds:index }
+
+sis_HEd_student_documents:
+  path: /student/documents
+  defaults: { _controller: KulaHEdStudentBundle:Documents:index }
+
+sis_HEd_student_enrollment_activateinactivate:
+  path: /student/enrollment/activateinactivate
+  defaults: { _controller: KulaHEdStudentBundle:Enrollment:activateinactivate }
+
+sis_HEd_student_enrollment_activitydetail:
+  path: /student/enrollment/activity/{student_enrollment_id}
+  defaults: { _controller: KulaHEdStudentBundle:Enrollment:activity }
+
+sis_HEd_student_enrollment_enrollmentdetail:
+  path: /student/enrollment/enrollments/{student_status_id}
+  defaults: { _controller: KulaHEdStudentBundle:Enrollment:enrollments }
+
+sis_HEd_student_enrollment_reports_enrollmentverification:
+  path: /student/enrollment/reports/enrollmentverification
+  defaults: { _controller: KulaHEdStudentBundle:EnrollmentVerificationReport:index }
+  methods: [GET]
+
+sis_HEd_student_enrollment_reports_enrollmentverification_generate:
+  path: /student/enrollment/reports/enrollmentverification
+  defaults: { _controller: KulaHEdStudentBundle:EnrollmentVerificationReport:generate }
+  methods: [POST]
+
+sis_HEd_student_enrollment_statuses:
+  path: /student/enrollment
+  defaults: { _controller: KulaHEdStudentBundle:Enrollment:index }
+
+sis_HEd_setup_student_documents:
+  path: /setup/student/documents
+  defaults: { _controller: KulaHEdStudentBundle:DocumentsSetup:document_codes }
+
+sis_HEd_setup_student_holds:
+  path: /setup/student/holds
+  defaults: { _controller: KulaHEdStudentBundle:HoldsSetup:hold_codes }
+
+sis_HEd_home_holds:
+  path: /home/holds
+  defaults: { _controller: KulaHEdStudentBundle:HomeHolds:index }

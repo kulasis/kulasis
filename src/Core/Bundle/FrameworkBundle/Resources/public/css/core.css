@@ -608,9 +608,10 @@ button {
 
 .modal-body {
   position: relative;
-  max-height: 800px;
   padding: 15px;
   overflow-y: auto;
+  max-height: none;
+  text-align: center;
 }
 
 .modal-form {

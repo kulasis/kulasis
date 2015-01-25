@@ -1,0 +1,501 @@
+Constituent.Constituent:	
+  description: "Constituent Table"
+  db_table_name: CONS_CONSTITUENT
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: CONSTITUENT_ID
+      db_column_type: primary_serial
+      column_name: "Constituent ID"
+      label_name: "Constituent ID"
+    LastName:
+      description: "Last Name"
+      db_column_name: LAST_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      field_type: text
+      field_size: 30
+      column_name: "Last Name"
+      label_name: "Last Name"
+    FirstName:
+      description: "First Name"
+      db_column_name: FIRST_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      field_type: text
+      field_size: 30
+      column_name: "First Name"
+      label_name: "First Name"
+    MiddleName:
+      description: "Middle Name"
+      db_column_name: MIDDLE_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Middle Name"
+      label_name: "Middle Name"
+    Gender:
+      description: "Gender"
+      db_column_name: GENDER
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Gender
+      column_name: "Gender"
+      label_name: "Gender"
+    BirthDate:
+      description: "Birth Date"
+      db_column_name: BIRTH_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Birth Date"
+      label_name: "Birth Date"
+    PreferredName:
+      description: "Preferred Name"
+      db_column_name: PREFERRED_NAME
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: true
+      field_type: text
+      field_length: 20
+      column_name: "Preferred Name"
+      label_name: "Preferred Name"
+    MaidenName:
+      description: "Maiden Name"
+      db_column_name: MAIDEN_NAME
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: true
+      field_type: text
+      field_length: 20
+      column_name: "Maiden Name"
+      label_name: "Maiden Name"
+    Race:
+      description: "Race"
+      db_column_name: RACE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Race
+      column_name: "Race"
+      label_name: "Race"
+    Hispanic:
+      description: "Hispanic"
+      db_column_name: HISPANIC
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Hispanic"
+      label_name: "Hispanic"
+    SocialSecurityNumber:
+      description: "Social Security Number"
+      db_column_name: SOCIAL_SECURITY_NUMBER
+      db_column_type: varbinary
+      db_column_length: 50
+      db_column_null: true
+      field_type: text
+      class: Kula\Core\Bundle\ConstituentBundle\Field\SocialSecurityNumber
+      column_name: "Social Security Number"
+      label_name: "Social Security Number"
+    PermanentNumber:
+      description: "Permanent Number"
+      db_column_name: PERMANENT_NUMBER
+      db_column_type: varchar
+      db_column_length: 20
+      db_column_null: true
+      field_type: text
+      column_name: "Permanent Number"
+      label_name: "Permanent Number"
+    Notes:
+      description: "Notes"
+      db_column_name: NOTES
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Notes"
+      label_name: "Notes"
+    ResidenceAddressID:
+      description: "Residence Address ID"
+      parent: Constituent.Address.ID
+      db_column_name: RESIDENCE_ADDRESS_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: radio
+      column_name: "Residence Address ID"
+      label_name: "Residence Address ID"
+    MailingAddressID:
+      description: "Mailing Address ID"
+      parent: Constituent.Address.ID
+      db_column_name: MAILING_ADDRESS_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: radio
+      column_name: "Mailing Address ID"
+      label_name: "Mailing Address ID"
+    WorkAddressID:
+      description: "Work Address ID"
+      parent: Constituent.Address.ID
+      db_column_name: WORK_ADDRESS_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: radio
+      column_name: "Work Address ID"
+      label_name: "Work Address ID"
+    PrimaryPhoneID:
+      description: "Primary Phone ID"
+      parent: Constituent.Phone.ID
+      db_column_name: PRIMARY_PHONE_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: radio
+      column_name: "Primary Phone ID"
+      label_name: "Primary Phone ID"
+    PrimaryEmailID:
+      description: "Primary Email ID"
+      parent: Constituent.EmailAddress.ID
+      db_column_name: PRIMARY_EMAIL_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: radio
+      column_name: "Primary Email ID"
+      label_name: "Primary Email ID"
+
+Constituent.Address:
+  description: "Constituent Address"
+  db_table_name: CONS_ADDRESS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: ADDRESS_ID
+      db_column_type: primary_serial
+      column_name: "Address ID"
+      label_name: "Address ID"
+    ConstituentID:
+      description: "Constituent ID"
+      parent: Constituent.Constituent.ID
+      db_column_name: CONSTITUENT_ID
+      db_column_type: serial
+      column_name: "Constituent ID"
+      label_name: "Constituent ID"
+    Active:
+      description: "Active"
+      db_column_name: ACTIVE
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Active"
+      label_name: "Active"
+    Undeliverable:
+      description: "Undeliverable"
+      db_column_name: UNDELIVERABLE
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Undeliverable"
+      label_name: "Undeliverable"
+    EffectiveDate:
+      description: "Effective Date"
+      db_column_name: EFFECTIVE_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Effective Date"
+      label_name: "Effective Date"
+    Type:
+      description: "Address Type"
+      db_column_name: ADDRESS_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Address.Type
+      column_name: "Address Type"
+      label_name: "Address Type"
+    Recipient:
+      description: "Recipient"
+      db_column_name: RECIPIENT
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      field_type: text
+      column_name: "Recipient"
+      label_name: "Recipient"
+    Country:
+      description: "Two letter ISO country code of this address."
+      db_column_name: COUNTRY
+      db_column_type: varchar
+      db_column_length: 2
+      db_column_null: true
+      db_column_default: US
+      field_type: lookup
+      lookup: Constituent.Address.Country
+      column_name: "Country"
+      label_name: "Country"
+    AdministrativeArea:
+      description: "The administrative area of this address. (i.e. State/Province)"
+      db_column_name: ADMINISTRATIVE_AREA
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Address.AdministrativeArea
+      column_name: "Administrative Area"
+      label_name: "Administrative Area"
+    SubAdministrativeArea:
+      description: "The sub administrative area of this address."
+      db_column_name: SUB_ADMINISTRATIVE_AREA
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Address.SubAdministrativeArea
+      column_name: "Sub Administrative Area"
+      label_name: "Sub Administrative Area"
+    Locality:
+      description: "The locality of this address. (i.e. City)"
+      db_column_name: LOCALITY
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 15
+      column_name: "Locality"
+      label_name: "Locality"
+    DependentLocality:
+      description: "The dependent locality of this address."
+      db_column_name: DEPENDENT_LOCALITY
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      column_name: "Dependent Locality"
+      label_name: "Dependent Locality"
+    PostalCode:
+      description: "The postal code of this address."
+      db_column_name: POSTAL_CODE
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 10
+      column_name: "Postal Code"
+      label_name: "Postal Code"
+    Thoroughfare:
+      description: "The thoroughfare of this address. (i.e. Street address)"
+      db_column_name: THOROUGHFARE
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 35
+      column_name: "Thoroughfare"
+      label_name: "Thoroughfare"
+    Premise:
+      description: "The premise of this address. (i.e. Apartment / Suite number)"
+      db_column_name: PREMISE
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      column_name: "Premise"
+      label_name: "Premise"
+    SubPremise:
+      description: "The sub_premise of this address."
+      db_column_name: SUB_PREMISE
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      column_name: "Sub Premise"
+      label_name: "Sub Premise"
+    SendGrades:
+      description: "Send Grades"
+      db_column_name: SEND_GRADES
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Send Grades"
+      label_name: "Send Grades"
+    SendBill:
+      description: "Send Bill"
+      db_column_name: SEND_BILL
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Send Bill"
+      label_name: "Send Bill"
+    Notes:
+      description: "Notes"
+      db_column_name: NOTES
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Notes"
+      label_name: "Notes"
+
+Constituent.EmailAddress:
+  description: "Constituent Email Address"
+  db_table_name: CONS_EMAIL_ADDRESS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: EMAIL_ADDRESS_ID
+      db_column_type: primary_serial
+      column_name: "Email Address ID"
+      label_name: "Email Address ID"
+    ConstituentID:
+      description: "Constituent ID"
+      parent: Constituent.Constituent.ID
+      db_column_name: CONSTITUENT_ID
+      db_column_type: serial
+      column_name: "Constituent ID"
+      label_name: "Constituent ID"
+    Undeliverable:
+      description: "Undeliverable"
+      db_column_name: UNDELIVERABLE
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Undeliverable"
+      label_name: "Undeliverable"
+    Active:
+      description: "Active"
+      db_column_name: ACTIVE
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Active"
+      label_name: "Active"
+    EffectiveDate:
+      description: "Effective Date"
+      db_column_name: EFFECTIVE_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Effective Date"
+      label_name: "Effective Date"
+    Type:
+      description: "Email Address Type"
+      db_column_name: EMAIL_ADDRESS_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.EmailAddress.Type
+      column_name: "Email Address Type"
+      label_name: "Email Address Type"
+    EmailAddress:
+      description: "Email Address"
+      db_column_name: EMAIL_ADDRESS
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 30
+      column_name: "Email Address"
+      label_name: "Email Address"
+
+Constituent.Phone:
+  description: "Constituent Phone Numbers"
+  db_table_name: CONS_PHONE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: PHONE_NUMBER_ID
+      db_column_type: primary_serial
+      column_name: "Phone Number ID"
+      label_name: "Phone Number ID"
+    ConstituentID:
+      description: "Constituent ID"
+      parent: Constituent.Constituent.ID
+      db_column_name: CONSTITUENT_ID
+      db_column_type: serial
+      column_name: "Constituent ID"
+      label_name: "Constituent ID"
+    Disconnected:
+      description: "Disconnected"
+      db_column_name: DISCONNECTED
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Disconnected"
+      label_name: "Disconnected"
+    Active:
+      description: "Active"
+      db_column_name: ACTIVE
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Active"
+      label_name: "Active"
+    EffectiveDate:
+      description: "Effective Date"
+      db_column_name: EFFECTIVE_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Effective Date"
+      label_name: "Effective Date"
+    Type:
+      description: "Phone Number Type"
+      db_column_name: PHONE_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Phone.Type
+      column_name: "Phone Type"
+      label_name: "Phone Type"
+    PhoneNumber:
+      description: "Phone Number"
+      db_column_name: PHONE_NUMBER
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: false
+      field_type: text
+      field_size: 30
+      column_name: "Phone Number"
+      label_name: "Phone Number"
+    PhoneExtension:
+      description: "Phone Extension"
+      db_column_name: PHONE_EXTENSION
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: true
+      field_type: text
+      field_size: 7
+      column_name: "Phone Extension"
+      label_name: "Phone Extension"
+    PhoneCountry:
+      description: "Phone Country"
+      db_column_name: PHONE_COUNTRY
+      db_column_type: varchar
+      db_column_length: 2
+      db_column_null: true
+      db_column_default: US
+      field_type: lookup
+      lookup: Constituent.Address.Country
+      column_name: "Phone Country"
+      label_name: "Phone Country"

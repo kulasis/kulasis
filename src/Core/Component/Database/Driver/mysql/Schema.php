@@ -138,7 +138,7 @@ class Schema extends DatabaseSchema {
   protected function createFieldSql($name, $spec) {
     $sql = "`" . $name . "` " . $spec['mysql_type'];
 
-    if (in_array($spec['mysql_type'], array('VARCHAR', 'CHAR', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT', 'TEXT'))) {
+    if (in_array($spec['mysql_type'], array('VARCHAR', 'CHAR', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT', 'TEXT', 'VARBINARY'))) {
       if (isset($spec['length'])) {
         $sql .= '(' . $spec['length'] . ')';
       }
@@ -261,7 +261,9 @@ class Schema extends DatabaseSchema {
       'datetime:normal' => 'DATETIME',
       'time:normal'     => 'TIME',
       
-      'bool:normal'     => 'BOOLEAN'
+      'bool:normal'     => 'BOOLEAN',
+      
+      'varbinary:normal' => 'VARBINARY'
     );
     return $map;
   }

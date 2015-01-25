@@ -1,0 +1,386 @@
+Constituent.Gender:
+  description: "Gender"
+  allow_update: false
+  values:
+    - { code: F, description: "Female" }
+    - { code: M, description: "Male" }
+
+Constituent.Race:
+  description: "Race"
+  allow_update: true
+  values:
+    - { code: "01", description: "American Indian/Alaskan Native" }
+    - { code: "02", description: "Asian" }
+    - { code: "03", description: "Black/African American" }
+    - { code: "04", description: "Hispanic/Latino" }
+    - { code: "05", description: "Native Hawaiian/Pacific Islander" }
+    - { code: "06", description: "White" }
+    - { code: "07", description: "Two or More" }
+    - { code: "08", description: "Undisclosed" }
+    - { code: "09", description: "Unkown" }
+    - { code: "10", description: "Nonresident Alien" }
+    
+Constituent.Address.Type:
+  description: "Address Types"
+  allow_update: true
+  values:
+    - { code: R, description: "Residence", sort: 1 }
+    - { code: M, description: "Mailing", sort: 2 }
+    - { code: H, description: "Home", sort: 3 }
+    - { code: B, description: "Billing", sort: 4 }
+    - { code: P, description: "Parent", sort: 5 }
+    - { code: W, description: "Work", sort: 6 }
+    
+Constituent.Address.Country:
+  description: "Country Codes"
+  allow_update: true
+  values:
+    - { code: AF, description: "AFGHANISTAN" }
+    - { code: AL, description: "ALBANIA" }
+    - { code: AG, description: "ALGERIA" }
+    - { code: AQ, description: "AMERICAN SAMOA" }
+    - { code: AN, description: "ANDORRA" }
+    - { code: AO, description: "ANGOLA" }
+    - { code: AV, description: "ANGUILLA" }
+    - { code: AY, description: "ANTARCTICA" }
+    - { code: AC, description: "ANTIGUA AND BARBUDA" }
+    - { code: AR, description: "ARGENTINA" }
+    - { code: AM, description: "ARMENIA" }
+    - { code: AA, description: "ARUBA" }
+    - { code: AT, description: "ASHMORE AND CARTIER ISLANDS" }
+    - { code: AS, description: "AUSTRALIA" }
+    - { code: AU, description: "AUSTRIA" }
+    - { code: AJ, description: "AZERBAIJAN" }
+    - { code: BF, description: "BAHAMAS, THE" }
+    - { code: BA, description: "BAHRAIN" }
+    - { code: FQ, description: "BAKER ISLAND" }
+    - { code: BG, description: "BANGLADESH" }
+    - { code: BB, description: "BARBADOS" }
+    - { code: BS, description: "BASSAS DA INDIA" }
+    - { code: BO, description: "BELARUS" }
+    - { code: BE, description: "BELGIUM" }
+    - { code: BH, description: "BELIZE" }
+    - { code: BN, description: "BENIN" }
+    - { code: BD, description: "BERMUDA" }
+    - { code: BT, description: "BHUTAN" }
+    - { code: BL, description: "BOLIVIA" }
+    - { code: BK, description: "BOSNIA AND HERZEGOVINA" }
+    - { code: BC, description: "BOTSWANA" }
+    - { code: BV, description: "BOUVET ISLAND" }
+    - { code: BR, description: "BRAZIL" }
+    - { code: IO, description: "BRITISH INDIAN OCEAN TERRITORY" }
+    - { code: VI, description: "BRITISH VIRGIN ISLANDS" }
+    - { code: BX, description: "BRUNEI" }
+    - { code: BU, description: "BULGARIA" }
+    - { code: UV, description: "BURKINA FASO" }
+    - { code: BM, description: "BURMA (MYANMAR)" }
+    - { code: BY, description: "BURUNDI" }
+    - { code: CB, description: "CAMBODIA" }
+    - { code: CM, description: "CAMEROON" }
+    - { code: CA, description: "CANADA" }
+    - { code: CV, description: "CAPE VERDE" }
+    - { code: CJ, description: "CAYMAN ISLANDS" }
+    - { code: CT, description: "CENTRAL AFRICAN REPUBLIC" }
+    - { code: CD, description: "CHAD" }
+    - { code: CI, description: "CHILE" }
+    - { code: CH, description: "CHINA" }
+    - { code: KT, description: "CHRISTMAS ISLAND" }
+    - { code: IP, description: "CLIPPERTON ISLAND" }
+    - { code: CK, description: "COCOS (KEELING) ISLANDS" }
+    - { code: CO, description: "COLOMBIA" }
+    - { code: CN, description: "COMOROS" }
+    - { code: CG, description: "CONGO, DEMOCRATIC REPUBLIC OF THE" }
+    - { code: CF, description: "CONGO, REPUBLIC OF THE" }
+    - { code: CW, description: "COOK ISLANDS" }
+    - { code: CR, description: "CORAL SEA ISLANDS" }
+    - { code: CS, description: "COSTA RICA" }
+    - { code: IV, description: "COTE D IVOIRE" }
+    - { code: HR, description: "CROATIA" }
+    - { code: CU, description: "CUBA" }
+    - { code: CY, description: "CYPRUS" }
+    - { code: EZ, description: "CZECH REPUBLIC" }
+    - { code: U1, description: "CZECHOSLOVAKIA" }
+    - { code: DA, description: "DENMARK" }
+    - { code: DJ, description: "DJIBOUTI" }
+    - { code: DO, description: "DOMINICA" }
+    - { code: DR, description: "DOMINICAN REPUBLIC" }
+    - { code: TT, description: "EAST TIMOR" }
+    - { code: EC, description: "ECUADOR" }
+    - { code: EG, description: "EGYPT" }
+    - { code: ES, description: "EL SALVADOR" }
+    - { code: EK, description: "EQUATORIAL GUINEA" }
+    - { code: ER, description: "ERITREA" }
+    - { code: EN, description: "ESTONIA" }
+    - { code: ET, description: "ETHIOPIA" }
+    - { code: EU, description: "EUROPA ISLAND" }
+    - { code: FK, description: "FALKLAND ISLANDS" }
+    - { code: FO, description: "FAROE ISLANDS" }
+    - { code: FJ, description: "FIJI" }
+    - { code: FI, description: "FINLAND" }
+    - { code: FR, description: "FRANCE" }
+    - { code: FG, description: "FRENCH GUIANA" }
+    - { code: FP, description: "FRENCH POLYNESIA" }
+    - { code: FS, description: "FRENCH SOUTHERN AND ANTARCTIC LANDS" }
+    - { code: GB, description: "GABON" }
+    - { code: GA, description: "GAMBIA, THE" }
+    - { code: GZ, description: "GAZA STRIP" }
+    - { code: GG, description: "GEORGIA" }
+    - { code: GM, description: "GERMANY" }
+    - { code: GH, description: "GHANA" }
+    - { code: GI, description: "GIBRALTAR" }
+    - { code: GO, description: "GLORIOSO ISLANDS" }
+    - { code: GR, description: "GREECE" }
+    - { code: GL, description: "GREENLAND" }
+    - { code: GJ, description: "GRENADA" }
+    - { code: GP, description: "GUADELOUPE" }
+    - { code: GQ, description: "GUAM" }
+    - { code: GT, description: "GUATEMALA" }
+    - { code: GK, description: "GUERNSEY" }
+    - { code: GV, description: "GUINEA" }
+    - { code: PU, description: "GUINEA-BISSAU" }
+    - { code: GY, description: "GUYANA" }
+    - { code: HA, description: "HAITI" }
+    - { code: HM, description: "HEARD ISLAND AND MCDONALD ISLANDS" }
+    - { code: HO, description: "HONDURAS" }
+    - { code: HK, description: "HONG KONG" }
+    - { code: HQ, description: "HOWLAND ISLAND" }
+    - { code: HU, description: "HUNGARY" }
+    - { code: IC, description: "ICELAND" }
+    - { code: IN, description: "INDIA" }
+    - { code: ID, description: "INDONESIA" }
+    - { code: IR, description: "IRAN" }
+    - { code: IZ, description: "IRAQ" }
+    - { code: EI, description: "IRELAND" }
+    - { code: IS, description: "ISRAEL" }
+    - { code: IT, description: "ITALY" }
+    - { code: JM, description: "JAMAICA" }
+    - { code: JN, description: "JAN MAYEN" }
+    - { code: JA, description: "JAPAN" }
+    - { code: DQ, description: "JARVIS ISLAND" }
+    - { code: JE, description: "JERSEY" }
+    - { code: JQ, description: "JOHNSTON ATOLL" }
+    - { code: JO, description: "JORDAN" }
+    - { code: JU, description: "JUAN DE NOVA ISLAND" }
+    - { code: KZ, description: "KAZAKHSTAN" }
+    - { code: KE, description: "KENYA" }
+    - { code: KQ, description: "KINGMAN REEF" }
+    - { code: KR, description: "KIRIBATI" }
+    - { code: KN, description: "KOREA, NORTH" }
+    - { code: KS, description: "KOREA, SOUTH" }
+    - { code: KU, description: "KUWAIT" }
+    - { code: KG, description: "KYRGYZSTAN" }
+    - { code: LA, description: "LAOS" }
+    - { code: LG, description: "LATVIA" }
+    - { code: LE, description: "LEBANON" }
+    - { code: LT, description: "LESOTHO" }
+    - { code: LI, description: "LIBERIA" }
+    - { code: LY, description: "LIBYA" }
+    - { code: LS, description: "LIECHTENSTEIN" }
+    - { code: LH, description: "LITHUANIA" }
+    - { code: LU, description: "LUXEMBOURG" }
+    - { code: MC, description: "MACAU" }
+    - { code: MK, description: "MACEDONIA, THE REPUBLIC OF" }
+    - { code: MA, description: "MADAGASCAR" }
+    - { code: MI, description: "MALAWI" }
+    - { code: MY, description: "MALAYSIA" }
+    - { code: MV, description: "MALDIVES" }
+    - { code: ML, description: "MALI" }
+    - { code: MT, description: "MALTA" }
+    - { code: IM, description: "MAN, ISLE OF" }
+    - { code: RM, description: "MARSHALL ISLANDS" }
+    - { code: MB, description: "MARTINIQUE" }
+    - { code: MR, description: "MAURITANIA" }
+    - { code: MP, description: "MAURITIUS" }
+    - { code: MF, description: "MAYOTTE" }
+    - { code: MX, description: "MEXICO" }
+    - { code: FM, description: "MICRONESIA, FEDERATED STATES OF" }
+    - { code: MQ, description: "MIDWAY ISLANDS" }
+    - { code: MD, description: "MOLDOVA" }
+    - { code: MN, description: "MONACO" }
+    - { code: MG, description: "MONGOLIA" }
+    - { code: MH, description: "MONTSERRAT" }
+    - { code: MO, description: "MOROCCO" }
+    - { code: MZ, description: "MOZAMBIQUE" }
+    - { code: WA, description: "NAMIBIA" }
+    - { code: NR, description: "NAURU" }
+    - { code: BQ, description: "NAVASSA ISLAND" }
+    - { code: NP, description: "NEPAL" }
+    - { code: NL, description: "NETHERLANDS" }
+    - { code: NT, description: "NETHERLANDS ANTILLES" }
+    - { code: U2, description: "NEUTRAL ZONE" }
+    - { code: NC, description: "NEW CALEDONIA" }
+    - { code: NZ, description: "NEW ZEALAND" }
+    - { code: NU, description: "NICARAGUA" }
+    - { code: NG, description: "NIGER" }
+    - { code: NI, description: "NIGERIA" }
+    - { code: NE, description: "NIUE" }
+    - { code: NF, description: "NORFOLK ISLAND" }
+    - { code: CQ, description: "NORTHERN MARIANA ISLANDS" }
+    - { code: NO, description: "NORWAY" }
+    - { code: MU, description: "OMAN" }
+    - { code: PK, description: "PAKISTAN" }
+    - { code: PS, description: "PALAU" }
+    - { code: LQ, description: "PALMYRA ATOLL" }
+    - { code: PM, description: "PANAMA" }
+    - { code: PP, description: "PAPUA NEW GUINEA" }
+    - { code: PF, description: "PARACEL ISLANDS" }
+    - { code: PA, description: "PARAGUAY" }
+    - { code: PE, description: "PERU" }
+    - { code: RP, description: "PHILIPPINES" }
+    - { code: PC, description: "PITCAIRN ISLANDS" }
+    - { code: PL, description: "POLAND" }
+    - { code: PO, description: "PORTUGAL" }
+    - { code: RQ, description: "PUERTO RICO" }
+    - { code: QA, description: "QATAR" }
+    - { code: RE, description: "REUNION" }
+    - { code: RO, description: "ROMANIA" }
+    - { code: RS, description: "RUSSIA" }
+    - { code: RW, description: "RWANDA" }
+    - { code: SH, description: "SAINT HELENA" }
+    - { code: SC, description: "SAINT KITTS AND NEVIS" }
+    - { code: ST, description: "SAINT LUCIA" }
+    - { code: SB, description: "SAINT PIERRE AND MIQUELON" }
+    - { code: VC, description: "SAINT VINCENT AND THE GRENADINES" }
+    - { code: WS, description: "SAMOA (WESTERN SAMOA)" }
+    - { code: SM, description: "SAN MARINO" }
+    - { code: TP, description: "SAO TOME AND PRINCIPE" }
+    - { code: SA, description: "SAUDI ARABIA" }
+    - { code: SG, description: "SENEGAL" }
+    - { code: SE, description: "SEYCHELLES" }
+    - { code: SL, description: "SIERRA LEONE" }
+    - { code: SN, description: "SINGAPORE" }
+    - { code: LO, description: "SLOVAKIA" }
+    - { code: SI, description: "SLOVENIA" }
+    - { code: BP, description: "SOLOMON ISLANDS" }
+    - { code: SO, description: "SOMALIA" }
+    - { code: SF, description: "SOUTH AFRICA" }
+    - { code: SX, description: "SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS" }
+    - { code: SP, description: "SPAIN" }
+    - { code: PG, description: "SPRATLY ISLANDS" }
+    - { code: CE, description: "SRI LANKA" }
+    - { code: U3, description: "STATELESS" }
+    - { code: SU, description: "SUDAN" }
+    - { code: NS, description: "SURINAME" }
+    - { code: SV, description: "SVALBARD" }
+    - { code: WZ, description: "SWAZILAND" }
+    - { code: SW, description: "SWEDEN" }
+    - { code: SZ, description: "SWITZERLAND" }
+    - { code: SY, description: "SYRIA" }
+    - { code: TW, description: "TAIWAN" }
+    - { code: TI, description: "TAJIKISTAN" }
+    - { code: TZ, description: "TANZANIA" }
+    - { code: TH, description: "THAILAND" }
+    - { code: TO, description: "TOGO" }
+    - { code: TL, description: "TOKELAU" }
+    - { code: TN, description: "TONGA" }
+    - { code: TD, description: "TRINIDAD AND TOBAGO" }
+    - { code: TE, description: "TROMELIN ISLAND" }
+    - { code: TS, description: "TUNISIA" }
+    - { code: TU, description: "TURKEY" }
+    - { code: TX, description: "TURKMENISTAN" }
+    - { code: TK, description: "TURKS AND CAICOS ISLANDS" }
+    - { code: TV, description: "TUVALU" }
+    - { code: VQ, description: "U.S. VIRGIN ISLANDS" }
+    - { code: UG, description: "UGANDA" }
+    - { code: UP, description: "UKRAINE" }
+    - { code: U4, description: "UNION OF SOVIET SOCIALIST REPUBLICS" }
+    - { code: TC, description: "UNITED ARAB EMIRATES" }
+    - { code: UK, description: "UNITED KINGDOM" }
+    - { code: US, description: "UNITED STATES" }
+    - { code: U5, description: "UNKNOWN" }
+    - { code: UY, description: "URUGUAY" }
+    - { code: UZ, description: "UZBEKISTAN" }
+    - { code: NH, description: "VANUATU" }
+    - { code: VT, description: "VATICAN CITY (HOLY SEE)" }
+    - { code: VE, description: "VENEZUELA" }
+    - { code: VM, description: "VIETNAM" }
+    - { code: WQ, description: "WAKE ISLAND" }
+    - { code: WF, description: "WALLIS AND FUTUNA" }
+    - { code: WE, description: "WEST BANK" }
+    - { code: WI, description: "WESTERN SAHARA" }
+    - { code: YM, description: "YEMEN" }
+    - { code: YI, description: "YUGOSLAVIA" }
+    - { code: ZA, description: "ZAMBIA" }
+    - { code: ZI, description: "ZIMBABWE" }
+    
+    
+Constituent.Address.AdministrativeArea:
+  description: "States"
+  allow_update: true
+  values:
+    - { code: AL, description: "Alabama" }
+    - { code: AK, description: "Alaska" }
+    - { code: AS, description: "American Samoa" }
+    - { code: AZ, description: "Arizona" }
+    - { code: AR, description: "Arkansas" }
+    - { code: CA, description: "California" }
+    - { code: CO, description: "Colorado" }
+    - { code: CT, description: "Connecticut" }
+    - { code: DE, description: "Delaware" }
+    - { code: DC, description: "District of Columbia" }
+    - { code: FM, description: "Federated States of Micronesia" }
+    - { code: FL, description: "Florida" }
+    - { code: GA, description: "Georgia" }
+    - { code: GU, description: "Guam" }
+    - { code: HI, description: "Hawaii" }
+    - { code: ID, description: "Idaho" }
+    - { code: IL, description: "Illinois" }
+    - { code: IN, description: "Indiana" }
+    - { code: IA, description: "Iowa" }
+    - { code: KS, description: "Kansas" }
+    - { code: KY, description: "Kentucky" }
+    - { code: LA, description: "Louisiana" }
+    - { code: ME, description: "Maine" }
+    - { code: MH, description: "Marshall Islands" }
+    - { code: MD, description: "Maryland" }
+    - { code: MA, description: "Massachusetts" }
+    - { code: MI, description: "Michigan" }
+    - { code: MN, description: "Minnesota" }
+    - { code: MS, description: "Mississippi" }
+    - { code: MO, description: "Missouri" }
+    - { code: MT, description: "Montana" }
+    - { code: NE, description: "Nebraska" }
+    - { code: NV, description: "Nevada" }
+    - { code: NH, description: "New Hampshire" }
+    - { code: NJ, description: "New Jersey" }
+    - { code: NM, description: "New Mexico" }
+    - { code: NY, description: "New York" }
+    - { code: NC, description: "North Carolina" }
+    - { code: ND, description: "North Dakota" }
+    - { code: MP, description: "Northern Mariana Islands" }
+    - { code: OH, description: "Ohio" }
+    - { code: OK, description: "Oklahoma" }
+    - { code: OR, description: "Oregon" }
+    - { code: PW, description: "Palau" }
+    - { code: PA, description: "Pennsylvania" }
+    - { code: PR, description: "Puerto Rico" }
+    - { code: RI, description: "Rhode Island" }
+    - { code: SC, description: "South Carolina" }
+    - { code: SD, description: "South Dakota" }
+    - { code: TN, description: "Tennessee" }
+    - { code: TX, description: "Texas" }
+    - { code: UT, description: "Utah" }
+    - { code: VT, description: "Vermont" }
+    - { code: VI, description: "Virgin Islands" }
+    - { code: VA, description: "Virginia" }
+    - { code: WA, description: "Washington" }
+    - { code: WV, description: "West Virginia" }
+    - { code: WI, description: "Wisconsin" }
+    - { code: WY, description: "Wyoming" }
+    - { code: AP, description: "Armed Forces Pacific" }
+    - { code: AA, description: "Armed Forces Americas" }
+    - { code: AE, description: "Armed Forces Europe, the Middl" }
+    
+    
+Constituent.Address.SubAdministrativeArea:
+  description: "Sub Administrative Areas"
+  allow_update: true
+
+Constituent.EmailAddress.Type:
+  description: "Email Address Types"
+  allow_update: true
+  values:
+    - { code: SCH, description: "School" }
+    - { code: PER, description: "Personal" }
+    - { code: WRK, description: "Work" }
+

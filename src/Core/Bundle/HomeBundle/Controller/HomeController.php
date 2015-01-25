@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class HomeController extends Controller {
   
   public function homeAction() {
+    $this->authorize();
     
     return $this->render('KulaCoreHomeBundle:Home:home.html.twig', array()); 
   }
