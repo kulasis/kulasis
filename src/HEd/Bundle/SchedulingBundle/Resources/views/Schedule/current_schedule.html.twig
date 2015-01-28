@@ -1,0 +1,49 @@
+<div class="data-table-header-div">
+Current Schedule
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ db_table: 'STUD_SECTION', db_field: 'SECTION_NUMBER', field_name_override: 'Section', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_COURSE', db_field: 'COURSE_NUMBER', field_name_override: 'Course', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_COURSE', db_field: 'COURSE_TITLE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_SECTION', db_field: 'CALC_MEETS', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_SECTION_MEETINGS', db_field: 'START_TIME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_SECTION_MEETINGS', db_field: 'END_TIME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_ROOM', db_field: 'ROOM_NAME', field_name_override: 'Room', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STAFF', db_field: 'ABBREVIATED_NAME', field_name_override: 'Instructor', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_SECTION', db_field: 'CREDITS', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+	{% set lastsectionid = '' %}
+	{% set index = 1 %}
+	{% for class in classes %}
+	<tr>
+		{% if class.SECTION_ID == lastsectionid %}
+		<td class="data-table-cell-row-num">&nbsp;</td>
+		<td colspan="3">&nbsp;</td>
+		{{ kula_field({ db_table: 'STUD_SECTION', db_field: 'CALC_MEETS', input: false, value: class.meets, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_SECTION_MEETINGS', db_field: 'START_TIME', input: false, value: class.START_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_SECTION_MEETINGS', db_field: 'END_TIME', input: false, value: class.END_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_ROOM', db_field: 'ROOM_NUMBER', input: false, value: class.ROOM_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		<td colspan="4">&nbsp;</td>
+		{% else %}
+		<td class="data-table-cell-row-num">{{ index }}</td>
+		{{ kula_field({ db_table: 'STUD_SECTION', db_field: 'SECTION_NUMBER', input: false, value: class.SECTION_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_COURSE', db_field: 'COURSE_NUMBER', input: false, value: class.COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_COURSE', db_field: 'COURSE_TITLE', input: false, value: class.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_SECTION', db_field: 'CALC_MEETS', input: false, value: class.meets, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_SECTION_MEETINGS', db_field: 'START_TIME', input: false, value: class.START_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_SECTION_MEETINGS', db_field: 'END_TIME', input: false, value: class.END_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_ROOM', db_field: 'ROOM_NUMBER', input: false, value: class.ROOM_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_STAFF', db_field: 'ABBREVIATED_NAME', input: false, value: class.ABBREVIATED_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_SECTION', db_field: 'CREDITS', input: false, value: class.CREDITS_ATTEMPTED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+	</tr>
+	{% set index = index + 1 %}
+	{% endif %}
+	{% set lastsectionid = class.SECTION_ID %}
+	{% endfor %}
+</tbody>
+</table>

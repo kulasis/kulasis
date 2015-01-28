@@ -1,0 +1,7 @@
+sis_core_constituent_constituent:
+    path:     /core/constituent/constituent
+    defaults: { _controller: KulaCoreConstituentBundle:Constituent:index }
+
+sis_core_constituent_constituent_combine_delete_constituent:
+    path:     /core/constituent/constituent/combine_and_delete
+    defaults: { _controller: KulaCoreConstituentBundle:Constituent:combineAndDelete }

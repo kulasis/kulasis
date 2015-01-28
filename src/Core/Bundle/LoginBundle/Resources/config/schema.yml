@@ -8,7 +8,7 @@ Core.User:
       primary: true
       db_column_name: USER_ID
       db_column_type: serial
-      parent: Constituent.Constituent.ID
+      parent: Core.Constituent.ID
       field_type: radio
       column_name: "User ID"
       label_name: "User ID"

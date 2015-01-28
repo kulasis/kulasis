@@ -1,0 +1,50 @@
+HEd.Room:
+  description: "Room List"
+  db_table_name: STUD_ROOM
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: ROOM_ID
+      db_column_type: primary_serial
+      column_name: "Student Wait List ID"
+      label_name: "Student Wait List ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    Building:
+      description: "Building"
+      db_column_name: BUILDING
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Room.Buildings
+      column_name: "Building"
+      label_name: "Building"
+    RoomName:
+      description: "Room Name"
+      db_column_name: ROOM_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Room Name"
+      label_name: "Room Name"
+    RoomNumber:
+      description: "Room Number"
+      db_column_name: ROOM_NUMBER
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: true
+      field_type: text
+      field_size: 7
+      column_name: "Room Number"
+      label_name: "Room Number"

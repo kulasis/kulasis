@@ -1,0 +1,2 @@
+imports:
+    - { resource: schema/staff.yml }

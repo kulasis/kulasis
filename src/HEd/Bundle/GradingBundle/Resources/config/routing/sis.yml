@@ -1,0 +1,69 @@
+sis_HEd_setup_grading_markscale_detail:
+  path: /setup/grading/markscales/{mark_scale_id}/detail
+  defaults: { _controller: KulaHEdGradingBundle:GradingSetupMarkScale:detail }
+
+sis_HEd_setup_grading_markscales:
+  path: /setup/grading/markscales
+  defaults: { _controller: KulaHEdGradingBundle:GradingSetupMarkScale:index }
+
+sis_HEd_setup_grading_standings:
+  path: /setup/grading/standings
+  defaults: { _controller: KulaHEdGradingBundle:StandingSetup:index }
+
+sis_HEd_student_coursehistory_coursehistory:
+  path: /student/coursehistory/coursehistory
+  defaults: { _controller: KulaHEdGradingBundle:CourseHistory:coursehistory }
+
+sis_HEd_student_coursehistory_coursehistory_detail_edit:
+  path: /student/{id}/coursehistory/coursehistory/detail/{sub_id}
+  defaults: { _controller: KulaHEdGradingBundle:CourseHistory:detail }
+
+sis_HEd_student_coursehistory_degrees:
+  path: /student/coursehistory/degrees
+  defaults: { _controller: KulaHEdGradingBundle:Degree:degrees }
+
+sis_HEd_student_coursehistory_degrees_detail:
+  path: /student/coursehistory/{id}/detail/{sub_id}
+  defaults: { _controller: KulaHEdGradingBundle:Degree:detail }
+
+sis_HEd_student_coursehistory_gpa:
+  path: /student/coursehistory/gpa
+  defaults: { _controller: KulaHEdGradingBundle:GPA:index }
+
+sis_HEd_student_coursehistory_reports_studenttranscript_generate:
+  path: /student/coursehistory/reports/studenttranscript
+  defaults: { _controller: KulaHEdGradingBundle:StudentTranscriptReport:generate }
+  methods: [POST]
+
+sis_HEd_student_coursehistory_reports_studenttranscript:
+  path: /student/coursehistory/reports/studenttranscript
+  defaults: { _controller: KulaHEdGradingBundle:StudentTranscriptReport:index }
+  methods: [GET]
+
+sis_HEd_student_coursehistory_reports_degreeaudit:
+  path: /student/coursehistory/reports/degreeaudit
+  defaults: { _controller: KulaHEdGradingBundle:DegreeAuditReport:index }
+  methods: [GET]
+
+sis_HEd_student_coursehistory_reports_degreeaudit_generate:
+  path: /student/coursehistory/reports/degreeaudit
+  defaults: { _controller: KulaHEdGradingBundle:DegreeAuditReport:generate }
+  methods: [POST]
+
+sis_HEd_student_coursehistory_standings:
+  path: /student/coursehistory/standings
+  defaults: { _controller: KulaHEdGradingBundle:Standings:index }
+
+sis_HEd_student_coursehistory_transcriptcomments:
+  path: /student/coursehistory/transcriptcomments
+  defaults: { _controller: KulaHEdGradingBundle:TranscriptComments:index }
+
+sis_HEd_student_schedule_reports_finalgrades:
+  path: /student/schedule/reports/finalgrades
+  defaults: { _controller: KulaHEdGradingBundle:FinalGradesReport:index }
+  methods: [GET]
+
+sis_HEd_student_schedule_reports_finalgrades_generate:
+  path: /student/schedule/reports/finalgrades
+  defaults: { _controller: KulaHEdGradingBundle:FinalGradesReport:generate }
+  methods: [POST]

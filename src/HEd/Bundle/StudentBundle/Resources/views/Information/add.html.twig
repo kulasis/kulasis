@@ -1,0 +1,82 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="group-box">
+<div class="group-box-header">Search Constituents</div>
+<div class="group-box-contents group">
+{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', label: true }) }}
+{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', label: true }) }}
+{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'MIDDLE_NAME', label: true }) }}
+{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', label: true }) }}
+{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'BIRTH_DATE', label: true }) }}
+{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'SOCIAL_SECURITY_NUMBER', label: true }) }}
+</div>
+</div>
+
+{% if request.request.has('search') %}
+<div class="group-box-contents group">
+	<a href="{{ path('sis_student_information_add_constituent') }}" class="normal-link">Add Constituent</a>
+</div>
+{% endif %}
+
+{% if constituents %}
+<div class="group-box">
+<div class="group-box-header">Add Student</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_STATUS', db_field: 'GRADE', db_row_id: record_obj.getSelectedRecord.STUDENT_ID, label: true }) }}
+{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_STATUS', db_field: 'LEVEL', db_row_id: record_obj.getSelectedRecord.STUDENT_ID, label: true }) }}
+{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_STATUS', db_field: 'RESIDENT', db_row_id: record_obj.getSelectedRecord.STUDENT_ID, label: true }) }}
+{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_STATUS', db_field: 'ENTER_DATE', db_row_id: record_obj.getSelectedRecord.STUDENT_ID, label: true }) }}
+{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_STATUS', db_field: 'ENTER_CODE', db_row_id: record_obj.getSelectedRecord.STUDENT_ID, label: true }) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">New Degree</div>
+<div class="group-box-contents group">Leave blank to use existing degree.</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_DEGREES', db_field: 'DEGREE_ID', db_row_id: record_obj.getSelectedRecord.STUDENT_ID, field_name_override: 'Degree', label: true }) }}
+{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_DEGREES', db_field: 'EXPECTED_COMPLETION_TERM_ID', db_row_id: record_obj.getSelectedRecord.STUDENT_ID, field_name_override: 'Expected Completion Term', label: true }) }}
+{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_DEGREES', db_field: 'EXPECTED_GRADUATION_DATE', db_row_id: record_obj.getSelectedRecord.STUDENT_ID, field_name_override: 'Expected Graduation Date', label: true }) }}
+</div>
+</div>
+{% endif %}
+
+
+
+<div class="data-table-header-div">
+Search Results
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+	{{ kula_field_name({ add: true, db_table: 'CONS_CONSTITUENT', db_field: 'CONSTITUENT_ID', field_name_override: '&nbsp;', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'MIDDLE_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'GENDER', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'BIRTH_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'SOCIAL_SECURITY_NUMBER', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+	{% for constituent in constituents %}
+	<tr>
+		{% if constituent.STUDENT_STATUS_ID %}
+		<td class="data-table-cell-row-delete">X</td>
+		{% else %}
+		{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT', db_field: 'STUDENT_ID', value: constituent.CONSTITUENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		{% endif %}
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', db_row_id: constituent.CONSTITUENT_ID, value: constituent.LAST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', db_row_id: constituent.CONSTITUENT_ID, value: constituent.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'MIDDLE_NAME', db_row_id: constituent.CONSTITUENT_ID, value: constituent.MIDDLE_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', db_row_id: constituent.CONSTITUENT_ID, value: constituent.PERMANENT_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'GENDER', db_row_id: constituent.CONSTITUENT_ID, value: constituent.GENDER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'BIRTH_DATE', db_row_id: constituent.CONSTITUENT_ID, value: constituent.BIRTH_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'SOCIAL_SECURITY_NUMBER', db_row_id: constituent.CONSTITUENT_ID, value: constituent.SOCIAL_SECURITY_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

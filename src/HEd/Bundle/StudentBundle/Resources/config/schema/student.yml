@@ -1,0 +1,271 @@
+HEd.Student:
+  description: "Students"
+  db_table_name: STUD_STUDENT
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      parent: Core.Constituent.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      column_name: "Student ID"
+      label_name: "Student ID"
+    ConversionStudentNumber:
+      description: "Conversion Student Number"
+      db_column_name: CONV_STUDENT_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Conv Student Number"
+      label_name: "Conv Student Number"
+    AlternateNumber1:
+      description: "Alternate Student Number 1"
+      db_column_name: ALTERNATE_NUMBER_1
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Alternate Number 1"
+      label_name: "Alternate Number 1"
+    AlternateNumber2:
+      description: "Alternate Student Number 2"
+      db_column_name: ALTERNATE_NUMBER_2
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Alternate Number 2"
+      label_name: "Alternate Number 2"
+    OriginalEnterDate:
+      description: "Original Enter Date"
+      db_column_name: ORIGINAL_ENTER_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Original Enter Date"
+      label_name: "Original Enter Date"
+    OriginalEnterCode:
+      description: "Original Enter Code"
+      db_column_name: ORIGINAL_ENTER_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.EnterCode
+      column_name: "Original Enter Code"
+      label_name: "Original Enter Code"
+    OriginalEnterTerm:
+      description: "Original Enter Term"
+      db_column_name: ORIGINAL_ENTER_TERM
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Term.ID
+      field_type: chooser
+      chooser: Kula\Core\Bundle\SystemBundle\Chooser\TermChooser
+      column_name: "Original Enter Term"
+      label_name: "Original Enter Term"
+    DiplomaName:
+      description: "Diploma Name"
+      db_column_name: DIPLOMA_NAME
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Diploma Name"
+      label_name: "Diploma Name"
+    HighSchoolGraduationDate:
+      description: "High School Graduation Date"
+      db_column_name: HIGH_SCHOOL_GRADUATION_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "High School Graduation Date"
+      label_name: "High School Grad Date"
+    HighSchoolState:
+      description: "High School State"
+      db_column_name: HIGH_SCHOOL_STATE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Address.AdministrativeArea
+      column_name: "High School State"
+      label_name: "High School State"
+    HighSchoolDiplomaType:
+      description: "High School Diploma Type"
+      db_column_name: HIGH_SCHOOL_DIPLOMA_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.HighSchool.DiplomaType
+      column_name: "High School Diploma Type"
+      label_name: "HS Diploma Type"
+    GEDDate:
+      description: "GED Date"
+      db_column_name: GED_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "GED Date"
+      label_name: "GED Date"
+    GEDState:
+      description: "GED State"
+      db_column_name: GED_STATE
+      db_column_type: varchar
+      db_column_length: 5
+      field_type: lookup
+      lookup: Constituent.Address.AdministrativeArea
+      column_name: "GED State"
+      label_name: "GED State"
+    ParentGuardian:
+      description: "Parent Guardian"
+      db_column_name: PARENT_GUARDIAN
+      db_column_type: varchar
+      db_column_length: 100
+      field_type: text
+      field_size: 30
+      column_name: "Parent Guardian"
+      label_name: "Parent Guardian"
+    OriginState:
+      description: "Origin State"
+      db_column_name: ORIGIN_STATE
+      db_column_type: varchar
+      db_column_length: 5
+      field_type: lookup
+      lookup: Constituent.Address.AdministrativeArea
+      column_name: "Origin State"
+      label_name: "Origin State"
+    CitizenshipCountry:
+      description: "Citizenship Country"
+      db_column_name: CITIZENSHIP_COUNTRY
+      db_column_type: varchar
+      db_column_length: 2
+      field_type: lookup
+      lookup: Constituent.Address.Country
+      column_name: "Citizenship Country"
+      label_name: "Citizenship Country"
+    Veteran:
+      description: "Veteran"
+      db_column_name: VETERAN
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Veteran"
+      label_name: "Veteran"
+    ResidentCounty:
+      description: "Resident County"
+      db_column_name: RESIDENT_COUNTY
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Address.County
+      column_name: "Resident County"
+      label_Name: "Resident County"
+    Disability:
+      description: "Disability"
+      db_column_name: DISABILITY
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Disability"
+      label_name: "Disability"
+    SendGradesAddressType:
+      description: "Send Grades Address Type"
+      db_column_name: SEND_GRADES_ADDRESS_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Address.Type
+      column_name: "Send Grades Address Type"
+      label_name: "Send Grades Address Type"
+    VisaType:
+      description: "Visa Type"
+      db_column_name: VISA_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.VisaType
+      column_name: "Visa Type"
+      label_name: "Visa Type"
+    AlienNumber:
+      description: "Alien Number"
+      db_column_name: ALIEN_NUMBER
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: text
+      field_size: 15
+      column_name: "Alien Number"
+      label_name: "Alien Number"
+    HomeAddressID:
+      description: "Home Address ID"
+      db_column_name: HOME_ADDRESS_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Constituent.Address.ID
+      field_type: radio
+      column_name: "Home Address ID"
+      label_name: "Home Address ID"
+    ParentAddressID:
+      description: "Parent Address ID"
+      db_column_name: PARENT_ADDRESS_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Constituent.Address.ID
+      field_type: radio
+      column_name: "Parent Address ID"
+      label_name: "Parent Address ID"
+    BillingAddressID:
+      description: "Billing Address ID"
+      db_column_name: BILLING_ADDRESS_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Constituent.Address.ID
+      field_type: radio
+      column_name: "Billing Address ID"
+      label_name: "Billing Address ID"
+    DirectoryPermission:
+      description: "Directory Permission"
+      db_column_name: DIRECTORY_PERMISSION
+      db_column_type: bool
+      db_column_null: false
+      db_column_default: 1
+      field_type: checkbox
+      column_name: "Directory Permission"
+      label_name: "Directory Permission"
+    LastCollegeAttended:
+      description: "Last College Attended"
+      db_column_name: LAST_COLLEGE_ATTENDED
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      column_name: "Last College Attended"
+      label_name: "Last College Attended"
+    BillingNotes:
+      description: "Billing Notes"
+      db_column_name: BILLING_NOTES
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Billing Notes"
+      label_name: "Billing Notes"
+    LeadSource:
+      description: "Lead Source"
+      db_column_name: LEAD_SOURCE
+      db_column_type: varchar
+      db_column_length: 200
+      db_column_null: true
+      field_type: text
+      field_size: 25
+      column_name: "Lead Source"
+      label_name: "Lead Source"

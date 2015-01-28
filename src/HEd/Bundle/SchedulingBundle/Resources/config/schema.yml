@@ -1,0 +1,7 @@
+imports:
+    - { resource: schema/enrollment.yml }
+    - { resource: schema/course.yml }
+    - { resource: schema/section.yml }
+    - { resource: schema/class.yml }
+    - { resource: schema/waitlist.yml }
+    - { resource: schema/room.yml }

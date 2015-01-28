@@ -1,0 +1,35 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+
+<div class="data-table-header-div">
+Wait List
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+	{{ kula_field_name({ delete: true, db_table: 'STUD_STUDENT_WAIT_LIST', db_field: 'STUDENT_WAIT_LIST_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', field_name_override: 'Student ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'GENDER', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_WAIT_LIST', db_field: 'ADDED_TIMESTAMP', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+	{% for student in students %}
+	<tr>
+		{{ kula_field({ delete: true, db_table: 'STUD_STUDENT_WAIT_LIST', db_field: 'STUDENT_WAIT_LIST_ID', db_row_id: student.STUDENT_WAIT_LIST_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', db_row_id: student.STUDENT_WAIT_LIST_ID, value: student.PERMANENT_NUMBER, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', db_row_id: student.STUDENT_WAIT_LIST_ID, value: student.LAST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', db_row_id: student.STUDENT_WAIT_LIST_ID, value: student.FIRST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'GENDER', db_row_id: student.STUDENT_WAIT_LIST_ID, value: student.GENDER, lookup: 'C', input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_STUDENT_WAIT_LIST', db_field: 'ADDED_TIMESTAMP', db_row_id: student.STUDENT_WAIT_LIST_ID, value: student.ADDED_TIMESTAMP, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

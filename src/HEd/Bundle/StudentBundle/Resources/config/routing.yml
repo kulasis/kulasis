@@ -1,7 +1,7 @@
 _HEd_student:
     resource: "@KulaHEdStudentBundle/Resources/config/routing/sis.yml"
-    prefix: sis
+    prefix: sis/HEd
 
 _HEd_teacher:
     resource: "@KulaHEdStudentBundle/Resources/config/routing/teacher.yml"
-    prefix: teacher
+    prefix: teacher/HEd

@@ -1,0 +1,47 @@
+HEd.Student.EmergencyContact:
+  description: "Student Emergency Contacts"
+  db_table_name: STUD_STUDENT_EMERGENCY_CONTACT
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: EMERGENCY_CONTACT_ID
+      db_column_type: primary_serial
+      column_name: "Emergency Contact ID"
+      label_name: "Emergency Contact ID"
+    StudentID:
+      description: "Student ID"
+      parent: HEd.Student.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      column_name: "Student ID"
+      label_name: "Student ID"
+    Sort:
+      description: "Sort"
+      db_column_name: SORT
+      db_column_type: int
+      db_column_size: tiny
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "Sort"
+      label_name: "Sort"
+    EmergencyContactName:
+      description: "Emergency Contact Name"
+      db_column_name: EMERGENCY_CONTACT_NAME
+      db_column_type: varchar
+      db_column_length: 50
+      field_type: text
+      field_size: 20
+      column_name: "Emergency Contact Name"
+      label_name: "Emergency Contact Name"
+    EmergencyContactPhone:
+      description: "Emergency Contact Phone"
+      db_column_name: EMERGENCY_CONTACT_PHONE
+      db_column_type: varchar
+      db_column_length: 15
+      field_type: text
+      field_size: 15
+      column_name: "Emergency Contact Phone"
+      label_name: "Emergency Contact Phone"

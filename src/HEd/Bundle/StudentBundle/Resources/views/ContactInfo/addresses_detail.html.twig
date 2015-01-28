@@ -1,0 +1,39 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block detail %}
+<div class="group-box">
+<div class="group-box-header">Address Type</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'ADDRESS_TYPE', db_row_id: address.ADDRESS_ID, value: address.ADDRESS_TYPE, label: true }) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Address</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'ADDRESS', db_row_id: address.ADDRESS_ID, value: address.ADDRESS, label: true }) }}
+</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'CITY', db_row_id: address.ADDRESS_ID, value: address.CITY, label: true }) }}
+{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'STATE', db_row_id: address.ADDRESS_ID, value: address.STATE, lookup: 'C', label: true }) }}
+{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'ZIPCODE', db_row_id: address.ADDRESS_ID, value: address.ZIPCODE, label: true }) }}
+</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'COUNTRY', db_row_id: address.ADDRESS_ID, value: address.COUNTRY, label: true }) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Notes</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'NOTES', db_row_id: address.ADDRESS_ID, value: address.NOTES, label: true }) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Audit</div>
+<div class="group-box-contents group">
+{{ kula_field({ db_table: 'CONS_ADDRESS', db_field: 'CREATED_USERSTAMP', value: address.createduser_FIRST_NAME~' '~address.createduser_LAST_NAME, label: true }) }}
+{{ kula_field({ db_table: 'CONS_ADDRESS', db_field: 'CREATED_TIMESTAMP', value: address.CREATED_TIMESTAMP, label: true }) }}
+{{ kula_field({ db_table: 'CONS_ADDRESS', db_field: 'UPDATED_USERSTAMP', value: address.updateduser_FIRST_NAME~' '~address.updateduser_LAST_NAME, label: true }) }}
+{{ kula_field({ db_table: 'CONS_ADDRESS', db_field: 'UPDATED_TIMESTAMP', value: address.UPDATED_TIMESTAMP, label: true }) }}
+</div>
+</div>
+{% endblock %}

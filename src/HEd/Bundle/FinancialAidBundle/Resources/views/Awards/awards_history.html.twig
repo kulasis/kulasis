@@ -1,0 +1,48 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Awards
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+	<tr>
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ db_table: 'FAID_STUDENT_AWARD_YEAR', db_field: 'AWARD_YEAR', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'FAID_STUDENT_AWARD_YEAR_TERMS', db_field: 'ORGANIZATION_TERM_ID', field_name_override: 'Org / Term / Sq', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'FAID_STUDENT_AWARDS', db_field: 'AWARD_CODE_ID', field_name_override: 'Award', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'FAID_STUDENT_AWARD_YEAR_AWARDS', db_field: 'GROSS_AMOUNT', field_name_override: 'YR Gross Amount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'FAID_STUDENT_AWARDS', db_field: 'DISBURSEMENT_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'FAID_STUDENT_AWARDS', db_field: 'AWARD_STATUS', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'FAID_STUDENT_AWARDS', db_field: 'GROSS_AMOUNT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'FAID_STUDENT_AWARDS', db_field: 'NET_AMOUNT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'FAID_STUDENT_AWARDS', db_field: 'SHOW_ON_STATEMENT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	</tr>
+</thead>
+<tbody>
+	{% for award in awards %}
+	{% if last_award_year != award.AWARD_YEAR and loop.index > 1 %}
+	<tr>
+		<td class="data-table-cell-row-num">&nbsp;</td>
+		<td colspan="8">&nbsp;</td>
+	</tr>
+	{% endif %}
+	<tr>
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ input: false, db_table: 'FAID_STUDENT_AWARD_YEAR', db_field: 'AWARD_YEAR', value: award.AWARD_YEAR, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'FAID_STUDENT_AWARD_YEAR_TERMS', db_row_id: award.AWARD_ID, db_field: 'ORGANIZATION_TERM_ID', value: award.ORGANIZATION_TERM_ID, prepend_html: '<td>', append_html: ' / '~award.SEQUENCE~'</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'FAID_STUDENT_AWARDS', db_row_id: award.AWARD_ID, db_field: 'AWARD_CODE_ID', value: award.AWARD_CODE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'FAID_STUDENT_AWARD_YEAR_AWARDS', db_row_id: award.AWARD_ID, db_field: 'GROSS_AMOUNT', value: award.yr_GROSS_AMOUNT, prepend_html: '<td style="text-align:right;">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'FAID_STUDENT_AWARDS', db_row_id: award.AWARD_ID, db_field: 'DISBURSEMENT_DATE', value: award.DISBURSEMENT_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'FAID_STUDENT_AWARDS', db_row_id: award.AWARD_ID, db_field: 'AWARD_STATUS', value: award.AWARD_STATUS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'FAID_STUDENT_AWARDS', db_row_id: award.AWARD_ID, db_field: 'GROSS_AMOUNT', value: award.GROSS_AMOUNT, prepend_html: '<td style="text-align:right;">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'FAID_STUDENT_AWARDS', db_row_id: award.AWARD_ID, db_field: 'NET_AMOUNT', value: award.NET_AMOUNT, prepend_html: '<td style="text-align:right;">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'FAID_STUDENT_AWARDS', db_row_id: award.AWARD_ID, db_field: 'SHOW_ON_STATEMENT', value: award.SHOW_ON_STATEMENT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+	</tr>
+	{% set last_award_year = award.AWARD_YEAR %}
+	{% endfor %}
+</tbody>
+</table>
+{% endblock %}

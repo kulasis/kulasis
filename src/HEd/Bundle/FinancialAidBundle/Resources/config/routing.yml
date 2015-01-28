@@ -1,0 +1,36 @@
+sis_HEd_student_financialaid_awards:
+  path: /student/financialaid/awards
+  defaults: { _controller: KulaHEdFinancialAidBundle:Awards:index }
+
+sis_HEd_student_financialaid_awards_history:
+  path: /student/financialaid/award_history
+  defaults: { _controller: KulaHEdFinancialAidBundle:Awards:awards_history }
+
+sis_HEd_student_financialaid_billing:
+  path: /student/financialaid/billing
+  defaults: { _controller: KulaHEdFinancialAidBundle:Awards:billing }
+  methods: [GET]
+
+sis_HEd_student_financialaid_billing_history:
+  path: /student/financialaid/billing/history
+  defaults: { _controller: KulaHEdFinancialAidBundle:Awards:billing_history }
+
+sis_HEd_student_financialaid_package:
+  path: /student/financialaid/package
+  defaults: { _controller: KulaHEdFinancialAidBundle:Package:index }
+
+sis_HEd_student_financialaid_terms:
+  path: /student/financialaid/terms
+  defaults: { _controller: KulaHEdFinancialAidBundle:Terms:index }
+
+sis_HEd_home_financialaid_pending:
+  path: /home/financialaid/pending
+  defaults: { _controller: KulaHEdFinancialAidBundle:HomeFinancialAid:pending }
+
+sis_HEd_home_financialaid_posted:
+  path: /home/financialaid/posted
+  defaults: { _controller: KulaHEdFinancialAidBundle:HomeFinancialAid:posted }
+
+sis_HEd_setup_financialaid_awardcodes:
+  path: /setup/financialaid/awardcodes
+  defaults: { _controller: KulaHEdFinancialAidBundle:Codes:award_codes }

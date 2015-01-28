@@ -1,0 +1,59 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+
+{% block content %}
+
+{% for address_type in address_types %}
+<div class="data-table-header-div">
+{{ address_type.ADDRESS_TYPE_DESCRIPTION }}
+</div>
+<table id="window_window_num_data_table_addresses_{{ address_type.ADDRESS_TYPE_CODE }}" class="data-table">
+<thead>
+	<tr>
+	{{ kula_field_name({ delete: true, db_table: 'CONS_ADDRESS', db_field: 'ADDRESS_ID', prepend_html: '<th class="data-table-cell-row-header" width="20">', append_html: '</th>' }) }}
+	<th class="data-table-cell-row-header" width="20">#</th>
+	{% set addressfield = address_type.ADDRESS_TYPE_DESCRIPTION|upper~'_ADDRESS_ID' %}
+	{% if address_type.ADDRESS_TYPE_DESCRIPTION == 'Residence' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Mailing' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Work' %}
+	 {% set addresstable = 'CONS_CONSTITUENT' %}
+	{% elseif address_type.ADDRESS_TYPE_DESCRIPTION == 'Home' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Billing' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Parent' %}
+	 {% set addresstable = 'STUD_STUDENT' %}
+	{% endif %}
+	{{ kula_field_name({ db_table: addresstable, db_field: addressfield, field_name_override: 'Primary', prepend_html: '<th class="data-table-cell-row-header" width="40">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_ADDRESS', db_field: 'ACTIVE', prepend_html: '<th class="data-table-cell-row-header" width="40">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_ADDRESS', db_field: 'UNDELIVERABLE', prepend_html: '<th class="data-table-cell-row-header" width="40">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_ADDRESS', db_field: 'EFFECTIVE_DATE', prepend_html: '<th class="data-table-cell-row-header" width="100">', append_html: '</th>' }) }}
+	{% if address_type.ADDRESS_TYPE_DESCRIPTION == 'Billing' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Parent' %}
+	{{ kula_field_name({ db_table: 'CONS_ADDRESS', db_field: 'RECIPIENT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{% endif %}
+	{{ kula_field_name({ db_table: 'CONS_ADDRESS', db_field: 'ADDRESS', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_ADDRESS', db_field: 'CITY', field_name_override: 'City, St Zip', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_ADDRESS', db_field: 'SEND_BILL', prepend_html: '<th class="data-table-cell-row-header" width="70">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_ADDRESS', db_field: 'SEND_GRADES', prepend_html: '<th class="data-table-cell-row-header" width="80">', append_html: '</th>' }) }}
+	<th class="data-table-cell-row-header">...</th>
+</tr>
+</thead>
+<tbody>
+	{% for address in addresses[address_type.ADDRESS_TYPE_CODE] %}
+	<tr>
+		{{ kula_field({ delete: true, db_table: 'CONS_ADDRESS', db_field: 'ADDRESS_ID', db_row_id: address.ADDRESS_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ edit: true, db_table: addresstable, db_field: addressfield, db_row_id: record_obj.getSelectedRecord.STUDENT_ID, value: address.ADDRESS_ID, value_to_compare: primary_addresses[addressfield], prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'ACTIVE', db_row_id: address.ADDRESS_ID, value: address.ACTIVE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'UNDELIVERABLE', db_row_id: address.ADDRESS_ID, value: address.UNDELIVERABLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'EFFECTIVE_DATE', db_row_id: address.ADDRESS_ID, value: address.EFFECTIVE_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{% if address_type.ADDRESS_TYPE_DESCRIPTION == 'Billing' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Parent' %}
+		{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'RECIPIENT', db_row_id: address.ADDRESS_ID, value: address.RECIPIENT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{% endif %}
+		{{ kula_field({ input: false, db_table: 'CONS_ADDRESS', db_field: 'ADDRESS', db_row_id: address.ADDRESS_ID, value: address.ADDRESS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'CONS_ADDRESS', db_field: 'CITY', db_row_id: address.ADDRESS_ID, value: address.CITY, prepend_html: '<td>', append_html: ', ', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'CONS_ADDRESS', db_field: 'STATE', db_row_id: address.ADDRESS_ID, value: address.STATE, lookup: 'C', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'CONS_ADDRESS', db_field: 'ZIPCODE', db_row_id: address.ADDRESS_ID, value: address.ZIPCODE, append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'SEND_BILL', db_row_id: address.ADDRESS_ID, value: address.SEND_BILL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'CONS_ADDRESS', db_field: 'SEND_GRADES', db_row_id: address.ADDRESS_ID, value: address.SEND_GRADES, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		<td class="data-table-cell-row-detail"><a class="data-table-detail-link" data-row-id-prefix="address" data-row-id="{{ address.ADDRESS_ID }}" href="{{ path('sis_student_information_addresses_detail', { id : record_obj.getSelectedRecord.STUDENT_ID, sub_id : address.ADDRESS_ID }) }}">...</a></td>
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endfor %}
+{% endblock %}

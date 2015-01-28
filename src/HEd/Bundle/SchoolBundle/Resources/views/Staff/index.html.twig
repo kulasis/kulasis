@@ -1,0 +1,13 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+
+<div class="group-box">
+<div class="group-box-header">Staff Info</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, db_table: 'STUD_STAFF', db_field: 'ABBREVIATED_NAME', db_row_id: staff.STAFF_ID, value: staff.ABBREVIATED_NAME, label: true, attributes_html: { 'size' : 40 } }) }}
+{{ kula_field({ edit: true, db_table: 'STUD_STAFF', db_field: 'CONVERSION', db_row_id: staff.STAFF_ID, value: staff.CONVERSION, label: true, attributes_html: { 'size' : 40 } }) }}
+</div>
+</div>
+
+{% endblock %}

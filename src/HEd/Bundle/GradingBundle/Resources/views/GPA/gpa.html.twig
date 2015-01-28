@@ -1,0 +1,41 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+GPA
+</div>
+<table id="window_window_num_data_table_standings" class="data-table">
+<thead>
+	<tr>
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_GPA', db_field: 'LEVEL', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_GPA', db_field: 'TERM_CREDITS_ATTEMPTED', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_GPA', db_field: 'TERM_CREDITS_EARNED', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_GPA', db_field: 'TERM_QUALITY_POINTS', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_GPA', db_field: 'TERM_GPA_VALUE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_GPA', db_field: 'CUM_CREDITS_ATTEMPTED', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_GPA', db_field: 'CUM_CREDITS_EARNED', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_GPA', db_field: 'CUM_QUALITY_POINTS', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_GPA', db_field: 'CUM_GPA_VALUE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	</tr>
+</thead>
+<tbody>
+	{% for gpa_row in gpa %}
+	<tr>
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ input: false, db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', value: gpa_row.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_GPA', db_field: 'LEVEL', value: gpa_row.LEVEL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_GPA', db_field: 'TERM_CREDITS_ATTEMPTED', value: gpa_row.TERM_CREDITS_ATTEMPTED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_GPA', db_field: 'TERM_CREDITS_EARNED', value: gpa_row.TERM_CREDITS_EARNED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_GPA', db_field: 'TERM_QUALITY_POINTS', value: gpa_row.TERM_QUALITY_POINTS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_GPA', db_field: 'TERM_GPA_VALUE', value: gpa_row.TERM_GPA_VALUE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_GPA', db_field: 'CUM_CREDITS_ATTEMPTED', value: gpa_row.CUM_CREDITS_ATTEMPTED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_GPA', db_field: 'CUM_CREDITS_EARNED', value: gpa_row.CUM_CREDITS_EARNED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_GPA', db_field: 'CUM_QUALITY_POINTS', value: gpa_row.CUM_QUALITY_POINTS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_GPA', db_field: 'CUM_GPA_VALUE', value: gpa_row.CUM_GPA_VALUE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endblock %}

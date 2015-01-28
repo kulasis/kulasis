@@ -1,0 +1,23 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+{{ kula_field({ add: true, hidden: true, db_table: 'CONS_ADDRESS', db_field: 'CONSTITUENT_ID', table_row: false, value: record_obj.getSelectedRecord.STUDENT_ID, label: true }) }}
+<div class="group-box">
+<div class="group-box-header">Add Address</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, db_table: 'CONS_ADDRESS', db_field: 'ADDRESS_TYPE', table_row: false, value: address.ADDRESS_TYPE, label: true }) }}
+{{ kula_field({ add: true, db_table: 'CONS_ADDRESS', db_field: 'EFFECTIVE_DATE', table_row: false, value:"now"|date("m/d/Y"), label: true }) }}
+</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, db_table: 'CONS_ADDRESS', db_field: 'ADDRESS', table_row: false, value: address.ADDRESS, label: true }) }}
+</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, db_table: 'CONS_ADDRESS', db_field: 'CITY', table_row: false, value: address.CITY, label: true }) }}
+{{ kula_field({ add: true, db_table: 'CONS_ADDRESS', db_field: 'STATE', table_row: false, value: address.STATE, lookup: 'C', label: true }) }}
+{{ kula_field({ add: true, db_table: 'CONS_ADDRESS', db_field: 'ZIPCODE', table_row: false, value: address.ZIPCODE, label: true }) }}
+</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, db_table: 'CONS_ADDRESS', db_field: 'COUNTRY', table_row: false, value: 'US', label: true }) }}
+</div>
+</div>
+{% endblock %}

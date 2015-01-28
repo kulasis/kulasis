@@ -127,7 +127,7 @@ Core.Term:
       field_length: 20
       column_name: "Conversion Term"
       label_name: "Conversion Term"
-Core.Organization.Terms:
+Core.Organization.Term:
   description: "Organization Terms Table"
   db_table_name: CORE_ORGANIZATION_TERMS
   timestamps: true
@@ -158,4 +158,4 @@ Core.Organization.Terms:
       field_type: chooser
       chooser: Core.Term
   unique_keys:
-    OrganizationTerms: [ 'Core.Organization.Terms.OrganizationID', 'Core.Organization.Terms.TermID' ]
+    OrganizationTerms: [ 'Core.Organization.Term.OrganizationID', 'Core.Organization.Term.TermID' ]

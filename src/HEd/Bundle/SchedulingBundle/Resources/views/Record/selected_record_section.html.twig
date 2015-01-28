@@ -1,0 +1,15 @@
+<div id="window_window_num_selected_record_bar_left" class="window_selected_record_bar_left">
+<ul>
+<li>{{ kula_field({ db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_NAME', db_row_id: record_obj.getSelectedRecord.SECTION_ID, value: record_obj.getSelectedRecord.ORGANIZATION_NAME, input: false }) }}</li>
+<li>{{ kula_field({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', db_row_id: record_obj.getSelectedRecord.SECTION_ID, value: record_obj.getSelectedRecord.TERM_ABBREVIATION, input: false }) }}</li>
+<li>
+	{% if record_obj.getSelectedRecord.STATUS != '' %} ( {% endif %}
+{{ kula_field({ db_table: 'STUD_SECTION', db_field: 'SECTION_NUMBER', db_row_id: record_obj.getSelectedRecord.SECTION_ID, value: record_obj.getSelectedRecord.SECTION_NUMBER, input: false }) }}
+	{% if record_obj.getSelectedRecord.STATUS != '' %} ) {% endif %}
+</li>
+<li>{{ kula_field({ db_table: 'STUD_SECTION', db_field: 'COURSE_ID', db_row_id: record_obj.getSelectedRecord.SECTION_ID, value: record_obj.getSelectedRecord.COURSE_ID, input: false }) }}</li>
+{% if record_obj.getSelectedRecord.STAFF_ORGANIZATION_TERM_ID %}
+<li>{{ kula_field({ db_table: 'STUD_SECTION', db_field: 'STAFF_ORGANIZATION_TERM_ID', db_row_id: record_obj.getSelectedRecord.SECTION_ID, value: record_obj.getSelectedRecord.STAFF_ORGANIZATION_TERM_ID, input: false }) }}</li>
+{% endif %}
+</ul>
+</div>

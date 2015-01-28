@@ -93,6 +93,14 @@ class PosterRecord {
     return $this->fields[$field];
   }
   
+  public function getCRUD() {
+    return $this->crud;
+  }
+  
+  public function isPosted() {
+    return $this->posted;
+  }
+  
   private function getOriginalRecord() {
     if ($this->crud == self::ADD)
       return false;

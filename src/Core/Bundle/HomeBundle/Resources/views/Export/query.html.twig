@@ -1,0 +1,36 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="group-box">
+<div class="group-box-header">Query</div>
+<div class="group-box-contents group">
+<textarea name="non[query]" cols="100" rows="20">{{ query }}</textarea>
+</div>
+</div>
+
+{% if results %}
+<div class="data-table-header-div">
+Results (First 25 Rows)
+</div>
+<table id="window_window_num_data_table_usergroups" class="data-table">
+<thead>
+	<tr>
+	<th class="data-table-cell-row-header">#</th>
+	{% for column in column_names %}
+	<th class="data-table-cell-row-header">{{ column }}</th>
+	{% endfor %}
+</tr>
+</thead>
+<tbody>
+	{% for row in results %}
+	<tr>
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{% for column in column_names %}
+			<td>{{ row[column] }}</td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endif %}
+{% endblock %}

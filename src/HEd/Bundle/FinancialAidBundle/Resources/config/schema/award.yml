@@ -1,0 +1,282 @@
+HEd.FAID.Student.AwardYear:
+  description: "Student Award Years"
+  db_table_name: FAID_STUDENT_AWARD_YEAR
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: AWARD_YEAR_ID
+      db_column_type: primary_serial
+      column_name: "Award Year ID"
+      label_name: "Award Year ID"
+    StudentID:
+      description: "Student ID"
+      parent: HEd.Student.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Student ID"
+      label_name: "Student ID"
+    AwardYear:
+      description: "Award Year"
+      db_column_name: AWARD_YEAR
+      db_column_type: int
+      db_column_length: 4
+      db_column_null: false
+      field_type: text
+      field_size: 6
+      column_name: "Award Year"
+      label_name: "Award Year"
+    OrganizationID:
+      description: "Organization ID"
+      parent: Core.Organization.ID
+      db_column_name: ORGANIZATION_ID
+      db_column_type: serial
+      field_type: chooser
+      chooser: Core.Organization
+      column_name: "Organization ID"
+      label_name: "Organization ID"
+    PrimaryEFC:
+      description: "Primary EFC"
+      db_column_name: PRIMARY_EFC
+      db_column_type: int
+      db_column_null: null
+      field_type: text
+      field_length: 10
+      column_name: "Primary EFC"
+      label_name: "Primary EFC"
+    SecondaryEFC:
+      description: "Secondary EFC"
+      db_column_name: SECONDARY_EFC
+      db_column_type: int
+      db_column_null: null
+      field_type: text
+      field_length: 10
+      column_name: "Secondary EFC"
+      label_name: "Seconday EFC"
+    TotalIncome:
+      description: "Total Income"
+      db_column_name: TOTAL_INCOME
+      db_column_type: int
+      db_column_null: null
+      field_type: text
+      field_length: 10
+      column_name: "Total Income"
+      label_name: "Total Income"
+    TotalCostOfAttendance:
+      description: "Total Cost of Attendance"
+      db_column_name: TOTAL_COST_OF_ATTENDANCE
+      db_column_type: int
+      db_column_null: null
+      field_type: text
+      field_length: 10
+      column_name: "Total Cost of Attendance"
+      label_name: "Total Cost of Attendance"
+    ConversionAwardYear:
+      description: "Conversion Award Year"
+      db_column_name: CONV_AWARD_YEAR_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_length: 10
+      column_name: "Conversion Award Year Number"
+      label_name: "Conversion Award Year Number"
+
+HEd.FAID.Student.AwardYear.Term:
+  description: "Student Award Year Terms"
+  db_table_name: FAID_STUDENT_AWARD_YEAR_TERMS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: AWARD_YEAR_TERM_ID
+      db_column_type: primary_serial
+      column_name: "Award Year Term ID"
+      label_name: "Award Year Term ID"
+    AwardYearID:
+      description: "Award Year ID"
+      parent: HEd.FAID.Student.AwardYear.ID
+      db_column_name: AWARD_YEAR_ID
+      db_column_type: serial
+      column_name: "Award Year ID"
+      label_name: "Award Year ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    Sequence:
+      description: "Sequence"
+      db_column_name: SEQUENCE
+      db_column_type: int
+      db_column_size: tiny
+      db_column_length: 1
+      field_type: text
+      field_size: 4
+      column_name: "Sequence"
+      label_name: "Sequence"
+    Percentage:
+      description: "Percentage"
+      db_column_name: PERCENTAGE
+      db_column_type: int
+      db_column_size: normal
+      db_column_length: 3
+      field_type: text
+      field_size: 5
+      column_name: "Percentage"
+      label_name: "Percentage"
+  unique_keys:
+    AwardYearTerms: [ 'HEd.FAID.Student.AwardYear.Term.AwardYearID', 'HEd.FAID.Student.AwardYear.Term.OrganizationTermID', 'HEd.FAID.Student.AwardYear.Term.Sequence' ]
+
+HEd.FAID.Student.AwardYear.Award:
+  description: "Student Award Year Terms"
+  db_table_name: FAID_STUDENT_AWARD_YEAR_AWARDS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: AWARD_YEAR_AWARD_ID
+      db_column_type: primary_serial
+      column_name: "Award Year Award ID"
+      label_name: "Award Year Award ID"
+    AwardYearID:
+      description: "Award Year ID"
+      parent: HEd.FAID.Student.AwardYear.ID
+      db_column_name: AWARD_YEAR_ID
+      db_column_type: serial
+      column_name: "Award Year ID"
+      label_name: "Award Year ID"
+    AwardCodeID:
+      description: "Award Code ID"
+      parent: HEd.FAID.Code.ID
+      db_column_name: AWARD_CODE_ID
+      db_column_type: serial
+      field_type: select
+      #class: 
+      column_name: "Award Code ID"
+      label_name: "Award Code ID"
+    GrossAmount:
+      description: "Gross Amount"
+      db_column_name: GROSS_AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 7
+      column_name: "Gross Amount"
+      label_name: "Gross Amount"
+
+HEd.FAID.Student.Award:
+  description: "Student Awards"
+  db_table_name: FAID_STUDENT_AWARDS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: AWARD_ID
+      db_column_type: primary_serial
+      column_name: "Award ID"
+      label_name: "Award ID"
+    AwardYearTermID:
+      description: "Award Year Term ID"
+      parent: HEd.FAID.Student.AwardYear.Term.ID
+      db_column_name: AWARD_YEAR_TERM_ID
+      db_column_type: serial
+      column_name: "Award Year Term ID"
+      label_name: "Award Year Term ID"
+    AwardCodeID:
+      description: "Award Code ID"
+      parent: HEd.FAID.Code.ID
+      db_column_name: AWARD_CODE_ID
+      db_column_type: serial
+      field_type: select
+      #class:
+      column_name: "Award Code ID"
+      label_name: "Award Code ID"
+    DisbursementDate:
+      description: "Disbursement Date"
+      db_column_name: DISBURSEMENT_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Disbursement Date"
+      label_name: "Disbursement Date"
+    GrossAmount:
+      description: "Gross Amount"
+      db_column_name: GROSS_AMOUNT
+      db_column_type: numeric
+      db_column_length: 9
+      db_column_precision: 2
+      field_type: text
+      field_size: 8
+      column_name: "Gross Amount"
+      label_name: "Gross Amount"
+    NetAmount:
+      description: "Net Amount"
+      db_column_name: NET_AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_length: 8
+      column_name: "Net Amount"
+      label_name: "Net Amount"
+    OriginalAmount:
+      description: "Original Amount"
+      db_column_name: ORIGINAL_AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_length: 8
+      column_name: "Original Amount"
+      label_name: "Original Amount"
+    AwardStatus:
+      description: "Award Status"
+      db_column_name: AWARD_STATUS
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.FAID.Award.Status
+      column_name: "Award Status"
+      label_name: "Award Status"
+    ShowOnStatement:
+      description: "Show on Statement"
+      db_column_name: SHOW_ON_STATEMENT
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Show on Statement"
+      label_name: "Show on Statement"
+    ConversionAwardNumber:
+      description: "Conversion Award Number"
+      db_column_name: CONV_AWARD_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_length: 15
+      column_name: "Conversion Award Number"
+      label_name: "Conversion Award Number"
+      
+HEd.Billing.Transaction:
+  fields:
+    AwardID:
+      description: "FA Award ID"
+      parent: HEd.FAID.Student.Award.ID
+      db_column_name: AWARD_ID
+      db_column_type: serial
+      db_column_null: true

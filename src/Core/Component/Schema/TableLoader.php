@@ -109,6 +109,13 @@ class TableLoader {
         $structure['fields'][$field->getDBColumnName()]['default'] = $field->getDBColumnDefault();
       }
       
+      $precision = $field->getDBColumnPrecision();
+      if (isset($precision)) {
+        unset($structure['fields'][$field->getDBColumnName()]['length']);
+        $structure['fields'][$field->getDBColumnName()]['precision'] = $field->getDBColumnLength();
+        $structure['fields'][$field->getDBColumnName()]['scale'] = $precision;
+      }
+      
       if ($field->getPrimary()) {
         $structure['primary key'][] = $field->getDBColumnName();
       }
@@ -175,14 +182,14 @@ class TableLoader {
         $parentTableName = substr($field->getParent(), 0, strrpos($field->getParent(), '.'));
         // Field is the last part
         $parentFieldName = substr($field->getParent(), strrpos($field->getParent(), '.')+1, strlen($field->getParent()));
-      
+
         $parentTable = $schema->getTableForSchema($parentTableName);
         $parentField = $schema->getFieldForSchema($parentTableName, $parentFieldName);
-      
+
         $fkTableName = ''; // First letter
         $tokenziedTableName = strtok($this->db_tableName, '_');
         while ($tokenziedTableName !== false) {
-          $fkTableName .= substr($tokenziedTableName, 0, 1);
+          $fkTableName .= substr($tokenziedTableName, 0, 3);
           $tokenziedTableName = strtok('_');
         }
         
@@ -221,7 +228,7 @@ class TableLoader {
             $ukTableName = '';
             $tokenziedTableName = strtok(implode('_', $uniqueKeysForDB), '_');
             while ($tokenziedTableName !== false) {
-              $ukTableName .= substr($tokenziedTableName, 0, 1);
+              $ukTableName .= substr($tokenziedTableName, 0, 3);
               $tokenziedTableName = strtok('_');
             }
           } else {

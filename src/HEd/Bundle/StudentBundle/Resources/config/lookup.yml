@@ -1,0 +1,137 @@
+HEd.Student.Enrollment.EnterCode:
+  description: "Enrollment Enter Codes"
+  allow_update: true
+  values: 
+    - { code: "01", description: "Continuing" }
+    - { code: "02", description: "First-time, first-year" }
+    - { code: "03", description: "Mobility" }
+    - { code: "04", description: "Transfer" }
+    - { code: "05", description: "Non-degree" }
+    - { code: "06", description: "Accepted" }
+    - { code: "07", description: "Accepted Conditionally" }
+    - { code: "08", description: "Extension Programs" }
+    - { code: "09", description: "Faculty" }
+    - { code: "10", description: "Graduate" }
+    - { code: "11", description: "OAICU Cross Registration" }
+    - { code: "12", description: "Staff" }
+    - { code: "13", description: "First-time, graduate" }
+    - { code: "14", description: "Re-Admit" }
+
+HEd.Student.Enrollment.LeaveCode:
+  description: "Enrollment Leave Codes"
+  allow_update: true
+  values: 
+    - { code: "01", description: "Withdrawn" }
+    - { code: "02", description: "Leave of Absence" }
+    - { code: "03", description: "Defer" }
+    - { code: "04", description: "Dismissed" }
+    - { code: "05", description: "Deceased" }
+    - { code: "06", description: "CLOSED" }
+    - { code: "07", description: "Forfeit Acceptance" }
+
+HEd.Student.HighSchool.DiplomaType:
+  description: "High School Diploma Types"
+  allow_update: true
+  values:
+    - { code: GED, description: "GED", sort: 2 }
+    - { code: HS, description: "High School", sort: 1 }
+
+Constituent.Address.County:
+  description: "County Addresses"
+  allow_update: true
+  values:
+    - { code: OR-BE, description: "Benton, OR" }
+    - { code: OR-CL, description: "Clackamas, OR" }
+    - { code: OR-HR, description: "Hood River, OR" }
+    - { code: OR-JO, description: "Josephine, OR" }
+    - { code: OR-LA, description: "Lane, OR" }
+    - { code: OR-MA, description: "Marion, OR" }
+    - { code: OR-MU, description: "Multnomah, OR" }
+    - { code: OR-PO, description: "Polk, OR" }
+    - { code: OR-TH, description: "Thurston, OR" }
+    - { code: OR-WA, description: "Washington, OR" }
+    - { code: OR-YA, description: "Yamhill, OR" }
+    - { code: WA-CL, description: "Clark, OR" }
+    - { code: WA-KI, description: "King, OR" }
+    - { code: WA-PI, description: "Pierce, OR" }
+    - { code: WA-SP, description: "Spokane, OR" }
+
+HEd.Student.VisaType:
+  description: "Visa Type"
+  allow_update: true
+  values:
+    - { code: F, description: F }
+    - { code: H, description: H }
+    - { code: M, description: M }
+
+HEd.Student.Enrollment.Grade:
+  description: "Grade Levels"
+  allow_update: true
+  values:
+    - { code: DP01, description: "1st Year" }
+    - { code: DP02, description: "2nd Year" }
+    - { code: DP03, description: "3rd Year" }
+    - { code: DP04, description: "4th Year" }
+    - { code: DP05, description: "5th Year" }
+    - { code: DP06, description: "Artisanry", inactive_after: "2010-01-01" }
+    - { code: DP07, description: "Cross Reg" }
+    - { code: DP08, description: "Joint MFA" }
+    - { code: DP09, description: "MFA Craft", inactive_after: "2014-07-14" }
+    - { code: DP10, description: "Post-bacc" }
+    - { code: DP11, description: "Pre-thesis", inactive_after: "2010-01-01" }
+    - { code: DP12, description: "Thesis", inactive_after: "2010-01-01" }
+    - { code: DP13, description: "Freshman", inactive_after: "2010-01-01" }
+    - { code: DP14, description: "Sophomore", inactive_after: "2010-01-01" }
+    - { code: DP15, description: "Non-Degree" }
+    - { code: DP16, description: "1st Year Grad" }
+    - { code: DP17, description: "2nd Year Grad" }
+    - { code: DP18, description: "Pre-College" }
+
+HEd.Student.Enrollment.Level:
+  description: "Levels"
+  allow_update: true
+  values:
+    - { code: UG, description: "Undergraduate" }
+    - { code: GR, description: "Graduate" }
+    - { code: ND, description: "Non-Degree" }
+    - { code: NC, description: "Non-Credit" }
+
+HEd.Student.Enrollment.Resident:
+  description: "Resident"
+  allow_update: true
+  values:
+    - { code: C, description: "Commuter" }
+    - { code: R, description: "Resident" }
+    
+HEd.Student.Enrollment.ThesisStatus:
+  description: "Thesis Status"
+  allow_update: true
+  values:
+    - { code: P, description: "Pre-Thesis" }
+    - { code: T, description: "Thesis" }
+
+HEd.Student.Enrollment.Cohort:
+  description: "Cohort"
+  allow_update: true
+  values:
+    - { code: 2005, description: "2005-2006" }
+    - { code: 2006, description: "2006-2007" }
+    - { code: 2007, description: "2007-2008" }
+    - { code: 2008, description: "2008-2009" }
+    - { code: 2009, description: "2009-2010" }
+    - { code: 2010, description: "2010-2011" }
+    - { code: 2011, description: "2011-2012" }
+    - { code: 2012, description: "2012-2013" }
+    - { code: 2013, description: "2013-2014" }
+    - { code: 2014, description: "2014-2015" }
+
+HEd.Document.Status:
+  description: "Document Status"
+  allow_update: true
+  values:
+    - { code: I, description: "Incomplete" }
+    - { code: S, description: "Specific" }
+    - { code: G, description: "General" }
+    - { code: C, description: "Complete" }
+    - { code: A, description: "Approved" }
+    - { code: D, description: "Declined" }

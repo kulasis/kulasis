@@ -1,0 +1,4 @@
+services:
+  kula.HEd.scheduling.schedule:
+    class: Kula\HEd\Bundle\SchedulingBundle\Service\ScheduleService
+    arguments: ["@kula.core.db", "@kula.core.poster", "@kula.core.record", "@kula.core.session"]

@@ -76,9 +76,9 @@ class CoreUsersController extends Controller {
     try {
       // get constituent data
       $constituentPoster = $this->poster();
-      $constituentPoster->add('Constituent.Constituent', 'new', $this->request->request->get('add')['Constituent.Constituent']['new']);
+      $constituentPoster->add('Core.Constituent', 'new', $this->request->request->get('add')['Core.Constituent']['new']);
       $constituentPoster->process();
-      $constituent_id = $constituentPoster->getPosterRecord('Constituent.Constituent', 'new')->getID();
+      $constituent_id = $constituentPoster->getPosterRecord('Core.Constituent', 'new')->getID();
 
       // get user data
       $user_addition = $this->request->request->get('add')['Core.User']['new'];

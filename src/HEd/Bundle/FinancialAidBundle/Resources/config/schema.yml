@@ -1,0 +1,3 @@
+imports:
+    - { resource: schema/code.yml }
+    - { resource: schema/award.yml }

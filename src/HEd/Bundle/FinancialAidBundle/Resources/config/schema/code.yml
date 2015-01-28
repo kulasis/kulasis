@@ -1,0 +1,91 @@
+HEd.FAID.Code:
+  description: "Award Codes"
+  db_table_name: FAID_AWARD_CODE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: AWARD_CODE_ID
+      db_column_type: primary_serial
+      column_name: "Award Code ID"
+      label_name: "Award Code ID"
+    Code:
+      description: "Code"
+      db_column_name: AWARD_CODE
+      db_column_type: varchar
+      db_column_length: 25
+      db_column_null: false
+      field_type: text
+      field_size: 10
+      column_name: "Award Code"
+      label_name: "Award Code"
+    Description:
+      description: "Description"
+      db_column_name: AWARD_DESCRIPTION
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: false
+      field_type: text
+      field_size: 25
+      column_name: "Award Description"
+      label_name: "Award Description"
+    Category:
+      description: "Category"
+      db_column_name: AWARD_CATEGORY
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.FAID.Code.Category
+      column_name: "Award Category"
+      label_name: "Award Category"
+    Inactive:
+      description: "Inactive"
+      db_column_name: INACTIVE
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Inactive"
+      label_name: "Inactive"
+    ShowOnStatement:
+      description: "Show on Statement"
+      db_column_name: SHOW_ON_STATEMENT
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Show On Statement"
+      label_name: "Show On Statement"
+    TransactionCodeID:
+      description: "Transaction Code ID"
+      parent: HEd.Billing.Code.ID
+      db_column_name: TRANSACTION_CODE_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: select
+      #class:
+      column_name: "Transaction Code ID"
+      label_name: "Transaction Code ID"
+    OriginationFeePercentage:
+      description: "Origination Fee Percentage"
+      db_column_name: ORIGINAL_FEE_PERCENTAGE
+      db_column_type: numeric
+      db_column_length: 6
+      db_column_precision: 3
+      field_type: text
+      field_size: 8
+      column_name: "Origination Fee Percentage"
+      label_name: "Origination Fee Percentage"
+    ConversionAwardCode:
+      description: "Conversion Award Code"
+      db_column_name: CONV_AWARD_CODE_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Conversion Award Code"
+      label_name: "Conversion Award Code"
+      

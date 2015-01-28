@@ -2,6 +2,8 @@ imports:
     - { resource: schema/schema.yml }
     - { resource: schema/lookup.yml }
     - { resource: schema/organization.yml }
+    - { resource: schema/nonorganization.yml }
+    - { resource: schema/sequence.yml }
     - { resource: schema/navigation.yml }
     - { resource: schema/record.yml }
     - { resource: schema/user.yml }

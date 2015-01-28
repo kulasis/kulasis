@@ -1,0 +1,52 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Degrees
+<span class="data-table-header-buttons">
+	{{ kula_table_add('window_window_num_data_table_degrees', 'STUD_STUDENT_DEGREES') }}
+</span>
+</div>
+<table id="window_window_num_data_table_degrees" class="data-table">
+<thead>
+	<tr>
+	{{ kula_field_name({ delete: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'STUDENT_DEGREE_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_DEGREES', db_field: 'EFFECTIVE_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_DEGREES', db_field: 'DEGREE_ID', field_name_override: 'Degree Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_DEGREES', db_field: 'EXPECTED_COMPLETION_TERM_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_DEGREES', db_field: 'DEGREE_AWARDED', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_DEGREES', db_field: 'GRADUATION_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_DEGREES', db_field: 'CONFERRED_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+		<th class="data-table-cell-row-header">...</th>
+	</tr>
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'STUDENT_DEGREE_ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+	{{ kula_field({ add: true, hidden: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'STUDENT_ID', value: record_obj.getSelectedRecord.STUDENT_ID }) }}
+	{{ kula_field({ add: true, delete: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'STUDENT_DEGREE_ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'STUDENT_DEGREE_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'EFFECTIVE_DATE', value:"now"|date("m/d/Y") , prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'DEGREE_ID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'EXPECTED_COMPLETION_TERM_ID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'DEGREE_AWARDED', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'GRADUATION_DATE', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'CONFERRED_DATE', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'STUDENT_DEGREE_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'STUDENT_DEGREE_ID', prepend_html: '</tr>' }) }}
+	{% for degree in degrees %}
+	<tr>
+		{{ kula_field({ delete: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'STUDENT_DEGREE_ID', db_row_id: degree.STUDENT_DEGREE_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'EFFECTIVE_DATE', db_row_id: degree.STUDENT_DEGREE_ID, value: degree.EFFECTIVE_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'DEGREE_ID', db_row_id: degree.STUDENT_DEGREE_ID, value: degree.DEGREE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'EXPECTED_COMPLETION_TERM_ID', db_row_id: degree.STUDENT_DEGREE_ID, value: degree.EXPECTED_COMPLETION_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'DEGREE_AWARDED', db_row_id: degree.STUDENT_DEGREE_ID, value: degree.DEGREE_AWARDED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'GRADUATION_DATE', db_row_id: degree.STUDENT_DEGREE_ID, value: degree.GRADUATION_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_DEGREES', db_field: 'CONFERRED_DATE', db_row_id: degree.STUDENT_DEGREE_ID, value: degree.CONFERRED_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		<td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_student_coursehistory_degrees_detail', { id : record_obj.getSelectedRecord.STUDENT_ID, sub_id : degree.STUDENT_DEGREE_ID }) }}">...</a></td>
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endblock %}

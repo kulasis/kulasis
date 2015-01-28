@@ -1,0 +1,428 @@
+HEd.Degree:
+  description: "Degrees"
+  db_table_name: STUD_DEGREE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: DEGREE_ID
+      db_column_type: primary_serial
+      column_name: "Degree ID"
+      label_name: "Degree ID"
+    Name:
+      description: "Degree Name"
+      db_column_name: DEGREE_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      field_type: text
+      field_size: 20
+      column_name: "Degree Name"
+      label_name: "Degree Name"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    EffectiveTermID:
+      description: "Effective Term ID"
+      parent: Core.Term.ID
+      db_column_name: EFFECTIVE_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.Term
+      column_name: "Effective Term ID"
+      label_name: "Effective Term ID"
+    MinimumGPA:
+      description: "Minimum GPA"
+      db_column_name: MINIMUM_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Minimum GPA"
+      label_name: "Minimum GPA"
+    MinimumCredits:
+      description: "Minimum Credits"
+      db_column_name: MINIMUM_CREDITS
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Minimum Credits"
+      label_name: "Minimum Credits"
+
+HEd.Degree.Concentration:
+  description: "Concentrations"
+  db_table_name: STUD_DEGREE_CONCENTRATION
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: CONCENTRATION_ID
+      db_column_type: primary_serial
+      column_name: "Concentration ID"
+      label_name: "Concentration ID"
+    Name:
+      description: "Name"
+      db_column_name: CONCENTRATION_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Concentration Name"
+      label_name: "Concentration Name"
+    EffectiveTermID:
+      description: "Effective Term ID"
+      parent: Core.Term.ID
+      db_column_name: EFFECTIVE_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.Term
+      column_name: "Effective Term ID"
+      label_name: "Effective Term ID"
+    MinimumGPA:
+      description: "Minimum GPA"
+      db_column_name: MINIMUM_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Minimum GPA"
+      label_name: "Minimum GPA"
+    MinimumCredits:
+      description: "Minimum Credits"
+      db_column_name: MINIMUM_CREDITS
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Minimum Credits"
+      label_name: "Minimum Credits"
+
+HEd.Degree.Major:
+  description: "Majors"
+  db_table_name: STUD_DEGREE_MAJOR
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: MAJOR_ID
+      db_column_type: primary_serial
+      column_name: "Major ID"
+      label_name: "Major ID"
+    Name:
+      description: "Name"
+      db_column_name: MAJOR_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Major Name"
+      label_name: "Major Name"
+    EffectiveTermID:
+      description: "Effective Term ID"
+      parent: Core.Term.ID
+      db_column_name: EFFECTIVE_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.Term
+      column_name: "Effective Term ID"
+      label_name: "Effective Term ID"
+    MinimumGPA:
+      description: "Minimum GPA"
+      db_column_name: MINIMUM_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Minimum GPA"
+      label_name: "Minimum GPA"
+    MinimumCredits:
+      description: "Minimum Credits"
+      db_column_name: MINIMUM_CREDITS
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Minimum Credits"
+      label_name: "Minimum Credits"
+
+HEd.Degree.Minor:
+  description: "Minors"
+  db_table_name: STUD_DEGREE_MINOR
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: MINOR_ID
+      db_column_type: primary_serial
+      column_name: "Minor ID"
+      label_name: "Minor ID"
+    Name:
+      description: "Name"
+      db_column_name: MINOR_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Minor Name"
+      label_name: "Minor Name"
+    EffectiveTermID:
+      description: "Effective Term ID"
+      parent: Core.Term.ID
+      db_column_name: EFFECTIVE_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.Term
+      column_name: "Effective Term ID"
+      label_name: "Effective Term ID"
+    MinimumGPA:
+      description: "Minimum GPA"
+      db_column_name: MINIMUM_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Minimum GPA"
+      label_name: "Minimum GPA"
+    MinimumCredits:
+      description: "Minimum Credits"
+      db_column_name: MINIMUM_CREDITS
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Minimum Credits"
+      label_name: "Minimum Credits"
+      
+HEd.Student.Degree:
+  description: "Student Degrees"
+  db_table_name: STUD_STUDENT_DEGREES
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_DEGREE_ID
+      db_column_type: primary_serial
+      column_name: "Student Degree ID"
+      label_name: "Student Degree ID"
+    StudentID:
+      description: "Student ID"
+      parent: HEd.Student.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      column_name: "Student ID"
+      label_name: "Student ID"
+    EffectiveDate:
+      description: "Effective Date"
+      db_column_name: EFFECTIVE_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Effective Date"
+      label_name: "Effective Date"
+    DegreeID:
+      description: "Degree ID"
+      parent: HEd.Degree.ID
+      db_column_name: DEGREE_ID
+      db_column_type: serial
+      db_column_null: false
+      #field_type: chooser
+      #chooser: 
+      column_name: "Degree ID"
+      label_name: "Degree ID"
+    ExpectedCompletionTermID:
+      description: "Expected Completion Term ID"
+      parent: Core.Term.ID
+      db_column_name: EXPECTED_COMPLETION_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.Term
+      column_name: "Expected Completion Term ID"
+      label_name: "Expected Completion Term ID"
+    ExpectedGraduationDate:
+      description: "Expected Graduation Date"
+      db_column_name: EXPECTED_GRADUATION_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Expected Graduation Date"
+      label_name: "Expected Graduation Date"
+    DegreeAwarded:
+      description: "Degree Awarded"
+      db_column_name: DEGREE_AWARDED
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Degree Awarded"
+      label_name: "Degree Awarded"
+    GraduationDate:
+      description: "Graduation Date"
+      db_column_name: GRADUATION_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Graduation Date"
+      label_name: "Graduation Date"
+    ConferredDate:
+      description: "Conferred Date"
+      db_column_name: CONFERRED_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Conferred Date"
+      label_name: "Conferred Date"
+    ConversionDegreeNumber:
+      description: "Conversion Degree Number"
+      db_column_name: CONV_DEGREE_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Conversion Degree Number"
+      label_name: "Conversion Degree Number"
+
+HEd.Student.Degree.Concentration:
+  description: "Student Degree Concentrations"
+  db_table_name: STUD_STUDENT_DEGREES_CONCENTRATIONS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_CONCENTRATION_ID
+      db_column_type: primary_serial
+      column_name: "Student Concentration ID"
+      label_name: "Student Concentration ID"
+    StudentDegreeID:
+      description: "Student Degree ID"
+      parent: HEd.Student.Degree.ID
+      db_column_name: STUDENT_DEGREE_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Student Degree ID"
+      label_name: "Student Degree ID"
+    ConcentrationID:
+      description: "Concentration ID"
+      parent: HEd.Degree.Concentration.ID
+      db_column_name: CONCENTRATION_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      #class: 
+      column_name: "Concentration ID"
+      label_name: "Concentration ID"
+
+HEd.Student.Degree.Major:
+  description: "Student Degree Majors"
+  db_table_name: STUD_STUDENT_DEGREES_MAJORS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_MAJOR_ID
+      db_column_type: primary_serial
+      column_name: "Student Major ID"
+      label_name: "Student Major ID"
+    StudentDegreeID:
+      description: "Student Degree ID"
+      parent: HEd.Student.Degree.ID
+      db_column_name: STUDENT_DEGREE_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Student Degree ID"
+      label_name: "Student Degree ID"
+    MajorID:
+      description: "Major ID"
+      parent: HEd.Degree.Major.ID
+      db_column_name: MAJOR_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      #class: 
+      column_name: "Major ID"
+      label_name: "Major ID"
+
+HEd.Student.Degree.Minor:
+  description: "Student Degree Minors"
+  db_table_name: STUD_STUDENT_DEGREES_MINORS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_MINOR_ID
+      db_column_type: primary_serial
+      column_name: "Student Minor ID"
+      label_name: "Student Minor ID"
+    StudentDegreeID:
+      description: "Student Degree ID"
+      parent: HEd.Student.Degree.ID
+      db_column_name: STUDENT_DEGREE_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Student Degree ID"
+      label_name: "Student Degree ID"
+    MinorID:
+      description: "Minor ID"
+      parent: HEd.Degree.Minor.ID
+      db_column_name: MINOR_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      #class: 
+      column_name: "Minor ID"
+      label_name: "Minor ID"
+
+HEd.Student.Status:
+  fields:
+    SeekingDegree1ID:
+      description: "Seeking Degree 1 ID"
+      db_column_name: SEEKING_DEGREE_1_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: HEd.Student.Degree.ID
+      field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\StudentDegreeProgram
+      column_name: "Seeking Degree 1 ID"
+      label_name: "Seeking Degree 1 ID"
+    SeekingDegree2ID:
+      description: "Seeking Degree 2 ID"
+      db_column_name: SEEKING_DEGREE_2_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: HEd.Student.Degree.ID
+      field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\StudentDegreeProgram
+      column_name: "Seeking Degree 2 ID"
+      label_name: "Seeking Degree 2 ID"
+

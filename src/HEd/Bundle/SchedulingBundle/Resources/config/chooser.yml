@@ -1,0 +1,2 @@
+HEd.Course:
+  class: Kula\HEd\Bundle\SchedulingBundle\Chooser\CourseChooser

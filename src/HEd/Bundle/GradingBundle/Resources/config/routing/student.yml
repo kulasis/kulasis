@@ -1,0 +1,3 @@
+student_HEd_student_grades:
+  path: /student/grades
+  defaults: { _controller: KulaHEdCourseHistoryBundle:StudentGrades:grades }

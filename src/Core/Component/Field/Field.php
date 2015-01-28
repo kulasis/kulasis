@@ -12,4 +12,8 @@ abstract class Field {
     $this->container = $container;
   }
   
+  public function db() {
+    return $this->container->get('kula.core.db');
+  }
+  
 }

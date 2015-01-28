@@ -1,0 +1,284 @@
+HEd.Student.Status:
+  description: "Students Status"
+  db_table_name: STUD_STUDENT_STATUS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_STATUS_ID
+      db_column_type: primary_serial
+      column_name: "Student Status ID"
+      label_name: "Student Status ID"
+    StudentID:
+      description: "Student ID"
+      parent: HEd.Student.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Student ID"
+      label_name: "Student ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    Grade:
+      description: "Grade"
+      db_column_name: GRADE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Grade
+      column_name: "Grade"
+      label_name: "Grade"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    Status:
+      description: "Enrollment Status"
+      db_column_name: STATUS
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      column_name: "Status"
+      label_name: "Status"
+    EnterDate:
+      description: "Enter Date"
+      db_column_name: ENTER_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Enter Date"
+      label_name: "Enter Date"
+    EnterCode:
+      description: "Enter Code"
+      db_column_name: ENTER_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.EnterCode
+    LeaveDate:
+      description: "Leave Date"
+      db_column_name: LEAVE_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Leave Date"
+      label_name: "Leave Date"
+    LeaveCode:
+      description: "Leave Code"
+      db_column_name: LEAVE_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.LeaveCode
+      column_name: "Leave Code"
+      label_name: "Leave Code"
+    Resident:
+      description: "Resident"
+      db_column_name: RESIDENT
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Resident
+      column_name: "Resident"
+      label_name: "Resident"
+    FTE:
+      description: "FTE"
+      db_column_name: FTE
+      db_column_type: float
+      db_column_length: 5
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_length: 5
+      column_name: "FTE"
+      label_name: "FTE"
+    ThesisStatus:
+      description: "Thesis Status"
+      db_column_name: THESIS_STATUS
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.ThesisStatus
+      column_name: "Thesis Status"
+      label_name: "Thesis Status"
+    AdmissionsCounselorID:
+      description: "Adminissions Counselor ID"
+      parent: HEd.Staff.ID
+      db_column_name: ADMISSIONS_COUNSELOR_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Kula\Core\Bundle\SystemBundle\Chooser\StaffChooser
+      column_name: "Admissions Counselor ID"
+      label_name: "Admissions Counselor ID"
+    AdvisorID:
+      description: "Advisor ID"
+      parent: HEd.Staff.ID
+      db_column_name: ADVISOR_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Kula\Core\Bundle\SystemBundle\Chooser\StaffChooser
+      column_name: "Advisor ID"
+      label_name: "Advisor ID"
+    Cohort:
+      description: "Cohort"
+      db_column_name: COHORT
+      db_column_type: serial
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Cohort
+      column_name: "Cohort"
+      label_name: "Cohort"
+    EnterTermID:
+      description: "Enter Term ID"
+      db_column_name: ENTER_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Kula\Core\Bundle\SystemBundle\Chooser\TermChooser
+      column_name: "Enter Term ID"
+      label_name: "Enter Term"
+HEd.Student.Enrollment:
+  description: "Student Enrollments"
+  db_table_name: STUD_STUDENT_ENROLLMENT
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: ENROLLMENT_ID
+      db_column_type: primary_serial
+      column_name: "Enrollment ID"
+      label_name: "Enrollment ID"
+    StatusID:
+      description: "Student Status ID"
+      parent: HEd.Student.Status.ID
+      db_column_name: STUDENT_STATUS_ID
+      db_column_type: serial
+      column_name: "Student Status ID"
+      label_name: "Student Status ID"
+    EnterDate:
+      description: "Enter Date"
+      db_column_name: ENTER_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "Enter Date"
+      label_name: "Enter Date"
+    EnterCode:
+      description: "Enter Code"
+      db_column_name: ENTER_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.EnterCode
+      column_name: "Enter Code"
+      label_name: "Enter Code"
+    LeaveDate:
+      description: "Leave Date"
+      db_column_name: LEAVE_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Leave Date"
+      label_name: "Leave Date"
+    LeaveCode:
+      description: "Leave Code"
+      db_column_name: LEAVE_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.LeaveCode
+      column_name: "Leave Code"
+      label_name: "Leave Code"
+HEd.Student.Enrollment.Activity:
+  description: "Student Enrollment Activity"
+  db_table_name: STUD_STUDENT_ENROLLMENT_ACTIVITY
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: ENROLLMENT_ACTIVITY_ID
+      db_column_type: primary_serial
+      column_name: "Enrollment Activity ID"
+      label_name: "Enrollment Activity ID"
+    EnrollmentID:
+      description: "Enrollment ID"
+      parent: HEd.Student.Enrollment.ID
+      db_column_name: ENROLLMENT_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Enrollment ID"
+      label_name: "Enrollment ID"
+    Grade:
+      description: "Grade"
+      db_column_name: GRADE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Grade
+      column_name: "Grade"
+      label_name: "Grade"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    Resident:
+      description: "Resident"
+      db_column_name: RESIDENT
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Resident
+      column_name: "Resident"
+      label_name: "Resident"
+    FTE:
+      description: "FTE"
+      db_column_name: FTE
+      db_column_type: float
+      db_column_length: 5
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 7
+      column_name: "FTE"
+      label_name: "FTE"
+    ThesisStatus:
+      description: "Thesis Status"
+      db_column_name: THESIS_STATUS
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.ThesisStatus
+      column_name: "Thesis Status"
+      label_name: "Thesis Status"

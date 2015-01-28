@@ -25,6 +25,7 @@ class LookupLoader {
   
   public function loadLookup($lookup, $path) {
     
+    if ($lookup) {
     foreach($lookup as $lookupTableName => $lookupTable) {
       
       $this->lookups[$lookupTableName] = $lookupTable;
@@ -50,6 +51,7 @@ class LookupLoader {
       }
       }
       
+    }
     }
   }
   

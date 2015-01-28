@@ -1,0 +1,42 @@
+Core.NonOrganization:
+  description: "Non Organization Table"
+  db_table_name: CORE_NON_ORGANIZATION
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: NON_ORGANIZATION_ID
+      db_column_type: primary_serial
+      column_name: "Non Organization ID"
+      label_name: "Non Organization ID"
+    Type:
+      description: "Type"
+      db_column_name: NON_ORGANIZATION_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Core.NonOrganization.Type
+      column_name: "Non Organization Type"
+      label_name: "Type"
+    Name:
+      description: "Name"
+      db_column_name: NON_ORGANIZATION_NAME
+      db_column_type: varchar
+      db_column_length: 200
+      db_column_null: false
+      field_type: text
+      field_size: 30
+      column_name: "Non Organization Name"
+      label_name: "Name"
+    ConversionNonOrganizationNumber:
+      description: "Conversion Non Organization Number"
+      db_column_name: CONV_NON_ORGANIZATION_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Conversion Non Organization Number"
+      label_name: "Conv Non Org Number"

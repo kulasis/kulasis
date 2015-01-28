@@ -1,0 +1,59 @@
+{% extends 'KulaFrameworkBundle::teacher.html.twig' %}
+
+{% block content %}
+{% if section_info.TEACHER_GRADES_COMPLETED == 'Y' %}
+	<div class="alert alert-success">Grades complete.  Submitted by {{ section_info.USERNAME }} on {{ section_info.TEACHER_GRADES_COMPLETED_TIMESTAMP }}.</div>
+{% elseif gradesopen and cleared_for_submission %}
+    <div class="alert alert-info"><input type="checkbox" name="submit_grades" value="Y" /> Finalize my grades.</div>
+{% else %}
+		<div class="alert alert-error">Not cleared for submission.</div>
+{% endif %}
+<div class="data-table-header-div">
+Grades
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+	{{ kula_field_name({ delete: true, db_table: 'STUD_STUDENT_CLASSES', db_field: 'STUDENT_CLASS_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', field_name_override: 'Student ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'MARK', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+	{% for student in students %}
+	<tr>
+		{{ kula_field({ delete: true, db_table: 'STUD_STUDENT_CLASSES', db_field: 'STUDENT_CLASS_ID', db_row_id: student.STUDENT_CLASS_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', db_row_id: student.STUDENT_CLASS_ID, value: student.PERMANENT_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', db_row_id: student.STUDENT_CLASS_ID, value: student.LAST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', db_row_id: student.STUDENT_CLASS_ID, value: student.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{% if (gradesopen and student.TEACHER_SET != 'N') and section_info.TEACHER_GRADES_COMPLETED != 'Y' %}
+
+			{% if student.COURSE_HISTORY_ID %}
+			{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'MARK', db_row_id: student.COURSE_HISTORY_ID, value: student.MARK, MARK_SCALE_ID: student.MARK_SCALE_ID, TEACHER: true, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+			{% else %}
+			{{ kula_field({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'MARK', table_row: false, db_row_id: student.STUDENT_CLASS_ID, MARK_SCALE_ID: student.MARK_SCALE_ID, TEACHER: true, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}	
+			{% endif %}
+		
+		{% else %}
+		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'MARK', db_row_id: student.COURSE_HISTORY_ID, value: student.MARK, MARK_SCALE_ID: student.MARK_SCALE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{% endif %}
+	</tr>
+	{% if student.ALLOW_COMMENTS == 'Y' or student.REQUIRE_COMMENTS == 'Y' %}
+		<tr>
+			<td class="data-table-cell-row-num">{{ loop.index }}</td>
+			{% if section_info.TEACHER_GRADES_COMPLETED != 'Y' %}
+      {{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COMMENTS', db_row_id: student.COURSE_HISTORY_ID, value: student.COMMENTS, prepend_html: '<td colspan="5">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+      {% else %}
+      {{ kula_field({ input: false, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COMMENTS', db_row_id: student.COURSE_HISTORY_ID, value: student.COMMENTS, prepend_html: '<td colspan="5">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+      {% endif %}
+    </tr>
+  {% else %}
+	{% endif %}
+	{% endfor %}
+</tbody>
+</table>
+{% endblock %}

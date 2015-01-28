@@ -1,0 +1,37 @@
+<div id="window_window_num_selected_record_bar_left" class="window_selected_record_bar_left">
+<ul>
+{% if record_obj.getSelectedRecord.ORGANIZATION_NAME %}
+{{ kula_field({ db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_NAME', db_row_id: record_obj.getSelectedRecord.STUDENT_STATUS_ID, value: record_obj.getSelectedRecord.ORGANIZATION_NAME, input: false, prepend_html: '<li>', append_html: '</li>' }) }}
+<li>{{ kula_field({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', db_row_id: record_obj.getSelectedRecord.STUDENT_STATUS_ID, value: record_obj.getSelectedRecord.TERM_ABBREVIATION, input: false }) }}</li>
+{% endif %}
+<li>
+	{% if record_obj.getSelectedRecord.STATUS != '' %}({% endif %}
+	{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', db_row_id: record_obj.getSelectedRecord.STUDENT_STATUS_ID, value: record_obj.getSelectedRecord.LAST_NAME, input: false }) }},
+{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', db_row_id: record_obj.getSelectedRecord.STUDENT_STATUS_ID, value: record_obj.getSelectedRecord.FIRST_NAME, input: false }) }}
+{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'MIDDLE_NAME', db_row_id: record_obj.getSelectedRecord.STUDENT_STATUS_ID, value: record_obj.getSelectedRecord.MIDDLE_NAME, input: false })|first }}
+
+	{% if record_obj.getSelectedRecord.STATUS != '' %}){% endif %}
+</li>
+{% if record_obj.getSelectedRecord.PREFERRED_NAME %}
+<li>
+{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'PREFERRED_NAME', db_row_id: record_obj.getSelectedRecord.STUDENT_STATUS_ID, value: '"'~record_obj.getSelectedRecord.PREFERRED_NAME~'"', input: false }) }}
+</li>
+{% endif %}
+<li>{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'GENDER', db_row_id: record_obj.getSelectedRecord.STUDENT_STATUS_ID, value: record_obj.getSelectedRecord.GENDER, lookup: 'C', input: false }) }}</li>
+{% if record_obj.getSelectedRecord.GRADE %}
+<li>{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'GRADE', db_row_id: record_obj.getSelectedRecord.STUDENT_STATUS_ID, value: record_obj.getSelectedRecord.GRADE, input: false }) }}</li>
+<li>{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'RESIDENT', db_row_id: record_obj.getSelectedRecord.STUDENT_STATUS_ID, value: record_obj.getSelectedRecord.RESIDENT, lookup: 'C', input: false }) }}</li>
+{% endif %}
+<li>{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', db_row_id: record_obj.getSelectedRecord.STUDENT_STATUS_ID, value: record_obj.getSelectedRecord.PERMANENT_NUMBER, input: false }) }}</li>
+</ul>
+</div>
+<div id="window_window_num_selected_record_bar_right" class="window_selected_record_bar_right">
+	{% if record_obj.getSelectedRecord.DIRECTORY_PERMISSION == 'N' %}
+	<div class="student-alert" style="background-color:#F5B800;padding:4px;font-weight:bold;color:black;">
+		Directory
+	</div>
+	{% endif %}
+	<div class="student-alert">
+		{{ record_obj.getSelectedRecord.holds }}
+	</div>
+</div>

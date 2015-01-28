@@ -1,0 +1,20 @@
+Core.Sequence:
+  description: "Sequence Table"
+  db_table_name: CORE_SEQUENCE
+  timestamps: false
+  fields:
+    SequenceKey:
+      description: "ID"
+      primary: true
+      db_column_name: SEQUENCE_KEY
+      db_column_type: varchar
+      db_column_length: 25
+      column_name: "Sequence Key"
+      label_name: "Sequence Key"
+    NextNumber:
+      description: "Next Number"
+      db_column_name: NEXT_NUMBER
+      db_column_type: varchar
+      db_column_length: 50
+      column_name: "Next Number"
+      label_name: "Next Number"

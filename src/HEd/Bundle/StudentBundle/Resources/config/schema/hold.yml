@@ -1,0 +1,98 @@
+HEd.Hold:
+  description: "Holds"
+  db_table_name: STUD_HOLD
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: HOLD_ID
+      db_column_type: primary_serial
+      column_name: "Hold ID"
+      label_name: "Hold ID"
+    Code:
+      description: "Code"
+      db_column_name: HOLD_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      field_type: text
+      field_size: 7
+      column_name: "Code"
+      label_name: "Code"
+    Name:
+      description: "Hold Name"
+      db_column_name: HOLD_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      field_type: text
+      field_size: 20
+      column_name: "Hold Name"
+      label_name: "Name"
+    Description:
+      description: "Hold Description"
+      db_column_name: HOLD_DESCRIPTION
+      db_column_type: varchar
+      db_column_length: 200
+      field_type: text
+      field_size: 35
+      column_name: "Hold Description"
+      label_name: "Description"
+    AlertDisplay:
+      description: "Alert Display"
+      db_column_name: ALERT_DISPLAY
+      db_column_type: varchar
+      db_column_length: 20
+      field_type: text
+      field_size: 15
+      column_name: "Alert Display"
+      label_name: "Alert Display"
+    Inactive:
+      description: "Inactive"
+      db_column_name: INACTIVE
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Inactive"
+      label_name: "Inactive"
+    ConversionHoldNumber:
+      description: "Conversion Hold Number"
+      db_column_name: CONV_HOLD_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_length: 20
+      column_name: "Conversion Hold Number"
+      label_name: "Conversion Hold Number"
+
+HEd.Student.Hold:
+  description: "Student Holds"
+  db_table_name: STUD_STUDENT_HOLDS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_HOLD_ID
+      db_column_type: primary_serial
+      column_name: "Student Hold ID"
+      label_name: "Student Hold ID"
+    StudentID:
+      description: "Student ID"
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      db_column_null: false
+      parent: HEd.Student.ID
+      column_name: "Student ID"
+      label_name: "Student ID"
+    HoldID:
+      description: "Hold ID"
+      db_column_name: HOLD_ID
+      db_column_type: serial
+      db_column_null: false
+      parent: HEd.Hold.ID
+      field_type: select
+      class: Kula\HEd\Bundle\StudentBundle\Field\Hold
+      column_name: "Hold ID"
+      label_name: "Hold"

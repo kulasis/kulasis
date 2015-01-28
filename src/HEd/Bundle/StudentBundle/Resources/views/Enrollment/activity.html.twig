@@ -1,0 +1,72 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<p>
+<a class="normal-link"  data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_student_enrollment_enrollmentdetail', { student_status_id: status.STUDENT_STATUS_ID }) }}">Back to Enrollments</a>
+</p>
+
+<div class="group-box">
+<div class="group-box-header">Status</div>
+<div class="group-box-contents group">
+{{ kula_field({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', field_name_override: 'Term', value: status.TERM_ABBREVIATION, label: true }) }}
+{{ kula_field({ db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_NAME', value: status.ORGANIZATION_NAME, label: true }) }}
+{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'GRADE', value: status.GRADE, label: true }) }}
+{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'LEVEL', value: status.LEVEL, label: true }) }}
+{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'RESIDENT', value: status.RESIDENT, label: true }) }}
+{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'FTE', value: status.FTE, label: true }) }}
+{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'THESIS_STATUS', value: status.THESIS_STATUS, label: true }) }}
+</div>
+</div>
+
+<div class="group-box">
+<div class="group-box-header">Enrollment</div>
+<div class="group-box-contents group">
+{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT', db_field: 'ENTER_DATE', value: enrollment.ENTER_DATE, label: true }) }}
+{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT', db_field: 'ENTER_CODE', value: enrollment.ENTER_CODE, label: true }) }}
+{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT', db_field: 'LEAVE_DATE', value: enrollment.LEAVE_DATE, label: true }) }}
+{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT', db_field: 'LEAVE_CODE', value: enrollment.LEAVE_CODE, label: true }) }}
+</div>
+</div>
+
+<div class="group-box">
+<div class="group-box-header">Audit</div>
+<div class="group-box-contents group">
+{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT', db_field: 'CREATED_USERSTAMP', value: enrollment.createduser_FIRST_NAME~' '~enrollment.createduser_LAST_NAME, label: true }) }}
+{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT', db_field: 'CREATED_TIMESTAMP', value: enrollment.CREATED_TIMESTAMP, label: true }) }}
+{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT', db_field: 'UPDATED_USERSTAMP', value: enrollment.updateduser_FIRST_NAME~' '~enrollment.updateduser_LAST_NAME, label: true }) }}
+{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT', db_field: 'UPDATED_TIMESTAMP', value: enrollment.UPDATED_TIMESTAMP, label: true }) }}
+</div>
+</div>
+
+<div class="data-table-header-div">
+Enrollment Activity
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'EFFECTIVE_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'GRADE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'LEVEL', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'THESIS_STATUS', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'RESIDENT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'FTE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'SEEKING_DEGREE_1_ID', field_name_override: 'Seeking Degree 1', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'SEEKING_DEGREE_2_ID', field_name_override: 'Seeking Degree 2', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+	{% for act in activity %}
+	<tr>
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'EFFECTIVE_DATE', db_row_id: act.ENROLLMENT_ACTIVITY_ID, value: act.EFFECTIVE_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'GRADE', db_row_id: act.ENROLLMENT_ACTIVITY_ID, value: act.GRADE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'LEVEL', db_row_id: act.ENROLLMENT_ACTIVITY_ID, value: act.LEVEL, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'THESIS_STATUS', db_row_id: act.ENROLLMENT_ACTIVITY_ID, value: act.THESIS_STATUS, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'RESIDENT', db_row_id: act.ENROLLMENT_ACTIVITY_ID, value: act.RESIDENT, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'FTE', db_row_id: act.ENROLLMENT_ACTIVITY_ID, value: act.FTE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'SEEKING_DEGREE_1_ID', STUDENT_ID: record_obj.getSelectedRecordID(), db_row_id: act.ENROLLMENT_ACTIVITY_ID, value: act.SEEKING_DEGREE_1_ID, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'STUD_STUDENT_ENROLLMENT_ACTIVITY', db_field: 'SEEKING_DEGREE_2_ID', db_row_id: act.ENROLLMENT_ACTIVITY_ID, value: act.SEEKING_DEGREE_2_ID, STUDENT_ID: record_obj.getSelectedRecordID(), input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,250 @@
+HEd.Course:
+  description: "Courses"
+  db_table_name: STUD_COURSE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: COURSE_ID
+      db_column_type: primary_serial
+      column_name: "Course ID"
+      label_name: "Course ID"
+    CourseNumber:
+      description: "Course Number"
+      db_column_name: COURSE_NUMBER
+      db_column_type: varchar
+      db_column_length: 15
+      field_type: text
+      field_size: 8
+      column_name: "Course Number"
+      label_name: "Course Number"
+    CourseTitle:
+      description: "Course Title"
+      db_column_name: COURSE_TITLE
+      db_column_type: varchar
+      db_column_length: 100
+      field_type: text
+      field_size: 25
+      column_name: "Course Title"
+      label_name: "Course Title"
+    ShortTitle:
+      description: "Short Title"
+      db_column_name: SHORT_TITLE
+      db_column_type: varchar
+      db_column_length: 20
+      db_column_null: true
+      field_type: text
+      field_size: 15
+      column_name: "Short Title"
+      label_name: "Short Title"
+    ConversionCourseNumber:
+      description: "Conversion Course Number"
+      db_column_name: CONV_COURSE_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 15
+      column_name: "Conversion Course Number"
+      label_name: "Conversion Course Number"
+    Type:
+      description: "Course Type"
+      db_column_name: COURSE_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Course.Type
+      column_name: "Course Type"
+      label_name: "Course Type"
+    Description:
+      description: "Course Description"
+      db_column_name: COURSE_DESCRIPTION
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Course Description"
+      label_name: "Course Description"
+    PrerequisiteDescription:
+      description: "Prerequisite Description"
+      db_column_name: PREREQUISITE_DESCRIPTION
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Prerequisite Description"
+      label_name: "Prerequisite Description"
+    Credits:
+      description: "Credits"
+      db_column_name: CREDITS
+      db_column_type: float
+      db_column_length: 5
+      db_column_precision: 3
+      db_column_null: false
+      field_type: text
+      field_size: 5
+      column_name: "Credits"
+      label_name: "Credits"
+    Department:
+      description: "Department"
+      db_column_name: DEPARTMENT
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: lookup
+      lookup: HEd.Course.Department
+      column_name: "Department"
+      label_name: "Department"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+HEd.Course.Book:
+  description: "Courses"
+  db_table_name: STUD_COURSE_BOOK
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: COURSE_BOOK_ID
+      db_column_type: primary_serial
+      column_name: "Course Book ID"
+      label_name: "Course Book ID"
+    CourseID:
+      description: "Course ID"
+      parent: HEd.Course.ID
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      column_name: "Course ID"
+      label_name: "Course ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    ISBNNumber:
+      description: "ISBN Number"
+      db_column_name: ISBN_NUMBER
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: false
+      field_type: text
+      field_size: 15
+      column_name: "ISBN Number"
+      label_name: "ISBN Number"
+    Publisher:
+      description: "Publisher"
+      db_column_name: PUBLISHER
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: false
+      field_type: text
+      field_size: 15
+      column_name: "Publisher"
+      label_name: "Publisher"
+    Title:
+      description: "Title"
+      db_column_name: TITLE
+      db_column_type: varchar
+      db_column_length: 150
+      db_column_null: true
+      field_type: text
+      field_size: 25
+      column_name: "Title"
+      label_name: "Title"
+    Author:
+      description: "Author"
+      db_column_name: AUTHOR
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      field_type: text
+      field_size: 15
+      column_name: "Author"
+      label_name: "Author"
+    Cost:
+      description: "Cost"
+      db_column_name: COST
+      db_column_type: numeric
+      db_column_length: 5
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "Cost"
+      label_name: "Cost"
+HEd.Course.Corequisite:
+  description: "Course Corequisite"
+  db_table_name: STUD_COURSE_COREQUISITES
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: COURSE_COREQUISITE_ID
+      db_column_type: primary_serial
+      column_name: "Course Corequisite ID"
+      label_name: "Course Corequisite ID"
+    CourseID:
+      description: "Course ID"
+      parent: HEd.Course.ID
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      column_name: "Course ID"
+      label_name: "Course ID"
+    CorequisiteCourseID:
+      description: "Corequisite Course ID"
+      parent: HEd.Course.ID
+      db_column_name: COREQUISITE_COURSE_ID
+      db_column_type: serial
+      field_type: chooser
+      chooser: HEd.Course
+      column_name: "Corequisite Course ID"
+      label_name: "Corequisite Course ID"
+HEd.Course.Prerequisite:
+  description: "Course Prerequisite"
+  db_table_name: STUD_COURSE_PREREQUISITES
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: COURSE_PREREQUISITE_ID
+      db_column_type: primary_serial
+      column_name: "Course Prerequisite ID"
+      label_name: "Course Prerequisite ID"
+    CourseID:
+      description: "Course ID"
+      parent: HEd.Course.ID
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      column_name: "Course ID"
+      label_name: "Course ID"
+    PrerequisiteCourseID:
+      description: "Prerequisite Course ID"
+      parent: HEd.Course.ID
+      db_column_name: PREREQUISITE_COURSE_ID
+      db_column_type: serial
+      field_type: chooser
+      chooser: HEd.Course
+      column_name: "Prerequisite Course ID"
+      label_name: "Prerequisite Course ID"
+    MinimumMark:
+      description: "Minimum Mark"
+      db_column_name: MINIMUM_MARK
+      db_column_type: varchar
+      db_column_length: 2
+      field_type: text
+      field_size: 5
+      column_name: "Minimum Mark"
+      label_name: "Minimum Mark"

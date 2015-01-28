@@ -107,6 +107,10 @@ class FieldLoader {
     $this->db_columnLength = $columnLength;
   }
   
+  public function getDBColumnPrecision() {
+    return $this->db_columnPrecision;
+  }
+  
   public function setDBColumnPrecision($columnPrecision) {
     $this->db_columnPrecision = $columnPrecision;
   }
@@ -202,7 +206,7 @@ class FieldLoader {
         $catalogFieldsForDB['LABEL_POSITION'] = $this->labelPosition;
       if ($this->updateField) {
         // Lookup parent schema field ID
-        $updateSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
+        $updateSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields', array('target' => 'schema'))
           ->fields('schema_fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
           ->condition('FIELD_NAME', $this->updateField)
           ->execute()->fetch();
@@ -212,12 +216,12 @@ class FieldLoader {
       
       if (count($catalogFieldsForDB) > 0) {
         $catalogFieldsForDB['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-        $db->db_update('CORE_SCHEMA_FIELDS')->fields($catalogFieldsForDB)->condition('FIELD_NAME', $this->table->getName() . '.' .$this->name)->execute();
+        $db->db_update('CORE_SCHEMA_FIELDS', array('target' => 'schema'))->fields($catalogFieldsForDB)->condition('FIELD_NAME', $this->table->getName() . '.' .$this->name)->execute();
       }
     } else {
       
       // Lookup table ID
-      $tableID = $db->db_select('CORE_SCHEMA_TABLES', 'schema_tables')
+      $tableID = $db->db_select('CORE_SCHEMA_TABLES', 'schema_tables', array('target' => 'schema'))
           ->fields('schema_tables', array('SCHEMA_TABLE_ID'))
           ->condition('TABLE_NAME', $this->table->getName())
           ->execute()->fetch();
@@ -258,7 +262,7 @@ class FieldLoader {
         $catalogFieldsForDB['LABEL_POSITION'] = $this->labelPosition;
       if ($this->updateField) {
         // Lookup parent schema field ID
-        $updateSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
+        $updateSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields', array('target' => 'schema'))
           ->fields('schema_fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
           ->condition('FIELD_NAME', $this->updateField)
           ->execute()->fetch();
@@ -266,7 +270,7 @@ class FieldLoader {
         $catalogFieldsForDB['UPDATE_FIELD_ID'] = ($updateSchemaField['SCHEMA_FIELD_ID']) ? $updateSchemaField['SCHEMA_FIELD_ID'] : null;
       }
       $catalogFieldsForDB['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-      $db->db_insert('CORE_SCHEMA_FIELDS')->fields($catalogFieldsForDB)->execute();
+      $db->db_insert('CORE_SCHEMA_FIELDS', array('target' => 'schema'))->fields($catalogFieldsForDB)->execute();
     }
     
   }

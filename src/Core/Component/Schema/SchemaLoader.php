@@ -60,7 +60,7 @@ class SchemaLoader {
     foreach($schemaArray as $tableName => $table) {
       
       $this->loadTable($bundlePath, $tableName, 
-                       $table['description'],
+                       isset($table['description']) ? $table['description'] : null,
                        isset($table['db_table_name']) ? $table['db_table_name'] : null, 
                        isset($table['class']) ? $table['class'] : null, 
                        isset($table['qualified']) ? $table['qualified'] : null, 
@@ -70,6 +70,8 @@ class SchemaLoader {
       if (isset($table['fields']) AND count($table['fields']) > 0) {
         
         foreach($table['fields'] as $fieldName => $field) {
+          
+          try {
           
           $this->loadField($bundlePath, $tableName, 
                            $fieldName, 
@@ -95,6 +97,13 @@ class SchemaLoader {
                            isset($field['label_position']) ? $field['label_position'] : null,
                            isset($field['update_field']) ? $field['update_field'] : null
           );
+          
+          } catch(\Symfony\Component\Debug\Exception\ContextErrorException $e) {
+            echo $fieldName;
+            var_dump($field);
+            throw new \Symfony\Component\Debug\Exception\ContextErrorException($e->getMessage(), $e->getCode(), $e->getSeverity(), $e->getFile(), $e->getLine(), $e->getContext());
+          
+          }
           
         } // end foreach fields
         

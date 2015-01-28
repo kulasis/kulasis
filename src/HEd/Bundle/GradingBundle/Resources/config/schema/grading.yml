@@ -1,0 +1,165 @@
+HEd.MarkScale:
+  description: "Mark Scales"
+  db_table_name: STUD_MARK_SCALE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: MARK_SCALE_ID
+      db_column_type: primary_serial
+      column_name: "Mark Scale ID"
+      label_name: "Mark Scale ID"
+    Name:
+      description: "Name"
+      db_column_name: MARK_SCALE_NAME
+      db_column_type: varchar
+      db_column_length: 20
+      field_type: text
+      field_size: 15
+      column_name: "Mark Scale Name"
+      label_name: "Mark Scale Name"
+    Audit:
+      description: "Audit"
+      db_column_name: AUDIT
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Audit"
+      label_name: "Audit"
+    InactiveAfter:
+      description: "Inactive After"
+      db_column_name: INACTIVE_AFTER
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Inactive After"
+      label_name: "Inactive After"
+
+HEd.MarkScale.Mark:
+  description: "Marks for Mark Scale"
+  db_table_name: STUD_MARK_SCALE_MARKS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: MARK_SCALE_MARK_ID
+      db_column_type: primary_serial
+      column_name: "Mark Scale Mark ID"
+      label_name: "Mark Scale Mark ID"
+    MarkScaleID:
+      description: "Mark Scale ID"
+      parent: HEd.MarkScale.ID
+      db_column_name: MARK_SCALE_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Mark Scale ID"
+      label_name: "Mark Scale ID"
+    Sort:
+      description: "Sort"
+      db_column_name: SORT
+      db_column_type: int
+      db_column_size: tiny
+      db_column_null: true
+      field_type: text
+      field_size: 4
+      column_name: "Sort"
+      label_name: "Sort"
+    Mark:
+      description: "Mark"
+      db_column_name: MARK
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: text
+      field_size: 4
+      column_name: "Mark"
+      label_name: "Mark"
+    GetsCredit:
+      description: "Gets Credit"
+      db_column_name: GETS_CREDIT
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Gets Credit"
+      label_name: "Gets Credit"
+    GetsCreditAttempted:
+      description: "Gets Credit Attempted"
+      db_column_name: GETS_CREDIT_ATTEMPTED
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Gets Credit Attempted"
+      label_name: "Gets Credit Attempted"
+    AllowTeacher:
+      description: "Allow Teacher"
+      db_column_name: ALLOW_TEACHER
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Allow Teacher"
+      label_name: "Allow Teacher"
+    AllowComments:
+      description: "Allow Comments"
+      db_column_name: ALLOW_COMMENTS
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Allow Comments"
+      label_name: "Allow Comments"
+    RequireComments:
+      description: "Require Comments"
+      db_column_name: REQUIRE_COMMENTS
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Require Comments"
+      label_name: "Require Comments"
+    GPAValue:
+      description: "GPA Value"
+      db_column_name: GPA_VALUE
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "GPA Value"
+      label_name: "GPA Value"
+    InactiveAfter:
+      description: "Inactive After"
+      db_column_name: INACTIVE_AFTER
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Inactive After"
+      label_name: "Inactive After"
+
+HEd.Course:
+  fields:
+    MarkScaleID:
+      description: "Mark Scale ID"
+      parent: HEd.MarkScale.ID
+      db_column_name: MARK_SCALE_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Mark Scale ID"
+      label_name: "Mark Scale ID"
+
+HEd.Student.Class:
+  fields:
+    MarkScaleID:
+      description: "Mark Scale ID"
+      db_column_name: MARK_SCALE_ID
+      db_column_type: serial
+      parent: HEd.MarkScale.ID
+      field_type: select
+      column_name: "Mark Scale ID"
+      label_name: "Mark Scale ID"

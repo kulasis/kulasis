@@ -1,0 +1,52 @@
+sis_HEd_school_schoolsetup_general:
+  path: /setup/school/general
+  defaults: { _controller: KulaHEdSchoolBundle:SchoolSetup:general }
+
+sis_HEd_school_schoolsetup_gradelevels:
+  path: /setup/school/gradelevels
+  defaults: { _controller: KulaHEdSchoolBundle:SchoolSetup:gradelevels }
+
+sis_HEd_school_schoolsetup_levels:
+  path: /setup/school/levels
+  defaults: { _controller: KulaHEdSchoolBundle:SchoolSetup:levels }
+
+sis_HEd_school_schoolsetup_levels_fte:
+  path: /setup/school/levels/{level_id}/fte
+  defaults: { _controller: KulaHEdSchoolBundle:SchoolSetup:fte }
+  
+sis_HEd_school_staff:
+  path: /staff
+  defaults: { _controller: KulaHEdSchoolBundle:Staff:index }
+
+sis_HEd_school_staff_add:
+  path: /staff/add
+  defaults: { _controller: KulaHEdSchoolBundle:Staff:add }
+
+sis_HEd_school_staff_add_constituent:
+  path: /staff/add/constituent
+  defaults: { _controller: KulaHEdSchoolBundle:Staff:add_constituent }
+  methods: [GET]
+
+sis_HEd_school_staff_chooser:
+  path: /staff/chooser
+  defaults: { _controller: KulaHEdSchoolBundle:Staff:staff_chooser }
+  methods: [GET]
+
+sis_HEd_school_staff_create_constituent:
+  path: /staff/add/constituent
+  defaults: { _controller: KulaHEdSchoolBundle:Staff:create_constituent }
+  methods: [POST]
+
+sis_HEd_school_staff_delete:
+  path: /staff/delete
+  defaults: { _controller: KulaHEdSchoolBundle:Staff:delete }
+  methods: [POST]
+
+sis_HEd_school_staff_orgterm_chooser:
+  path: /staff/organizationterm/chooser
+  defaults: { _controller: KulaHEdSchoolBundle:Staff:staff_organizationterm_chooser }
+  methods: [GET]
+
+sis_HEd_school_staff_orgterms:
+  path: /staff/orgterms
+  defaults: { _controller: KulaHEdSchoolBundle:Staff:staff_orgterms }

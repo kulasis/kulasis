@@ -1,0 +1,73 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+{#
+<div class="group-box">
+<div class="group-box-header">Add for Organization</div>
+<div class="group-box-contents group">
+{{ kula_field({ non: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'ORGANIZATION_ID', value: drop_date, label: true }) }}
+{{ kula_field({ non: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'NON_ORGANIZATION_ID', value: drop_date, label: true }) }}
+</div>
+</div> #}
+
+<div class="data-table-header-div">
+Course History
+<span class="data-table-header-buttons">
+	{{ kula_table_add('window_window_num_data_table_course_history', 'STUD_STUDENT_COURSE_HISTORY') }}
+</span>
+</div>
+<table id="window_window_num_data_table_course_history" class="data-table">
+<thead>
+	<tr>
+	{{ kula_field_name({ delete: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_HISTORY_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CALENDAR_MONTH', field_name_override: 'Cal Mon', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CALENDAR_YEAR', field_name_override: 'Cal Yr', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'TERM', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_ID', field_name_override: 'Org Crs', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_NUMBER', field_name_override: 'Crs Num', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_TITLE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'LEVEL', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CREDITS_ATTEMPTED', field_name_override: 'Crd Att', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CREDITS_EARNED', field_name_override: 'Crd Ern', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'MARK', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+		<th class="data-table-cell-row-header">...</th>
+	</tr>
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_HISTORY_ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+	{{ kula_field({ add: true, hidden: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'STUDENT_ID', value: record_obj.getSelectedRecord.STUDENT_ID }) }}
+	{{ kula_field({ add: true, delete: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_HISTORY_ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_HISTORY_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CALENDAR_MONTH', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CALENDAR_YEAR', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'TERM', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_ID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_NUMBER', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_TITLE', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'LEVEL', lookup: 'C', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CREDITS_ATTEMPTED', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CREDITS_EARNED', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'MARK_SCALE_ID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_HISTORY_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_HISTORY_ID', prepend_html: '</tr>' }) }}
+	{% for ch in course_history %}
+	<tr>
+		{{ kula_field({ delete: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_HISTORY_ID', db_row_id: ch.COURSE_HISTORY_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		<td class="data-table-cell-row-num"><a class="data-table-detail-link" data-row-id-prefix="ch" data-row-id="{{ ch.COURSE_HISTORY_ID }}" href="{{ path('sis_student_coursehistory_coursehistory_detail_edit', { id : record_obj.getSelectedRecord.STUDENT_ID, sub_id : ch.COURSE_HISTORY_ID }) }}">{{ loop.index }}</a></td>
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CALENDAR_MONTH', db_row_id: ch.COURSE_HISTORY_ID, value: ch.CALENDAR_MONTH, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CALENDAR_YEAR', db_row_id: ch.COURSE_HISTORY_ID, value: ch.CALENDAR_YEAR, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'TERM', db_row_id: ch.COURSE_HISTORY_ID, value: ch.TERM, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_ID', db_row_id: ch.COURSE_HISTORY_ID, value: ch.COURSE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'width:6em;' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_NUMBER', db_row_id: ch.COURSE_HISTORY_ID, value: ch.COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'COURSE_TITLE', db_row_id: ch.COURSE_HISTORY_ID, value: ch.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'LEVEL', db_row_id: ch.COURSE_HISTORY_ID, lookup: 'C', value: ch.LEVEL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CREDITS_ATTEMPTED', db_row_id: ch.COURSE_HISTORY_ID, value: ch.CREDITS_ATTEMPTED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'CREDITS_EARNED', db_row_id: ch.COURSE_HISTORY_ID, value: ch.CREDITS_EARNED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_COURSE_HISTORY', db_field: 'MARK', db_row_id: ch.COURSE_HISTORY_ID, value: ch.MARK, MARK_SCALE_ID: ch.MARK_SCALE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		<td class="data-table-cell-row-detail"><a class="data-table-detail-link" data-row-id-prefix="ch" data-row-id="{{ ch.COURSE_HISTORY_ID }}" href="{{ path('sis_student_coursehistory_coursehistory_detail_edit', { id : record_obj.getSelectedRecord.STUDENT_ID, sub_id : ch.COURSE_HISTORY_ID }) }}">...</a></td>
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endblock %}

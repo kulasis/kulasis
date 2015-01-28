@@ -1,0 +1,16 @@
+HEd.FAID.Code.Category:
+  description: "Award Categories"
+  allow_update: true
+  values:
+    - { code: OUT, description: "Outside" }
+    - { code: INST, description: "Institutional" }
+    - { code: FED, description: "Federal" }
+    - { code: STATE, description: "State" }
+    
+HEd.FAID.Award.Status:
+  description: "Award Status"
+  allow_update: true
+  values:
+    - { code: AWAR, description: "Awarded", sort: 1 }
+    - { code: APPR, description: "Approved", sort: 2 }
+    - { code: PEND, description: "Pending", sort: 3 }

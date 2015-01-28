@@ -1,0 +1,50 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+
+{% if record_obj.getSelectedRecord %}
+<div class="group-box">
+<div class="group-box-header">Drop Students</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_CLASSES', db_field: 'DROP_DATE', value: drop_date, label: true }) }}
+</div>
+</div>
+{% endif %}
+
+<div class="data-table-header-div">
+Roster
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+	{{ kula_field_name({ delete: true, db_table: 'STUD_STUDENT_CLASSES', db_field: 'STUDENT_CLASS_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', field_name_override: 'Student ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'GENDER', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_CLASSES', db_field: 'START_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_STUDENT_CLASSES', db_field: 'END_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+	{% for student in students %}
+	<tr>
+		{{ kula_field({ delete: true, db_table: 'STUD_STUDENT_CLASSES', db_field: 'STUDENT_CLASS_ID', db_row_id: student.STUDENT_CLASS_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', db_row_id: student.STUDENT_CLASS_ID, value: student.PERMANENT_NUMBER, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', db_row_id: student.STUDENT_CLASS_ID, value: student.LAST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', db_row_id: student.STUDENT_CLASS_ID, value: student.FIRST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'GENDER', db_row_id: student.STUDENT_CLASS_ID, value: student.GENDER, lookup: 'C', input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{% if student.DROPPED == 'Y' %}
+		{{ kula_field({ db_table: 'STUD_STUDENT_CLASSES', db_field: 'DROPPED', db_row_id: student.STUDENT_CLASS_ID, value: 'Dropped', input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{% else %}
+		{{ kula_field({ db_table: 'STUD_STUDENT_CLASSES', db_field: 'START_DATE', db_row_id: student.STUDENT_CLASS_ID, value: student.START_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{% endif %}
+		{{ kula_field({ db_table: 'STUD_STUDENT_CLASSES', db_field: 'END_DATE', db_row_id: student.STUDENT_CLASS_ID, value: student.END_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

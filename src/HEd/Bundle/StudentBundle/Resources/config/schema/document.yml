@@ -1,0 +1,136 @@
+HEd.Document:
+  description: "Documents"
+  db_table_name: STUD_DOCUMENT
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: DOCUMENT_ID
+      db_column_type: primary_serial
+      column_name: "Document ID"
+      label_name: "Document ID"
+    Code:
+      description: "Code"
+      db_column_name: DOCUMENT_CODE
+      db_column_type: varchar
+      db_column_length: 20
+      db_column_null: false
+      field_type: text
+      field_size: 10
+      column_name: "Document Code"
+      label_name: "Document Code"
+    Name:
+      description: "Name"
+      db_column_name: DOCUMENT_NAME
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Document Name"
+      label_name: "Document Name"
+    Description:
+      description: "Description"
+      db_column_name: DOCUMENT_DESCRIPTION
+      db_column_type: varchar
+      db_column_length: 200
+      db_column_null: true
+      field_type: text
+      field_size: 40
+      column_name: "Document Description"
+      label_name: "Document Description"
+    Inactive:
+      description: "Inactive"
+      db_column_name: INACTIVE
+      db_column_type: bool
+      db_column_null: false
+      db_column_default: 0
+      field_type: checkbox
+      column_name: "Inactive"
+      label_name: "Inactive"
+    ConversionDocumentNumber:
+      description: "Conversion Document Number"
+      db_column_name: CONV_DOCUMENT_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Conversion Document Number"
+      label_name: "Conversion Document Number"
+HEd.Student.Document:
+  description: "Student Documents"
+  db_table_name: STUD_STUDENT_DOCUMENTS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_DOCUMENT_ID
+      db_column_type: primary_serial
+      column_name: "Student Document ID"
+      label_name: "Student Document ID"
+    StudentID:
+      description: "Student ID"
+      parent: HEd.Student.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Student ID"
+      label_name: "Student ID"
+    DocumentID:
+      description: "Document ID"
+      parent: HEd.Document.ID
+      db_column_name: DOCUMENT_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\HEd\Bundle\StudentBundle\Field\Document
+      column_name: "Document ID"
+      label_name: "Document ID"
+    DocumentDate:
+      description: "Document Date"
+      db_column_name: DOCUMENT_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "Document Date"
+      label_name: "Document Date"
+    DocumentStatus:
+      description: "Document Status"
+      db_column_name: DOCUMENT_STATUS
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Document.Status
+      column_name: "Document Status"
+      label_name: "Document Status"
+    Comments:
+      description: "Comments"
+      db_column_name: COMMENTS
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Comments"
+      label_name: "Comments"
+    CompletedDate:
+      description: "Completed Date"
+      db_column_name: COMPLETED_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Completed Date"
+      label_name: "Completed Date"
+    ConversionDocumentNumber:
+      description: "Conversion Document Number"
+      db_column_name: CONVERSION_DOCUMENT_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Conversion Document Number"
+      label_name: "Conversion Document Number"
+    

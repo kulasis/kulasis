@@ -43,11 +43,11 @@ class SchoolTermRecord extends Record implements RecordDelegateInterface {
   }
   
   public function getBaseTable() {
-    return 'Core.Organization.Terms';
+    return 'Core.Organization.Term';
   }
   
   public function getBaseKeyFieldName() {
-    return 'Core.Organization.Terms.ID';
+    return 'Core.Organization.Term.ID';
   }
   
   public function modifySearchDBOBject($db_obj) {

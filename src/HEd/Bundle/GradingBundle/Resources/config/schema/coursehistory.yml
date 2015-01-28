@@ -1,0 +1,312 @@
+HEd.Student.CourseHistory:
+  description: "Student Course History"
+  db_table_name: STUD_STUDENT_COURSE_HISTORY
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: COURSE_HISTORY_ID
+      db_column_type: primary_serial
+      column_name: "Course History ID"
+      label_name: "Course History ID"
+    StudentID:
+      description: "Student ID"
+      parent: HEd.Student.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Student ID"
+      label_name: "Student ID"
+    CourseID:
+      description: "Course ID"
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      field_type: chooser
+      chooser: HEd.Course.ID
+      column_name: "Course ID"
+      label_name: "Course ID"
+    OrganizationID:
+      description: "Organization ID"
+      parent: Core.Organization.ID
+      db_column_name: ORGANIZATION_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.Organization
+      column_name: "Organization ID"
+      label_name: "Organization"
+    NonOrganizationID:
+      description: "Non Organization ID"
+      parent: Core.NonOrganization.ID
+      db_column_name: NON_ORGANIZATION_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.NonOrganization.ID
+      column_name: "Non Organization ID"
+      label_name: "Non Organization"
+    CalendarYear:
+      description: "Calendar Year"
+      db_column_name: CALENDAR_YEAR
+      db_column_type: int
+      db_column_length: 4
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Calendar Year"
+      label_name: "Calendar Year"
+    CalendarMonth:
+      description: "Calendar Month"
+      db_column_name: CALENDAR_MONTH
+      db_column_type: int
+      db_column_length: 2
+      db_column_null: true
+      field_type: text
+      field_size: 4
+      column_name: "Calendar Month"
+      label_name: "Calendar Month"
+    Term:
+      description: "Term"
+      db_column_name: TERM
+      db_column_type: varchar
+      db_column_length: 30
+      db_column_null: true
+      field_type: text
+      field_size: 15
+      column_name: "Term"
+      label_name: "Term"
+    StartDate:
+      description: "Start Date"
+      db_column_name: START_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Start Date"
+      label_name: "Start Date"
+    CompletedDate:
+      description: "Completed Date"
+      db_column_name: COMPLETED_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Completed Date"
+      label_name: "Completed Date"
+    CourseNumber:
+      description: "Course Number"
+      db_column_name: COURSE_NUMBER
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: true
+      field_type: text
+      field_size: 7
+      column_name: "Course Number"
+      label_name: "Course Number"
+    CourseTitle:
+      description: "Course Title"
+      db_column_name: COURSE_TITLE
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Course Title"
+      label_name: "Course Title"
+    StudentClassID:
+      description: "Student Class ID"
+      parent: HEd.Student.Class.ID
+      db_column_name: STUDENT_CLASS_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      #chooser: 
+      column_name: "Student Class ID"
+      label_name: "Student Class ID"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    CreditsAttempted:
+      description: "Credits Attempted"
+      db_column_name: CREDITS_ATTEMPTED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Credits Attempted"
+      label_name: "Credits Attempted"
+    CreditsEarned:
+      description: "Credits Earned"
+      db_column_name: CREDITS_EARNED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Credits Earned"
+      label_name: "Credits Earned"
+    StaffID:
+      description: "Staff ID"
+      db_column_name: STAFF_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      # chooser
+      column_name: "Staff ID"
+      label_name: "Staff ID"
+    Staff:
+      description: "Staff Name"
+      db_column_name: STAFF_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      field_type: text
+      field_size: 25
+      column_name: "Staff Name"
+      label_name: "Staff Name"
+    Mark:
+      description: "Mark"
+      db_column_name: MARK
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: select
+      #class:
+      column_name: "Mark"
+      label_name: "Mark"
+    MarkScaleID:
+      description: "Mark Scale ID"
+      parent: HEd.MarkScale.ID
+      db_column_name: MARK_SCALE_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: select
+      #class:
+      column_name: "Mark Scale ID"
+      label_name: "Mark Scale ID"
+    TeacherSet:
+      description: "Teacher Set"
+      db_column_name: TEACHER_SET
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Teacher Set"
+      label_name: "Teacher Set"
+    GPAValue:
+      description: "GPA Value"
+      db_column_name: GPA_VALUE
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "GPA Value"
+      label_name: "GPA Value"
+    QualityPoints:
+      description: "Quality Points"
+      db_column_name: QUALITY_POINTS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 8
+      column_name: "Quality Points"
+      label_name: "Quality Points"
+    DegreeRequirementGroupID:
+      description: "Degree Requirement Group ID"
+      db_column_name: DEGREE_REQ_GRP_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: HEd.Degree.Requirement.Group.ID
+      #field_type: 
+      column_name: "Degree Requirement Group ID"
+      label_name: "Degree Requirement Group ID"
+    Comments:
+      description: "Comments"
+      db_column_name: COMMENTS
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Comments"
+      label_name: "Comments"
+
+HEd.Student.CourseHistory.Comment:
+  description: "Student Course History Comments"
+  db_table_name: STUD_STUDENT_COURSE_HISTORY_COMMENT
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_COURSE_HISTORY_COMMENT_ID
+      db_column_type: primary_serial
+      column_name: "Course History Comment ID"
+      label_name: "Course History Commment ID"
+    StudentID:
+      description: "Student ID"
+      parent: HEd.Student.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Student ID"
+      label_name: "Student ID"
+    CalendarYear:
+      description: "Calendar Year"
+      db_column_name: CALENDAR_YEAR
+      db_column_type: int
+      db_column_length: 4
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Calendar Year"
+      label_name: "Calendar Year"
+    CalendarMonth:
+      description: "Calendar Month"
+      db_column_name: CALENDAR_MONTH
+      db_column_type: int
+      db_column_length: 2
+      db_column_null: true
+      field_type: text
+      field_size: 4
+      column_name: "Calendar Month"
+      label_name: "Calendar Month"
+    Term:
+      description: "Term"
+      db_column_name: TERM
+      db_column_type: varchar
+      db_column_length: 30
+      db_column_null: true
+      field_type: text
+      field_size: 15
+      column_name: "Term"
+      label_name: "Term"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    Comments:
+      description: "Comments"
+      db_column_name: COMMENTS
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Comments"
+      label_name: "Comments"

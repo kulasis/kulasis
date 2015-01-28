@@ -1,0 +1,7 @@
+teacher_HEd_class_roster:
+  path: /class/roster
+  defaults: { _controller: KulaHEdSchedulingBundle:TeacherSection:roster }
+
+teacher_HEd_class_roster_dropped:
+  path: /class/roster/dropped
+  defaults: { _controller: KulaHEdSchedulingBundle:TeacherSection:dropped_roster }

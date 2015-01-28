@@ -1,0 +1,179 @@
+HEd.Degree.Requirement.Group:
+  description: "Student Degree Requirement Group"
+  db_table_name: STUD_DEGREE_REQ_GRP
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: DEGREE_REQ_GRP_ID
+      db_column_type: primary_serial
+      column_name: "Degree Requirement Group ID"
+      label_name: "Degree Requirement Group ID"
+    DegreeID:
+      description: "Degree ID"
+      parent: HEd.Degree.ID
+      db_column_name: DEGREE_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Degree ID"
+      label_name: "Degree ID"
+    MajorID:
+      description: "Major ID"
+      parent: HEd.Degree.Major.ID
+      db_column_name: MAJOR_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Major ID"
+      label_name: "Major ID"
+    MinorID:
+      description: "Minor ID"
+      parent: HEd.Degree.Minor.ID
+      db_column_name: MINOR_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Minor ID"
+      label_name: "Minor ID"
+    ConcentrationID:
+      description: "Concentration ID"
+      parent: HEd.Degree.Concentration.ID
+      db_column_name: CONCENTRATION_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Concentration ID"
+      label_name: "Concentration ID"
+    GroupName:
+      description: "Group Name"
+      db_column_name: GROUP_NAME
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Group Name"
+      label_name: "Group Name"
+    StartTermID:
+      description: "Start Term ID"
+      parent: Core.Term.ID
+      db_column_name: START_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.Term
+      column_name: "Start Term ID"
+      label_name: "Start Term ID"
+    EndTermID:
+      description: "End Term ID"
+      parent: Core.Term.ID
+      db_column_name: END_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.Term
+      column_name: "End Term ID"
+      label_name: "End Term ID"
+    CreditsRequired:
+      description: "Credits Required"
+      db_column_name: CREDITS_REQUIRED
+      db_column_type: numeric
+      db_column_length: 6
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Credits Required"
+      label_name: "Credits Required"
+    Elective:
+      description: "Elective"
+      db_column_name: ELECTIVE
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Elective"
+      label_name: "Elective"
+
+HEd.Degree.Requirement.Group.Course:
+  description: "Student Degree Requirement Group Courses"
+  db_table_name: STUD_DEGREE_REQ_GRP_CRS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: DEGREE_REQ_GRP_CRS_ID
+      db_column_type: primary_serial
+      column_name: "Degree Requirement Group Course ID"
+      label_name: "Degree Requirement Group Course ID"
+    DegreeRequirementCourseGroupID:
+      description: "Degree Requirement Course Group ID"
+      parent: HEd.Degree.Requirement.Group.ID
+      db_column_name: DEGREE_REQ_GRP_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Degree Req Grp ID"
+      label_name: "Degree Req Grp ID"
+    CourseID:
+      description: "Course ID"
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      field_type: chooser
+      chooser: HEd.Course.ID
+      column_name: "Course ID"
+      label_name: "Course ID"
+    Required:
+      description: "Required"
+      db_column_name: REQUIRED
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Required"
+      label_name: "Required"
+    ShowAsOption:
+      description: "Show As Option"
+      db_column_name: "SHOW_AS_OPTION"
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Show as Option"
+      label_name: "Show as Option"
+
+HEd.Degree.Requirement.Group.Course.Equivalent:
+  description: "Student Degree Requirement Group Course Equivalents"
+  db_table_name: STUD_DEGREE_REQ_GRP_CRS_EQUIV
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: DEGREE_REQ_GRP_CRS_EQUV_ID
+      db_column_type: primary_serial
+      column_name: "Degree Requirement Group Course Equivalent ID"
+      label_name: "Degree Requirement Group Course Equivalent ID"
+    DegreeRequirementCourseGroupCourseID:
+      description: "ID"
+      parent: HEd.Degree.Requirement.Group.Course.ID
+      db_column_name: DEGREE_REQ_GRP_CRS_ID
+      db_column_type: serial
+      column_name: "Degree Requirement Group Course ID"
+      label_name: "Degree Requirement Group Course ID"
+    CourseID:
+      description: "Course ID"
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      field_type: chooser
+      chooser: HEd.Course.ID
+      column_name: "Course ID"
+      label_name: "Course ID"
+
+HEd.Student.Class:
+  fields:
+    DegreeRequirementGroupID:
+      description: "Degree Requirement Group ID"
+      db_column_name: DEGREE_REQ_GRP_ID
+      db_column_type: serial
+      parent: HEd.Degree.Requirement.Group.ID
+      #field_type: 
+      column_name: "Degree Requirement Group ID"
+      label_name: "Degree Requirement Group ID"

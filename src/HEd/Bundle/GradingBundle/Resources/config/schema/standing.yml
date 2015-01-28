@@ -1,0 +1,100 @@
+HEd.Standing:
+  description: "Standings"
+  db_table_name: STUD_STANDING
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STANDING_ID
+      db_column_type: primary_serial
+      column_name: "Standing ID"
+      label_name: "Standing ID"
+    Code:
+      description: "Code"
+      db_column_name: STANDING_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      field_type: text
+      field_size: 7
+      column_name: "Code"
+      label_name: "Code"
+    Description:
+      description: "Description"
+      db_column_name: STANDING_DESCRIPTION
+      db_column_type: varchar
+      db_column_length: 30
+      field_type: text
+      field_size: 20
+      column_name: "Description"
+      label_name: "Description"
+    ConversionStandingNumber:
+      description: "Conversion Standing Number"
+      db_column_name: CONV_STANDING_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Conversion Standing Number"
+      label_name: "Conversion Standing Number"
+
+HEd.Student.CourseHistory.Standing:
+  description: "Student Course History Standing"
+  db_table_name: STUD_STUDENT_COURSE_HISTORY_STANDING
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_COURSE_HISTORY_STANDING_ID
+      db_column_type: primary_serial
+      column_name: "Course History Standing ID"
+      label_name: "Course History Standing ID"
+    StudentID:
+      description: "Student ID"
+      parent: HEd.Student.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Student ID"
+      label_name: "Student ID"
+    CalendarYear:
+      description: "Calendar Year"
+      db_column_name: CALENDAR_YEAR
+      db_column_type: int
+      db_column_length: 4
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Calendar Year"
+      label_name: "Calendar Year"
+    CalendarMonth:
+      description: "Calendar Month"
+      db_column_name: CALENDAR_MONTH
+      db_column_type: int
+      db_column_length: 2
+      db_column_null: true
+      field_type: text
+      field_size: 4
+      column_name: "Calendar Month"
+      label_name: "Calendar Month"
+    Term:
+      description: "Term"
+      db_column_name: TERM
+      db_column_type: varchar
+      db_column_length: 30
+      db_column_null: true
+      field_type: text
+      field_size: 15
+      column_name: "Term"
+      label_name: "Term"
+    StandingID:
+      description: "Standing ID"
+      parent: HEd.Standing.ID
+      db_column_name: STANDING_ID
+      db_column_type: serial
+      field_type: select
+      #class: 
+      column_name: "Standing ID"
+      label_name: "Standing"

@@ -1,4 +1,4 @@
-Constituent.Constituent:	
+Core.Constituent:	
   description: "Constituent Table"
   db_table_name: CONS_CONSTITUENT
   timestamps: true
@@ -124,7 +124,7 @@ Constituent.Constituent:
       label_name: "Notes"
     ResidenceAddressID:
       description: "Residence Address ID"
-      parent: Constituent.Address.ID
+      parent: Core.Constituent.Address.ID
       db_column_name: RESIDENCE_ADDRESS_ID
       db_column_type: serial
       db_column_null: true
@@ -133,7 +133,7 @@ Constituent.Constituent:
       label_name: "Residence Address ID"
     MailingAddressID:
       description: "Mailing Address ID"
-      parent: Constituent.Address.ID
+      parent: Core.Constituent.Address.ID
       db_column_name: MAILING_ADDRESS_ID
       db_column_type: serial
       db_column_null: true
@@ -142,7 +142,7 @@ Constituent.Constituent:
       label_name: "Mailing Address ID"
     WorkAddressID:
       description: "Work Address ID"
-      parent: Constituent.Address.ID
+      parent: Core.Constituent.Address.ID
       db_column_name: WORK_ADDRESS_ID
       db_column_type: serial
       db_column_null: true
@@ -151,7 +151,7 @@ Constituent.Constituent:
       label_name: "Work Address ID"
     PrimaryPhoneID:
       description: "Primary Phone ID"
-      parent: Constituent.Phone.ID
+      parent: Core.Constituent.Phone.ID
       db_column_name: PRIMARY_PHONE_ID
       db_column_type: serial
       db_column_null: true
@@ -160,7 +160,7 @@ Constituent.Constituent:
       label_name: "Primary Phone ID"
     PrimaryEmailID:
       description: "Primary Email ID"
-      parent: Constituent.EmailAddress.ID
+      parent: Core.Constituent.EmailAddress.ID
       db_column_name: PRIMARY_EMAIL_ID
       db_column_type: serial
       db_column_null: true
@@ -168,7 +168,7 @@ Constituent.Constituent:
       column_name: "Primary Email ID"
       label_name: "Primary Email ID"
 
-Constituent.Address:
+Core.Constituent.Address:
   description: "Constituent Address"
   db_table_name: CONS_ADDRESS
   timestamps: true
@@ -182,7 +182,7 @@ Constituent.Address:
       label_name: "Address ID"
     ConstituentID:
       description: "Constituent ID"
-      parent: Constituent.Constituent.ID
+      parent: Core.Constituent.ID
       db_column_name: CONSTITUENT_ID
       db_column_type: serial
       column_name: "Constituent ID"
@@ -347,7 +347,7 @@ Constituent.Address:
       column_name: "Notes"
       label_name: "Notes"
 
-Constituent.EmailAddress:
+Core.Constituent.EmailAddress:
   description: "Constituent Email Address"
   db_table_name: CONS_EMAIL_ADDRESS
   timestamps: true
@@ -361,7 +361,7 @@ Constituent.EmailAddress:
       label_name: "Email Address ID"
     ConstituentID:
       description: "Constituent ID"
-      parent: Constituent.Constituent.ID
+      parent: Core.Constituent.ID
       db_column_name: CONSTITUENT_ID
       db_column_type: serial
       column_name: "Constituent ID"
@@ -413,7 +413,7 @@ Constituent.EmailAddress:
       column_name: "Email Address"
       label_name: "Email Address"
 
-Constituent.Phone:
+Core.Constituent.Phone:
   description: "Constituent Phone Numbers"
   db_table_name: CONS_PHONE
   timestamps: true
@@ -427,7 +427,7 @@ Constituent.Phone:
       label_name: "Phone Number ID"
     ConstituentID:
       description: "Constituent ID"
-      parent: Constituent.Constituent.ID
+      parent: Core.Constituent.ID
       db_column_name: CONSTITUENT_ID
       db_column_type: serial
       column_name: "Constituent ID"

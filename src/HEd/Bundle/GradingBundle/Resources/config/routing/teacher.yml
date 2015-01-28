@@ -1,0 +1,7 @@
+teacher_HEd_section_grades_current:
+  path: /section/grades
+  defaults: { _controller: KulaHEdGradingBundle:TeacherClassGrades:current }
+
+teacher_HEd_section_grades_dropped:
+  path: /section/grades/dropped
+  defaults: { _controller: KulaHEdGradingBundle:TeacherClassGrades:dropped }

@@ -1,0 +1,47 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<p>
+<a class="normal-link" data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_offering_degrees_requirements_groups', { type: type, id: degree_id }) }}">Back to Requirement Groups</a>
+</p>
+
+<div class="data-table-header-div">
+Requirement Group Courses
+<span class="data-table-header-buttons">
+	{{ kula_table_add('window_window_num_data_table_requirement_groups', 'STUD_DEGREE_REQ_GRP_CRS_REQ_GRP_CRS') }}
+</span>
+</div>
+<table id="window_window_num_data_table_requirement_groups" class="data-table">
+<thead>
+	<tr>
+	{{ kula_field_name({ delete: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'DEGREE_REQ_GRP_CRS_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'COURSE_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'REQUIRED', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'SHOW_AS_OPTION', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	<th class="data-table-cell-row-header">...</th>
+	</tr>
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'DEGREE_REQ_GRP_CRS_ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'DEGREE_REQ_GRP_ID', value: requirement_group_id, hidden: true }) }}
+	{{ kula_field({ add: true, delete: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'DEGREE_REQ_GRP_CRS_ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+	{{ kula_display_html({ add: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'DEGREE_REQ_GRP_CRS_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'COURSE_ID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'REQUIRED', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'SHOW_AS_OPTION', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+	{{ kula_display_html({ add: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'DEGREE_REQ_GRP_CRS_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+	{{ kula_display_html({ add: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'DEGREE_REQ_GRP_CRS_ID', prepend_html: '</tr>' }) }}
+	{% for req in requirement_grp_courses %}
+	<tr>
+		{{ kula_field({ delete: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'DEGREE_REQ_GRP_CRS_ID', db_row_id: req.DEGREE_REQ_GRP_CRS_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ edit: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'COURSE_ID', db_row_id: req.DEGREE_REQ_GRP_CRS_ID, value: req.COURSE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'REQUIRED', db_row_id: req.DEGREE_REQ_GRP_CRS_ID, value: req.REQUIRED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ edit: true, db_table: 'STUD_DEGREE_REQ_GRP_CRS', db_field: 'SHOW_AS_OPTION', db_row_id: req.DEGREE_REQ_GRP_CRS_ID, value: req.SHOW_AS_OPTION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		<td class="data-table-cell-row-detail"><a class="normal-link"  data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_offering_degrees_requirements_groups_courses_equiv', { id: req.DEGREE_REQ_GRP_CRS_ID }) }}">...</a></td>
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endblock %}

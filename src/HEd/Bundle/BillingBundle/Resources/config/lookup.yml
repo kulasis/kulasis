@@ -1,0 +1,6 @@
+HEd.Billing.Code.Type:
+  description: "Billing Code Types"
+  allow_update: false
+  values:
+    - { code: C, description: "Charge" }
+    - { code: P, description: "Payment" }

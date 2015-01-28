@@ -282,10 +282,8 @@ class DB {
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
   public function db_query($query, array $args = array(), array $options = array()) {
-    if (empty($options['target'])) {
-      $options['target'] = 'default';
-      $options['fetch'] = \PDO::FETCH_ASSOC;
-    }
+    if (empty($options['target'])) $options['target'] = 'default';
+    if (empty($options['fetch'])) $options['fetch'] = \PDO::FETCH_ASSOC;
     
     return Database::getConnection($options['target'])->query($query, $args, $options);
   }
@@ -350,10 +348,8 @@ class DB {
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
   public function db_query_temporary($query, array $args = array(), array $options = array()) {
-    if (empty($options['target'])) {
-      $options['target'] = 'default';
-      $options['fetch'] = \PDO::FETCH_ASSOC;
-    }
+    if (empty($options['target'])) $options['target'] = 'read';
+    if (empty($options['fetch'])) $options['fetch'] = \PDO::FETCH_ASSOC;
 
     return Database::getConnection($options['target'])->queryTemporary($query, $args, $options);
   }
@@ -465,10 +461,8 @@ class DB {
    *   A new Select object for this connection.
    */
   public function db_select($table, $alias = NULL, array $options = array()) {
-    if (empty($options['target'])) {
-      $options['target'] = 'read';
-      $options['fetch'] = \PDO::FETCH_ASSOC;
-    }
+    if (empty($options['target'])) $options['target'] = 'read';
+    if (empty($options['fetch'])) $options['fetch'] = \PDO::FETCH_ASSOC;
     return new Proxy(Database::getConnection($options['target'])->select($table, $alias, $options));
   }
 
@@ -485,10 +479,8 @@ class DB {
    *   A new Transaction object for this connection.
    */
   public function db_transaction($name = NULL, array $options = array()) {
-    if (empty($options['target'])) {
-      $options['target'] = 'write';
-      $options['fetch'] = \PDO::FETCH_ASSOC;
-    }
+    if (empty($options['target'])) $options['target'] = 'read';
+    if (empty($options['fetch'])) $options['fetch'] = \PDO::FETCH_ASSOC;
     return Database::getConnection($options['target'])->startTransaction($name);
   }
 

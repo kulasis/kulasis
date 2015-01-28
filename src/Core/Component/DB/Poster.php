@@ -102,4 +102,20 @@ class Poster {
     return $this->records[$table][$id];
   }
   
+  public function getAddedIDs($table) {
+    $ids = array();
+    
+    if (isset($this->records[$table])) {
+    foreach($this->records[$table] as $id => $record) {
+      
+      if ($record->getCRUD() == PosterRecord::ADD AND $record->isPosted()) {
+        $ids[] = $record->getID();
+      }
+      
+    }
+    }
+    
+    return $ids;
+  }
+  
 }

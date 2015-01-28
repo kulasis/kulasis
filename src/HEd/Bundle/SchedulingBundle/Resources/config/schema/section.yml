@@ -1,0 +1,375 @@
+HEd.Section:
+  description: "Section"
+  db_table_name: STUD_SECTION
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SECTION_ID
+      db_column_type: primary_serial
+      column_name: "Section ID"
+      label_name: "Section ID"
+    SectionNumber:
+      description: "Section Number"
+      db_column_name: SECTION_NUMBER
+      db_column_type: varchar
+      db_column_length: 20
+      field_type: text
+      field_size: 10
+      column_name: "Section Number"
+      label_name: "Section Number"
+    Status:
+      description: "Status"
+      db_column_name: STATUS
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: true
+      column_name: "Status"
+      label_name: "Status"
+    CourseID:
+      description: "Course ID"
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      field_type: chooser
+      chooser: HEd.Course.ID
+      column_name: "Course ID"
+      label_name: "Course ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    StaffOrganizationTermID:
+      description: "Staff Organization Term ID"
+      parent: HEd.Staff.OrganizationTerms.ID
+      db_column_name: STAFF_ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: HEd.Staff.OrganizationTerm
+      column_name: "Staff Organization Term ID"
+      label_name: "Staff Organization Term ID"
+    StartDate:
+      description: "Start Date"
+      db_column_name: START_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Start Date"
+      label_name: "Start Date"
+    EndDate:
+      description: "End Date"
+      db_column_name: END_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "End Date"
+      label_name: "End Date"
+    Credits:
+      description: "Credits"
+      db_column_name: CREDITS
+      db_column_type: float
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Credits"
+      label_name: "Credits"
+    ConversionSectionNumber:
+      description: "Conversion Section Number"
+      db_column_name: CONV_SECTION_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      field_type: text
+      field_size: 15
+      column_name: "Conversion Section Number"
+      label_name: "Conversion Section Number"
+    Capacity:
+      description: "Capacity"
+      db_column_name: CAPACITY
+      db_column_type: int
+      db_column_size: small
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "Capacity"
+      label_name: "Capacity"
+    Minimum:
+      description: "Minimum"
+      db_column_name: MINIMUM
+      db_column_type: int
+      db_column_size: small
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "Minimum"
+      label_name: "Minimum"
+    EnrolledTotal:
+      description: "Enrolled Total"
+      db_column_name: ENROLLED_TOTAL
+      db_column_type: int
+      db_column_size: small
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "Enrolled Total"
+      label_name: "Enrolled Total"
+    WaitListedTotal:
+      description: "Wait Listed Total"
+      db_column_name: WAIT_LISTED_TOTAL
+      db_column_type: int
+      db_column_size: small
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "Wait Listed Total"
+      label_name: "Wait Listed Total"
+    SuppliesRequired:
+      description: "Supplies Required"
+      db_column_name: SUPPLIES_REQUIRED
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Supplies Required"
+      label_name: "Supplies Required"
+    SuppliesOptional:
+      description: "Supplies Optional"
+      db_column_name: SUPPLIES_OPTIONAL
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Supplies Optional"
+      label_name: "Supplies Optional"
+    SuppliesPrice:
+      description: "Supplies Price"
+      db_column_name: SUPPLIES_PRICE
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: true
+      field_type: text
+      field_size: 15
+      column_name: "Supplies Price"
+      label_name: "Supplies Price"
+    NoClassDates:
+      description: "No Class Dates"
+      db_column_name: NO_CLASS_DATES
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "No Class Dates"
+      label_name: "No Class Dates"
+
+HEd.Section.Course:
+  description: "Section Courses"
+  db_table_name: STUD_SECTION_COURSES
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SECTION_COURSE_ID
+      db_column_type: primary_serial
+      column_name: "Section Course ID"
+      label_name: "Section Course ID"
+    SectionID:
+      description: "Section ID"
+      parent: HEd.Section.ID
+      db_column_name: SECTION_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Section ID"
+      label_name: "Section ID"
+    CourseID:
+      description: "Additional Course ID"
+      parent: HEd.Course.ID
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: chooser
+      chooser: HEd.Course
+      column_name: "Course ID"
+      label_name: "Course ID"
+
+HEd.Section.Meeting:
+  description: "Section Meetings"
+  db_table_name: STUD_SECTION_MEETINGS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SECTION_MEETING_ID
+      db_column_type: primary_serial
+      column_name: "Section Meeting ID"
+      label_name: "Section Meeting ID"
+    SectionID:
+      description: "Section ID"
+      parent: HEd.Section.ID
+      db_column_name: SECTION_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Section ID"
+      label_name: "Section ID"
+    StartDate:
+      description: "Start Date"
+      db_column_name: START_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Start Date"
+      label_name: "Start Date"
+    EndDate:
+      description: "End Date"
+      db_column_name: END_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "End Date"
+      label_name: "End Date"
+    Monday:
+      description: "Monday"
+      db_column_name: MON
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Monday"
+      label_name: "Mon"
+    Tuesday:
+      description: "Tuesday"
+      db_column_name: TUE
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Tuesday"
+      label_name: "Tue"
+    Wednesday:
+      description: "Wednesday"
+      db_column_name: WED
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Wednesday"
+      label_name: "Wed"
+    Thursday:
+      description: "Thursday"
+      db_column_name: THU
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Thursday"
+      label_name: "Thu"
+    Friday:
+      description: "Friday"
+      db_column_name: FRI
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Friday"
+      label_name: "Fri"
+    Saturday:
+      description: "Saturday"
+      db_column_name: SAT
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Saturday"
+      label_name: "Sat"
+    Sunday:
+      description: "Sunday"
+      db_column_name: SUN
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Sunday"
+      label_name: "Sun"
+    StartTime:
+      description: "Start Time"
+      db_column_name: START_TIME
+      db_column_type: time
+      db_column_null: true
+      field_type: time
+      column_name: "Start TIme"
+      label_name: "Start Time"
+    EndTime:
+      description: "End Time"
+      db_column_name: END_TIME
+      db_column_type: time
+      db_column_null: true
+      field_type: time
+      column_name: "End TIme"
+      label_name: "End Time"
+    ScheduleType:
+      description: "Schedule Type"
+      db_column_name: SCHEDULE_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Section.ScheduleType
+      column_name: "Schedule Type"
+      label_name: "Schedule Type"
+    RoomID:
+      description: "Room ID"
+      db_column_name: ROOM_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: HEd.Room.ID
+      column_name: "Room ID"
+      label_name: "Room ID"
+HEd.Section.Staff:
+  description: "Section Staff"
+  db_table_name: STUD_SECTION_STAFF
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SECTION_STAFF_ID
+      db_column_type: primary_serial
+      column_name: "Section Staff ID"
+      label_name: "Section Staff ID"
+    SectionID:
+      description: "Section ID"
+      parent: HEd.Section.ID
+      db_column_name: SECTION_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Section ID"
+      label_name: "Section ID"
+    SectionMeetingID:
+      description: "Section Meeting ID"
+      parent: HEd.Section.Meeting.ID
+      db_column_name: SECTION_MEETING_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Section Meeting ID"
+      label_name: "Section Meeting ID"
+    StaffOrganizationTermID:
+      description: "Staff Organization Term ID"
+      parent: HEd.Staff.OrganizationTerms.ID
+      db_column_name: STAFF_ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: HEd.Staff.OrganizationTerm
+      column_name: "Staff Organization Term ID"
+      label_name: "Staff Organization Term ID"
+    PrimaryInstructor:
+      description: "Primary Instructor"
+      db_column_name: PRIMARY_INSTRUCTOR
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Primary Instructor"
+      label_name: "Primary Instructor"

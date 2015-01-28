@@ -1,0 +1,39 @@
+{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Posted Awards
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+	<tr>
+	<th class="data-table-cell-row-header">#</th>
+	{{ kula_field_name({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ABBREVIATION', field_name_override: 'Organization', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', field_name_override: 'Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'TRANSACTION_DATE', field_name_override: 'Date', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'BILL_CODE', db_field: 'CODE_TYPE', field_name_override: 'Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'BILL_CODE', db_field: 'CODE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'TRANSACTION_DESCRIPTION', field_name_override: 'Description', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'AMOUNT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+	</tr>
+</thead>
+<tbody>
+	{% for transaction in transactions %}
+	<tr>
+		<td class="data-table-cell-row-num">{{ loop.index }}</td>
+		{{ kula_field({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', input: false, value: transaction.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ABBREVIATION', input: false, value: transaction.ORGANIZATION_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', input: false, value: transaction.PERMANENT_NUMBER~' '~transaction.LAST_NAME~', '~transaction.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, db_field: 'TRANSACTION_DATE', value: transaction.TRANSACTION_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'BILL_CODE', db_field: 'CODE_TYPE', input: false, value: transaction.CODE_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'BILL_CODE', db_field: 'CODE', input: false, value: transaction.CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ input: false, db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, db_field: 'TRANSACTION_DESCRIPTION', value: transaction.TRANSACTION_DESCRIPTION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+		{{ kula_field({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'AMOUNT', input: false, value: transaction.AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+{% endblock %}

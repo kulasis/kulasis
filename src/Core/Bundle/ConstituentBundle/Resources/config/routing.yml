@@ -1,0 +1,3 @@
+_constituent:
+    resource: "@KulaCoreConstituentBundle/Resources/config/routing/sis.yml"
+    prefix: sis/HEd
