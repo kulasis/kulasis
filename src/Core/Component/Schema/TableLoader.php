@@ -33,6 +33,10 @@ class TableLoader {
     return $this->name;
   }
   
+  public function getDBName() {
+    return $this->db_tableName;
+  }
+  
   public function addField(FieldLoader $field) {
     $fieldName = $field->getName();
     

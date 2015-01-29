@@ -117,16 +117,16 @@ Core.Term:
       field_length: 6
       column_name: "Financial Aid Year"
       label_name: "Financial Aid Year"
-    ConversionTerm:
-      description: "Conversion Term"
-      db_column_name: CONV_TERM
+    ConversionTermNumber:
+      description: "Conversion Term Number"
+      db_column_name: CONV_TERM_NUMBER
       db_column_type: varchar
       db_column_length: 255
-      db_colunn_null: true
+      db_column_null: true
       field_type: text
       field_length: 20
-      column_name: "Conversion Term"
-      label_name: "Conversion Term"
+      column_name: "Conversion Term Number"
+      label_name: "Conversion Term Number"
 Core.Organization.Term:
   description: "Organization Terms Table"
   db_table_name: CORE_ORGANIZATION_TERMS

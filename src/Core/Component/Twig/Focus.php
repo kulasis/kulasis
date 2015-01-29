@@ -30,10 +30,20 @@ class Focus {
     return self::$usergroups;  
   }
   
-  public static function terms($portal, $administrator = 'N', $user_id = null) {
+  public static function terms($organization, $term, $organizationID, $portal, $administrator = 'N', $user_id = null) {
+    $terms = array();
     if ($portal == 'sis') {
-      self::$terms['ALL'] = 'All';
+      $terms['ALL'] = 'All';
     }
+    
+    $termsFromOrganization = $organization->getTermsForOrganization($organizationID);
+    if ($termsFromOrganization) {
+      foreach($termsFromOrganization as $key) {
+        $terms[$key] = $term->getTermAbbreviation($key);
+      }
+    }
+    
+    /*
     $term_results = \Kula\Component\Database\DB::connect('read')->select('CORE_TERM', 'terms')
       ->distinct()
       ->fields('terms', array('TERM_ID', 'TERM_ABBREVIATION', 'TERM_NAME'))
@@ -45,16 +55,18 @@ class Focus {
       $term_results = $term_results->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', null, 'stafforgterms.ORGANIZATION_TERM_ID = orgterm.ORGANIZATION_TERM_ID');
       $term_results = $term_results->predicate('stafforgterms.STAFF_ID', $user_id);  
     }
+    
      $term_results = $term_results
       ->order_by('START_DATE')
       ->order_by('END_DATE')
       ->execute();
     while ($term_row = $term_results->fetch())
       self::$terms[$term_row['TERM_ID']] = $term_row['TERM_ABBREVIATION'];
-    
-    return self::$terms;
+    */
+    asort($terms);
+    return $terms;
   }
-  
+  /*
   public static function getTeachers($organization_term_id) {
     $instructors = array();
     
@@ -99,34 +111,26 @@ class Focus {
     }
     return $section_menu;
   }
-  
-  public static function getOrganizationMenu($top_organization_id) {
-    
-    $organization_obj = new \Kula\Component\Focus\Organization;
-    $organization_obj->setOrganization($top_organization_id);
-    $organizations = $organization_obj->getAllOrganization();
-    
-    self::createMenuForOrganization($top_organization_id, $organizations);
-    
+  */
+  public static function getOrganizationMenu($organization, $topOrganizationID) {
+    self::createMenuForOrganization($organization->getOrganization($topOrganizationID));
     return self::$organization_menu;
   }
   
-  private static function createMenuForOrganization($parent_organization_id, $organization_array, $dashes = null) {
-    
-    $children_organization = null;
+  private static function createMenuForOrganization($organization, $dashes = null) {
     
     // top of menu
-    self::$organization_menu[$organization_array[$parent_organization_id]['ORGANIZATION_ID']] = $dashes . $organization_array[$parent_organization_id]['ORGANIZATION_NAME'];
-    self::$organization_ids[] = $parent_organization_id;
+    self::$organization_menu[$organization->getID()] = $dashes . $organization->getName();
     
     // look for any children
-    foreach($organization_array as $org_id => $org_row) {
-      foreach($org_row as $org_row_key => $org_row_value) {
-        if ($org_row_key == 'PARENT_ORGANIZATION_ID' && $org_row_value == $parent_organization_id) {
-          self::createMenuForOrganization($org_id, $organization_array, $dashes . '-- ');
-        }
+    if ($organization->getChildren()) {
+      foreach($organization->getChildren() as $child) {
+        self::createMenuForOrganization($child, $dashes.'-- ');
       }
+      
+      
     }
+    
   }
   
   

@@ -271,6 +271,16 @@ class FieldLoader {
       }
       $catalogFieldsForDB['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
       $db->db_insert('CORE_SCHEMA_FIELDS', array('target' => 'schema'))->fields($catalogFieldsForDB)->execute();
+      
+      if (!$db->db_schema()->fieldExists($this->table->getDBName(), $this->getDBColumnName())) {
+        $db->db_schema()->addField($this->table->getDBName(), $this->getDBColumnName(), array(
+          'description' => $this->getDescription(),
+          'type' => $this->getDBColumnType(),
+          'size' => $this->getDBColumnSize(),
+          'length' => $this->getDBColumnLength(),
+          'not null' => ($this->getDBColumnNull() == false) ? true : false
+        ));
+      }
     }
     
   }

@@ -9,6 +9,7 @@ class Item {
   private $name;
   private $db_id;
   private $portal;
+  private $target;
   private $sort;
   private $displayName;
   private $route;
@@ -44,6 +45,14 @@ class Item {
   
   public function getParent() {
     return $this->parent;
+  }
+  
+  public function setTarget($target) {
+    $this->target = $target;
+  }
+  
+  public function getTarget() {
+    return $this->target;
   }
   
 }

@@ -1,10 +1,10 @@
 function focus_documentReady() {
 	$('#focus_usergroup').on('change', focus_usergroup_change);
 	$('#focus_organization').on('change', focus_organizationterm_change);
-	$("#focus_term").quickselect({
+	/* $("#focus_term").quickselect({
 autoSelectFirst: true,
 inputClass: 'focus-term-input'
-                }); 
+                });  */
 	$('#focus_term').on('change', focus_organizationterm_change);
 	
 }

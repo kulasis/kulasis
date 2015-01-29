@@ -17,7 +17,13 @@ services:
     tags: 
       - { name: kernel.event_subscriber }
       - { name: monolog.logger, channel: request }
-    
+  
+  kula.core.controller:
+    class: Kula\Core\Bundle\FrameworkBundle\EventListener\ControllerListener
+    arguments: ["@request_stack", "@kula.core.focus", "@kula.core.session"]
+    tags:
+      - { name: kernel.event_subscriber }
+  
   kula.core.db:
     class:        Kula\Core\Component\DB\DB
     arguments:    [ %kernel.root_dir% , %kernel.environment% ]
@@ -65,7 +71,7 @@ services:
     
   kula.core.focus:
     class:        Kula\Core\Bundle\FrameworkBundle\Service\Focus
-    arguments:    ["@kula.core.session", "@kula.core.db", "@kula.core.poster"]
+    arguments:    ["@kula.core.session", "@kula.core.db", "@kula.core.poster", "@kula.core.organization", "@kula.core.term"] 
     
   kula.core.record:
     class: Kula\Core\Bundle\FrameworkBundle\Service\Record

@@ -37,6 +37,24 @@ class DBCacheConfig extends BaseConfigCache {
     return true;
   }
   
+  public function isDBFresh() {
+    
+    if (!is_file($this->file)) {
+        return false;
+    }
+
+    if (!$this->debug) {
+        return true;
+    }
+    
+    $time = filemtime($this->file);
+    if ($time < $this->getLastUpdatestamp()) {
+     return false;
+    }
+    
+    return true;
+  }
+  
   private function getLastUpdatestamp() {
     
     $latestTimestamp = '';

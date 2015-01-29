@@ -1,11 +1,11 @@
-SIS.Student:
-  description: "Student"
-  display_name: "Student"
+SIS.HEd.Student:
+  description: "Student Higher Education"
+  display_name: "Student (HEd)"
   type: form_group
   portal: sis
   sort: 1
   forms: 
-    HEd.Information:
+    Information:
       description: "Information"
       display_name: "Information"
       sort: 1

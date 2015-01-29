@@ -1,0 +1,21 @@
+parameters:
+  kula.term.options.cache_class: kula%kernel.environment%TermCache
+
+services:
+  kula.core.term.cache:
+    class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\TermCacheWarmer
+    public: false
+    arguments: ["@kula.core.term_store"]
+    tags:
+      - { name: kernel.cache_warmer }
+  
+  kula.core.term_store:
+    class: Kula\Core\Component\Focus\TermStore
+    arguments: ["@kula.core.db", %kula.term.options.cache_class%, %kernel.cache_dir%, %kernel.debug%, "@kernel", "@kula.core.session", "@kula.core.permission", "@request_stack"] 
+    public: false
+    
+  kula.core.term:
+    class: Kula\Core\Component\Focus\Term
+    factory_service: kula.core.term_store
+    factory_method: getTerm
+    arguments: ["@kula.core.db"]  

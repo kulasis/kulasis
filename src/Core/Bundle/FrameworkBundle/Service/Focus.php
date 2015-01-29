@@ -8,18 +8,20 @@ class Focus {
   private $poster_factory;
   private $session;
   
-  private $organization_object;
+  private $organization;
   
   private $organization_term_ids;
   
   public function __construct($session,
                               \Kula\Core\Component\DB\DB $db, 
-                              \Kula\Core\Component\DB\Poster $poster) {
+                              \Kula\Core\Component\DB\Poster $poster,
+                              $organization,
+                              $term) {
       $this->db = $db;
       $this->poster_factory = $poster;
       $this->session = $session;
-      
-      $this->organization_object = new \Kula\Core\Component\Focus\Organization;
+      $this->organization = $organization;
+      $this->term = $term;
   }
   
   public function setOrganizationTermFocus($organization_id = null, $term_id = null, $role_token = null) {
@@ -48,16 +50,13 @@ class Focus {
           ->execute();
       }       
     } 
-
-    $this->organization_object->setOrganization($this->getOrganizationID());
     
     if (!$organization_id AND !$term_id AND $this->session->get('portal') != 'sis') {
-      $this->session->setFocus('organization_id', $this->organization_object->getSchoolOrganizationIDs()[0]);
+      $this->session->setFocus('organization_id', $this->organization->getSchoolOrganizationIDs()[0]);
     }
-
-    $this->setOrganizationTermIDs();
+    
   }
-  
+  /*
   public function setSectionFocus($section_id = null, $role_token = null) {
     
     if ($role_token === null) {
@@ -120,12 +119,12 @@ class Focus {
     else
       return false;
   }
-  
+  */
   public function getSchoolIDs() {
     if ($this->session->get('portal') == 'sis') {
-      return $this->organization_object->getSchoolOrganizationIDs();
+      return $this->organization->getSchoolOrganizationIDs();
     } else {
-      return $this->organization_object->getSchoolOrganizationIDs()[0];
+      return $this->organization->getSchoolOrganizationIDs()[0];
     }
   }
   
