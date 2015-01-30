@@ -30,7 +30,7 @@ class NavigationStore {
       $nav_obj = new \Kula\Core\Component\Navigation\NavigationLoader;
       $nav_obj->getNavigationFromBundles($this->kernel->getBundles());
       $nav_obj->synchronizeDatabaseCatalog($this->db);
-      
+
       $navigation = new Navigation($this->db);
       $navigation->loadNavigation();
       $cache->write(serialize($navigation), $nav_obj->paths);

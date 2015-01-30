@@ -1,10 +1,10 @@
 <?php
 
-namespace Kula\Bundle\HEd\StudentBundle\Controller;
+namespace Kula\HEd\Bundle\StudentBundle\Controller;
 
-use Kula\Bundle\Core\KulaFrameworkBundle\Controller\ReportController;
+use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
-class EnrollmentVerificationReportController extends ReportController {
+class SISEnrollmentVerificationReportController extends ReportController {
 	
 	public function indexAction() {
 		$this->authorize();

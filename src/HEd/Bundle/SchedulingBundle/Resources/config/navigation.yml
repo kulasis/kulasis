@@ -1,0 +1,52 @@
+Schedule:
+  description: "Schedule"
+  type: form
+  parent: SIS.HEd.Student
+  portal: sis
+  display_name: "Schedule"
+  sort: 3
+  tabs:
+    CurrentSchedule:
+      description: "Current Schedule"
+      display_name: "Current Schedule"
+      sort: 1
+      route: sis_HEd_student_schedule
+    History:
+      description: "History"
+      display_name: "History"
+      sort: 2
+      route: sis_HEd_student_schedule_history
+    WaitList:
+      description: "Wait List"
+      display_name: "Wait List"
+      sort: 4
+      route: sis_HEd_student_schedule_waitlist
+  menu_actions:
+    AddClasses:
+      description: "Add Classes"
+      display_name: "Add Classes"
+      sort: 1
+      record_loaded: true
+      route: sis_HEd_student_schedule_add
+    CalculateFTEAndTuition:
+      description: "Calculate FTE and Tuition"
+      display_name: "Calculate FTE & Tuition"
+      sort: 2
+      divider_before: true
+      record_loaded: true
+      route: sis_HEd_student_schedule_calculateTotals
+  menu_reports:
+    StudentSchedule:
+      description: "Student Schedule"
+      display_name: "Student Schedule"
+      sort: 1
+      route: sis_HEd_student_schedule_reports_studentschedule
+
+StudentSchedule:
+  description: "Student Schedule"
+  type: report
+  portal: sis
+  parent: SIS.HEd.Student
+  display_name: "Student Schedule"
+  sort: 5
+  route: sis_HEd_student_schedule_reports_studentschedule

@@ -3,7 +3,7 @@
 {% block focus %}
   <span>
     <label for="focus_term">Term:</label>
-    {{ form_select(focus_terms, 'focus_term', focus.getTermID, { id : 'focus_term' }) }}
+    {{ form_select(focus_terms, 'focus_term', focus.getTermIDForMenu, { id : 'focus_term' }) }}
   </span>
   <span>
     <label for="focus_school">Organization:</label>

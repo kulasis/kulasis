@@ -1,10 +1,10 @@
 <?php
 
-namespace Kula\Bundle\HEd\StudentBundle\Controller;
+namespace Kula\HEd\Bundle\StudentBundle\Controller;
 
-use Kula\Bundle\Core\KulaFrameworkBundle\Controller\Controller;
+use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
-class HomeHoldsController extends Controller {
+class SISHomeHoldsController extends Controller {
 	
 	public function indexAction() {
 		$this->authorize();

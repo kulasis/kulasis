@@ -32,6 +32,10 @@ class OrganizationUnit {
     return $this->id;
   }
   
+  public function getType() {
+    return $this->type;
+  }
+  
   public function addChild($child) {
     $this->children[$child->getID()] = $child;
   }
@@ -46,6 +50,10 @@ class OrganizationUnit {
   
   public function getTermIDs() {
     return array_keys($this->terms);
+  }
+  
+  public function getOrganizationTermID($termID) {
+    return $this->terms[$termID];
   }
   
 }

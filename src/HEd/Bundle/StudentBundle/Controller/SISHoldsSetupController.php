@@ -1,10 +1,10 @@
 <?php
 
-namespace Kula\Bundle\HEd\StudentBundle\Controller;
+namespace Kula\HEd\Bundle\StudentBundle\Controller;
 
-use Kula\Bundle\Core\KulaFrameworkBundle\Controller\Controller;
+use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
-class HoldsSetupController extends Controller {
+class SISHoldsSetupController extends Controller {
 	
 	public function hold_codesAction() {
 		$this->authorize();

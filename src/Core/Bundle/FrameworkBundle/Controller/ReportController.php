@@ -12,9 +12,9 @@
  * further to include additional functionality.
  */
 
-namespace Kula\Bundle\Core\KulaFrameworkBundle\Controller;
+namespace Kula\Core\Bundle\FrameworkBundle\Controller;
 
-use Kula\Bundle\Core\KulaFrameworkBundle\Controller\Controller as BaseController;
+use Kula\Core\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReportController extends BaseController {

@@ -1,11 +1,11 @@
-Core.Home:
+Core.Page.Home:
   description: "Home"
   display_name: "Home"
   type: page
   portal: core
   route: core_home
   sort: 1
-SIS.Home:
+SIS.Page.Home:
   description: "Home"
   display_name: "Home"
   type: page

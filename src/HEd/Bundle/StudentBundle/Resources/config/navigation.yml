@@ -45,6 +45,11 @@ SIS.HEd.Student:
           display_name: "Emergency Contacts"
           sort: 7
           route: sis_HEd_student_information_emergencycontacts
+        Other:
+          description: "Other Information"
+          display_name: "Other Info"
+          sort: 8
+          route: sis_HEd_student_information_otherinfo
       menu_actions:
         NewStudent:
           description: "New Student"
@@ -58,3 +63,48 @@ SIS.HEd.Student:
           record_loaded: true
           route: sis_HEd_student_information_addresses_add
           sort: 2
+    Enrollment:
+      description: "Enrollment"
+      display_name: "Enrollment"
+      sort: 2
+      menu_actions:
+        ActivateInactivate:
+          description: "Activate/Inactivate"
+          display_name: "Activate/Inactivate"
+          record_loaded: true
+          route: sis_HEd_student_enrollment_activateinactivate
+          sort: 1
+      menu_reports:
+        EnrollmentVerification:
+          description: "Enrollment Verification"
+          display_name: "Enrollment Verification"
+          route: sis_HEd_student_enrollment_reports_enrollmentverification
+          sort: 1
+    Documents:
+      description: "Documents"
+      display_name: "Documents"
+      route: sis_HEd_student_documents
+      sort: 7
+    Holds:
+      description: "Holds"
+      display_name: "Holds"
+      route: sis_HEd_student_holds
+      sort: 8
+  reports:
+    EnrollmentVerification:
+      description: "Enrollment Verification"
+      display_name: "Enrollment Verification"
+      route: sis_HEd_student_enrollment_reports_enrollmentverification
+      sort: 1
+SIS.Home:
+  description: "Home"
+  display_name: "Home"
+  type: form_group
+  portal: sis
+  sort: 1
+  forms: 
+    Holds:
+      description: "Holds"
+      display_name: "Holds"
+      route: sis_HEd_home_holds
+      sort: 1

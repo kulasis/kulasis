@@ -5,7 +5,6 @@ namespace Kula\Core\Component\Focus;
 class Organization {
   
   private $organizations = array();
-  private $schools = array();
   
   public function __construct($db) {
     $this->db = $db;
@@ -59,6 +58,28 @@ class Organization {
     return $this->organizations[$id];
   }
   
+  public function getSchools($id, $nested = false) {
+    if ($nested === false) {
+      $this->schools = array();
+    }
+    $organization = $this->organizations[$id];
+    if ($organization->getChildren()) {
+      foreach($organization->getChildren() as $child) {
+         $this->getSchools($child->getID(), true);
+      }
+    } elseif ($nested === true) {
+      if ($organization->getType() == 'S') {
+        $this->schools[] = $organization->getID();
+      }
+      return;
+    } else {
+      if ($organization->getType() == 'S') {
+        $this->schools[] = $organization->getID();
+      }
+    }
+    return $this->schools;
+  }
+  
   public function getTermsForOrganization($id, $nested = false) {
     if ($nested === false) {
       $this->terms = array();
@@ -79,10 +100,34 @@ class Organization {
     return $this->terms;
   }
   
+  public function getOrganizationTerms($organizationID, $termIDs, $nested = false) {
+    if ($nested === false) {
+      $this->organizationTerms = array();
+    }
+    if ($organizationID AND $termIDs) {
+      $organization = $this->organizations[$organizationID];
+      if ($organization->getChildren()) {
+        foreach($organization->getChildren() as $child) {
+           $this->getOrganizationTerms($child->getID(), $termIDs, true);
+        }
+      } elseif ($nested === true) {
+        if ($organization->getTermIDs()) {
+          foreach($organization->getTermIDs() as $term) {
+            if ((is_array($termIDs) AND in_array($term, $termIDs)) OR (!is_array($termIDs) AND $term == $termIDs)) {
+              $this->organizationTerms[] = $organization->getOrganizationTermID($term);
+            }
+          }
+        }
+        return;
+      }
+    }
+    return $this->organizationTerms;
+  }
+  
   public function __sleep() {
     $this->db = null;
     
-    return array('organizations', 'schools');
+    return array('organizations');
   }
   
 }

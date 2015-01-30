@@ -61,7 +61,11 @@ class TwigExtension extends \Twig_Extension {
     
     if ($this->session->get('user_id')) {
       $globals_array += array(
-        'focus_usergroups' => Focus::usergroups($this->db, $this->session->get('user_id')),
+        'focus_usergroups' => Focus::usergroups($this->db, $this->session->get('user_id'))
+      );
+    }
+    if ($this->session->get('user_id') AND $this->session->get('portal') == 'sis') {
+        $globals_array += array(
         'focus_organization' => Focus::getOrganizationMenu($this->container->get('kula.core.organization'), $this->session->get('organization_id')),
         'focus_terms' => Focus::terms($this->container->get('kula.core.organization'), $this->container->get('kula.core.term'), $this->session->get('organization_id'), $this->session->get('portal'), $this->session->get('administrator'), $this->session->get('user_id'))
       );

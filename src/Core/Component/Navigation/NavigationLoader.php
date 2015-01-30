@@ -16,8 +16,10 @@ class NavigationLoader {
     
     if ($navigation) {
       foreach($navigation as $path => $nav) {
-        $this->loadNavigation($nav, $path);
-        $this->paths[] = new FileResource($path);
+        if ($nav) {
+          $this->loadNavigation($nav, $path);
+          $this->paths[] = new FileResource($path);
+        }
       }
     }
     
@@ -49,7 +51,7 @@ class NavigationLoader {
         $this->page($nav, $navName);
       }
       
-      $this->navigation[$navName] = $nav;
+      //$this->navigation[$navName] = $nav;
       
     }
   }
@@ -71,7 +73,7 @@ class NavigationLoader {
     $this->addNavigation($name, $nav);
     
     foreach($nav['reports'] as $reportName => $report) {
-      $this->report($report, $reportmName, $name, $nav['portal']);
+      $this->report($report, $reportName, $name, $nav['portal']);
     }
   }
   
@@ -101,7 +103,7 @@ class NavigationLoader {
   }
   
   private function form($nav, $name, $parent, $portal) {
-    
+
     $nav['parent'] = $parent;
     $nav['type'] = 'form';
     $nav['portal'] = $portal;
@@ -128,7 +130,7 @@ class NavigationLoader {
   }
   
   private function tab($nav, $name, $parent, $portal) {
-    
+
     $nav['parent'] = $parent;
     $nav['portal'] = $portal;
     $nav['type'] = 'tab';
@@ -195,7 +197,6 @@ class NavigationLoader {
         $navFields['NAVIGATION_NAME'] = $navName;
         
         if (isset($nav['parent'])) {
-          
           // Look up parent
           $navParent = $db->db_select('CORE_NAVIGATION', 'nav')
             ->fields('nav', array('NAVIGATION_ID'))
@@ -204,8 +205,7 @@ class NavigationLoader {
           
           if ($navParent['NAVIGATION_ID']) 
             $navFields['PARENT_NAVIGATION_ID'] = $navParent['NAVIGATION_ID'];
-          
-        }
+        } 
         
         $navFields['NAVIGATION_TYPE'] = $nav['type'];
         $navFields['PORTAL'] = $nav['portal'];

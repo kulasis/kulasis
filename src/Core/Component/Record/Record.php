@@ -12,5 +12,9 @@ abstract class Record {
     $this->session = $session;
     $this->focus = $focus;
 	}
+  
+  public function db() {
+    return $this->db;
+  }
 	
 }

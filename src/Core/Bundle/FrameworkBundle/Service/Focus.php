@@ -51,10 +51,11 @@ class Focus {
       }       
     } 
     
+    /*
     if (!$organization_id AND !$term_id AND $this->session->get('portal') != 'sis') {
       $this->session->setFocus('organization_id', $this->organization->getSchoolOrganizationIDs()[0]);
     }
-    
+    */
   }
   /*
   public function setSectionFocus($section_id = null, $role_token = null) {
@@ -119,7 +120,7 @@ class Focus {
     else
       return false;
   }
-  */
+  
   public function getSchoolIDs() {
     if ($this->session->get('portal') == 'sis') {
       return $this->organization->getSchoolOrganizationIDs();
@@ -127,31 +128,13 @@ class Focus {
       return $this->organization->getSchoolOrganizationIDs()[0];
     }
   }
-  
+  */
   public function getOrganizationTermIDs() {  
-    return $this->organization_term_ids;
+    return $this->organization->getOrganizationTerms($this->getOrganizationID(), $this->getTermID());
   }
   
-  public function setOrganizationTermIDs() {
-    $this->organization_term_ids = $this->getSchoolTermIDsForTermAndOrganization($this->getSchoolIDs(), $this->getTermID());
-  }
-  
-  private function getSchoolTermIDsForTermAndOrganization($organization_ids, $term_ids) {
-    $organization_results = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'orgterm')
-      ->fields('orgterm', array('ORGANIZATION_TERM_ID'))
-      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterm.ORGANIZATION_ID')
-      ->condition('org.SCHOOL', 'Y');
-    if ($organization_ids)
-      $organization_results = $organization_results->condition('orgterm.ORGANIZATION_ID', $organization_ids);
-    if ($term_ids)
-      $organization_results = $organization_results->condition('TERM_ID', $term_ids);
-
-    $organization_results = $organization_results->execute();
-    $organization_term_ids = array();
-    while ($organization_row = $organization_results->fetch()) {
-      $organization_term_ids[] = $organization_row['ORGANIZATION_TERM_ID'];
-    }
-    return $organization_term_ids;
+  public function getSchoolIDs() {
+    return $this->organization->getSchools($this->getOrganizationID());
   }
   
   public function getOrganizationID() {
@@ -167,7 +150,19 @@ class Focus {
     if (isset($session_focus['term_id']) AND $session_focus['term_id'] != 'ALL') {
       return $session_focus['term_id'];  
     } elseif (isset($session_focus['term_id']) AND $session_focus['term_id'] == 'ALL') {
-      return \Kula\Component\Focus\Term::getAllTermIDs();
+      return $this->term->getAllTermIDs();
+    } elseif ($this->session->get('term_id')) {  
+      return $this->session->get('term_id');
+    }
+  }
+  
+  public function getTermIDForMenu() {
+    $session_focus = $this->session->get('focus');
+    
+    if (isset($session_focus['term_id']) AND $session_focus['term_id'] != 'ALL') {
+      return $session_focus['term_id'];  
+    } elseif (isset($session_focus['term_id']) AND $session_focus['term_id'] == 'ALL') {
+      return '';
     } elseif ($this->session->get('term_id')) {  
       return $this->session->get('term_id');
     }

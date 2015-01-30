@@ -1,0 +1,23 @@
+Grades:
+  type: tab
+  portal: sis
+  parent: SIS.HEd.Student.Schedule
+  description: "Grades"
+  display_name: "Grades"
+  route: sis_HEd_student_schedule_grades
+
+FinalGrades:
+  type: menu_report
+  portal: sis
+  parent: SIS.HEd.Student.Schedule
+  descriptions: "Final Grades"
+  display_name: "Final Grades"
+  route: sis_HEd_student_schedule_reports_finalgrades
+
+FinalGrades:
+  type: report
+  portal: sis
+  parent: SIS.HEd.Student
+  description: "Final Grades"
+  display_name: "Final Grades"
+  route: sis_HEd_student_schedule_reports_finalgrades
