@@ -140,7 +140,7 @@ class TableLoader {
     $this->addTimestamps();
     
     // Check table exists in database
-    $catalogTable = $db->db_select('CORE_SCHEMA_TABLES', 'schema_tables')
+    $catalogTable = $db->db_select('CORE_SCHEMA_TABLES', 'schema_tables', array('target' => 'schema'))
       ->fields('schema_tables')
       ->condition('TABLE_NAME', $this->name)
       ->execute()->fetch();

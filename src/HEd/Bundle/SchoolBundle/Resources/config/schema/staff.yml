@@ -30,7 +30,7 @@ HEd.Staff:
       field_size: 25
       column_name: "Abbreviated Name"
       label_name: "Abbreviated Name"
-HEd.Staff.OrganizationTerms:
+HEd.Staff.OrganizationTerm:
   description: "Staff in Terms"
   db_table_name: STUD_STAFF_ORGANIZATION_TERMS
   timestamps: true
@@ -90,4 +90,4 @@ HEd.Staff.OrganizationTerms:
       column_name: "Department"
       label_name: "Department"
   unique_keys:
-    StaffOrganizationTerms: [ 'HEd.Staff.OrganizationTerms.StaffID', 'HEd.Staff.OrganizationTerms.OrganizationTermID' ]
+    StaffOrganizationTerms: [ 'HEd.Staff.OrganizationTerm.StaffID', 'HEd.Staff.OrganizationTerm.OrganizationTermID' ]

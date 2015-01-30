@@ -1,20 +1,20 @@
 <?php
 
-namespace Kula\Bundle\HEd\StudentBillingBundle\Field;
+namespace Kula\HEd\Bundle\BillingBundle\Field;
 
-use Kula\Component\Database\CalculatedFieldInterface;
+use Kula\Core\Component\Field\Field;
 
-class RefundType implements CalculatedFieldInterface {
-	
-	public static function select($schema, $param) {
+class RefundType extends Field {
+  
+  public function select($schema, $param) {
 
-		$menu = array(
-			'TUITION' => 'Tuition',
-			'COURSEFEE' => 'Course Fees'
-		);
-		
-		return $menu;
-		
-	}
-	
+    $menu = array(
+      'TUITION' => 'Tuition',
+      'COURSEFEE' => 'Course Fees'
+    );
+    
+    return $menu;
+    
+  }
+  
 }

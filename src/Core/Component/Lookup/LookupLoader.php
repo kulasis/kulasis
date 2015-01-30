@@ -60,7 +60,7 @@ class LookupLoader {
     foreach($this->lookups as $lookupTableName => $lookupTable) {
       
       // Check table exists in database
-      $catalogLookupTable = $db->db_select('CORE_LOOKUP_TABLES', 'lookup_tables')
+      $catalogLookupTable = $db->db_select('CORE_LOOKUP_TABLES', 'lookup_tables', array('target' => 'schema'))
         ->fields('lookup_tables')
         ->condition('LOOKUP_TABLE_NAME', $lookupTableName)
         ->execute()->fetch();
@@ -77,7 +77,7 @@ class LookupLoader {
           $lookupTableFields['LOOKUP_TABLE_UPDATE'] = ($lookupTable['allow_update']) ? 1 : 0;
         if (count($lookupTableFields) > 0) {
           $lookupTableFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-          $db->db_update('CORE_LOOKUP_TABLES')->fields($lookupTableFields)->condition('LOOKUP_TABLE_NAME', $lookupTableName)->execute();
+          $db->db_update('CORE_LOOKUP_TABLES', array('target' => 'schema'))->fields($lookupTableFields)->condition('LOOKUP_TABLE_NAME', $lookupTableName)->execute();
         }
       } else {
         
@@ -85,7 +85,7 @@ class LookupLoader {
         $lookupTableFields['LOOKUP_TABLE_DESCRIPTION'] = $lookupTable['description'];
         $lookupTableFields['LOOKUP_TABLE_UPDATE'] = ($lookupTable['allow_update']) ? 1 : 0;
         $lookupTableFields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-        $lookupTableID = $db->db_insert('CORE_LOOKUP_TABLES')->fields($lookupTableFields)->execute();
+        $lookupTableID = $db->db_insert('CORE_LOOKUP_TABLES', array('target' => 'schema'))->fields($lookupTableFields)->execute();
         
       }
       
@@ -93,7 +93,7 @@ class LookupLoader {
       if (isset($lookupTable['values'])) {
       foreach($lookupTable['values'] as $value) {
         
-        $catalogLookupValue = $db->db_select('CORE_LOOKUP_VALUES', 'lookup_values')
+        $catalogLookupValue = $db->db_select('CORE_LOOKUP_VALUES', 'lookup_values', array('target' => 'schema'))
           ->fields('lookup_values')
           ->condition('LOOKUP_TABLE_ID', $lookupTableID)
           ->condition('CODE', $value['code'])
@@ -113,7 +113,7 @@ class LookupLoader {
             $lookupTableValueFields['CONVERSION'] = (isset($value['conversion'])) ? $value['conversion'] : null;
           if (count($lookupTableValueFields) > 0) {
             $lookupTableValueFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-            $db->db_update('CORE_LOOKUP_VALUES')->fields($lookupTableValueFields)->condition('CODE', $value['code'])->execute();
+            $db->db_update('CORE_LOOKUP_VALUES', array('target' => 'schema'))->fields($lookupTableValueFields)->condition('CODE', $value['code'])->execute();
           }
         } else {
           
@@ -124,7 +124,7 @@ class LookupLoader {
           $lookupTableValueFields['INACTIVE_AFTER'] = (isset($value['inactive_date'])) ? $value['inactive_date'] : null;
           $lookupTableValueFields['CONVERSION'] = (isset($value['conversion'])) ? $value['conversion'] : null;
           $lookupTableValueFields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-          $db->db_insert('CORE_LOOKUP_VALUES')->fields($lookupTableValueFields)->execute();
+          $db->db_insert('CORE_LOOKUP_VALUES', array('target' => 'schema'))->fields($lookupTableValueFields)->execute();
           
         }
         

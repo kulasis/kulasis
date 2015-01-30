@@ -1,25 +1,25 @@
 <?php
 
-namespace Kula\Bundle\HEd\StudentBillingBundle\Field;
+namespace Kula\HEd\Bundle\BillingBundle\Field;
 
-use Kula\Component\Database\CalculatedFieldInterface;
+use Kula\Core\Component\Field\Field;
 
-class TransactionRule implements CalculatedFieldInterface {
-	
-	public static function select($schema, $param) {
+class TransactionRule extends Field {
+  
+  public function select($schema, $param) {
 
-		$menu = array(
-			'NEWSTU' => 'New Student',
-			'ALLSTU' => 'All Students',
-			'TUITION' => 'Tuition',
-			'AUDIT' => 'Audit',
-			'OVERLOAD' => 'Overload',
-			'LATE' => 'Late Fee',
-			'ADDDROP' => 'Add/Drop Fee'
-		);
-		
-		return $menu;
-		
-	}
-	
+    $menu = array(
+      'NEWSTU' => 'New Student',
+      'ALLSTU' => 'All Students',
+      'TUITION' => 'Tuition',
+      'AUDIT' => 'Audit',
+      'OVERLOAD' => 'Overload',
+      'LATE' => 'Late Fee',
+      'ADDDROP' => 'Add/Drop Fee'
+    );
+    
+    return $menu;
+    
+  }
+  
 }

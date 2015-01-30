@@ -1,0 +1,2 @@
+SIS.FAID.AwardCode:
+  class: Kula\HEd\Bundle\FinancialAidBundle\Record\SISFinancialAidAwardCodeRecord

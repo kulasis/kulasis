@@ -37,7 +37,7 @@ class ChooserLoader {
     foreach($this->choosers as $chooserName => $chooser) {
       
       // Check table exists in database
-      $catalogRecordTable = $db->db_select('CORE_CHOOSER', 'chooser')
+      $catalogRecordTable = $db->db_select('CORE_CHOOSER', 'chooser', array('target' => 'schema'))
         ->fields('chooser')
         ->condition('CHOOSER_NAME', $chooserName)
         ->execute()->fetch();
@@ -50,14 +50,14 @@ class ChooserLoader {
           $chooserFields['CLASS'] = $chooser['class'];
         if (count($chooserFields) > 0) {
           $chooserFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-          $db->db_update('CORE_CHOOSER')->fields($chooserFields)->condition('CHOOSER_NAME', $chooserName)->execute();
+          $db->db_update('CORE_CHOOSER', array('target' => 'schema'))->fields($chooserFields)->condition('CHOOSER_NAME', $chooserName)->execute();
         }
       } else {
         
         $chooserFields['CHOOSER_NAME'] = $chooserName;
         $chooserFields['CLASS'] = (isset($chooser['class'])) ? $chooser['class'] : null;
         $chooserFields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-        $chooserID = $db->db_insert('CORE_CHOOSER')->fields($chooserFields)->execute();
+        $chooserID = $db->db_insert('CORE_CHOOSER', array('target' => 'schema'))->fields($chooserFields)->execute();
         
       }
       

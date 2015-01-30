@@ -16,7 +16,7 @@ class Organization {
   
   public function loadOrganization() {
     // Get all organizations in an array with [organization_id] = organization_array
-    $organization_results = $this->db->db_select('CORE_ORGANIZATION', 'org')
+    $organization_results = $this->db->db_select('CORE_ORGANIZATION', 'org', array('target' => 'schema'))
       ->fields('org', array('ORGANIZATION_ID', 'PARENT_ORGANIZATION_ID', 'ORGANIZATION_NAME', 'ORGANIZATION_ABBREVIATION', 'ORGANIZATION_TYPE'))
       ->orderBy('PARENT_ORGANIZATION_ID')
       ->orderBy('ORGANIZATION_NAME')
@@ -41,7 +41,7 @@ class Organization {
         $this->schools[$organization_row['ORGANIZATION_ID']] = $organization;
         
         // Get terms
-        $orgTerms = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'orgterms')
+        $orgTerms = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'orgterms', array('target' => 'schema'))
           ->fields('orgterms')
           ->condition('orgterms.ORGANIZATION_ID', $organization_row['ORGANIZATION_ID'])
           ->execute();

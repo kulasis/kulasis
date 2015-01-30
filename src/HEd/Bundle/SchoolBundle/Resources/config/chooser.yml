@@ -1,0 +1,4 @@
+HEd.Staff:
+  class: Kula\HEd\Bundle\SchoolBundle\Chooser\StaffChooser
+HEd.Staff.SchoolTerm:
+  class: Kula\HEd\Bundle\SchoolBundle\Chooser\StaffSchoolTermChooser

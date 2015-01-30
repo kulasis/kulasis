@@ -1,36 +1,36 @@
 <?php
 
-namespace Kula\Bundle\HEd\CourseHistoryBundle\Field;
+namespace Kula\HEd\Bundle\GradingBundle\Field;
 
-use Kula\Component\Database\CalculatedFieldInterface;
+use Kula\Core\Component\Field\Field;
 
-class Mark implements CalculatedFieldInterface {
-	
-	public static function select($schema, $param) {
+class Mark extends Field {
+  
+  public function select($schema, $param) {
 
-		$menu = array();
-		
-		$or_condition = new \Kula\Component\Database\Query\Predicate('OR');
-		$or_condition = $or_condition->predicate('marks.INACTIVE_AFTER', null)
-			->predicate('marks.INACTIVE_AFTER', date('Y-m-d'), '>');
-		
-		$result = \Kula\Component\Database\DB::connect('read')->select('STUD_MARK_SCALE_MARKS', 'marks')
-	->fields('marks', array('MARK'))
-	->predicate('marks.MARK_SCALE_ID', $param['MARK_SCALE_ID'])
-	->predicate($or_condition)
-	->order_by('SORT', 'ASC');
-		
-		if (isset($param['TEACHER']) AND $param['TEACHER']) {
-			$result = $result->predicate('marks.ALLOW_TEACHER', 'Y');
-		}
-			
-		$result = $result->execute();
-		while ($row = $result->fetch()) {
-			$menu[$row['MARK']] = $row['MARK'];
-		}
-		
-		return $menu;
-		
-	}
-	
+    $menu = array();
+    
+    $or_condition = $this->db()->db_or();
+    $or_condition = $or_condition->condition('marks.INACTIVE_AFTER', null)
+      ->condition('marks.INACTIVE_AFTER', date('Y-m-d'), '>');
+    
+    $result = $this->db()->db_select('STUD_MARK_SCALE_MARKS', 'marks')
+      ->fields('marks', array('MARK'))
+      ->condition('marks.MARK_SCALE_ID', $param['MARK_SCALE_ID'])
+      ->condition($or_condition)
+      ->orderBy('SORT', 'ASC');
+    
+    if (isset($param['TEACHER']) AND $param['TEACHER']) {
+      $result = $result->condition('marks.ALLOW_TEACHER', 'Y');
+    }
+      
+    $result = $result->execute();
+    while ($row = $result->fetch()) {
+      $menu[$row['MARK']] = $row['MARK'];
+    }
+    
+    return $menu;
+    
+  }
+  
 }

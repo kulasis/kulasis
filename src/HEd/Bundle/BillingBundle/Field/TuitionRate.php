@@ -4,7 +4,7 @@ namespace Kula\HEd\Bundle\BillingBundle\Field;
 
 use Kula\Core\Component\Field\Field;
 
-class TuitionRate implements Field{
+class TuitionRate extends Field{
   
   public function select($schema, $param) {
 

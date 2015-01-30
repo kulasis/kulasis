@@ -45,7 +45,7 @@ HEd.Section:
       label_name: "Organization Term ID"
     StaffOrganizationTermID:
       description: "Staff Organization Term ID"
-      parent: HEd.Staff.OrganizationTerms.ID
+      parent: HEd.Staff.OrganizationTerm.ID
       db_column_name: STAFF_ORGANIZATION_TERM_ID
       db_column_type: serial
       db_column_null: true
@@ -356,7 +356,7 @@ HEd.Section.Staff:
       label_name: "Section Meeting ID"
     StaffOrganizationTermID:
       description: "Staff Organization Term ID"
-      parent: HEd.Staff.OrganizationTerms.ID
+      parent: HEd.Staff.OrganizationTerm.ID
       db_column_name: STAFF_ORGANIZATION_TERM_ID
       db_column_type: serial
       db_column_null: true

@@ -25,7 +25,7 @@ class SocialSecurityNumber extends Field {
     } else {
       \Kula\Component\Database\DB::connect('write')->parentQuery("UPDATE CONS_CONSTITUENT SET SOCIAL_SECURITY_NUMBER = NULL WHERE CONSTITUENT_ID = '".$id."'");
     }
-    return 'remove_field';
+    return self::REMOVE_FIELD;
   }
   
   public function expression() {

@@ -37,7 +37,7 @@ class RecordLoader {
     foreach($this->records as $recordName => $record) {
       
       // Check table exists in database
-      $catalogRecordTable = $db->db_select('CORE_RECORD_TYPES', 'record_types')
+      $catalogRecordTable = $db->db_select('CORE_RECORD_TYPES', 'record_types', array('target' => 'schema'))
         ->fields('record_types')
         ->condition('RECORD_NAME', $recordName)
         ->execute()->fetch();
@@ -50,7 +50,7 @@ class RecordLoader {
           $recordFields['CLASS'] = $record['class'];
         if (count($recordFields) > 0) {
           $recordFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-          $db->db_update('CORE_RECORD_TYPES')->fields($recordFields)->condition('RECORD_NAME', $recordName)->execute();
+          $db->db_update('CORE_RECORD_TYPES', array('target' => 'schema'))->fields($recordFields)->condition('RECORD_NAME', $recordName)->execute();
         }
       } else {
         
@@ -58,7 +58,7 @@ class RecordLoader {
         $recordFields['PORTAL'] = strtolower(substr($recordName, 0, strpos($recordName, '.')));
         $recordFields['CLASS'] = (isset($record['class'])) ? $record['class'] : null;
         $recordFields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-        $recordID = $db->db_insert('CORE_RECORD_TYPES')->fields($recordFields)->execute();
+        $recordID = $db->db_insert('CORE_RECORD_TYPES', array('target' => 'schema'))->fields($recordFields)->execute();
         
       }
       

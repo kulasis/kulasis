@@ -1,2 +1,4 @@
 HEd.Course:
   class: Kula\HEd\Bundle\SchedulingBundle\Chooser\CourseChooser
+HEd.Room:
+  class: Kula\HEd\Bundle\SchedulingBundle\Chooser\RoomChooser

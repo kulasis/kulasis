@@ -16,7 +16,7 @@ HEd.Student.Status:
       field_type: checkbox
       column_name: "Academic Probation"
       label_name: "Academic Probation"
-HEd.Staff.OrganizationTerms:
+HEd.Staff.OrganizationTerm:
   fields:
     TeacherGradesOpen:
       description: "Teacher Grades Open"

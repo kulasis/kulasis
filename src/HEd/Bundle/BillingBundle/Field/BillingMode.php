@@ -1,20 +1,20 @@
 <?php
 
-namespace Kula\Bundle\HEd\StudentBillingBundle\Field;
+namespace Kula\HEd\Bundle\BillingBundle\Field;
 
-use Kula\Component\Database\CalculatedFieldInterface;
+use Kula\Core\Component\Field\Field;
 
-class BillingMode implements CalculatedFieldInterface {
-	
-	public static function select($schema, $param) {
+class BillingMode extends Field {
+  
+  public function select($schema, $param) {
 
-		$menu = array(
-			'STAND' => 'Standard',
-			'HOUR' => 'Hourly'
-		);
-		
-		return $menu;
-		
-	}
-	
+    $menu = array(
+      'STAND' => 'Standard',
+      'HOUR' => 'Hourly'
+    );
+    
+    return $menu;
+    
+  }
+  
 }

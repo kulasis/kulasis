@@ -1,0 +1,2 @@
+HEd.Student:
+  class: Kula\HEd\Bundle\StudentBundle\Chooser\StudentChooser

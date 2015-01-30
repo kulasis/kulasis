@@ -235,10 +235,7 @@ class DB {
     // Load database configuration
     $database_configuration = Yaml::parse($root_dir.'/config/databases.yml');
     Database::setMultipleConnectionInfo($database_configuration);
-    
-    if (in_array($environment, array('dev', 'test'))) {
-      Database::startLog('request');
-    }
+    $this->environment = $environment;
   }
 
   public function db_connection($options = null) {
@@ -246,6 +243,12 @@ class DB {
       $options['target'] = 'default';
     }
     return Database::getConnection($options['target']);
+  }
+  
+  public function startLogger() {
+    if (in_array($this->environment, array('dev', 'test'))) {
+      Database::startLog('request');
+    }
   }
 
   /**
@@ -370,6 +373,7 @@ class DB {
       $options['target'] = 'write';
     }
     $options['return'] = Database::RETURN_INSERT_ID;
+    $this->startLogger();
     return new Proxy(Database::getConnection($options['target'])->insert($table, $options));
   }
 
@@ -407,6 +411,7 @@ class DB {
       $options['target'] = 'write';
     }
     $options['return'] = Database::RETURN_AFFECTED;
+    if ($options['target'] != 'schema') $this->startLogger();
     return new Proxy(Database::getConnection($options['target'])->update($table, $options));
   }
 
@@ -425,6 +430,7 @@ class DB {
     if (empty($options['target']) || $options['target'] == 'replica') {
       $options['target'] = 'write';
     }
+    if ($options['target'] != 'schema') $this->startLogger();
     return new Proxy(Database::getConnection($options['target'])->delete($table, $options));
   }
 
@@ -463,6 +469,7 @@ class DB {
   public function db_select($table, $alias = NULL, array $options = array()) {
     if (empty($options['target'])) $options['target'] = 'read';
     if (empty($options['fetch'])) $options['fetch'] = \PDO::FETCH_ASSOC;
+    if ($options['target'] != 'schema') $this->startLogger();
     return new Proxy(Database::getConnection($options['target'])->select($table, $alias, $options));
   }
 
@@ -481,6 +488,7 @@ class DB {
   public function db_transaction($name = NULL, array $options = array()) {
     if (empty($options['target'])) $options['target'] = 'read';
     if (empty($options['fetch'])) $options['fetch'] = \PDO::FETCH_ASSOC;
+    if ($options['target'] != 'schema') $this->startLogger();
     return Database::getConnection($options['target'])->startTransaction($name);
   }
 

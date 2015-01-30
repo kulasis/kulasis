@@ -166,7 +166,7 @@ class FieldLoader {
   public function synchronizeDatabaseCatalog(\Kula\Core\Component\DB\DB $db) {
     
     // Check field exists in database
-    $catalogField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
+    $catalogField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields', array('target' => 'schema'))
       ->fields('schema_fields')
       ->condition('FIELD_NAME', $this->table->getName() . '.' .$this->name)
       ->execute()->fetch();
@@ -289,14 +289,14 @@ class FieldLoader {
     
     if ($this->parent) {
       // Lookup parent schema field ID
-      $parentSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields')
+      $parentSchemaField = $db->db_select('CORE_SCHEMA_FIELDS', 'schema_fields', array('target' => 'schema'))
         ->fields('schema_fields', array('SCHEMA_FIELD_ID', 'FIELD_NAME'))
         ->condition('FIELD_NAME', $this->parent)
         ->execute()->fetch();
       
       $catalogFieldsForDB['PARENT_SCHEMA_FIELD_ID'] = ($parentSchemaField['SCHEMA_FIELD_ID']) ? $parentSchemaField['SCHEMA_FIELD_ID'] : null;
 
-      $db->db_update('CORE_SCHEMA_FIELDS')->fields($catalogFieldsForDB)->condition('FIELD_NAME', $this->table->getName() . '.' .$this->name)->execute();
+      $db->db_update('CORE_SCHEMA_FIELDS', array('target' => 'schema'))->fields($catalogFieldsForDB)->condition('FIELD_NAME', $this->table->getName() . '.' .$this->name)->execute();
     }
     
     

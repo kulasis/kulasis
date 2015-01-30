@@ -17,7 +17,7 @@ class Term {
   public function loadTerms() {
     
     // Get all organizations in an array with [organization_id] = organization_array
-    $term_results = $this->db->db_select('CORE_TERM', 'term')
+    $term_results = $this->db->db_select('CORE_TERM', 'term', array('target' => 'schema'))
       ->fields('term', array('TERM_ID', 'TERM_NAME', 'TERM_ABBREVIATION'))
       ->orderBy('START_DATE')
       ->execute();

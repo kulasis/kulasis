@@ -1,0 +1,6 @@
+SIS.Course:
+  class: Kula\HEd\Bundle\SchedulingBundle\Record\SISCourseRecord
+SIS.Section:
+  class: Kula\HEd\Bundle\SchedulingBundle\Record\SISSectionRecord
+Teacher.Section:
+  class: Kula\HEd\Bundle\SchedulingBundle\Record\TeacherSectionRecord

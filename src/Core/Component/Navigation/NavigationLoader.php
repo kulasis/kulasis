@@ -165,7 +165,7 @@ class NavigationLoader {
     foreach($this->navigation as $navName => $nav) {
       
       // Check table exists in database
-      $catalogNavigationTable = $db->db_select('CORE_NAVIGATION', 'nav')
+      $catalogNavigationTable = $db->db_select('CORE_NAVIGATION', 'nav', array('target' => 'schema'))
         ->fields('nav')
         ->condition('NAVIGATION_NAME', $navName)
         ->execute()->fetch();
@@ -193,7 +193,7 @@ class NavigationLoader {
         
         if (count($navFields) > 0) {
           $navFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-          $db->db_update('CORE_NAVIGATION')->fields($navFields)->condition('NAVIGATION_NAME', $navName)->execute();
+          $db->db_update('CORE_NAVIGATION', array('target' => 'schema'))->fields($navFields)->condition('NAVIGATION_NAME', $navName)->execute();
         }
         
       } else {
@@ -202,7 +202,7 @@ class NavigationLoader {
         
         if (isset($nav['parent'])) {
           // Look up parent
-          $navParent = $db->db_select('CORE_NAVIGATION', 'nav')
+          $navParent = $db->db_select('CORE_NAVIGATION', 'nav', array('target' => 'schema'))
             ->fields('nav', array('NAVIGATION_ID'))
             ->condition('NAVIGATION_NAME', $nav['parent'])
             ->execute()->fetch();
@@ -220,7 +220,7 @@ class NavigationLoader {
         $navFields['ROUTE'] = (isset($nav['route'])) ? $nav['route'] : null;
         $navFields['CONFIRMATION_MESSAGE'] = (isset($nav['confirmation_message'])) ? $nav['confirmation_message'] : null;
         $navFields['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-        $navID = $db->db_insert('CORE_NAVIGATION')->fields($navFields)->execute();
+        $navID = $db->db_insert('CORE_NAVIGATION', array('target' => 'schema'))->fields($navFields)->execute();
         
       }
       
