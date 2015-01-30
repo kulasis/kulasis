@@ -456,7 +456,7 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectDoesNotExistException("Cannot add foreign key @name to table @table: table doesn't exist.", array('@table' => $table, '@name' => $name));
     }
     if ($this->indexExists($table, $name)) {
-      throw new SchemaObjectExistsException("Cannot add foreign key @name to table @table: foreign key already exists.", array('@table' => $table, '@name' => $name));
+      throw new SchemaObjectExistsException("Cannot add foreign key ".$table." to table ".$name.": foreign key already exists.");
     }
 
     $table_column = key($spec['columns']);

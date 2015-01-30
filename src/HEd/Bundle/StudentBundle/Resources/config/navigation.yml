@@ -66,6 +66,7 @@ SIS.HEd.Student:
     Enrollment:
       description: "Enrollment"
       display_name: "Enrollment"
+      route: sis_HEd_student_enrollment_statuses
       sort: 2
       menu_actions:
         ActivateInactivate:
@@ -90,13 +91,21 @@ SIS.HEd.Student:
       display_name: "Holds"
       route: sis_HEd_student_holds
       sort: 8
+      
+SIS.HEd.Reports.Student:
+  description: "Student (HEd)"
+  display_name: "Student (HEd)"
+  type: report_group
+  portal: sis
+  sort: 1
   reports:
     EnrollmentVerification:
       description: "Enrollment Verification"
       display_name: "Enrollment Verification"
       route: sis_HEd_student_enrollment_reports_enrollmentverification
       sort: 1
-SIS.Home:
+
+SIS.HEd.Home:
   description: "Home"
   display_name: "Home"
   type: form_group

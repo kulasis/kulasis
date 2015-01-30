@@ -1,0 +1,71 @@
+FinancialAid:
+  description: "Financial Aid"
+  type: form
+  parent: SIS.HEd.Home
+  portal: sis
+  display_name: "Financial Aid"
+  sort: 4
+  tabs:
+    Pending:
+      description: "Pending"
+      display_name: "Pending"
+      sort: 1
+      route: sis_HEd_home_financialaid_pending
+    Posted:
+      description: "Posted"
+      display_name: "Posted"
+      sort: 2
+      route: sis_HEd_home_financialaid_posted
+
+FinancialAid:
+  description: "Financial Aid"
+  type: form
+  parent: SIS.HEd.Student
+  portal: sis
+  display_name: "Financial Aid"
+  sort: 4
+  tabs:
+    Package:
+      description: "Package"
+      display_name: "Package"
+      sort: 1
+      route: sis_HEd_student_financialaid_package
+    Terms:
+      description: "Terms"
+      display_name: "Terms"
+      sort: 2
+      route: sis_HEd_student_financialaid_terms
+    Awards:
+      description: "Awards"
+      display_name: "Awards"
+      sort: 3
+      route: sis_HEd_student_financialaid_awards
+    AwardHistory:
+      description: "Award History"
+      display_name: "Award History"
+      sort: 4
+      route: sis_HEd_student_financialaid_awards_history
+    Billing:
+      description: "Billing"
+      display_name: "Billing"
+      sort: 5
+      route: sis_HEd_student_financialaid_billing
+    BillingHistory:
+      description: "Billing History"
+      display_name: "Billing History"
+      sort: 6
+      route: sis_HEd_student_financialaid_billing_history
+
+FinancialAid:
+  description: "Financial Aid"
+  type: form
+  parent: SIS.HEd.Setup
+  portal: sis
+  display_name: "Financial Aid"
+  sort: 4
+  tabs:
+    AwardCodes:
+      description: "Award Codes"
+      display_name: "Award Codes"
+      sort: 1
+      route: sis_HEd_setup_financialaid_awardcodes

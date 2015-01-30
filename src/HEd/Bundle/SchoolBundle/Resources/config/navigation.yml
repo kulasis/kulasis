@@ -1,0 +1,94 @@
+SIS.HEd.Setup:
+  description: "Setup"
+  display_name: "Setup"
+  type: form_group
+  portal: sis
+  sort: 5
+  forms:
+    Staff:
+      description: "Staff"
+      display_name: "Staff"
+      sort: 1
+      tabs: 
+        Information:
+          description: "Information"
+          display_name: "Information"
+          sort: 1
+          route: sis_HEd_school_staff
+        OrganizationTerms:
+          description: "Organization Terms"
+          display_name: "Organization Terms"
+          sort: 2
+          route: sis_HEd_school_staff_orgterms
+        Schedule:
+          description: "Schedule"
+          display_name: "Schedule"
+          sort: 3
+          route: sis_HEd_school_staff_schedule
+      menu_actions:
+        AddStaff:
+          description: "Add Staff"
+          display_name: "Add Staff"
+          sort: 1
+          route: sis_HEd_school_staff_add
+        DeleteStaff:
+          description: "Delete Staff"
+          display_name: "Delete Staff"
+          sort: 2
+          route: sis_HEd_school_staff_delete
+          divider_before: true
+          record_loaded: true
+      menu_reports:
+        InstructorSchedule:
+          description: "Instructor Schedule"
+          display_name: "Instructor Schedule"
+          sort: 1
+          route: sis_HEd_offering_staff_reports_schedule
+    SchoolSetup:
+      description: "School Setup"
+      display_name: "School Setup"
+      sort: 2
+      tabs:
+        General:
+          description: "General"
+          display_name: "General"
+          sort: 1
+          route: sis_HEd_school_schoolsetup_general
+        Levels:
+          description: "Levels"
+          display_name: "Levels"
+          sort: 2
+          route: sis_HEd_school_schoolsetup_levels
+        GradeLevels:
+          description: "Grade Levels"
+          display_name: "Grade Levels"
+          sort: 3
+          route: sis_HEd_school_schoolsetup_gradelevels
+    Student:
+      description: "Student"
+      display_name: "Student"
+      sort: 3
+      tabs:
+        Documents:
+          description: "Documents"
+          display_name: "Documents"
+          sort: 1
+          route: sis_HEd_setup_student_documents
+        Holds:
+          description: "Holds"
+          display_name: "Holds"
+          sort: 2
+          route: sis_HEd_setup_student_holds
+
+SIS.HEd.Reports.Setup:
+  description: "Setup"
+  display_name: "Setup"
+  type: report_group
+  portal: sis
+  reports:
+    InstructorSchedule:
+      description: "Instructor Schedule"
+      display_name: "Instructor Schedule"
+      sort: 1
+      route: sis_HEd_offering_staff_reports_schedule
+

@@ -17,7 +17,99 @@ FinalGrades:
 FinalGrades:
   type: report
   portal: sis
-  parent: SIS.HEd.Student
+  parent: SIS.HEd.Reports.Student
   description: "Final Grades"
   display_name: "Final Grades"
   route: sis_HEd_student_schedule_reports_finalgrades
+
+CourseHistory:
+  description: "Course History"
+  type: form
+  parent: SIS.HEd.Student
+  portal: sis
+  display_name: "Course History"
+  sort: 4
+  tabs:
+    CourseHistory:
+      description: "Course History"
+      display_name: "Course History"
+      sort: 1
+      route: sis_HEd_student_coursehistory_coursehistory
+    Degrees:
+      description: "Degrees"
+      display_name: "Degrees"
+      sort: 2
+      route: sis_HEd_student_coursehistory_degrees
+    Standings:
+      description: "Standings"
+      display_name: "Standings"
+      sort: 3
+      route: sis_HEd_student_coursehistory_standings
+    TranscriptComments:
+      description: "Transcript Comments"
+      display_name: "Transcript Comments"
+      sort: 4
+      route: sis_HEd_student_coursehistory_transcriptcomments
+    GPA:
+      description: "GPA"
+      display_name: "GPA"
+      sort: 5
+      route: sis_HEd_student_coursehistory_gpa
+  menu_reports:
+    StudentTranscript:
+      description: "Student Transcript"
+      display_name: "Student Transcript"
+      sort: 1
+      route: sis_HEd_student_coursehistory_reports_studenttranscript
+    DegreeAudit:
+      description: "Degree Audit"
+      display_name: "Degree Audit"
+      sort: 2
+      route: sis_student_coursehistory_reports_degreeaudit
+
+StudentTranscript:
+  description: "Student Transcript"
+  type: report
+  parent: SIS.HEd.Reports.Student
+  portal: sis
+  display_name: "Student Transcript"
+  sort: 1
+  route: sis_HEd_student_coursehistory_reports_studenttranscript
+DegreeAudit:
+  description: "Degree Audit"
+  type: report
+  parent: SIS.HEd.Reports.Student
+  portal: sis
+  display_name: "Degree Audit"
+  sort: 2
+  route: sis_HEd_student_coursehistory_reports_degreeaudit
+
+Degrees:
+  description: "Degrees"
+  type: form
+  parent: SIS.HEd.Offering
+  portal: sis
+  display_name: "Degrees"
+  sort: 2
+  tabs:
+    Degrees:
+      description: "Degrees"
+      display_name: "Degrees"
+      sort: 1
+      route: sis_HEd_degrees_degrees
+    Majors:
+      description: "Majors"
+      display_name: "Majors"
+      sort: 2
+      route: sis_HEd_degrees_majors
+    Minors:
+      description: "Minors"
+      display_name: "Minors"
+      sort: 3
+      route: sis_HEd_degrees_minors
+    Concentrations:
+      description: "Concentrations"
+      display_name: "Concentrations"
+      sort: 4
+      route: sis_HEd_degrees_concentrations
+    

@@ -5,11 +5,26 @@ Core.System:
   portal: core
   sort: 1
   forms: 
+    Setup:
+      description: "Setup"
+      display_name: "Setup"
+      sort: 1
+      tabs:
+        General:
+          description: "General"
+          display_name: "General"
+          sort: 1
+          route: sis_HEd_setup_system
+        LDAP:
+          description: "LDAP"
+          display_name: "LDAP"
+          sort: 2
+          route: sis_HEd_setup_system_ldap
     Lookup:
       description: "Lookup"
       display_name: "Lookup"
       route: core_system_lookup
-      sort: 1
+      sort: 2
       menu_actions:
         New:
           description: "New Lookup"
@@ -24,10 +39,15 @@ Core.System:
           route: core_system_lookup_delete
           confirmation_message: "Are you sure you want to delete lookup?"
           sort: 2
+    NonOrganization:
+      description: "Non Organization"
+      display_name: "Non Organization"
+      route: sis_HEd_system_nonorganization
+      sort: 3
     Organization:
       description: "Organization"
       display_name: "Organization"
-      sort: 2
+      sort: 4
       tabs:
         OrganizationTerms:
           description: "Organization Terms"
@@ -42,7 +62,7 @@ Core.System:
     Terms:
       description: "Terms"
       display_name: "Terms"
-      sort: 3
+      sort: 5
       route: core_system_terms
 Core.Security:
   description: "Security"

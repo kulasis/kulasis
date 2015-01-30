@@ -60,8 +60,10 @@ class NavigationLoader {
     
     $this->addNavigation($name, $nav);
     
+    if (isset($nav['forms'])) {
     foreach($nav['forms'] as $formName => $form) {
       $this->form($form, $formName, $name, $nav['portal']);
+    }
     }
   }
   
@@ -72,8 +74,10 @@ class NavigationLoader {
   private function reportGroup($nav, $name) {
     $this->addNavigation($name, $nav);
     
+    if (isset($nav['reports'])) {
     foreach($nav['reports'] as $reportName => $report) {
       $this->report($report, $reportName, $name, $nav['portal']);
+    }
     }
   }
   

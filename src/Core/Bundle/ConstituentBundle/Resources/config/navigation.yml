@@ -1,0 +1,19 @@
+Core.Constituent:
+  description: "Constituent"
+  display_name: "Constituent"
+  type: form_group
+  portal: core
+  sort: 1
+  forms: 
+    Lookup:
+      description: "Constituent"
+      display_name: "Constituent"
+      route: sis_constituent_constituent
+      sort: 1
+      menu_actions:
+        CombineDeleteConstituent:
+          description: "Combine & Delete Constituent"
+          display_name: "Combine & Delete Constituent"
+          route: sis_HEd_constituent_constituent_combine_delete_constituent
+          record_loaded: true
+          sort: 1

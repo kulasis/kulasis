@@ -1,0 +1,114 @@
+Billing:
+  description: "Billing"
+  type: form
+  parent: SIS.HEd.Home
+  portal: sis
+  display_name: "Billing"
+  sort: 3
+  tabs:
+    Pending:
+      description: "Pending"
+      display_name: "Pending"
+      sort: 1
+      route: sis_HEd_home_billing_pending
+    AllPending:
+      description: "All Pending"
+      display_name: "All Pending"
+      sort: 2
+      route: sis_HEd_home_billing_pending_all
+
+Billing:
+  description: "Billing"
+  type: form
+  parent: SIS.HEd.Student
+  portal: sis
+  display_name: "Billing"
+  sort: 5
+  tabs:
+    Balances:
+      description: "Balances"
+      display_name: "Balances"
+      sort: 1
+      route: sis_HEd_student_billing
+    Transactions:
+      description: "Transactions"
+      display_name: "Transactions"
+      sort: 2
+      route: sis_HEd_student_billing_transactions
+    History:
+      description: "History"
+      display_name: "History"
+      sort: 3
+      route: sis_HEd_student_billing_history
+  menu_actions:
+    AddCharge:
+      description: "Add Charge"
+      display_name: "Add Charge"
+      sort: 1
+      record_loaded: true
+      route: sis_HEd_student_billing_charges_add
+    AddPayment:
+      description: "Add Payment"
+      display_name: "Add Payment"
+      sort: 2
+      record_loaded: true
+      divider_before: true
+      route: sis_HEd_student_billing_payments_add
+  menu_reports:
+    BillingStatement:
+      description: "Billing Statement"
+      display_name: "Billing Statement"
+      sort: 1
+      route: sis_HEd_student_billing_reports_billingstatement
+    BillingReceipt:
+      description: "Billing Receipt"
+      display_name: "Billing Receipt"
+      sort: 2
+      route: sis_HEd_student_billing_reports_billingreceipt
+    BillingLedger:
+      description: "Billing Ledger"
+      display_name: "Billing Ledger"
+      sort: 3
+      route: sis_HEd_student_billing_reports_billingledger
+
+SIS.HEd.Reports.Billing:
+  description: "Billing"
+  display_name: "Billing"
+  type: report_group
+  portal: sis
+  sort: 3
+  reports:
+    BillingStatement:
+      description: "Billing Statement"
+      display_name: "Billing Statement"
+      sort: 1
+      route: sis_HEd_student_billing_reports_billingstatement
+    BillingReceipt:
+      description: "Billing Receipt"
+      display_name: "Billing Receipt"
+      sort: 2
+      route: sis_HEd_student_billing_reports_billingreceipt
+    BillingLedger:
+      description: "Billing Ledger"
+      display_name: "Billing Ledger"
+      sort: 3
+      route: sis_HEd_student_billing_reports_billingledger
+
+Billing:
+  description: "Billing"
+  type: form
+  parent: SIS.HEd.Setup
+  portal: sis
+  display_name: "Billing"
+  sort: 3
+  tabs:
+    TuitionRates:
+      description: "Tuition Rates"
+      display_name: "Tuition Rates"
+      sort: 1
+      route: sis_HEd_setup_billing_tuitionrates
+    Codes:
+      description: "Codes"
+      display_name: "Codes"
+      sort: 2
+      route: sis_HEd_setup_billing_codes
