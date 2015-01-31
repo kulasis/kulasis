@@ -1,4 +1,4 @@
-kulasis
+Kula SIS
 =======
 
 The Kula Student Information System Project
