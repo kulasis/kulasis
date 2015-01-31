@@ -1,31 +1,27 @@
-Grades:
+SIS.HEd.Student.Schedule.Grades:
   type: tab
   portal: sis
-  parent: SIS.HEd.Student.Schedule
   description: "Grades"
   display_name: "Grades"
   route: sis_HEd_student_schedule_grades
 
-FinalGrades:
+SIS.HEd.Student.Schedule.FinalGrades:
   type: menu_report
   portal: sis
-  parent: SIS.HEd.Student.Schedule
   descriptions: "Final Grades"
   display_name: "Final Grades"
   route: sis_HEd_student_schedule_reports_finalgrades
 
-FinalGrades:
+SIS.HEd.Reports.Student.FinalGrades:
   type: report
   portal: sis
-  parent: SIS.HEd.Reports.Student
   description: "Final Grades"
   display_name: "Final Grades"
   route: sis_HEd_student_schedule_reports_finalgrades
 
-CourseHistory:
+SIS.HEd.Student.CourseHistory:
   description: "Course History"
   type: form
-  parent: SIS.HEd.Student
   portal: sis
   display_name: "Course History"
   sort: 4
@@ -67,27 +63,24 @@ CourseHistory:
       sort: 2
       route: sis_student_coursehistory_reports_degreeaudit
 
-StudentTranscript:
+SIS.HEd.Reports.Student.StudentTranscript:
   description: "Student Transcript"
   type: report
-  parent: SIS.HEd.Reports.Student
   portal: sis
   display_name: "Student Transcript"
   sort: 1
   route: sis_HEd_student_coursehistory_reports_studenttranscript
-DegreeAudit:
+SIS.HEd.Reports.Student.DegreeAudit:
   description: "Degree Audit"
   type: report
-  parent: SIS.HEd.Reports.Student
   portal: sis
   display_name: "Degree Audit"
   sort: 2
   route: sis_HEd_student_coursehistory_reports_degreeaudit
 
-Degrees:
+SIS.HEd.Offering.Degrees:
   description: "Degrees"
   type: form
-  parent: SIS.HEd.Offering
   portal: sis
   display_name: "Degrees"
   sort: 2

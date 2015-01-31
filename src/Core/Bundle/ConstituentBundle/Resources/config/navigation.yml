@@ -5,7 +5,7 @@ Core.Constituent:
   portal: core
   sort: 1
   forms: 
-    Lookup:
+    Constituent:
       description: "Constituent"
       display_name: "Constituent"
       route: sis_constituent_constituent

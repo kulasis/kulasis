@@ -1,7 +1,6 @@
-FinancialAid:
+SIS.HEd.Home.FinancialAid:
   description: "Financial Aid"
   type: form
-  parent: SIS.HEd.Home
   portal: sis
   display_name: "Financial Aid"
   sort: 4
@@ -17,10 +16,9 @@ FinancialAid:
       sort: 2
       route: sis_HEd_home_financialaid_posted
 
-FinancialAid:
+SIS.HEd.Student.FinancialAid:
   description: "Financial Aid"
   type: form
-  parent: SIS.HEd.Student
   portal: sis
   display_name: "Financial Aid"
   sort: 4
@@ -56,10 +54,9 @@ FinancialAid:
       sort: 6
       route: sis_HEd_student_financialaid_billing_history
 
-FinancialAid:
+SIS.HEd.Setup.FinancialAid:
   description: "Financial Aid"
   type: form
-  parent: SIS.HEd.Setup
   portal: sis
   display_name: "Financial Aid"
   sort: 4

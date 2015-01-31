@@ -1,7 +1,6 @@
-Billing:
+SIS.HEd.Home.Billing:
   description: "Billing"
   type: form
-  parent: SIS.HEd.Home
   portal: sis
   display_name: "Billing"
   sort: 3
@@ -17,10 +16,9 @@ Billing:
       sort: 2
       route: sis_HEd_home_billing_pending_all
 
-Billing:
+SIS.HEd.Student.Billing:
   description: "Billing"
   type: form
-  parent: SIS.HEd.Student
   portal: sis
   display_name: "Billing"
   sort: 5
@@ -94,10 +92,9 @@ SIS.HEd.Reports.Billing:
       sort: 3
       route: sis_HEd_student_billing_reports_billingledger
 
-Billing:
+SIS.HEd.Setup.Billing:
   description: "Billing"
   type: form
-  parent: SIS.HEd.Setup
   portal: sis
   display_name: "Billing"
   sort: 3

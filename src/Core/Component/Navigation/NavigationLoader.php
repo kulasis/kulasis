@@ -38,15 +38,15 @@ class NavigationLoader {
       } elseif ($nav['type'] == 'report_group') { 
         $this->reportGroup($nav, $navName);
       } elseif ($nav['type'] == 'form') {
-        $this->form($nav, $navName, $nav['parent'], $nav['portal']);
+        $this->form($nav, $navName, null, $nav['portal']);
       } elseif ($nav['type'] == 'menu_actions') {
-        $this->formMenuActions($nav, $navName, $nav['parent'], $nav['portal']);
+        $this->formMenuActions($nav, $navName, null, $nav['portal']);
       } elseif ($nav['type'] == 'menu_reports') {
-        $this->formMenuReports($nav, $navName, $nav['parent'], $nav['portal']);
+        $this->formMenuReports($nav, $navName, null, $nav['portal']);
       } elseif ($nav['type'] == 'report') {
-        $this->report($nav, $navName, $nav['parent'], $nav['portal']);
+        $this->report($nav, $navName, null, $nav['portal']);
       } elseif ($nav['type'] == 'tab') {
-        $this->tab($nav, $navName, $nav['parent'], $nav['portal']);
+        $this->tab($nav, $navName, null, $nav['portal']);
       } elseif ($nav['type'] == 'page') {
         $this->page($nav, $navName);
       }
@@ -81,53 +81,71 @@ class NavigationLoader {
     }
   }
   
+  private function getParent($name, $parent) {
+    if ($parent)
+      return $parent;
+    else {
+      return substr($name, 0, strrpos($name, '.'));
+    }
+  }
+  
+  private function getName($name, $parent) {
+    if (!$parent)
+      return $name;
+    
+    if ($parent AND strpos($name, $parent))
+      return $name;
+
+    return $parent.'.'.$name;
+  }
+  
   private function formMenuActions($nav, $name, $parent, $portal) {
     
-    $nav['parent'] = $parent;
+    $nav['parent'] = $this->getParent($name, $parent);
     $nav['type'] = 'menu_action';
     $nav['portal'] = $portal;
-    $this->addNavigation($parent.'.'.$name, $nav);
+    $this->addNavigation($this->getName($name, $parent), $nav);
     
   }
   
   private function formMenuReports($nav, $name, $parent, $portal) {
     
-    $nav['parent'] = $parent;
+    $nav['parent'] = $this->getParent($name, $parent);
     $nav['type'] = 'menu_report';
     $nav['portal'] = $portal;
-    $this->addNavigation($parent.'.'.$name, $nav);
+    $this->addNavigation($this->getName($name, $parent), $nav);
     
   }
   
   private function report($nav, $name, $parent, $portal) {
-    $nav['parent'] = $parent;
+    $nav['parent'] = $this->getParent($name, $parent);
     $nav['type'] = 'report';
     $nav['portal'] = $portal;
-    $this->addNavigation($parent.'.'.$name, $nav);
+    $this->addNavigation($this->getName($name, $parent), $nav);
   }
   
   private function form($nav, $name, $parent, $portal) {
 
-    $nav['parent'] = $parent;
+    $nav['parent'] = $this->getParent($name, $parent);
     $nav['type'] = 'form';
     $nav['portal'] = $portal;
-    $this->addNavigation($parent.'.'.$name, $nav);
+    $this->addNavigation($this->getName($name, $parent), $nav);
     
     if (isset($nav['tabs'])) {
     foreach($nav['tabs'] as $tabName => $tab) {
-      $this->tab($tab, $tabName, $nav['parent'].'.'.$name, $portal);
+      $this->tab($tab, $tabName, $this->getName($name, $parent), $portal);
     }
     }
     
     if (isset($nav['menu_actions'])) {
     foreach($nav['menu_actions'] as $menuactionName => $menu) {
-      $this->formMenuActions($menu, $menuactionName, $nav['parent'].'.'.$name, $portal);
+      $this->formMenuActions($menu, $menuactionName, $this->getName($name, $parent), $portal);
     }
     }
     
     if (isset($nav['menu_reports'])) {
     foreach($nav['menu_reports'] as $menureportName => $menu) {
-      $this->formMenuReports($menu, $menureportName, $nav['parent'].'.'.$name, $portal);
+      $this->formMenuReports($menu, $menureportName, $this->getName($name, $parent), $portal);
     }
     }
     
@@ -135,10 +153,10 @@ class NavigationLoader {
   
   private function tab($nav, $name, $parent, $portal) {
 
-    $nav['parent'] = $parent;
+    $nav['parent'] = $this->getParent($name, $parent);
     $nav['portal'] = $portal;
     $nav['type'] = 'tab';
-    $this->addNavigation($parent.'.'.$name, $nav);
+    $this->addNavigation($this->getName($name, $parent), $nav);
     
   }
   
