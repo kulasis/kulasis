@@ -189,7 +189,7 @@ HEd.TuitionRate.Students:
       field_type: lookup
       lookup: HEd.Student.Enrollment.EnterCode
 
-HEd.TuitionRate.Transactions:
+HEd.TuitionRate.Transaction:
   description: "Tuition Rate Transactions"
   db_table_name: BILL_TUITION_RATE_TRANSACTIONS
   timestamps: true

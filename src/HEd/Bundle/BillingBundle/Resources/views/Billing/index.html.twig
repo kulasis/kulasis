@@ -1,4 +1,4 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
 
 {% block content %}
 <div class="data-table-header-div">
@@ -8,34 +8,34 @@ Charges
 </div>
 <table id="window_window_num_data_table_terms" class="data-table">
 <thead>
-	<tr>
-	<th class="data-table-cell-row-header">#</th>
-	{{ kula_field_name({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'CHARGE_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_CHARGE_CODE', db_field: 'CHARGE_CODE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'CHARGE_DESCRIPTION', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'AMOUNT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'APPLIED_BALANCE', field_name_override: 'Balance', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <tr>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'Core.Term.Abbreviation', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Billing.db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'CHARGE_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ db_table: 'BILL_CHARGE_CODE', db_field: 'CHARGE_CODE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'CHARGE_DESCRIPTION', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'AMOUNT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'APPLIED_BALANCE', field_name_override: 'Balance', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </tr>
 </thead>
 <tbody>
-	{% for charge in charges %}
-	<tr>
-		<td class="data-table-cell-row-num">{{ loop.index }}</td>
-		{{ kula_field({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', input: false, value: charge.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'CHARGE_DATE', input: false, value: charge.CHARGE_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'BILL_CHARGE_CODE', db_field: 'CHARGE_CODE', input: false, value: charge.CHARGE_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'CHARGE_DESCRIPTION', input: false, value: charge.CHARGE_DESCRIPTION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'AMOUNT', input: false, value: charge.AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'APPLIED_BALANCE', input: false, value: charge.APPLIED_BALANCE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-	</tr>
-	{% endfor %}
-	<tr>
-		<td class="data-table-cell-row-num">T</td>
-		<td colspan="4" align="right">Total:</td>
-		<td>{{ charges_total }}</td>
-		<td>&nbsp;</td>
-	</tr>
+  {% for charge in charges %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', input: false, value: charge.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'CHARGE_DATE', input: false, value: charge.CHARGE_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ db_table: 'BILL_CHARGE_CODE', db_field: 'CHARGE_CODE', input: false, value: charge.CHARGE_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'CHARGE_DESCRIPTION', input: false, value: charge.CHARGE_DESCRIPTION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'AMOUNT', input: false, value: charge.AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ db_table: 'BILL_CONSTITUENT_CHARGES', db_field: 'APPLIED_BALANCE', input: false, value: charge.APPLIED_BALANCE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+  <tr>
+    <td class="data-table-cell-row-num">T</td>
+    <td colspan="4" align="right">Total:</td>
+    <td>{{ charges_total }}</td>
+    <td>&nbsp;</td>
+  </tr>
 </tbody>
 </table>
 
@@ -46,34 +46,34 @@ Payments
 </div>
 <table id="window_window_num_data_table_terms" class="data-table">
 <thead>
-	<tr>
-	<th class="data-table-cell-row-header">#</th>
-	{{ kula_field_name({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'PAYMENT_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_PAYMENT_CODE', db_field: 'PAYMENT_CODE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'PAYMENT_DESCRIPTION', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'AMOUNT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'APPLIED_BALANCE', field_name_override: 'Balance', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <tr>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'PAYMENT_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ db_table: 'BILL_PAYMENT_CODE', db_field: 'PAYMENT_CODE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'PAYMENT_DESCRIPTION', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'AMOUNT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'APPLIED_BALANCE', field_name_override: 'Balance', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </tr>
 </thead>
 <tbody>
-	{% for payment in payments %}
-	<tr>
-		<td class="data-table-cell-row-num">{{ loop.index }}</td>
-		{{ kula_field({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', input: false, value: payment.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'PAYMENT_DATE', input: false, value: payment.PAYMENT_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'BILL_PAYMENT_CODE', db_field: 'PAYMENT_CODE', input: false, value: payment.PAYMENT_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'PAYMENT_DESCRIPTION', input: false, value: payment.PAYMENT_DESCRIPTION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'AMOUNT', input: false, value: payment.AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'APPLIED_BALANCE', input: false, value: payment.APPLIED_BALANCE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-	</tr>
-	{% endfor %}
-	<tr>
-		<td class="data-table-cell-row-num">T</td>
-		<td colspan="4" align="right">Total:</td>
-		<td>{{ payments_total }}</td>
-		<td>&nbsp;</td>
-	</tr>
+  {% for payment in payments %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', input: false, value: payment.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'PAYMENT_DATE', input: false, value: payment.PAYMENT_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ db_table: 'BILL_PAYMENT_CODE', db_field: 'PAYMENT_CODE', input: false, value: payment.PAYMENT_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'PAYMENT_DESCRIPTION', input: false, value: payment.PAYMENT_DESCRIPTION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'AMOUNT', input: false, value: payment.AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ db_table: 'BILL_CONSTITUENT_PAYMENTS', db_field: 'APPLIED_BALANCE', input: false, value: payment.APPLIED_BALANCE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+  <tr>
+    <td class="data-table-cell-row-num">T</td>
+    <td colspan="4" align="right">Total:</td>
+    <td>{{ payments_total }}</td>
+    <td>&nbsp;</td>
+  </tr>
 </tbody>
 </table>
 

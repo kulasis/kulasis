@@ -1,93 +1,53 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
 
 {% block content %}
 <p>
-<a class="normal-link"  data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_student_billing_transactions') }}">Back to Transactions</a>
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_student_billing_transactions') }}">Back to Transactions</a>
 </p>
 
 <div class="group-box">
 <div class="group-box-header">Term</div>
 <div class="group-box-contents group">
-{{ kula_field({ edit: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, field_name_override: 'Org / Term', db_field: 'ORGANIZATION_TERM_ID', value: transaction.ORGANIZATION_TERM_ID, label: true }) }}
+{{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.OrganizationTermID', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, field_name_override: 'Org / Term', value: transaction.ORGANIZATION_TERM_ID, label: true }) }}
 </div>
 </div>
 <div class="group-box">
 <div class="group-box-header">Transaction</div>
 <div class="group-box-contents group">
-{{ kula_field({ db_table: 'BILL_CODE', db_field: 'CODE_TYPE', field_name_override: 'Type', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.CODE_TYPE, label: true }) }}
+{{ kula_field({ field: 'HEd.Billing.Code.Type', field_name_override: 'Type', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.CODE_TYPE, label: true }) }}
 {% if transaction.POSTED != 'Y' and transaction.VOIDED != 'Y' %}
-{{ kula_field({ edit: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'CODE_ID', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, field_name_override: 'Code', value: transaction.CODE_ID, label: true }) }}
+{{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.CodeID', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, field_name_override: 'Code', value: transaction.CODE_ID, label: true }) }}
 {% else %}
-{{ kula_field({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'CODE_ID', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, field_name_override: 'Code', value: transaction.CODE_ID, label: true }) }}
+{{ kula_field({ field: 'HEd.Billing.Transaction.CodeID', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, field_name_override: 'Code', value: transaction.CODE_ID, label: true }) }}
 {% endif %}
 </div>
 <div class="group-box-contents group">
 {% if transaction.POSTED != 'Y' and transaction.VOIDED != 'Y' %}
-{{ kula_field({ edit: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'TRANSACTION_DATE', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.TRANSACTION_DATE, label: true }) }}
+{{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.TransactionDate', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.TRANSACTION_DATE, label: true }) }}
 {% else %}
-{{ kula_field({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'TRANSACTION_DATE', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.TRANSACTION_DATE, label: true }) }}
+{{ kula_field({ field: 'HEd.Billing.Transaction.TransactionDate', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.TRANSACTION_DATE, label: true }) }}
 {% endif %}
-{{ kula_field({ edit: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, db_field: 'TRANSACTION_DESCRIPTION', value: transaction.TRANSACTION_DESCRIPTION, label: true }) }}
+{{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.Description', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.TRANSACTION_DESCRIPTION, label: true }) }}
 </div>
 <div class="group-box-contents group">
-{{ kula_field({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'POSTED', value: transaction.POSTED, label: true }) }}
-{{ kula_field({ edit: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'SHOW_ON_STATEMENT', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.SHOW_ON_STATEMENT, label: true }) }}
+{{ kula_field({ field: 'HEd.Billing.Transaction.Posted', value: transaction.POSTED, label: true }) }}
+{{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.ShowOnStatement', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.SHOW_ON_STATEMENT, label: true }) }}
 {% if transaction.POSTED != 'Y' and transaction.VOIDED != 'Y' %}
-{{ kula_field({ edit: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'AMOUNT', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.AMOUNT, label: true }) }}
+{{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.Amount', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.AMOUNT, label: true }) }}
 {% else %}
-{{ kula_field({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'AMOUNT', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.AMOUNT, label: true }) }}
+{{ kula_field({ field: 'HEd.Billing.Transaction.Amount', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.AMOUNT, label: true }) }}
 {% endif %}
-{{ kula_field({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'APPLIED_BALANCE', value: transaction.APPLIED_BALANCE, label: true }) }}
+{{ kula_field({ field: 'HEd.Billing.Transaction.AppliedBalance', value: transaction.APPLIED_BALANCE, label: true }) }}
 </div>
 </div>
 <div class="group-box">
 <div class="group-box-header">Voided</div>
 <div class="group-box-contents group">
-{{ kula_field({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'VOIDED', value: transaction.VOIDED, label: true }) }}
-{{ kula_field({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'ORIGINAL_AMOUNT', value: transaction.ORIGINAL_AMOUNT, label: true }) }}
-{{ kula_field({ edit: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, db_field: 'VOIDED_REASON', value: transaction.VOIDED_REASON, label: true }) }}
-{{ kula_field({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'VOIDED_USERSTAMP', value: transaction.USERNAME, label: true }) }}
-{{ kula_field({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS', db_field: 'VOIDED_TIMESTAMP', value: transaction.VOIDED_TIMESTAMP, label: true }) }}
+{{ kula_field({ field: 'HEd.Billing.Transaction.Voided', value: transaction.VOIDED, label: true }) }}
+{{ kula_field({ field: 'HEd.Billing.Transaction.OriginalAmount', value: transaction.ORIGINAL_AMOUNT, label: true }) }}
+{{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.VoidedReason', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.VOIDED_REASON, label: true }) }}
+{{ kula_field({ field: 'HEd.Billing.Transaction.VoidedUsername', value: transaction.USERNAME, label: true }) }}
+{{ kula_field({ field: 'HEd.Billing.Transaction.VoidedTimestamp', value: transaction.VOIDED_TIMESTAMP, label: true }) }}
 </div>
 </div>
-
-<div class="data-table-header-div">
-Applied Payments
-<span class="data-table-header-buttons">
-	{{ kula_table_add('window_window_num_data_table_appliedpayments', 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED') }}
-</span>
-</div>
-<table id="window_window_num_data_table_appliedpayments" class="data-table">
-<thead>
-		{{ kula_field_name({ delete: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'APPLIED_TRANSACTION_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	<th class="data-table-cell-row-header">#</th>
-	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'CHARGE_TRANSACTION_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'PAYMENT_TRANSACTION_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'AMOUNT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-</thead>
-<tbody>
-  {{ kula_display_html({ add: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'APPLIED_TRANSACTION_ID', prepend_html: '<tr class="data-table-row-new">' }) }}
-	{{ kula_field({ add: true, delete: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'APPLIED_TRANSACTION_ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-	{{ kula_display_html({ add: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'APPLIED_TRANSACTION_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
-	{{ kula_field({ add: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'CHARGE_TRANSACTION_ID', CONSTITUENT_ID: transaction.CONSTITUENT_ID, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-	{{ kula_field({ add: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'AMOUNT', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-	{{ kula_display_html({ add: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'APPLIED_TRANSACTION_ID', prepend_html: '</tr>' }) }}
-	{% for applied in applied_payments %}
-	<tr>
-		{{ kula_field({ delete: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'APPLIED_TRANSACTION_ID', db_row_id: applied.APPLIED_TRANSACTION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-		<td class="data-table-cell-row-num">{{ loop.index }}</td>
-		{{ kula_field({ edit: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'CHARGE_TRANSACTION_ID', db_row_id: applied.APPLIED_TRANSACTION_ID, CONSTITUENT_ID: applied.CONSTITUENT_ID, value: applied.CHARGE_TRANSACTION_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'PAYMENT_TRANSACTION_ID', db_row_id: applied.APPLIED_TRANSACTION_ID, CONSTITUENT_ID: applied.CONSTITUENT_ID, value: applied.PAYMENT_TRANSACTION_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'BILL_CONSTITUENT_TRANSACTIONS_APPLIED', db_field: 'AMOUNT', db_row_id: applied.APPLIED_TRANSACTION_ID, value: applied.AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-	</tr>
-	{% endfor %}
-	<tr>
-		<td class="data-table-cell-row-delete">&nbsp;</td>
-		<td class="data-table-cell-row-num">T</td>
-		<td align="right">Total:</td>
-		<td>{{ applied_payments_total }}</td>
-		<td>&nbsp;</td>
-	</tr>
-</tbody>
-</table>
 {% endblock %}

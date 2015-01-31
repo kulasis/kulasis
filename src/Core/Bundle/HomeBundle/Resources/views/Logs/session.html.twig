@@ -1,4 +1,4 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
 <div class="data-table-header-div">
@@ -6,31 +6,30 @@ Session Log
 </div>
 <table id="window_window_num_data_table_usergroups" class="data-table">
 <thead>
-	<tr>
-	{{ kula_field_name({ db_table: 'LOG_SESSION', db_field: 'SESSION_ID', field_name_override: 'ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', field_name_override: 'Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_NAME', field_name_override: 'User Group', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ABBREVIATION', field_name_override: 'Organization', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'LOG_SESSION', db_field: 'IN_TIME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'LOG_SESSION', db_field: 'OUT_TIME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'LOG_SESSION', db_field: 'IP_ADDRESS', field_name_override: 'IP', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <tr>
+  {{ kula_field_name({ field: 'Log.Session.ID', field_name_override: 'ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.LastName', field_name_override: 'Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Usergroup.Name', field_name_override: 'User Group', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Organization.Abbreviation', field_name_override: 'Organization', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Term.Abbreviation', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.Session.InTime', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.Session.OutTime', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.Session.IPAddress', field_name_override: 'IP', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </tr>
 </thead>
 <tbody>
-	{% for session in sessions %}
-	<tr>
-		{{ kula_field({ input: false, db_table: 'LOG_SESSION', db_field: 'SESSION_ID', value: session.SESSION_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', value: session.LAST_NAME~', '~session.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'CORE_USERGROUP', db_field: 'USERGROUP_NAME', value: session.USERGROUP_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_ABBREVIATION', value: session.ORGANIZATION_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', value: session.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'LOG_SESSION', db_field: 'IN_TIME', value: session.IN_TIME, prepend_html: '<td style= "white-space: nowrap">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'LOG_SESSION', db_field: 'OUT_TIME', value: session.OUT_TIME, prepend_html: '<td style= "white-space: nowrap">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'LOG_SESSION', db_field: 'IP_ADDRESS', value: session.IP_ADDRESS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-	</tr>
-	{% endfor %}
+  {% for session in sessions %}
+  <tr>
+    {{ kula_field({ input: false, field: 'Log.Session.ID', value: session.SESSION_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.LastName', value: session.LAST_NAME~', '~session.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Usergroup.Name', value: session.USERGROUP_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Organization.Abbreviation', value: session.ORGANIZATION_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Term.Abbreviation', value: session.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Log.Session.InTime', value: session.IN_TIME, prepend_html: '<td style= "white-space: nowrap">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Log.Session.OutTime', value: session.OUT_TIME, prepend_html: '<td style= "white-space: nowrap">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Log.Session.IPAddress', value: session.IP_ADDRESS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
 </tbody>
 </table>
-
 {% endblock %}

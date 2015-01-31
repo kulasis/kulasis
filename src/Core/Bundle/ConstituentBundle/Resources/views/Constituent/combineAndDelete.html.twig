@@ -1,15 +1,15 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
 
 {% block content %}
 <div class="group-box">
 <div class="group-box-header">Search Constituents</div>
 <div class="group-box-contents group">
-{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', label: true }) }}
-{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', label: true }) }}
-{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'MIDDLE_NAME', label: true }) }}
-{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', label: true }) }}
-{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'BIRTH_DATE', label: true }) }}
-{{ kula_field({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'SOCIAL_SECURITY_NUMBER', label: true }) }}
+{{ kula_field({ search: true, field: 'Core.Constituent.LastName', label: true }) }}
+{{ kula_field({ search: true, field: 'Core.Constituent.FirstName', label: true }) }}
+{{ kula_field({ search: true, field: 'Core.Constituent.MiddleName', label: true }) }}
+{{ kula_field({ search: true, field: 'Core.Constituent.PermanentNumber', label: true }) }}
+{{ kula_field({ search: true, field: 'Core.Constituent.BirthDate', label: true }) }}
+{{ kula_field({ search: true, field: 'Core.Constituent.SocialSecurityNumber', label: true }) }}
 </div>
 </div>
 
@@ -18,34 +18,34 @@ Search Results
 </div>
 <table id="window_window_num_data_table_terms" class="data-table">
 <thead>
-	{{ kula_field_name({ add: true, db_table: 'CONS_CONSTITUENT', db_field: 'CONSTITUENT_ID', field_name_override: '&nbsp;', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	<th class="data-table-cell-row-header">#</th>
-	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'MIDDLE_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'GENDER', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'BIRTH_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ search: true, db_table: 'CONS_CONSTITUENT', db_field: 'SOCIAL_SECURITY_NUMBER', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ add: true, field: 'Core.Constituent.ID', field_name_override: '&nbsp;', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ search: true, field: 'Core.Constituent.LastName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ search: true, field: 'Core.Constituent.FirstName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ search: true, field: 'Core.Constituent.MiddleName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ search: true, field: 'Core.Constituent.PermanentNumber', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ search: true, field: 'Core.Constituent.Gender', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ search: true, field: 'Core.Constituent.BirthDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ search: true, field: 'Core.Constituent.SocialSecurityNumber', db_field: 'SOCIAL_SECURITY_NUMBER', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </thead>
 <tbody>
-	{% for constituent in constituents %}
-	<tr>
-		{% if constituent.CONSTITUENT_ID == record_obj.getSelectedRecord.CONSTITUENT_ID %}
-		<td class="data-table-cell-row-num">D</td>
-		{% else %}
-		{{ kula_field({ add: true, post_type: 'combine', db_table: 'CONS_CONSTITUENT', db_field: 'CONSTITUENT_ID', value: constituent.CONSTITUENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-		{% endif %}
-		<td class="data-table-cell-row-num">{{ loop.index }}</td>
-		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'LAST_NAME', db_row_id: constituent.CONSTITUENT_ID, value: constituent.LAST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'FIRST_NAME', db_row_id: constituent.CONSTITUENT_ID, value: constituent.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'MIDDLE_NAME', db_row_id: constituent.CONSTITUENT_ID, value: constituent.MIDDLE_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'PERMANENT_NUMBER', db_row_id: constituent.CONSTITUENT_ID, value: constituent.PERMANENT_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'GENDER', db_row_id: constituent.CONSTITUENT_ID, value: constituent.GENDER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'BIRTH_DATE', db_row_id: constituent.CONSTITUENT_ID, value: constituent.BIRTH_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'CONS_CONSTITUENT', db_field: 'SOCIAL_SECURITY_NUMBER', db_row_id: constituent.CONSTITUENT_ID, value: constituent.SOCIAL_SECURITY_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-	</tr>
-	{% endfor %}
+  {% for constituent in constituents %}
+  <tr>
+    {% if constituent.CONSTITUENT_ID == kula_core_record.getSelectedRecord.CONSTITUENT_ID %}
+    <td class="data-table-cell-row-num">D</td>
+    {% else %}
+    {{ kula_field({ add: true, post_type: 'combine', field: 'Core.Constituent.ID', value: constituent.CONSTITUENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    {% endif %}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, field: 'Core.Constituent.LastName', db_row_id: constituent.CONSTITUENT_ID, value: constituent.LAST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.FirstName', db_row_id: constituent.CONSTITUENT_ID, value: constituent.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.MiddleName', db_row_id: constituent.CONSTITUENT_ID, value: constituent.MIDDLE_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.PermanentNumber', db_row_id: constituent.CONSTITUENT_ID, value: constituent.PERMANENT_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Gender', db_row_id: constituent.CONSTITUENT_ID, value: constituent.GENDER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.BirthDate', db_row_id: constituent.CONSTITUENT_ID, value: constituent.BIRTH_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.SocialSecurityNumber', db_row_id: constituent.CONSTITUENT_ID, value: constituent.SOCIAL_SECURITY_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
 </tbody>
 </table>
 

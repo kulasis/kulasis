@@ -1,4 +1,4 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
 
 {% block content %}
 <input type="hidden" name="record_id" value="{{ request.query.get('record_id') }}" />
@@ -6,11 +6,11 @@
 <div class="group-box">
 <div class="group-box-header">Billing Receipt</div>
 <div class="group-box-contents group">
-	<select name="non[receipts][]" multiple="multiple">
-		{% for payment in student_payments %}
-		<option value="{{ payment.CONSTITUENT_TRANSACTION_ID }}"{% if loop.index == 1 %} selected="selected"{% endif %}>{{ payment.TRANSACTION_DATE|date("m/d/Y") }} / {{ payment.CODE }} / {{ payment.TRANSACTION_DESCRIPTION }}</option>
-		{% endfor %}
-	</select>
+  <select name="non[receipts][]" multiple="multiple">
+    {% for payment in student_payments %}
+    <option value="{{ payment.CONSTITUENT_TRANSACTION_ID }}"{% if loop.index == 1 %} selected="selected"{% endif %}>{{ payment.TRANSACTION_DATE|date("m/d/Y") }} / {{ payment.CODE }} / {{ payment.TRANSACTION_DESCRIPTION }}</option>
+    {% endfor %}
+  </select>
 </div>
 </div>
 {% endblock %}

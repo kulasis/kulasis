@@ -43,6 +43,14 @@ HEd.Billing.Transaction:
       field_type: date
       column_name: "Transaction Date"
       label_name: "Transaction Date"
+    Description:
+      description: "Transaction Description"
+      db_column_name: TRANSACTION_DESCRIPTION
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Transaction Description"
+      label_name: "Transaction Description"
     Amount:
       description: "Amount"
       db_column_name: AMOUNT

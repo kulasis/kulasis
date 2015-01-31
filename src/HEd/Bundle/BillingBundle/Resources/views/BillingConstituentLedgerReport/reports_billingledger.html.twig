@@ -1,4 +1,4 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
 
 {% block content %}
 <input type="hidden" name="record_id" value="{{ request.query.get('record_id') }}" />
@@ -6,8 +6,8 @@
 <div class="group-box">
 <div class="group-box-header">Billing Ledger</div>
 <div class="group-box-contents group">
-	Financial Aid Year:
-	{{ form_select(fa_menu, 'fa_year') }}
+  Financial Aid Year:
+  {{ form_select(fa_menu, 'fa_year') }}
 </div>
 </div>
 {% endblock %}
