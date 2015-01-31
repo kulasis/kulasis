@@ -44,6 +44,6 @@
         "google/apiclient": "1.0.*@beta"
     },
     "autoload": {
-        "psr-4": { "Kula\\": "src/" },
+        "psr-4": { "Kula\\": "src/" }
     }
 }
