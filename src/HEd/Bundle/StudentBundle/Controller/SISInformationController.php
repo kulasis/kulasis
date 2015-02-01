@@ -92,12 +92,14 @@ class SISInformationController extends Controller {
     
     $student = array();
     
-    $student = $this->db()->db_select('STUD_STUDENT', null)
-      ->join('CONS_CONSTITUENT', 'constituent', null, 'constituent.CONSTITUENT_ID = STUD_STUDENT.STUDENT_ID')
+    $student = $this->db()->db_select('STUD_STUDENT')
+      ->fields('STUD_STUDENT')
+      ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = STUD_STUDENT.STUDENT_ID')
+      ->fields('constituent')
       ->condition('STUDENT_ID', $this->record->getSelectedRecord()['STUDENT_ID'])
       ->execute()->fetch();
     
-    return $this->render('KulaHEdStudentBundle:Information:demographic.html.twig', array('student' => $student));
+    return $this->render('KulaHEdStudentBundle:SISInformation:demographic.html.twig', array('student' => $student));
   }
   
   public function other_infoAction() {
@@ -111,7 +113,7 @@ class SISInformationController extends Controller {
       ->condition('STUDENT_ID', $this->record->getSelectedRecord()['STUDENT_ID'])
       ->execute()->fetch();
     
-    return $this->render('KulaHEdStudentBundle:Information:other_info.html.twig', array('student' => $student));
+    return $this->render('KulaHEdStudentBundle:SISInformation:other_info.html.twig', array('student' => $student));
   }
   
   public function enrollmentAction() {
@@ -212,7 +214,7 @@ class SISInformationController extends Controller {
     
     } // end if selected record
         
-    return $this->render('KulaHEdStudentBundle:Information:enrollment.html.twig', array('status' => $status, 'effective_date' => $effective_date));
+    return $this->render('KulaHEdStudentBundle:SISInformation:enrollment.html.twig', array('status' => $status, 'effective_date' => $effective_date));
   }
   
   public function addAction() {
@@ -240,13 +242,13 @@ class SISInformationController extends Controller {
       $constituents = $query->execute()->fetchAll();
     }
     
-    return $this->render('KulaHEdStudentBundle:Information:add.html.twig', array('constituents' => $constituents));
+    return $this->render('KulaHEdStudentBundle:SISInformation:add.html.twig', array('constituents' => $constituents));
   }
   
   public function add_constituentAction() {
     $this->authorize();
     $this->formAction('sis_student_information_create_constituent');
-    return $this->render('KulaHEdStudentBundle:Information:add_constituent.html.twig');
+    return $this->render('KulaHEdStudentBundle:SISInformation:add_constituent.html.twig');
   }
   
   public function create_constituentAction() {
@@ -411,7 +413,7 @@ class SISInformationController extends Controller {
   
   public function index_teacherAction() {
     $this->authorize();
-    return $this->render('KulaHEdStudentBundle:Information:index_teacher.html.twig');
+    return $this->render('KulaHEdStudentBundle:SISInformation:index_teacher.html.twig');
     
   }
   

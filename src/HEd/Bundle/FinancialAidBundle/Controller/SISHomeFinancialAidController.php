@@ -2,9 +2,9 @@
 
 namespace Kula\HEd\Bundle\FinancialAidBundle\Controller;
 
-use Kula\Core\Bundle\KulaCoreFrameworkBundle\Controller\Controller;
+use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
-class HomeFinancialAidController extends Controller {
+class SISHomeFinancialAidController extends Controller {
   
   public function pendingAction() {
     $this->authorize();

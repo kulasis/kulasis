@@ -26,15 +26,23 @@ class SchemaStore implements WarmableInterface {
       $schema_obj = new \Kula\Core\Component\Schema\SchemaLoader;
       $schema_obj->getSchemaFromBundles($this->kernel->getBundles());
       $schema_obj->synchronizeDatabaseCatalog($this->db);
+      $paths = $schema_obj->paths;
       
+      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - finish compiling\n";
       $schema = new Schema($this->db);
+      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - make schema\n";
       $schema->loadTables();
+      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - load tables\n";
       $schema->loadFields();
-      $cache->write(serialize($schema), $schema_obj->paths);
+      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')."- load fields\n";
+      $cache->write(serialize($schema), $paths);
+      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - write\n";
+      unset($schema);
+      
+
     }
-    
+    unset($this->schema);
     $this->schema = unserialize(file_get_contents((string) $cache));
-    
   }
   
   public function getSchema() {

@@ -5,11 +5,11 @@ namespace Kula\Bundle\HEd\StudentBundle\Record;
 class StudentStudentStatusRecord extends \Kula\Component\Record\BaseRecord implements \Kula\Component\Record\RecordDelegateInterface {
 	
 	public function getSelectedRecordBarTemplate() {
-		return 'KulaHEdStudentBundle::Record/student_selected_record_student_status.html.twig';
+		return 'KulaHEdStudentBundle::SISRecord/student_selected_record_student_status.html.twig';
 	}
 	
 	public function getRecordBarTemplate() {
-		return 'KulaHEdStudentBundle::Record/student_record_student_status.html.twig';
+		return 'KulaHEdStudentBundle::SISRecord/student_record_student_status.html.twig';
 	}
 	
 	public function getFromDifferentType($record_type, $record_id) {

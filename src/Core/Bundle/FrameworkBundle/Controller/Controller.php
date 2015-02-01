@@ -34,6 +34,7 @@ class Controller extends BaseController {
     $this->record = $this->container->get('kula.core.record');
     $this->chooser = $this->container->get('kula.core.chooser');
     $this->searcher = $this->container->get('kula.core.searcher');
+    $this->poster = null;
   }
 
   protected function db() {
@@ -41,11 +42,11 @@ class Controller extends BaseController {
   }
   
   protected function poster() {
-    return $this->container->get('kula.core.poster_factory');
+    return $this->poster;
   }
   
-  protected function prePoster() {
-    return new \Kula\Core\Component\DB\PrePoster;
+  protected function newPoster() {
+    return new $this->container->get('kula.core.poster');;
   }
   
   protected function chooser($chooser) {

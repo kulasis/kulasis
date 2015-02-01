@@ -6,6 +6,7 @@ use Kula\Core\Component\Permission\Permission;
 
 class Field {
   
+  private static $container;
   private static $permission;
   private static $focus;
   private static $record;
@@ -16,7 +17,8 @@ class Field {
   private static $chooser;
   private static $lookup;
   
-  public static function setDependencies($permission, $focus, $record, $poster, $schema, $db, $session, $chooser, $lookup) {
+  public static function setDependencies($container, $permission, $focus, $record, $poster, $schema, $db, $session, $chooser, $lookup) {
+    self::$container = $container;
     self::$permission = $permission;
     self::$focus = $focus;
     self::$record = $record;
@@ -287,15 +289,15 @@ class Field {
       $field_name = self::getNameForField($param);
       $param['attributes_html']['size'] = $schema->getFieldSize();
       $class = $schema->getClass();
-      if ($class) {
-        $param['value'] = $class::calculate($param['value']);
+      if (class_exists($class) AND $class = new $class(self::$container)) {
+        $param['value'] = $class->calculate($param['value']);
       }
       return GenericField::text($field_name, $param['value'], $param['attributes_html']);
     } elseif (self::_displayValue($param) AND !$param['input']) {
       $schema = self::getFieldInfo($param['field']);
       $class = $schema->getClass();
-      if ($class) {
-        $param['value'] = $class::calculate($param['value']);
+      if (class_exists($class) AND $class = new $class(self::$container)) {
+        $param['value'] = $class->calculate($param['value']);
       }
       return $param['value'];
     } elseif (self::_displayValue($param)) {
@@ -303,8 +305,8 @@ class Field {
       $param['attributes_html']['size'] = $schema->getFieldSize();
       $param['attributes_html']['disabled'] = 'disabled';
       $class = $schema->getClass();
-      if ($class) {
-        $param['value'] = $class::calculate($param['value']);
+      if (class_exists($class) AND $class = new $class(self::$container)) {
+        $param['value'] = $class->calculate($param['value']);
       }
       return GenericField::text(null, $param['value'], $param['attributes_html']);
     }
@@ -499,8 +501,8 @@ class Field {
       $select_options = array('' => '');
       // check if field is calculated
       $class = $schema->getClass();
-      if (class_exists($class)) {
-        $select_options += $class::select($schema, $param);
+      if (class_exists($class) AND $class = new $class(self::$container)) {
+        $select_options += $class->select($schema, $param);
       }
       return GenericField::select($select_options, $field_name, $param['value'], $param['attributes_html']);
     } elseif (self::_displayValue($param) AND !$param['input']) {
@@ -508,9 +510,9 @@ class Field {
       $select_options = array('' => '');
       // check if field is calculated
       $class = $schema->getClass();
-      if (class_exists($class)) {
+      if (class_exists($class) AND $class = new $class(self::$container)) {
         $param['attributes_html']['disabled'] = 'disabled';
-        $select_options += $class::select($schema, $param);
+        $select_options += $class->select($schema, $param);
       }
       return $select_options[$param['value']];
     } elseif (self::_displayValue($param)) {
@@ -518,9 +520,9 @@ class Field {
       $select_options = array('' => '');
       // check if field is calculated
       $class = $schema->getClass();
-      if (class_exists($class)) {
+      if (class_exists($class) AND $class = new $class(self::$container)) {
         $param['attributes_html']['disabled'] = 'disabled';
-        $select_options += $class::select($schema, $param);
+        $select_options += $class->select($schema, $param);
       }
       return GenericField::select($select_options, null, $param['value'], $param['attributes_html']);
     }

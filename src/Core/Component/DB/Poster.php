@@ -104,7 +104,6 @@ class Poster {
   
   public function getAddedIDs($table) {
     $ids = array();
-    
     if (isset($this->records[$table])) {
     foreach($this->records[$table] as $id => $record) {
       

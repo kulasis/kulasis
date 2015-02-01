@@ -2,7 +2,7 @@
 
 namespace Kula\HEd\Bundle\BillingBundle\Controller;
 
-use Kula\Core\Bundle\KulaCoreFrameworkBundle\Controller\Controller;
+use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
 class SISHomeBillingController extends Controller {
   
@@ -49,11 +49,11 @@ class SISHomeBillingController extends Controller {
     
     $this->_transactionChanges();
     
-    $query_conditions_or = new \Kula\Component\Database\Query\Predicate('OR');
-    $query_conditions_or = $query_conditions_or->predicate('transactions.POSTED', null);
-    $query_conditions_or = $query_conditions_or->predicate('transactions.POSTED', 'N');
+    $query_conditions_or = $this->db()->db_or();
+    $query_conditions_or = $query_conditions_or->condition('transactions.POSTED', null);
+    $query_conditions_or = $query_conditions_or->condition('transactions.POSTED', 'N');
     
-    $transactions = $this->db()->select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+    $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
       ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP'))
       ->join('BILL_CODE', 'code', array('CODE_TYPE', 'CODE'), 'code.CODE_ID = transactions.CODE_ID')
       ->join('CONS_CONSTITUENT', 'constituent', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'), 'constituent.CONSTITUENT_ID = transactions.CONSTITUENT_ID')
@@ -61,8 +61,8 @@ class SISHomeBillingController extends Controller {
       ->left_join('CORE_ORGANIZATION', 'organization', array('ORGANIZATION_ABBREVIATION'), 'orgterms.ORGANIZATION_ID = organization.ORGANIZATION_ID')
       ->left_join('CORE_TERM', 'term', array('TERM_ABBREVIATION'), 'orgterms.TERM_ID = term.TERM_ID')
       ->left_join('CORE_USER', 'user', array('USERNAME'), 'user.USER_ID = transactions.CREATED_USERSTAMP')
-      ->predicate($query_conditions_or)
-      ->predicate('transactions.CREATED_USERSTAMP', $this->session->get('user_id'))
+      ->condition($query_conditions_or)
+      ->condition('transactions.CREATED_USERSTAMP', $this->session->get('user_id'))
       ->execute()->fetchAll();
     
     return $this->render('KulaHEdStudentBillingBundle:HomeBilling:pending.html.twig', array('transactions' => $transactions));
@@ -72,10 +72,10 @@ class SISHomeBillingController extends Controller {
     $this->_transactionChanges();
     
     $query_conditions_or = new \Kula\Component\Database\Query\Predicate('OR');
-    $query_conditions_or = $query_conditions_or->predicate('transactions.POSTED', null);
-    $query_conditions_or = $query_conditions_or->predicate('transactions.POSTED', 'N');
+    $query_conditions_or = $query_conditions_or->condition('transactions.POSTED', null);
+    $query_conditions_or = $query_conditions_or->condition('transactions.POSTED', 'N');
     
-    $transactions = $this->db()->select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+    $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
       ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP'))
       ->join('BILL_CODE', 'code', array('CODE_TYPE', 'CODE'), 'code.CODE_ID = transactions.CODE_ID')
       ->join('CONS_CONSTITUENT', 'constituent', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'), 'constituent.CONSTITUENT_ID = transactions.CONSTITUENT_ID')
@@ -83,7 +83,7 @@ class SISHomeBillingController extends Controller {
       ->left_join('CORE_ORGANIZATION', 'organization', array('ORGANIZATION_ABBREVIATION'), 'orgterms.ORGANIZATION_ID = organization.ORGANIZATION_ID')
       ->left_join('CORE_TERM', 'term', array('TERM_ABBREVIATION'), 'orgterms.TERM_ID = term.TERM_ID')
       ->left_join('CORE_USER', 'user', array('USERNAME'), 'user.USER_ID = transactions.CREATED_USERSTAMP')
-      ->predicate($query_conditions_or)
+      ->condition($query_conditions_or)
       ->execute()->fetchAll();
     
     return $this->render('KulaHEdStudentBillingBundle:HomeBilling:pending.html.twig', array('transactions' => $transactions));
@@ -104,7 +104,7 @@ class SISHomeBillingController extends Controller {
     $applied_transactions_total = 0;
     
     if ($this->record->getSelectedRecordID()) {
-      $transaction = $this->db()->select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+      $transaction = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
         ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP'))
         ->join('BILL_CODE', 'code', array('CODE_TYPE'), 'code.CODE_ID = transactions.CODE_ID')
         ->left_join('STUD_STUDENT_STATUS', 'status', null, 'status.STUDENT_STATUS_ID = transactions.STUDENT_STATUS_ID')
@@ -112,15 +112,15 @@ class SISHomeBillingController extends Controller {
         ->left_join('CORE_ORGANIZATION', 'organization', array('ORGANIZATION_NAME'), 'orgterms.ORGANIZATION_ID = organization.ORGANIZATION_ID')
         ->left_join('CORE_TERM', 'term', array('TERM_ABBREVIATION'), 'orgterms.TERM_ID = term.TERM_ID')
         ->left_join('CORE_USER', 'user', array('USERNAME'), 'user.USER_ID = transactions.VOIDED_USERSTAMP')
-        ->predicate('transactions.CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
+        ->condition('transactions.CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
         ->execute()->fetch();
       
       $query_conditions_or = new \Kula\Component\Database\Query\Predicate('OR');
-      $query_conditions_or = $query_conditions_or->predicate('CHARGE_TRANSACTION_ID', $constituent_transaction_id);
-      $query_conditions_or = $query_conditions_or->predicate('PAYMENT_TRANSACTION_ID', $constituent_transaction_id);
+      $query_conditions_or = $query_conditions_or->condition('CHARGE_TRANSACTION_ID', $constituent_transaction_id);
+      $query_conditions_or = $query_conditions_or->condition('PAYMENT_TRANSACTION_ID', $constituent_transaction_id);
       
-      $applied_transactions = $this->db()->select('BILL_CONSTITUENT_TRANSACTIONS_APPLIED')
-        ->predicate($query_conditions_or)
+      $applied_transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS_APPLIED')
+        ->condition($query_conditions_or)
         ->execute()->fetchAll();
       
       foreach($applied_transactions as $index => $row) {

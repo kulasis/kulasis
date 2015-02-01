@@ -468,7 +468,7 @@ Core.Constituent.Phone:
       lookup: Constituent.Phone.Type
       column_name: "Phone Type"
       label_name: "Phone Type"
-    PhoneNumber:
+    Number:
       description: "Phone Number"
       db_column_name: PHONE_NUMBER
       db_column_type: varchar
@@ -478,7 +478,7 @@ Core.Constituent.Phone:
       field_size: 30
       column_name: "Phone Number"
       label_name: "Phone Number"
-    PhoneExtension:
+    Extension:
       description: "Phone Extension"
       db_column_name: PHONE_EXTENSION
       db_column_type: varchar
@@ -488,7 +488,7 @@ Core.Constituent.Phone:
       field_size: 7
       column_name: "Phone Extension"
       label_name: "Phone Extension"
-    PhoneCountry:
+    Country:
       description: "Phone Country"
       db_column_name: PHONE_COUNTRY
       db_column_type: varchar

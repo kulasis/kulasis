@@ -11,7 +11,7 @@ class SISHoldCodeRecord extends Record {
   }
   
   public function getRecordBarTemplate() {
-    return 'KulaHEdStudentBundle::Record/record_hold_code.html.twig';
+    return 'KulaHEdStudentBundle::SISRecord/record_hold_code.html.twig';
   }
   
   public function getRecordIDStack() {

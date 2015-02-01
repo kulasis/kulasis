@@ -9,7 +9,7 @@ class SISContactInfoController extends Controller {
   public function addressesAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     $addresses = array();
     $primary_addresses = array();
@@ -56,14 +56,15 @@ class SISContactInfoController extends Controller {
       ->fields('values', array('DESCRIPTION' => 'ADDRESS_TYPE_DESCRIPTION', 'CODE' => 'ADDRESS_TYPE_CODE'))
       ->join('CORE_LOOKUP_TABLES', 'tables', 'tables.LOOKUP_TABLE_ID = values.LOOKUP_TABLE_ID')
       ->condition('LOOKUP_TABLE_NAME', 'Constituent.Address.Type')
-      ->orderBy('SORT', 'ASC')
+      ->orderBy('SORT', 'ASC');
+    $address_types = $address_types
       ->execute()
       ->fetchAll();
     
     if ($this->record->getSelectedRecordID()) {
       $addresses_result = $this->db()->db_select('CONS_ADDRESS', 'addr')
-        ->fields('addr', array('ADDRESS_ID', 'ADDRESS_TYPE', 'EFFECTIVE_DATE', 'RECIPIENT', 'ADDRESS', 'CITY', 'STATE', 'ZIPCODE', 'COUNTRY', 'SEND_GRADES', 'SEND_BILL', 'ACTIVE', 'UNDELIVERABLE'))
-        ->join('CORE_LOOKUP_VALUES', 'addresstype', 'addresstype.CODE = CONS_ADDRESS.ADDRESS_TYPE')
+        ->fields('addr', array('ADDRESS_ID', 'ADDRESS_TYPE', 'EFFECTIVE_DATE', 'RECIPIENT', 'THOROUGHFARE', 'ADMINISTRATIVE_AREA', 'LOCALITY', 'POSTAL_CODE', 'COUNTRY', 'SEND_GRADES', 'SEND_BILL', 'ACTIVE', 'UNDELIVERABLE'))
+        ->join('CORE_LOOKUP_VALUES', 'addresstype', 'addresstype.CODE = addr.ADDRESS_TYPE')
         ->join('CORE_LOOKUP_TABLES', 'addresstypetable', 'addresstypetable.LOOKUP_TABLE_ID = addresstype.LOOKUP_TABLE_ID')
         ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->condition('LOOKUP_TABLE_NAME', 'Constituent.Address.Type')
@@ -85,16 +86,16 @@ class SISContactInfoController extends Controller {
         ->fields('cons', array('RESIDENCE_ADDRESS_ID', 'MAILING_ADDRESS_ID', 'WORK_ADDRESS_ID'))
         ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->execute()->fetch();
-      $primary_addresses['RESIDENCE_ADDRESS_ID'] = $constituent_primary_addresses['RESIDENCE_ADDRESS_ID'];
-      $primary_addresses['MAILING_ADDRESS_ID'] = $constituent_primary_addresses['MAILING_ADDRESS_ID'];
+      $primary_addresses['Core.Constituent.ResidenceAddressID'] = $constituent_primary_addresses['RESIDENCE_ADDRESS_ID'];
+      $primary_addresses['Core.Constituent.MailingAddressID'] = $constituent_primary_addresses['MAILING_ADDRESS_ID'];
       
       $student_primary_addresses = $this->db()->db_select('STUD_STUDENT', 'stu')
         ->fields('stu', array('HOME_ADDRESS_ID', 'BILLING_ADDRESS_ID', 'PARENT_ADDRESS_ID'))
         ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
         ->execute()->fetch();
-      $primary_addresses['HOME_ADDRESS_ID'] = $student_primary_addresses['HOME_ADDRESS_ID'];
-      $primary_addresses['PARENT_ADDRESS_ID'] = $student_primary_addresses['PARENT_ADDRESS_ID'];
-      $primary_addresses['BILLING_ADDRESS_ID'] = $student_primary_addresses['BILLING_ADDRESS_ID'];
+      $primary_addresses['HEd.Student.HomeAddressID'] = $student_primary_addresses['HOME_ADDRESS_ID'];
+      $primary_addresses['HEd.Student.ParentAddressID'] = $student_primary_addresses['PARENT_ADDRESS_ID'];
+      $primary_addresses['HEd.Student.BillingAddressID'] = $student_primary_addresses['BILLING_ADDRESS_ID'];
       
     }
     return $this->render('KulaHEdStudentBundle:SISContactInfo:addresses.html.twig', array('address_types' => $address_types, 'addresses' => $addresses, 'primary_addresses' => $primary_addresses));
@@ -102,10 +103,10 @@ class SISContactInfoController extends Controller {
   
   public function detailAction($id, $sub_id) {
     $this->authorize();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     $address = $this->db()->db_select('CONS_ADDRESS', 'CONS_ADDRESS')
-      ->fields('CONS_ADDRESS', array('ADDRESS_ID', 'ADDRESS_TYPE', 'ADDRESS', 'CITY', 'STATE', 'ZIPCODE', 'COUNTRY', 'NOTES', 'CREATED_USERSTAMP', 'CREATED_TIMESTAMP', 'UPDATED_USERSTAMP', 'UPDATED_TIMESTAMP'))
+      ->fields('CONS_ADDRESS', array('ADDRESS_ID', 'ADDRESS_TYPE', 'THOROUGHFARE', 'ADMINISTRATIVE_AREA', 'LOCALITY', 'POSTAL_CODE', 'COUNTRY', 'NOTES', 'CREATED_USERSTAMP', 'CREATED_TIMESTAMP', 'UPDATED_USERSTAMP', 'UPDATED_TIMESTAMP'))
       ->join('CORE_LOOKUP_VALUES', 'addresstype', 'addresstype.CODE = CONS_ADDRESS.ADDRESS_TYPE')
       ->join('CORE_LOOKUP_TABLES', 'addresstypetable', 'addresstypetable.LOOKUP_TABLE_ID = addresstype.LOOKUP_TABLE_ID')
       ->fields('addresstype', array('DESCRIPTION' => 'addresstype_description'))
@@ -124,12 +125,12 @@ class SISContactInfoController extends Controller {
   public function add_addressAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     if ($this->poster()) {
       $address_result = $this->poster()->getAddedIDs('Core.Constituent.Address');
       if ($address_result) {  
-        return $this->forward('sis_HEd_student_information_addresses', array('record_type' => 'HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
+        return $this->forward('sis_HEd_student_information_addresses', array('record_type' => 'SIS.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
       }
     }
     
@@ -139,7 +140,7 @@ class SISContactInfoController extends Controller {
   public function phonesAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     if ($this->poster()) {
     $phone_result = $this->poster()->getAddedIDs('Core.Constituent.Phone');
@@ -185,7 +186,7 @@ class SISContactInfoController extends Controller {
   public function emailAddressesAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     $emails = array();
     
@@ -204,7 +205,7 @@ class SISContactInfoController extends Controller {
   public function emergencyContactsAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     $emergency = array();
     

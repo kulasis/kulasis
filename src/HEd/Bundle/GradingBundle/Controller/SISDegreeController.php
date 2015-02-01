@@ -2,7 +2,7 @@
 
 namespace Kula\Bundle\HEd\CourseHistoryBundle\Controller;
 
-use Kula\Bundle\Core\KulaFrameworkBundle\Controller\Controller;
+use Kula\Bundle\Core\FrameworkBundle\Controller\Controller;
 
 class DegreeController extends Controller {
 	

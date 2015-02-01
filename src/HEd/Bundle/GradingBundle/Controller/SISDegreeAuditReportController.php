@@ -2,7 +2,7 @@
 
 namespace Kula\Bundle\HEd\CourseHistoryBundle\Controller;
 
-use Kula\Bundle\Core\KulaFrameworkBundle\Controller\ReportController;
+use Kula\Bundle\Core\FrameworkBundle\Controller\ReportController;
 
 class DegreeAuditReportController extends ReportController {
 	

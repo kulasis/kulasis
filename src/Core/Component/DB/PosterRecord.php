@@ -128,7 +128,7 @@ class PosterRecord {
       $class = '\\'.$this->schema->getClass($fieldName);
       if (method_exists($class, 'save')) {
         $syntheticField = new $class($this->container);
-        $returnedValue = call_user_func_array(array($syntheticField, 'save'), array($field));
+        $returnedValue = call_user_func_array(array($syntheticField, 'save'), array($field, $this->id));
         if ($returnedValue == Field::REMOVE_FIELD)
           unset($this->fields[$fieldName]);
         else

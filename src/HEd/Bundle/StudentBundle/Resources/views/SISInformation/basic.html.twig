@@ -63,9 +63,9 @@ Phone Numbers
   <th class="data-table-cell-row-header">#</th>
   {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.EffectiveDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.PhoneNumber', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.PhoneExtension', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.PhoneCountry', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.Number', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.Extension', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.Country', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </thead>
 <tbody>
   {% for phone in phones %}
@@ -73,9 +73,9 @@ Phone Numbers
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
     {{ kula_field({ input: false, field: 'Core.Constituent.Phone.EffectiveDate', db_row_id: phone.PHONE_NUMBER_ID, value: phone.EFFECTIVE_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'Core.Constituent.Phone.Type', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.PhoneNumber', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.PhoneExtension', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_EXTENSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.PhoneCountry', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_COUNTRY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'width:150px;' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.Number', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.Extension', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_EXTENSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.Country', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_COUNTRY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'width:150px;' } }) }}
   </tr>
   {% endfor %}
 </tbody>

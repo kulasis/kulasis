@@ -7,11 +7,11 @@ use Kula\Core\Component\Record\Record;
 class SISStudentStatusRecord extends Record {
   
   public function getSelectedRecordBarTemplate() {
-    return 'KulaHEdStudentBundle::Record/selected_record_student_status.html.twig';
+    return 'KulaHEdStudentBundle::SISRecord/selected_record_student_status.html.twig';
   }
   
   public function getRecordBarTemplate() {
-    return 'KulaHEdStudentBundle::Record/record_student_status.html.twig';
+    return 'KulaHEdStudentBundle::SISRecord/record_student_status.html.twig';
   }
   
   public function getFromDifferentType($record_type, $record_id) {

@@ -151,6 +151,10 @@ class Connection extends DatabaseConnection {
   public function databaseType() {
     return 'mysql';
   }
+  
+  public function escapeTable($table) {
+    return '`'.parent::escapeTable($table).'`';
+  }
 
   /**
    * Overrides \Kula\Core\Component\Database\Connection::createDatabase().

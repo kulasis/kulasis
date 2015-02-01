@@ -2,7 +2,7 @@
 
 namespace Kula\HEd\Bundle\BillingBundle\Controller;
 
-use Kula\Core\Bundle\KulaCoreFrameworkBundle\Controller\Controller;
+use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
 class SISCodesController extends Controller {
   

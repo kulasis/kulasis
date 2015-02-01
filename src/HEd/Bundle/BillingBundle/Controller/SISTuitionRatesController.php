@@ -2,7 +2,7 @@
 
 namespace Kula\HEd\Bundle\BillingBundle\Controller;
 
-use Kula\Core\Bundle\KulaFrameworkBundle\Controller\Controller;
+use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
 class SISTuitionRatesController extends Controller {
   

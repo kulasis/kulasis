@@ -1,36 +1,36 @@
 sis_HEd_student_financialaid_awards:
-  path: /student/financialaid/awards
-  defaults: { _controller: KulaHEdFinancialAidBundle:Awards:index }
+  path: /sis/student/financialaid/awards
+  defaults: { _controller: KulaHEdFinancialAidBundle:SISAwards:index }
 
 sis_HEd_student_financialaid_awards_history:
-  path: /student/financialaid/award_history
-  defaults: { _controller: KulaHEdFinancialAidBundle:Awards:awards_history }
+  path: /sis/student/financialaid/award_history
+  defaults: { _controller: KulaHEdFinancialAidBundle:SISAwards:awards_history }
 
 sis_HEd_student_financialaid_billing:
-  path: /student/financialaid/billing
-  defaults: { _controller: KulaHEdFinancialAidBundle:Awards:billing }
+  path: /sis/student/financialaid/billing
+  defaults: { _controller: KulaHEdFinancialAidBundle:SISAwards:billing }
   methods: [GET]
 
 sis_HEd_student_financialaid_billing_history:
-  path: /student/financialaid/billing/history
-  defaults: { _controller: KulaHEdFinancialAidBundle:Awards:billing_history }
+  path: /sis/student/financialaid/billing/history
+  defaults: { _controller: KulaHEdFinancialAidBundle:SISAwards:billing_history }
 
 sis_HEd_student_financialaid_package:
-  path: /student/financialaid/package
-  defaults: { _controller: KulaHEdFinancialAidBundle:Package:index }
+  path: /sis/student/financialaid/package
+  defaults: { _controller: KulaHEdFinancialAidBundle:SISPackage:index }
 
 sis_HEd_student_financialaid_terms:
-  path: /student/financialaid/terms
-  defaults: { _controller: KulaHEdFinancialAidBundle:Terms:index }
+  path: /sis/student/financialaid/terms
+  defaults: { _controller: KulaHEdFinancialAidBundle:SISTerms:index }
 
 sis_HEd_home_financialaid_pending:
-  path: /home/financialaid/pending
-  defaults: { _controller: KulaHEdFinancialAidBundle:HomeFinancialAid:pending }
+  path: /sis/home/financialaid/pending
+  defaults: { _controller: KulaHEdFinancialAidBundle:SISHomeFinancialAid:pending }
 
 sis_HEd_home_financialaid_posted:
-  path: /home/financialaid/posted
-  defaults: { _controller: KulaHEdFinancialAidBundle:HomeFinancialAid:posted }
+  path: /sis/home/financialaid/posted
+  defaults: { _controller: KulaHEdFinancialAidBundle:SISHomeFinancialAid:posted }
 
 sis_HEd_setup_financialaid_awardcodes:
-  path: /setup/financialaid/awardcodes
-  defaults: { _controller: KulaHEdFinancialAidBundle:Codes:award_codes }
+  path: /sis/setup/financialaid/awardcodes
+  defaults: { _controller: KulaHEdFinancialAidBundle:SISCodes:award_codes }

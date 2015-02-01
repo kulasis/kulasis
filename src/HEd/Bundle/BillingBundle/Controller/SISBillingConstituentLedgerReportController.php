@@ -2,7 +2,7 @@
 
 namespace Kula\HEd\Bundle\BillingBundle\Controller;
 
-use Kula\Core\Bundle\KulaCoreFrameworkBundle\Controller\ReportController;
+use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
 class SISBillingConstituentLedgerReportController extends ReportController {
   

@@ -384,3 +384,13 @@ Constituent.EmailAddress.Type:
     - { code: PER, description: "Personal" }
     - { code: WRK, description: "Work" }
 
+Constituent.Phone.Type:
+  description: "Phone Types"
+  allow_update: true
+  values:
+    - { code: BIL, description: "Billing" }
+    - { code: CEL, description: "Cell" }
+    - { code: HOM, description: "Home" }
+    - { code: PAR, description: "Parent" }
+    - { code: RES, description: "Residence" }
+    - { code: WOR, description: "Work" }

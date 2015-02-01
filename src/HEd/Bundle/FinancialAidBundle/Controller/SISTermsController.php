@@ -2,9 +2,9 @@
 
 namespace Kula\HEd\Bundle\FinancialAidBundle\Controller;
 
-use Kula\Core\Bundle\KulaCoreFrameworkBundle\Controller\Controller;
+use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
-class SISPackageController extends Controller {
+class SISTermsController extends Controller {
   
   public function indexAction() {
     $this->authorize();
