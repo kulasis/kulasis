@@ -249,6 +249,7 @@ HEd.Student:
       db_column_type: serial
       db_column_null: true
       field_type: chooser
+      chooser: Core.NonOrganization
       column_name: "Last College Attended"
       label_name: "Last College Attended"
     BillingNotes:

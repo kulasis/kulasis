@@ -89,7 +89,7 @@ HEd.Student.Document:
       class: Kula\HEd\Bundle\StudentBundle\Field\Document
       column_name: "Document ID"
       label_name: "Document ID"
-    DocumentDate:
+    Date:
       description: "Document Date"
       db_column_name: DOCUMENT_DATE
       db_column_type: date
@@ -97,7 +97,7 @@ HEd.Student.Document:
       field_type: date
       column_name: "Document Date"
       label_name: "Document Date"
-    DocumentStatus:
+    Status:
       description: "Document Status"
       db_column_name: DOCUMENT_STATUS
       db_column_type: varchar

@@ -251,4 +251,10 @@ class TableLoader {
     
   }
   
+  public function __destruct() {
+    $this->uniqueKeys = null;
+    $this->fields = null;
+    $this->log = null;
+  }
+  
 }

@@ -148,3 +148,11 @@ core_setup_system:
 core_setup_system_ldap:
   path: /setup/system/ldap
   defaults: { _controller: KulaCoreSystemBundle:CoreSetup:ldap }
+
+core_system_nonorganization:
+  path: /system/nonorganization
+  defaults: { _controller: KulaCoreSystemBundle:NonOrganization:index }
+
+core_system_nonorganization_chooser:
+  path: /system/nonorganization/chooser
+  defaults: { _controller: KulaCoreSystemBundle:NonOrganization:chooser }

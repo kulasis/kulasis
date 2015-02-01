@@ -15,7 +15,7 @@ class SISStudentRecord extends Record {
   }
   
   public function getFromDifferentType($record_type, $record_id) {
-    if ($record_type == 'STUDENT_STATUS') {
+    if ($record_type == 'SIS.HEd.Student.Status') {
       $result = $this->db()->db_select('STUD_STUDENT_STATUS', 'STUD_STUDENT_STATUS')
         ->fields('STUD_STUDENT_STATUS', array('STUDENT_ID'))
         ->condition('STUDENT_STATUS_ID', $record_id);

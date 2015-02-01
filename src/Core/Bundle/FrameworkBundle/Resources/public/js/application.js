@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-	
+
 	navigation_documentReady();
 	form_submitButton();
 	focus_documentReady();

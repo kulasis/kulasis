@@ -64,9 +64,9 @@
   <div id="nav_reports"{% if navigation_info.NAVIGATION_TYPE != 'R' %} style="display:none;"{% endif %}>
     {% set navReportGroups = kula_core_navigation.getReportGroups() %}
     {% for group_id, group_row in navReportGroups %}
-      <div id="drawer-reports-{{ group_row.getName() }}" class="navigation-drawer navigation-reports">
-        <div class="drawer-header navigation-reports" data-category="reports-{{ group_row.getName() }}">{{ group_row.getDisplayName() }}</div>
-        <div id="drawer-contents-reports-{{ group_row.getName() }}" class="drawer-contents navigation-reports" style="{% if group_row.selected_group == 'Y' %}display:block;{% else %}display:none;{% endif %}">
+      <div id="drawer-reports-{{ group_id }}" class="navigation-drawer navigation-reports">
+        <div class="drawer-header navigation-reports" data-category="reports-{{ group_id }}">{{ group_row.getDisplayName() }}</div>
+        <div id="drawer-contents-reports-{{ group_id }}" class="drawer-contents navigation-reports" style="{% if group_row.selected_group == 'Y' %}display:block;{% else %}display:none;{% endif %}">
           <ul>
           {% for report_id, report_row in group_row.getReports() %}
             {% if report_row.getName() %}

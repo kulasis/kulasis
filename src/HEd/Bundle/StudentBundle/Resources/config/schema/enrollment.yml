@@ -231,6 +231,14 @@ HEd.Student.Enrollment.Activity:
       db_column_null: false
       column_name: "Enrollment ID"
       label_name: "Enrollment ID"
+    EffectiveDate:
+      description: "Effective Date"
+      db_column_name: EFFECTIVE_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "Effective Date"
+      label_name: "Effective Date"
     Grade:
       description: "Grade"
       db_column_name: GRADE

@@ -163,4 +163,8 @@ class SchemaLoader {
     
   }
   
+  public function __destruct() {
+    $this->schema = null;
+  }
+  
 }

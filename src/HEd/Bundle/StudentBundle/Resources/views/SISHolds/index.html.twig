@@ -4,51 +4,51 @@
 <div class="data-table-header-div">
 Holds
 <span class="data-table-header-buttons">
-	{{ kula_table_add('window_window_num_data_table_documents', 'STUD_STUDENT_HOLDS') }}
+  {{ kula_table_add('window_window_num_data_table_documents', 'STUD_STUDENT_HOLDS') }}
 </span>
 </div>
 <table id="window_window_num_data_table_documents" class="data-table">
 <thead>
-	{{ kula_display_html({ delete: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'STUDENT_HOLD_ID', prepend_html: '<th class="data-table-cell-row-header">V</th>' }) }}
-	<th class="data-table-cell-row-header">#</th>
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_HOLDS', db_field: 'HOLD_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_HOLDS', db_field: 'HOLD_ID', field_name_override: 'Hold Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_HOLDS', db_field: 'COMMENTS', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED_REASON', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED_USERSTAMP', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED_TIMESTAMP', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_display_html({ delete: true, field: 'HEd.Student.Hold.ID, prepend_html: '<th class="data-table-cell-row-header">V</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Student.Hold.Date', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Hold.HoldID', field_name_override: 'Hold Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Hold.Comments', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Hold.Voided', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Hold.VoidedReason', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Hold.VoidedUserstamp', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Hold.VoidedTimestamp', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </thead>
 <tbody>
-  {{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'STUDENT_HOLD_ID', prepend_html: '<tr class="data-table-row-new">' }) }}
-	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'STUDENT_ID', value: record_obj.getSelectedRecord.STUDENT_ID, hidden: true }) }}
-	{{ kula_field({ add: true, delete: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'STUDENT_HOLD_ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'STUDENT_HOLD_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
-	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'HOLD_DATE', value:"now"|date("m/d/Y"), prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'HOLD_ID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-	{{ kula_field({ add: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'COMMENTS', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED', prepend_html: '<td>&nbsp;</td>' }) }}
-	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED_REASON', prepend_html: '<td>&nbsp;</td>' }) }}
-	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED_USERSTAMP', prepend_html: '<td>&nbsp;</td>' }) }}
-	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED_TIMESTAMP', prepend_html: '<td>&nbsp;</td>' }) }}
-	{{ kula_display_html({ add: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'STUDENT_HOLD_ID', prepend_html: '</tr>' }) }}
-	{% for hold in holds %}
-	<tr>
-		{% if hold.VOIDED == 'Y' %}
-		{{ kula_display_html({ delete: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED', prepend_html: '<td class="data-table-cell-row-delete">&nbsp;</td>' }) }}
-		{% else %}
-		{{ kula_field({ delete: true, post_type: 'void', db_table: 'STUD_STUDENT_HOLDS', db_field: 'STUDENT_HOLD_ID', db_row_id: hold.STUDENT_HOLD_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-		{% endif %}
-		<td class="data-table-cell-row-num">{{ loop.index }}</td>
-		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'HOLD_DATE', db_row_id: hold.STUDENT_HOLD_ID, value: hold.HOLD_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'HOLD_ID', db_row_id: hold.STUDENT_HOLD_ID, value: hold.HOLD_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'width:125px;' } }) }}
-		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'COMMENTS', db_row_id: hold.STUDENT_HOLD_ID, value: hold.COMMENTS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED', db_row_id: hold.STUDENT_HOLD_ID, value: hold.VOIDED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED_REASON', db_row_id: hold.STUDENT_HOLD_ID, value: hold.VOIDED_REASON, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED_USERSTAMP', db_row_id: hold.STUDENT_HOLD_ID, value: hold.VOIDED_USERSTAMP, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ input: false, db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED_TIMESTAMP', db_row_id: hold.STUDENT_HOLD_ID, value: hold.VOIDED_TIMESTAMP, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-	</tr>
-	{% endfor %}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.Hold.ID, prepend_html: '<tr class="data-table-row-new">' }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.Hold.StudentID', value: record_obj.getSelectedRecord.STUDENT_ID, hidden: true }) }}
+  {{ kula_field({ add: true, delete: true, field: 'HEd.Student.Hold.ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.Hold.ID, prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.Hold.Date', value:"now"|date("m/d/Y"), prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.Hold.ID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.Hold.Comments', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.Hold.Voided', prepend_html: '<td>&nbsp;</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.Hold.VoidedReason', prepend_html: '<td>&nbsp;</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.Hold.VoidedTimestamp', prepend_html: '<td>&nbsp;</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.Hold.VoidedTimestamp', prepend_html: '<td>&nbsp;</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.Hold.ID, prepend_html: '</tr>' }) }}
+  {% for hold in holds %}
+  <tr>
+    {% if hold.VOIDED == 'Y' %}
+    {{ kula_display_html({ delete: true, db_table: 'STUD_STUDENT_HOLDS', db_field: 'VOIDED', prepend_html: '<td class="data-table-cell-row-delete">&nbsp;</td>' }) }}
+    {% else %}
+    {{ kula_field({ delete: true, post_type: 'void', field: 'HEd.Student.Hold.ID, db_row_id: hold.STUDENT_HOLD_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    {% endif %}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'HEd.Student.Hold.Date', db_row_id: hold.STUDENT_HOLD_ID, value: hold.HOLD_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Hold.HoldID', db_row_id: hold.STUDENT_HOLD_ID, value: hold.HOLD_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'width:125px;' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Hold.Comments', db_row_id: hold.STUDENT_HOLD_ID, value: hold.COMMENTS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.Hold.Voided', db_row_id: hold.STUDENT_HOLD_ID, value: hold.VOIDED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Hold.VoidedReason', db_row_id: hold.STUDENT_HOLD_ID, value: hold.VOIDED_REASON, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.Hold.VoidedUserstamp', db_row_id: hold.STUDENT_HOLD_ID, value: hold.VOIDED_USERSTAMP, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.Hold.VoidedTimestamp', db_row_id: hold.STUDENT_HOLD_ID, value: hold.VOIDED_TIMESTAMP, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
 </tbody>
 </table>
 {% endblock %}

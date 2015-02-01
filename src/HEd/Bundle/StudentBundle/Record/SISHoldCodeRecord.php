@@ -20,7 +20,7 @@ class SISHoldCodeRecord extends Record {
     //$or_query_conditions = $or_query_conditions->predicate('EFFECTIVE_DATE', null);
     //$or_query_conditions = $or_query_conditions->predicate('EFFECTIVE_DATE', date('Y-m-d'), '>=');
     
-    $result = $this->db()->select('STUD_HOLD', 'hold')
+    $result = $this->db()->db_select('STUD_HOLD', 'hold')
     ->distinct()
     ->fields('hold', array('HOLD_ID' => 'ID'))
     ->condition('INACTIVE', 0)

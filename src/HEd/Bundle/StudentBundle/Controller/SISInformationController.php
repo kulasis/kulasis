@@ -109,7 +109,8 @@ class SISInformationController extends Controller {
     
     $student = array();
     
-    $student = $this->db()->db_select('STUD_STUDENT', null)
+    $student = $this->db()->db_select('STUD_STUDENT', 'STUD_STUDENT')
+      ->fields('STUD_STUDENT')
       ->condition('STUDENT_ID', $this->record->getSelectedRecord()['STUDENT_ID'])
       ->execute()->fetch();
     
@@ -137,7 +138,7 @@ class SISInformationController extends Controller {
         
         // Get latest enrollment ID
         $enrollment = $this->db()->db_select('STUD_STUDENT_ENROLLMENT')
-          ->fields(null, array('ENROLLMENT_ID', 'ENTER_DATE'))
+          ->fields('STUD_STUDENT_ENROLLMENT', array('ENROLLMENT_ID', 'ENTER_DATE'))
           ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
           ->orderBy('ENTER_DATE', 'DESC')
           ->execute()->fetch();
@@ -153,7 +154,7 @@ class SISInformationController extends Controller {
         
         // Determine if date already exists
         $activity_exists = $this->db()->db_select('STUD_STUDENT_ENROLLMENT_ACTIVITY')
-          ->fields(null, array('EFFECTIVE_DATE', 'ENROLLMENT_ACTIVITY_ID'))
+          ->fields('STUD_STUDENT_ENROLLMENT_ACTIVITY', array('EFFECTIVE_DATE', 'ENROLLMENT_ACTIVITY_ID'))
           ->condition('ENROLLMENT_ID', $enrollment['ENROLLMENT_ID'])
           ->orderBy('EFFECTIVE_DATE', 'DESC')
           ->execute()->fetch();
@@ -202,6 +203,7 @@ class SISInformationController extends Controller {
       }
       
       $status = $this->db()->db_select('STUD_STUDENT_STATUS')
+        ->fields('STUD_STUDENT_STATUS')
         ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
         ->execute()->fetch();
       

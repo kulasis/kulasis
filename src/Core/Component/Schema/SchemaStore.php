@@ -27,7 +27,7 @@ class SchemaStore implements WarmableInterface {
       $schema_obj->getSchemaFromBundles($this->kernel->getBundles());
       $schema_obj->synchronizeDatabaseCatalog($this->db);
       $paths = $schema_obj->paths;
-      
+      $schema_obj = null;
       //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - finish compiling\n";
       $schema = new Schema($this->db);
       //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - make schema\n";
@@ -37,7 +37,7 @@ class SchemaStore implements WarmableInterface {
       //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')."- load fields\n";
       $cache->write(serialize($schema), $paths);
       //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - write\n";
-      unset($schema);
+      $schema = null;
       
 
     }

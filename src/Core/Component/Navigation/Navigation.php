@@ -173,8 +173,15 @@ class Navigation {
   }
   
   public function getReportGroups() {
-    if (isset($this->reportGroups[$this->session->get('portal')]))
-      return $this->reportGroups[$this->session->get('portal')];
+    if (isset($this->reportGroups[$this->session->get('portal')])) {
+      $groups = array();
+      foreach($this->reportGroups[$this->session->get('portal')] as $name => $group) {
+        if ($this->permission->getPermissionForNavigationObject($name)) {
+          $groups[] = $group;
+        }
+      }
+      return $groups;
+    }
   }
   
   public function getRequestedNavItem() {

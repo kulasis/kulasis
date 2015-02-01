@@ -42,7 +42,7 @@ class SISHomeHoldsController extends Controller {
       ->execute()->fetchAll();
     }
     
-    return $this->render('KulaHEdStudentBundle:HomeHolds:index.html.twig', array('holds' => $holds));
+    return $this->render('KulaHEdStudentBundle:SISHomeHolds:index.html.twig', array('holds' => $holds));
   }
   
 }

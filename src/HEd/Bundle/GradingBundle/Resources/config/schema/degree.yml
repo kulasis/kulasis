@@ -426,3 +426,25 @@ HEd.Student.Status:
       column_name: "Seeking Degree 2 ID"
       label_name: "Seeking Degree 2 ID"
 
+HEd.Student.Enrollment.Activity:
+  fields:
+    SeekingDegree1ID:
+      description: "Seeking Degree 1 ID"
+      db_column_name: SEEKING_DEGREE_1_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: HEd.Student.Degree.ID
+      field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\StudentDegreeProgram
+      column_name: "Seeking Degree 1 ID"
+      label_name: "Seeking Degree 1 ID"
+    SeekingDegree2ID:
+      description: "Seeking Degree 2 ID"
+      db_column_name: SEEKING_DEGREE_2_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: HEd.Student.Degree.ID
+      field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\StudentDegreeProgram
+      column_name: "Seeking Degree 2 ID"
+      label_name: "Seeking Degree 2 ID"

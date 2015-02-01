@@ -2,12 +2,29 @@
 function navigation_documentReady() {
 	// start navigation listeners
 	navigation_startNavigationListeners();
+
 	// if no drawer set to show, show first drawer
-	if ($('.navigation-forms.drawer-contents').css('display') == 'none') {
+	var drawerOpen = false;
+  $('#nav_forms').find('.drawer-contents').each(function (index) {
+    if ($(this).css('display') == 'block') {
+      drawerOpen = true;
+    }
+  });
+  
+  if (!drawerOpen) {
     $('.navigation-forms.drawer-contents:first').show({ duration: 200, queue: false });
 	}
-	if ($('.navigation-reports.drawer-contents').css('display') == 'none')
-		$('.navigation-reports.drawer-contents:first').show({ duration: 200, queue: false });
+  
+  var reportsDrawerOpen = false;
+  $('#nav_reports').find('.drawer-contents').each(function (index) {
+    if ($(this).css('display') == 'block') {
+      reportsDrawerOpen = true;
+    }
+  });
+  
+  if (!reportsDrawerOpen) {
+    $('.navigation-reports.drawer-contents:first').show({ duration: 200, queue: false });
+	}
 	
 	navigation_windowListeners();
   

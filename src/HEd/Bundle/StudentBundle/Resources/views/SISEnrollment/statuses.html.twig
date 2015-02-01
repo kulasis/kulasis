@@ -1,4 +1,4 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
 
 {% block content %}
 <div class="data-table-header-div">
@@ -6,38 +6,38 @@ Statuses
 </div>
 <table id="window_window_num_data_table_terms" class="data-table">
 <thead>
-	<th class="data-table-cell-row-header">#</th>
-	{{ kula_field_name({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_NAME', field_name_override: 'School', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_STATUS', db_field: 'GRADE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_STATUS', db_field: 'LEVEL', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_STATUS', db_field: 'THESIS_STATUS', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_STATUS', db_field: 'RESIDENT', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_STATUS', db_field: 'FTE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_STATUS', db_field: 'ENTER_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_STATUS', db_field: 'ENTER_CODE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_STATUS', db_field: 'LEAVE_DATE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_STUDENT_STATUS', db_field: 'LEAVE_CODE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	<th class="data-table-cell-row-header">...</th>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'Core.Term.Abbreviation', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Organization.Name', field_name_override: 'School', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Status.Grade', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Status.Level', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Status.ThesisStatus', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Status.Resident', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Status.FTE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Status.EnterDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Status.EnterCode', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Status.LeaveDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Status.LeaveCode', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">...</th>
 </thead>
 <tbody>
-	{% for status in statuses %}
-	<tr>
-		<td class="data-table-cell-row-num">{{ loop.index }}</td>
-		{{ kula_field({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', db_row_id: status.STUDENT_STATUS_ID, value: status.TERM_ABBREVIATION, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_NAME', db_row_id: status.STUDENT_STATUS_ID, value: status.ORGANIZATION_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'GRADE', db_row_id: status.STUDENT_STATUS_ID, value: status.GRADE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'LEVEL', db_row_id: status.STUDENT_STATUS_ID, value: status.LEVEL, lookup: 'C', input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'THESIS_STATUS', db_row_id: status.STUDENT_STATUS_ID, value: status.THESIS_STATUS, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'RESIDENT', db_row_id: status.STUDENT_STATUS_ID, value: status.RESIDENT, input: false, lookup: 'C', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'FTE', db_row_id: status.STUDENT_STATUS_ID, value: status.FTE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_STATUS', db_field: 'ENTER_DATE', db_row_id: status.STUDENT_STATUS_ID, value: status.ENTER_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_STATUS', db_field: 'ENTER_CODE', db_row_id: status.STUDENT_STATUS_ID, value: status.ENTER_CODE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_STATUS', db_field: 'LEAVE_DATE', db_row_id: status.STUDENT_STATUS_ID, value: status.LEAVE_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'STUD_STUDENT_STATUS', db_field: 'LEAVE_CODE', db_row_id: status.STUDENT_STATUS_ID, value: status.LEAVE_CODE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		<td class="data-table-cell-row-detail"><a class="normal-link"  data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_student_enrollment_enrollmentdetail', { student_status_id: status.STUDENT_STATUS_ID }) }}">...</a></td>
-	</tr>
-	{% endfor %}
+  {% for status in statuses %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ field: 'Core.Term.Abbreviation', db_row_id: status.STUDENT_STATUS_ID, value: status.TERM_ABBREVIATION, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Organization.Name', db_row_id: status.STUDENT_STATUS_ID, value: status.ORGANIZATION_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Student.Status.Grade', db_row_id: status.STUDENT_STATUS_ID, value: status.GRADE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Student.Status.Level', db_row_id: status.STUDENT_STATUS_ID, value: status.LEVEL, lookup: 'C', input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Student.Status.ThesisStatus', db_row_id: status.STUDENT_STATUS_ID, value: status.THESIS_STATUS, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Student.Status.Resident', db_row_id: status.STUDENT_STATUS_ID, value: status.RESIDENT, input: false, lookup: 'C', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Student.Status.FTE', db_row_id: status.STUDENT_STATUS_ID, value: status.FTE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Status.EnterDate', db_row_id: status.STUDENT_STATUS_ID, value: status.ENTER_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Status.EnterCode', db_row_id: status.STUDENT_STATUS_ID, value: status.ENTER_CODE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Status.LeaveDate', db_row_id: status.STUDENT_STATUS_ID, value: status.LEAVE_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Status.LeaveCode', db_row_id: status.STUDENT_STATUS_ID, value: status.LEAVE_CODE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td class="data-table-cell-row-detail"><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_student_enrollment_enrollmentdetail', { student_status_id: status.STUDENT_STATUS_ID }) }}">...</a></td>
+  </tr>
+  {% endfor %}
 </tbody>
 </table>
 {% endblock %}

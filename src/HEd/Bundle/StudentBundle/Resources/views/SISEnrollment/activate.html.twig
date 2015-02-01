@@ -1,27 +1,27 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
 
 {% block content %}
 <div class="group-box">
 <div class="group-box-header">Status</div>
 <div class="group-box-contents group">
-{{ kula_field({ db_table: 'CORE_TERM', db_field: 'TERM_ABBREVIATION', field_name_override: 'Term', value: status.TERM_ABBREVIATION, label: true }) }}
-{{ kula_field({ db_table: 'CORE_ORGANIZATION', db_field: 'ORGANIZATION_NAME', value: status.ORGANIZATION_NAME, label: true }) }}
-{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'GRADE', value: status.GRADE, label: true }) }}
-{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'RESIDENT', value: status.RESIDENT, label: true }) }}
-{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'FTE', value: status.FTE, label: true }) }}
-{{ kula_field({ db_table: 'STUD_STUDENT_STATUS', db_field: 'THESIS_STATUS', value: status.THESIS_STATUS, label: true }) }}
+{{ kula_field({ field: 'Core.Term.Abbreviation', field_name_override: 'Term', value: status.TERM_ABBREVIATION, label: true }) }}
+{{ kula_field({ field: 'Core.Organization.Name', value: status.ORGANIZATION_NAME, label: true }) }}
+{{ kula_field({ field: 'HEd.Student.Status.Grade', value: status.GRADE, label: true }) }}
+{{ kula_field({ field: 'HEd.Student.Status.Resident', value: status.RESIDENT, label: true }) }}
+{{ kula_field({ field: 'HEd.Student.Status.FTE', value: status.FTE, label: true }) }}
+{{ kula_field({ field: 'HEd.Student.Status.ThesisStatus', value: status.THESIS_STATUS, label: true }) }}
 </div>
 </div>
 
 <div class="group-box">
 <div class="group-box-header">Activate Student</div>
 <div class="group-box-contents group">
-{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_STATUS', db_field: 'GRADE', table_row: false, label: true }) }}
-{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_STATUS', db_field: 'RESIDENT', table_row: false, label: true }) }}
-{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_STATUS', db_field: 'FTE', table_row: false, label: true }) }}
-{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_STATUS', db_field: 'THESIS_STATUS', table_row: false, label: true }) }}
-{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_STATUS', db_field: 'ENTER_DATE', table_row: false, label: true }) }}
-{{ kula_field({ add: true, table_row: false, db_table: 'STUD_STUDENT_STATUS', db_field: 'ENTER_CODE', table_row: false, label: true }) }}
+{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.Grade', table_row: false, label: true }) }}
+{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.Resident', table_row: false, label: true }) }}
+{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.FTE', table_row: false, label: true }) }}
+{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.ThesisStatus', table_row: false, label: true }) }}
+{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.EnterDate', table_row: false, label: true }) }}
+{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.EnterCode', table_row: false, label: true }) }}
 </div>
 </div>
 

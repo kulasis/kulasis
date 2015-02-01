@@ -1,15 +1,6 @@
 $(function() {
 	$('#role_select').on('change', role_change);
   
-  // start navigation listeners
-	$('.drawer-header').on('click', navigation_openDrawer);
-  
-	// if no drawer set to show, show first drawer
-	if (!$('.navigation-forms.drawer-contents').css('display') == 'block')
-		$('.navigation-forms.drawer-contents:first').show({ duration: 200, queue: false });
-	
-	if (!$('.navigation-reports.drawer-contents').css('display') == 'block')
-		$('.navigation-reports.drawer-contents:first').show({ duration: 200, queue: false });
 });
 
 // show or hide drawer listener
