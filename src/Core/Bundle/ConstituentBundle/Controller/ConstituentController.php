@@ -2,7 +2,7 @@
 
 namespace Kula\Core\Bundle\ConstituentBundle\Controller;
 
-use Kula\Bundle\Core\KulaFrameworkBundle\Controller\Controller;
+use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
 class ConstituentController extends Controller {
   
@@ -152,7 +152,7 @@ class ConstituentController extends Controller {
       $query = $query->fields('CONS_CONSTITUENT', array('CONSTITUENT_ID', 'PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'BIRTH_DATE', 'GENDER', 'SOCIAL_SECURITY_NUMBER'));
       $query = $query->leftJoin('STUD_STUDENT', 'stu', 'stu.STUDENT_ID = CONS_CONSTITUENT.CONSTITUENT_ID');
       $query = $query->leftJoin('STUD_STUDENT_STATUS', 'status', 'stu.STUDENT_ID = status.STUDENT_ID AND status.ORGANIZATION_TERM_ID IN (' . implode(', ', $this->focus->getOrganizationTermIDs()) . ')');
-      $query = $query->fields('status', array('ORGANIZATION_TERM_ID', 'STUDENT_STATUS_ID'))
+      $query = $query->fields('status', array('ORGANIZATION_TERM_ID', 'STUDENT_STATUS_ID'));
       $query = $query->orderBy('LAST_NAME', 'ASC');
       $query = $query->orderBy('FIRST_NAME', 'ASC');
       $query = $query->range(0, 100);

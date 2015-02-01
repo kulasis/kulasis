@@ -14,12 +14,12 @@ Core.System:
           description: "General"
           display_name: "General"
           sort: 1
-          route: sis_HEd_setup_system
+          route: core_setup_system
         LDAP:
           description: "LDAP"
           display_name: "LDAP"
           sort: 2
-          route: sis_HEd_setup_system_ldap
+          route: core_setup_system_ldap
     Lookup:
       description: "Lookup"
       display_name: "Lookup"
@@ -42,7 +42,7 @@ Core.System:
     NonOrganization:
       description: "Non Organization"
       display_name: "Non Organization"
-      route: sis_HEd_system_nonorganization
+      route: core_system_nonorganization
       sort: 3
     Organization:
       description: "Organization"

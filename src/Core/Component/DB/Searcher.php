@@ -19,11 +19,11 @@ class Searcher {
     $this->db = $db;
     $this->schema = $schema;
     $this->permission = $permission;
-    $this->request = $request;
+    $this->request = $request->getCurrentRequest();
   }
   
-  public function startProcessing($db, $schema, $permission, $request) {
-
+  public function startProcessing($db = null, $schema = null, $permission = null, $request = null) {
+    
     $this->post = $this->request->request->get('search');
 
     $this->post = self::cleanSearchVariable($this->post);
@@ -70,7 +70,6 @@ class Searcher {
   }
   
   public function prepareSearch($post_data, $base_table, $base_field) {
-    
     $post_data = $this->cleanSearchVariable($post_data);
     
     $select_obj = $this->db->db_select($base_table);

@@ -38,12 +38,12 @@
         "symfony/assetic-bundle": "2.*",
         "twig/twig": "1.*",
         "ircmaxell/password-compat": "1.*",
-        "itbz/fpdf": "dev-master",
+        "itbz/fpdf": "1.*",
         "symfony/monolog-bundle": "2.*",
         "monolog/monolog": "1.*",
-        "google/apiclient": "1.0.*@beta"
+        "google/apiclient": "1.*"
     },
     "autoload": {
-        "psr-4": { "Kula\\": "src/" },
+        "psr-4": { "Kula\\": "src/" }
     }
 }

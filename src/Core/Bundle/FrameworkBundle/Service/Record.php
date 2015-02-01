@@ -17,7 +17,7 @@ class Record {
   private $selected_record_id;
   private $selected_record;
   
-  public function __construct($db, $session, $schema, $focus, $request, $flash, $permission, $recordType) {
+  public function __construct($db, $session, $schema, $focus, $request, $flash, $permission, $recordType, $searcher) {
     $this->db = $db;
     $this->session = $session;
     $this->schema = $schema;
@@ -27,6 +27,7 @@ class Record {
     $this->permission = $permission;
     $this->flash = $flash;
     $this->recordType = $recordType;
+    $this->searcher = $searcher;
   }
   
   public function setRecordType($recordTypeName, $add_mode = null, $eager_search_data = null) {
@@ -66,7 +67,7 @@ class Record {
         // if searching, process search, load first record returned
         if ($this->request->request->get('mode') == 'search' AND $this->selected_record_id == ''
         ) {
-          $post_data = \Kula\Core\Component\DB\Searcher::startProcessing($this->db, $this->schema, $this->permission, $this->request);
+          $post_data = $this->searcher->startProcessing($this->db, $this->schema, $this->permission, $this->request);
           $this->selected_record_id = $this->_search($post_data);
         } else {
       
@@ -260,18 +261,19 @@ class Record {
         foreach($table_data as $field => $value) {
           // check for permission
           if ($this->permission->getPermissionForSchemaObject($table, $field, Permission::READ)) {
+            
             if (is_array($value)) {  
-              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$field, $value);
+              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$this->schema->getField($field)->getDBName(), $value, 'IN');
             } elseif (is_int($value)) { 
-              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$field, $value);
+              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$this->schema->getField($field)->getDBName(), $value, '=');
             } else {
-              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$field, $value . '%', 'LIKE');
+              $select_obj = $select_obj->condition($this->schema->getTable($table)->getDBName().'.'.$this->schema->getField($field)->getDBName(), $value . '%', 'LIKE');
             }
           } else {
             $this->flash->add('error', 'Searching in ' . $table . '.' . $field . ' with no permission.');
           }
         }
-        
+
         // get link to base table
         
         

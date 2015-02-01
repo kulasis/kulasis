@@ -75,4 +75,4 @@ services:
     
   kula.core.record:
     class: Kula\Core\Bundle\FrameworkBundle\Service\Record
-    arguments: ["@kula.core.db", "@kula.core.session", "@kula.core.schema", "@kula.core.focus", "@request_stack", "@flash", "@kula.core.permission", "@kula.core.record_type"]
+    arguments: ["@kula.core.db", "@kula.core.session", "@kula.core.schema", "@kula.core.focus", "@request_stack", "@flash", "@kula.core.permission", "@kula.core.record_type", "@kula.core.searcher"]

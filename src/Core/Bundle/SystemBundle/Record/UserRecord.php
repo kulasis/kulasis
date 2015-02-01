@@ -49,10 +49,10 @@ class UserRecord extends Record implements RecordDelegateInterface {
   }
   
   public function modifySearchDBOBject($db_obj) {
-    $db_obj =  $db_obj->join('CORE_USER', 'CORE_USER', 'CONSTITUENT_ID = USER_ID')->fields('CORE_USER', array('USER_ID'));
+    $db_obj =  $db_obj->join('CONS_CONSTITUENT', 'CONS_CONSTITUENT', 'CONSTITUENT_ID = USER_ID');
     $db_obj =  $db_obj->orderBy('LAST_NAME', 'ASC');
     $db_obj =  $db_obj->orderBy('FIRST_NAME', 'ASC');
-    
+
     return $db_obj;
   }
   
