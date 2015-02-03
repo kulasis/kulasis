@@ -43,4 +43,8 @@ class Form extends Item {
     
   }
   
+  public function getType() {
+    return 'form';
+  }
+  
 }

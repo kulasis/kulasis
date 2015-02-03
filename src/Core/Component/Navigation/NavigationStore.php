@@ -37,8 +37,10 @@ class NavigationStore {
       
     }
     
-    $this->navigation = unserialize(file_get_contents((string) $cache));
-    $this->navigation->awake($this->session, $this->permission, $this->request);
+    if (!$this->navigation) {
+      $this->navigation = unserialize(file_get_contents((string) $cache));
+      $this->navigation->awake($this->session, $this->permission, $this->request);
+    }
   }
   
   public function getNavigation() {

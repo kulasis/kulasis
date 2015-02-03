@@ -54,4 +54,9 @@ class Table {
     }
   }
   
+  public function __destruct() {
+    $this->fields = null;
+    $this->primary = null;
+  }
+  
 }

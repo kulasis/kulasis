@@ -46,7 +46,7 @@ class Controller extends BaseController {
   }
   
   protected function newPoster() {
-    return new $this->container->get('kula.core.poster');;
+    return $this->container->get('kula.core.poster');
   }
   
   protected function chooser($chooser) {
@@ -68,8 +68,46 @@ class Controller extends BaseController {
         if ($this->request->request->get('delete'))
           $this->poster->deleteMultiple($this->request->request->get('delete'));
         $this->poster->process();
+        
+        if ($this->poster->isPosted()) {
+          $this->addFlash('success', 'Changes saved.');
+        } else {
+          $this->addFlash('info', 'No changes saved.');
+        }
+        
       }
     }
+  }
+  
+  protected function form($variable, $table, $id = null, $field = null) {
+    
+    $query = $this->request->query->get($variable);
+    $request = $this->request->request->get($variable);
+    
+    if (!isset($query) AND !isset($request)) {
+      return null;
+    } elseif (isset($query)) {
+      $var = $this->request->query->get($variable);
+    } elseif (isset($request)) {
+      $var = $this->request->request->get($variable);
+    }
+    
+    if (!isset($var[$table])) {
+      return null;
+    }
+    
+    if (isset($var[$table][$id][$field])) {
+      return $var[$table][$id][$field];
+    }
+    
+    if (isset($var[$table][$id]) AND $field === null) {
+      return $var[$table][$id];
+    }
+    
+    if (isset($var[$table][$field]) AND $id === null) {
+      return $var[$table][$field];
+    }
+    
   }
   
   public function getSubmitMode() {

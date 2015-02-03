@@ -118,6 +118,7 @@ HEd.Student:
       db_column_name: GED_STATE
       db_column_type: varchar
       db_column_length: 5
+      db_column_null: true
       field_type: lookup
       lookup: Constituent.Address.AdministrativeArea
       column_name: "GED State"
@@ -127,6 +128,7 @@ HEd.Student:
       db_column_name: PARENT_GUARDIAN
       db_column_type: varchar
       db_column_length: 100
+      db_column_null: true
       field_type: text
       field_size: 30
       column_name: "Parent Guardian"
@@ -136,6 +138,7 @@ HEd.Student:
       db_column_name: ORIGIN_STATE
       db_column_type: varchar
       db_column_length: 5
+      db_column_null: true
       field_type: lookup
       lookup: Constituent.Address.AdministrativeArea
       column_name: "Origin State"
@@ -145,6 +148,7 @@ HEd.Student:
       db_column_name: CITIZENSHIP_COUNTRY
       db_column_type: varchar
       db_column_length: 2
+      db_column_null: true
       field_type: lookup
       lookup: Constituent.Address.Country
       column_name: "Citizenship Country"

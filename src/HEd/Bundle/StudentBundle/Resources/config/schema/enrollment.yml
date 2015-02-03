@@ -16,6 +16,7 @@ HEd.Student.Status:
       db_column_name: STUDENT_ID
       db_column_type: serial
       db_column_null: false
+      field_type: radio
       column_name: "Student ID"
       label_name: "Student ID"
     OrganizationTermID:
@@ -70,6 +71,8 @@ HEd.Student.Status:
       db_column_null: true
       field_type: lookup
       lookup: HEd.Student.Enrollment.EnterCode
+      column_name: "Enter Code"
+      label_name: "Enter Code"
     LeaveDate:
       description: "Leave Date"
       db_column_name: LEAVE_DATE
@@ -126,7 +129,7 @@ HEd.Student.Status:
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser: Kula\Core\Bundle\SystemBundle\Chooser\StaffChooser
+      chooser: HEd.Staff
       column_name: "Admissions Counselor ID"
       label_name: "Admissions Counselor ID"
     AdvisorID:
@@ -136,7 +139,7 @@ HEd.Student.Status:
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser: Kula\Core\Bundle\SystemBundle\Chooser\StaffChooser
+      chooser: HEd.Staff
       column_name: "Advisor ID"
       label_name: "Advisor ID"
     Cohort:
@@ -154,9 +157,11 @@ HEd.Student.Status:
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser: Kula\Core\Bundle\SystemBundle\Chooser\TermChooser
+      chooser: Core.Term
       column_name: "Enter Term ID"
       label_name: "Enter Term"
+  unique_keys:
+    StudentOrganizationTermID: [ "HEd.Student.Status.StudentID", "HEd.Student.Status.OrganizationTermID" ]
 HEd.Student.Enrollment:
   description: "Student Enrollments"
   db_table_name: STUD_STUDENT_ENROLLMENT
@@ -207,6 +212,7 @@ HEd.Student.Enrollment:
       db_column_name: LEAVE_CODE
       db_column_type: varchar
       db_column_length: 5
+      db_column_null: true
       field_type: lookup
       lookup: HEd.Student.Enrollment.LeaveCode
       column_name: "Leave Code"

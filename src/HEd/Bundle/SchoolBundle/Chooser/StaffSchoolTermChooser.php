@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\StudentBundle\Chooser;
+namespace Kula\HEd\Bundle\SchoolBundle\Chooser;
 
 use Kula\Core\Component\Chooser\Chooser;
 
@@ -43,7 +43,7 @@ class StaffSchoolTermChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'sis_HEd_offering_staff_orgterm_chooser';
+    return 'sis_HEd_school_staff_orgterm_chooser';
   }
   
 }

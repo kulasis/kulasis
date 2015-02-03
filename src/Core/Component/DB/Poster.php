@@ -40,8 +40,13 @@ class Poster {
     $this->isPosted = false;
   }
   
+  public function isPosted() {
+    return $this->isPosted;
+  }
+  
   public function add($table, $id, $fields) {
     $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::ADD, $table, $id, $fields);
+    return $this;
   }
   
   public function addMultiple(array $post) {
@@ -57,6 +62,7 @@ class Poster {
   
   public function edit($table, $id, $fields) {
     $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::EDIT, $table, $id, $fields);
+    return $this;
   }
   
   public function editMultiple(array $post) {
@@ -70,6 +76,7 @@ class Poster {
   
   public function delete($table, $id, $fields) {
     $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::DELETE, $table, $id, $fields);
+    return $this;
   }
   
   public function deleteMultiple(array $post) {
@@ -83,23 +90,28 @@ class Poster {
   
   public function process() {
     if (count($this->records) > 0) {
-      $transaction = $this->db->db_transaction('poster');
-      try {
-        foreach($this->records as $table => $tableRow) {
-          foreach($tableRow as $id => $record) {
-            $record->process();
-          }
+      $transaction = $this->db->db_transaction();
+      foreach($this->records as $table => $tableRow) {
+        foreach($tableRow as $id => $record) {
+          $record->process();
         }
-      } catch (\Exception $e) {
-        $transaction->rollback();
-        $class = get_class($e);
-        throw new $class($e);
       }
+      $transaction->commit();
+      $this->isPosted = true;
     }
+    return $this;
   }
   
   public function getPosterRecord($table, $id) {
     return $this->records[$table][$id];
+  }
+  
+  public function getID() {
+    foreach($this->records as $table => $record) {
+      foreach($this->records[$table] as $record_id => $posterRecord) {
+        return $this->records[$table][$record_id]->getID();
+      }
+    } 
   }
   
   public function getAddedIDs($table) {

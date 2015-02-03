@@ -85,13 +85,13 @@ class Navigation {
       }
       
       if ($navRow['NAVIGATION_TYPE'] == 'menu_action') {
-        $navigationItem = new Menu($navRow['NAVIGATION_NAME'], $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE'], $navRow['DIVIDER_BEFORE'], $navRow['RECORD_LOADED'], $navRow['CONFIRMATION_MESSAGE']);
+        $navigationItem = new Menu($navRow['NAVIGATION_NAME'], 'menu_action', $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE'], $navRow['DIVIDER_BEFORE'], $navRow['RECORD_LOADED'], $navRow['CONFIRMATION_MESSAGE']);
         
         $this->navigation[$navRow['parent_NAVIGATION_NAME']]->addMenuAction($navigationItem);
       }
       
       if ($navRow['NAVIGATION_TYPE'] == 'menu_report') {
-        $navigationItem = new Menu($navRow['NAVIGATION_NAME'], $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE'], $navRow['DIVIDER_BEFORE'], $navRow['RECORD_LOADED'], $navRow['CONFIRMATION_MESSAGE']);
+        $navigationItem = new Menu($navRow['NAVIGATION_NAME'], 'menu_report', $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE'], $navRow['DIVIDER_BEFORE'], $navRow['RECORD_LOADED'], $navRow['CONFIRMATION_MESSAGE']);
         
         $this->navigation[$navRow['parent_NAVIGATION_NAME']]->addMenuReport($navigationItem);
       }
@@ -189,19 +189,16 @@ class Navigation {
 
     if (isset($this->navigationByRoutes[$route])) {
     
-    $routeNav = $this->navigationByRoutes[$route];
+      $routeNav = $this->navigationByRoutes[$route];
+      
+      if ($routeNav instanceof Page OR $routeNav instanceof Form OR $routeNav instanceof Report OR $routeNav instanceof Menu) {
+        return $routeNav;
+      }
     
-    if ($routeNav instanceof Page) {
-      return $routeNav;
-    }
-    
-    if ($routeNav instanceof Form) {
-      return $routeNav;
-    }
-    
-    if ($routeNav instanceof Tab OR $routeNav instanceof MenuAction OR $routeNav instanceof MenuReport) {
-      return $this->navigation[$routeNav->getParent()];
-    } 
+      if ($routeNav instanceof Tab) {
+        
+        return $this->navigation[$routeNav->getParent()];
+      } 
     
     }
   }

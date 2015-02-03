@@ -73,28 +73,28 @@ class CoreUsersController extends Controller {
     
     $transaction = $this->db()->db_transaction('create_user');
     
-    try {
-      // get constituent data
-      $constituentPoster = $this->poster();
-      $constituentPoster->add('Core.Constituent', 'new', $this->request->request->get('add')['Core.Constituent']['new']);
-      $constituentPoster->process();
-      $constituent_id = $constituentPoster->getPosterRecord('Core.Constituent', 'new')->getID();
+    // get constituent data
+    $constituentPoster = $this->newPoster();
+    $constituentPoster->add('Core.Constituent', 'new', $this->form('add', 'Core.Constituent', 'new'));
+    $constituentPoster->process();
+    $constituent_id = $constituentPoster->getPosterRecord('Core.Constituent', 'new')->getID();
 
-      // get user data
-      $user_addition = $this->request->request->get('add')['Core.User']['new'];
-      $user_addition['Core.User.ID'] = $constituent_id;
-      // Post data
-      $userPoster = $this->poster();
-      $userPoster->add('Core.User', 'new', $user_addition);
-      $userPoster->process();
-      // Get user ID
-      $user_id = $userPoster->getPosterRecord('Core.User', 'new')->getField('Core.User.ID');
-    
-      return $this->forward('core_system_users', array('record_type' => 'Core.User', 'record_id' => $user_id), array('record_type' => 'Core.User', 'record_id' => $user_id));
-    } catch (\Exception $e) {
-      $transaction->rollback();
-      throw new \Exception($e);
-    }
+    // get user data
+    $user_addition = $this->form('add', 'Core.User', 'new');
+    $user_addition['Core.User.ID'] = $constituent_id;
+    // Post data
+    $userPoster = $this->newPoster();
+    $userPoster->add('Core.User', 'new', $user_addition);
+    $userPoster->process();
+    // Get user ID
+    $user_id = $userPoster->getPosterRecord('Core.User', 'new')->getField('Core.User.ID');
+  
+    if ($user_id) {
+      $this->addFlash('success', 'Created user.');
+      $transaction->commit();
+    } 
+  
+    return $this->forward('core_system_users', array('record_type' => 'Core.User', 'record_id' => $user_id), array('record_type' => 'Core.User', 'record_id' => $user_id));
   }
   
   public function deleteAction() {

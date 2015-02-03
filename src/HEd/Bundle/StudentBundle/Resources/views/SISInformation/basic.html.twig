@@ -8,7 +8,7 @@
 {{ kula_field({ edit: true, field: 'HEd.Student.Status.AdvisorID', db_row_id: status.STUDENT_STATUS_ID, value: status.ADVISOR_ID, label: true}) }}
 {{ kula_field({ edit: true, field: 'HEd.Student.Status.Cohort', db_row_id: status.STUDENT_STATUS_ID, value: status.COHORT, label: true}) }}
 {{ kula_field({ edit: true, field: 'HEd.Student.Status.AdmissionsCounselorID', field_name_override: 'Admissions Counselor', db_row_id: status.STUDENT_STATUS_ID, value: status.ADMISSIONS_COUNSELOR_ID, label: true}) }}
-{{ kula_field({ field: 'HEd.Student.Degree.GraudationDate', field_name_override: 'Graduation Date', db_row_id: status.STUDENT_STATUS_ID, value: status.GRADUATION_DATE, label: true}) }}
+{{ kula_field({ field: 'HEd.Student.Degree.GraduationDate', field_name_override: 'Graduation Date', db_row_id: status.STUDENT_STATUS_ID, value: status.GRADUATION_DATE, label: true}) }}
 </div>
 </div>
 {% if status.DEGREE_ID %}

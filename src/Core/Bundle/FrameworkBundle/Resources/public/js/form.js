@@ -54,7 +54,7 @@ function form_submitButton() {
 }
 
 function formSubmission(event) {
-	if ($(this).data('navigation-type') != 'R' && $(this).data('navigation-type') != 'MR') {
+	if ($(this).data('navigation-type') != 'report' && $(this).data('navigation-type') != 'menu_report') {
 	event.preventDefault();
 	thisurl = $(this).prop('action');
 	

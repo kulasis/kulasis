@@ -486,7 +486,7 @@ class DB {
    *   A new Transaction object for this connection.
    */
   public function db_transaction($name = NULL, array $options = array()) {
-    if (empty($options['target'])) $options['target'] = 'read';
+    if (empty($options['target'])) $options['target'] = 'write';
     if (empty($options['fetch'])) $options['fetch'] = \PDO::FETCH_ASSOC;
     if ($options['target'] != 'schema') $this->startLogger();
     return Database::getConnection($options['target'])->startTransaction($name);

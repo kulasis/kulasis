@@ -283,6 +283,7 @@ class FieldLoader {
       }
     }
     
+    $db = null;
   }
   
   public function synchronizeDatabaseCatalogParentKeys(\Kula\Core\Component\DB\DB $db) {
@@ -299,7 +300,16 @@ class FieldLoader {
       $db->db_update('CORE_SCHEMA_FIELDS', array('target' => 'schema'))->fields($catalogFieldsForDB)->condition('FIELD_NAME', $this->table->getName() . '.' .$this->name)->execute();
     }
     
-    
+    $db = null;
+  }
+  
+  public function __destruct() {
+    //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - start field  / ".$this->name." destruction<br />\n";
+    unset($this->table);
+    $this->table = null;
+    $this->name = null;
+    $this->log = null;
+    //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - end field destruction<br />\n";
   }
   
 }

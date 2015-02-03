@@ -1,0 +1,4 @@
+services:
+  kula.HEd.student:
+    class: Kula\HEd\Bundle\StudentBundle\Service\StudentService
+    arguments: ["@kula.core.db", "@kula.core.sequence", "@kula.core.poster_factory"]

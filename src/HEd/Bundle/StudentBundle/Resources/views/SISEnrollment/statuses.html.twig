@@ -35,7 +35,7 @@ Statuses
     {{ kula_field({ edit: true, field: 'HEd.Student.Status.EnterCode', db_row_id: status.STUDENT_STATUS_ID, value: status.ENTER_CODE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Status.LeaveDate', db_row_id: status.STUDENT_STATUS_ID, value: status.LEAVE_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Status.LeaveCode', db_row_id: status.STUDENT_STATUS_ID, value: status.LEAVE_CODE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    <td class="data-table-cell-row-detail"><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_student_enrollment_enrollmentdetail', { student_status_id: status.STUDENT_STATUS_ID }) }}">...</a></td>
+    <td class="data-table-cell-row-detail"><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_student_enrollment_enrollmentdetail', { student_status_id: status.STUDENT_STATUS_ID }) }}">...</a></td>
   </tr>
   {% endfor %}
 </tbody>

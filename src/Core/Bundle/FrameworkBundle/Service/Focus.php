@@ -129,8 +129,12 @@ class Focus {
     }
   }
   */
-  public function getOrganizationTermIDs() {  
+  public function getOrganizationTermIDs() {
     return $this->organization->getOrganizationTerms($this->getOrganizationID(), $this->getTermID());
+  }
+  
+  public function getOrganizationTermID() {
+    return $this->organization->getOrganizationTerms($this->getOrganizationID(), $this->getTermID())[0];
   }
   
   public function getSchoolIDs() {

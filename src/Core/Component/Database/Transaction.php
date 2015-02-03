@@ -40,7 +40,7 @@ class Transaction {
    *
    * @var Boolean
    */
-  protected $rolledBack = FALSE;
+  protected $rolledBack = TRUE;
 
   /**
    * The name of the transaction.
@@ -97,5 +97,9 @@ class Transaction {
   public function rollback() {
     $this->rolledBack = TRUE;
     $this->connection->rollback($this->name);
+  }
+  
+  public function commit() {
+    $this->rolledBack = FALSE;
   }
 }

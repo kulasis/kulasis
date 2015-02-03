@@ -164,6 +164,11 @@ class SchemaLoader {
   }
   
   public function __destruct() {
+    foreach($this->schema as $tableName => $table) {
+      // create table
+      $this->schema[$tableName]->__destruct();
+    }
+    
     $this->schema = null;
   }
   

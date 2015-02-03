@@ -22,5 +22,9 @@ class Group extends Item {
   public function getReports() {
     return $this->reports;
   }
+  
+  public function getType() {
+    return 'group';
+  }
 
 }

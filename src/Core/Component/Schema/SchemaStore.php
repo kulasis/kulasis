@@ -23,29 +23,34 @@ class SchemaStore implements WarmableInterface {
 
     if (!$cache->isFresh()) {
       
+       //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - start schema loader<br />\n";
+      
       $schema_obj = new \Kula\Core\Component\Schema\SchemaLoader;
       $schema_obj->getSchemaFromBundles($this->kernel->getBundles());
       $schema_obj->synchronizeDatabaseCatalog($this->db);
+      
       $paths = $schema_obj->paths;
       $schema_obj = null;
-      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - finish compiling\n";
+      //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - finish compiling<br />\n";
       $schema = new Schema($this->db);
-      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - make schema\n";
+      //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - make schema<br />\n";
       $schema->loadTables();
-      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - load tables\n";
+      //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - load tables<br />\n";
       $schema->loadFields();
-      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')."- load fields\n";
+      //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')."- load fields<br />\n";
       $cache->write(serialize($schema), $paths);
-      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - write\n";
+      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - write<br />\n";
       $schema = null;
-      
+      //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - unset schema<br />\n";
 
     }
-    unset($this->schema);
-    $this->schema = unserialize(file_get_contents((string) $cache));
+    if (!$this->schema)
+      $this->schema = unserialize(file_get_contents((string) $cache));
+     //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - loaded schema file<br />\n";
   }
   
   public function getSchema() {
+    //echo 'called getSchema()<br />';
     if (!$this->schema)
       $this->warmUp($this->cacheDir);
     return $this->schema;

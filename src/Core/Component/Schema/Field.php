@@ -101,4 +101,8 @@ class Field {
       return true;
   }
   
+  public function __destruct() {
+    $this->table = null;
+  }
+  
 }

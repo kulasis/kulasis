@@ -61,30 +61,35 @@ class TableLoader {
   
   private function addTimestamps() {
     if ($this->timestamps) {
-      
+
       $created_userstamp = new FieldLoader($this, 'CreatedUserstamp', 'Created Userstamp');
       $created_userstamp->setDBColumnName('CREATED_USERSTAMP');
       $created_userstamp->setDBColumnType('serial');
       $created_userstamp->setDBColumnNull(true);
       $this->addField($created_userstamp);
+      $created_userstamp = null;
       
       $created_timestamp = new FieldLoader($this, 'CreatedTimestamp', 'Created Timestamp');
       $created_timestamp->setDBColumnName('CREATED_TIMESTAMP');
       $created_timestamp->setDBColumnType('datetime');
       $created_timestamp->setDBColumnNull(true);
       $this->addField($created_timestamp);
+      $created_timestamp = null;
       
       $updated_userstamp = new FieldLoader($this, 'UpdatedUserstamp', 'Updated Userstamp');
       $updated_userstamp->setDBColumnName('UPDATED_USERSTAMP');
       $updated_userstamp->setDBColumnType('serial');
       $updated_userstamp->setDBColumnNull(true);
       $this->addField($updated_userstamp);
+      $updated_userstamp = null;
       
       $updated_timestamp = new FieldLoader($this, 'UpdatedTimestamp', 'Updated Timestamp');
       $updated_timestamp->setDBColumnName('UPDATED_TIMESTAMP');
       $updated_timestamp->setDBColumnType('datetime');
       $updated_timestamp->setDBColumnNull(true);
       $this->addField($updated_timestamp);
+      $updated_timestamp = null;
+      
     }
   }
   
@@ -252,9 +257,21 @@ class TableLoader {
   }
   
   public function __destruct() {
+
+    //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - start table ".$this->name." destruction<br />\n";
+    if (count($this->fields) > 0){
+    foreach($this->fields as $name => $field) {
+      // create table
+      //$this->fields[$name]->__destruct();
+      $this->fields[$name] = null;
+    }
+    }
+    
     $this->uniqueKeys = null;
     $this->fields = null;
     $this->log = null;
+
+    //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - end table destruction<br />\n";
   }
   
 }

@@ -9,9 +9,9 @@ class SISEnrollmentVerificationReportController extends ReportController {
 	public function indexAction() {
 		$this->authorize();
 		//$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-		if ($this->request->query->get('record_type') == 'STUDENT' AND $this->request->query->get('record_id') != '')
-			$this->setRecordType('STUDENT');
-		return $this->render('KulaHEdStudentBundle:EnrollmentVerificationReport:reports_enrollmentverification.html.twig');
+		if ($this->request->query->get('record_type') == 'SIS.HEd.Student' AND $this->request->query->get('record_id') != '')
+			$this->setRecordType('SIS.HEd.Student');
+		return $this->render('KulaHEdStudentBundle:SISEnrollmentVerificationReport:reports_enrollmentverification.html.twig');
 	}
 	
 	public function generateAction()

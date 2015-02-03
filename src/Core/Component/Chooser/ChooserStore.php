@@ -36,9 +36,10 @@ class ChooserStore {
       
     }
     
-    $this->choosers = unserialize(file_get_contents((string) $cache));
-    $this->choosers->loadDependencies($this->db, $this->session, $this->focus);
-    
+    if (!$this->choosers) {
+      $this->choosers = unserialize(file_get_contents((string) $cache));
+      $this->choosers->loadDependencies($this->db, $this->session, $this->focus);
+    }
   }
   
   public function getChoosers() {

@@ -119,6 +119,14 @@ class Organization {
           }
         }
         return;
+      } else {
+        if ($organization->getTermIDs()) {
+          foreach($organization->getTermIDs() as $term) {
+            if ((is_array($termIDs) AND in_array($term, $termIDs)) OR (!is_array($termIDs) AND $term == $termIDs)) {
+              $this->organizationTerms[] = $organization->getOrganizationTermID($term);
+            }
+          }
+        }
       }
     }
     return $this->organizationTerms;

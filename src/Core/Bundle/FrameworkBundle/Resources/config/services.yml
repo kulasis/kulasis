@@ -41,9 +41,7 @@ services:
 
   kula.core.poster_factory:
     class: Kula\Core\Component\DB\PosterFactory
-    factory: ["%kula.core.poster_factory.class%", "getPoster"]
     arguments: ["@service_container"]
-    container: prototype
   
   kula.core.poster:
     class: Kula\Core\Component\DB\Poster
@@ -53,6 +51,10 @@ services:
   kula.core.searcher:
     class: Kula\Core\Component\DB\Searcher
     arguments: ["@kula.core.db", "@kula.core.schema", "@kula.core.permission", "@request_stack"]
+
+  kula.core.sequence:
+    class: Kula\Core\Bundle\FrameworkBundle\Service\Sequence
+    arguments: ["@kula.core.db"]
   
   kula.core.session:
     class: Kula\Core\Bundle\FrameworkBundle\Service\Session

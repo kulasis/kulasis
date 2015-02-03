@@ -9,7 +9,7 @@ class SISDocumentsController extends Controller {
   public function indexAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     $documents = array();
     

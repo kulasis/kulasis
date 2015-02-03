@@ -10,12 +10,13 @@
 
 {% block window %}
 <!-- window menu bar -->
-{% set menuActions = kula_core_navigation.getRequestedNavItem().getMenuActions() %}
-{% set menuReports = kula_core_navigation.getRequestedNavItem().getMenuReports() %}
-<form id="window_window_num_form" method="post" action="{{ form_action }}" data-navigation-type="{{navigation_info.NAVIGATION_TYPE}}"{% if navigation_info.NAVIGATION_TYPE == 'R' or navigation_info.NAVIGATION_TYPE == 'MR' %} target="_blank"{% endif %}>
+{% set requestedNav = kula_core_navigation.getRequestedNavItem() %}
+{% set menuActions = requestedNav.getMenuActions() %}
+{% set menuReports = requestedNav.getMenuReports() %}
+<form id="window_window_num_form" method="post" action="{{ form_action }}" data-navigation-type="{{ requestedNav.getType() }}"{% if requestedNav.getType() == 'report' or requestedNav.getType() == 'menu_report' %} target="_blank"{% endif %}>
 <div id="window_window_num_menu_bar" class="window_menu_bar group">
   <div id="window_window_num_menu_bar_left" class="window_menu_bar_left">
-    {% if menuActions %}
+{% if menuActions %}
 <div id="window_window_num_menu_actions" class="dropdown">
     <a href="#" data-toggle="dropdown" class="menu-button"><img src="{{ asset('images/actions_menu.png') }}" /> <span class="caret"></span></a>
   <ul id="window_window_num_menu_actions_contents" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">

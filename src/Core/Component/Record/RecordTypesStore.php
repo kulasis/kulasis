@@ -34,6 +34,7 @@ class RecordTypesStore {
       
     }
     
+    if (!$this->record)
     $this->record = unserialize(file_get_contents((string) $cache));
     
   }

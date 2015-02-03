@@ -8,7 +8,7 @@ class Menu extends Item {
   private $recordLoaded;
   private $confirmationMessage;
 
-  public function __construct($name, $parent, $db_id, $portal, $sort, $displayName, $route, $dividerBefore, $recordLoaded, $confirmationMessage) {
+  public function __construct($name, $type, $parent, $db_id, $portal, $sort, $displayName, $route, $dividerBefore, $recordLoaded, $confirmationMessage) {
     
     parent::__construct($name, $parent, $db_id, $portal, $sort, $displayName, $route);
     
@@ -16,6 +16,7 @@ class Menu extends Item {
     $this->recordLoaded = $recordLoaded;
     $this->confirmationMessage = $confirmationMessage;
     
+    $this->type = $type;
   }
   
   public function getDividerBefore() {
@@ -31,5 +32,9 @@ class Menu extends Item {
   public function getConfirmationMessage() {
     return $this->confirmationMessage;
   }
-
+  
+  public function getType() {
+    return $this->type;
+  }
+  
 }

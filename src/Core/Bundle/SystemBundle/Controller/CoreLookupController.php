@@ -56,7 +56,7 @@ class CoreLookupController extends Controller {
   
   public function chooserAction() {
     $this->authorize();
-    $data = \Kula\Core\Bundle\SystemBundle\Chooser\LookupChooser::createChooserMenu($this->request->query->get('q'));
+    $data = $this->chooser('Core.Lookup')->createChooserMenu($this->request->query->get('q'));
     return $this->JSONResponse($data);
   }
   
