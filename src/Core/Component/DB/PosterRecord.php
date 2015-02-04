@@ -27,6 +27,7 @@ class PosterRecord {
   private $violations;
   private $hasViolations;
   
+  private $result;
   private $posted;
   
   const ADD = 'C';
@@ -78,7 +79,7 @@ class PosterRecord {
         $this->validate();
     
         if (!$this->hasViolations) {
-          $this->execute();
+          $this->result = $this->execute();
           $this->posted = true;
         }
       }
@@ -99,6 +100,10 @@ class PosterRecord {
   
   public function isPosted() {
     return $this->posted;
+  }
+  
+  public function getResult() {
+    return $this->result;
   }
   
   private function getOriginalRecord() {
@@ -307,7 +312,6 @@ class PosterRecord {
   }
   
   private function execute() {
-    
     if ($this->posted === false) {
       if ($this->crud == self::ADD OR $this->crud == self::EDIT) {
         $fields = array();

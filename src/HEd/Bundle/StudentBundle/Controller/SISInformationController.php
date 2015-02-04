@@ -127,14 +127,55 @@ class SISInformationController extends Controller {
     if ($this->record->getSelectedRecordID()) {
       
       // Add enrollment activity
-      if (isset($this->request->request->get('add')['STUD_STUDENT_ENROLLMENT_ACTIVITY']['new'])) {
+      if ($activity_post = $this->form('add', 'HEd.Student.Enrollment.Activity', 'new')) {
         
         // posted data
-        $activity_post = $this->request->request->get('add')['STUD_STUDENT_ENROLLMENT_ACTIVITY']['new'];
+        $transaction = $this->db()->db_transaction();
         
-        $connect = $this->db('write');
-        if (!$connect->inTransaction())
-          $connect->beginTransaction();
+        if ($activity_post['HEd.Student.Enrollment.Activity.Grade']) {
+          $activity_data['HEd.Student.Enrollment.Activity.Grade'] = $activity_post['HEd.Student.Enrollment.Activity.Grade'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.Resident']) {
+          $activity_data['HEd.Student.Enrollment.Activity.Resident'] = $activity_post['HEd.Student.Enrollment.Activity.Resident'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.FTE']) {
+          $activity_data['HEd.Student.Enrollment.Activity.FTE'] = $activity_post['HEd.Student.Enrollment.Activity.FTE'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.Level']) {
+          $activity_data['HEd.Student.Enrollment.Activity.Level'] = $activity_post['HEd.Student.Enrollment.Activity.Level'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.ThesisStatus']) {
+          $activity_data['HEd.Student.Enrollment.Activity.ThesisStatus'] = $activity_post['HEd.Student.Enrollment.Activity.ThesisStatus'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.SeekingDegree1ID']) {
+          $activity_data['HEd.Student.Enrollment.Activity.SeekingDegree1ID'] = $activity_post['HEd.Student.Enrollment.Activity.SeekingDegree1ID'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.SeekingDegree2ID']) {
+          $activity_data['HEd.Student.Enrollment.Activity.SeekingDegree2ID'] = $activity_post['HEd.Student.Enrollment.Activity.SeekingDegree2ID'];
+        }
+        
+        // Post data to status
+        if ($activity_post['HEd.Student.Enrollment.Activity.Grade']) {
+          $status_data['HEd.Student.Status.Grade'] = $activity_post['HEd.Student.Enrollment.Activity.Grade'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.Resident']) {
+          $status_data['HEd.Student.Status.Resident'] = $activity_post['HEd.Student.Enrollment.Activity.Resident'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.FTE']) {
+          $status_data['HEd.Student.Status.FTE'] = $activity_post['HEd.Student.Enrollment.Activity.FTE'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.Level']) {
+          $status_data['HEd.Student.Status.Level'] = $activity_post['HEd.Student.Enrollment.Activity.Level'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.ThesisStatus']) {
+          $status_data['HEd.Student.Status.ThesisStatus'] = $activity_post['HEd.Student.Enrollment.Activity.ThesisStatus'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.SeekingDegree1ID']) {
+          $status_data['HEd.Student.Status.SeekingDegree1ID'] = $activity_post['HEd.Student.Enrollment.Activity.SeekingDegree1ID'];
+        }
+        if ($activity_post['HEd.Student.Enrollment.Activity.SeekingDegree2ID']) {
+          $status_data['HEd.Student.Status.SeekingDegree2ID'] = $activity_post['HEd.Student.Enrollment.Activity.SeekingDegree2ID'];
+        }
         
         // Get latest enrollment ID
         $enrollment = $this->db()->db_select('STUD_STUDENT_ENROLLMENT')
@@ -143,63 +184,36 @@ class SISInformationController extends Controller {
           ->orderBy('ENTER_DATE', 'DESC')
           ->execute()->fetch();
         
-        $activity_addition['EFFECTIVE_DATE'] = $activity_post['EFFECTIVE_DATE'];
-        if ($activity_post['GRADE']) $activity_addition['GRADE'] = $activity_post['GRADE'];
-        if ($activity_post['RESIDENT']) $activity_addition['RESIDENT'] = $activity_post['RESIDENT'];
-        if ($activity_post['FTE']) $activity_addition['FTE'] = $activity_post['FTE'];
-        if ($activity_post['LEVEL']) $activity_addition['LEVEL'] = $activity_post['LEVEL'];
-        if ($activity_post['THESIS_STATUS']) $activity_addition['THESIS_STATUS'] = $activity_post['THESIS_STATUS'];
-        if ($activity_post['SEEKING_DEGREE_1_ID']) $activity_addition['SEEKING_DEGREE_1_ID'] = $activity_post['SEEKING_DEGREE_1_ID'];
-        if ($activity_post['SEEKING_DEGREE_2_ID']) $activity_addition['SEEKING_DEGREE_2_ID'] = $activity_post['SEEKING_DEGREE_2_ID'];
-        
         // Determine if date already exists
         $activity_exists = $this->db()->db_select('STUD_STUDENT_ENROLLMENT_ACTIVITY')
           ->fields('STUD_STUDENT_ENROLLMENT_ACTIVITY', array('EFFECTIVE_DATE', 'ENROLLMENT_ACTIVITY_ID'))
           ->condition('ENROLLMENT_ID', $enrollment['ENROLLMENT_ID'])
           ->orderBy('EFFECTIVE_DATE', 'DESC')
           ->execute()->fetch();
-        if ($activity_exists['EFFECTIVE_DATE'] == date('Y-m-d', strtotime($activity_post['EFFECTIVE_DATE']))) {
+        if ($activity_exists['EFFECTIVE_DATE'] == date('Y-m-d', strtotime($activity_post['HEd.Student.Enrollment.Activity.EffectiveDate']))) {
           // update existing record
           // Post data to activity
-          $activity_poster = new \Kula\Component\Database\Poster(null, array('STUD_STUDENT_ENROLLMENT_ACTIVITY' => array($activity_exists['ENROLLMENT_ACTIVITY_ID'] => $activity_addition)));
-          $activity_poster_aff_rows = $activity_poster->getResultForTable('update', 'STUD_STUDENT_ENROLLMENT_ACTIVITY')[$activity_exists['ENROLLMENT_ACTIVITY_ID']];
-          unset($activity_addition['EFFECTIVE_DATE']);
-          // Post data to status
-          $status_id = $this->record->getSelectedRecordID();
-          $status_poster = new \Kula\Component\Database\Poster(null, array('STUD_STUDENT_STATUS' => array($status_id => $activity_addition)));
-          $status_poster_aff_rows = $status_poster->getResultForTable('update', 'STUD_STUDENT_STATUS')[$status_id];
-          
-        if ($activity_poster_aff_rows AND $status_poster_aff_rows) {
-            $connect->commit();
-            return $this->forward('sis_student_information_enrollment', array('record_type' => 'STUDENT_STATUS', 'record_id' => $status_id), array('record_type' => 'STUDENT_STATUS', 'record_id' => $status_id));
-          } else {
-            $connect->rollback();
-            throw new \Kula\Component\Database\PosterFormException('Changes not saved.');
-          }
-          
-        } elseif ($activity_exists['EFFECTIVE_DATE'] < date('Y-m-d', strtotime($activity_post['EFFECTIVE_DATE']))) {
+          $activity_poster = $this->newPoster()->edit('HEd.Student.Enrollment.Activity', $activity_exists['ENROLLMENT_ACTIVITY_ID'], $activity_data)->process()->getResult();
+        } else {
           // insert new record
           // Post data to activity
-          $activity_addition['ENROLLMENT_ID'] = $enrollment['ENROLLMENT_ID'];
-          $activity_poster = new \Kula\Component\Database\Poster(array('STUD_STUDENT_ENROLLMENT_ACTIVITY' => array('new' => $activity_addition)));
-          $activity_poster_id = $activity_poster->getResultForTable('insert', 'STUD_STUDENT_ENROLLMENT_ACTIVITY')['new'];
-          unset($activity_addition['EFFECTIVE_DATE'], $activity_addition['ENROLLMENT_ID']);
+          $activity_data['HEd.Student.Enrollment.Activity.EffectiveDate'] = $activity_post['HEd.Student.Enrollment.Activity.EffectiveDate'];
+          $activity_data['HEd.Student.Enrollment.Activity.EnrollmentID'] = $enrollment['ENROLLMENT_ID'];
+          $activity_poster = $this->newPoster()->add('HEd.Student.Enrollment.Activity', 'new', $activity_data)->process()->getResult();
+        }
+       
+        if ($activity_exists['EFFECTIVE_DATE'] <= date('Y-m-d', strtotime($activity_post['HEd.Student.Enrollment.Activity.EffectiveDate']))) {
           // Post data to status
-          $status_id = $this->record->getSelectedRecordID();
-          $status_poster = new \Kula\Component\Database\Poster(null, array('STUD_STUDENT_STATUS' => array($status_id => $activity_addition)));
-          $status_poster_aff_rows = $status_poster->getResultForTable('update', 'STUD_STUDENT_STATUS')[$status_id];
-          
-          if ($activity_poster_id AND $status_poster_aff_rows) {
-              $connect->commit();
-              return $this->forward('sis_student_information_enrollment', array('record_type' => 'STUDENT_STATUS', 'record_id' => $status_id), array('record_type' => 'STUDENT_STATUS', 'record_id' => $status_id));
-            } else {
-              $connect->rollback();
-              throw new \Kula\Component\Database\PosterFormException('Changes not saved.');
-            }
-        } else {
-          throw new \Kula\Component\Database\PosterFormException('Changes not saved.  Effective date cannot be before enter date ('.$enrollment['ENTER_DATE'].').');
+          $status_poster = $this->newPoster()->edit('HEd.Student.Status', $this->record->getSelectedRecordID(), $status_data)->process()->getResult();
         }
         
+        if ($activity_poster) {
+          $transaction->commit();
+          return $this->forward('sis_HEd_student_information_enrollment', array('record_type' => 'SIS.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
+        } else {
+          $transaction->rollback();
+          throw new \Kula\Core\Component\DB\PosterException('Changes not saved.');
+        }
       }
       
       $status = $this->db()->db_select('STUD_STUDENT_STATUS')
@@ -207,12 +221,7 @@ class SISInformationController extends Controller {
         ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
         ->execute()->fetch();
       
-      $today = date('Y-m-d');
-      
-      if ($status['ENTER_DATE'] > $today)
-        $effective_date = $status['ENTER_DATE'];
-      else
-        $effective_date = $today;
+      $effective_date = date('Y-m-d');
     
     } // end if selected record
         

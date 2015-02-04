@@ -89,6 +89,7 @@ class Poster {
   }
   
   public function process() {
+    
     if (count($this->records) > 0) {
       $transaction = $this->db->db_transaction();
       foreach($this->records as $table => $tableRow) {
@@ -100,6 +101,14 @@ class Poster {
       $this->isPosted = true;
     }
     return $this;
+  }
+  
+  public function getResult() {
+    foreach($this->records as $table => $record) {
+      foreach($this->records[$table] as $record_id => $posterRecord) {
+        return $this->records[$table][$record_id]->getResult();
+      }
+    }
   }
   
   public function getPosterRecord($table, $id) {
@@ -130,3 +139,4 @@ class Poster {
   }
   
 }
+
