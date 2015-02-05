@@ -17,6 +17,7 @@ class SISSectionController extends Controller {
       ->execute()->fetch();
     
     $meeting_times = $this->db()->db_select('STUD_SECTION_MEETINGS')
+      ->fields('STUD_SECTION_MEETINGS')
       ->condition('SECTION_ID', $this->record->getSelectedRecordID())
       ->execute()->fetchAll();
     
@@ -223,61 +224,60 @@ class SISSectionController extends Controller {
   public function addAction() {
     $this->authorize();
     $this->setRecordType('SIS.HEd.Section', 'Y');
-    $this->formAction('sis_offering_sections_create');
+    $this->formAction('sis_HEd_offering_sections_create');
     return $this->render('KulaHEdSchedulingBundle:SISSection:add.html.twig');
   }
   
   public function createAction() {
     $this->authorize();
     
-    $add = $this->request->request->get('add');
-    
-    foreach($add as $table => $add_row) {
-      foreach($add_row as $key => $row) {
-        
-        // Get Course
-        $course_info = $this->db()->db_select('STUD_COURSE', 'course')
-          ->fields('course', array('MARK_SCALE_ID', 'COURSE_NUMBER'))
-          ->condition('course.COURSE_ID', $row['COURSE_ID'])
-          ->execute()->fetch();
-        
-        // Get last section number
-        $section_number = $this->db()->db_select('STUD_SECTION', 'section')
-          ->fields('section', array('SECTION_NUMBER'))
-          ->condition('section.COURSE_ID', $row['COURSE_ID'])
-          ->condition('section.ORGANIZATION_TERM_ID', $row['hidden']['ORGANIZATION_TERM_ID'])
-          ->orderBy('SECTION_NUMBER', 'DESC', 'section')
-          ->execute()->fetch();
-        if ($section_number['SECTION_NUMBER']) {
-          // Split section
-          $split_section = explode('-', $section_number['SECTION_NUMBER']);
-          $new_number = str_pad($split_section[1] + 1, 2, '0', STR_PAD_LEFT);
-          $add[$table][$key]['SECTION_NUMBER'] = $course_info['COURSE_NUMBER'].'-'.$new_number;
-        } else {
-          $add[$table][$key]['SECTION_NUMBER'] = $course_info['COURSE_NUMBER'].'-01';
-        }
-        
-        
-        $add[$table][$key]['MARK_SCALE_ID'] = $course_info['MARK_SCALE_ID'];
+    if ($sectionInfo = $this->form('add', 'HEd.Section', 0)) {
+      
+      $transaction = $this->db()->db_transaction();
+      
+      // Get Course
+      $course_info = $this->db()->db_select('STUD_COURSE', 'course')
+        ->fields('course', array('MARK_SCALE_ID', 'COURSE_NUMBER'))
+        ->condition('course.COURSE_ID', $sectionInfo['HEd.Section.CourseID'])
+        ->execute()->fetch();
+      
+      // Get last section number
+      $section_number = $this->db()->db_select('STUD_SECTION', 'section')
+        ->fields('section', array('SECTION_NUMBER'))
+        ->condition('section.COURSE_ID', $sectionInfo['HEd.Section.CourseID'])
+        ->condition('section.ORGANIZATION_TERM_ID', $sectionInfo['HEd.Section.OrganizationTermID'])
+        ->orderBy('SECTION_NUMBER', 'DESC', 'section')
+        ->execute()->fetch();
+      if ($section_number['SECTION_NUMBER']) {
+        // Split section
+        $split_section = explode('-', $section_number['SECTION_NUMBER']);
+        $new_number = str_pad($split_section[1] + 1, 2, '0', STR_PAD_LEFT);
+        $sectionInfo['HEd.Section.SectionNumber'] = $course_info['COURSE_NUMBER'].'-'.$new_number;
+      } else {
+        $sectionInfo['HEd.Section.SectionNumber'] = $course_info['COURSE_NUMBER'].'-01';
       }
-    }
-    
-    $this->poster = new \Kula\Component\Database\Poster($add);
-    
-    
-    $id = $this->poster->getResultForTable('insert', 'STUD_SECTION')[0];
-    return $this->forward('sis_HEd_offering_sections', array('record_type' => 'SIS.HEd.Section', 'record_id' => $id), array('record_type' => 'SIS.HEd.Section', 'record_id' => $id));
+      $sectionInfo['HEd.Section.MarkScaleID'] = $course_info['MARK_SCALE_ID'];
+      
+      $sectionID = $this->newPoster()->add('HEd.Section', 0, $sectionInfo)->process()->getResult();
+      
+      if ($sectionID) {
+        $transaction->commit();
+        $this->addFlash('success', 'Created section.');
+        return $this->forward('sis_HEd_offering_sections', array('record_type' => 'SIS.HEd.Section', 'record_id' => $sectionID), array('record_type' => 'SIS.HEd.Section', 'record_id' => $sectionID));
+      } else {
+        $transaction->rollback();
+      }
+    } 
   }
   
   public function deleteAction() {
     $this->authorize();
     $this->setRecordType('SIS.HEd.Section');
     
-    $rows_affected = $this->db()->delete('STUD_SECTION')
-        ->condition('SECTION_ID', $this->record->getSelectedRecordID())->execute();
+    $deletedSection = $this->newPoster()->delete('HEd.Section', $this->record->getSelectedRecordID())->process()->getResult();
     
-    if ($rows_affected == 1) {
-      $this->flash->add('success', 'Deleted section.');
+    if ($deletedSection == 1) {
+      $this->addFlash('success', 'Deleted section.');
     }
     
     return $this->forward('sis_HEd_offering_sections');
@@ -289,19 +289,15 @@ class SISSectionController extends Controller {
     
     
     if ($this->record->getSelectedRecord()['STATUS'] == 'I') {
-      $rows_affected = $this->db()->update('STUD_SECTION')
-        ->fields(array('STATUS' => null))
-          ->condition('SECTION_ID', $this->record->getSelectedRecordID())->execute();
+      $rows_affected = $this->newPoster()->edit('HEd.Section', $this->record->getSelectedRecordID(), array('HEd.Section.Status' => null))->process()->getResult();
       $success_message = 'Activated section.';
     } else {
-      $rows_affected = $this->db()->update('STUD_SECTION')
-        ->fields(array('STATUS' => 'I'))
-          ->condition('SECTION_ID', $this->record->getSelectedRecordID())->execute();
+      $rows_affected = $this->newPoster()->edit('HEd.Section', $this->record->getSelectedRecordID(), array('HEd.Section.Status' => 'I'))->process()->getResult();
       $success_message = 'Inactivated section.';
     }
     
     if ($rows_affected == 1) {
-      $this->flash->add('success', $success_message);
+      $this->addFlash('success', $success_message);
       
       return $this->forward('sis_HEd_offering_sections', array('record_type' => 'SIS.HEd.Section', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.HEd.Section', 'record_id' => $this->record->getSelectedRecordID()));
     }
@@ -310,20 +306,17 @@ class SISSectionController extends Controller {
   public function recalculate_section_totalsAction() {
     $this->authorize();
     
-    $condition_or = $this->db()->db_or();
-    $condition_or = $condition_or->condition('DROPPED', null)->condition('DROPPED', 'N');
-    
     // Get Enrolled Totals
     $enrolled_totals = array();
     $enrolled_totals_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('SECTION_ID'))
-      ->expressions(array('COUNT(*)' => 'enrolled_total'))
+      ->expression('COUNT(*)', 'enrolled_total')
       ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
       ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'section.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
       ->condition('orgterms.ORGANIZATION_ID', $this->focus->getOrganizationID())
       ->condition('orgterms.TERM_ID', $this->focus->getTermID())
-      ->condition($condition_or)
-      ->group_by('SECTION_ID', 'class')
+      ->condition($this->db()->db_or()->condition('DROPPED', null)->condition('DROPPED', 0))
+      ->groupBy('SECTION_ID', 'class')
       ->execute();
     while ($enrolled_totals_row = $enrolled_totals_result->fetch()) {
       $enrolled_totals[$enrolled_totals_row['SECTION_ID']] = $enrolled_totals_row['enrolled_total'];
@@ -333,12 +326,12 @@ class SISSectionController extends Controller {
     $waitlist_totals = array();
     $waitlist_totals_result = $this->db()->db_select('STUD_STUDENT_WAIT_LIST', 'waitlist')
       ->fields('waitlist', array('SECTION_ID'))
-      ->expressions(array('COUNT(*)' => 'waitlist_total'))
+      ->expression('COUNT(*)', 'waitlist_total')
       ->join('STUD_SECTION', 'section', 'waitlist.SECTION_ID = section.SECTION_ID')
       ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'section.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
       ->condition('orgterms.ORGANIZATION_ID', $this->focus->getOrganizationID())
       ->condition('orgterms.TERM_ID', $this->focus->getTermID())
-      ->group_by('SECTION_ID', 'waitlist')
+      ->groupBy('SECTION_ID', 'waitlist')
       ->execute();
     while ($waitlist_totals_row = $waitlist_totals_result->fetch()) {
       $waitlist_totals[$waitlist_totals_row['SECTION_ID']] = $waitlist_totals_row['waitlist_total'];
@@ -352,18 +345,15 @@ class SISSectionController extends Controller {
       ->condition('orgterms.TERM_ID', $this->focus->getTermID())
       ->execute();
     while ($sections_row = $sections_result->fetch()) {
+
+      $this->newPoster()->edit('HEd.Section', $sections_row['SECTION_ID'], array(
+        'HEd.Section.EnrolledTotal' => (isset($enrolled_totals[$sections_row['SECTION_ID']]) AND $enrolled_totals[$sections_row['SECTION_ID']] > 0) ? $enrolled_totals[$sections_row['SECTION_ID']] : 0,
+        'HEd.Section.WaitListedTotal' => (isset($waitlist_totals[$sections_row['SECTION_ID']]) AND $waitlist_totals[$sections_row['SECTION_ID']] > 0) ? $waitlist_totals[$sections_row['SECTION_ID']] : 0
+      ))->process();
       
-      $section_data = array('STUD_SECTION' => array($sections_row['SECTION_ID'] => array(
-        'ENROLLED_TOTAL' => $enrolled_totals[$sections_row['SECTION_ID']] > 0 ? $enrolled_totals[$sections_row['SECTION_ID']] : 0,
-        'WAIT_LISTED_TOTAL' => $waitlist_totals[$sections_row['SECTION_ID']] > 0 ? $waitlist_totals[$sections_row['SECTION_ID']] : 0
-      )));
-      
-      
-      $poster_obj = new \Kula\Component\Database\Poster(null, $section_data);
-      unset($poster_obj);
     }
     
-    $this->flash->add('success', 'Recalculated section totals.');
+    $this->addFlash('success', 'Recalculated section totals.');
     return $this->forward('sis_HEd_offering_sections');
     
   }

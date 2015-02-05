@@ -10,3 +10,8 @@ Core.Organization.School:
   class: Kula\Core\Bundle\SystemBundle\Record\SchoolRecord
 Core.Organization.School.Term:
   class: Kula\Core\Bundle\SystemBundle\Record\SchoolTermRecord
+  
+SIS.Organization.School:
+  class: Kula\Core\Bundle\SystemBundle\Record\SchoolRecord
+SIS.Organization.School.Term:
+  class: Kula\Core\Bundle\SystemBundle\Record\SchoolTermRecord

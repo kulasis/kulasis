@@ -3,7 +3,7 @@
 namespace Kula\Core\Bundle\SystemBundle\Record;
 
 use Kula\Core\Component\Record\Record;
-use Kula\Core\Component\Record\RecordDelegateInterface
+use Kula\Core\Component\Record\RecordDelegateInterface;
 
 class SchoolTermRecord extends Record implements RecordDelegateInterface {
   
@@ -20,7 +20,7 @@ class SchoolTermRecord extends Record implements RecordDelegateInterface {
     $result = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'CORE_ORGANIZATION_TERMS')
       ->fields('CORE_ORGANIZATION_TERMS', array('ORGANIZATION_TERM_ID' => 'ID'))
       ->join('CORE_ORGANIZATION', 'CORE_ORGANIZATION', 'CORE_ORGANIZATION.ORGANIZATION_ID = CORE_ORGANIZATION_TERMS.ORGANIZATION_ID')
-      ->condition('ORGANIZATION_TYPE', 'SCHL')
+      ->condition('ORGANIZATION_TYPE', 'S')
       ->condition('CORE_ORGANIZATION_TERMS.ORGANIZATION_ID', $this->focus->getSchoolIDs());
     
     if ($this->focus->getTermID())

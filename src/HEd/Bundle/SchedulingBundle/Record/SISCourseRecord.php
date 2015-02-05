@@ -4,14 +4,14 @@ namespace Kula\HEd\Bundle\SchedulingBundle\Record;
 
 use Kula\Core\Component\Record\Record;
 
-class CourseRecord extends Record {
+class SISCourseRecord extends Record {
   
   public function getSelectedRecordBarTemplate() {
     
   }
   
   public function getRecordBarTemplate() {
-    return 'KulaHEdOfferingBundle::Record/record_course.html.twig';
+    return 'KulaHEdSchedulingBundle::SISRecord/record_course.html.twig';
   }
   
   public function getRecordIDStack() {
@@ -27,7 +27,7 @@ class CourseRecord extends Record {
   public function get($record_id) {
     
     $result = $this->db()->db_select('STUD_COURSE', 'course')
-    ->fields('course', array('COURSE_ID', 'COURSE_NUMBER', 'COURSE_TITLE', 'SHORT_TITLE', 'CONVERSION', 'COURSE_TYPE', 'CREDITS', 'DEPARTMENT', 'LEVEL', 'MARK_SCALE_ID'))
+    ->fields('course', array('COURSE_ID', 'COURSE_NUMBER', 'COURSE_TITLE', 'SHORT_TITLE', 'CONV_COURSE_NUMBER', 'COURSE_TYPE', 'CREDITS', 'DEPARTMENT', 'LEVEL', 'MARK_SCALE_ID'))
     ->condition('course.COURSE_ID', $record_id)
     ->execute()->fetch();
     return $result;

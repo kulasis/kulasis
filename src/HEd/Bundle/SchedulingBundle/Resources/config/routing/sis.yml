@@ -166,34 +166,6 @@ sis_HEd_courses_prerequisites:
   path: /offering/courses/prerequisites
   defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:prerequisites }
 
-sis_HEd_degrees_degrees:
-  path: /offering/degrees/degrees
-  defaults: { _controller: KulaHEdSchedulingBundle:SISDegree:degrees }
-
-sis_HEd_degrees_majors:
-  path: /offering/degrees/majors
-  defaults: { _controller: KulaHEdSchedulingBundle:SISDegree:majors }
-
-sis_HEd_degrees_minors:
-  path: /offering/degrees/minors
-  defaults: { _controller: KulaHEdSchedulingBundle:SISDegree:minors }
-
-sis_HEd_degrees_concentrations:
-  path: /offering/degrees/concentrations
-  defaults: { _controller: KulaHEdSchedulingBundle:SISDegree:concentrations }
-
-sis_HEd_degrees_requirements_groups:
-  path: /offering/degrees/requirements/groups/{type}/{id}
-  defaults: { _controller: KulaHEdSchedulingBundle:SISRequirements:requirement_groups }
-
-sis_HEd_degrees_requirements_groups_courses:
-  path: /offering/degrees/requirements/courses/{id}
-  defaults: { _controller: KulaHEdSchedulingBundle:SISRequirements:requirement_group_courses }
-
-sis_HEd_degrees_requirements_groups_courses_equiv:
-  path: /offering/degrees/requirements/courses/equivalent/{id}
-  defaults: { _controller: KulaHEdSchedulingBundle:SISRequirements:requirement_group_courses_equivalent }
-
 sis_HEd_room_chooser:
   path: /offering/room/chooser
   defaults: { _controller: KulaHEdSchedulingBundle:SISRooms:chooser }

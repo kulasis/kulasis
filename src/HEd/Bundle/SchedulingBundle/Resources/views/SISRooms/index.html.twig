@@ -17,7 +17,7 @@ Rooms
 </thead>
 <tbody>
     {{ kula_display_html({ add: true, field: 'HEd.Room.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
-    {{ kula_field({ add: true, field: 'HEd.Room.OrganizationTermID, value: kula_core_record.getSelectedRecord.ORGANIZATION_TERM_ID, hidden: true }) }}
+    {{ kula_field({ add: true, field: 'HEd.Room.OrganizationTermID', value: kula_core_record.getSelectedRecord.ORGANIZATION_TERM_ID, hidden: true }) }}
     {{ kula_field({ add: true, field: 'HEd.Room.ID', value: kula_core_record.getSelectedRecord.ROOM_ID, hidden: true }) }}
     {{ kula_field({ add: true, delete: true, field: 'HEd.Room.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     {{ kula_display_html({ add: true, field: 'HEd.Room.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}

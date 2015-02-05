@@ -140,35 +140,35 @@ SIS.HEd.Offering:
         Prerequisites:
           description: "Prerequisites"
           display_name: "Prerequisites"
-          route: sis_HEd_offering_courses_prerequisites
+          route: sis_HEd_courses_prerequisites
           sort: 2
         Corequisites:
           description: "Corequisites"
           display_name: "Corequisites"
-          route: sis_HEd_offering_courses_corequisites
+          route: sis_HEd_courses_corequisites
           sort: 3
         Fees:
           description: "Fees"
           display_name: "Fees"
-          route: sis_HEd_offering_courses_fees
+          route: sis_HEd_courses_fees
           sort: 4
         Books:
           description: "Books"
           display_name: "Books"
-          route: sis_HEd_offering_courses_books
+          route: sis_HEd_courses_books
           sort: 5
       menu_actions:
         NewCourse:
           description: "New Course"
           display_name: "New Course"
-          route: sis_HEd_offering_courses_add
+          route: sis_HEd_courses_add
           sort: 1
         DeleteCourse:
           description: "Delete Course"
           display_name: "Delete Course"
           divider_before: true
           record_loaded: true
-          route: sis_HEd_offering_courses_delete
+          route: sis_HEd_courses_delete
           sort: 2
     Rooms:
       description: "Rooms"

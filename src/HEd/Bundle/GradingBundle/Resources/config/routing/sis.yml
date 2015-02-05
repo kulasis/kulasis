@@ -67,3 +67,31 @@ sis_HEd_student_schedule_reports_finalgrades_generate:
   path: /student/schedule/reports/finalgrades
   defaults: { _controller: KulaHEdGradingBundle:FinalGradesReport:generate }
   methods: [POST]
+
+sis_HEd_degrees_degrees:
+  path: /offering/degrees/degrees
+  defaults: { _controller: KulaHEdGradingBundle:SISDegree:degrees }
+
+sis_HEd_degrees_majors:
+  path: /offering/degrees/majors
+  defaults: { _controller: KulaHEdGradingBundle:SISDegree:majors }
+
+sis_HEd_degrees_minors:
+  path: /offering/degrees/minors
+  defaults: { _controller: KulaHEdGradingBundle:SISDegree:minors }
+
+sis_HEd_degrees_concentrations:
+  path: /offering/degrees/concentrations
+  defaults: { _controller: KulaHEdGradingBundle:SISDegree:concentrations }
+
+sis_HEd_degrees_requirements_groups:
+  path: /offering/degrees/requirements/groups/{type}/{id}
+  defaults: { _controller: KulaHEdGradingBundle:SISRequirements:requirement_groups }
+
+sis_HEd_degrees_requirements_groups_courses:
+  path: /offering/degrees/requirements/courses/{id}
+  defaults: { _controller: KulaHEdGradingBundle:SISRequirements:requirement_group_courses }
+
+sis_HEd_degrees_requirements_groups_courses_equiv:
+  path: /offering/degrees/requirements/courses/equivalent/{id}
+  defaults: { _controller: KulaHEdGradingBundle:SISRequirements:requirement_group_courses_equivalent }

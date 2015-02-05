@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\HEd\Bundle\GradingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -27,7 +27,7 @@ class SISRequirementsController extends Controller {
       
       $requirement_groups = $requirement_groups->execute()->fetchAll();
     
-    return $this->render('KulaHEdOfferingBundle:SISRequirements:requirement_groups.html.twig', array('type' => $type, 'id' => $id, 'requirement_groups' => $requirement_groups));
+    return $this->render('KulaHEdGradingBundle:SISRequirements:requirement_groups.html.twig', array('type' => $type, 'id' => $id, 'requirement_groups' => $requirement_groups));
   }
   
   public function requirement_group_coursesAction($id) {
@@ -64,7 +64,7 @@ class SISRequirementsController extends Controller {
         ->orderBy('COURSE_TITLE', 'ASC')
         ->execute()->fetchAll();
     
-    return $this->render('KulaHEdOfferingBundle:SISRequirements:requirement_groups_courses.html.twig', array('type' => $type, 'degree_id' => $degree_id, 'requirement_group_id' => $id, 'requirement_grp_courses' => $requirement_grp_courses));
+    return $this->render('KulaHEdGradingBundle:SISRequirements:requirement_groups_courses.html.twig', array('type' => $type, 'degree_id' => $degree_id, 'requirement_group_id' => $id, 'requirement_grp_courses' => $requirement_grp_courses));
   }
   
   public function requirement_group_courses_equivalentAction($id) {
@@ -87,7 +87,7 @@ class SISRequirementsController extends Controller {
         ->orderBy('COURSE_TITLE', 'ASC')
         ->execute()->fetchAll();
     
-    return $this->render('KulaHEdOfferingBundle:SISRequirements:requirement_groups_courses_equivalent.html.twig', array('requirement_group_course_id' => $requirement_groups['DEGREE_REQ_GRP_ID'], 'requirement_grp_courses_equivalents' => $requirement_grp_courses_equivalents));
+    return $this->render('KulaHEdGradingBundle:SISRequirements:requirement_groups_courses_equivalent.html.twig', array('requirement_group_course_id' => $requirement_groups['DEGREE_REQ_GRP_ID'], 'requirement_grp_courses_equivalents' => $requirement_grp_courses_equivalents));
   }
   
 }

@@ -145,6 +145,8 @@ Core.Organization.Term:
       db_column_name: ORGANIZATION_ID
       db_column_type: serial
       db_column_null: false
+      field_type: chooser
+      chooser: Core.Organization
       column_name: "Organization ID"
       label_name: "Organization"
     TermID:

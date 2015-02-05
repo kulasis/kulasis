@@ -52,7 +52,7 @@ abstract class Field {
     // get required attributes
     $attributes = $this->required_attributes;
     if ($this->name) $attributes['name'] = $this->name;
-    if ($this->value) $attributes['value'] = $this->value;
+    if ($this->value !== null) $attributes['value'] = $this->value;
     
     // mix in default attributes
     $attributes += $this->attributes;

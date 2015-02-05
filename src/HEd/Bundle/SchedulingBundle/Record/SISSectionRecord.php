@@ -4,18 +4,18 @@ namespace Kula\HEd\Bundle\SchedulingBundle\Record;
 
 use Kula\Core\Component\Record\Record;
 
-class SectionRecord extends Record {
+class SISSectionRecord extends Record {
   
   public function getSelectedRecordBarTemplate() {
-    return 'KulaHEdSchedulingBundle::Record/selected_record_section.html.twig';
+    return 'KulaHEdSchedulingBundle::SISRecord/selected_record_section.html.twig';
   }
   
   public function getRecordBarTemplate() {
-    return 'KulaHEdSchedulingBundle::Record/record_section.html.twig';
+    return 'KulaHEdSchedulingBundle::SISRecord/record_section.html.twig';
   }
   
   public function getRecordBarTeacherTemplate() {
-    return 'KulaHEdSchedulingBundle::Record/teacher_record_section.html.twig';
+    return 'KulaHEdSchedulingBundle::TeacherRecord/teacher_record_section.html.twig';
   }
   
   public function getRecordIDStack() {

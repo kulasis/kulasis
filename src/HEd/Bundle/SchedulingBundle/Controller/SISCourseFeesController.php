@@ -41,7 +41,7 @@ class SISCourseFeesController extends Controller {
       ->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
       ->execute()->fetch();
     
-    return $this->render('KulaHEdOfferingBundle:CourseFees:fees_index.html.twig', array('fees' => $fees, 'organization_term_id' => $this->focus->getOrganizationTermID(), 'organization_term_id_display' => $org_term['TERM_ABBREVIATION'] . ' / ' . $org_term['ORGANIZATION_NAME']));
+    return $this->render('KulaHEdSchedulingBundle:SISCourseFees:fees_index.html.twig', array('fees' => $fees, 'organization_term_id' => $this->focus->getOrganizationTermID(), 'organization_term_id_display' => $org_term['TERM_ABBREVIATION'] . ' / ' . $org_term['ORGANIZATION_NAME']));
     
   }
 

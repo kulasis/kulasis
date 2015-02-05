@@ -80,7 +80,7 @@ HEd.Course:
       db_column_type: float
       db_column_length: 5
       db_column_precision: 3
-      db_column_null: false
+      db_column_null: true
       field_type: text
       field_size: 5
       column_name: "Credits"
@@ -90,7 +90,7 @@ HEd.Course:
       db_column_name: DEPARTMENT
       db_column_type: varchar
       db_column_length: 5
-      db_column_null: false
+      db_column_null: true
       field_type: lookup
       lookup: HEd.Course.Department
       column_name: "Department"
@@ -100,7 +100,7 @@ HEd.Course:
       db_column_name: LEVEL
       db_column_type: varchar
       db_column_length: 5
-      db_column_null: false
+      db_column_null: true
       field_type: lookup
       lookup: HEd.Student.Enrollment.Level
       column_name: "Level"
@@ -244,6 +244,7 @@ HEd.Course.Prerequisite:
       db_column_name: MINIMUM_MARK
       db_column_type: varchar
       db_column_length: 2
+      db_column_null: true
       field_type: text
       field_size: 5
       column_name: "Minimum Mark"

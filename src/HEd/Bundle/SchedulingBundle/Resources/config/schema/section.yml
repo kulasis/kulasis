@@ -83,6 +83,7 @@ HEd.Section:
       db_column_name: CONV_SECTION_NUMBER
       db_column_type: varchar
       db_column_length: 255
+      db_column_null: true
       field_type: text
       field_size: 15
       column_name: "Conversion Section Number"
@@ -335,6 +336,8 @@ HEd.Section.Meeting:
       db_column_type: serial
       db_column_null: true
       parent: HEd.Room.ID
+      field_type: chooser
+      chooser: HEd.Room
       column_name: "Room ID"
       label_name: "Room ID"
 HEd.Section.Staff:

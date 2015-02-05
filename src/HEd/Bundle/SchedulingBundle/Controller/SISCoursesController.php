@@ -14,12 +14,13 @@ class SISCoursesController extends Controller {
     if ($this->record->getSelectedRecordID()) {
       
       // Get Rooms
-      $course = $this->db()->db_db_select('STUD_COURSE')
+      $course = $this->db()->db_select('STUD_COURSE')
+        ->fields('STUD_COURSE')
         ->condition('COURSE_ID', $this->record->getSelectedRecordID())
         ->execute()->fetch();
     }
     
-    return $this->render('KulaHEdOfferingBundle:SISCourses:index.html.twig', array('course' => $course));
+    return $this->render('KulaHEdSchedulingBundle:SISCourses:index.html.twig', array('course' => $course));
   }
   
   public function prerequisitesAction() {
@@ -27,21 +28,23 @@ class SISCoursesController extends Controller {
     $this->processForm();
     $this->setRecordType('SIS.HEd.Course');
     $prerequisites = array();
+    $course_info = array();
     if ($this->record->getSelectedRecordID()) {
       
       // Get course info
-      $course_info = $this->db()->db_db_select('STUD_COURSE')
+      $course_info = $this->db()->db_select('STUD_COURSE')
         ->fields('STUD_COURSE', array('MARK_SCALE_ID'))
         ->condition('COURSE_ID', $this->record->getSelectedRecordID())
         ->execute()->fetch();
       
       // Get Prerequisites
-      $prerequisites = $this->db()->db_db_select('STUD_COURSE_PREREQUISITES')
+      $prerequisites = $this->db()->db_select('STUD_COURSE_PREREQUISITES')
+        ->fields('STUD_COURSE_PREREQUISITES')
         ->condition('COURSE_ID', $this->record->getSelectedRecordID())
         ->execute()->fetchAll();
     }
     
-    return $this->render('KulaHEdOfferingBundle:SISCourses:prerequisites.html.twig', array('course_info' => $course_info, 'prerequisites' => $prerequisites));
+    return $this->render('KulaHEdSchedulingBundle:SISCourses:prerequisites.html.twig', array('course_info' => $course_info, 'prerequisites' => $prerequisites));
   }
   
   public function corequisitesAction() {
@@ -57,25 +60,26 @@ class SISCoursesController extends Controller {
       
       // Get Rooms
       $corequisites = $this->db()->db_select('STUD_COURSE_COREQUISITES')
+        ->fields('STUD_COURSE_COREQUISITES')
         ->condition($query_conditions)
         ->execute()->fetchAll();
     }
     
-    return $this->render('KulaHEdOfferingBundle:SISCourses:corequisites.html.twig', array('corequisites' => $corequisites));
+    return $this->render('KulaHEdSchedulingBundle:SISCourses:corequisites.html.twig', array('corequisites' => $corequisites));
   }
   
   public function addAction() {
     $this->authorize();
     $this->setRecordType('SIS.HEd.Course', 'Y');
-    $this->formAction('sis_HEd_offering_courses_create');
-    return $this->render('KulaHEdOfferingBundle:SISCourses:add.html.twig');
+    $this->formAction('sis_HEd_courses_create');
+    return $this->render('KulaHEdSchedulingBundle:SISCourses:add.html.twig');
   }
   
   public function createAction() {
     $this->authorize();
     $this->processForm();
     $id = $this->poster()->getResult();
-    return $this->forward('sis_HEd_offering_courses', array('record_type' => 'SIS.HEd.Course', 'record_id' => $id), array('record_type' => 'SIS.HEd.Course', 'record_id' => $id));
+    return $this->forward('sis_HEd_courses', array('record_type' => 'SIS.HEd.Course', 'record_id' => $id), array('record_type' => 'SIS.HEd.Course', 'record_id' => $id));
   }
   
   public function deleteAction() {
@@ -89,12 +93,12 @@ class SISCoursesController extends Controller {
       $this->addFlash('success', 'Deleted course.');
     }
     
-    return $this->forward('sis_HEd_offering_courses');
+    return $this->forward('sis_HEd_courses');
   }
   
   public function chooserAction() {
     $this->authorize();
-    $data = $this->chooser('SIS.HEd.Course')->createChooserMenu($this->request->query->get('q'));
+    $data = $this->chooser('HEd.Course')->createChooserMenu($this->request->query->get('q'));
     return $this->JSONResponse($data);
   }
 

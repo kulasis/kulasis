@@ -20,7 +20,7 @@ Corequisites
   {{ kula_field({ add: true, field: 'HEd.Course.Corequisite.CourseID', value: kula_core_record.getSelectedRecordID(), hidden: true }) }}
   {{ kula_field({ add: true, delete: true, field: 'HEd.Course.Corequisite.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
   {{ kula_display_html({ add: true, field: 'HEd.Course.Corequisite.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
-  {{ kula_field({ add: true, field: 'HEd.Course.Corequisite.CourseCorequisiteID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Course.Corequisite.CorequisiteCourseID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
   {{ kula_display_html({ add: true, field: 'HEd.Course.Corequisite.ID', prepend_html: '</tr>' }) }}
   {% for coreq in corequisites %}
   <tr>

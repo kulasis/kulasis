@@ -153,7 +153,7 @@ class PosterRecord {
   
   private function processSameValues() {
     foreach($this->fields as $fieldName => $field) {
-      if (array_key_exists($this->schema->getField($fieldName)->getDBName(), $this->originalRecord) AND $this->originalRecord[$this->schema->getField($fieldName)->getDBName()] == $this->fields[$fieldName]) {
+      if (array_key_exists($this->schema->getField($fieldName)->getDBName(), $this->originalRecord) AND $this->originalRecord[$this->schema->getField($fieldName)->getDBName()] === $this->fields[$fieldName]) {
         unset($this->fields[$fieldName]);
       }
     }

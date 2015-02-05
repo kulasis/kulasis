@@ -19,7 +19,7 @@ class RoomChooser extends Chooser {
     
     $data = array();
     
-    $search = $this->db()->select('STUD_ROOM', 'room')
+    $search = $this->db()->db_select('STUD_ROOM', 'room')
       ->fields('room', array('ROOM_ID', 'BUILDING', 'ROOM_NAME', 'ROOM_NUMBER'))
       ->condition($query_conditions)
       ->orderBy('ROOM_NUMBER', 'ASC');
@@ -31,7 +31,7 @@ class RoomChooser extends Chooser {
   }
   
   public function choice($id) {
-    $row = $this->db()->select('STUD_ROOM', 'room')
+    $row = $this->db()->db_select('STUD_ROOM', 'room')
       ->fields('room', array('ROOM_ID', 'BUILDING', 'ROOM_NAME', 'ROOM_NUMBER'))
       ->condition('room.ROOM_ID', $id)
       ->execute()
@@ -40,7 +40,7 @@ class RoomChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'sis_HEd_offering_room_chooser';
+    return 'sis_HEd_room_chooser';
   }
   
 }

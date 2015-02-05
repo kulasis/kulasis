@@ -10,11 +10,12 @@ class SISCodesController extends Controller {
     $this->authorize();
     $this->processForm();
     
-    $codes = $this->db()->select('BILL_CODE')
-      ->order_by('CODE')
+    $codes = $this->db()->db_select('BILL_CODE')
+      ->fields('BILL_CODE')
+      ->orderBy('CODE')
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdStudentBillingBundle:Codes:codes.html.twig', array('codes' => $codes));
+    return $this->render('KulaHEdBillingBundle:SISCodes:codes.html.twig', array('codes' => $codes));
   }
   
 }
