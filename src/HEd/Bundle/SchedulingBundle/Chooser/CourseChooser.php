@@ -27,7 +27,7 @@ class CourseChooser extends Chooser {
   }
   
   public function choice($id) {
-    $row = $this->db()->select('STUD_COURSE', 'course')
+    $row = $this->db()->db_select('STUD_COURSE', 'course')
       ->fields('course', array('COURSE_ID', 'COURSE_NUMBER', 'COURSE_TITLE'))
       ->condition('course.COURSE_ID', $id)
       ->execute()
@@ -36,7 +36,7 @@ class CourseChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'sis_HEd_offering_course_chooser';
+    return 'sis_HEd_course_chooser';
   }
   
 }

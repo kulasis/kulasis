@@ -19,7 +19,7 @@ HEd.Course:
       field_size: 8
       column_name: "Course Number"
       label_name: "Course Number"
-    CourseTitle:
+    Title:
       description: "Course Title"
       db_column_name: COURSE_TITLE
       db_column_type: varchar

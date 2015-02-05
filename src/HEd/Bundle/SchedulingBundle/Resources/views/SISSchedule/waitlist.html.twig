@@ -1,0 +1,58 @@
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+
+<div class="data-table-header-div">
+Wait List
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+  {{ kula_field_name({ delete: true, field: 'HEd.Student.WaitList.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Section.SectionNumber', field_name_override: 'Section', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Course.CourseNumber', field_name_override: 'Course', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Course.Title', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Section.Meets', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Section.Meeting.StartTime', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Section.Meeting.EndTime', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Room.Name', field_name_override: 'Room', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Staff.AbbreviatedName', field_name_override: 'Instructor', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.WaitList.AddedTimestamp', field_name_override: 'Added', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+  {% set lastsectionid = '' %}
+  {% set index = 1 %}
+  {% for class in classes %}
+  <tr>
+    {% if class.SECTION_ID == lastsectionid %}
+    {{ kula_display_html({ delete: true, field: 'HEd.Student.WaitList.ID', prepend_html: '<td class="data-table-cell-row-delete">&nbsp;', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">&nbsp;</td>
+    <td colspan="3">&nbsp;</td>
+    {{ kula_field({ field: 'HEd.Section.Meets', input: false, value: class.meets, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Section.Meet.StartTime', input: false, value: class.START_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Section.Meet.EndTime', input: false, value: class.END_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Room.Number', input: false, value: class.ROOM_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td>&nbsp;</td>
+    {% else %}
+    {{ kula_field({ delete: true, field: 'HEd.Student.WaitList.ID', db_row_id: class.STUDENT_WAIT_LIST_ID, post_type: 'drop', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ index }}</td>
+    {{ kula_field({ field: 'HEd.Section.SectionNumber', input: false, value: class.SECTION_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Course.CourseNumber', input: false, value: class.COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Course.Title', input: false, value: class.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Section.Meets', input: false, value: class.meets, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Section.Meeting.StartTime', input: false, value: class.START_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Section.Meeting.EndTime', input: false, value: class.END_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Room.Number', input: false, value: class.ROOM_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Staff.AbbreviatedName', input: false, value: class.ABBREVIATED_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Student.WaitList.AddedTimestamp', input: false, value: class.ADDED_TIMESTAMP, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% set index = index + 1 %}
+  {% endif %}
+  {% set lastsectionid = class.SECTION_ID %}
+  {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

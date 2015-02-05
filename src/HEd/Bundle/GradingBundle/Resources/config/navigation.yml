@@ -3,6 +3,7 @@ SIS.HEd.Student.Schedule.Grades:
   portal: sis
   description: "Grades"
   display_name: "Grades"
+  sort: 3
   route: sis_HEd_student_schedule_grades
 
 SIS.HEd.Student.Schedule.FinalGrades:

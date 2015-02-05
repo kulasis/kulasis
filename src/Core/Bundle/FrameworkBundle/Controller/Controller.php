@@ -46,7 +46,7 @@ class Controller extends BaseController {
   }
   
   protected function newPoster() {
-    return $this->container->get('kula.core.poster');
+    return $this->container->get('kula.core.poster_factory')->newPoster();
   }
   
   protected function chooser($chooser) {
@@ -106,6 +106,10 @@ class Controller extends BaseController {
     
     if (isset($var[$table][$field]) AND $id === null) {
       return $var[$table][$field];
+    }
+    
+    if (isset($var[$table]) AND $field === null AND $id === null) {
+      return $var[$table];
     }
     
   }

@@ -28,7 +28,7 @@ HEd.Room:
       lookup: HEd.Room.Buildings
       column_name: "Building"
       label_name: "Building"
-    RoomName:
+    Name:
       description: "Room Name"
       db_column_name: ROOM_NAME
       db_column_type: varchar
@@ -38,7 +38,7 @@ HEd.Room:
       field_size: 20
       column_name: "Room Name"
       label_name: "Room Name"
-    RoomNumber:
+    Number:
       description: "Room Number"
       db_column_name: ROOM_NUMBER
       db_column_type: varchar

@@ -1,0 +1,19 @@
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<input type="hidden" name="record_id" value="{{ request.query.get('record_id') }}" />
+<input type="hidden" name="record_type" value="{{ request.query.get('record_type') }}" />
+<div class="group-box">
+<div class="group-box-header">Section</div>
+<div class="group-box-contents group">
+  <div class="form-field"><label name="sort">Sort</label>
+    <select name="non[sort]">
+      <option value="">Section ID</option>
+      <option value="instructor">Instructor</option>
+      <option value="room">Room</option>
+    </select>
+  </div>
+</div>
+</div>
+
+{% endblock %}

@@ -64,7 +64,7 @@ class DBCacheConfig extends BaseConfigCache {
       // check if table exists
       if ($this->db->db_table_exists($table)) {
       
-      $result = $this->db->db_select($table, 'tables')
+      $result = $this->db->db_select($table, 'tables', array('nolog' => true))
         ->expression('MAX(CREATED_TIMESTAMP)', 'max_created')
         ->expression('MAX(UPDATED_TIMESTAMP)', 'max_updated')
         ->execute()->fetch();

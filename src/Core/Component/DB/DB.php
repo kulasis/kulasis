@@ -250,6 +250,12 @@ class DB {
       Database::startLog('request');
     }
   }
+  
+  public function stopLogger() {
+    if (in_array($this->environment, array('dev', 'test'))) {
+      Database::stopLog('request');
+    }
+  }
 
   /**
    * The following utility public functions are simply convenience wrappers.
@@ -373,7 +379,7 @@ class DB {
       $options['target'] = 'write';
     }
     $options['return'] = Database::RETURN_INSERT_ID;
-    $this->startLogger();
+    if ($options['target'] == 'schema' OR (isset($options['nolog']) AND $options['nolog'] === true)) $this->stopLogger(); else $this->startLogger();
     return new Proxy(Database::getConnection($options['target'])->insert($table, $options));
   }
 
@@ -411,7 +417,7 @@ class DB {
       $options['target'] = 'write';
     }
     $options['return'] = Database::RETURN_AFFECTED;
-    if ($options['target'] != 'schema') $this->startLogger();
+    if ($options['target'] == 'schema' OR (isset($options['nolog']) AND $options['nolog'] === true)) $this->stopLogger(); else $this->startLogger();
     return new Proxy(Database::getConnection($options['target'])->update($table, $options));
   }
 
@@ -430,7 +436,7 @@ class DB {
     if (empty($options['target']) || $options['target'] == 'replica') {
       $options['target'] = 'write';
     }
-    if ($options['target'] != 'schema') $this->startLogger();
+    if ($options['target'] == 'schema' OR (isset($options['nolog']) AND $options['nolog'] === true)) $this->stopLogger(); else $this->startLogger();
     return new Proxy(Database::getConnection($options['target'])->delete($table, $options));
   }
 
@@ -469,7 +475,7 @@ class DB {
   public function db_select($table, $alias = NULL, array $options = array()) {
     if (empty($options['target'])) $options['target'] = 'read';
     if (empty($options['fetch'])) $options['fetch'] = \PDO::FETCH_ASSOC;
-    if ($options['target'] != 'schema') $this->startLogger();
+    if ($options['target'] == 'schema' OR (isset($options['nolog']) AND $options['nolog'] === true)) $this->stopLogger(); else $this->startLogger();
     return new Proxy(Database::getConnection($options['target'])->select($table, $alias, $options));
   }
 
@@ -488,7 +494,7 @@ class DB {
   public function db_transaction($name = NULL, array $options = array()) {
     if (empty($options['target'])) $options['target'] = 'write';
     if (empty($options['fetch'])) $options['fetch'] = \PDO::FETCH_ASSOC;
-    if ($options['target'] != 'schema') $this->startLogger();
+    if ($options['target'] == 'schema' OR (isset($options['nolog']) AND $options['nolog'] === true)) $this->stopLogger(); else $this->startLogger();
     return Database::getConnection($options['target'])->startTransaction($name);
   }
 
@@ -721,6 +727,7 @@ class DB {
    *   TRUE if the given table exists, otherwise FALSE.
    */
   public function db_table_exists($table) {
+    $this->stopLogger();
     return Database::getConnection('schema')->schema()->tableExists($table);
   }
 

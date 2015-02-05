@@ -322,7 +322,7 @@ class SISInformationController extends Controller {
   
   public function chooserAction() {
     $this->authorize();
-    $data = $this->chooser('HEd.Student')->createChooserMenu($this->request->query->get('q'));
+    $data = $this->chooser('SIS.HEd.Student')->createChooserMenu($this->request->query->get('q'));
     return $this->JSONResponse($data);
   }
   

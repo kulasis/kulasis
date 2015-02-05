@@ -1,6 +1,0 @@
-{{ kula_field({ edit: true, school_term_only: true, db_table: 'STUD_SECTION', db_field: 'ORGANIZATION_TERM_ID', db_row_id: record_obj.getSelectedRecord.SECTION_ID, value: focus.getOrganizationTermIDs()[0], hidden: true }) }}
-{% if record_obj.getAddMode() != true %}
-{{ kula_field({ edit: true, db_table: 'STUD_SECTION', db_field: 'SECTION_NUMBER', db_row_id: record_obj.getSelectedRecord.SECTION_ID, value: record_obj.getSelectedRecord.SECTION_NUMBER, label: true }) }}
-{% endif %}
-{{ kula_field({ edit: true, school_term_only: true, db_table: 'STUD_SECTION', db_field: 'COURSE_ID', db_row_id: record_obj.getSelectedRecord.SECTION_ID, field_name_override: 'Course', value: record_obj.getSelectedRecord.COURSE_ID, label: true }) }}
-{{ kula_field({ edit: true, school_term_only: true, db_table: 'STUD_SECTION', field_name_override: 'Instructor', db_field: 'STAFF_ORGANIZATION_TERM_ID', db_row_id: record_obj.getSelectedRecord.SECTION_ID, value: record_obj.getSelectedRecord.STAFF_ORGANIZATION_TERM_ID, label: true }) }}

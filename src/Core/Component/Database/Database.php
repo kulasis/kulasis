@@ -98,9 +98,12 @@ abstract class Database {
    * @see \Kula\Core\Component\Database\Log
    */
   final public static function startLog($logging_key, $key = 'default') {
+    $needToStart = false;
     if (empty(self::$logs[$key])) {
       self::$logs[$key] = new Log($key);
-
+      
+      $needToStart = true;
+    }
       // Every target already active for this connection key needs to have the
       // logging object associated with it.
       if (!empty(self::$connections[$key])) {
@@ -108,10 +111,39 @@ abstract class Database {
           $connection->setLogger(self::$logs[$key]);
         }
       }
+    if ($needToStart) {
+      self::$logs[$key]->start($logging_key);
     }
+    return self::$logs[$key];
+  }
+
+  /**
+   * Starts logging a given logging key on the specified connection.
+   *
+   * @param string $logging_key
+   *   The logging key to log.
+   * @param string $key
+   *   The database connection key for which we want to log.
+   *
+   * @return \Kula\Core\Component\Database\Log
+   *   The query log object. Note that the log object does support richer
+   *   methods than the few exposed through the Database class, so in some
+   *   cases it may be desirable to access it directly.
+   *
+   * @see \Kula\Core\Component\Database\Log
+   */
+  final public static function stopLog($logging_key, $key = 'default') {
+    if (isset(self::$logs[$key])) {
+      if (!empty(self::$connections[$key])) {
+        foreach (self::$connections[$key] as $connection) {
+          $connection->setLogger(null);
+        }
+      }
+    
     self::$logs[$key]->start($logging_key);
 
     return self::$logs[$key];
+    }
   }
 
   /**

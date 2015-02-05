@@ -156,19 +156,18 @@ class SISEnrollmentController extends Controller {
       
       if ($status['STATUS'] == '') {
         
-        if (isset($this->request->request->get('edit')['HEd.Student.Enrollment'])) {
+        if ($enrollmentInfo = $this->form('edit', 'HEd.Student.Enrollment')) {
 
-          $connect = $this->db()->db_transaction();
-          $enrollmentPoster = $this->poster();
+          $transaction = $this->db()->db_transaction();
           // update enrollment record
-          $enrollmentPoster->add('HEd.Student.Enrollment', 0, $this->request->request->get('edit')['HEd.Student.Enrollment']);
+          $enrollmentPoster = $this->newPoster()->edit('HEd.Student.Enrollment', key($enrollmentInfo), current($enrollmentInfo))->process()->getResult();
           
           // update status record
-          $status_poster = $enrollmentPoster->add('HEd.Student.Status', 0, array(
-            'LEAVE_DATE' => $this->request->request->get('edit')['HEd.Student.Enrollment']['LEAVE_DATE'],
-            'LEAVE_CODE' => $this->request->request->get('edit')['HEd.Student.Enrollment']['LEAVE_CODE'],
-            'STATUS' => 'I'
-          ));
+          $statusPoster = $this->newPoster()->edit('HEd.Student.Status', $status['STUDENT_STATUS_ID'], array(
+            'HEd.Student.Status.LeaveDate' => $enrollmentInfo[key($enrollmentInfo)]['HEd.Student.Enrollment.LeaveDate'],
+            'HEd.Student.Status.LeaveCode' => $enrollmentInfo[key($enrollmentInfo)]['HEd.Student.Enrollment.LeaveCode'],
+            'HEd.Student.Status.Status' => 'I'
+          ))->process()->getResult();
           
           // Drop all classes
           //$schedule_service = $this->get('kula.HEd.scheduling.schedule');
@@ -179,12 +178,13 @@ class SISEnrollmentController extends Controller {
           //$student_billing_service->processBilling($status['STUDENT_STATUS_ID'], 'Student Inactivated and Classes Dropped');
           
           // redirect
-          if ($enrollment_poster AND $status_poster) {
-            $connect->commit();
+          if ($enrollmentPoster AND $statusPoster) {
+            $transaction->commit();
+            $this->addFlash('success', 'Inactivated student.');
             return $this->forward('sis_HEd_student_enrollment_statuses', array('record_type' => 'SIS.HEd.Student', 'record_id' => $status['STUDENT_ID']), array('record_type' => 'SIS.HEd.Student', 'record_id' => $status['STUDENT_ID']));
           } else {
-            $connect->rollback();
-            throw new \Kula\Component\Database\PosterFormException('Changes not saved.');
+            $transaction->rollback();
+            throw new \Kula\Core\Component\DB\PosterException('Inactivation failed.');
           }
           
         }
@@ -201,53 +201,45 @@ class SISEnrollmentController extends Controller {
         
       } elseif ($status['STATUS'] == 'I') {
         
-        if (isset($this->request->request->get('add')['STUD_STUDENT_STATUS'])) {
-          $submitted_info = $this->request->request->get('add')['STUD_STUDENT_STATUS']['new'];
+        if ($enrollmentInfo = $this->form('add', 'HEd.Student.Status', 'new')) {
           
-          $connect = $this->db()->db_transaction();
+          $transaction = $this->db()->db_transaction();
           
           // Update status info
-          $status_data[$status['STUDENT_STATUS_ID']]['ENTER_DATE'] = $submitted_info['ENTER_DATE'];
-          $status_data[$status['STUDENT_STATUS_ID']]['ENTER_CODE'] = $submitted_info['ENTER_CODE'];
-          $status_data[$status['STUDENT_STATUS_ID']]['LEAVE_DATE'] = null;
-          $status_data[$status['STUDENT_STATUS_ID']]['LEAVE_CODE'] = null;
-          if (isset($submitted_info['GRADE'])) $status_data[$status['STUDENT_STATUS_ID']]['GRADE'] = $submitted_info['GRADE'];
-          if (isset($submitted_info['RESIDENT'])) $status_data[$status['STUDENT_STATUS_ID']]['RESIDENT'] = $submitted_info['RESIDENT'];
-          if (isset($submitted_info['FTE'])) $status_data[$status['STUDENT_STATUS_ID']]['FTE'] = $submitted_info['FTE'];
-          $status_data[$status['STUDENT_STATUS_ID']]['STATUS'] = null;
-          $status_poster = new \Kula\Component\Database\Poster(null, array('STUD_STUDENT_STATUS' => $status_data));
-          $status_poster_affected = $status_poster->getResultForTable('update', 'STUD_STUDENT_STATUS')[$status['STUDENT_STATUS_ID']];
+          $enrollmentInfo['HEd.Student.Status.Status'] = null;
+          $statusPoster = $this->newPoster()->edit('HEd.Student.Status', $status['STUDENT_STATUS_ID'], $enrollmentInfo)->process()->getResult();
           
           // insert enrollment record
-          $enrollment_data['STUDENT_STATUS_ID'] = $status['STUDENT_STATUS_ID'];
-          $enrollment_data['ENTER_DATE'] = $submitted_info['ENTER_DATE'];
-          $enrollment_data['ENTER_CODE'] = $submitted_info['ENTER_CODE'];
-          $enrollment_poster = new \Kula\Component\Database\Poster(array('STUD_STUDENT_ENROLLMENT' => array('new' => $enrollment_data)));
-          $student_enrollment_id = $enrollment_poster->getResultForTable('insert', 'STUD_STUDENT_ENROLLMENT')['new'];
-          
+          $enrollmentPoster = $this->newPoster()->add('HEd.Student.Enrollment', 'new', array(
+            'HEd.Student.Enrollment.StatusID' => $status['STUDENT_STATUS_ID'],
+            'HEd.Student.Enrollment.EnterDate' => $enrollmentInfo['HEd.Student.Status.EnterDate'],
+            'HEd.Student.Enrollment.EnterCode' => $enrollmentInfo['HEd.Student.Status.EnterCode']
+          ))->process()->getResult();
+
           // insert enrollment activity record
-          $activity_data['ENROLLMENT_ID'] = $student_enrollment_id;
-          if (isset($submitted_info['GRADE'])) $activity_data['GRADE'] = $submitted_info['GRADE'];
-          if (isset($submitted_info['RESIDENT'])) $activity_data['RESIDENT'] = $submitted_info['RESIDENT'];
-          if (isset($submitted_info['FTE'])) $activity_data['FTE'] = $submitted_info['FTE'];
-          if (isset($submitted_info['LEVEL'])) $activity_data['LEVEL'] = $submitted_info['LEVEL'];
-          $activity_data['EFFECTIVE_DATE'] = $submitted_info['ENTER_DATE'];
-          $activity_poster = new \Kula\Component\Database\Poster(array('STUD_STUDENT_ENROLLMENT_ACTIVITY' => array('new' => $activity_data)));
-          $student_activity_id = $activity_poster->getResultForTable('insert', 'STUD_STUDENT_ENROLLMENT_ACTIVITY')['new'];
+          $activityPoster = $this->newPoster()->add('HEd.Student.Enrollment.Activity', 'new', array(
+            'HEd.Student.Enrollment.Activity.EnrollmentID' => $enrollmentPoster,
+            'HEd.Student.Enrollment.Activity.Grade' => (isset($enrollmentInfo['HEd.Student.Status.Grade'])) ? $enrollmentInfo['HEd.Student.Status.Grade'] : null,
+            'HEd.Student.Enrollment.Activity.Resident' => (isset($enrollmentInfo['HEd.Student.Status.Resident'])) ? $enrollmentInfo['HEd.Student.Status.Resident'] : null,
+            'HEd.Student.Enrollment.Activity.FTE' => (isset($enrollmentInfo['HEd.Student.Status.FTE'])) ? $enrollmentInfo['HEd.Student.Status.FTE'] : null,
+            'HEd.Student.Enrollment.Activity.Level' => (isset($enrollmentInfo['HEd.Student.Status.Level'])) ? $enrollmentInfo['HEd.Student.Status.Level'] : null,
+            'HEd.Student.Enrollment.Activity.EffectiveDate' => date('m/d/Y')
+          ))->process()->getResult();
           
           // determine tuition rate
-          $constituent_billing_service = new \Kula\Bundle\HEd\StudentBillingBundle\ConstituentBillingService($this->db('write'), new \Kula\Component\Database\PosterFactory, $this->record, $this->session);
-          $constituent_billing_service->determineTuitionRate($this->record->getSelectedRecordID());
+          //$constituent_billing_service = new \Kula\Bundle\HEd\StudentBillingBundle\ConstituentBillingService($this->db('write'), new \Kula\Component\Database\PosterFactory, $this->record, $this->session);
+          //$constituent_billing_service->determineTuitionRate($this->record->getSelectedRecordID());
           
           // mandatory transactions
-          $constituent_billing_service->checkMandatoryTransactions($this->record->getSelectedRecordID());
+          //$constituent_billing_service->checkMandatoryTransactions($this->record->getSelectedRecordID());
           
-          if ($status_poster_affected AND $student_enrollment_id AND $student_activity_id) {
-            $connect->commit();
-            return $this->forward('sis_student_enrollment_statuses', array('record_type' => 'STUDENT', 'record_id' => $status['STUDENT_ID']), array('record_type' => 'STUDENT', 'record_id' => $status['STUDENT_ID']));
+          if ($statusPoster AND $enrollmentPoster AND $activityPoster) {
+            $transaction->commit();
+            $this->addFlash('success', 'Activated student.');
+            return $this->forward('sis_HEd_student_enrollment_statuses', array('record_type' => 'SIS.HEd.Student', 'record_id' => $status['STUDENT_ID']), array('record_type' => 'SIS.HEd.Student', 'record_id' => $status['STUDENT_ID']));
           } else {
-            $connect->rollback();
-            throw new \Kula\Component\Database\PosterFormException('Changes not saved.');
+            $transaction->rollback();
+            throw new \Kula\Core\Component\DB\PosterException('Activation failed.');
           }
           
         }

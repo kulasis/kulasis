@@ -32,7 +32,7 @@ HEd.Section:
       db_column_name: COURSE_ID
       db_column_type: serial
       field_type: chooser
-      chooser: HEd.Course.ID
+      chooser: HEd.Course
       column_name: "Course ID"
       label_name: "Course ID"
     OrganizationTermID:
@@ -50,7 +50,7 @@ HEd.Section:
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser: HEd.Staff.OrganizationTerm
+      chooser: HEd.Staff.SchoolTerm
       column_name: "Staff Organization Term ID"
       label_name: "Staff Organization Term ID"
     StartDate:
@@ -161,6 +161,17 @@ HEd.Section:
       field_type: textarea
       column_name: "No Class Dates"
       label_name: "No Class Dates"
+    Meets:
+      description: "Meetings"
+      field_type: text
+      class: Kula\HEd\Bundle\SchedulingBundle\Field\Meets
+      column_name: "Meets"
+      label_name: "Meets"
+    Available:
+      description: "Available"
+      field_type: text
+      column_name: "Available"
+      label_name: "Available"
 
 HEd.Section.Course:
   description: "Section Courses"
@@ -361,7 +372,7 @@ HEd.Section.Staff:
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser: HEd.Staff.OrganizationTerm
+      chooser: HEd.Staff.SchoolTerm
       column_name: "Staff Organization Term ID"
       label_name: "Staff Organization Term ID"
     PrimaryInstructor:

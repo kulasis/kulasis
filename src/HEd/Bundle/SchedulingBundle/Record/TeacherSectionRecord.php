@@ -10,7 +10,7 @@ class TeacherSectionRecord extends Record {
   }
   
   public function getRecordBarTemplate() {
-    return 'KulaHEdSchedulingBundle::Record/teacher_record_section.html.twig';
+    return 'KulaHEdSchedulingBundle::TeacherRecord/teacher_record_section.html.twig';
   }
   
   public function getRecordIDStack() {

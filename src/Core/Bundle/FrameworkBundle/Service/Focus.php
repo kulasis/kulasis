@@ -34,11 +34,11 @@ class Focus {
     
       $items_to_update = array();
       
-      if ($organization_id) { 
+      if ($organization_id AND $organization_id != 'undefined') { 
         $this->session->setFocus('organization_id', $organization_id);
         $items_to_update['LAST_ORGANIZATION_ID'] = $organization_id;
       }
-      if ($term_id) {
+      if ($term_id AND $term_id != 'undefined') {
         $this->session->setFocus('term_id', $term_id);
         $items_to_update['LAST_TERM_ID'] = $term_id;
       }

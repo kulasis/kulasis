@@ -24,8 +24,13 @@ class Report extends \fpdf\FPDF {
   public function __construct($orientation='P', $unit='mm', $size='Letter')
   {
     $container = $GLOBALS['kernel']->getContainer();
-    $this->session = $container->get('kula.session');
-
+    $this->session = $container->get('kula.core.session');
+    
+    $this->reportInstitutionName = $container->getParameter('report_institution_name');
+    $this->reportAddressLine1 = $container->getParameter('report_institution_address_line1');
+    $this->reportAddressLine2 = $container->getParameter('report_institution_address_line2');
+    $this->reportLogo = $container->getParameter('report_logo_path');
+    
     parent::__construct($orientation, $unit, $size);
     
     $this->include_footer_info = true;
@@ -41,7 +46,7 @@ class Report extends \fpdf\FPDF {
   {
       if ($this->show_logo) {
         // School Logo
-        $image1 = KULA_ROOT . "/web/images/ocaclogo_vertical.png";
+        $image1 = KULA_ROOT . $this->reportLogo;
         $this->Cell(1,0, $this->Image($image1, 15, 15), 0, 0, 'L');
       }
       // Report Title

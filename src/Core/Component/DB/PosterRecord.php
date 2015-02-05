@@ -56,7 +56,7 @@ class PosterRecord {
         unset($this->fields['delete_row']);
         $this->verifyPermissions();
         if (!$this->hasViolations) {
-          $this->execute();
+          $this->result = $this->execute();
         }
         
       } else {
@@ -323,7 +323,6 @@ class PosterRecord {
 
       if ($this->crud == self::ADD) {
         $transaction = $this->db->db_transaction();
-
         $this->id = $this->db->db_insert($this->schema->getTable($this->table)->getDBName())
           ->fields($fields)
           ->execute();

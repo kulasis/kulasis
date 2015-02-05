@@ -105,28 +105,32 @@ class TableLoader {
     
     foreach($this->fields as $field) {
       
-      $structure['fields'][$field->getDBColumnName()] = array(
-        'description' => $field->getDescription(),
-        'type' => $field->getDBColumnType(),
-        'size' => $field->getDBColumnSize(),
-        'length' => $field->getDBColumnLength(),
-        'not null' => ($field->getDBColumnNull() == false) ? true : false
-      );
+      if ($field->getDBColumnName()) {
       
-      $default = $field->getDBColumnDefault();      
-      if (isset($default)) {
-        $structure['fields'][$field->getDBColumnName()]['default'] = $field->getDBColumnDefault();
-      }
+        $structure['fields'][$field->getDBColumnName()] = array(
+          'description' => $field->getDescription(),
+          'type' => $field->getDBColumnType(),
+          'size' => $field->getDBColumnSize(),
+          'length' => $field->getDBColumnLength(),
+          'not null' => ($field->getDBColumnNull() == false) ? true : false
+        );
       
-      $precision = $field->getDBColumnPrecision();
-      if (isset($precision)) {
-        unset($structure['fields'][$field->getDBColumnName()]['length']);
-        $structure['fields'][$field->getDBColumnName()]['precision'] = $field->getDBColumnLength();
-        $structure['fields'][$field->getDBColumnName()]['scale'] = $precision;
-      }
+        $default = $field->getDBColumnDefault();      
+        if (isset($default)) {
+          $structure['fields'][$field->getDBColumnName()]['default'] = $field->getDBColumnDefault();
+        }
       
-      if ($field->getPrimary()) {
-        $structure['primary key'][] = $field->getDBColumnName();
+        $precision = $field->getDBColumnPrecision();
+        if (isset($precision)) {
+          unset($structure['fields'][$field->getDBColumnName()]['length']);
+          $structure['fields'][$field->getDBColumnName()]['precision'] = $field->getDBColumnLength();
+          $structure['fields'][$field->getDBColumnName()]['scale'] = $precision;
+        }
+      
+        if ($field->getPrimary()) {
+          $structure['primary key'][] = $field->getDBColumnName();
+        }
+      
       }
       
     }  // end foreach on fields

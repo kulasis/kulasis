@@ -392,7 +392,7 @@ abstract class Connection implements \Serializable {
    * @param $logger
    *   The logging object we want to use.
    */
-  public function setLogger(Log $logger) {
+  public function setLogger(Log $logger = null) {
     $this->logger = $logger;
   }
 

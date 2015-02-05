@@ -1,10 +1,10 @@
 <?php
 
-namespace Kula\Bundle\HEd\SchedulingBundle\Controller;
+namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
 
-use Kula\Bundle\Core\KulaFrameworkBundle\Controller\ReportController;
+use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
-class ClassRosterReportController extends ReportController {
+class SISClassRosterReportController extends ReportController {
 	
 	public function indexAction() {
 		$this->authorize();

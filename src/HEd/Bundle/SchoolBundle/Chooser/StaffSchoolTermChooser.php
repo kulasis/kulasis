@@ -36,7 +36,7 @@ class StaffSchoolTermChooser extends Chooser {
       ->fields('stafforgtrm', array('STAFF_ORGANIZATION_TERM_ID'))
       ->join('STUD_STAFF', 'staff', 'stafforgtrm.STAFF_ID = staff.STAFF_ID')
       ->fields('staff', array('ABBREVIATED_NAME'))
-      ->condtion('stafforgtrm.STAFF_ORGANIZATION_TERM_ID', $id)
+      ->condition('stafforgtrm.STAFF_ORGANIZATION_TERM_ID', $id)
       ->execute()
       ->fetch();
     return $this->currentValue($row['STAFF_ORGANIZATION_TERM_ID'], $row['ABBREVIATED_NAME']);
