@@ -166,7 +166,24 @@ function navigation_drawerItemListenerNewWindow(invokedOn) {
 	
 	var options = new Array();
 	options['windowTitle'] = invokedOn.text();
+  
+	// Get current window number
+	var windowNumber = $('#window_bar .selected-window-element').data('window');
+  
+	// Get current active tab 
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
 	
+	if (activeTabID == undefined) {
+		// not in tab
+		activeTabID = 'window_' + windowNumber + '_tab_';
+	}
+	
+	var record_id = $('#' + activeTabID + '_content > .record_bar_tab_menu_data').data('record-id');
+	var record_type = $('#' + activeTabID + '_content > .record_bar_tab_menu_data').data('record-type');
+
+	url += "?record_type=" + encodeURIComponent(record_type);
+	url += "&record_id=" + encodeURIComponent(record_id);
+  
   getLink(url, 'window', 'windows_container', options, function(msg, options) {
 		// create new window
 		var newWindowNum = navigation_createWindow(options['url']);

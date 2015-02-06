@@ -51,27 +51,27 @@ class SISStudentStatusRecord extends Record {
   
   public function get($record_id) {
     
-    $result = $this->db()->db_select('STUD_STUDENT_STATUS', 'STUD_STUDENT_STATUS')
-      ->fields('STUD_STUDENT_STATUS', array('STUDENT_STATUS_ID', 'STUDENT_ID', 'STATUS', 'GRADE', 'RESIDENT', 'ORGANIZATION_TERM_ID'))
-      ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = STUD_STUDENT_STATUS.STUDENT_ID')
-      ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'RACE'))
-      ->join('STUD_STUDENT', 'stu', 'stu.STUDENT_ID = STUD_STUDENT_STATUS.STUDENT_ID')
-      ->fields('stu', array('STUDENT_ID', 'DIRECTORY_PERMISSION'))
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = STUD_STUDENT_STATUS.ORGANIZATION_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
-      ->fields('org', array('ORGANIZATION_NAME'))
-      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
-      ->fields('term', array('TERM_ABBREVIATION'))
-      ->condition('STUDENT_STATUS_ID', $record_id)
-      ->execute()->fetch();
+    if ($result = $this->getInfo($record_id))
+      return $result;
+    else {
+      // Get Student ID
+      $studentID = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('STUDENT_ID'))
+        ->condition('stustatus.STUDENT_STATUS_ID', $record_id)
+        ->execute()->fetch();
+      
+      // Get Student Status ID
+      $statusStudentID = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('STUDENT_STATUS_ID'))
+        ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'stustatus.ORGANIZATION_TERM_ID = orgterm.ORGANIZATION_TERM_ID')
+        ->condition('stustatus.STUDENT_ID', $studentID['STUDENT_ID'])
+        ->condition('orgterm.ORGANIZATION_ID', $this->focus->getSchoolIDs());
+        if ($this->focus->getTermID())
+          $statusStudentID = $statusStudentID->condition('orgterm.TERM_ID', $this->focus->getTermID());
+      $statusStudentID = $statusStudentID->execute()->fetch();
     
-    if ($result) {
-      $additional = $this->getAdditional($record_id);
-      $result = array_merge($result, $additional);
+      return $this->getInfo($statusStudentID['STUDENT_STATUS_ID']);
     }
-    
-    return $result;
-    
   }
   
   public function getAdditional($record_id) {
@@ -95,6 +95,32 @@ class SISStudentStatusRecord extends Record {
       $holds_array[] = $hold_row['ALERT_DISPLAY'];
     }
     $result['holds'] = implode(", ", $holds_array);
+    
+    return $result;
+  }
+  
+  public function getInfo($record_id) {
+    $result = $this->db()->db_select('STUD_STUDENT_STATUS', 'STUD_STUDENT_STATUS')
+      ->fields('STUD_STUDENT_STATUS', array('STUDENT_STATUS_ID', 'STUDENT_ID', 'STATUS', 'GRADE', 'RESIDENT', 'ORGANIZATION_TERM_ID'))
+      ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = STUD_STUDENT_STATUS.STUDENT_ID')
+      ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'RACE'))
+      ->join('STUD_STUDENT', 'stu', 'stu.STUDENT_ID = STUD_STUDENT_STATUS.STUDENT_ID')
+      ->fields('stu', array('STUDENT_ID', 'DIRECTORY_PERMISSION'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = STUD_STUDENT_STATUS.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_NAME'))
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->fields('term', array('TERM_ABBREVIATION'))
+      ->condition('STUDENT_STATUS_ID', $record_id)
+      ->condition('orgterms.ORGANIZATION_ID', $this->focus->getSchoolIDs());
+      if ($this->focus->getTermID())
+        $result = $result->condition('orgterms.TERM_ID', $this->focus->getTermID());
+      $result = $result->execute()->fetch();
+    
+    if ($result) {
+      $additional = $this->getAdditional($record_id);
+      $result = array_merge($result, $additional);
+    }
     
     return $result;
   }
