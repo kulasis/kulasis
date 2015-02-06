@@ -62,7 +62,7 @@ Requirement Groups
     {{ kula_field({ edit: true, field: 'HEd.Degree.Requirement.Group.EndTermID', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.END_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Degree.Requirement.Group.CreditsRequired', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.CREDITS_REQUIRED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Degree.Requirement.Group.Elective', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.ELECTIVE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    <td class="data-table-cell-row-detail"><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_offering_degrees_requirements_groups_courses', { id: req.DEGREE_REQ_GRP_ID }) }}">...</a></td>
+    <td class="data-table-cell-row-detail"><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_degrees_requirements_groups_courses', { id: req.DEGREE_REQ_GRP_ID }) }}">...</a></td>
   </tr>
   {% endfor %}
 </tbody>

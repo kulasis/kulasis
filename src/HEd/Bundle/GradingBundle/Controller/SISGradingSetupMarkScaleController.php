@@ -13,12 +13,12 @@ class SISGradingSetupMarkScaleController extends Controller {
     $mark_scales = array();
     
       // Get Mark Scales
-      $mark_scales = $this->db()->select('STUD_MARK_SCALE')
-        ->fields(null, array('MARK_SCALE_NAME', 'MARK_SCALE_ID', 'INACTIVE_AFTER', 'AUDIT'))
-        ->order_by('MARK_SCALE_NAME', 'ASC')
+      $mark_scales = $this->db()->db_select('STUD_MARK_SCALE')
+        ->fields('STUD_MARK_SCALE', array('MARK_SCALE_NAME', 'MARK_SCALE_ID', 'INACTIVE_AFTER', 'AUDIT'))
+        ->orderBy('MARK_SCALE_NAME', 'ASC')
         ->execute()->fetchAll();
     
-    return $this->render('KulaHEdCourseHistoryBundle:GradingSetupMarkScale:mark_scales.html.twig', array('mark_scales' => $mark_scales));
+    return $this->render('KulaHEdGradingBundle:SISGradingSetupMarkScale:mark_scales.html.twig', array('mark_scales' => $mark_scales));
   }
   
   public function detailAction($mark_scale_id) {
@@ -28,20 +28,20 @@ class SISGradingSetupMarkScaleController extends Controller {
     $mark_scale = array();
     
     // Get Mark Scales
-    $mark_scale = $this->db()->select('STUD_MARK_SCALE')
-      ->fields(null, array('MARK_SCALE_NAME', 'MARK_SCALE_ID'))
-      ->predicate('MARK_SCALE_ID', $mark_scale_id)
+    $mark_scale = $this->db()->db_select('STUD_MARK_SCALE')
+      ->fields('STUD_MARK_SCALE', array('MARK_SCALE_NAME', 'MARK_SCALE_ID'))
+      ->condition('MARK_SCALE_ID', $mark_scale_id)
       ->execute()->fetch();
     
     $marks = array();
     
       // Get Marks
-      $marks = $this->db()->select('STUD_MARK_SCALE_MARKS')
-        ->fields(null, array('MARK_SCALE_MARK_ID', 'SORT', 'MARK', 'GETS_CREDIT', 'GPA_VALUE', 'INACTIVE_AFTER', 'ALLOW_TEACHER', 'ALLOW_COMMENTS', 'REQUIRE_COMMENTS'))
-        ->predicate('MARK_SCALE_ID', $mark_scale_id)
-        ->order_by('SORT', 'ASC')
+      $marks = $this->db()->db_select('STUD_MARK_SCALE_MARKS')
+        ->fields('STUD_MARK_SCALE_MARKS', array('MARK_SCALE_MARK_ID', 'SORT', 'MARK', 'GETS_CREDIT', 'GPA_VALUE', 'INACTIVE_AFTER', 'ALLOW_TEACHER', 'ALLOW_COMMENTS', 'REQUIRE_COMMENTS'))
+        ->condition('MARK_SCALE_ID', $mark_scale_id)
+        ->orderBy('SORT', 'ASC')
         ->execute()->fetchAll();
     
-    return $this->render('KulaHEdCourseHistoryBundle:GradingSetupMarkScale:mark_scale_detail.html.twig', array('marks' => $marks, 'mark_scale' => $mark_scale));
+    return $this->render('KulaHEdGradingBundle:SISGradingSetupMarkScale:mark_scale_detail.html.twig', array('marks' => $marks, 'mark_scale' => $mark_scale));
   }
 }

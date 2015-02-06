@@ -4,7 +4,7 @@ namespace Kula\HEd\Bundle\GradingBundle\Field;
 
 use Kula\Core\Component\Field\Field;
 
-class Standing implements Field {
+class Standing extends Field {
   
   public function select($schema, $param) {
 

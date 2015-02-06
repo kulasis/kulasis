@@ -23,7 +23,7 @@ HEd.Student.CourseHistory:
       db_column_name: COURSE_ID
       db_column_type: serial
       field_type: chooser
-      chooser: HEd.Course.ID
+      chooser: HEd.Course
       column_name: "Course ID"
       label_name: "Course ID"
     OrganizationID:
@@ -160,7 +160,7 @@ HEd.Student.CourseHistory:
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      # chooser
+      chooser: HEd.Staff.SchoolTerm
       column_name: "Staff ID"
       label_name: "Staff ID"
     Staff:
@@ -180,7 +180,7 @@ HEd.Student.CourseHistory:
       db_column_length: 5
       db_column_null: true
       field_type: select
-      #class:
+      class: Kula\HEd\Bundle\GradingBundle\Field\Mark
       column_name: "Mark"
       label_name: "Mark"
     MarkScaleID:
@@ -190,7 +190,7 @@ HEd.Student.CourseHistory:
       db_column_type: serial
       db_column_null: true
       field_type: select
-      #class:
+      class: Kula\HEd\Bundle\GradingBundle\Field\MarkScale
       column_name: "Mark Scale ID"
       label_name: "Mark Scale ID"
     TeacherSet:

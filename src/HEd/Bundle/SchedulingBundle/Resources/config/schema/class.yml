@@ -22,6 +22,7 @@ HEd.Student.Class:
       parent: HEd.Section.ID
       db_column_name: SECTION_ID
       db_column_type: serial
+      field_type: checkbox
       column_name: "Section ID"
       label_name: "Section ID"
     CourseID:

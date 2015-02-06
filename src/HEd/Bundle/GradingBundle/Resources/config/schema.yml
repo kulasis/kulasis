@@ -11,8 +11,8 @@ HEd.Student.Status:
       description: "Academic Probation"
       db_column_name: ACADEMIC_PROBATION
       db_column_type: bool
-      db_column_null: false
       db_column_default: 0
+      db_column_null: false
       field_type: checkbox
       column_name: "Academic Probation"
       label_name: "Academic Probation"

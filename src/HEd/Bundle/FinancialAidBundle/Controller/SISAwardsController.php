@@ -8,7 +8,7 @@ class SISAwardsController extends Controller {
   
   public function indexAction() {
     $this->authorize();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     $edit = $this->request->request->get('edit');
   
@@ -70,12 +70,12 @@ class SISAwardsController extends Controller {
         ->execute()->fetchAll();
     }
     
-    return $this->render('KulaHEdFinancialAidBundle:Awards:awards.html.twig', array('fin_aid_year' => $fin_aid_year['FINANCIAL_AID_YEAR'], 'awards' => $awards));
+    return $this->render('KulaHEdFinancialAidBundle:SISAwards:awards.html.twig', array('fin_aid_year' => $fin_aid_year['FINANCIAL_AID_YEAR'], 'awards' => $awards));
   }
   
   public function awards_historyAction() {
     $this->authorize();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     $awards = array();
     
@@ -104,12 +104,12 @@ class SISAwardsController extends Controller {
       
     }
     
-    return $this->render('KulaHEdFinancialAidBundle:Awards:awards_history.html.twig', array('awards' => $awards));
+    return $this->render('KulaHEdFinancialAidBundle:SISAwards:awards_history.html.twig', array('awards' => $awards));
   }
   
   public function billingAction() {
     $this->authorize();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     $transactions = array();
     
@@ -117,7 +117,8 @@ class SISAwardsController extends Controller {
 
       $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
         ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE'))
-        ->join('BILL_CODE', 'code', array('CODE_TYPE', 'CODE'), 'code.CODE_ID = transactions.CODE_ID')
+        ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
+        ->fields('code', array('CODE_TYPE', 'CODE'))
         ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
         ->leftJoin('CORE_ORGANIZATION', 'organization', 'organization.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
         ->fields('organization', array('ORGANIZATION_ABBREVIATION'))
@@ -134,12 +135,12 @@ class SISAwardsController extends Controller {
       
     }
     
-    return $this->render('KulaHEdFinancialAidBundle:Awards:billing.html.twig', array('transactions' => $transactions));
+    return $this->render('KulaHEdFinancialAidBundle:SISAwards:billing.html.twig', array('transactions' => $transactions));
   }
   
   public function billing_historyAction() {
     $this->authorize();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     $transactions = array();
     
@@ -164,6 +165,6 @@ class SISAwardsController extends Controller {
       
     }
     
-    return $this->render('KulaHEdFinancialAidBundle:Awards:billing.html.twig', array('transactions' => $transactions));
+    return $this->render('KulaHEdFinancialAidBundle:SISAwards:billing.html.twig', array('transactions' => $transactions));
   }
 }

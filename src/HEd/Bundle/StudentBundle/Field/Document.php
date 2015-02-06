@@ -4,7 +4,7 @@ namespace Kula\HEd\Bundle\StudentBundle\Field;
 
 use Kula\Core\Component\Field\Field;
 
-class Document implements Field {
+class Document extends Field {
   
   public function select($schema, $param) {
 

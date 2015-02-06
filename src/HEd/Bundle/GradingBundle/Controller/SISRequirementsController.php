@@ -13,7 +13,7 @@ class SISRequirementsController extends Controller {
     $requirement_groups = array();
     
       // Get Requirements
-      $requirement_groups = $this->db()->select('STUD_DEGREE_REQ_GRP')
+      $requirement_groups = $this->db()->db_select('STUD_DEGREE_REQ_GRP')
         ->fields('STUD_DEGREE_REQ_GRP', array('DEGREE_REQ_GRP_ID', 'GROUP_NAME', 'START_TERM_ID', 'END_TERM_ID', 'CREDITS_REQUIRED', 'ELECTIVE', 'CONCENTRATION_ID'))
         ->orderBy('GROUP_NAME', 'ASC');
       if ($type == 'degree')
@@ -34,7 +34,7 @@ class SISRequirementsController extends Controller {
     $this->authorize();
     $this->processForm();
     
-    $requirement_groups = $this->db()->select('STUD_DEGREE_REQ_GRP')
+    $requirement_groups = $this->db()->db_select('STUD_DEGREE_REQ_GRP')
       ->fields('STUD_DEGREE_REQ_GRP', array('MINOR_ID', 'MAJOR_ID', 'DEGREE_ID', 'CONCENTRATION_ID'))
       ->condition('DEGREE_REQ_GRP_ID', $id)
       ->orderBy('GROUP_NAME', 'ASC')
@@ -56,7 +56,7 @@ class SISRequirementsController extends Controller {
     $requirement_grp_courses = array();
     
     // Get Courses
-    $requirement_grp_courses = $this->db()->select('STUD_DEGREE_REQ_GRP_CRS', 'reqgrpcrs')
+    $requirement_grp_courses = $this->db()->db_select('STUD_DEGREE_REQ_GRP_CRS', 'reqgrpcrs')
         ->fields('reqgrpcrs', array('DEGREE_REQ_GRP_CRS_ID', 'DEGREE_REQ_GRP_ID', 'COURSE_ID', 'REQUIRED', 'SHOW_AS_OPTION'))
         ->join('STUD_COURSE', 'course', 'course.COURSE_ID = reqgrpcrs.COURSE_ID')
         ->condition('DEGREE_REQ_GRP_ID', $id)
@@ -73,13 +73,13 @@ class SISRequirementsController extends Controller {
     
     $requirement_group_courses_equivalents = array();
     
-    $requirement_groups = $this->db()->select('STUD_DEGREE_REQ_GRP_CRS')
+    $requirement_groups = $this->db()->db_select('STUD_DEGREE_REQ_GRP_CRS')
       ->fields('STUD_DEGREE_REQ_GRP_CRS', array('DEGREE_REQ_GRP_ID'))
       ->condition('DEGREE_REQ_GRP_CRS_ID', $id)
       ->execute()->fetch();
     
     // Get Courses
-    $requirement_grp_courses_equivalents = $this->db()->select('STUD_DEGREE_REQ_GRP_CRS_EQUV', 'reqgrpcrsequv')
+    $requirement_grp_courses_equivalents = $this->db()->db_select('STUD_DEGREE_REQ_GRP_CRS_EQUV', 'reqgrpcrsequv')
         ->fields('reqgrpcrsequv', array('DEGREE_REQ_GRP_CRS_ID', 'COURSE_ID'))
         ->join('STUD_COURSE', 'course', 'course.COURSE_ID = reqgrpcrsequv.COURSE_ID')
         ->condition('DEGREE_REQ_GRP_CRS_ID', $id)

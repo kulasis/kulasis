@@ -10,7 +10,7 @@ class MajorName extends Field {
     
     $menu = array();
     
-    $result = $this->db->db_select('STUD_DEGREE_MAJOR', 'major')
+    $result = $this->db()->db_select('STUD_DEGREE_MAJOR', 'major')
       ->fields('major', array('MAJOR_ID', 'MAJOR_NAME'))
       ->orderBy('MAJOR_NAME', 'ASC')->execute();
     while ($row = $result->fetch()) {

@@ -95,6 +95,6 @@ HEd.Student.CourseHistory.Standing:
       db_column_name: STANDING_ID
       db_column_type: serial
       field_type: select
-      #class: 
+      class: Kula\HEd\Bundle\GradingBundle\Field\Standing
       column_name: "Standing ID"
       label_name: "Standing"

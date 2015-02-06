@@ -9,13 +9,13 @@ class SISCourseHistoryController extends Controller {
   public function coursehistoryAction() {
     $this->authorize();
     //$this->processForm();
-    $this->setRecordType('STUDENT');
+    $this->setRecordType('SIS.HEd.Student');
 
     $non = $this->request->request->get('non');
     
     // Add new course history records
     if ($this->request->request->get('add')) {
-      $course_history_service = new \Kula\Bundle\HEd\CourseHistoryBundle\CourseHistoryService($this->db('write'), new \Kula\Component\Database\PosterFactory, $this->record);
+      $course_history_service = $this->get('kula.HEd.grading.coursehistory');
       $new_ch = $this->request->request->get('add')['STUD_STUDENT_COURSE_HISTORY'];
       unset($new_ch['new_num']);
       foreach($new_ch as $ch_id => $ch_data) {
@@ -31,7 +31,7 @@ class SISCourseHistoryController extends Controller {
     
     // Edit course history records
     if ($this->request->request->get('edit')) {
-      $course_history_service = new \Kula\Bundle\HEd\CourseHistoryBundle\CourseHistoryService($this->db('write'), new \Kula\Component\Database\PosterFactory, $this->record);
+      $course_history_service = $this->get('kula.HEd.grading.coursehistory');
       $edit_ch = $this->request->request->get('edit')['STUD_STUDENT_COURSE_HISTORY'];
       foreach($edit_ch as $edit_id => $edit_data) {
         $edit_ch = $edit_data;
@@ -53,32 +53,32 @@ class SISCourseHistoryController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
     
-      $course_history = $this->db()->select('STUD_STUDENT_COURSE_HISTORY', 'ch')
+      $course_history = $this->db()->db_select('STUD_STUDENT_COURSE_HISTORY', 'ch')
         ->fields('ch', array('COURSE_HISTORY_ID', 'CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'COURSE_ID', 'COURSE_NUMBER', 'COURSE_TITLE', 'LEVEL', 'CREDITS_ATTEMPTED', 'CREDITS_EARNED', 'MARK_SCALE_ID', 'MARK'))
-        ->predicate('STUDENT_ID', $this->record->getSelectedRecordID())
-        ->order_by('CALENDAR_YEAR', 'ASC', 'ch')
-        ->order_by('CALENDAR_MONTH', 'ASC', 'ch')
+        ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
+        ->orderBy('ch.CALENDAR_YEAR', 'ASC')
+        ->orderBy('ch.CALENDAR_MONTH', 'ASC')
         ->execute()->fetchAll();
           
     }
 
-    return $this->render('KulaHEdCourseHistoryBundle:CourseHistory:coursehistory.html.twig', array('course_history' => $course_history));
+    return $this->render('KulaHEdGradingBundle:SISCourseHistory:coursehistory.html.twig', array('course_history' => $course_history));
   }
   
   public function detailAction($id, $sub_id) {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('STUDENT');
+    $this->setRecordType('SIS.HEd.Student');
       
     $course_history = array();
     
-    $course_history = $this->db()->select('STUD_STUDENT_COURSE_HISTORY', 'ch')
+    $course_history = $this->db()->db_select('STUD_STUDENT_COURSE_HISTORY', 'ch')
       ->fields('ch', array('COURSE_HISTORY_ID', 'COURSE_ID', 'ORGANIZATION_ID', 'NON_ORGANIZATION_ID', 'START_DATE', 'COMPLETED_DATE', 'INSTRUCTOR_ID', 'INSTRUCTOR', 'MARK_SCALE_ID', 'GPA_VALUE', 'QUALITY_POINTS', 'STUDENT_CLASS_ID', 'DEGREE_REQ_GRP_ID'))
-      ->predicate('STUDENT_ID', $this->record->getSelectedRecordID())
-      ->predicate('COURSE_HISTORY_ID', $sub_id)
+      ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
+      ->condition('COURSE_HISTORY_ID', $sub_id)
       ->execute()->fetch();
 
-    return $this->render('KulaHEdCourseHistoryBundle:CourseHistory:coursehistory_detail.html.twig', array('course_history' => $course_history));  
+    return $this->render('KulaHEdGradingBundle:SISCourseHistory:coursehistory_detail.html.twig', array('course_history' => $course_history));  
   }
   
 }

@@ -4,12 +4,12 @@ namespace Kula\HEd\Bundle\StudentBundle\Field;
 
 use Kula\Core\Component\Field\Field;
 
-class Hold implements Field {
+class Hold extends Field {
   
   public function select($schema, $param) {
 
     $menu = array();
-    
+
     $result = $this->db()->db_select('STUD_HOLD', 'hold')
   ->fields('hold', array('HOLD_ID', 'HOLD_CODE', 'HOLD_NAME'))
   ->condition('INACTIVE', '0')

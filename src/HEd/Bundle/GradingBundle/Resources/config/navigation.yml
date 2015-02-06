@@ -62,7 +62,7 @@ SIS.HEd.Student.CourseHistory:
       description: "Degree Audit"
       display_name: "Degree Audit"
       sort: 2
-      route: sis_student_coursehistory_reports_degreeaudit
+      route: sis_HEd_student_coursehistory_reports_degreeaudit
 
 SIS.HEd.Reports.Student.StudentTranscript:
   description: "Student Transcript"

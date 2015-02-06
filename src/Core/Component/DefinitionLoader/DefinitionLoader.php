@@ -26,12 +26,10 @@ class DefinitionLoader {
             }
           }
           
-        } else {
-          unset($bundledSchema['imports']);
-          $definition[$path] = $bundledSchema;
         }
+        unset($bundledSchema['imports']);
+        $definition[$path] = $bundledSchema;
           
-        
       }
     }
     return $definition;

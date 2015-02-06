@@ -278,7 +278,8 @@ class FieldLoader {
           'type' => $this->getDBColumnType(),
           'size' => $this->getDBColumnSize(),
           'length' => $this->getDBColumnLength(),
-          'not null' => ($this->getDBColumnNull() == false) ? true : false
+          'not null' => ($this->getDBColumnNull() == false) ? true : false,
+          'default' => $this->getDBColumnDefault()
         ));
       }
     }

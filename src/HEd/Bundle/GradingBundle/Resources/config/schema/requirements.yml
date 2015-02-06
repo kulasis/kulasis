@@ -42,7 +42,7 @@ HEd.Degree.Requirement.Group:
       db_column_null: true
       column_name: "Concentration ID"
       label_name: "Concentration ID"
-    GroupName:
+    Name:
       description: "Group Name"
       db_column_name: GROUP_NAME
       db_column_type: varchar
@@ -78,6 +78,7 @@ HEd.Degree.Requirement.Group:
       db_column_type: numeric
       db_column_length: 6
       db_column_precision: 3
+      db_column_null: true
       field_type: text
       field_size: 6
       column_name: "Credits Required"
@@ -114,10 +115,11 @@ HEd.Degree.Requirement.Group.Course:
       label_name: "Degree Req Grp ID"
     CourseID:
       description: "Course ID"
+      parent: HEd.Course.ID
       db_column_name: COURSE_ID
       db_column_type: serial
       field_type: chooser
-      chooser: HEd.Course.ID
+      chooser: HEd.Course
       column_name: "Course ID"
       label_name: "Course ID"
     Required:
@@ -141,7 +143,7 @@ HEd.Degree.Requirement.Group.Course:
 
 HEd.Degree.Requirement.Group.Course.Equivalent:
   description: "Student Degree Requirement Group Course Equivalents"
-  db_table_name: STUD_DEGREE_REQ_GRP_CRS_EQUIV
+  db_table_name: STUD_DEGREE_REQ_GRP_CRS_EQUV
   timestamps: true
   fields:
     ID:
@@ -160,10 +162,11 @@ HEd.Degree.Requirement.Group.Course.Equivalent:
       label_name: "Degree Requirement Group Course ID"
     CourseID:
       description: "Course ID"
+      parent: HEd.Course.ID
       db_column_name: COURSE_ID
       db_column_type: serial
       field_type: chooser
-      chooser: HEd.Course.ID
+      chooser: HEd.Course
       column_name: "Course ID"
       label_name: "Course ID"
 

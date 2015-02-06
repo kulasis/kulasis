@@ -8,7 +8,7 @@ class SISPackageController extends Controller {
   
   public function indexAction() {
     $this->authorize();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     $fin_aid_year = $this->db()->db_select('CORE_TERM', 'term')
       ->fields('term', array('FINANCIAL_AID_YEAR'))
@@ -237,6 +237,6 @@ class SISPackageController extends Controller {
       }
 
     }
-    return $this->render('KulaHEdFinancialAidBundle:Package:package_index.html.twig', array('award_year' => $award_year, 'award_terms' => $award_terms, 'awards' => $awards, 'awards_terms_totals' => $awards_terms_totals));
+    return $this->render('KulaHEdFinancialAidBundle:SISPackage:package_index.html.twig', array('award_year' => $award_year, 'award_terms' => $award_terms, 'awards' => $awards, 'awards_terms_totals' => $awards_terms_totals));
   }
 }

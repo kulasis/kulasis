@@ -34,7 +34,7 @@ class SISHoldsController extends Controller {
     $holds = array();
     
     if ($this->record->getSelectedRecordID()) {
-      $holds = $this->db()->select('STUD_STUDENT_HOLDS', 'stuholds')
+      $holds = $this->db()->db_select('STUD_STUDENT_HOLDS', 'stuholds')
         ->fields('stuholds', array('STUDENT_HOLD_ID', 'HOLD_ID', 'HOLD_DATE', 'COMMENTS', 'VOIDED', 'VOIDED_REASON', 'VOIDED_TIMESTAMP'))
         ->join('STUD_HOLD', 'hold', 'stuholds.HOLD_ID = hold.HOLD_ID')
         ->fields('hold', array('HOLD_NAME'))

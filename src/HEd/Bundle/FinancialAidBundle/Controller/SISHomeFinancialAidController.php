@@ -63,7 +63,7 @@ class SISHomeFinancialAidController extends Controller {
       }
     }
     
-    return $this->render('KulaHEdFinancialAidBundle:HomeFinancialAid:pending.html.twig', array('awards' => $awards, 'gross_total' => $gross_total, 'net_total' => $net_total));
+    return $this->render('KulaHEdFinancialAidBundle:SISHomeFinancialAid:pending.html.twig', array('awards' => $awards, 'gross_total' => $gross_total, 'net_total' => $net_total));
   }
   
   public function postedAction() {
@@ -97,7 +97,7 @@ class SISHomeFinancialAidController extends Controller {
 
     }
     
-    return $this->render('KulaHEdFinancialAidBundle:HomeFinancialAid:posted.html.twig', array('transactions' => $transactions));
+    return $this->render('KulaHEdFinancialAidBundle:SISHomeFinancialAid:posted.html.twig', array('transactions' => $transactions));
   }
   
 }

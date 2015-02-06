@@ -6,11 +6,11 @@ use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
 class SISHomeBillingController extends Controller {
   
-  private function _transactionChanges() {
+  private function transactionChanges() {
     $this->processForm();
     
     if ($this->request->request->get('void')) {
-      $constituent_billing_service = new \Kula\Bundle\HEd\StudentBillingBundle\ConstituentBillingService($this->db('write'), new \Kula\Component\Database\PosterFactory, $this->record, $this->session);
+      $constituent_billing_service = $this->get('kula.HEd.billing.student');
       
       $void = $this->request->request->get('void');
       $non = $this->request->request->get('non');
@@ -33,7 +33,7 @@ class SISHomeBillingController extends Controller {
     }
     
     if ($this->request->request->get('post')) {
-      $constituent_billing_service = new \Kula\Bundle\HEd\StudentBillingBundle\ConstituentBillingService($this->db('write'), new \Kula\Component\Database\PosterFactory, $this->record, $this->session);
+      $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
       
       $post = $this->request->request->get('post');
       
@@ -47,57 +47,60 @@ class SISHomeBillingController extends Controller {
   
   public function pendingAction() {
     
-    $this->_transactionChanges();
+    $this->transactionChanges();
     
     $query_conditions_or = $this->db()->db_or();
     $query_conditions_or = $query_conditions_or->condition('transactions.POSTED', null);
-    $query_conditions_or = $query_conditions_or->condition('transactions.POSTED', 'N');
+    $query_conditions_or = $query_conditions_or->condition('transactions.POSTED', 0);
     
     $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
       ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP'))
-      ->join('BILL_CODE', 'code', array('CODE_TYPE', 'CODE'), 'code.CODE_ID = transactions.CODE_ID')
-      ->join('CONS_CONSTITUENT', 'constituent', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'), 'constituent.CONSTITUENT_ID = transactions.CONSTITUENT_ID')
-      ->left_join('CORE_ORGANIZATION_TERMS', 'orgterms', null, 'transactions.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
-      ->left_join('CORE_ORGANIZATION', 'organization', array('ORGANIZATION_ABBREVIATION'), 'orgterms.ORGANIZATION_ID = organization.ORGANIZATION_ID')
-      ->left_join('CORE_TERM', 'term', array('TERM_ABBREVIATION'), 'orgterms.TERM_ID = term.TERM_ID')
-      ->left_join('CORE_USER', 'user', array('USERNAME'), 'user.USER_ID = transactions.CREATED_USERSTAMP')
+      ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
+      ->fields('code', array('CODE_TYPE', 'CODE'))
+      ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = transactions.CONSTITUENT_ID')
+      ->fields('constituent', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'))
+      ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'transactions.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
+      ->leftJoin('CORE_ORGANIZATION', 'organization', 'orgterms.ORGANIZATION_ID = organization.ORGANIZATION_ID')
+      ->fields('organization', array('ORGANIZATION_ABBREVIATION'))
+      ->leftJoin('CORE_TERM', 'term', 'orgterms.TERM_ID = term.TERM_ID')
+      ->fields('term', array('TERM_ABBREVIATION'))
+      ->leftJoin('CORE_USER', 'user', 'user.USER_ID = transactions.CREATED_USERSTAMP')
+      ->fields('user', array('USERNAME'))
       ->condition($query_conditions_or)
       ->condition('transactions.CREATED_USERSTAMP', $this->session->get('user_id'))
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdStudentBillingBundle:HomeBilling:pending.html.twig', array('transactions' => $transactions));
+    return $this->render('KulaHEdBillingBundle:SISHomeBilling:pending.html.twig', array('transactions' => $transactions));
   }
   
   public function all_pendingAction() {
-    $this->_transactionChanges();
+    $this->transactionChanges();
     
-    $query_conditions_or = new \Kula\Component\Database\Query\Predicate('OR');
+    $query_conditions_or = $this->db()->db_or();
     $query_conditions_or = $query_conditions_or->condition('transactions.POSTED', null);
-    $query_conditions_or = $query_conditions_or->condition('transactions.POSTED', 'N');
+    $query_conditions_or = $query_conditions_or->condition('transactions.POSTED', 0);
     
     $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
       ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP'))
-      ->join('BILL_CODE', 'code', array('CODE_TYPE', 'CODE'), 'code.CODE_ID = transactions.CODE_ID')
-      ->join('CONS_CONSTITUENT', 'constituent', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'), 'constituent.CONSTITUENT_ID = transactions.CONSTITUENT_ID')
-      ->left_join('CORE_ORGANIZATION_TERMS', 'orgterms', null, 'transactions.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
-      ->left_join('CORE_ORGANIZATION', 'organization', array('ORGANIZATION_ABBREVIATION'), 'orgterms.ORGANIZATION_ID = organization.ORGANIZATION_ID')
-      ->left_join('CORE_TERM', 'term', array('TERM_ABBREVIATION'), 'orgterms.TERM_ID = term.TERM_ID')
-      ->left_join('CORE_USER', 'user', array('USERNAME'), 'user.USER_ID = transactions.CREATED_USERSTAMP')
+      ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
+      ->fields('code', array('CODE_TYPE', 'CODE'))
+      ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = transactions.CONSTITUENT_ID')
+      ->fields('constituent', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'))
+      ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'transactions.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
+      ->leftJoin('CORE_ORGANIZATION', 'organization', 'orgterms.ORGANIZATION_ID = organization.ORGANIZATION_ID')
+      ->fields('organization', array('ORGANIZATION_ABBREVIATION'))
+      ->leftJoin('CORE_TERM', 'term', 'orgterms.TERM_ID = term.TERM_ID')
+      ->fields('term', array('TERM_ABBREVIATION'))
+      ->leftJoin('CORE_USER', 'user', 'user.USER_ID = transactions.CREATED_USERSTAMP')
+      ->fields('user', array('USERNAME'))
       ->condition($query_conditions_or)
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdStudentBillingBundle:HomeBilling:pending.html.twig', array('transactions' => $transactions));
+    return $this->render('KulaHEdBillingBundle:SISHomeBilling:pending.html.twig', array('transactions' => $transactions));
   }
   
   public function transaction_detailAction($constituent_transaction_id) {
     $this->authorize();
-    
-    $edit_post = $this->request->get('edit');
-    
-    if (isset($edit_post['BILL_CONSTITUENT_CHARGES'])) {
-      $charge_detail_poster = new \Kula\Component\Database\PosterFactory;
-      $return_charge_poster = $charge_detail_poster->newPoster(null, array('BILL_CONSTITUENT_CHARGES' => $edit_post['BILL_CONSTITUENT_CHARGES']));
-    }
     
     $transaction = array();
     $applied_transactions = array();
@@ -106,16 +109,20 @@ class SISHomeBillingController extends Controller {
     if ($this->record->getSelectedRecordID()) {
       $transaction = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
         ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP'))
-        ->join('BILL_CODE', 'code', array('CODE_TYPE'), 'code.CODE_ID = transactions.CODE_ID')
-        ->left_join('STUD_STUDENT_STATUS', 'status', null, 'status.STUDENT_STATUS_ID = transactions.STUDENT_STATUS_ID')
-        ->left_join('CORE_ORGANIZATION_TERMS', 'orgterms', null, 'status.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
-        ->left_join('CORE_ORGANIZATION', 'organization', array('ORGANIZATION_NAME'), 'orgterms.ORGANIZATION_ID = organization.ORGANIZATION_ID')
-        ->left_join('CORE_TERM', 'term', array('TERM_ABBREVIATION'), 'orgterms.TERM_ID = term.TERM_ID')
-        ->left_join('CORE_USER', 'user', array('USERNAME'), 'user.USER_ID = transactions.VOIDED_USERSTAMP')
+        ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
+        ->fields('code', array('CODE_TYPE'))
+        ->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = transactions.STUDENT_STATUS_ID')
+        ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'status.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
+        ->leftJoin('CORE_ORGANIZATION', 'organization', 'orgterms.ORGANIZATION_ID = organization.ORGANIZATION_ID')
+        ->fields('organization', array('ORGANIZATION_NAME'))
+        ->leftJoin('CORE_TERM', 'term', 'orgterms.TERM_ID = term.TERM_ID')
+        ->fields('term', array('TERM_ABBREVIATION'))
+        ->leftJoin('CORE_USER', 'user', 'user.USER_ID = transactions.VOIDED_USERSTAMP')
+        ->fields('user', array('USERNAME'))
         ->condition('transactions.CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
         ->execute()->fetch();
       
-      $query_conditions_or = new \Kula\Component\Database\Query\Predicate('OR');
+      $query_conditions_or = $this->db()->db_or();
       $query_conditions_or = $query_conditions_or->condition('CHARGE_TRANSACTION_ID', $constituent_transaction_id);
       $query_conditions_or = $query_conditions_or->condition('PAYMENT_TRANSACTION_ID', $constituent_transaction_id);
       
@@ -127,7 +134,7 @@ class SISHomeBillingController extends Controller {
         $applied_transactions_total += $row['AMOUNT'];
       }
     }
-    return $this->render('KulaHEdStudentBillingBundle:HomeBilling:transactions_detail.html.twig', array('transaction' => $transaction, 'applied_transactions' => $applied_transactions, 'applied_transactions_total' => $applied_transactions_total));
+    return $this->render('KulaHEdBillingBundle:SISHomeBilling:transactions_detail.html.twig', array('transaction' => $transaction, 'applied_transactions' => $applied_transactions, 'applied_transactions_total' => $applied_transactions_total));
   }
   
 }

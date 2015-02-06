@@ -11,7 +11,7 @@ class SISFinancialAidAwardCodeRecord extends Record {
   }
   
   public function getRecordBarTemplate() {
-    return 'KulaHEdFinancialAidBundle::Record/record_faid_award_code.html.twig';
+    return 'KulaHEdFinancialAidBundle::SISRecord/record_faid_award_code.html.twig';
   }
   
   public function getRecordIDStack() {
@@ -23,7 +23,7 @@ class SISFinancialAidAwardCodeRecord extends Record {
     $result = $this->db()->db_select('FAID_AWARD_CODE', 'code')
     ->distinct()
     ->fields('code', array('AWARD_CODE_ID' => 'ID'))
-    ->condition('INACTIVE', 'N')
+    ->condition('INACTIVE', '0')
     ->orderBy('AWARD_CODE')
     ->execute()->fetchAll();
     return $result;  

@@ -32,7 +32,7 @@ HEd.Billing.Transaction:
       db_column_type: serial
       db_column_null: false
       field_type: select
-      # class:
+      class: Kula\HEd\Bundle\BillingBundle\Field\TransactionCode
       column_name: "Code ID"
       label_name: "Code"
     TransactionDate:
@@ -158,7 +158,7 @@ HEd.Billing.Transaction:
       db_column_name: STUDENT_CLASS_ID
       db_column_type: serial
       db_column_null: true
-      field_type: chooser
-      #chooser: 
+      field_type: select
+      class: Kula\HEd\Bundle\SchedulingBundle\Field\Classes
       column_name: "Student Class ID"
       label_name: "Student Class ID"

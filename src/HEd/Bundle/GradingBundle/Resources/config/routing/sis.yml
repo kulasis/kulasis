@@ -20,11 +20,11 @@ sis_HEd_student_coursehistory_coursehistory_detail_edit:
 
 sis_HEd_student_coursehistory_degrees:
   path: /student/coursehistory/degrees
-  defaults: { _controller: KulaHEdGradingBundle:SISDegree:degrees }
+  defaults: { _controller: KulaHEdGradingBundle:SISStudentDegree:degrees }
 
 sis_HEd_student_coursehistory_degrees_detail:
   path: /student/coursehistory/{id}/detail/{sub_id}
-  defaults: { _controller: KulaHEdGradingBundle:SISDegree:detail }
+  defaults: { _controller: KulaHEdGradingBundle:SISStudentDegree:detail }
 
 sis_HEd_student_coursehistory_gpa:
   path: /student/coursehistory/gpa

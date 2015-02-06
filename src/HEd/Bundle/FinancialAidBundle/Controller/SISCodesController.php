@@ -15,7 +15,7 @@ class SISCodesController extends Controller {
       ->orderBy('AWARD_CODE')
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdFinancialAidBundle:Codes:award_codes.html.twig', array('award_codes' => $award_codes));
+    return $this->render('KulaHEdFinancialAidBundle:SISCodes:award_codes.html.twig', array('award_codes' => $award_codes));
   }
   
 }

@@ -8,7 +8,7 @@ class SISTermsController extends Controller {
   
   public function indexAction() {
     $this->authorize();
-    $this->setRecordType('HEd.Student');
+    $this->setRecordType('SIS.HEd.Student');
     
     $award_terms = array();
     
@@ -79,6 +79,6 @@ class SISTermsController extends Controller {
       
     }
     
-    return $this->render('KulaHEdFinancialAidBundle:Terms:terms.html.twig', array('fin_aid_year' => $fin_aid_year['FINANCIAL_AID_YEAR'], 'award_terms' => $award_terms));
+    return $this->render('KulaHEdFinancialAidBundle:SISTerms:terms.html.twig', array('fin_aid_year' => $fin_aid_year['FINANCIAL_AID_YEAR'], 'award_terms' => $award_terms));
   }
 }

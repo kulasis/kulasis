@@ -24,4 +24,3 @@ HEd.Student.Status:
       class: Kula\HEd\Bundle\BillingBundle\Field\TuitionRate
       column_name: "Tuition Rate ID"
       label_name: "Tuition Rate"
-    

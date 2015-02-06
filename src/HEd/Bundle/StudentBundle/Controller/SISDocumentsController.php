@@ -17,7 +17,8 @@ class SISDocumentsController extends Controller {
       
       $documents = $this->db()->db_select('STUD_STUDENT_DOCUMENTS', 'studocs')
         ->fields('studocs', array('STUDENT_DOCUMENT_ID', 'DOCUMENT_ID', 'DOCUMENT_DATE', 'DOCUMENT_STATUS', 'COMMENTS', 'COMPLETED_DATE'))
-        ->join('STUD_DOCUMENT', 'doc', array('DOCUMENT_NAME'), 'studocs.DOCUMENT_ID = doc.DOCUMENT_ID')
+        ->join('STUD_DOCUMENT', 'doc', 'studocs.DOCUMENT_ID = doc.DOCUMENT_ID')
+        ->fields('doc', array('DOCUMENT_NAME'))
         ->condition('studocs.STUDENT_ID', $this->record->getSelectedRecordID())
         ->condition('doc.INACTIVE', 0)
         ->orderBy('DOCUMENT_DATE', 'DESC', 'studocs')

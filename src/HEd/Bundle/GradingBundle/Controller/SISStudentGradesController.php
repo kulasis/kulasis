@@ -8,9 +8,9 @@ class SISStudentGradesController extends Controller {
   
   public function gradesAction() {
     $this->authorize();
-    $this->setRecordType('STUDENT_STATUS');
+    $this->setRecordType('SIS.HEd.Student.Status');
     
-    return $this->render('KulaHEdCourseHistoryBundle:StudentGrades:grades.html.twig', array());
+    return $this->render('KulaHEdGradingBundle:SISStudentGrades:grades.html.twig', array());
   }
   
   
