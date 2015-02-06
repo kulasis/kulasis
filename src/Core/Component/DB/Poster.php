@@ -74,8 +74,8 @@ class Poster {
     }
   }
   
-  public function delete($table, $id, $fields) {
-    $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::DELETE, $table, $id, $fields);
+  public function delete($table, $id) {
+    $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::DELETE, $table, $id);
     return $this;
   }
   
@@ -83,7 +83,7 @@ class Poster {
     ksort($post);
     foreach($post as $table => $tableRow) {
       foreach($tableRow as $id => $row) {
-        $this->delete($table, $id, $row);
+        $this->delete($table, $id);
       }
     }
   }

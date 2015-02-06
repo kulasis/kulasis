@@ -34,7 +34,7 @@ class PosterRecord {
   const EDIT = 'U';
   const DELETE = 'D';
   
-  public function __construct($container, $crud, $table, $id, $fields) {
+  public function __construct($container, $crud, $table, $id, $fields = null) {
     $this->container = $container;
     $this->db = $this->container->get('kula.core.db');
     $this->schema = $this->container->get('kula.core.schema');
@@ -54,13 +54,10 @@ class PosterRecord {
     if ($this->crud == self::DELETE) {
       if ($this->fields['delete_row'] == 'Y') {
         unset($this->fields['delete_row']);
-        $this->verifyPermissions();
-        if (!$this->hasViolations) {
-          $this->result = $this->execute();
-        }
-        
-      } else {
-        return;
+      }
+      $this->verifyPermissions();
+      if (!$this->hasViolations) {
+        $this->result = $this->execute();
       }
     } else {
       $this->processConfirmation();
@@ -344,12 +341,12 @@ class PosterRecord {
         return $affectedRows;
       }
       if ($this->crud == self::DELETE) {
+        
         $transaction = $this->db->db_transaction();
         $affectedRows = 0;
 
         $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName())
-          ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
-          ->execute();
+          ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)->execute();
         $this->auditLog();
 
         $transaction->commit();

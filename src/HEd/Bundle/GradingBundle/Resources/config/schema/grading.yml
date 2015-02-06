@@ -200,3 +200,22 @@ HEd.Student.Class:
       field_type: select
       column_name: "Mark Scale ID"
       label_name: "Mark Scale ID"
+
+HEd.Staff.OrganizationTerm:
+  fields:
+    TeacherGradesOpen:
+      description: "Open Grades Window for Teacher"
+      db_column_name: TEACHER_GRADES_OPEN
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      column_name: "Instructor Grades Open"
+      label_name: "Instructor Grades Open"
+    TeacherGradesClose:
+      description: "Close Grades Window for Teacher"
+      db_column_name: TEACHER_GRADES_CLOSE
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      column_name: "Instructor Grades Close"
+      label_name: "Instructor Grades Close"

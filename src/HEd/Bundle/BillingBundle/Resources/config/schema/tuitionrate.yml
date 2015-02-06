@@ -35,7 +35,7 @@ HEd.TuitionRate:
       db_column_length: 5
       db_column_null: false
       field_type: select
-      #class: 
+      class: Kula\HEd\Bundle\BillingBundle\Field\BillingMode
       column_name: "Billing Mode"
       label_name: "Billing Mode"
     FullTimeFlatRate:
@@ -129,7 +129,7 @@ HEd.TuitionRate.Refund:
       db_column_length: 10
       db_column_null: false
       field_type: select
-      #class
+      class: Kula\HEd\Bundle\BillingBundle\Field\RefundType
       column_name: "Refund Type"
       label_name: "Refund Type"
     EndDate:
@@ -188,6 +188,8 @@ HEd.TuitionRate.Students:
       db_column_null: true
       field_type: lookup
       lookup: HEd.Student.Enrollment.EnterCode
+      column_name: "Enter Code"
+      label_name: "Enter Code"
 
 HEd.TuitionRate.Transaction:
   description: "Tuition Rate Transactions"
@@ -214,7 +216,7 @@ HEd.TuitionRate.Transaction:
       db_column_name: TRANSACTION_CODE_ID
       db_column_type: serial
       field_type: select
-      #class: 
+      class: Kula\HEd\Bundle\BillingBundle\Field\TransactionCode
       column_name: "Transaction Code ID"
       label_name: "Transaction Code ID"
     Amount:
@@ -233,6 +235,7 @@ HEd.TuitionRate.Transaction:
       db_column_length: 10
       db_column_null: false
       field_type: select
+      class: Kula\HEd\Bundle\BillingBundle\Field\TransactionRule
       column_name: "Rule"
       label_name: "Rule"
     MinimumCredits:

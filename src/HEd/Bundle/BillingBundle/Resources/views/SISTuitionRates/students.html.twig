@@ -22,12 +22,12 @@ Students
 </thead>
 <tbody>
   {{ kula_display_html({ add: true, field: 'HEd.TuitionRate.Students.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
-  {{ kula_field({ add: true, delete: true, field: 'HEd.TuitionRate.Students.ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_field({ add: true, delete: true, field: 'HEd.TuitionRate.Students.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
   {{ kula_field({ add: true, field: 'HEd.TuitionRate.Students.TuitionRateID', value: tuition_rate_id, hidden: true }) }}
   {{ kula_display_html({ add: true, field: 'HEd.TuitionRate.Students.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
   {{ kula_field({ add: true, field: 'HEd.TuitionRate.Students.Level', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.TuitionRate.Students.EnterCode', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-  {{ kula_display_html({ add: true, field: 'HEd.TuitionRate.Students.ID, prepend_html: '</tr>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.TuitionRate.Students.ID', prepend_html: '</tr>' }) }}
   {% for student in students %}
   <tr>
     {{ kula_field({ delete: true, field: 'HEd.TuitionRate.Students.ID', db_row_id: student.TUITION_RATE_STUDENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}

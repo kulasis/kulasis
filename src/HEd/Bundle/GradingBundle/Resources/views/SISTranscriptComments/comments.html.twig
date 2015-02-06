@@ -1,0 +1,49 @@
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Comments
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_comments', 'STUD_STUDENT_COURSE_HISTORY_COMMENT') }}
+</span>
+</div>
+<table id="window_window_num_data_table_comments" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ delete: true, field: 'HEd.Student.CourseHistory.Comment.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Comment.Level', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Comment.CalendarMonth', field_name_override: 'Cal Mon', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Comment.CalendarYear', field_name_override: 'Cal Yr', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Comment.Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Comment.Comments', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+    <th class="data-table-cell-row-header">...</th>
+  </tr>
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, field: 'HEd.Student.CourseHistory.Comment.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+  {{ kula_field({ add: true, hidden: true, field: 'HEd.Student.CourseHistory.Comment.StudentID', value: kula_core_record.getSelectedRecord.STUDENT_ID }) }}
+  {{ kula_field({ add: true, delete: true, field: 'HEd.Student.CourseHistory.Comment.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.CourseHistory.Comment.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.CourseHistory.Comment.Level', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.CourseHistory.Comment.CalendarMonth', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.CourseHistory.Comment.CalendarYear', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.CourseHistory.Comment.Term', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.CourseHistory.Comment.Comments', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.CourseHistory.Comment.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.CourseHistory.Comment.ID', prepend_html: '</tr>' }) }}
+  {% for comment in comments %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'HEd.Student.CourseHistory.Comment.ID', db_row_id: comment.STUDENT_COURSE_HISTORY_COMMENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Comment.Level', db_row_id: comment.STUDENT_COURSE_HISTORY_COMMENT_ID, value: comment.DEGREE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Comment.CalendarMonth', db_row_id: comment.STUDENT_COURSE_HISTORY_COMMENT_ID, value: comment.CALENDAR_MONTH, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Comment.CalendarYear', db_row_id: comment.STUDENT_COURSE_HISTORY_COMMENT_ID, value: comment.CALENDAR_YEAR, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Comment.Term', db_row_id: comment.STUDENT_COURSE_HISTORY_COMMENT_ID, value: comment.TERM, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Comment.Comments', db_row_id: comment.STUDENT_COURSE_HISTORY_COMMENT_ID, value: comment.COMMENTS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_student_coursehistory_comments_detail', { id : kula_core_record.getSelectedRecord.STUDENT_ID, sub_id : comment.STUDENT_COURSE_HISTORY_COMMENT_ID }) }}">...</a></td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

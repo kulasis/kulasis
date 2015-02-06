@@ -252,8 +252,8 @@ HEd.Student.Degree:
       db_column_name: DEGREE_ID
       db_column_type: serial
       db_column_null: false
-      #field_type: chooser
-      #chooser: 
+      field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\DegreeName
       column_name: "Degree ID"
       label_name: "Degree ID"
     ExpectedCompletionTermID:
@@ -337,7 +337,7 @@ HEd.Student.Degree.Concentration:
       db_column_type: serial
       db_column_null: false
       field_type: select
-      #class: 
+      class: Kula\HEd\Bundle\GradingBundle\Field\ConcentrationName
       column_name: "Concentration ID"
       label_name: "Concentration ID"
 
@@ -368,7 +368,7 @@ HEd.Student.Degree.Major:
       db_column_type: serial
       db_column_null: false
       field_type: select
-      #class: 
+      class: Kula\HEd\Bundle\GradingBundle\Field\MajorName
       column_name: "Major ID"
       label_name: "Major ID"
 
@@ -399,7 +399,7 @@ HEd.Student.Degree.Minor:
       db_column_type: serial
       db_column_null: false
       field_type: select
-      #class: 
+      class: Kula\HEd\Bundle\GradingBundle\Field\MinorName
       column_name: "Minor ID"
       label_name: "Minor ID"
 

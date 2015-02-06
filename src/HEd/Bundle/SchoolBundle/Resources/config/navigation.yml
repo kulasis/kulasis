@@ -20,11 +20,6 @@ SIS.HEd.Setup:
           display_name: "Organization Terms"
           sort: 2
           route: sis_HEd_school_staff_orgterms
-        Schedule:
-          description: "Schedule"
-          display_name: "Schedule"
-          sort: 3
-          route: sis_HEd_school_staff_schedule
       menu_actions:
         AddStaff:
           description: "Add Staff"
@@ -38,12 +33,6 @@ SIS.HEd.Setup:
           route: sis_HEd_school_staff_delete
           divider_before: true
           record_loaded: true
-      menu_reports:
-        InstructorSchedule:
-          description: "Instructor Schedule"
-          display_name: "Instructor Schedule"
-          sort: 1
-          route: sis_HEd_offering_staff_reports_schedule
     SchoolSetup:
       description: "School Setup"
       display_name: "School Setup"

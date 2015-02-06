@@ -436,6 +436,7 @@ class DB {
     if (empty($options['target']) || $options['target'] == 'replica') {
       $options['target'] = 'write';
     }
+    $options['return'] = Database::RETURN_AFFECTED;
     if ($options['target'] == 'schema' OR (isset($options['nolog']) AND $options['nolog'] === true)) $this->stopLogger(); else $this->startLogger();
     return new Proxy(Database::getConnection($options['target'])->delete($table, $options));
   }

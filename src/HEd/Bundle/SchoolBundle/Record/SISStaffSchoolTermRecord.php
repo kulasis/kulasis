@@ -4,14 +4,14 @@ namespace Kula\HEd\Bundle\SchoolBundle\Record;
 
 use Kula\Core\Component\Record\Record;
 
-class StaffSchoolTermRecord extends Record {
+class SISStaffSchoolTermRecord extends Record {
   
   public function getSelectedRecordBarTemplate() {
     
   }
   
   public function getRecordBarTemplate() {
-    return 'KulaHEdSchoolBundle::Record/record_staff.html.twig';
+    return 'KulaHEdSchoolBundle::SISRecord/record_staff.html.twig';
   }
   
   public function getFromDifferentType($record_type, $record_id) {

@@ -193,3 +193,21 @@ SIS.HEd.Reports.Offering:
       display_name: "Master Schedule"
       route: sis_HEd_offering_sections_reports_masterschedule
       sort: 2
+      
+SIS.HEd.Setup.Staff:
+  description: "Staff"
+  display_name: "Staff"
+  type: form
+  portal: sis
+  tabs:
+    Schedule:
+      description: "Schedule"
+      display_name: "Schedule"
+      sort: 3
+      route: sis_HEd_offering_staff_schedule
+  menu_reports:
+    InstructorSchedule:
+      description: "Instructor Schedule"
+      display_name: "Instructor Schedule"
+      sort: 1
+      route: sis_HEd_offering_staff_reports_schedule

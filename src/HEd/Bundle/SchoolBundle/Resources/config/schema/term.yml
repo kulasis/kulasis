@@ -141,7 +141,7 @@ HEd.School.Term.Level:
       field_size: 6
       column_name: "FTE Full Time Hours"
       label_name: "FTE Full Time Hours"
-HEd.School.Term.Level:
+HEd.School.Term.Level.FTE:
   description: "School Term Level"
   db_table_name: STUD_SCHOOL_TERM_LEVEL_FTE
   timestamps: true

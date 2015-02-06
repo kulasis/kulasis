@@ -1,70 +1,70 @@
-{% extends 'KulaFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
 
 {% block content %}
 
 <p>
 {% if type == 'degree' %}
-<a class="normal-link"  data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_offering_degrees_degrees') }}">Back to Degrees</a>
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_degrees_degrees') }}">Back to Degrees</a>
 {% elseif type == 'major' %}
-<a class="normal-link"  data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_offering_degrees_majors') }}">Back to Majors</a>
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_degrees_majors') }}">Back to Majors</a>
 {% elseif type == 'minor' %}
-<a class="normal-link"  data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_offering_degrees_minors') }}">Back to Minors</a>
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_degrees_minors') }}">Back to Minors</a>
 {% elseif type == 'concentration' %}
-<a class="normal-link"  data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_offering_degrees_concentrations') }}">Back to Concentrations</a>
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_degrees_concentrations') }}">Back to Concentrations</a>
 {% endif %}
 </p>
 
 <div class="data-table-header-div">
 Requirement Groups
 <span class="data-table-header-buttons">
-	{{ kula_table_add('window_window_num_data_table_requirement_groups', 'STUD_DEGREE_REQ_GRP_REQ_GRP') }}
+  {{ kula_table_add('window_window_num_data_table_requirement_groups', 'STUD_DEGREE_REQ_GRP_REQ_GRP') }}
 </span>
 </div>
 <table id="window_window_num_data_table_requirement_groups" class="data-table">
 <thead>
-	<tr>
-	{{ kula_field_name({ delete: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'DEGREE_REQ_GRP_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	<th class="data-table-cell-row-header">#</th>
-	{{ kula_field_name({ db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'GROUP_NAME', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'START_TERM_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'END_TERM_ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'CREDITS_REQUIRED', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	{{ kula_field_name({ db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'ELECTIVE', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-	<th class="data-table-cell-row-header">...</th>
-	</tr>
+  <tr>
+  {{ kula_field_name({ delete: true, field: 'HEd.Degree.Requirement.Group.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Degree.Requirement.Group.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Requirement.Group.StartTermID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Requirement.Group.EndTermID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Requirement.Group.CreditsRequired', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Requirement.Group.Elective', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">...</th>
+  </tr>
 </thead>
 <tbody>
-  {{ kula_display_html({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'DEGREE_REQ_GRP_ID', prepend_html: '<tr class="data-table-row-new">' }) }}
-	{% if type == 'degree' %}
-	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'DEGREE_ID', value: id, hidden: true }) }}
-	{% elseif type == 'major' %}
-	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'MAJOR_ID', value: id, hidden: true }) }}
-	{% elseif type == 'minor' %}
-	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'MINOR_ID', value: id, hidden: true }) }}
-	{% elseif type == 'concentration' %}
-	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'CONCENTRATION_ID', value: id, hidden: true }) }}
-	{% endif %}
-	{{ kula_field({ add: true, delete: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'DEGREE_REQ_GRP_ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-	{{ kula_display_html({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'DEGREE_REQ_GRP_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
-	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'GROUP_NAME', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
-	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'START_TERM_ID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
-	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'END_TERM_ID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
-	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'CREDITS_REQUIRED', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
-	{{ kula_field({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'ELECTIVE', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
-	{{ kula_display_html({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'DEGREE_REQ_GRP_ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
-	{{ kula_display_html({ add: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'DEGREE_REQ_GRP_ID', prepend_html: '</tr>' }) }}
-	{% for req in requirement_groups %}
-	<tr>
-		{{ kula_field({ delete: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'DEGREE_REQ_GRP_ID', db_row_id: req.DEGREE_REQ_GRP_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-		<td class="data-table-cell-row-num">{{ loop.index }}</td>
-		{{ kula_field({ edit: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'GROUP_NAME', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.GROUP_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'START_TERM_ID', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.START_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'END_TERM_ID', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.END_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'CREDITS_REQUIRED', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.CREDITS_REQUIRED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		{{ kula_field({ edit: true, db_table: 'STUD_DEGREE_REQ_GRP', db_field: 'ELECTIVE', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.ELECTIVE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-		<td class="data-table-cell-row-detail"><a class="normal-link"  data-record-id="{{ record_obj.getSelectedRecordID() }}" data-record-type="{{ record_obj.getRecordType() }}" href="{{ path('sis_offering_degrees_requirements_groups_courses', { id: req.DEGREE_REQ_GRP_ID }) }}">...</a></td>
-	</tr>
-	{% endfor %}
+  {{ kula_display_html({ add: true, field: 'HEd.Degree.Requirement.Group.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+  {% if type == 'degree' %}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.DegreeID', value: id, hidden: true }) }}
+  {% elseif type == 'major' %}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.MajorID', value: id, hidden: true }) }}
+  {% elseif type == 'minor' %}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.MinorID', value: id, hidden: true }) }}
+  {% elseif type == 'concentration' %}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.ConcentrationID', value: id, hidden: true }) }}
+  {% endif %}
+  {{ kula_field({ add: true, delete: true, field: 'HEd.Degree.Requirement.Group.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Degree.Requirement.Group.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.Name', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.StartTermID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.EndTermID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.CreditsRequired', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.Elective', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Degree.Requirement.Group.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Degree.Requirement.Group.ID', prepend_html: '</tr>' }) }}
+  {% for req in requirement_groups %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'HEd.Degree.Requirement.Group.ID', db_row_id: req.DEGREE_REQ_GRP_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Requirement.Group.Name', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.GROUP_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Requirement.Group.StartTermID', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.START_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Requirement.Group.EndTermID', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.END_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Requirement.Group.CreditsRequired', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.CREDITS_REQUIRED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Requirement.Group.Elective', db_row_id: req.DEGREE_REQ_GRP_ID, value: req.ELECTIVE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td class="data-table-cell-row-detail"><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_offering_degrees_requirements_groups_courses', { id: req.DEGREE_REQ_GRP_ID }) }}">...</a></td>
+  </tr>
+  {% endfor %}
 </tbody>
 </table>
 {% endblock %}

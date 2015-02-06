@@ -48,6 +48,7 @@ HEd.Staff.OrganizationTerm:
       db_column_name: STAFF_ID
       db_column_type: serial
       db_column_null: false
+      field_type: radio
       column_name: "Staff ID"
       label_name: "Staff ID"
     OrganizationTermID:
@@ -63,7 +64,7 @@ HEd.Staff.OrganizationTerm:
       db_column_name: CONV_STAFF_NUMBER
       db_column_type: varchar
       db_column_length: 255
-      db_column_null: false
+      db_column_null: true
       field_type: text
       field_size: 25
       column_name: "Conversion Staff Number"
