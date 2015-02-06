@@ -10,12 +10,12 @@ class CourseHistoryService {
   
   protected $record;
 
-  public function __construct(\Kula\Component\Database\Connection $db, 
-                            \Kula\Component\Database\PosterFactory $poster_factory,
-                            \Kula\Component\Record\Record $record) {
+  public function __construct(\Kula\Core\Component\DB\DB $db, 
+                              \Kula\Core\Component\DB\PosterFactory $poster_factory,
+                              $record = null) {
     $this->database = $db;
     $this->record = $record;
-    $this->poster_factory = $poster_factory;
+    $this->posterFactory = $poster_factory;
   
   }
   
@@ -25,134 +25,129 @@ class CourseHistoryService {
     if ($mark) {
     
     // Get course history data
-    $course_info = $this->database->select('STUD_STUDENT_CLASSES', 'class')
+    $course_info = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('START_DATE', 'STUDENT_CLASS_ID', 'LEVEL', 'MARK_SCALE_ID'))
-      ->join('STUD_SECTION', 'section', array('END_DATE', 'CREDITS'), 'section.SECTION_ID = class.SECTION_ID')
-      ->join('STUD_COURSE', 'course', array('COURSE_ID', 'COURSE_NUMBER', 'COURSE_TITLE'), 'course.COURSE_ID = section.COURSE_ID')
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', array('ORGANIZATION_ID'), 'orgterms.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
-      ->join('CORE_TERM', 'term', array('TERM_NAME', 'END_DATE' => 'term_END_DATE'), 'term.TERM_ID = orgterms.TERM_ID')
-      ->join('STUD_STUDENT_STATUS', 'status', array('STUDENT_ID'), 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
-      ->left_join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', array('STAFF_ID'), 'stafforgterms.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
-      ->left_join('STUD_STAFF', 'staff', array('ABBREVIATED_NAME'), 'staff.STAFF_ID = stafforgterms.STAFF_ID')
-      ->predicate('class.STUDENT_CLASS_ID', $student_class_id)
+      ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
+      ->fields('section', array('END_DATE', 'CREDITS'))
+      ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
+      ->fields('course', array('COURSE_ID', 'COURSE_NUMBER', 'COURSE_TITLE'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
+      ->fields('orgterms', array('ORGANIZATION_ID'))
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->fields('term', array('TERM_NAME', 'END_DATE' => 'term_END_DATE'))
+      ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
+      ->fields('status', array('STUDENT_ID'))
+      ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', 'stafforgterms.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
+      ->fields('stafforgterms', array('STAFF_ID'))
+      ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterms.STAFF_ID')
+      ->fields('staff', array('ABBREVIATED_NAME'))
+      ->condition('class.STUDENT_CLASS_ID', $student_class_id)
       ->execute()->fetch();
     
-    $course_history_data['STUDENT_ID'] = $course_info['STUDENT_ID'];
-    $course_history_data['COURSE_ID'] = $course_info['COURSE_ID'];
-    $course_history_data['ORGANIZATION_ID'] = $course_info['ORGANIZATION_ID'];
-    $course_history_data['CALENDAR_YEAR'] = date('Y', strtotime($course_info['term_END_DATE']));
-    $course_history_data['CALENDAR_MONTH'] = date('n', strtotime($course_info['term_END_DATE']));
-    $course_history_data['TERM'] = $course_info['TERM_NAME'];
-    $course_history_data['START_DATE'] = $course_info['START_DATE'];
-    $course_history_data['COMPLETED_DATE'] = $course_info['END_DATE'];
-    $course_history_data['COURSE_NUMBER'] = $course_info['COURSE_NUMBER'];
-    $course_history_data['COURSE_TITLE'] = $course_info['COURSE_TITLE'];
-    $course_history_data['STUDENT_CLASS_ID'] = $course_info['STUDENT_CLASS_ID'];
-    $course_history_data['LEVEL'] = $course_info['LEVEL'];
-    $course_history_data['INSTRUCTOR_ID'] = $course_info['STAFF_ID'];
-    $course_history_data['INSTRUCTOR'] = $course_info['ABBREVIATED_NAME'];
-    $course_history_data['MARK_SCALE_ID'] = $course_info['MARK_SCALE_ID'];
-    $course_history_data['CREDITS_ATTEMPTED'] = $course_info['CREDITS'];
-    $course_history_data['MARK'] = $mark;
-    $course_history_data['TEACHER_SET']['checkbox_hidden'] = 'N';
-    $course_history_data['TEACHER_SET']['checkbox'] = $teacher_set;
+    $course_history_data['HEd.Student.CourseHistory.StudentID'] = $course_info['STUDENT_ID'];
+    $course_history_data['HEd.Student.CourseHistory.CourseID'] = $course_info['COURSE_ID'];
+    $course_history_data['HEd.Student.CourseHistory.OrganizationID'] = $course_info['ORGANIZATION_ID'];
+    $course_history_data['HEd.Student.CourseHistory.CalendarYear'] = date('Y', strtotime($course_info['term_END_DATE']));
+    $course_history_data['HEd.Student.CourseHistory.CalendarMonth'] = date('n', strtotime($course_info['term_END_DATE']));
+    $course_history_data['HEd.Student.CourseHistory.Term'] = $course_info['TERM_NAME'];
+    $course_history_data['HEd.Student.CourseHistory.StartDate'] = $course_info['START_DATE'];
+    $course_history_data['HEd.Student.CourseHistory.CompletedDate'] = $course_info['END_DATE'];
+    $course_history_data['HEd.Student.CourseHistory.CourseNumber'] = $course_info['COURSE_NUMBER'];
+    $course_history_data['HEd.Student.CourseHistory.CourseTitle'] = $course_info['COURSE_TITLE'];
+    $course_history_data['HEd.Student.CourseHistory.StudentClassID'] = $course_info['STUDENT_CLASS_ID'];
+    $course_history_data['HEd.Student.CourseHistory.Level'] = $course_info['LEVEL'];
+    $course_history_data['HEd.Student.CourseHistory.StaffID'] = $course_info['STAFF_ID'];
+    $course_history_data['HEd.Student.CourseHistory.Staff'] = $course_info['ABBREVIATED_NAME'];
+    $course_history_data['HEd.Student.CourseHistory.MarkScaleID'] = $course_info['MARK_SCALE_ID'];
+    $course_history_data['HEd.Student.CourseHistory.CreditsAttempted'] = $course_info['CREDITS'];
+    $course_history_data['HEd.Student.CourseHistory.Mark'] = $mark;
+    $course_history_data['HEd.Student.CourseHistory.TeacherSet'] = 0;
     
     // Get award data
-    $award_data = $this->_determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS']);
-    $course_history_data['CREDITS_EARNED'] = $award_data['CREDITS_EARNED'];
-    $course_history_data['GPA_VALUE'] = $award_data['GPA_VALUE'];
-    $course_history_data['QUALITY_POINTS'] = $award_data['QUALITY_POINTS'];
-    $student_course_history_poster = $this->poster_factory->newPoster(array('STUD_STUDENT_COURSE_HISTORY' => array('new' => $course_history_data)));
-    $student_course_history_id = $student_course_history_poster->getResultForTable('insert', 'STUD_STUDENT_COURSE_HISTORY')['new'];
+    $award_data = $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS']);
+    $course_history_data['HEd.Student.CourseHistory.CreditsEarned'] = $award_data['CREDITS_EARNED'];
+    $course_history_data['HEd.Student.CourseHistory.GPAValue'] = $award_data['GPA_VALUE'];
+    $course_history_data['HEd.Student.CourseHistory.QualityPoints'] = $award_data['QUALITY_POINTS'];
     
-    return $student_course_history_id;
+    return $this->posterFactory->newFactory()->add('HEd.Student.CourseHistory', 'new', $course_history_data)->process()->getResult();
     
     }
   }
   
   // update course history
-  public function updateCourseHistoryForClass($course_history_id, $mark, $comments = null, $teacher_set = 'N') {
+  public function updateCourseHistoryForClass($course_history_id, $mark, $comments = null, $teacher_set = 0) {
     
     // Get mark scale id
-    $course_info = $this->database->select('STUD_STUDENT_COURSE_HISTORY')
-      ->fields(null, array('MARK_SCALE_ID', 'CREDITS_ATTEMPTED', 'TEACHER_SET'))
-      ->predicate('COURSE_HISTORY_ID', $course_history_id)
+    $course_info = $this->database->db_select('STUD_STUDENT_COURSE_HISTORY')
+      ->fields('STUD_STUDENT_COURSE_HISTORY', array('MARK_SCALE_ID', 'CREDITS_ATTEMPTED', 'TEACHER_SET'))
+      ->condition('COURSE_HISTORY_ID', $course_history_id)
       ->execute()->fetch();
     
     // Get award data
-    $award_data = $this->_determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS_ATTEMPTED']);
-    $course_history_data['MARK'] = $mark;
+    $award_data = $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS_ATTEMPTED']);
+    $course_history_data['HEd.Student.CourseHistory.Mark'] = $mark;
     
-    if ((isset($award_data['COMMENTS']) AND $award_data['COMMENTS'] == 'Y' AND $teacher_set == 'Y') OR $teacher_set == 'N') {
-      $course_history_data['COMMENTS'] = $comments;
+    if ((isset($award_data['COMMENTS']) AND $award_data['COMMENTS'] == 'Y' AND $teacher_set == 1) OR $teacher_set == 0) {
+      $course_history_data['HEd.Student.CourseHistory.Comments'] = $comments;
     } else {
-      $course_history_data['COMMENTS'] = null;
+      $course_history_data['HEd.Student.CourseHistory.Comments'] = null;
     }
     
-    $course_history_data['CREDITS_EARNED'] = $award_data['CREDITS_EARNED'];
-    $course_history_data['GPA_VALUE'] = $award_data['GPA_VALUE'];
-    $course_history_data['QUALITY_POINTS'] = $award_data['QUALITY_POINTS'];
-    $course_history_data['TEACHER_SET']['checkbox_hidden'] = $course_info['TEACHER_SET'];
-    $course_history_data['TEACHER_SET']['checkbox'] = $teacher_set;
-    $student_course_history_poster = $this->poster_factory->newPoster(null, array('STUD_STUDENT_COURSE_HISTORY' => array($course_history_id => $course_history_data)));
-    $student_course_history_id = $student_course_history_poster->getResultForTable('update', 'STUD_STUDENT_COURSE_HISTORY')[$course_history_id];
+    $course_history_data['HEd.Student.CourseHistory.CreditsEarned'] = $award_data['HEd.Student.CourseHistory.CreditsEarned'];
+    $course_history_data['HEd.Student.CourseHistory.GPAValue'] = $award_data['HEd.Student.CourseHistory.GPAValue'];
+    $course_history_data['HEd.Student.CourseHistory.QualityPoints'] = $award_data['HEd.Student.CourseHistory.QualityPoints'];
+    $course_history_data['HEd.Student.CourseHistory.TeacherSet'] = $teacher_set;
     
-    return $student_course_history_id;
+    return $this->posterFactory->newPoster()->edit('HEd.Student.CourseHistory', $course_history_id, $course_history_data)->process()->getResult();
   }
   
   public function deleteCourseHistoryForClass($course_history_id) {
-    $student_course_history_poster = $this->poster_factory->newPoster(null, null, array('STUD_STUDENT_COURSE_HISTORY' => array($course_history_id => array('delete_row' => 'Y'))));
-    $student_course_history_id = $student_course_history_poster->getResultForTable('delete', 'STUD_STUDENT_COURSE_HISTORY')[$course_history_id];
-    return $student_course_history_id;
+    return $this->posterFactory->newPoster()->delete('HEd.Student.CourseHistory', $course_history_id)->process()->getResult();
   }
   
   public function insertCourseHistoryForCH($data) {
-    $student_course_history_poster = $this->poster_factory->newPoster(array('STUD_STUDENT_COURSE_HISTORY' => array('new' => $data)));
-    $student_course_history_id = $student_course_history_poster->getResultForTable('insert', 'STUD_STUDENT_COURSE_HISTORY')['new'];
-    return $student_course_history_id;
+    return $this->posterFactory->newPoster()->add('HEd.Student.CourseHistory', 'new', $data)->process()->getResult();
   }
   
   public function updateCourseHistoryForCH($id, $data) {
     
-    if (isset($data['MARK_SCALE_ID']))
-      $mark_scale_id = $data['MARK_SCALE_ID'];
+    if (isset($data['HEd.Student.CourseHistory.MarkScaleID']))
+      $mark_scale_id = $data['HEd.Student.CourseHistory.MarkScaleID'];
     else {
-    $current_info = $this->database->select('STUD_STUDENT_COURSE_HISTORY')
-      ->fields(null, array('MARK_SCALE_ID'))
-      ->predicate('COURSE_HISTORY_ID', $id)
+    $current_info = $this->database->db_select('STUD_STUDENT_COURSE_HISTORY')
+      ->fields('STUD_STUDENT_COURSE_HISTORY', array('MARK_SCALE_ID'))
+      ->condition('COURSE_HISTORY_ID', $id)
       ->execute()->fetch();
     $mark_scale_id = $current_info['MARK_SCALE_ID'];
     }
     
-    $data += $this->_determineAward($mark_scale_id, $data['MARK'], $data['CREDITS_ATTEMPTED']);
-    
-    $student_course_history_poster = $this->poster_factory->newPoster(null, array('STUD_STUDENT_COURSE_HISTORY' => array($id => $data)));
-    $student_course_history_id = $student_course_history_poster->getResultForTable('insert', 'STUD_STUDENT_COURSE_HISTORY')[$id];
-    return $student_course_history_id;
+    $data += $this->determineAward($mark_scale_id, $data['HEd.Student.CourseHistory.Mark'], $data['HEd.Student.CourseHistory.CreditsAttempted']);
+    unset($data['COMMENTS']);
+    return $this->posterFactory-newPoster()->add('HEd.Student.CourseHistory', $id, $data)->process()->getResult();
   }
   
-  private function _determineAward($mark_scale_id, $mark, $credits_attempted) {
+  private function determineAward($mark_scale_id, $mark, $credits_attempted) {
     
     // Get GPA Value
-    $mark_info = $this->database->select('STUD_MARK_SCALE_MARKS')
-      ->fields(null, array('MARK', 'GETS_CREDIT', 'GPA_VALUE', 'ALLOW_COMMENTS', 'REQUIRE_COMMENTS'))
-      ->predicate('MARK_SCALE_ID', $mark_scale_id)
-      ->predicate('MARK', $mark)
+    $mark_info = $this->database->db_select('STUD_MARK_SCALE_MARKS')
+      ->fields('STUD_MARK_SCALE_MARKS', array('MARK', 'GETS_CREDIT', 'GPA_VALUE', 'ALLOW_COMMENTS', 'REQUIRE_COMMENTS'))
+      ->condition('MARK_SCALE_ID', $mark_scale_id)
+      ->condition('MARK', $mark)
       ->execute()->fetch();
     
     if ($mark_info['MARK'] == '')
-      $award_data['MARK'] = null;
+      $award_data['HEd.Student.CourseHistory.Mark'] = null;
     
     // Determine credit
-    if ($mark_info['GETS_CREDIT'] == 'Y')
-      $award_data['CREDITS_EARNED'] = $credits_attempted;
+    if ($mark_info['GETS_CREDIT'] == 1)
+      $award_data['HEd.Student.CourseHistory.CreditsEarned'] = $credits_attempted;
     else
-      $award_data['CREDITS_EARNED'] = 0.0;
+      $award_data['HEd.Student.CourseHistory.CreditsEarned'] = 0.0;
     
-    $award_data['GPA_VALUE'] = $mark_info['GPA_VALUE'];
-    $award_data['QUALITY_POINTS'] = $mark_info['GPA_VALUE'] * $award_data['CREDITS_EARNED'];
+    $award_data['HEd.Student.CourseHistory.GPAValue'] = $mark_info['GPA_VALUE'];
+    $award_data['HEd.Student.CourseHistory.QualityPoints'] = $mark_info['GPA_VALUE'] * $award_data['CREDITS_EARNED'];
     
-    if ($mark_info['ALLOW_COMMENTS'] == 'Y' OR $mark_info['REQUIRE_COMMENTS'] == 'Y') {
+    if ($mark_info['ALLOW_COMMENTS'] == 1 OR $mark_info['REQUIRE_COMMENTS'] == 1) {
       $award_data['COMMENTS'] = 'Y';
     }
     

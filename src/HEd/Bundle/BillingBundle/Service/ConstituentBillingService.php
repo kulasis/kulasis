@@ -12,22 +12,22 @@ class ConstituentBillingService {
   
   protected $session;
   
-  public function __construct(\Kula\Component\Database\Connection $db, 
-                              \Kula\Component\Database\PosterFactory $poster_factory,
+  public function __construct(\Kula\Core\Component\DB\DB $db, 
+                              \Kula\Core\Component\DB\PosterFactory $poster_factory,
                               $record = null, 
                               $session = null) {
     $this->database = $db;
     $this->record = $record;
-    $this->poster_factory = $poster_factory;
+    $this->posterFactory = $poster_factory;
     $this->session = $session;
   }
   
   public function addTransaction($constituent_id, $organization_term_id, $transaction_code_id, $transaction_date, $transaction_description, $amount) {
     
     // Get transaction code
-    $transaction_code = $this->database->select('BILL_CODE', 'code')
+    $transaction_code = $this->database->db_select('BILL_CODE', 'code')
       ->fields('code', array('CODE_TYPE', 'CODE_DESCRIPTION'))
-      ->predicate('code.CODE_ID', $transaction_code_id)
+      ->condition('code.CODE_ID', $transaction_code_id)
       ->execute()->fetch();
     if ($transaction_description) {
       $formatted_transaction_description = $transaction_code['CODE_DESCRIPTION'].' - '.$transaction_description;
@@ -39,59 +39,58 @@ class ConstituentBillingService {
       $amount = $amount * -1;
     
     // Prepare & post payment data    
-    $payment_poster = $this->poster_factory->newPoster(array('BILL_CONSTITUENT_TRANSACTIONS' => array('new' => array(
-      'CONSTITUENT_ID' => $constituent_id,
-      'ORGANIZATION_TERM_ID' => $organization_term_id,
-      'CODE_ID' => $transaction_code_id,
-      'TRANSACTION_DATE' => $transaction_date,
-      'TRANSACTION_DESCRIPTION' => $formatted_transaction_description,
-      'AMOUNT' => $amount, 
-      'ORIGINAL_AMOUNT' => $amount,
-      'APPLIED_BALANCE' => $amount,
-      'POSTED' => 'N'
-    ))));
-    // Capture new payment ID
-    $constituent_transaction_id = $payment_poster->getResultForTable('insert', 'BILL_CONSTITUENT_TRANSACTIONS')['new'];
-    return $constituent_transaction_id;
+    return $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', array(
+      'HEd.Billing.Transaction.ConstituentID' => $constituent_id,
+      'HEd.Billing.Transaction.OrganizationTermID' => $organization_term_id,
+      'HEd.Billing.Transaction.CodeID' => $transaction_code_id,
+      'HEd.Billing.Transaction.TransactionDate' => $transaction_date,
+      'HEd.Billing.Transaction.TransactionDescription' => $formatted_transaction_description,
+      'HEd.Billing.Transaction.Amount' => $amount, 
+      'HEd.Billing.Transaction.OriginalAmount' => $amount,
+      'HEd.Billing.Transaction.AppliedBalance' => $amount,
+      'HEd.Billing.Transaction.Posted' => 0
+    ))->process()->getResult();
   }
   
   public function addCourseFees($student_class_id) {
     
     // Get Class Info
-    $class_fees = $this->database->select('STUD_STUDENT_CLASSES', 'class')
+    $class_fees = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_STATUS_ID'))
-      ->join('STUD_STUDENT_STATUS', 'status', array('STUDENT_ID'), 'class.STUDENT_STATUS_ID = status.STUDENT_STATUS_ID')
-      ->join('STUD_SECTION', 'section', array('ORGANIZATION_TERM_ID'), 'section.SECTION_ID = class.SECTION_ID')
-      ->join('BILL_COURSE_FEE', 'crsfee', array('CODE_ID', 'AMOUNT'), 'crsfee.COURSE_ID = section.COURSE_ID AND section.ORGANIZATION_TERM_ID = crsfee.ORGANIZATION_TERM_ID')
-      ->join('BILL_CODE', 'code', array('CODE_DESCRIPTION'), 'code.CODE_ID = crsfee.CODE_ID')
-      ->predicate('class.STUDENT_CLASS_ID', $student_class_id)
+      ->join('STUD_STUDENT_STATUS', 'status', 'class.STUDENT_STATUS_ID = status.STUDENT_STATUS_ID')
+      ->fields('status', array('STUDENT_ID'))
+      ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
+      ->fields('section', array('ORGANIZATION_TERM_ID'))
+      ->join('BILL_COURSE_FEE', 'crsfee', 'crsfee.COURSE_ID = section.COURSE_ID AND section.ORGANIZATION_TERM_ID = crsfee.ORGANIZATION_TERM_ID')
+      ->fields('crsfee', array('CODE_ID', 'AMOUNT'))
+      ->join('BILL_CODE', 'code', 'code.CODE_ID = crsfee.CODE_ID')
+      ->fields('code', array('CODE_DESCRIPTION'))
+      ->condition('class.STUDENT_CLASS_ID', $student_class_id)
       ->execute();
     while ($class_fee_row = $class_fees->fetch()) {
-      // Prepare & post payment data    
-      $payment_poster = $this->poster_factory->newPoster(array('BILL_CONSTITUENT_TRANSACTIONS' => array('new' => array(
-        'CONSTITUENT_ID' => $class_fee_row['STUDENT_ID'],
-        'ORGANIZATION_TERM_ID' => $class_fee_row['ORGANIZATION_TERM_ID'],
-        'CODE_ID' => $class_fee_row['CODE_ID'],
-        'TRANSACTION_DATE' => date('Y-m-d'),
-        'TRANSACTION_DESCRIPTION' => $class_fee_row['CODE_DESCRIPTION'],
-        'AMOUNT' => $class_fee_row['AMOUNT'], 
-        'ORIGINAL_AMOUNT' => $class_fee_row['AMOUNT'],
-        'APPLIED_BALANCE' => $class_fee_row['AMOUNT'],
-        'POSTED' => array('checkbox_hidden' => '', 'checkbox' => 'Y'),
-        'SHOW_ON_STATEMENT' => array('checkbox_hidden' => '', 'checkbox' => 'Y'),
-        'STUDENT_CLASS_ID' => $student_class_id,
-      ))));
-      // Capture new payment ID
-      $constituent_transaction_id = $payment_poster->getResultForTable('insert', 'BILL_CONSTITUENT_TRANSACTIONS')['new'];  
+      // Prepare & post payment data
+      return $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', array(
+        'HEd.Billing.Transaction.ConstituentID' => $class_fee_row['STUDENT_ID'],
+        'HEd.Billing.Transaction.OrganizationTermID' => $class_fee_row['ORGANIZATION_TERM_ID'],
+        'HEd.Billing.Transaction.CodeID' => $class_fee_row['CODE_ID'],
+        'HEd.Billing.Transaction.TransactionDate' => date('Y-m-d'),
+        'HEd.Billing.Transaction.Description' => $class_fee_row['CODE_DESCRIPTION'],
+        'HEd.Billing.Transaction.Amount' => $class_fee_row['AMOUNT'], 
+        'HEd.Billing.Transaction.OriginalAmount' => $class_fee_row['AMOUNT'],
+        'HEd.Billing.Transaction.AppliedBalance' => $class_fee_row['AMOUNT'],
+        'HEd.Billing.Transaction.Posted' => 1,
+        'HEd.Billing.Transaction.ShowOnStatement' => 1,
+        'HEd.Billing.Transaction.StudentClassID' => $student_class_id
+      ))->process()->getResult();
     }
     
   }
   
   public function removeCourseFees($student_class_id) {
-    $course_fees_transactions = $this->database->select('BILL_CONSTITUENT_TRANSACTIONS', 'constrans')
+    $course_fees_transactions = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'constrans')
       ->fields('constrans', array('CONSTITUENT_TRANSACTION_ID'))
-      ->predicate('constrans.REFUND_TRANSACTION_ID', null)
-      ->predicate('constrans.STUDENT_CLASS_ID', $student_class_id)
+      ->condition('constrans.REFUND_TRANSACTION_ID', null)
+      ->condition('constrans.STUDENT_CLASS_ID', $student_class_id)
       ->execute();
     while ($course_fees_transaction = $course_fees_transactions->fetch()) {
       $this->removeTransaction($course_fees_transaction['CONSTITUENT_TRANSACTION_ID'], 'Schedule change (auto)', date('Y-m-d'));
@@ -101,74 +100,77 @@ class ConstituentBillingService {
   public function determineTuitionRate($student_status_id) {
     
     // Get Student Status Info
-    $student_status = $this->database->select('STUD_STUDENT_STATUS', 'status')
+    $student_status = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
       ->fields('status', array('STUDENT_STATUS_ID', 'ORGANIZATION_TERM_ID', 'ENTER_CODE', 'LEVEL'))
-      ->predicate('status.STUDENT_STATUS_ID', $student_status_id)
+      ->condition('status.STUDENT_STATUS_ID', $student_status_id)
       ->execute()->fetch();
     
     // Get Tuition Rate
-    $tuition_rate = $this->database->select('BILL_TUITION_RATE_STUDENTS', 'trstu')
-      ->fields('trstu', array())
-      ->join('BILL_TUITION_RATE', 'tr', array('TUITION_RATE_ID'), 'tr.TUITION_RATE_ID = trstu.TUITION_RATE_ID')
-      ->predicate('trstu.LEVEL', $student_status['LEVEL'])
-      ->predicate('trstu.ENTER_CODE', $student_status['ENTER_CODE'])
-      ->predicate('tr.ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID'])
+    $tuition_rate = $this->database->db_select('BILL_TUITION_RATE_STUDENTS', 'trstu')
+      ->fields('trstu')
+      ->join('BILL_TUITION_RATE', 'tr', 'tr.TUITION_RATE_ID = trstu.TUITION_RATE_ID')
+      ->fields('tr', array('TUITION_RATE_ID'))
+      ->condition('trstu.LEVEL', $student_status['LEVEL'])
+      ->condition('trstu.ENTER_CODE', $student_status['ENTER_CODE'])
+      ->condition('tr.ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID'])
       ->execute()->fetch();
     
     if ($tuition_rate['TUITION_RATE_ID']) {
       // post tuition rate
-      $tuitionrate_poster = $this->poster_factory->newPoster(null, array('STUD_STUDENT_STATUS' => array($student_status_id => array('TUITION_RATE_ID' => $tuition_rate['TUITION_RATE_ID']))));
+      return $this->posterFactory->newPoster()->edit('HEd.Student.Status', $student_status_id, array(
+        'HEd.Student.Status.TuitionRateID' => $tuition_rate['TUITION_RATE_ID']
+      ))->process()->getResult();
     }
     
   }
   
   public function postFinancialAidAward($award_id) {
     
-    if (!$this->database->inTransaction())
-      $this->database->beginTransaction();
+    $transaction = $this->database->db_transaction();
     
     // Get FA Info
-    $award_info = $this->database->select('FAID_STUDENT_AWARDS', 'award')
+    $award_info = $this->database->db_select('FAID_STUDENT_AWARDS', 'award')
       ->fields('award', array('AWARD_ID', 'NET_AMOUNT', 'DISBURSEMENT_DATE'))
-      ->join('FAID_AWARD_CODE', 'awardcode', null, 'awardcode.AWARD_CODE_ID = award.AWARD_CODE_ID')
-      ->join('BILL_CODE', 'code', array('CODE_ID', 'CODE_DESCRIPTION'), 'awardcode.TRANSACTION_CODE_ID = code.CODE_ID')
-      ->join('FAID_STUDENT_AWARD_YEAR_TERMS', 'awardterms', array('ORGANIZATION_TERM_ID'), 'awardterms.AWARD_YEAR_TERM_ID = award.AWARD_YEAR_TERM_ID')
-      ->join('FAID_STUDENT_AWARD_YEAR', 'stuawardyr', array('STUDENT_ID'), 'stuawardyr.AWARD_YEAR_ID = awardterms.AWARD_YEAR_ID')
-      ->predicate('award.AWARD_ID', $award_id)
+      ->join('FAID_AWARD_CODE', 'awardcode', 'awardcode.AWARD_CODE_ID = award.AWARD_CODE_ID')
+      ->join('BILL_CODE', 'code', 'awardcode.TRANSACTION_CODE_ID = code.CODE_ID')
+      ->fields('code', array('CODE_ID', 'CODE_DESCRIPTION'))
+      ->join('FAID_STUDENT_AWARD_YEAR_TERMS', 'awardterms', 'awardterms.AWARD_YEAR_TERM_ID = award.AWARD_YEAR_TERM_ID')
+      ->fields('awardterms', array('ORGANIZATION_TERM_ID'))
+      ->join('FAID_STUDENT_AWARD_YEAR', 'stuawardyr', 'stuawardyr.AWARD_YEAR_ID = awardterms.AWARD_YEAR_ID')
+      ->fields('stuawardyr', array('STUDENT_ID'))
+      ->condition('award.AWARD_ID', $award_id)
       ->execute()->fetch();
     
-    $payment_poster = $this->poster_factory->newPoster(array('BILL_CONSTITUENT_TRANSACTIONS' => array('new' => array(
-      'CONSTITUENT_ID' => $award_info['STUDENT_ID'],
-      'ORGANIZATION_TERM_ID' => $award_info['ORGANIZATION_TERM_ID'],
-      'CODE_ID' => $award_info['CODE_ID'],
-      'TRANSACTION_DATE' => $award_info['DISBURSEMENT_DATE'] != '' ? $award_info['DISBURSEMENT_DATE'] : date('Y-m-d'),
-      'TRANSACTION_DESCRIPTION' => $award_info['CODE_DESCRIPTION'],
-      'AMOUNT' => $award_info['NET_AMOUNT'] * -1, 
-      'ORIGINAL_AMOUNT' => $award_info['NET_AMOUNT'] * -1,
-      'APPLIED_BALANCE' => $award_info['NET_AMOUNT'] * -1,
-      'POSTED' => array('checkbox_hidden' => '', 'checkbox' => 'Y'),
-      'SHOW_ON_STATEMENT' => array('checkbox_hidden' => '', 'checkbox' => 'Y'),
-      'AWARD_ID' => $award_id,
-    ))));
+    $payment_poster = $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', array(
+      'HEd.Billing.Transaction.ConstituentID' => $award_info['STUDENT_ID'],
+      'HEd.Billing.Transaction.OrganizationTermID' => $award_info['ORGANIZATION_TERM_ID'],
+      'HEd.Billing.CodeID' => $award_info['CODE_ID'],
+      'HEd.Billing.TransactionDate' => $award_info['DISBURSEMENT_DATE'] != '' ? $award_info['DISBURSEMENT_DATE'] : date('Y-m-d'),
+      'HEd.Billing.Transaction.Description' => $award_info['CODE_DESCRIPTION'],
+      'HEd.Billing.Transaction.Amount' => $award_info['NET_AMOUNT'] * -1, 
+      'HEd.Billing.Transaction.OriginalAmount' => $award_info['NET_AMOUNT'] * -1,
+      'HEd.Billing.Transaction.AppliedAmount' => $award_info['NET_AMOUNT'] * -1,
+      'HEd.Billing.Transaction.Posted' => 1,
+      'HEd.Billing.Transaction.ShowOnStatement' => 1,
+      'HEd.Billing.Transaction.AwardID' => $award_id,
+    ))->process()->getResult();
     
-    $award_poster = $this->poster_factory->newPoster(null, 
-      array('FAID_STUDENT_AWARDS' => array($award_id => array(
-        'AWARD_STATUS' => 'AWAR'
-      ))));
+    $award_poster = $this->posterFactory->newPoster()->edit('HEd.FAID.Student.Award', $award_id, array(
+      'HEd.FAID.Student.Award.AwardStatus' => 'AWAR'
+    ))->process()->getResult();
     
-    if (!$this->database->inTransaction())
-      $this->database->commit();
+    $transaction->commit();
     
   }
   
   public function adjustFinancialAidAward(Array $award_ids) {
     
     // Query for financial aid award totals
-    $award_id_totals = $this->database->select('BILL_CONSTITUENT_TRANSACTIONS', 'constrans')
+    $award_id_totals = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'constrans')
       ->fields('constrans', array('AWARD_ID'))
-      ->expressions(array('SUM(AMOUNT)' => 'award_total'))
-      ->predicate('AWARD_ID', array_keys($award_ids))
-      ->group_by('AWARD_ID')
+      ->expression('SUM(AMOUNT)', 'award_total')
+      ->condition('AWARD_ID', array_keys($award_ids))
+      ->groupBy('AWARD_ID')
       ->execute();
     while ($award_id_total = $award_id_totals->fetch()) {
       if ($award_id_total['award_total'] != ($award_ids[$award_id_total['AWARD_ID']] * -1)) {
@@ -177,55 +179,51 @@ class ConstituentBillingService {
         $adjustment_amt = -1 * ($award_id_total['award_total'] - (-1 * $award_ids[$award_id_total['AWARD_ID']]));
         
         // Get FA Info
-        $award_info = $this->database->select('FAID_STUDENT_AWARDS', 'award')
+        $award_info = $this->database->db_select('FAID_STUDENT_AWARDS', 'award')
           ->fields('award', array('AWARD_ID', 'NET_AMOUNT'))
-          ->join('FAID_AWARD_CODE', 'awardcode', null, 'awardcode.AWARD_CODE_ID = award.AWARD_CODE_ID')
-          ->join('BILL_CODE', 'code', array('CODE_ID', 'CODE_DESCRIPTION'), 'awardcode.TRANSACTION_CODE_ID = code.CODE_ID')
-          ->join('FAID_STUDENT_AWARD_YEAR_TERMS', 'awardterms', array('ORGANIZATION_TERM_ID'), 'awardterms.AWARD_YEAR_TERM_ID = award.AWARD_YEAR_TERM_ID')
-          ->join('FAID_STUDENT_AWARD_YEAR', 'stuawardyr', array('STUDENT_ID'), 'stuawardyr.AWARD_YEAR_ID = awardterms.AWARD_YEAR_ID')
-          ->predicate('award.AWARD_ID', $award_id_total['AWARD_ID'])
+          ->join('FAID_AWARD_CODE', 'awardcode', 'awardcode.AWARD_CODE_ID = award.AWARD_CODE_ID')
+          ->join('BILL_CODE', 'code', 'awardcode.TRANSACTION_CODE_ID = code.CODE_ID')
+          ->fields('code', array('CODE_ID', 'CODE_DESCRIPTION'))
+          ->join('FAID_STUDENT_AWARD_YEAR_TERMS', 'awardterms', 'awardterms.AWARD_YEAR_TERM_ID = award.AWARD_YEAR_TERM_ID')
+          ->fields('awardterms', array('ORGANIZATION_TERM_ID'))
+          ->join('FAID_STUDENT_AWARD_YEAR', 'stuawardyr', 'stuawardyr.AWARD_YEAR_ID = awardterms.AWARD_YEAR_ID')
+          ->fields('stuawardyr', array('STUDENT_ID'))
+          ->condition('award.AWARD_ID', $award_id_total['AWARD_ID'])
           ->execute()->fetch();
         
-        $payment_poster = $this->poster_factory->newPoster(array('BILL_CONSTITUENT_TRANSACTIONS' => array('new' => array(
-          'CONSTITUENT_ID' => $award_info['STUDENT_ID'],
-          'ORGANIZATION_TERM_ID' => $award_info['ORGANIZATION_TERM_ID'],
-          'CODE_ID' => $award_info['CODE_ID'],
-          'TRANSACTION_DATE' => date('Y-m-d'),
-          'TRANSACTION_DESCRIPTION' => $award_info['CODE_DESCRIPTION'],
-          'AMOUNT' => $adjustment_amt, 
-          'ORIGINAL_AMOUNT' => $adjustment_amt,
-          'APPLIED_BALANCE' => $adjustment_amt,
-          'POSTED' => array('checkbox_hidden' => '', 'checkbox' => 'N'),
-          'SHOW_ON_STATEMENT' => array('checkbox_hidden' => '', 'checkbox' => 'Y'),
-          'AWARD_ID' => $award_id_total['AWARD_ID'],
-        ))));
+        $payment_poster = $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', array(
+          'HEd.Billing.Transaction.ConstituentID' => $award_info['STUDENT_ID'],
+          'HEd.Billing.Transaction.OrganizationTermID' => $award_info['ORGANIZATION_TERM_ID'],
+          'HEd.Billing.Transaction.CodeID' => $award_info['CODE_ID'],
+          'HEd.Billing.Transaction.TransactionDate' => date('Y-m-d'),
+          'HEd.Billing.Transaction.Description' => $award_info['CODE_DESCRIPTION'],
+          'HEd.Billing.Transaction.Amount' => $adjustment_amt, 
+          'HEd.Billing.Transaction.OriginalAmount' => $adjustment_amt,
+          'HEd.Billing.Transaction.AppliedBalance' => $adjustment_amt,
+          'HEd.Billing.Transaction.Posted' => 0,
+          'HEd.Billing.Transaction.ShowOnStatement' => 1,
+          'HEd.Billing.Transaction.AwardID' => $award_id_total['AWARD_ID'],
+        ))->process()->getResult();
       }
     }
     
   }
   
   public function postTransaction($constituent_transaction_id) {
-    $transaction_poster = $this->poster_factory->newPoster(null, 
-      array('BILL_CONSTITUENT_TRANSACTIONS' => array($constituent_transaction_id => array(
-        'POSTED' => array('checkbox_hidden' => '', 'checkbox' => 'Y'),
-        'SHOW_ON_STATEMENT' => array('checkbox_hidden' => '', 'checkbox' => 'Y')
-      ))));
-    return $transaction_poster->getResultForTable('update', 'BILL_CONSTITUENT_TRANSACTIONS')[$constituent_transaction_id];
+    return $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', $constituent_transaction_id, array(
+      'HEd.Billing.Transaction.Posted' => 1,
+      'HEd.Billing.Transaction.ShowOnStatement' => 1
+    ))->process()->getResult();
   }
   
   public function removeTransaction($constituent_transaction_id, $voided_reason, $transaction_date) {
     
-    if (!$this->database->inTransaction()) {
-      $tran_started = 1;
-      $this->database->beginTransaction();
-    } else {
-      $tran_started = 0;
-    }
+    $transaction = $this->database->db_transaction();
 
     // Get transaction info
-    $transaction_row = $this->database->select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+    $transaction_row = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
       ->fields('transactions', array('POSTED', 'CODE_ID', 'CONSTITUENT_ID', 'ORGANIZATION_TERM_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'VOIDED_REASON', 'STUDENT_CLASS_ID', 'AWARD_ID'))
-      ->predicate('CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
+      ->condition('CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
       ->execute()->fetch();
     
     if ($transaction_row['POSTED'] == 'Y') {
@@ -255,27 +253,23 @@ class ConstituentBillingService {
       if ($transaction_row['STUDENT_CLASS_ID']) $return_payment_data['STUDENT_CLASS_ID'] = $transaction_row['STUDENT_CLASS_ID'];
       if ($transaction_row['AWARD_ID']) $return_payment_data['AWARD_ID'] = $transaction_row['AWARD_ID'];
       
-      $return_payment_poster = $this->poster_factory->newPoster(array('BILL_CONSTITUENT_TRANSACTIONS' => array('new' => $return_payment_data)));
-      $return_payment_affected = $return_payment_poster->getResultForTable('insert', 'BILL_CONSTITUENT_TRANSACTIONS')['new'];
+      $return_payment_affected = $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', $return_payment_data)->process()->getResult();
 
       // set as returned for existing transaction
-      $original_transaction_poster = $this->poster_factory->newPoster(null, 
-        array('BILL_CONSTITUENT_TRANSACTIONS' => array($constituent_transaction_id => array(
-          'REFUND_TRANSACTION_ID' => $return_payment_affected,
-          'APPLIED_BALANCE' => 0,
-          'SHOW_ON_STATEMENT' => array('checkbox_hidden' => 'Y')
-        ))));
+      $original_transaction_poster = $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', $constituent_transaction_id, array(
+        'HEd.Billing.Transaction.RefundTransactionID' => $return_payment_affected,
+        'HEd.Billing.Transaction.AppliedBalance' => 0,
+        'HEd.Billing.Transaction.ShowOnStatement' => 1
+      ))->process()->getResult();
         
         // Has an FA award.  Need to set back to pending
         if ($transaction_row['AWARD_ID']) {
-          $fa_poster = $this->poster_factory->newPoster(null, 
-            array('FAID_STUDENT_AWARDS' => array($transaction_row['AWARD_ID'] => array(
-              'AWARD_STATUS' => 'PEND'
-            ))));
+          $fa_poster = $this->posterFactory->newPoster()->add('HEd.FAID.Student.Award', $transaction_row['AWARD_ID'], array(
+            'HEd.FAID.Student.Award.AwardStatus' => 'PEND'
+          ))->process()->getResult();
         }
         
-        if ($tran_started == 1)
-          $this->database->commit();
+      $transaction->commit();
       
       return $return_payment_affected;
       
@@ -283,11 +277,19 @@ class ConstituentBillingService {
       // Void payment
       if ($transaction_row['VOIDED_REASON'] != '')
         $voided_reason = $transaction_row['VOIDED_REASON']. ' | '.$voided_reason;
-      $voided_transaction_poster = $this->poster_factory->newPoster(null, array('BILL_CONSTITUENT_TRANSACTIONS' => array($constituent_transaction_id => array('AMOUNT' => 0.00, 'APPLIED_BALANCE' => 0.00, 'POSTED' => array('checkbox_hidden' => '', 'checkbox' => 'Y'), 'SHOW_ON_STATEMENT' => array('checkbox_hidden' => 'Y', 'checkbox' => 'N'), 'VOIDED' => array('checkbox_hidden' => '', 'checkbox' => 'Y'), 'VOIDED_REASON' => $voided_reason, 'VOIDED_USERSTAMP' => $this->session->get('user_id'), 'VOIDED_TIMESTAMP' => date('Y-m-d H:i:s')))));
-      $voided_transaction_result = $voided_transaction_poster->getResultForTable('update', 'BILL_CONSTITUENT_TRANSACTIONS')[$constituent_transaction_id];
+      
+      $voided_transaction_result = $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', $constituent_transaction_id, array(
+        'HEd.Billing.Transaction.Amount' => 0.00, 
+        'HEd.Billing.Transaction.AppliedBalance' => 0.00, 
+        'HEd.Billing.Transaction.Posted' => 1, 
+        'HEd.Billing.Transaction.ShowOnStatement' => 0, 
+        'HEd.Billing.Transaction.Voided' => 1, 
+        'HEd.Billing.Transaction.VoidedReason' => $voided_reason, 
+        'HEd.Billing.Transaction.VoidedUserstamp' => $this->session->get('user_id'), 
+        'HEd.Billing.Transaction.VoidedTimestamp' => date('Y-m-d H:i:s')
+      ))->process()->getResult();
 
-      if ($tran_started == 1)
-        $this->database->commit();
+      $transaction->commit();
       
       return $voided_transaction_result;
     }
