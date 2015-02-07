@@ -45,7 +45,7 @@ Course History
   {% for ch in course_history %}
   <tr>
     {{ kula_field({ delete: true, field: 'HEd.Student.CourseHistory.ID', db_row_id: ch.COURSE_HISTORY_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-    <td class="data-table-cell-row-num"><a class="data-table-detail-link" data-row-id-prefix="ch" data-row-id="{{ ch.COURSE_HISTORY_ID }}" href="{{ path('sis_student_coursehistory_coursehistory_detail_edit', { id : kula_core_record.getSelectedRecord.STUDENT_ID, sub_id : ch.COURSE_HISTORY_ID }) }}">{{ loop.index }}</a></td>
+    <td class="data-table-cell-row-num"><a class="data-table-detail-link" data-row-id-prefix="ch" data-row-id="{{ ch.COURSE_HISTORY_ID }}" href="{{ path('sis_HEd_student_coursehistory_coursehistory_detail_edit', { id : kula_core_record.getSelectedRecord.STUDENT_ID, sub_id : ch.COURSE_HISTORY_ID }) }}">{{ loop.index }}</a></td>
     {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.CalendarMonth', db_row_id: ch.COURSE_HISTORY_ID, value: ch.CALENDAR_MONTH, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.CalendarYear', db_row_id: ch.COURSE_HISTORY_ID, value: ch.CALENDAR_YEAR, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Term', db_row_id: ch.COURSE_HISTORY_ID, value: ch.TERM, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}

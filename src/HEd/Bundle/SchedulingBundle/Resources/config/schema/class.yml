@@ -22,7 +22,7 @@ HEd.Student.Class:
       parent: HEd.Section.ID
       db_column_name: SECTION_ID
       db_column_type: serial
-      field_type: checkbox
+      field_type: multicheckbox
       column_name: "Section ID"
       label_name: "Section ID"
     CourseID:
@@ -54,7 +54,7 @@ HEd.Student.Class:
       db_column_name: LEVEL
       db_column_type: varchar
       db_column_length: 5
-      db_column_null: false
+      db_column_null: true
       field_type: lookup
       lookup: HEd.Student.Enrollment.Level
       column_name: "Level"
@@ -65,6 +65,7 @@ HEd.Student.Class:
       db_column_type: numeric
       db_column_length: 10
       db_column_precision: 3
+      db_column_null: true
       field_type: text
       field_size: 6
       column_name: "Credits Attempted"

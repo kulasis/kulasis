@@ -176,7 +176,9 @@ HEd.Student.Class:
       description: "Degree Requirement Group ID"
       db_column_name: DEGREE_REQ_GRP_ID
       db_column_type: serial
+      db_column_null: true
       parent: HEd.Degree.Requirement.Group.ID
-      #field_type: 
+      field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\DegreeRequirementGroup
       column_name: "Degree Requirement Group ID"
       label_name: "Degree Requirement Group ID"

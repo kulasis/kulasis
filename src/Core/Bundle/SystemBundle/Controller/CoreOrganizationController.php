@@ -50,7 +50,7 @@ class CoreOrganizationController extends Controller {
   
   public function org_term_chooserAction() {
     $this->authorize();
-    $data = \Kula\Core\Bundle\SystemBundle\Chooser\OrganizationTermChooser::createChooserMenu($this->request->query->get('q'));
+    $data = $this->chooser('Core.Organization.Term')->createChooserMenu($this->request->query->get('q'));
     return $this->JSONResponse($data);
   }
 }

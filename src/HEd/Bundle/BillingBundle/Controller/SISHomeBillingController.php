@@ -15,13 +15,13 @@ class SISHomeBillingController extends Controller {
       $void = $this->request->request->get('void');
       $non = $this->request->request->get('non');
         
-      if (isset($non['BILL_CONSTITUENT_TRANSACTIONS']['TRANSACTION_DATE']))
-        $transaction_date = $non['BILL_CONSTITUENT_TRANSACTIONS']['TRANSACTION_DATE'];
+      if (isset($non['HEd.Billing.Transaction']['HEd.Billing.Transaction.TransactionDate']))
+        $transaction_date = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.TransactionDate'];
       else 
         $transaction_date = null;
       
-      if (isset($non['BILL_CONSTITUENT_TRANSACTIONS']['VOIDED_REASON']))
-        $reason = $non['BILL_CONSTITUENT_TRANSACTIONS']['VOIDED_REASON'];
+      if (isset($non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason']))
+        $reason = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason'];
       else 
         $reason = null;
       

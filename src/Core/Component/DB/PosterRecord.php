@@ -169,9 +169,7 @@ class PosterRecord {
           } else {
             $this->fields[$fieldName] = '1';
           }
-        } else {
-          $this->fields[$fieldName] = '0';
-        }
+        } 
       }
     }
   }

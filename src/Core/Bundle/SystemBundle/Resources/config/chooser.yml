@@ -6,3 +6,5 @@ Core.Organization:
   class: Kula\Core\Bundle\SystemBundle\Chooser\OrganizationChooser
 Core.Usergroup:
   class: Kula\Core\Bundle\SystemBundle\Chooser\UsergroupChooser
+Core.Organization.Term:
+  class: Kula\Core\Bundle\SystemBundle\Chooser\OrganizationTermChooser

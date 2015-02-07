@@ -23,6 +23,8 @@ HEd.Billing.Transaction:
       db_column_name: ORGANIZATION_TERM_ID
       db_column_type: serial
       db_column_null: true
+      field_type: chooser
+      chooser: Core.Organization.Term
       column_name: "Organization Term ID"
       label_name: "Organization Term ID"
     CodeID:

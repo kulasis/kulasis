@@ -16,13 +16,13 @@ class SISTransactionsController extends Controller {
       $void = $this->request->request->get('void');
       $non = $this->request->request->get('non');
         
-      if (isset($non['BILL_CONSTITUENT_TRANSACTIONS']['TRANSACTION_DATE']))
-        $transaction_date = $non['BILL_CONSTITUENT_TRANSACTIONS']['TRANSACTION_DATE'];
+      if (isset($non['HEd.Billing.Transaction']['HEd.Billing.Transaction.TransactionDate']))
+        $transaction_date = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.TransactionDate'];
       else 
         $transaction_date = null;
       
-      if (isset($non['BILL_CONSTITUENT_TRANSACTIONS']['VOIDED_REASON']))
-        $reason = $non['BILL_CONSTITUENT_TRANSACTIONS']['VOIDED_REASON'];
+      if (isset($non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason']))
+        $reason = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason'];
       else 
         $reason = null;
       
@@ -37,7 +37,7 @@ class SISTransactionsController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       
-      $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+      $transactions = $this->db()->db_select('HEd.Billing.Transaction', 'transactions')
         ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE', ))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
         ->fields('code', array('CODE_TYPE', 'CODE'))
@@ -66,13 +66,13 @@ class SISTransactionsController extends Controller {
       $void = $this->request->request->get('void');
       $non = $this->request->request->get('non');
         
-      if (isset($non['BILL_CONSTITUENT_TRANSACTIONS']['TRANSACTION_DATE']))
-        $transaction_date = $non['BILL_CONSTITUENT_TRANSACTIONS']['TRANSACTION_DATE'];
+      if (isset($non['HEd.Billing.Transaction']['TransactionDate']))
+        $transaction_date = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.TransactionDate'];
       else 
         $transaction_date = null;
       
-      if (isset($non['BILL_CONSTITUENT_TRANSACTIONS']['VOIDED_REASON']))
-        $reason = $non['BILL_CONSTITUENT_TRANSACTIONS']['VOIDED_REASON'];
+      if (isset($non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason']))
+        $reason = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason'];
       else 
         $reason = null;
       
@@ -87,7 +87,7 @@ class SISTransactionsController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       
-      $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+      $transactions = $this->db()->db_select('HEd.Billing.Transaction', 'transactions')
         ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE'))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
         ->fields('code', array('CODE_TYPE', 'CODE'))
@@ -109,19 +109,18 @@ class SISTransactionsController extends Controller {
   public function transaction_detailAction($constituent_transaction_id) {
     $this->authorize();
     $this->setRecordType('SIS.HEd.Student');
-    
+
     $edit_post = $this->request->get('edit');
     
-    if (isset($edit_post['BILL_CONSTITUENT_TRANSACTIONS'])) {
-      
+    if (isset($edit_post['HEd.Billing.Transaction'])) {
       // set balance amount
-      foreach($edit_post['BILL_CONSTITUENT_TRANSACTIONS'] as $row_id => $row) {
-        if (isset($row['AMOUNT']))
-          $edit_post['BILL_CONSTITUENT_TRANSACTIONS'][$row_id]['APPLIED_BALANCE'] = $row['AMOUNT'];
+      foreach($edit_post['HEd.Billing.Transaction'] as $row_id => $row) {
+        if (isset($row['HEd.Billing.Transaction.Amount'])) {
+          $charge_detail_poster = $this->newPoster()->edit('HEd.Billing.Transaction', $row_id, array(
+            'HEd.Billing.Transaction.AppliedBalance' => $row['HEd.Billing.Transaction.Amount']
+          ))->process();
+        }
       }
-      
-      $charge_detail_poster = new \Kula\Component\Database\PosterFactory;
-      $return_charge_poster = $charge_detail_poster->newPoster(null, array('BILL_CONSTITUENT_TRANSACTIONS' => $edit_post['BILL_CONSTITUENT_TRANSACTIONS']));
     }
     
     $transaction = array();
@@ -129,7 +128,7 @@ class SISTransactionsController extends Controller {
     $applied_transactions_total = 0;
     
     if ($this->record->getSelectedRecordID()) {
-      $transaction = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+      $transaction = $this->db()->db_select('HEd.Billing.Transaction', 'transactions')
         ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP', 'SHOW_ON_STATEMENT', 'ORGANIZATION_TERM_ID'))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
         ->fields('code', array('CODE_TYPE'))
@@ -146,14 +145,15 @@ class SISTransactionsController extends Controller {
       $query_conditions_or = $this->db()->db_or();
       $query_conditions_or = $query_conditions_or->condition('CHARGE_TRANSACTION_ID', $constituent_transaction_id);
       $query_conditions_or = $query_conditions_or->condition('PAYMENT_TRANSACTION_ID', $constituent_transaction_id);
-      
-      $applied_transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS_APPLIED')
+      /*
+      $applied_transactions = $this->db()->db_select('HEd.Billing.Transaction_APPLIED')
         ->condition($query_conditions_or)
         ->execute()->fetchAll();
       
       foreach($applied_transactions as $index => $row) {
         $applied_transactions_total += $row['AMOUNT'];
       }
+      */
     }
     
     return $this->render('KulaHEdBillingBundle:SISTransactions:transactions_detail.html.twig', array('transaction' => $transaction, 'applied_transactions' => $applied_transactions, 'applied_transactions_total' => $applied_transactions_total));
@@ -175,11 +175,11 @@ class SISTransactionsController extends Controller {
         
       if ($this->request->request->get('add')) {
         
-        $constituent_billing_service = $this->get('kula.HEd.billing.student');
+        $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
         $add = $this->request->request->get('add');
-        $constituent_billing_service->addTransaction($this->record->getSelectedRecord()['STUDENT_ID'], $add['BILL_CONSTITUENT_TRANSACTIONS']['new_num']['ORGANIZATION_TERM_ID'], $add['BILL_CONSTITUENT_TRANSACTIONS']['new_num']['CODE_ID'], $add['BILL_CONSTITUENT_TRANSACTIONS']['new_num']['TRANSACTION_DATE'], $add['BILL_CONSTITUENT_TRANSACTIONS']['new_num']['TRANSACTION_DESCRIPTION'], $add['BILL_CONSTITUENT_TRANSACTIONS']['new_num']['AMOUNT']);
+        $constituent_billing_service->addTransaction($this->record->getSelectedRecord()['STUDENT_ID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.OrganizationTermID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.CodeID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.TransactionDate'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Description'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Amount']);
         
-        return $this->forward('sis_student_billing_transactions', array('record_type' => 'SIS.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
+        return $this->forward('sis_HEd_student_billing_transactions', array('record_type' => 'SIS.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
       }
         
     }

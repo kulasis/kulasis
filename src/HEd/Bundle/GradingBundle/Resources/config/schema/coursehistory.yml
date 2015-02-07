@@ -43,7 +43,7 @@ HEd.Student.CourseHistory:
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser: Core.NonOrganization.ID
+      chooser: Core.NonOrganization
       column_name: "Non Organization ID"
       label_name: "Non Organization"
     CalendarYear:
@@ -118,8 +118,8 @@ HEd.Student.CourseHistory:
       db_column_name: STUDENT_CLASS_ID
       db_column_type: serial
       db_column_null: true
-      field_type: chooser
-      #chooser: 
+      field_type: select
+      class: Kula\HEd\Bundle\SchedulingBundle\Field\Classes 
       column_name: "Student Class ID"
       label_name: "Student Class ID"
     Level:

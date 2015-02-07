@@ -44,7 +44,7 @@ class ConstituentBillingService {
       'HEd.Billing.Transaction.OrganizationTermID' => $organization_term_id,
       'HEd.Billing.Transaction.CodeID' => $transaction_code_id,
       'HEd.Billing.Transaction.TransactionDate' => $transaction_date,
-      'HEd.Billing.Transaction.TransactionDescription' => $formatted_transaction_description,
+      'HEd.Billing.Transaction.Description' => $formatted_transaction_description,
       'HEd.Billing.Transaction.Amount' => $amount, 
       'HEd.Billing.Transaction.OriginalAmount' => $amount,
       'HEd.Billing.Transaction.AppliedBalance' => $amount,
@@ -210,7 +210,7 @@ class ConstituentBillingService {
   }
   
   public function postTransaction($constituent_transaction_id) {
-    return $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', $constituent_transaction_id, array(
+    return $this->posterFactory->newPoster()->edit('HEd.Billing.Transaction', $constituent_transaction_id, array(
       'HEd.Billing.Transaction.Posted' => 1,
       'HEd.Billing.Transaction.ShowOnStatement' => 1
     ))->process()->getResult();

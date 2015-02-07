@@ -20,44 +20,42 @@ class SISPackageController extends Controller {
 
     if ($post_info_add) {
     
-      unset($post_info_add['FAID_STUDENT_AWARD_YEAR_AWARDS']['new_num']);
+      unset($post_info_add['HEd.FAID.Student.AwardYear']['new_num']);
+      unset($post_info_add['HEd.FAID.Student.AwardYear.Award']['new_num']);
 
-      if (count($post_info_add['FAID_STUDENT_AWARD_YEAR_AWARDS']) == 0 AND count($post_info_add['FAID_STUDENT_AWARDS']) == 0) {
+     if (isset($post_info_add['HEd.FAID.Student.AwardYear.Award']) AND count($post_info_add['HEd.FAID.Student.AwardYear.Award']) == 0 AND isset($post_info_add['HEd.FAID.Student.AwardYear']) AND count($post_info_add['HEd.FAID.Student.AwardYear']) == 0) {
         unset($post_info_add);
       }
     
     }
     
-    
-    
     if (isset($post_info_add)) {
-      unset($post_info_add['FAID_STUDENT_AWARD_YEAR_AWARDS']['new_num']);
 
-      $this->db('write')->beginTransaction();
+      $transaction = $this->db()->db_transaction();
       
       foreach($post_info_add as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
           
           // if inserting into FAID_STUDENT_AWARD_YEAR_AWARDS
-          if ($table == 'FAID_STUDENT_AWARD_YEAR_AWARDS') {
+          if ($table == 'HEd.FAID.Student.AwardYear.Award') {
           
             // check if award code already exists
             $award_code_exists = $this->db()->db_select('FAID_STUDENT_AWARD_YEAR', 'FAID_STUDENT_AWARD_YEAR')
               ->fields('FAID_STUDENT_AWARD_YEAR', array('AWARD_YEAR_ID'))
               ->leftJoin('FAID_STUDENT_AWARD_YEAR_AWARDS', 'FAID_STUDENT_AWARD_YEAR_AWARDS', 
                 'FAID_STUDENT_AWARD_YEAR_AWARDS.AWARD_YEAR_ID = FAID_STUDENT_AWARD_YEAR.AWARD_YEAR_ID AND
-                AWARD_CODE_ID = '.$row['AWARD_CODE_ID'])
+                AWARD_CODE_ID = '.$row['HEd.FAID.Student.AwardYear.Award.AwardCodeID'])
               ->fields('FAID_STUDENT_AWARD_YEAR_AWARDS', array('AWARD_YEAR_AWARD_ID'))
               ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
               ->condition('AWARD_YEAR', $fin_aid_year['FINANCIAL_AID_YEAR'])
               ->execute()->fetch();
             if (!$award_code_exists['AWARD_YEAR_AWARD_ID']) {
               
-              $poster_factory = new \Kula\Component\Database\Poster(array('FAID_STUDENT_AWARD_YEAR_AWARDS' => array('new' => array(
-                'AWARD_YEAR_ID' => $award_code_exists['AWARD_YEAR_ID'],
-                'AWARD_CODE_ID' => $row['AWARD_CODE_ID'],
-                'GROSS_AMOUNT' => $row['GROSS_AMOUNT'],
-                ))));
+              $poster_factory = $this->newPoster()->add('HEd.FAID.Student.AwardYear.Award', 'new', array(
+                'HEd.FAID.Student.AwardYear.Award.AwardYearID' => $award_code_exists['AWARD_YEAR_ID'],
+                'HEd.FAID.Student.AwardYear.Award.AwardCodeID' => $row['HEd.FAID.Student.AwardYear.Award.AwardCodeID'],
+                'HEd.FAID.Student.AwardYear.Award.GrossAmount' => $row['HEd.FAID.Student.AwardYear.Award.GrossAmount'],
+              ))->process()->getResult();
                 
                 // Create student award records
                 $student_award_terms_result = $this->db()->db_select('FAID_STUDENT_AWARD_YEAR_TERMS', 'FAID_STUDENT_AWARD_YEAR_TERMS')
@@ -73,30 +71,32 @@ class SISPackageController extends Controller {
                   
                   $award_code_result = $this->db()->db_select('FAID_AWARD_CODE', 'FAID_AWARD_CODE')
                     ->fields('FAID_AWARD_CODE', array('SHOW_ON_STATEMENT', 'ORIGINATION_FEE_PERCENTAGE'))
-                    ->condition('AWARD_CODE_ID', $row['AWARD_CODE_ID'])
+                    ->condition('AWARD_CODE_ID', $row['HEd.FAID.Student.AwardYear.Award.AwardCodeID'])
                     ->execute()->fetch();
                   
                   if ($award_code_result['ORIGINATION_FEE_PERCENTAGE'] > 0) {
-                    $net_amount = ceil($row['GROSS_AMOUNT'] * $percentage * ((100.0 - $award_code_result['ORIGINATION_FEE_PERCENTAGE']) * .01)); // (100 - fee) * .01
+                    $net_amount = ceil($row['HEd.FAID.Student.AwardYear.Award.GrossAmount'] * $percentage * ((100.0 - 
+                      $award_code_result['ORIGINATION_FEE_PERCENTAGE']) * .01)); // (100 - fee) * .01
                   } else {
-                    $net_amount = $row['GROSS_AMOUNT'] * $percentage;
+                    $net_amount = $row['HEd.FAID.Student.AwardYear.Award.GrossAmount'] * $percentage;
                   }
+                  //name="add[HEd.FAID.Student.AwardYear.Award][2][HEd.FAID.Student.AwardYear.Award.AwardCodeID]"
+                  $poster_factory = $this->newPoster()->add('HEd.FAID.Student.Award', 'new', array(
+                    'HEd.FAID.Student.Award.AwardYearTermID' => $student_award_term['AWARD_YEAR_TERM_ID'],
+                    'HEd.FAID.Student.Award.AwardCodeID' => $row['HEd.FAID.Student.AwardYear.Award.AwardCodeID'],
+                    'HEd.FAID.Student.Award.GrossAmount' => $row['HEd.FAID.Student.AwardYear.Award.GrossAmount'] * $percentage,
+                    'HEd.FAID.Student.Award.NetAmount' => $net_amount,
+                    'HEd.FAID.Student.Award.AwardStatus' => 'PEND',
+                    'HEd.FAID.Student.Award.ShowOnStatement' => $award_code_result['SHOW_ON_STATEMENT']
+                  ))->process()->getResult();
                   
-                  $poster_factory = new \Kula\Component\Database\Poster(array('FAID_STUDENT_AWARDS' => array('new' => array(
-                    'AWARD_YEAR_TERM_ID' => $student_award_term['AWARD_YEAR_TERM_ID'],
-                    'AWARD_CODE_ID' => $row['AWARD_CODE_ID'],
-                    'GROSS_AMOUNT' => $row['GROSS_AMOUNT'] * $percentage,
-                    'NET_AMOUNT' => $net_amount,
-                    'AWARD_STATUS' => 'PEND',
-                    'SHOW_ON_STATEMENT' => array('checkbox_hidden' => '', 'checkbox' => $award_code_result['SHOW_ON_STATEMENT'])
-                    ))));
                 }
                 
             }
             
           } // end if for FAID_STUDENT_AWARD_YEAR_AWARDS records
           
-          if ($table == 'FAID_STUDENT_AWARDS') {
+          if ($table == 'HEd.FAID.Student.Award') {
 
             foreach ($row as $award_row_id => $award) {
 
@@ -109,21 +109,20 @@ class SISPackageController extends Controller {
               ->execute()->fetch();
             
             if ($award_code_result['ORIGINATION_FEE_PERCENTAGE'] > 0) {
-              $net_amount = ceil($award['GROSS_AMOUNT'] * ((100.0 - $award_code_result['ORIGINATION_FEE_PERCENTAGE']) * .01)); // (100 - fee) * .01
+              $net_amount = ceil($award['HEd.FAID.Student.AwardYear.Award.GrossAmount'] * ((100.0 - $award_code_result['ORIGINATION_FEE_PERCENTAGE']) * 
+                .01)); // (100 - fee) * .01
             } else {
-              $net_amount = $award['GROSS_AMOUNT'];
+              $net_amount = $award['HEd.FAID.Student.AwardYear.Award.GrossAmount'];
             }
             
-            $data = array('FAID_STUDENT_AWARDS' => array('new' => array(
-              'AWARD_YEAR_TERM_ID' => $row_id_split[1],
-              'AWARD_CODE_ID' => $row_id_split[0],
-              'GROSS_AMOUNT' => $award['GROSS_AMOUNT'],
-              'NET_AMOUNT' => $net_amount,
-              'AWARD_STATUS' => 'PEND',
-              'SHOW_ON_STATEMENT' => array('checkbox_hidden' => 'N', 'checkbox' => $award_code_result['SHOW_ON_STATEMENT'])
-              )));
-            
-            $poster_factory = new \Kula\Component\Database\Poster($data);
+            $poster_factory = $this->newPoster()->add('HEd.FAID.Student.Award', 'new', array(
+              'HEd.FAID.Student.Award.AwardYearTermID' => $row_id_split[1],
+              'HEd.FAID.Student.Award.AwardCodeID' => $row_id_split[0],
+              'HEd.FAID.Student.Award.GrossAmount' => $award['HEd.FAID.Student.AwardYear.Award.GrossAmount'],
+              'HEd.FAID.Student.Award.NetAmount' => $net_amount,
+              'HEd.FAID.Student.Award.AwardStatus' => 'PEND',
+              'HEd.FAID.Student.Award.ShowOnStatement' => $award_code_result['SHOW_ON_STATEMENT']
+            ))->process()->getResult();
               
             } // end for
             
@@ -132,13 +131,13 @@ class SISPackageController extends Controller {
         }
       }
       
-      $this->db('write')->commit();
+      $transaction->commit();
       
     } elseif ($this->request->request->get('delete')) {  
       
       $post_delete = $this->request->request->get('delete');
       
-      $this->db('write')->beginTransaction();
+      $transaction = $this->db()->db_transaction();
       
       foreach($post_delete as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
@@ -156,19 +155,24 @@ class SISPackageController extends Controller {
               $award_term_ids[] = $award_year_id_row['AWARD_YEAR_TERM_ID'];
               $award_code_id = $award_year_id_row['AWARD_CODE_ID'];
             }
-      
-            // delete from FAID_STUDENT_AWARDS
-            $this->db('write')->db_delete('FAID_STUDENT_AWARDS')
+            
+            $awardsToDelete = $this->db()->db_select('FAID_STUDENT_AWARDS', 'awards')
+              ->fields('awards', array('AWARD_ID'))
               ->condition('AWARD_YEAR_TERM_ID', $award_term_ids)
               ->condition('AWARD_CODE_ID', $award_code_id)
               ->execute();
-            
+            while ($awardsToDeleteRow = $awardsToDelete->fetch()) {
+              // delete from FAID_STUDENT_AWARDS
+              $this->newPoster()->delete('HEd.FAID.Student.Award', $awardsToDeleteRow['AWARD_ID'])->process();
+            }
           }
         }
       }
-      $poster_factory = new \Kula\Component\Database\Poster(null, null, $post_delete);
+      $poster_factory = $this->newPoster();
+      $poster_factory->deleteMultiple($post_delete);
+      $poster_factory = $poster_factory->process()->getResult();
       
-      $this->db('write')->commit();
+      $transaction->commit();
       
     } else {
       $this->processForm();

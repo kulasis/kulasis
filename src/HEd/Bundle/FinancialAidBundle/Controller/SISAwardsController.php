@@ -13,34 +13,31 @@ class SISAwardsController extends Controller {
     $edit = $this->request->request->get('edit');
   
     if (count($edit) > 0) {
-      $this->db('write')->beginTransaction();
+      $transaction = $this->db()->db_transaction();
       $this->processForm();
-      if (isset($edit['FAID_STUDENT_AWARDS'])) {
+      if (isset($edit['HEd.FAID.Student.Award'])) {
       $awards_to_check = array();
-        foreach($edit['FAID_STUDENT_AWARDS'] as $award_id => $award) {
-          $awards_to_check[$award_id] = $award['NET_AMOUNT'];
+        foreach($edit['HEd.FAID.Student.Award'] as $award_id => $award) {
+          $awards_to_check[$award_id] = $award['HEd.FAID.Student.Award.NetAmount'];
         }
-        $constituent_billing_service = new \Kula\Bundle\HEd\StudentBillingBundle\ConstituentBillingService($this->db('write'), new \Kula\Component\Database\PosterFactory, $this->record, $this->session);
-      $constituent_billing_service->adjustFinancialAidAward($awards_to_check);
+        $constituent_billing_service = $this->get('kula.HEd.billing.constituent')->adjustFinancialAidAward($awards_to_check);
       }
-      $this->db('write')->commit();
+      $transaction->commit();
     }
     
     if ($this->request->request->get('post')) {
       
-      $this->db('write')->beginTransaction();
-      
-      $constituent_billing_service = new \Kula\Bundle\HEd\StudentBillingBundle\ConstituentBillingService($this->db('write'), new \Kula\Component\Database\PosterFactory, $this->record, $this->session);
+      $transaction = $this->db()->db_transaction();
       
       $post = $this->request->request->get('post');
       
       foreach($post as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
-          $constituent_billing_service->postFinancialAidAward($row_id);
+         $this->get('kula.HEd.billing.constituent')->postFinancialAidAward($row_id);
         }
       }
       
-      $this->db('write')->commit();
+      $transaction->commit();
     }
     
     $awards = array();

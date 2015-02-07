@@ -2,7 +2,7 @@
 
 {% block content %}
 <p>
-<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_student_billing_transactions') }}">Back to Transactions</a>
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_student_billing_transactions') }}">Back to Transactions</a>
 </p>
 
 <div class="group-box">
@@ -46,7 +46,7 @@
 {{ kula_field({ field: 'HEd.Billing.Transaction.Voided', value: transaction.VOIDED, label: true }) }}
 {{ kula_field({ field: 'HEd.Billing.Transaction.OriginalAmount', value: transaction.ORIGINAL_AMOUNT, label: true }) }}
 {{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.VoidedReason', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.VOIDED_REASON, label: true }) }}
-{{ kula_field({ field: 'HEd.Billing.Transaction.VoidedUsername', value: transaction.USERNAME, label: true }) }}
+{{ kula_field({ field: 'HEd.Billing.Transaction.VoidedUserstamp', value: transaction.USERNAME, label: true }) }}
 {{ kula_field({ field: 'HEd.Billing.Transaction.VoidedTimestamp', value: transaction.VOIDED_TIMESTAMP, label: true }) }}
 </div>
 </div>

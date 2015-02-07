@@ -20,9 +20,9 @@ class SISTermsController extends Controller {
     $post_info_add = $this->request->request->get('add');
     if ($post_info_add) {
     
-      unset($post_info_add['FAID_STUDENT_AWARD_YEAR_TERMS']['new_num']);
+      unset($post_info_add['HEd.FAID.Student.AwardYear.Term']['new_num']);
 
-      if (count($post_info_add['FAID_STUDENT_AWARD_YEAR_TERMS']) == 0) {
+      if (count($post_info_add['HEd.FAID.Student.AwardYear.Term']) == 0) {
         unset($post_info_add);
       }
     
@@ -36,27 +36,30 @@ class SISTermsController extends Controller {
         ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
         ->execute()->fetch();
       
+      $organizationid = $this->db()->db_select('CORE_ORGANIZATION_TERMS', 'orgterms')
+        ->fields('orgterms', array('ORGANIZATION_ID'))
+        ->condition('orgterms.ORGANIZATION_TERM_ID', current($post_info_add['HEd.FAID.Student.AwardYear.Term'])['HEd.FAID.Student.AwardYear.Term.OrganizationTermID']['value'])
+        ->execute()->fetch();
+      
       if ($award_year_info['AWARD_YEAR_ID'] == '') {
         // Create year record
-        $poster_factory = new \Kula\Component\Database\Poster(
-          array('FAID_STUDENT_AWARD_YEAR' => 
-            array('new' =>
-              array('STUDENT_ID' => $this->record->getSelectedRecordID(),
-                    'AWARD_YEAR' => $fin_aid_year['FINANCIAL_AID_YEAR']))));
-        $award_year_id = $poster_factory->getResultForTable('insert', 'FAID_STUDENT_AWARD_YEAR')['new'];
+        $award_year_id = $this->newPoster()->add('HEd.FAID.Student.AwardYear', 'new', array(
+          'HEd.FAID.Student.AwardYear.StudentID' => $this->record->getSelectedRecordID(),
+          'HEd.FAID.Student.AwardYear.AwardYear' => $fin_aid_year['FINANCIAL_AID_YEAR'],
+          'HEd.FAID.Student.AwardYear.OrganizationID' => $organizationid['ORGANIZATION_ID']
+        ))->process()->getResult();
         
       } else {
         $award_year_id = $award_year_info['AWARD_YEAR_ID'];
       }
       
-      $post_info_add = $this->request->request->get('add');
-      
       foreach($post_info_add as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
-          $post_info_add[$table][$row_id]['AWARD_YEAR_ID'] = $award_year_id;
+          //var_dump($row);
+          $row['HEd.FAID.Student.AwardYear.Award.AwardYearID'] = $award_year_id;
+          $this->newPoster()->add($table, $row_id, $row)->process();
         }
       }
-      $poster_factory = new \Kula\Component\Database\Poster($post_info_add);
     } else {
       $this->processForm();
     }

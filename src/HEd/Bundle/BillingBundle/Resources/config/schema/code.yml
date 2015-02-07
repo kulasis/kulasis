@@ -53,6 +53,7 @@ HEd.Billing.Code:
       db_column_name: CONV_CODE_NUMBER
       db_column_type: varchar
       db_column_length: 255
+      db_column_null: true
       field_type: text
       field_size: 20
       column_name: "Conversion Code Number"

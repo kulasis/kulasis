@@ -162,6 +162,7 @@ HEd.Section:
       db_column_null: true
       parent: HEd.MarkScale.ID
       field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\MarkScale
       column_name: "Mark Scale ID"
       label_name: "Mark Scale ID"
     TeacherGradesCompleted:
@@ -196,8 +197,10 @@ HEd.Student.Class:
       description: "Mark Scale ID"
       db_column_name: MARK_SCALE_ID
       db_column_type: serial
+      db_column_null: true
       parent: HEd.MarkScale.ID
       field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\MarkScale
       column_name: "Mark Scale ID"
       label_name: "Mark Scale ID"
 

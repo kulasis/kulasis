@@ -13,19 +13,17 @@ class SISHomeFinancialAidController extends Controller {
     
     if ($this->request->request->get('post')) {
       
-      $this->db('write')->beginTransaction();
-      
-      $constituent_billing_service = new \Kula\Bundle\HEd\StudentBillingBundle\ConstituentBillingService($this->db('write'), new \Kula\Component\Database\PosterFactory, $this->record, $this->session);
+      $transaction = $this->db()->db_transaction();
       
       $post = $this->request->request->get('post');
       
       foreach($post as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
-          $constituent_billing_service->postFinancialAidAward($row_id);
+          $this->get('kula.HEd.billing.constituent')->postFinancialAidAward($row_id);
         }
       }
       
-      $this->db('write')->commit();
+      $transaction->commit();
     }
     
     $awards = array();

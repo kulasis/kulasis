@@ -41,7 +41,7 @@ HEd.FAID.Student.AwardYear:
       description: "Primary EFC"
       db_column_name: PRIMARY_EFC
       db_column_type: int
-      db_column_null: null
+      db_column_null: true
       field_type: text
       field_length: 10
       column_name: "Primary EFC"
@@ -50,7 +50,7 @@ HEd.FAID.Student.AwardYear:
       description: "Secondary EFC"
       db_column_name: SECONDARY_EFC
       db_column_type: int
-      db_column_null: null
+      db_column_null: true
       field_type: text
       field_length: 10
       column_name: "Secondary EFC"
@@ -59,7 +59,7 @@ HEd.FAID.Student.AwardYear:
       description: "Total Income"
       db_column_name: TOTAL_INCOME
       db_column_type: int
-      db_column_null: null
+      db_column_null: true
       field_type: text
       field_length: 10
       column_name: "Total Income"
@@ -68,7 +68,7 @@ HEd.FAID.Student.AwardYear:
       description: "Total Cost of Attendance"
       db_column_name: TOTAL_COST_OF_ATTENDANCE
       db_column_type: int
-      db_column_null: null
+      db_column_null: true
       field_type: text
       field_length: 10
       column_name: "Total Cost of Attendance"
@@ -109,6 +109,8 @@ HEd.FAID.Student.AwardYear.Term:
       db_column_name: ORGANIZATION_TERM_ID
       db_column_type: serial
       db_column_null: false
+      field_type: chooser
+      chooser: Core.Organization.Term
       column_name: "Organization Term ID"
       label_name: "Organization Term ID"
     Sequence:
@@ -159,7 +161,7 @@ HEd.FAID.Student.AwardYear.Award:
       db_column_name: AWARD_CODE_ID
       db_column_type: serial
       field_type: select
-      #class: 
+      class: Kula\HEd\Bundle\FinancialAidBundle\Field\Award
       column_name: "Award Code ID"
       label_name: "Award Code ID"
     GrossAmount:
@@ -199,7 +201,7 @@ HEd.FAID.Student.Award:
       db_column_name: AWARD_CODE_ID
       db_column_type: serial
       field_type: select
-      #class:
+      class: Kula\HEd\Bundle\FinancialAidBundle\Field\Award
       column_name: "Award Code ID"
       label_name: "Award Code ID"
     DisbursementDate:

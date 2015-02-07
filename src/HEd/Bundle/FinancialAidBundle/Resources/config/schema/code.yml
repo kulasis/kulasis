@@ -65,15 +65,16 @@ HEd.FAID.Code:
       db_column_type: serial
       db_column_null: true
       field_type: select
-      #class:
+      class: Kula\HEd\Bundle\BillingBundle\Field\TransactionCode
       column_name: "Transaction Code ID"
       label_name: "Transaction Code ID"
     OriginationFeePercentage:
       description: "Origination Fee Percentage"
-      db_column_name: ORIGINAL_FEE_PERCENTAGE
+      db_column_name: ORIGINATION_FEE_PERCENTAGE
       db_column_type: numeric
       db_column_length: 6
       db_column_precision: 3
+      db_column_null: true
       field_type: text
       field_size: 8
       column_name: "Origination Fee Percentage"

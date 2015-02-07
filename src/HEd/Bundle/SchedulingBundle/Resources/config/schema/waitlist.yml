@@ -22,7 +22,7 @@ HEd.Student.WaitList:
       parent: HEd.Section.ID
       db_column_name: SECTION_ID
       db_column_type: serial
-      field_type: checkbox
+      field_type: multicheckbox
       column_name: "Section ID"
       label_name: "Section ID"
     AddedTimestamp:
