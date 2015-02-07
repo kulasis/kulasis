@@ -194,11 +194,11 @@ class NavigationLoader {
         
         if ($catalogNavigationTable['NAVIGATION_TYPE'] != $nav['type']) 
           $navFields['NAVIGATION_TYPE'] = $nav['type'];
-        if ($catalogNavigationTable['PORTAL'] != $nav['portal']) 
+        if (isset($nav['portal']) AND $catalogNavigationTable['PORTAL'] != $nav['portal']) 
           $navFields['PORTAL'] = $nav['portal'];
         if (isset($nav['sort']) AND $catalogNavigationTable['SORT'] != $nav['sort']) 
           $navFields['SORT'] = $nav['sort'];
-        if ($catalogNavigationTable['DISPLAY_NAME'] != $nav['display_name']) 
+        if (isset($nav['display_name']) AND $catalogNavigationTable['DISPLAY_NAME'] != $nav['display_name']) 
           $navFields['DISPLAY_NAME'] = $nav['display_name'];
         if (isset($nav['divider_before']) AND $catalogNavigationTable['DIVIDER_BEFORE'] != $nav['divider_before']) 
           $navFields['DIVIDER_BEFORE'] = (isset($nav['divider_before']) AND $nav['divider_before']) ? 1 : 0;

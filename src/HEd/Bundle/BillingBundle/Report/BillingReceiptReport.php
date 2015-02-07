@@ -55,17 +55,17 @@ class BillingReceiptReport extends Report {
   public function first_header() {
     
     // School Logo
-    $image1 = KULA_ROOT . "/web/images/ocaclogo_vertical.png";
+    $image1 = KULA_ROOT . $this->reportLogo;
     $this->Cell(1,0, $this->Image($image1, 15, 20), 0, 0, 'L');
     
     // College Information
-    $this->Cell(0,5, 'Oregon College of Art and Craft', '', 0,'C');
+    $this->Cell(0,5, $this->reportInstitutionName, '', 0,'C');
     $this->Ln(4);
-    $this->Cell(0,5, '8245 Southwest Barnes Road', '', 0,'C');
+    $this->Cell(0,5, $this->reportAddressLine1, '', 0,'C');
     $this->Ln(4);
-    $this->Cell(0,5, 'Portland, OR 97225', '', 0,'C');
+    $this->Cell(0,5, $this->reportAddressLine2, '', 0,'C');
     $this->Ln(4);
-    $this->Cell(0,5, 'Phone: 503-297-5544', '', 0,'C');
+    $this->Cell(0,5, $this->reportPhoneLine1, '', 0,'C');
     $this->Ln(25);
     // Student Name
     $y_pos = $this->GetY();

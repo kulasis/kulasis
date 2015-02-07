@@ -16,32 +16,33 @@ class SISBillingReceiptReportController extends ReportController {
   public function indexAction() {
     $this->authorize();
     $student_payments = array();
-    if ($this->request->query->get('record_type') == 'STUDENT' AND $this->request->query->get('record_id') != '') {
-      $this->setRecordType('STUDENT');
+    if ($this->request->query->get('record_type') == 'SIS.HEd.Student' AND $this->request->query->get('record_id') != '') {
+      $this->setRecordType('SIS.HEd.Student');
       
-      $student_payments = $this->db()->select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+      $student_payments = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
         ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT'))
-        ->join('BILL_CODE', 'code', array('CODE'), 'code.CODE_ID = trans.CODE_ID')
-        ->predicate('code.CODE_TYPE', 'P')
-        ->predicate('POSTED', 'Y')
-        ->predicate('CONSTITUENT_ID', $this->record->getSelectedRecordID())
-        ->order_by('TRANSACTION_DATE', 'DESC');
+        ->join('BILL_CODE', 'code', 'code.CODE_ID = trans.CODE_ID')
+        ->fields('code', array('CODE'))
+        ->condition('code.CODE_TYPE', 'P')
+        ->condition('POSTED', 1)
+        ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
+        ->orderBy('TRANSACTION_DATE', 'DESC');
       $org_term_ids = $this->focus->getOrganizationTermIDs();
       if ($this->session->get('term_id') != '' AND isset($org_term_ids) AND count($org_term_ids) > 0) {
-        $student_payments = $student_payments->predicate('trans.ORGANIZATION_TERM_ID', $org_term_ids);
+        $student_payments = $student_payments->condition('trans.ORGANIZATION_TERM_ID', $org_term_ids);
       }
       $student_payments = $student_payments->execute()->fetchAll();
       
     }
     
-    return $this->render('KulaHEdStudentBillingBundle:BillingReceiptReport:reports_billingreceipt.html.twig', array('student_payments' => $student_payments));
+    return $this->render('KulaHEdBillingBundle:SISBillingReceiptReport:reports_billingreceipt.html.twig', array('student_payments' => $student_payments));
   }
   
   public function generateAction()
   {  
     $this->authorize();
     
-    $this->pdf = new \Kula\Bundle\HEd\StudentBillingBundle\Controller\BillingReceiptReport("P");
+    $this->pdf = new \Kula\HEd\Bundle\BillingBundle\Report\BillingReceiptReport("P");
     $this->pdf->SetFillColor(245,245,245);
     $this->pdf->row_count = 0;
 
@@ -55,58 +56,68 @@ class SISBillingReceiptReportController extends ReportController {
       $this->selected_transactions = $non['receipts'];
     
     // Get current term start date
-    $focus_term_info = $this->db()->select('CORE_TERM', 'term')
+    $focus_term_info = $this->db()->db_select('CORE_TERM', 'term')
       ->fields('term', array('START_DATE'))
-      ->predicate('term.TERM_ID', $this->session->get('term_id'))
+      ->condition('term.TERM_ID', $this->session->get('term_id'))
       ->execute()->fetch();
 
     
     // Get Data and Load
-    $result = $this->db()->select('STUD_STUDENT', 'student')
+    $result = $this->db()->db_select('STUD_STUDENT', 'student')
       ->fields('student', array('STUDENT_ID'))
-      ->join('CONS_CONSTITUENT', 'stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'), 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
-      ->left_join('CONS_PHONE', 'phone', array('PHONE_NUMBER'), 'phone.PHONE_NUMBER_ID = stucon.PRIMARY_PHONE_ID')
-      ->left_join('CONS_ADDRESS', 'billaddr', array('ADDRESS' => 'bill_ADDRESS', 'CITY' => 'bill_CITY', 'STATE' => 'bill_STATE', 'ZIPCODE' => 'bill_ZIPCODE', 'COUNTRY' => 'bill_COUNTRY'), 'billaddr.ADDRESS_ID = student.BILLING_ADDRESS_ID')
-      ->left_join('CONS_ADDRESS', 'mailaddr', array('ADDRESS' => 'mail_ADDRESS', 'CITY' => 'mail_CITY', 'STATE' => 'mail_STATE', 'ZIPCODE' => 'mail_ZIPCODE', 'COUNTRY' => 'mail_COUNTRY'), 'mailaddr.ADDRESS_ID = stucon.MAILING_ADDRESS_ID')
-      ->left_join('CONS_ADDRESS', 'residenceaddr', array('ADDRESS' => 'residence_ADDRESS', 'CITY' => 'residence_CITY', 'STATE' => 'residence_STATE', 'ZIPCODE' => 'residence_ZIPCODE', 'COUNTRY' => 'residence_COUNTRY'), 'residenceaddr.ADDRESS_ID = stucon.RESIDENCE_ADDRESS_ID');
+      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
+      ->leftJoin('CONS_PHONE', 'phone', 'phone.PHONE_NUMBER_ID = stucon.PRIMARY_PHONE_ID')
+      ->fields('phone', array('PHONE_NUMBER'))
+      ->leftJoin('CONS_ADDRESS', 'billaddr', 'billaddr.ADDRESS_ID = student.BILLING_ADDRESS_ID')
+      ->fields('billaddr', array('THOROUGHFARE' => 'bill_ADDRESS', 'ADMINISTRATIVE_AREA' => 'bill_CITY', 'LOCALITY' => 'bill_STATE', 'POSTAL_CODE' => 'bill_ZIPCODE', 'COUNTRY' => 'bill_COUNTRY'))
+      ->leftJoin('CONS_ADDRESS', 'mailaddr', 'mailaddr.ADDRESS_ID = stucon.MAILING_ADDRESS_ID')
+      ->fields('mailaddr', array('THOROUGHFARE' => 'mail_ADDRESS', 'ADMINISTRATIVE_AREA' => 'mail_CITY', 'LOCALITY' => 'mail_STATE', 'POSTAL_CODE' => 'mail_ZIPCODE', 'COUNTRY' => 'mail_COUNTRY'))
+      ->leftJoin('CONS_ADDRESS', 'residenceaddr', 'residenceaddr.ADDRESS_ID = stucon.RESIDENCE_ADDRESS_ID')
+      ->fields('residenceaddr', array('THOROUGHFARE' => 'residence_ADDRESS', 'ADMINISTRATIVE_AREA' => 'residence_CITY', 'LOCALITY' => 'residence_STATE', 'POSTAL_CODE' => 'residence_ZIPCODE', 'COUNTRY' => 'residence_COUNTRY'));
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if ($this->session->get('term_id') != '' AND isset($org_term_ids) AND count($org_term_ids) > 0) {
-      $result = $result->predicate('status.ORGANIZATION_TERM_ID', $org_term_ids)
-        ->left_join('STUD_STUDENT_STATUS', 'status', null, 'status.STUDENT_ID = student.STUDENT_ID')
-        ->left_join('CORE_LOOKUP_VALUES', 'grade_values', array('DESCRIPTION' => 'GRADE'), 'grade_values.CODE = status.GRADE AND grade_values.LOOKUP_ID = 20')
-        ->left_join('CORE_LOOKUP_VALUES', 'entercode_values', array('DESCRIPTION' => 'ENTER_CODE'), 'entercode_values.CODE = status.ENTER_CODE AND entercode_values.LOOKUP_ID = 16')
-        ->left_join('STUD_STUDENT_DEGREES', 'studdegrees', null, 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
-        ->left_join('STUD_DEGREE', 'degree', array('DEGREE_NAME'), 'degree.DEGREE_ID = studdegrees.DEGREE_ID')  
-        ->left_join('CORE_ORGANIZATION_TERMS', 'orgterms', null, 'orgterms.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
-        ->left_join('CORE_ORGANIZATION', 'org', array('ORGANIZATION_ABBREVIATION'), 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
-        ->left_join('CORE_TERM', 'term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'), 'term.TERM_ID = orgterms.TERM_ID');
+      $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids)
+        ->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID')
+        ->leftJoin('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
+        ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
+        ->leftJoin('CORE_LOOKUP_VALUES', 'entercode_values', "entercode_values.CODE = status.ENTER_CODE AND entercode_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.EnterCode')")
+        ->fields('entercode_values', array('DESCRIPTION' => 'ENTER_CODE'))
+        ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
+        ->leftJoin('STUD_DEGREE', 'degree', 'degree.DEGREE_ID = studdegrees.DEGREE_ID')  
+        ->fields('degree', array('DEGREE_NAME'))
+        ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
+        ->leftJoin('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
+        ->fields('org', array('ORGANIZATION_ABBREVIATION'))
+        ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+        ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'));
     }
     
 
     // Add on selected record
-    if (isset($record_id) AND $record_id != '' AND $record_type == 'STUDENT')
-      $result = $result->predicate('student.STUDENT_ID', $record_id);
+    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.HEd.Student')
+      $result = $result->condition('student.STUDENT_ID', $record_id);
 
     $result = $result
-      ->order_by('LAST_NAME', 'ASC', 'stucon')
-      ->order_by('FIRST_NAME', 'ASC', 'stucon')
-      ->order_by('STUDENT_ID', 'ASC', 'student')
+      ->orderBy('stucon.LAST_NAME', 'ASC')
+      ->orderBy('stucon.FIRST_NAME', 'ASC')
+      ->orderBy('student.STUDENT_ID', 'ASC')
       ->execute();
     
     while ($row = $result->fetch()) {
       
       if ($row['bill_ADDRESS']) {
         // Get billing addresses
-        $billing_addresses_query_conditions = new \Kula\Component\Database\Query\Predicate('OR');
-        $billing_addresses_query_conditions = $billing_addresses_query_conditions->predicate('EFFECTIVE_DATE', null);
-        $billing_addresses_query_conditions = $billing_addresses_query_conditions->predicate('EFFECTIVE_DATE', date('Y-m-d'), '>=');
+        $billing_addresses_query_conditions = $this->db()->db_or();
+        $billing_addresses_query_conditions = $billing_addresses_query_conditions->condition('EFFECTIVE_DATE', null);
+        $billing_addresses_query_conditions = $billing_addresses_query_conditions->condition('EFFECTIVE_DATE', date('Y-m-d'), '>=');
         
-        $billing_addresses_result = $this->db()->select('CONS_ADDRESS', 'address')
-          ->fields('address', array('RECIPIENT', 'ADDRESS', 'CITY', 'STATE', 'ZIPCODE'))
-          ->predicate('CONSTITUENT_ID', $row['STUDENT_ID'])
-          ->predicate('ACTIVE', 'Y')
-          ->predicate('UNDELIVERABLE', 'N')
-          ->predicate('ADDRESS_TYPE', 'B');
+        $billing_addresses_result = $this->db()->db_select('CONS_ADDRESS', 'address')
+          ->fields('address', array('RECIPIENT', 'THOROUGHFARE', 'LOCALITY', 'ADMINISTRATIVE_AREA', 'POSTAL_CODE'))
+          ->condition('CONSTITUENT_ID', $row['STUDENT_ID'])
+          ->condition('ACTIVE', 1)
+          ->condition('UNDELIVERABLE', 0)
+          ->condition('ADDRESS_TYPE', 'B');
         
         $billing_addresses_result = $billing_addresses_result->execute();
         while ($billing_addresses_row = $billing_addresses_result->fetch()) {
@@ -138,23 +149,26 @@ class SISBillingReceiptReportController extends ReportController {
     $this->pdf->AddPage();
     
     // Get Transactions
-    $result = $this->db()->select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+    $result = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
       ->fields('transactions', array('TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT'))
-      ->join('BILL_CODE', 'code', array('CODE', 'CODE_TYPE'), 'transactions.CODE_ID = code.CODE_ID')
-      ->predicate('transactions.CONSTITUENT_ID', $student_id)
-      ->predicate('code.CODE_TYPE', 'P')
-      ->predicate('transactions.SHOW_ON_STATEMENT', 'Y')
-      ->left_join('CORE_ORGANIZATION_TERMS', 'orgterms', null, 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
-      ->left_join('CORE_ORGANIZATION', 'org', array('ORGANIZATION_ABBREVIATION'), 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
-      ->left_join('CORE_TERM', 'term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'), 'term.TERM_ID = orgterms.TERM_ID');
+      ->join('BILL_CODE', 'code', 'transactions.CODE_ID = code.CODE_ID')
+      ->fields('code', array('CODE', 'CODE_TYPE'))
+      ->condition('transactions.CONSTITUENT_ID', $student_id)
+      ->condition('code.CODE_TYPE', 'P')
+      ->condition('transactions.SHOW_ON_STATEMENT', 'Y')
+      ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
+      ->leftJoin('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_ABBREVIATION'))
+      ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'));
         
     if (count($this->selected_transactions) > 0) {
-      $result = $result->predicate('transactions.CONSTITUENT_TRANSACTION_ID', $this->selected_transactions);
+      $result = $result->condition('transactions.CONSTITUENT_TRANSACTION_ID', $this->selected_transactions);
     }
 
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if ($this->session->get('term_id') != '' AND isset($org_term_ids) AND count($org_term_ids) > 0) {
-      $result = $result->predicate('transactions.ORGANIZATION_TERM_ID', $org_term_ids);
+      $result = $result->condition('transactions.ORGANIZATION_TERM_ID', $org_term_ids);
     }
     $result = $result->execute();
     while ($row = $result->fetch()) {

@@ -65,11 +65,11 @@ class CourseHistoryService {
     
     // Get award data
     $award_data = $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS']);
-    $course_history_data['HEd.Student.CourseHistory.CreditsEarned'] = $award_data['CREDITS_EARNED'];
-    $course_history_data['HEd.Student.CourseHistory.GPAValue'] = $award_data['GPA_VALUE'];
-    $course_history_data['HEd.Student.CourseHistory.QualityPoints'] = $award_data['QUALITY_POINTS'];
+    $course_history_data['HEd.Student.CourseHistory.CreditsEarned'] = $award_data['HEd.Student.CourseHistory.CreditsEarned'];
+    $course_history_data['HEd.Student.CourseHistory.GPAValue'] = $award_data['HEd.Student.CourseHistory.GPAValue'];
+    $course_history_data['HEd.Student.CourseHistory.QualityPoints'] = $award_data['HEd.Student.CourseHistory.QualityPoints'];
     
-    return $this->posterFactory->newFactory()->add('HEd.Student.CourseHistory', 'new', $course_history_data)->process()->getResult();
+    return $this->posterFactory->newPoster()->add('HEd.Student.CourseHistory', 'new', $course_history_data)->process()->getResult();
     
     }
   }
@@ -123,7 +123,7 @@ class CourseHistoryService {
     
     $data += $this->determineAward($mark_scale_id, $data['HEd.Student.CourseHistory.Mark'], $data['HEd.Student.CourseHistory.CreditsAttempted']);
     unset($data['COMMENTS']);
-    return $this->posterFactory-newPoster()->add('HEd.Student.CourseHistory', $id, $data)->process()->getResult();
+    return $this->posterFactory->newPoster()->add('HEd.Student.CourseHistory', $id, $data)->process()->getResult();
   }
   
   private function determineAward($mark_scale_id, $mark, $credits_attempted) {
@@ -145,7 +145,7 @@ class CourseHistoryService {
       $award_data['HEd.Student.CourseHistory.CreditsEarned'] = 0.0;
     
     $award_data['HEd.Student.CourseHistory.GPAValue'] = $mark_info['GPA_VALUE'];
-    $award_data['HEd.Student.CourseHistory.QualityPoints'] = $mark_info['GPA_VALUE'] * $award_data['CREDITS_EARNED'];
+    $award_data['HEd.Student.CourseHistory.QualityPoints'] = $mark_info['GPA_VALUE'] * $award_data['HEd.Student.CourseHistory.CreditsEarned'];
     
     if ($mark_info['ALLOW_COMMENTS'] == 1 OR $mark_info['REQUIRE_COMMENTS'] == 1) {
       $award_data['COMMENTS'] = 'Y';

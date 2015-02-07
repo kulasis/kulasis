@@ -6,12 +6,15 @@ SIS.HEd.Student.Schedule.Grades:
   sort: 3
   route: sis_HEd_student_schedule_grades
 
-SIS.HEd.Student.Schedule.FinalGrades:
-  type: menu_report
+
+SIS.HEd.Student.Schedule:
+  type: form
   portal: sis
-  descriptions: "Final Grades"
-  display_name: "Final Grades"
-  route: sis_HEd_student_schedule_reports_finalgrades
+  menu_reports:
+    FinalGrades:
+      descriptions: "Final Grades"
+      display_name: "Final Grades"
+      route: sis_HEd_student_schedule_reports_finalgrades
 
 SIS.HEd.Reports.Student.FinalGrades:
   type: report

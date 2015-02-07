@@ -82,9 +82,9 @@ class StudentTranscriptReport extends BaseReport {
       $this->Cell(10,5,date('m/d/Y', strtotime($this->data['HIGH_SCHOOL_GRADUATION_DATE'])),'',0,'L');
       $this->Ln(4);
     }
-    if ($this->data['ORIG_ENTER_DATE']) {
+    if ($this->data['ORIGINAL_ENTER_DATE']) {
       $this->Cell(40,5,'Original Enter Date: ','',0,'L');
-      $this->Cell(10,5,date('m/d/Y', strtotime($this->data['ORIG_ENTER_DATE'])),'',0,'L');
+      $this->Cell(10,5,date('m/d/Y', strtotime($this->data['ORIGINAL_ENTER_DATE'])),'',0,'L');
       $this->Ln(4);
     }
     
@@ -93,13 +93,13 @@ class StudentTranscriptReport extends BaseReport {
     $this->SetY(12);
     
     // College Information
-    $this->Cell(60,5, 'Oregon College of Art and Craft', '', 0,'R');
+    $this->Cell(60,5, $this->reportInstitutionName, '', 0,'R');
     $this->Ln(4);
-    $this->Cell(60,5, '8245 Southwest Barnes Road', '', 0,'R');
+    $this->Cell(60,5, $this->reportAddressLine1, '', 0,'R');
     $this->Ln(4);
-    $this->Cell(60,5, 'Portland, OR 97225', '', 0,'R');
+    $this->Cell(60,5, $this->reportAddressLine2, '', 0,'R');
     $this->Ln(4);
-    $this->Cell(60,5, 'Phone: 503-297-5544', '', 0,'R');
+    $this->Cell(60,5, $this->reportPhoneLine1, '', 0,'R');
     $this->Ln(6);
     
     $this->SetFont('Arial', '', 7);

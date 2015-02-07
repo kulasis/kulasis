@@ -8,18 +8,18 @@ class SISStudentTranscriptReportController extends ReportController {
   
   public function indexAction() {
     $this->authorize();
-    $this->formAction('sis_student_coursehistory_reports_studenttranscript_generate');
+    $this->formAction('sis_HEd_student_coursehistory_reports_studenttranscript_generate');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    if ($this->request->query->get('record_type') == 'STUDENT' AND $this->request->query->get('record_id') != '')
-      $this->setRecordType('STUDENT');
-    return $this->render('KulaHEdCourseHistoryBundle:StudentTranscriptReport:reports_studenttranscript.html.twig');
+    if ($this->request->query->get('record_type') == 'SIS.HEd.Student' AND $this->request->query->get('record_id') != '')
+      $this->setRecordType('SIS.HEd.Student');
+    return $this->render('KulaHEdGradingBundle:SISStudentTranscriptReport:reports_studenttranscript.html.twig');
   }
   
   public function generateAction()
   {  
     $this->authorize();
     
-    $pdf = new \Kula\Bundle\HEd\CourseHistoryBundle\Controller\StudentTranscriptReport("P");
+    $pdf = new \Kula\HEd\Bundle\GradingBundle\Report\StudentTranscriptReport("P");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
     
@@ -29,41 +29,43 @@ class SISStudentTranscriptReportController extends ReportController {
     // Add on level
     $level_condition = '';
     $level = $this->request->request->get('non');
-    if (isset($level['STUD_STUDENT_COURSE_HISTORY']['LEVEL']) AND $level['STUD_STUDENT_COURSE_HISTORY']['LEVEL'] != '') {
-      $level_condition = ' AND classes.LEVEL = \''.$level['STUD_STUDENT_COURSE_HISTORY']['LEVEL'].'\'';
+    if (isset($level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
+      $level_condition = ' AND classes.LEVEL = \''.$level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'].'\'';
     }
     
-    $query_conditions = new \Kula\Component\Database\Query\Predicate('OR');
-    $query_conditions = $query_conditions->predicate('DROPPED', null);
-    $query_conditions = $query_conditions->predicate('DROPPED', 'N');
     // Get schedule data
-    $schedule_result = $this->db()->select('STUD_STUDENT', 'student')
+    $schedule_result = $this->db()->db_select('STUD_STUDENT', 'student')
       ->fields('student', array('STUDENT_ID'))
-      ->join('STUD_STUDENT_STATUS', 'stustatus', null, 'stustatus.STUDENT_ID = student.STUDENT_ID')
-      ->join('STUD_STUDENT_CLASSES', 'classes', array('LEVEL', 'CREDITS_ATTEMPTED'), 'classes.STUDENT_STATUS_ID = stustatus.STUDENT_STATUS_ID '.$level_condition)
-      ->join('STUD_SECTION', 'section', null, 'section.SECTION_ID = classes.SECTION_ID')
-      ->join('STUD_COURSE', 'course', array('COURSE_NUMBER', 'COURSE_TITLE'), 'course.COURSE_ID = section.COURSE_ID')
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', null, 'orgterms.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', array('ORGANIZATION_NAME'), 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
-      ->join('CORE_TERM', 'term', array('TERM_NAME'), 'term.TERM_ID = orgterms.TERM_ID')
-      ->left_join('CORE_LOOKUP_VALUES', 'level_values', array('DESCRIPTION' => 'LEVEL_DESCRIPTION'), 'level_values.CODE = classes.LEVEL AND level_values.LOOKUP_ID = 37')
-      ->left_join('STUD_STUDENT_COURSE_HISTORY', 'stucoursehistory', null, 'stucoursehistory.STUDENT_CLASS_ID = classes.STUDENT_CLASS_ID')
-      ->predicate('stucoursehistory.COURSE_HISTORY_ID', null)
-      ->predicate($query_conditions)
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = student.STUDENT_ID')
+      ->join('STUD_STUDENT_CLASSES', 'classes', 'classes.STUDENT_STATUS_ID = stustatus.STUDENT_STATUS_ID '.$level_condition)
+      ->fields('classes', array('LEVEL', 'CREDITS_ATTEMPTED'))
+      ->join('STUD_SECTION', 'section', 'section.SECTION_ID = classes.SECTION_ID')
+      ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
+      ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_NAME'))
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->fields('term', array('TERM_NAME'))
+      ->leftJoin('CORE_LOOKUP_VALUES', 'level_values', "level_values.CODE = classes.LEVEL AND level_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Level')")
+      ->fields('level_values', array('DESCRIPTION' => 'LEVEL_DESCRIPTION'))
+      ->leftJoin('STUD_STUDENT_COURSE_HISTORY', 'stucoursehistory', 'stucoursehistory.STUDENT_CLASS_ID = classes.STUDENT_CLASS_ID')
+      ->condition('stucoursehistory.COURSE_HISTORY_ID', null)
+      ->condition('DROPPED', 0)
       ;
     //$org_term_ids = $this->session->get('organization_term_ids');
     //if (isset($org_term_ids) AND count($org_term_ids) > 0) {
-    //  $schedule_result = $schedule_result->predicate('stustatus.ORGANIZATION_TERM_ID', $org_term_ids);
+    //  $schedule_result = $schedule_result->condition('stustatus.ORGANIZATION_TERM_ID', $org_term_ids);
     //}
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '')
-      $schedule_result = $schedule_result->predicate('student.STUDENT_ID', $record_id);
+      $schedule_result = $schedule_result->condition('student.STUDENT_ID', $record_id);
     $schedule_result = $schedule_result
-      ->order_by('STUDENT_ID', 'ASC', 'student')
-      ->order_by('DESCRIPTION', 'ASC', 'level_values')
-      ->order_by('START_DATE', 'ASC', 'term')
-      ->order_by('COURSE_NUMBER', 'ASC', 'course')
+      ->orderBy('student.STUDENT_ID', 'ASC')
+      ->orderBy('level_values.DESCRIPTION', 'ASC')
+      ->orderBy('term.START_DATE', 'ASC')
+      ->orderBy('course.COURSE_NUMBER', 'ASC')
       ;
     $schedule_result = $schedule_result->execute();
     while ($schedule_row = $schedule_result->fetch()) {
@@ -76,35 +78,39 @@ class SISStudentTranscriptReportController extends ReportController {
     // Add on level
     $level_condition = '';
     $level = $this->request->request->get('non');
-    if (isset($level['STUD_STUDENT_COURSE_HISTORY']['LEVEL']) AND $level['STUD_STUDENT_COURSE_HISTORY']['LEVEL'] != '') {
-      $level_condition = ' AND coursehistory.LEVEL = \''.$level['STUD_STUDENT_COURSE_HISTORY']['LEVEL'].'\'';
+    if (isset($level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
+      $level_condition = ' AND coursehistory.LEVEL = \''.$level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'].'\'';
     }
     
     $row_counts = array();
     // Get counts of rows
-    $result_counts = $this->db()->select('STUD_STUDENT', 'student')
+    $result_counts = $this->db()->db_select('STUD_STUDENT', 'student')
       ->distinct()
       ->fields('student', array('STUDENT_ID'))
-      ->join('CONS_CONSTITUENT', 'stucon', array('PERMANENT_NUMBER'), 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
-      ->left_join('STUD_STUDENT_COURSE_HISTORY', 'coursehistory', array('LEVEL', 'CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'NON_ORGANIZATION_ID'), 'coursehistory.STUDENT_ID = student.STUDENT_ID '.$level_condition)
-      ->left_join('CORE_ORGANIZATION', 'org', array('ORGANIZATION_NAME'), 'org.ORGANIZATION_ID = coursehistory.ORGANIZATION_ID')
-      ->left_join('CORE_NON_ORGANIZATION', 'nonorg', array('NON_ORGANIZATION_NAME'), 'nonorg.NON_ORGANIZATION_ID = coursehistory.NON_ORGANIZATION_ID')
+      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+      ->fields('stucon', array('PERMANENT_NUMBER'))
+      ->leftJoin('STUD_STUDENT_COURSE_HISTORY', 'coursehistory', 'coursehistory.STUDENT_ID = student.STUDENT_ID '.$level_condition)
+      ->fields('coursehistory', array('LEVEL', 'CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'NON_ORGANIZATION_ID'))
+      ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = coursehistory.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_NAME'))
+      ->leftJoin('CORE_NON_ORGANIZATION', 'nonorg', 'nonorg.NON_ORGANIZATION_ID = coursehistory.NON_ORGANIZATION_ID')
+      ->fields('nonorg', array('NON_ORGANIZATION_NAME'))
       ;
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '')
-      $result_counts = $result_counts->predicate('student.STUDENT_ID', $record_id);
+      $result_counts = $result_counts->condition('student.STUDENT_ID', $record_id);
 
     $result_counts = $result_counts
-      ->group_by('STUDENT_ID', 'student')
-      ->group_by('LEVEL', 'coursehistory')
-      ->group_by('ORGANIZATION_NAME', 'org')
-      ->group_by('NON_ORGANIZATION_NAME', 'nonorg')
-      ->group_by('CALENDAR_YEAR', 'coursehistory')
-      ->group_by('CALENDAR_MONTH', 'coursehistory')
-      ->group_by('TERM', 'coursehistory')
-      ->order_by('STUDENT_ID', 'ASC', 'student')
-      ->expressions(array('COUNT(*)' => 'row_count'));
+      ->groupBy('student.STUDENT_ID')
+      ->groupBy('coursehistory.LEVEL')
+      ->groupBy('org.ORGANIZATION_NAME')
+      ->groupBy('nonorg.NON_ORGANIZATION_NAME')
+      ->groupBy('coursehistory.CALENDAR_YEAR')
+      ->groupBy('coursehistory.CALENDAR_MONTH')
+      ->groupBy('coursehistory.TERM')
+      ->orderBy('student.STUDENT_ID', 'ASC')
+      ->expression('COUNT(*)', 'row_count');
     $result_counts = $result_counts->execute();
     
     while ($counts_row = $result_counts->fetch()) {
@@ -120,35 +126,40 @@ class SISStudentTranscriptReportController extends ReportController {
     }
     
     // Get Data and Load
-    $result = $this->db()->select('STUD_STUDENT', 'student')
+    $result = $this->db()->db_select('STUD_STUDENT', 'student')
       ->distinct()
-      ->fields('student', array('STUDENT_ID', 'ORIG_ENTER_DATE', 'HIGH_SCHOOL_GRADUATION_DATE'))
-      ->join('CONS_CONSTITUENT', 'stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'BIRTH_DATE'), 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
-      ->left_join('STUD_STUDENT_COURSE_HISTORY', 'coursehistory', array('ORGANIZATION_ID', 'LEVEL', 'COURSE_NUMBER', 'COURSE_TITLE', 'MARK', 'CREDITS_ATTEMPTED', 'CREDITS_EARNED', 'QUALITY_POINTS', 'CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'NON_ORGANIZATION_ID'), 'coursehistory.STUDENT_ID = student.STUDENT_ID '.$level_condition)
-      ->left_join('CORE_LOOKUP_VALUES', 'level_values', array('DESCRIPTION' => 'LEVEL_DESCRIPTION'), 'level_values.CODE = coursehistory.LEVEL AND level_values.LOOKUP_ID = 37')
-      ->left_join('CORE_ORGANIZATION', 'org', array('ORGANIZATION_NAME'), 'org.ORGANIZATION_ID = coursehistory.ORGANIZATION_ID')
-      ->left_join('CORE_NON_ORGANIZATION', 'nonorg', array('NON_ORGANIZATION_NAME'), 'nonorg.NON_ORGANIZATION_ID = coursehistory.NON_ORGANIZATION_ID')
+      ->fields('student', array('STUDENT_ID', 'ORIGINAL_ENTER_DATE', 'HIGH_SCHOOL_GRADUATION_DATE'))
+      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'BIRTH_DATE'))
+      ->leftJoin('STUD_STUDENT_COURSE_HISTORY', 'coursehistory', 'coursehistory.STUDENT_ID = student.STUDENT_ID '.$level_condition)
+      ->fields('coursehistory', array('ORGANIZATION_ID', 'LEVEL', 'COURSE_NUMBER', 'COURSE_TITLE', 'MARK', 'CREDITS_ATTEMPTED', 'CREDITS_EARNED', 'QUALITY_POINTS', 'CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'NON_ORGANIZATION_ID'))
+      ->leftJoin('CORE_LOOKUP_VALUES', 'level_values', "level_values.CODE = coursehistory.LEVEL AND level_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Level')")
+      ->fields('level_values', array('DESCRIPTION' => 'LEVEL_DESCRIPTION'))
+      ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = coursehistory.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_NAME'))
+      ->leftJoin('CORE_NON_ORGANIZATION', 'nonorg', 'nonorg.NON_ORGANIZATION_ID = coursehistory.NON_ORGANIZATION_ID')
+      ->fields('nonorg', array('NON_ORGANIZATION_NAME'))
       ;
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0) {
-      $result = $result->left_join('STUD_STUDENT_STATUS', 'status', null, 'status.STUDENT_ID = student.STUDENT_ID');
-      $result = $result->predicate('status.ORGANIZATION_TERM_ID', $org_term_ids);
+      $result = $result->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID');
+      $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids);
     }
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '')
-      $result = $result->predicate('student.STUDENT_ID', $record_id);
+      $result = $result->condition('student.STUDENT_ID', $record_id);
 
     $result = $result
-      ->order_by('LAST_NAME', 'ASC', 'stucon')
-      ->order_by('FIRST_NAME', 'ASC', 'stucon')
-      ->order_by('STUDENT_ID', 'ASC', 'student')
-      ->order_by('LEVEL', 'ASC', 'coursehistory')
-      ->order_by('CALENDAR_YEAR', 'ASC', 'coursehistory')
-      ->order_by('CALENDAR_MONTH', 'ASC', 'coursehistory')
-      ->order_by('TERM', 'ASC', 'coursehistory')
-      ->order_by('NON_ORGANIZATION_NAME', 'ASC', 'nonorg')
-      ->order_by('ORGANIZATION_NAME', 'ASC', 'org')
+      ->orderBy('stucon.LAST_NAME', 'ASC')
+      ->orderBy('stucon.FIRST_NAME', 'ASC')
+      ->orderBy('student.STUDENT_ID', 'ASC')
+      ->orderBy('coursehistory.LEVEL', 'ASC')
+      ->orderBy('coursehistory.CALENDAR_YEAR', 'ASC')
+      ->orderBy('coursehistory.CALENDAR_MONTH', 'ASC')
+      ->orderBy('coursehistory.TERM', 'ASC')
+      ->orderBy('nonorg.NON_ORGANIZATION_NAME', 'ASC')
+      ->orderBy('org.ORGANIZATION_NAME', 'ASC')
       ->execute();
     
     $last_student_id = 0;
@@ -212,29 +223,33 @@ class SISStudentTranscriptReportController extends ReportController {
         $totals['institution']['PTS'] = 0.0;  
         
         // Grade status info
-        $status_info = $this->db()->select('STUD_STUDENT_STATUS', 'status')
-          ->fields('status', array())
-          ->join('CORE_LOOKUP_VALUES', 'grade_values', array('DESCRIPTION' => 'GRADE'), 'grade_values.CODE = status.GRADE AND grade_values.LOOKUP_ID = 20')
-          ->left_join('STUD_STUDENT_DEGREES', 'studdegrees', null, 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
-          ->left_join('STUD_DEGREE', 'degree', array('DEGREE_NAME'), 'degree.DEGREE_ID = studdegrees.DEGREE_ID')
-          ->left_join('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcentrations', null, 'studdegrees.STUDENT_DEGREE_ID = stuconcentrations.STUDENT_DEGREE_ID')
-          ->left_join('STUD_DEGREE_CONCENTRATION', 'concentrations', array('CONCENTRATION_NAME'), 'stuconcentrations.CONCENTRATION_ID = concentrations.CONCENTRATION_ID')
-          ->predicate('status.STUDENT_ID', $row['STUDENT_ID']);
+        $status_info = $this->db()->db_select('STUD_STUDENT_STATUS', 'status')
+          ->fields('status')
+          ->join('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
+          ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
+          ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
+          ->leftJoin('STUD_DEGREE', 'degree', 'degree.DEGREE_ID = studdegrees.DEGREE_ID')
+          ->fields('degree', array('DEGREE_NAME'))
+          ->leftJoin('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcentrations', 'studdegrees.STUDENT_DEGREE_ID = stuconcentrations.STUDENT_DEGREE_ID')
+          ->leftJoin('STUD_DEGREE_CONCENTRATION', 'concentrations', 'stuconcentrations.CONCENTRATION_ID = concentrations.CONCENTRATION_ID')
+          ->fields('concentrations', array('CONCENTRATION_NAME'))
+          ->condition('status.STUDENT_ID', $row['STUDENT_ID']);
         
         if (isset($level['STUD_STUDENT_COURSE_HISTORY']['LEVEL']) AND $level['STUD_STUDENT_COURSE_HISTORY']['LEVEL'] != '') {
-         $status_info = $status_info->predicate('status.LEVEL', $level['STUD_STUDENT_COURSE_HISTORY']['LEVEL']);  
+         $status_info = $status_info->condition('status.LEVEL', $level['STUD_STUDENT_COURSE_HISTORY']['LEVEL']);  
         }
         
-        $status_info = $status_info->order_by('ENTER_DATE', 'DESC')
+        $status_info = $status_info->orderBy('ENTER_DATE', 'DESC')
           ->execute()->fetch();
         
         // Standings info
         $standings_info = array();
         
-        $standings_info_result = $this->db()->select('STUD_STUDENT_COURSE_HISTORY_STANDING', 'chstanding')
+        $standings_info_result = $this->db()->db_select('STUD_STUDENT_COURSE_HISTORY_STANDING', 'chstanding')
           ->fields('chstanding', array('CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM'))
-          ->join('STUD_STANDING', 'standing', array('STANDING_DESCRIPTION'), 'chstanding.STANDING_ID = standing.STANDING_ID')
-          ->predicate('chstanding.STUDENT_ID', $row['STUDENT_ID'])->execute();
+          ->join('STUD_STANDING', 'standing', 'chstanding.STANDING_ID = standing.STANDING_ID')
+          ->fields('standing', array('STANDING_DESCRIPTION'))
+          ->condition('chstanding.STUDENT_ID', $row['STUDENT_ID'])->execute();
         while ($standings_info_row = $standings_info_result->fetch()) {
           $standings_info['standings'][$standings_info_row['CALENDAR_YEAR']][$standings_info_row['CALENDAR_MONTH']][$standings_info_row['TERM']] = $standings_info_row['STANDING_DESCRIPTION'];
         }
@@ -242,11 +257,11 @@ class SISStudentTranscriptReportController extends ReportController {
         // Comments info
         $comments_info = array();
         
-        $comments_info_result = $this->db()->select('STUD_STUDENT_COURSE_HISTORY_COMMENT', 'chcomment')
+        $comments_info_result = $this->db()->db_select('STUD_STUDENT_COURSE_HISTORY_COMMENT', 'chcomment')
           ->fields('chcomment', array('CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'LEVEL', 'COMMENTS'))
-          ->predicate('chcomment.STUDENT_ID', $row['STUDENT_ID']);
+          ->condition('chcomment.STUDENT_ID', $row['STUDENT_ID']);
         if (isset($level['STUD_STUDENT_COURSE_HISTORY']['LEVEL']) AND $level['STUD_STUDENT_COURSE_HISTORY']['LEVEL'] != '') {
-         $comments_info_result = $comments_info_result->predicate('chcomment.LEVEL', $level['STUD_STUDENT_COURSE_HISTORY']['LEVEL']);  
+         $comments_info_result = $comments_info_result->condition('chcomment.LEVEL', $level['STUD_STUDENT_COURSE_HISTORY']['LEVEL']);  
         }
         $comments_info_result = $comments_info_result->execute();
         while ($comments_info_row = $comments_info_result->fetch()) {
@@ -297,12 +312,13 @@ class SISStudentTranscriptReportController extends ReportController {
         $totals['TERM']['HRS'] = 0.0;
         $totals['TERM']['PTS'] = 0.0;
         // Get Degrees
-        $degrees_res = $this->db()->select('STUD_STUDENT_DEGREES', 'studdegrees')
+        $degrees_res = $this->db()->db_select('STUD_STUDENT_DEGREES', 'studdegrees')
           ->fields('studdegrees', array('STUDENT_DEGREE_ID', 'DEGREE_AWARDED', 'GRADUATION_DATE', 'CONFERRED_DATE'))
-          ->join('STUD_DEGREE', 'degree', array('DEGREE_NAME'), 'studdegrees.DEGREE_ID = degree.DEGREE_ID')
-          ->predicate('studdegrees.STUDENT_ID', $row['STUDENT_ID'])
-          ->predicate('studdegrees.DEGREE_AWARDED', 'Y')
-          ->predicate('degree.LEVEL', $row['LEVEL'])
+          ->join('STUD_DEGREE', 'degree', 'studdegrees.DEGREE_ID = degree.DEGREE_ID')
+          ->fields('degree', array('DEGREE_NAME'))
+          ->condition('studdegrees.STUDENT_ID', $row['STUDENT_ID'])
+          ->condition('studdegrees.DEGREE_AWARDED', 'Y')
+          ->condition('degree.LEVEL', $row['LEVEL'])
           ->execute();
         while ($degree_row = $degrees_res->fetch()) {
           
@@ -314,28 +330,31 @@ class SISStudentTranscriptReportController extends ReportController {
           
           $pdf->degree_row($degree_row);  
           // Get majors
-          $degree_majors_res = $this->db()->select('STUD_STUDENT_DEGREES_MAJORS', 'studmajors')
+          $degree_majors_res = $this->db()->db_select('STUD_STUDENT_DEGREES_MAJORS', 'studmajors')
             ->fields('studmajors', array())
-            ->join('STUD_DEGREE_MAJOR', 'degmajor', array('MAJOR_NAME'), 'degmajor.MAJOR_ID = studmajors.MAJOR_ID')
-            ->predicate('studmajors.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
+            ->join('STUD_DEGREE_MAJOR', 'degmajor', 'degmajor.MAJOR_ID = studmajors.MAJOR_ID')
+            ->fields('degmajor', array('MAJOR_NAME'))
+            ->condition('studmajors.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
             ->execute();
           while ($degree_major_row = $degree_majors_res->fetch()) {
             $pdf->degree_major_row($degree_major_row);  
           }
           // Get minors
-          $degree_minors_res = $this->db()->select('STUD_STUDENT_DEGREES_MINORS', 'studminors')
+          $degree_minors_res = $this->db()->db_select('STUD_STUDENT_DEGREES_MINORS', 'studminors')
             ->fields('studminors', array())
-            ->join('STUD_DEGREE_MINOR', 'degminor', array('MINOR_NAME'), 'degminor.MINOR_ID = studminors.MINOR_ID')
-            ->predicate('studminors.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
+            ->join('STUD_DEGREE_MINOR', 'degminor', 'degminor.MINOR_ID = studminors.MINOR_ID')
+            ->fields('degminor', array('MINOR_NAME'))
+            ->condition('studminors.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
             ->execute();
           while ($degree_minor_row = $degree_minors_res->fetch()) {
             $pdf->degree_minor_row($degree_minor_row);  
           }
           // Get concentrations
-          $degree_concentrations_res = $this->db()->select('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'studconcentrations')
-            ->fields('studconcentrations', array())
-            ->join('STUD_DEGREE_CONCENTRATION', 'degconcentration', array('CONCENTRATION_NAME'), 'degconcentration.CONCENTRATION_ID = studconcentrations.CONCENTRATION_ID')
-            ->predicate('studconcentrations.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
+          $degree_concentrations_res = $this->db()->db_select('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'studconcentrations')
+            ->fields('studconcentrations')
+            ->join('STUD_DEGREE_CONCENTRATION', 'degconcentration', 'degconcentration.CONCENTRATION_ID = studconcentrations.CONCENTRATION_ID')
+            ->fields('degconcentration', array('CONCENTRATION_NAME'))
+            ->condition('studconcentrations.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
             ->execute();
           while ($degree_concentration_row = $degree_concentrations_res->fetch()) {
             $pdf->degree_concentration_row($degree_concentration_row);  

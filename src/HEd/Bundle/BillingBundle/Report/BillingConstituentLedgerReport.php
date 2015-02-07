@@ -32,7 +32,7 @@ class BillingConstituentLedgerReport extends Report {
   {
     // Page number
     //$this->Cell(0,0,'Page '.$this->GroupPageNo().' of '.$this->PageGroupAlias(),0,0,'L');
-    $this->Cell(0,0, 'Oregon College of Art and Craft', '', 0,'L');
+    $this->Cell(0,0, $this->reportInstitutionName, '', 0,'L');
     // Report Title
     $this->SetX(15);
     $this->Cell(0,0, 'BILLING LEDGER', 0, 0,'C');

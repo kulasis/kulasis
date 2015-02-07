@@ -8,17 +8,17 @@ class SISStaffScheduleReportController extends ReportController {
   
   public function indexAction() {
     $this->authorize();
-    if (($this->request->query->get('record_type') == 'STAFF' || $this->request->query->get('record_type') == 'STAFF_SCHOOL_TERM') AND $this->request->query->get('record_id') != '')
-      $this->setRecordType('STAFF_SCHOOL_TERM');
+    if (($this->request->query->get('record_type') == 'SIS.HEd.Staff' || $this->request->query->get('record_type') == 'SIS.HEd.Staff.SchoolTerm') AND $this->request->query->get('record_id') != '')
+      $this->setRecordType('SIS.HEd.Staff.SchoolTerm');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    return $this->render('KulaHEdSchedulingBundle:StaffScheduleReport:reports_staffschedule.html.twig');
+    return $this->render('KulaHEdSchedulingBundle:SISStaffScheduleReport:reports_staffschedule.html.twig');
   }
   
   public function generateAction()
   {  
     $this->authorize();
     
-    $pdf = new \Kula\Bundle\HEd\SchedulingBundle\Controller\StaffScheduleReport("P");
+    $pdf = new \Kula\HEd\Bundle\SchedulingBundle\Report\StaffScheduleReport("P");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
     
@@ -26,21 +26,23 @@ class SISStaffScheduleReportController extends ReportController {
     
     $meetings = array();
     // Get meeting data
-    $meeting_result = $this->db()->select('STUD_SECTION', 'section')
+    $meeting_result = $this->db()->db_select('STUD_SECTION', 'section')
       ->distinct(true)
       ->fields('section', array('SECTION_ID', 'SECTION_NUMBER'))
-      ->join('STUD_SECTION_MEETINGS', 'meetings', array('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'), 'meetings.SECTION_ID = section.SECTION_ID')
-      ->join('STUD_STUDENT_CLASSES', 'class', null, 'class.SECTION_ID = section.SECTION_ID')
-      ->left_join('STUD_ROOM', 'rooms', array('ROOM_NUMBER'), 'rooms.ROOM_ID = meetings.ROOM_ID');
+      ->join('STUD_SECTION_MEETINGS', 'meetings', 'meetings.SECTION_ID = section.SECTION_ID')
+      ->fields('meetings', array('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
+      ->join('STUD_STUDENT_CLASSES', 'class', 'class.SECTION_ID = section.SECTION_ID')
+      ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = meetings.ROOM_ID')
+      ->fields('rooms', array('ROOM_NUMBER'));
     
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0)
-      $meeting_result = $meeting_result->predicate('section.ORGANIZATION_TERM_ID', $org_term_ids);
+      $meeting_result = $meeting_result->condition('section.ORGANIZATION_TERM_ID', $org_term_ids);
     $record_id = $this->request->request->get('record_id');    
     if (isset($record_id) AND $record_id != '')
-      $meeting_result = $meeting_result->predicate('section.STAFF_ORGANIZATION_TERM_ID', $record_id);
+      $meeting_result = $meeting_result->condition('section.STAFF_ORGANIZATION_TERM_ID', $record_id);
     $meeting_result = $meeting_result
-      ->order_by('SECTION_ID');
+      ->orderBy('SECTION_ID');
     $meeting_result = $meeting_result->execute();
     $i = 0;
     $section_id = 0;
@@ -62,29 +64,33 @@ class SISStaffScheduleReportController extends ReportController {
     }
     
     // Get Data and Load
-    $result = $this->db()->select('STUD_SECTION', 'section')
+    $result = $this->db()->db_select('STUD_SECTION', 'section')
       ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'CREDITS', 'STAFF_ORGANIZATION_TERM_ID'))
-      ->join('STUD_COURSE', 'course', array('COURSE_TITLE'), 'course.COURSE_ID = section.COURSE_ID')
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', null, 'orgterms.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', array('ORGANIZATION_NAME'), 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
-      ->join('CORE_TERM', 'term', array('TERM_ABBREVIATION'), 'term.TERM_ID = orgterms.TERM_ID')
-      ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', null, 'stafforgterm.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
-      ->join('STUD_STAFF', 'staff', array('ABBREVIATED_NAME'), 'staff.STAFF_ID = stafforgterm.STAFF_ID')
+      ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
+      ->fields('course', array('COURSE_TITLE'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_NAME'))
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->fields('term', array('TERM_ABBREVIATION'))
+      ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', 'stafforgterm.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
+      ->join('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterm.STAFF_ID')
+      ->fields('staff', array('ABBREVIATED_NAME'))
       ;
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0)
-      $result = $result->predicate('stafforgterm.ORGANIZATION_TERM_ID', $org_term_ids);
+      $result = $result->condition('stafforgterm.ORGANIZATION_TERM_ID', $org_term_ids);
     
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '')
-      $result = $result->predicate('section.STAFF_ORGANIZATION_TERM_ID', $record_id);
+      $result = $result->condition('section.STAFF_ORGANIZATION_TERM_ID', $record_id);
 
     $result = $result
-      ->order_by('ABBREVIATED_NAME', 'ASC', 'staff')
-      ->order_by('START_DATE', 'ASC', 'term')
-      ->order_by('SECTION_NUMBER', 'ASC')
-      ->order_by('SECTION_ID', 'ASC')
+      ->orderBy('staff.ABBREVIATED_NAME', 'ASC')
+      ->orderBy('term.START_DATE', 'ASC')
+      ->orderBy('SECTION_NUMBER', 'ASC')
+      ->orderBy('SECTION_ID', 'ASC')
       ->execute();
     
     $last_student_status_id = 0;

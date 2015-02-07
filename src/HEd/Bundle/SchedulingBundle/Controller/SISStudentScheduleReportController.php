@@ -8,18 +8,18 @@ class SISStudentScheduleReportController extends ReportController {
   
   public function indexAction() {
     $this->authorize();
-    $this->formAction('sis_student_schedule_reports_studentschedule_generate');
-    if ($this->request->query->get('record_type') == 'STUDENT_STATUS' AND $this->request->query->get('record_id') != '')
-      $this->setRecordType('STUDENT_STATUS');
+    $this->formAction('sis_HEd_student_schedule_reports_studentschedule_generate');
+    if ($this->request->query->get('record_type') == 'SIS.HEd.Student.Status' AND $this->request->query->get('record_id') != '')
+      $this->setRecordType('SIS.HEd.Student.Status');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    return $this->render('KulaHEdSchedulingBundle:StudentScheduleReport:reports_studentschedule.html.twig');
+    return $this->render('KulaHEdSchedulingBundle:SISStudentScheduleReport:reports_studentschedule.html.twig');
   }
   
   public function generateAction()
   {  
     $this->authorize();
     
-    $pdf = new \Kula\Bundle\HEd\SchedulingBundle\Controller\StudentScheduleReport("P");
+    $pdf = new \Kula\HEd\Bundle\SchedulingBundle\Report\StudentScheduleReport("P");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
     
@@ -27,21 +27,23 @@ class SISStudentScheduleReportController extends ReportController {
     
     $meetings = array();
     // Get meeting data
-    $meeting_result = $this->db()->select('STUD_SECTION', 'section')
+    $meeting_result = $this->db()->db_select('STUD_SECTION', 'section')
       ->distinct(true)
       ->fields('section', array('SECTION_ID', 'SECTION_NUMBER'))
-      ->join('STUD_SECTION_MEETINGS', 'meetings', array('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'), 'meetings.SECTION_ID = section.SECTION_ID')
-      ->join('STUD_STUDENT_CLASSES', 'class', null, 'class.SECTION_ID = section.SECTION_ID')
-      ->left_join('STUD_ROOM', 'rooms', array('ROOM_NUMBER'), 'rooms.ROOM_ID = meetings.ROOM_ID');
+      ->join('STUD_SECTION_MEETINGS', 'meetings', 'meetings.SECTION_ID = section.SECTION_ID')
+      ->fields('meetings', array('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
+      ->join('STUD_STUDENT_CLASSES', 'class', 'class.SECTION_ID = section.SECTION_ID')
+      ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = meetings.ROOM_ID')
+      ->fields('rooms', array('ROOM_NUMBER'));
     
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0)
-      $meeting_result = $meeting_result->predicate('section.ORGANIZATION_TERM_ID', $org_term_ids);
+      $meeting_result = $meeting_result->condition('section.ORGANIZATION_TERM_ID', $org_term_ids);
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '')
-      $meeting_result = $meeting_result->predicate('class.STUDENT_STATUS_ID', $record_id);
+      $meeting_result = $meeting_result->condition('class.STUDENT_STATUS_ID', $record_id);
     $meeting_result = $meeting_result
-      ->order_by('SECTION_ID');
+      ->orderBy('SECTION_ID');
     $meeting_result = $meeting_result->execute();
     $i = 0;
     $section_id = 0;
@@ -62,50 +64,60 @@ class SISStudentScheduleReportController extends ReportController {
       $section_id = $meeting_row['SECTION_ID'];
     }
     
-    $dropped_conditions = new \Kula\Component\Database\Query\Predicate('OR');
-    $dropped_conditions = $dropped_conditions->predicate('class.DROPPED', null);
-    $dropped_conditions = $dropped_conditions->predicate('class.DROPPED', 'N');
-    
     // Get Data and Load
-    $result = $this->db()->select('STUD_STUDENT_CLASSES', 'class')
+    $result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('CREDITS_ATTEMPTED'))
-      ->left_join('STUD_MARK_SCALE', 'markscale', array('MARK_SCALE_NAME'), 'markscale.MARK_SCALE_ID = class.MARK_SCALE_ID')
-      ->join('STUD_STUDENT_STATUS', 'status', array('STUDENT_STATUS_ID'), 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
-      ->left_join('CORE_LOOKUP_VALUES', 'grvalue', array('DESCRIPTION' => 'GRADE'), 'grvalue.CODE = status.GRADE AND grvalue.LOOKUP_ID = 20')
-      ->left_join('STUD_STUDENT_DEGREES', 'studdegrees', null, 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
-      ->left_join('STUD_DEGREE', 'degree', array('DEGREE_NAME'), 'studdegrees.DEGREE_ID = degree.DEGREE_ID')
-      ->left_join('STUD_STAFF_ORGANIZATION_TERMS', 'advisororgterm', null, 'advisororgterm.STAFF_ORGANIZATION_TERM_ID = status.ADVISOR_ID')
-      ->left_join('STUD_STAFF', 'advisor', array('ABBREVIATED_NAME' => 'advisor_ABBREVIATED_NAME'), 'advisor.STAFF_ID = advisororgterm.STAFF_ID')
-      ->join('STUD_STUDENT', 'student', null, 'status.STUDENT_ID = student.STUDENT_ID')
-      ->join('CONS_CONSTITUENT', 'stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'), 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
-      ->left_join('CONS_ADDRESS', 'res_address', array('ADDRESS' => 'res_ADDRESS', 'CITY' => 'res_CITY', 'STATE' => 'res_STATE', 'ZIPCODE' => 'res_ZIPCODE'), 'res_address.ADDRESS_ID = stucon.RESIDENCE_ADDRESS_ID')
-      ->left_join('CONS_ADDRESS', 'mail_address', array('ADDRESS' => 'mail_ADDRESS', 'CITY' => 'mail_CITY', 'STATE' => 'mail_STATE', 'ZIPCODE' => 'mail_ZIPCODE'), 'mail_address.ADDRESS_ID = stucon.MAILING_ADDRESS_ID')
-      ->left_join('CONS_PHONE', 'phone', array('PHONE_NUMBER'), 'phone.PHONE_NUMBER_ID = stucon.PRIMARY_PHONE_ID')
-      ->join('STUD_SECTION', 'section', array('SECTION_ID', 'SECTION_NUMBER'), 'section.SECTION_ID = class.SECTION_ID')
-      ->join('STUD_COURSE', 'course', array('COURSE_TITLE'), 'course.COURSE_ID = section.COURSE_ID')
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', null, 'orgterms.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', array('ORGANIZATION_NAME'), 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
-      ->join('CORE_TERM', 'term', array('TERM_ABBREVIATION'), 'term.TERM_ID = orgterms.TERM_ID')
-      ->left_join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', null, 'stafforgterm.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
-      ->left_join('STUD_STAFF', 'staff', array('ABBREVIATED_NAME'), 'staff.STAFF_ID = stafforgterm.STAFF_ID')
-      ->predicate($dropped_conditions)
+      ->leftJoin('STUD_MARK_SCALE', 'markscale', 'markscale.MARK_SCALE_ID = class.MARK_SCALE_ID')
+      ->fields('markscale', array('MARK_SCALE_NAME'))
+      ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
+      ->fields('status', array('STUDENT_STATUS_ID'))
+      ->leftJoin('CORE_LOOKUP_VALUES', 'grvalue', "grvalue.CODE = status.GRADE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
+      ->fields('grvalue', array('DESCRIPTION' => 'GRADE'))
+      ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
+      ->leftJoin('STUD_DEGREE', 'degree', 'studdegrees.DEGREE_ID = degree.DEGREE_ID')
+      ->fields('degree', array('DEGREE_NAME'))
+      ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'advisororgterm', 'advisororgterm.STAFF_ORGANIZATION_TERM_ID = status.ADVISOR_ID')
+      ->leftJoin('STUD_STAFF', 'advisor', 'advisor.STAFF_ID = advisororgterm.STAFF_ID')
+      ->fields('advisor', array('ABBREVIATED_NAME' => 'advisor_ABBREVIATED_NAME'))
+      ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
+      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
+      ->leftJoin('CONS_ADDRESS', 'res_address', 'res_address.ADDRESS_ID = stucon.RESIDENCE_ADDRESS_ID')
+      ->fields('res_address', array('THOROUGHFARE' => 'res_ADDRESS', 'LOCALITY' => 'res_CITY', 'ADMINISTRATIVE_AREA' => 'res_STATE', 'POSTAL_CODE' => 'res_ZIPCODE'))
+      ->leftJoin('CONS_ADDRESS', 'mail_address', 'mail_address.ADDRESS_ID = stucon.MAILING_ADDRESS_ID')
+      ->fields('mail_address', array('THOROUGHFARE' => 'mail_ADDRESS', 'LOCALITY' => 'mail_CITY', 'ADMINISTRATIVE_AREA' => 'mail_STATE', 'POSTAL_CODE' => 'mail_ZIPCODE'))
+      ->leftJoin('CONS_PHONE', 'phone', 'phone.PHONE_NUMBER_ID = stucon.PRIMARY_PHONE_ID')
+      ->fields('phone', array('PHONE_NUMBER'))
+      ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER'))
+      ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
+      ->fields('course', array('COURSE_TITLE'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_NAME'))
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->fields('term', array('TERM_ABBREVIATION'))
+      ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', 'stafforgterm.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
+      ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterm.STAFF_ID')
+      ->fields('staff', array('ABBREVIATED_NAME'))
+      ->condition('class.DROPPED', '0')
       ;
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0)
-      $result = $result->predicate('status.ORGANIZATION_TERM_ID', $org_term_ids);
+      $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids);
     
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '')
-      $result = $result->predicate('status.STUDENT_STATUS_ID', $record_id);
+      $result = $result->condition('status.STUDENT_STATUS_ID', $record_id);
 
     $result = $result
-      ->order_by('LAST_NAME', 'ASC', 'stucon')
-      ->order_by('FIRST_NAME', 'ASC', 'stucon')
-      ->order_by('STUDENT_STATUS_ID', 'ASC', 'status')
-      ->order_by('START_DATE', 'ASC', 'term')
-      ->order_by('SECTION_NUMBER', 'ASC')
-      ->order_by('SECTION_ID', 'ASC');
+      ->orderBy('stucon.LAST_NAME', 'ASC')
+      ->orderBy('stucon.FIRST_NAME', 'ASC')
+      ->orderBy('status.STUDENT_STATUS_ID', 'ASC')
+      ->orderBy('term.START_DATE', 'ASC')
+      ->orderBy('SECTION_NUMBER', 'ASC')
+      ->orderBy('SECTION_ID', 'ASC');
     //echo $result->sql();
     //var_dump($result->arguments());
     //die();

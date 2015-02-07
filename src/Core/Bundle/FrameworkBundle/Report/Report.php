@@ -29,6 +29,7 @@ class Report extends \fpdf\FPDF {
     $this->reportInstitutionName = $container->getParameter('report_institution_name');
     $this->reportAddressLine1 = $container->getParameter('report_institution_address_line1');
     $this->reportAddressLine2 = $container->getParameter('report_institution_address_line2');
+    $this->reportPhoneLine1 = $container->getParameter('report_institution_phone_line1');
     $this->reportLogo = $container->getParameter('report_logo_path');
     
     parent::__construct($orientation, $unit, $size);
