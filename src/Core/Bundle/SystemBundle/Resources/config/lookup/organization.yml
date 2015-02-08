@@ -6,3 +6,15 @@ Core.Organization.Type:
     - { code: C, description: "Campus" }
     - { code: D, description: "District" }
     - { code: S, description: "School" }
+
+Core.NonOrganization.Type:
+  description: "Non Organization Types"
+  allow_update: true
+  values:
+    - { code: PU, description: "Public University" }
+    - { code: AS, description: "Art School" }
+    - { code: CC, description: "Community College" }
+    - { code: CS, description: "Craft School" }
+    - { code: RU, description: "Private University" }
+    - { code: TE, description: "Technical" }
+    - { code: HS, description: "High School" }

@@ -1,0 +1,40 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+LDAP Servers
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_terms', 'CORE_SYSTEM_LDAP') }}
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+  <tr>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ delete: true, field: 'Core.System.LDAP.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.System.LDAP.ServerName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.System.LDAP.ServerAddress', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.System.LDAP.DomainAppend', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  </tr>
+</thead>
+<tbody>
+   {{ kula_display_html({ add: true, field: 'Core.System.LDAP.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+    {{ kula_field({ add: true, delete: true, field: 'Core.System.LDAP.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    {{ kula_display_html({ add: true, field: 'Core.System.LDAP.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+    {{ kula_field({ add: true, field: 'Core.System.LDAP.ServerName', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.System.LDAP.ServerAddress', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.System.LDAP.DomainAppend', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'Core.System.LDAP.ID', prepend_html: '</tr>' }) }}
+  {% for server in servers %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'Core.System.LDAP.ID', db_row_id: server.LDAP_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'Core.System.LDAP.ServerName', db_row_id: server.LDAP_ID, value: server.SERVER_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.System.LDAP.ServerAddress', db_row_id: server.LDAP_ID, value: server.SERVER_ADDRESS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.System.LDAP.DomainAppend', db_row_id: server.LDAP_ID, value: server.DOMAIN_APPEND, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

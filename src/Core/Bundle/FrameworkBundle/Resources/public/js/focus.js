@@ -10,7 +10,7 @@ inputClass: 'focus-term-input'
 }
 
 function focus_usergroup_change(event) {
-  $('#focus_form').submit();
+  $('#role_form').submit();
 }
 
 function focus_organizationterm_change(event) {

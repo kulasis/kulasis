@@ -64,8 +64,9 @@ class LoginController extends Controller {
   }
   
   public function change_usergroupAction() {
-    $new_usergroup = $this->getRequest()->request->get('focus_usergroup');
-    
+
+    $new_usergroup = $this->getRequest()->get('focus_usergroup');
+
     $this->get('kula.login')->changeRole($new_usergroup);
     // Determine first route that can be used
     $first_route = $this->get('kula.core.navigation')->getFirstRoute();

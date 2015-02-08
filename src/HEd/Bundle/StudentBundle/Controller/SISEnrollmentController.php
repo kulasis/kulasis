@@ -170,12 +170,12 @@ class SISEnrollmentController extends Controller {
           ))->process()->getResult();
           
           // Drop all classes
-          //$schedule_service = $this->get('kula.HEd.scheduling.schedule');
-          //$schedule_service->dropAllClassesForStudentStatus($status['STUDENT_STATUS_ID'], $status_data[$status['STUDENT_STATUS_ID']]['LEAVE_DATE']);
+          $schedule_service = $this->get('kula.HEd.scheduling.schedule');
+          $schedule_service->dropAllClassesForStudentStatus($status['STUDENT_STATUS_ID'], $status_data[$status['STUDENT_STATUS_ID']]['LEAVE_DATE']);
           
           // Process billing
-          //$student_billing_service = $this->get('kula.HEd.billing.student');
-          //$student_billing_service->processBilling($status['STUDENT_STATUS_ID'], 'Student Inactivated and Classes Dropped');
+          $student_billing_service = $this->get('kula.HEd.billing.student');
+          $student_billing_service->processBilling($status['STUDENT_STATUS_ID'], 'Student Inactivated and Classes Dropped');
           
           // redirect
           if ($enrollmentPoster AND $statusPoster) {
@@ -227,11 +227,11 @@ class SISEnrollmentController extends Controller {
           ))->process()->getResult();
           
           // determine tuition rate
-          //$constituent_billing_service = new \Kula\Bundle\HEd\StudentBillingBundle\ConstituentBillingService($this->db('write'), new \Kula\Component\Database\PosterFactory, $this->record, $this->session);
-          //$constituent_billing_service->determineTuitionRate($this->record->getSelectedRecordID());
+          $constituent_billing_service = $this->get('kula.HEd.billing.student');
+          $constituent_billing_service->determineTuitionRate($this->record->getSelectedRecordID());
           
           // mandatory transactions
-          //$constituent_billing_service->checkMandatoryTransactions($this->record->getSelectedRecordID());
+          $constituent_billing_service->checkMandatoryTransactions($this->record->getSelectedRecordID());
           
           if ($statusPoster AND $enrollmentPoster AND $activityPoster) {
             $transaction->commit();

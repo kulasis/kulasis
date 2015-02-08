@@ -8,7 +8,7 @@ Core.Utility:
     Export:
       description: "Export"
       display_name: "Export"
-      route: core_export_query
+      route: core_export_savedqueries
       sort: 1
 
 SIS.Utility:

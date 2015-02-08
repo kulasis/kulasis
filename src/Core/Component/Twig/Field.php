@@ -228,6 +228,10 @@ class Field {
       $html .= self::_time($param);
     }
     
+    if ($field->getFieldType() == 'datetime') {
+      $html .= self::_datetime($param);
+    }
+    
     if ($field->getFieldType() == 'checkbox') {
       $html .= self::_checkbox($param);
     }
@@ -375,6 +379,35 @@ class Field {
         $date_format = $param['date_format'];
       else
         $date_format = 'g:i A';
+      $param['value'] = date($date_format, strtotime($param['value']));
+    }
+    if (self::_displayField($param)) {
+      $schema = self::getFieldInfo($param['field']);
+      $field_name = self::getNameForField($param);
+      if ($schema->getFieldSize())
+        $param['attributes_html']['size'] = $schema->getFieldSize();
+      else
+        $param['attributes_html']['size'] = 13;
+      return GenericField::text($field_name, $param['value'], $param['attributes_html']);
+    } elseif (self::_displayValue($param) AND !$param['input']) {
+      return $param['value'];
+    } else {
+      $schema = self::getFieldInfo($param['field']);
+      if ($schema->getFieldSize())
+        $param['attributes_html']['size'] = $schema->getFieldSize();
+      else
+        $param['attributes_html']['size'] = 13;
+      $param['attributes_html']['disabled'] = 'disabled';
+      return GenericField::text(null, $param['value'], $param['attributes_html']);
+    }  
+  }
+  
+  private static function _datetime($param) {
+    if ($param['value']) {
+      if (isset($param['date_format']))
+        $date_format = $param['date_format'];
+      else
+        $date_format = 'm/d/Y g:i A';
       $param['value'] = date($date_format, strtotime($param['value']));
     }
     if (self::_displayField($param)) {

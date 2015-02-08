@@ -1,9 +1,22 @@
+Core.Monitor:
+  description: "Monitor"
+  display_name: "Monitor"
+  type: form_group
+  portal: core
+  sort: 1
+  forms:
+    Logs:
+      description: "Logs"
+      display_name: "Logs"
+      sort: 1
+      route: core_logs_session
+
 Core.System:
   description: "System"
   display_name: "System"
   type: form_group
   portal: core
-  sort: 1
+  sort: 3
   forms: 
     Setup:
       description: "Setup"
@@ -69,7 +82,7 @@ Core.Security:
   display_name: "Security"
   type: form_group
   portal: core
-  sort: 2
+  sort: 4
   forms:
     NavigationPermissions:
       description: "Navigation Permissions"
@@ -116,7 +129,7 @@ Core.User:
   display_name: "User"
   type: form_group
   portal: core
-  sort: 3
+  sort: 5
   forms:
     UserGroups:
       description: "User Groups"
@@ -159,3 +172,55 @@ SIS.HEd.Admin:
   portal: sis
   display_name: "Administration"
   sort: 4
+  
+SIS.HEd.System:
+  description: "System"
+  type: form_group
+  portal: sis
+  display_name: "System"
+  sort: 6
+  forms:
+    Lookup:
+      description: "Lookup"
+      display_name: "Lookup"
+      route: core_system_lookup
+      sort: 2
+      menu_actions:
+        New:
+          description: "New Lookup"
+          display_name: "New Lookup"
+          route: core_system_lookup_add
+          sort: 1
+        Delete:
+          description: "Delete Lookup"
+          display_name: "Delete Lookup"
+          divider_before: true
+          record_loaded: true
+          route: core_system_lookup_delete
+          confirmation_message: "Are you sure you want to delete lookup?"
+          sort: 2
+    NonOrganization:
+      description: "Non Organization"
+      display_name: "Non Organization"
+      route: core_system_nonorganization
+      sort: 3
+    Organization:
+      description: "Organization"
+      display_name: "Organization"
+      sort: 4
+      tabs:
+        OrganizationTerms:
+          description: "Organization Terms"
+          display_name: "Organization Terms"
+          route: core_system_organization_terms
+          sort: 1
+        Organization:
+          description: "Organization"
+          display_name: "Organization"
+          route: core_system_organization
+          sort: 2
+    Terms:
+      description: "Terms"
+      display_name: "Terms"
+      sort: 5
+      route: core_system_terms

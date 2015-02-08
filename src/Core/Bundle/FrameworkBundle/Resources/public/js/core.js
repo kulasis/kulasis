@@ -774,7 +774,7 @@ function navigation_detailLinkListener(event) {
 		// not in tab
 		activeTabID = 'window_' + windowNumber + '_tab_';
 	}
-	
+  
 	// Get window detail
 	var windowDetailDiv = $('#' + activeTabID + '_detail');
 
@@ -799,8 +799,10 @@ function navigation_detailLinkListener(event) {
 	
 	if ($('#' + detailID).length == 0) {
 
+
+
 		windowDetailDiv.append('<div id="' + detailID + '" class="window-detail" data-window-url="' + url + '"><div class="window-detail-close">x Close Window</div><div id="' + detailID + '_content" class="window-detail-content"></div></div>');
-	
+
 		options = new Array();
 		 options['updateurl'] = 'N';
 		getLink(urltouse, 'detail', detailID, options, function(msg, options) {
