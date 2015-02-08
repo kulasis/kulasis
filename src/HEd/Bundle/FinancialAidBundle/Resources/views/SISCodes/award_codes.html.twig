@@ -45,8 +45,8 @@ Award Codes
     {{ kula_field({ edit: true, field: 'HEd.FAID.Code.ShowOnStatement', db_row_id: code.AWARD_CODE_ID, value: code.SHOW_ON_STATEMENT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.FAID.Code.Inactive', db_row_id: code.AWARD_CODE_ID, value: code.INACTIVE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.FAID.Code.TransactionCodeID', db_row_id: code.AWARD_CODE_ID, value: code.TRANSACTION_CODE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'HEd.FAID.Code.ConversionAwardCode', db_row_id: code.AWARD_CODE_ID, value: code.ORIGINATION_FEE_PERCENTAGE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'HEd.FAID.Student.Award.AwardCodeID', db_row_id: code.AWARD_CODE_ID, value: code.CONV_AWARD_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.FAID.Code.OriginationFeePercentage', db_row_id: code.AWARD_CODE_ID, value: code.ORIGINATION_FEE_PERCENTAGE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.FAID.Code.ConversionAwardCode', db_row_id: code.AWARD_CODE_ID, value: code.CONV_AWARD_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
   {% endfor %}
 </tbody>

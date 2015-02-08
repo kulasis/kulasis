@@ -37,7 +37,7 @@ class SISTransactionsController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       
-      $transactions = $this->db()->db_select('HEd.Billing.Transaction', 'transactions')
+      $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
         ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE', ))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
         ->fields('code', array('CODE_TYPE', 'CODE'))
@@ -87,7 +87,7 @@ class SISTransactionsController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       
-      $transactions = $this->db()->db_select('HEd.Billing.Transaction', 'transactions')
+      $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
         ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE'))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
         ->fields('code', array('CODE_TYPE', 'CODE'))
@@ -128,7 +128,7 @@ class SISTransactionsController extends Controller {
     $applied_transactions_total = 0;
     
     if ($this->record->getSelectedRecordID()) {
-      $transaction = $this->db()->db_select('HEd.Billing.Transaction', 'transactions')
+      $transaction = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
         ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP', 'SHOW_ON_STATEMENT', 'ORGANIZATION_TERM_ID'))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
         ->fields('code', array('CODE_TYPE'))

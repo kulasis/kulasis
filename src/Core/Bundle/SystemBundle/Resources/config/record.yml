@@ -11,6 +11,8 @@ Core.Organization.School:
 Core.Organization.School.Term:
   class: Kula\Core\Bundle\SystemBundle\Record\SchoolTermRecord
   
+SIS.Lookup:
+  class: Kula\Core\Bundle\SystemBundle\Record\LookupRecord
 SIS.Organization.School:
   class: Kula\Core\Bundle\SystemBundle\Record\SchoolRecord
 SIS.Organization.School.Term:

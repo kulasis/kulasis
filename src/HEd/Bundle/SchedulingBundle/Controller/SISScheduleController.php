@@ -139,7 +139,6 @@ class SISScheduleController extends Controller {
       $start_date = date('Y-m-d', strtotime($this->request->request->get('add')['HEd.Student.Class']['new']['HEd.Student.Class.StartDate']));
       
       if (isset($new_classes)) {
-        var_dump($new_classes);
         foreach($new_classes as $new_class) {
           $schedule_service->addClassForStudentStatus($this->record->getSelectedRecordID(), $new_class, $start_date);
         }
@@ -288,6 +287,8 @@ class SISScheduleController extends Controller {
     $student_billing_service = $this->get('kula.HEd.billing.student');
     
     $student_billing_service->processBilling($this->record->getSelectedRecordID(), 'Schedule Changed');
+    
+    $this->addFlash('success', 'Recalculated bill.');
     
     return $this->forward('sis_HEd_student_schedule', array('record_type' => 'SIS.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
   }

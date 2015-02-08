@@ -9,7 +9,11 @@ class CoreLookupController extends Controller {
   public function indexAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('Core.Lookup');
+    if ($this->session->get('portal') == 'sis') {
+      $this->setRecordType('SIS.Lookup');
+    } else {
+      $this->setRecordType('Core.Lookup');
+    }
     
     $values = array();
     

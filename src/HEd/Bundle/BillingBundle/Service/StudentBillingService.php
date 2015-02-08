@@ -15,18 +15,20 @@ class StudentBillingService {
   public function __construct(\Kula\Core\Component\DB\DB $db, 
                               \Kula\Core\Component\DB\PosterFactory $poster_factory,
                               $record = null, 
-                              $session = null) {
+                              $session = null,
+                              $constituent_billing_service = null,
+                              $schedule_service = null) {
     $this->database = $db;
     $this->record = $record;
     $this->poster_factory = $poster_factory;
     $this->session = $session;
+    $this->constituent_billing_service = $constituent_billing_service;
+    $this->schedule_service = $schedule_service;
   }
   
   public function processBilling($student_status_id, $email_subject = 'Student Detail/Tuition Recalculated') {
     
     if ($student_status_id) {
-    
-    $schedule_service = $this->get('kula.HEd.scheduling.schedule');
     
     // Get original attempted credits
     $attempted_total_credits = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
@@ -36,9 +38,9 @@ class StudentBillingService {
       ->fields('org', array('ORGANIZATION_NAME'))
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
-      ->join('CORE_LOOKUP_VALUES', 'grade', 'grade.CODE = status.GRADE AND grade.LOOKUP_ID = 20')
+      ->join('CORE_LOOKUP_VALUES', 'grade', "grade.CODE = status.GRADE AND grade.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
       ->fields('grade', array('DESCRIPTION' => 'grade'))
-      ->join('CORE_LOOKUP_VALUES', 'entercode', 'entercode.CODE = status.ENTER_CODE AND entercode.LOOKUP_ID = 16')
+      ->join('CORE_LOOKUP_VALUES', 'entercode', "entercode.CODE = status.ENTER_CODE AND grade.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.EnterCode')")
       ->fields('entercode', array('DESCRIPTION' => 'entercode'))
       ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = status.STUDENT_ID')
       ->fields('constituent', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'))
@@ -46,10 +48,10 @@ class StudentBillingService {
       ->execute()->fetch();
     
     // Calculate Total Credits
-    $schedule_service->calculateTotalAttemptedCredits($student_status_id);
+    $this->schedule_service->calculateTotalAttemptedCredits($student_status_id);
     
     // Calculate FTE
-    $schedule_service->calculateFTE($student_status_id);
+    $this->schedule_service->calculateFTE($student_status_id);
     
     // Calculate Tuition
     $this->calculateTuition($student_status_id);
@@ -87,8 +89,6 @@ class StudentBillingService {
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
       ->execute()->fetch();
     
-    $constituent_billing_service = $this->get('kula.HEd.scheduling.schedule');
-    
     // Active Student
     if ($student_status['STATUS'] == '') {
       // Get transactions for all students, add if do not exist
@@ -101,8 +101,8 @@ class StudentBillingService {
         ->condition('ratetrans.TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
         ->execute();
         while ($transactions_all_row = $transactions_all_result->fetch()) {
-          $new_transaction_id = $constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $transactions_all_row['TRANSACTION_CODE_ID'], date('Y-m-d'), '', $transactions_all_row['AMOUNT']);
-          $constituent_billing_service->postTransaction($new_transaction_id);
+          $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $transactions_all_row['TRANSACTION_CODE_ID'], date('Y-m-d'), '', $transactions_all_row['AMOUNT']);
+          $this->constituent_billing_service->postTransaction($new_transaction_id);
         }
       // Get transactions for new students, add if do not exist
     } elseif ($student_status['STATUS'] == 'I') {
@@ -163,8 +163,7 @@ class StudentBillingService {
         if ($amount_to_post < 0) {
         
           // Get latest drop date
-          $schedule_service = $this->get('kula.HEd.scheduling.schedule');
-          $drop_date = $schedule_service->calculateLatestDropDate($student_status_id);
+          $drop_date = $this->schedule_service->calculateLatestDropDate($student_status_id);
           $transaction_description = 'REFUND';
         
         // Apply refund policy
@@ -179,12 +178,10 @@ class StudentBillingService {
         $amount_to_post = $amount_to_post * $refund_percentage * .01;
       
         }
-        // Post transaction
-        $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
       
         if ($amount_to_post != 0) {
-          $new_transaction_id = $constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $audit_code, date('Y-m-d'), isset($transaction_description) ? $transaction_description : '', $amount_to_post);
-          $constituent_billing_service->postTransaction($new_transaction_id);
+          $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $audit_code, date('Y-m-d'), isset($transaction_description) ? $transaction_description : '', $amount_to_post);
+          $this->constituent_billing_service->postTransaction($new_transaction_id);
         }
       }
     }
@@ -250,8 +247,7 @@ class StudentBillingService {
       if ($amount_to_post < 0) {
         
         // Get latest drop date
-        $schedule_service = $this->get('kula.HEd.scheduling.schedule');
-        $drop_date = $schedule_service->calculateLatestDropDate($student_status_id);
+        $drop_date = $this->schedule_service->calculateLatestDropDate($student_status_id);
         $transaction_description = 'REFUND';
         
       // Apply refund policy
@@ -267,11 +263,9 @@ class StudentBillingService {
       
       }
       // Post transaction
-      $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
-      
       if ($amount_to_post != 0) {
-        $new_transaction_id = $constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $tuition_code, date('Y-m-d'), isset($transaction_description) ? $transaction_description : '', $amount_to_post);
-        $constituent_billing_service->postTransaction($new_transaction_id);
+        $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $tuition_code, date('Y-m-d'), isset($transaction_description) ? $transaction_description : '', $amount_to_post);
+        $this->constituent_billing_service->postTransaction($new_transaction_id);
       }
     } // end $tuition_code
   }
@@ -291,7 +285,7 @@ class StudentBillingService {
       ->execute();
     while ($classes_row = $classes_result->fetch()) {
       
-      $condition_or = $this->db()->db_or();
+      $condition_or = $this->database->db_or();
       $condition_or = $condition_or->condition('bill.AMOUNT', $classes_row['AMOUNT'])->condition('bill.AMOUNT', $classes_row['AMOUNT']*-1);
       
       // get existing fees for classes
@@ -319,15 +313,13 @@ class StudentBillingService {
         
         // if 100% refund, refund fee
         if ($refund['REFUND_PERCENTAGE'] == 100) {
-          $billing_service = $this->get('kula.HEd.billing.constituent');
-          $billing_service->removeCourseFees($classes_row);
+          $this->constituent_billing_service->removeCourseFees($classes_row);
         } elseif ($refund['REFUND_PERCENTAGE'] == 50) {
           // if 50% refund, determine if credit total changed
 
           // if credit total same or increased, refund fee
           if ($classes_row['TOTAL_CREDITS_ATTEMPTED'] >= $previous_credit_total) {
-            $billing_service = $this->get('kula.HEd.billing.constituent');
-            $billing_service->removeCourseFees($classes_row);
+            $this->constituent_billing_service->removeCourseFees($classes_row);
           }
           
         } else {
@@ -341,8 +333,7 @@ class StudentBillingService {
         // need to check if total amount of fees is 0, need to bill
         if ($existing_fees['total_amount'] == 0) {
           
-          $billing_service = $this->get('kula.HEd.billing.constituent');
-          $billing_service->addCourseFees($classes_row['STUDENT_CLASS_ID']);
+          $this->constituent_billing_service->addCourseFees($classes_row['STUDENT_CLASS_ID']);
           
         } // if not 0, already billed
         

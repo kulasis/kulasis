@@ -23,7 +23,11 @@ class CoreOrganizationController extends Controller {
   public function orgterms_indexAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('Core.Organization.School');
+    if ($this->session->get('portal') == 'sis') {
+      $this->setRecordType('SIS.Organization.School');
+    } else {
+      $this->setRecordType('Core.Organization.School');
+    }
     
     $orgterms = array();
     

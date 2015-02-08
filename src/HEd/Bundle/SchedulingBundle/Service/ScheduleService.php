@@ -46,8 +46,6 @@ class ScheduleService {
     
     $transaction = $this->database->db_transaction();
     
-    var_dump($class_info);
-    
     $student_class_id = $this->posterFactory->newPoster()->add('HEd.Student.Class', 'new', $class_info)->process()->getResult();
     
     // check if exists in wait list
