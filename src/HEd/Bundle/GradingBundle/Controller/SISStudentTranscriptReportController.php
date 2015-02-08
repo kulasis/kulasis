@@ -317,7 +317,7 @@ class SISStudentTranscriptReportController extends ReportController {
           ->join('STUD_DEGREE', 'degree', 'studdegrees.DEGREE_ID = degree.DEGREE_ID')
           ->fields('degree', array('DEGREE_NAME'))
           ->condition('studdegrees.STUDENT_ID', $row['STUDENT_ID'])
-          ->condition('studdegrees.DEGREE_AWARDED', 'Y')
+          ->condition('studdegrees.DEGREE_AWARDED', 1)
           ->condition('degree.LEVEL', $row['LEVEL'])
           ->execute();
         while ($degree_row = $degrees_res->fetch()) {
@@ -373,7 +373,11 @@ class SISStudentTranscriptReportController extends ReportController {
           $organization_name = $row['NON_ORGANIZATION_NAME'];
         else
           $organization_name = $row['ORGANIZATION_NAME'];
-        $height_for_rows = $row_counts[$row['STUDENT_ID']][$row['LEVEL']][$organization_name][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']] * 4;
+        if (isset($row_counts[$row['STUDENT_ID']][$row['LEVEL']][$organization_name][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']])) {
+          $height_for_rows = $row_counts[$row['STUDENT_ID']][$row['LEVEL']][$organization_name][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']] * 4;
+        } else {
+          $height_for_rows = 0;
+        }
         $total_height = $height_for_rows + 4 + 4 + 4 + 2 + 4 + 4;
         //kula_print_r($row_counts);
         //echo $organization_name.' '.$height_for_rows.' '.$total_height.'<br />';

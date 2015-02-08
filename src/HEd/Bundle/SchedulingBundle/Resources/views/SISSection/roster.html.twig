@@ -36,7 +36,7 @@ Roster
     {{ kula_field({ field: 'Core.Constituent.LastName', db_row_id: student.STUDENT_CLASS_ID, value: student.LAST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Constituent.FirstName', db_row_id: student.STUDENT_CLASS_ID, value: student.FIRST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Constituent.Gender', db_row_id: student.STUDENT_CLASS_ID, value: student.GENDER, lookup: 'C', input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {% if student.DROPPED == 'Y' %}
+    {% if student.DROPPED == '1' %}
     {{ kula_field({ field: 'HEd.Student.Class.Dropped', db_row_id: student.STUDENT_CLASS_ID, value: 'Dropped', input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {% else %}
     {{ kula_field({ field: 'HEd.Student.Class.StartDate', db_row_id: student.STUDENT_CLASS_ID, value: student.START_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}

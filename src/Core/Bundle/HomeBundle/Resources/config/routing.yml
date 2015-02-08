@@ -4,4 +4,4 @@ core_home:
 
 sis_home:
     path:     /sis/home
-    defaults: { _controller: KulaCoreHomeBundle:Home:home }
+    defaults: { _controller: KulaCoreHomeBundle:SISHome:home }

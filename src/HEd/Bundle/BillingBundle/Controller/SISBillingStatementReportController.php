@@ -179,7 +179,7 @@ class SISBillingStatementReportController extends ReportController {
       ->orderBy('stucon.LAST_NAME', 'ASC')
       ->orderBy('stucon.FIRST_NAME', 'ASC')
       ->orderBy('student.STUDENT_ID', 'ASC');
-    //echo $result->sql();
+    //echo $result;
     //var_dump($result->arguments());
     //die();
     $result = $result->execute();

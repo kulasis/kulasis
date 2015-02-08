@@ -18,7 +18,7 @@ class Term {
     
     // Get all organizations in an array with [organization_id] = organization_array
     $term_results = $this->db->db_select('CORE_TERM', 'term', array('target' => 'schema'))
-      ->fields('term', array('TERM_ID', 'TERM_NAME', 'TERM_ABBREVIATION'))
+      ->fields('term', array('TERM_ID', 'TERM_NAME', 'TERM_ABBREVIATION', 'START_DATE'))
       ->orderBy('START_DATE')
       ->execute();
     while ($term_row = $term_results->fetch()) {
@@ -37,6 +37,10 @@ class Term {
   
   public function getTermAbbreviation($termID) {
     return $this->terms[$termID]['TERM_ABBREVIATION'];
+  }
+  
+  public function getStartDate($termID) {
+    return $this->terms[$termID]['START_DATE'];
   }
   
   public function __sleep() {

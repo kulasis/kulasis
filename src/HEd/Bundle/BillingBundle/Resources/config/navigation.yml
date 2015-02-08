@@ -1,4 +1,4 @@
-SIS.HEd.Home.Billing:
+SIS.HEd.Admin.Billing:
   description: "Billing"
   type: form
   portal: sis
@@ -97,7 +97,7 @@ SIS.HEd.Setup.Billing:
   type: form
   portal: sis
   display_name: "Billing"
-  sort: 3
+  sort: 1
   tabs:
     TuitionRates:
       description: "Tuition Rates"

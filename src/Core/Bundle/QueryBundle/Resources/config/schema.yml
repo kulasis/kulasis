@@ -1,0 +1,40 @@
+Core.Export.SQLQuery:
+  description: "Saved SQL Queries"
+  db_table_name: CORE_EXPORT_SQL_QUERY
+  timestamps: true
+  fields:
+    ID:
+      description: "Saved SQL Query ID"
+      primary: true
+      db_column_name: SQL_QUERY_ID
+      db_column_type: primary_serial
+      column_name: "SQL Query Saved ID"
+      label_name: "SQL Query Saved ID"
+    Category:
+      description: "SQL Query Category"
+      db_column_name: SQL_QUERY_CATEGORY
+      db_column_type: varchar
+      db_column_length: 50
+      field_type: text
+      field_size: 15
+      column_name: "Category"
+      label_name: "Category"
+    Name:
+      description: "SQL Query Name"
+      db_column_name: SQL_QUERY_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      field_type: text
+      field_size: 30
+      column_name: "Name"
+      label_name: "Name"
+    Query:
+      description: "SQL Query"
+      db_column_name: SQL_QUERY
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      field_cols: 50
+      field_rows: 15
+      column_name: "SQL Query"
+      label_name: "SQL Query"

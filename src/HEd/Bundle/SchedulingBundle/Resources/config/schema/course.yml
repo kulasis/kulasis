@@ -64,6 +64,8 @@ HEd.Course:
       db_column_type: text
       db_column_null: true
       field_type: textarea
+      field_cols: 50
+      field_rows: 15
       column_name: "Course Description"
       label_name: "Course Description"
     PrerequisiteDescription:
@@ -72,6 +74,8 @@ HEd.Course:
       db_column_type: text
       db_column_null: true
       field_type: textarea
+      field_cols: 50
+      field_rows: 15
       column_name: "Prerequisite Description"
       label_name: "Prerequisite Description"
     Credits:

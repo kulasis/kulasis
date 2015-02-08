@@ -58,4 +58,21 @@ HEd.Billing.Code:
       field_size: 20
       column_name: "Conversion Code Number"
       label_name: "Conversion Code Number"
-      
+    Form1098TBox2:
+      description: "Form 1098-T Box 2"
+      db_column_name: FORM1098T_BOX2
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Form 1098-T Box 2"
+      label_name: "Form 1098-T Box 2"
+    Form1098TBox5:
+      description: "Form 1098-T Box 5"
+      db_column_name: FORM1098T_BOX5
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Form 1098-T Box 5"
+      label_name: "Form 1098-T Box 5"

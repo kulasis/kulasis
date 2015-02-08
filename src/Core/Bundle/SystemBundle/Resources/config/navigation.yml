@@ -152,3 +152,10 @@ Core.User:
           record_loaded: true
           confirmation_message: "Are you sure you want to delete user?"
           sort: 2
+
+SIS.HEd.Admin:
+  description: "Administration"
+  type: form_group
+  portal: sis
+  display_name: "Administration"
+  sort: 4

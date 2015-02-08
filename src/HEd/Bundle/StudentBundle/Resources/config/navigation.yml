@@ -105,15 +105,10 @@ SIS.HEd.Reports.Student:
       route: sis_HEd_student_enrollment_reports_enrollmentverification
       sort: 1
 
-SIS.HEd.Home:
-  description: "Home"
-  display_name: "Home"
-  type: form_group
+SIS.HEd.Admin.Holds:
+  type: form
   portal: sis
-  sort: 1
-  forms: 
-    Holds:
-      description: "Holds"
-      display_name: "Holds"
-      route: sis_HEd_home_holds
-      sort: 1
+  description: "Holds"
+  display_name: "Holds"
+  route: sis_HEd_home_holds
+  sort: 3

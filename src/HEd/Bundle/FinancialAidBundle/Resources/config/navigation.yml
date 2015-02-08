@@ -1,4 +1,4 @@
-SIS.HEd.Home.FinancialAid:
+SIS.HEd.Admin.FinancialAid:
   description: "Financial Aid"
   type: form
   portal: sis
@@ -59,7 +59,7 @@ SIS.HEd.Setup.FinancialAid:
   type: form
   portal: sis
   display_name: "Financial Aid"
-  sort: 4
+  sort: 2
   tabs:
     AwardCodes:
       description: "Award Codes"

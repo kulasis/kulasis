@@ -49,9 +49,9 @@ SIS.HEd.Reports.Student.StudentSchedule:
   sort: 5
   route: sis_HEd_student_schedule_reports_studentschedule
 
-SIS.HEd.Offering:
-  description: "Offering"
-  display_name: "Offering"
+SIS.HEd.Academic:
+  description: "Academic"
+  display_name: "Academic (HEd)"
   portal: sis
   type: form_group
   sort: 3
@@ -174,11 +174,11 @@ SIS.HEd.Offering:
       description: "Rooms"
       display_name: "Rooms"
       route: sis_HEd_rooms
-      sort: 1
+      sort: 3
 
-SIS.HEd.Reports.Offering:
-  description: "Offering"
-  display_name: "Offering"
+SIS.HEd.Reports.Academic:
+  description: "Academic"
+  display_name: "Academic (HEd)"
   type: report_group
   portal: sis
   sort: 1
@@ -194,7 +194,7 @@ SIS.HEd.Reports.Offering:
       route: sis_HEd_offering_sections_reports_masterschedule
       sort: 2
       
-SIS.HEd.Setup.Staff:
+SIS.HEd.Academic.Staff:
   description: "Staff"
   display_name: "Staff"
   type: form

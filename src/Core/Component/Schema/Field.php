@@ -72,6 +72,14 @@ class Field {
     return $this->field_Size;
   }
   
+  public function getFieldCols() {
+    return $this->field_ColumnLength;
+  }
+  
+  public function getFieldRows() {
+    return $this->field_RowHeight;
+  }
+  
   public function getClass() {
     return $this->field_Class;
   }

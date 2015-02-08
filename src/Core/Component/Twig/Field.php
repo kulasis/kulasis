@@ -317,16 +317,16 @@ class Field {
     if (self::_displayField($param)) {
       $schema = self::getFieldInfo($param['field']);
       $field_name = self::getNameForField($param);
-      $param['attributes_html']['cols'] = $schema->getFieldSize();
-      if (!isset($param['attributes_html']['rows'])) $param['attributes_html']['rows'] = 5;
+      $param['attributes_html']['cols'] = $schema->getFieldCols() ? $schema->getFieldCols() : 50;
+      $param['attributes_html']['rows'] = $schema->getFieldRows() ? $schema->getFieldRows() : 15;
       return GenericField::textArea($field_name, $param['value'], $param['attributes_html']);
     } elseif (self::_displayValue($param) AND !$param['input']) {
       return $param['value'];
     } elseif (self::_displayValue($param)) {
       $schema = self::getFieldInfo($param['field']);
-      $param['attributes_html']['cols'] = $schema->getFieldSize();
       $param['attributes_html']['disabled'] = 'disabled';
-      if (!isset($param['attributes_html']['rows'])) $param['attributes_html']['rows'] = 5;
+      $param['attributes_html']['cols'] = $schema->getFieldCols() ? $schema->getFieldCols() : 50;
+      $param['attributes_html']['rows'] = $schema->getFieldRows() ? $schema->getFieldRows() : 15;
       return GenericField::textArea(null, $param['value'], $param['attributes_html']);
     }
   }
@@ -426,7 +426,12 @@ class Field {
       $html .= GenericField::checkbox($field_name, null, $param['attributes_html']);
       return $html;
     } elseif (self::_displayValue($param)) {
-      return $param['value'];
+      if ($param['value'] == '1')
+        return 'Y';
+      elseif ($param['value'] == '0')
+        return 'N';
+      else 
+        return $param['value'];
     }
   }
   

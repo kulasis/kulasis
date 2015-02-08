@@ -119,6 +119,7 @@ HEd.FAID.Student.AwardYear.Term:
       db_column_type: int
       db_column_size: tiny
       db_column_length: 1
+      db_column_default: 1
       field_type: text
       field_size: 4
       column_name: "Sequence"

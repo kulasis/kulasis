@@ -7,14 +7,13 @@ SIS.HEd.Student.Schedule.Grades:
   route: sis_HEd_student_schedule_grades
 
 
-SIS.HEd.Student.Schedule:
-  type: form
+SIS.HEd.Student.Schedule.FinalGrades:
+  type: menu_reports
   portal: sis
-  menu_reports:
-    FinalGrades:
-      descriptions: "Final Grades"
-      display_name: "Final Grades"
-      route: sis_HEd_student_schedule_reports_finalgrades
+  descriptions: "Final Grades"
+  display_name: "Final Grades"
+  route: sis_HEd_student_schedule_reports_finalgrades
+  sort: 2
 
 SIS.HEd.Reports.Student.FinalGrades:
   type: report
@@ -82,7 +81,7 @@ SIS.HEd.Reports.Student.DegreeAudit:
   sort: 2
   route: sis_HEd_student_coursehistory_reports_degreeaudit
 
-SIS.HEd.Offering.Degrees:
+SIS.HEd.Academic.Degrees:
   description: "Degrees"
   type: form
   portal: sis
@@ -114,6 +113,7 @@ SIS.HEd.Setup.Grading:
   description: "Setup"
   type: form
   portal: sis
+  sort: 3
   display_name: "Grading"
   tabs:
     MarkScales:

@@ -52,16 +52,6 @@ Core.Navigation:
       lookup: Core.Navigation.Portal
       column_name: "Portal"
       label_name: "Portal"
-    Target:
-      description: "Target"
-      db_column_name: TARGET
-      db_column_type: varchar
-      db_column_length: 10
-      db_column_null: true
-      field_type: text
-      field_size: 10
-      column_name: "Target"
-      label_name: "Target"
     Sort:
       description: "Sort"
       db_column_name: SORT

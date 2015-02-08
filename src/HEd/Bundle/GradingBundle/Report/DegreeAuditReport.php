@@ -217,7 +217,7 @@ class DegreeAuditReport extends BaseReport {
         else
           $this->Cell(9,3,'','L',0,'L');
       
-        if (isset($row['REQUIRED']) AND $row['REQUIRED'] == 'Y')
+        if (isset($row['REQUIRED']) AND $row['REQUIRED'] == '1')
           $this->Cell(3,3,'R',0,0,'L');
         else
           $this->Cell(3,3,'',0,0,'L');
@@ -284,7 +284,7 @@ class DegreeAuditReport extends BaseReport {
         else
           $this->Cell(9,3,'','L',0,'L');
       
-        if (isset($row['REQUIRED']) AND $row['REQUIRED'] == 'Y')
+        if (isset($row['REQUIRED']) AND $row['REQUIRED'] == '1')
           $this->Cell(3,3,'R',0,0,'L');
         else
           $this->Cell(3,3,'',0,0,'L');
@@ -303,10 +303,10 @@ class DegreeAuditReport extends BaseReport {
       // if nothing
       } else {
         
-        if (isset($row['SHOW_AS_OPTION']) AND $row['SHOW_AS_OPTION'] == 'Y') {
+        if (isset($row['SHOW_AS_OPTION']) AND $row['SHOW_AS_OPTION'] == '1') {
         $this->Cell(9,3,'','L',0,'L');
       
-        if (isset($row['REQUIRED']) AND $row['REQUIRED'] == 'Y')
+        if (isset($row['REQUIRED']) AND $row['REQUIRED'] == '1')
           $this->Cell(3,3,'R',0,0,'L');
         else
           $this->Cell(3,3,'',0,0,'L');

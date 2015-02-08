@@ -155,7 +155,7 @@ class SISBillingReceiptReportController extends ReportController {
       ->fields('code', array('CODE', 'CODE_TYPE'))
       ->condition('transactions.CONSTITUENT_ID', $student_id)
       ->condition('code.CODE_TYPE', 'P')
-      ->condition('transactions.SHOW_ON_STATEMENT', 'Y')
+      ->condition('transactions.SHOW_ON_STATEMENT', 1)
       ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
       ->leftJoin('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
       ->fields('org', array('ORGANIZATION_ABBREVIATION'))

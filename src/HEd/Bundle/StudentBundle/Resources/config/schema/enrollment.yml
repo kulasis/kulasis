@@ -134,12 +134,12 @@ HEd.Student.Status:
       label_name: "Admissions Counselor ID"
     AdvisorID:
       description: "Advisor ID"
-      parent: HEd.Staff.ID
+      parent: HEd.Staff.OrganizationTerm.ID
       db_column_name: ADVISOR_ID
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser: HEd.Staff
+      chooser: HEd.Staff.SchoolTerm
       column_name: "Advisor ID"
       label_name: "Advisor ID"
     Cohort:

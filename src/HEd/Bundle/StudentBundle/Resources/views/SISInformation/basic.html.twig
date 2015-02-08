@@ -16,9 +16,9 @@
 <div class="group-box-header">Degree</div>
 <div class="group-box-contents group">
 {{ kula_field({ field: 'HEd.Student.Degree.DegreeID', field_name_override: 'Degree', value: status.DEGREE_ID, label: true}) }}
-{{ kula_field({ field: 'HEd.Student.Degree.Major.ID', field_name_override: 'Major', value: status.MAJOR_ID, label: true}) }}
-{{ kula_field({ field: 'HEd.Student.Degree.Minor.ID', field_name_override: 'Minor', value: status.MINOR_ID, label: true}) }}
-{{ kula_field({ field: 'HEd.Student.Degree.Concentration.ID', field_name_override: 'Concentration', value: status.CONCENTRATION_ID, label: true}) }}
+{{ kula_field({ field: 'HEd.Student.Degree.Major.MajorID', field_name_override: 'Major', value: status.MAJOR_ID, label: true}) }}
+{{ kula_field({ field: 'HEd.Student.Degree.Minor.MinorID', field_name_override: 'Minor', value: status.MINOR_ID, label: true}) }}
+{{ kula_field({ field: 'HEd.Student.Degree.Concentration.ConcentrationID', field_name_override: 'Concentration', value: status.CONCENTRATION_ID, label: true}) }}
 {{ kula_field({ edit: true, field: 'HEd.Student.Degree.ExpectedCompletionTermID', db_row_id: status.STUDENT_DEGREE_ID, value: status.EXPECTED_COMPLETION_TERM_ID, field_name_override: 'Expected Term Completed', label: true}) }}
 </div>
 </div>

@@ -105,7 +105,7 @@ class TableLoader {
     
     foreach($this->fields as $field) {
       
-      if ($field->getDBColumnName()) {
+      if ($field->getDBColumnName() != '') {
       
         $structure['fields'][$field->getDBColumnName()] = array(
           'description' => $field->getDescription(),

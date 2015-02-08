@@ -33,15 +33,18 @@ class Focus {
   public static function terms($organization, $term, $organizationID, $portal, $administrator = 'N', $user_id = null) {
     $terms = array();
     if ($portal == 'sis') {
-      $terms['ALL'] = 'All';
+      $terms['ALL'] = array('id' => 'ALL', 'startdate' => '2100-01-01', 'abbreviation' => 'All');
     }
     
     $termsFromOrganization = $organization->getTermsForOrganization($organizationID);
     if ($termsFromOrganization) {
       foreach($termsFromOrganization as $key) {
-        $terms[$key] = $term->getTermAbbreviation($key);
+        $terms[$key] = array('id' => $key, 'startdate' => $term->getStartDate($key), 'abbreviation' => $term->getTermAbbreviation($key));
       }
     }
+    
+    //var_dump($terms);
+    //die();
     
     /*
     $term_results = \Kula\Component\Database\DB::connect('read')->select('CORE_TERM', 'terms')
@@ -63,8 +66,16 @@ class Focus {
     while ($term_row = $term_results->fetch())
       self::$terms[$term_row['TERM_ID']] = $term_row['TERM_ABBREVIATION'];
     */
-    asort($terms);
-    return $terms;
+    
+    usort($terms, function($a, $b) {
+        return $a['startdate'] > $b['startdate'];
+    });
+    
+    foreach($terms as $key => $term) {
+      $return[$term['id']] = $term['abbreviation'];
+    }
+    
+    return $return;
   }
   /*
   public static function getTeachers($organization_term_id) {

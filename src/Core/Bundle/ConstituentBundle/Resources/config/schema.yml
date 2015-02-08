@@ -499,3 +499,38 @@ Core.Constituent.Phone:
       lookup: Constituent.Address.Country
       column_name: "Phone Country"
       label_name: "Phone Country"
+      
+Log.Constituent.Combined:
+  description: "Combined Constituents"
+  db_table_name: LOG_CONSTITUENT_COMBINED
+  timestamps: true
+  fields:
+    DeletedConstituentID:
+      description: "Deleted Constituent ID"
+      primary: true
+      db_column_name: DELETED_CONSTITUENT_ID
+      db_column_type: serial
+      column_name: "Deleted Constituent ID"
+      label_name: "Deleted Constituent ID"
+    DeletedConversionNumber:
+      description: "Deleted Conversion Number"
+      db_column_name: DELETED_CONV_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      column_name: "Deleted Conversion Number"
+      label_name: "Deleted Conversion Number"
+    MergedConstituentID:
+      description: "Merged Constituent ID"
+      db_column_name: MERGED_CONSTITUENT_ID
+      db_column_type: serial
+      column_name: "Merged Constituent ID"
+      label_name: "Merged Constituent ID"
+    MergedConversionNumber:
+      description: "Merged Conversion Number"
+      db_column_name: MERGED_CONV_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      column_name: "Merged Conversion Number"
+      label_name: "Merged Conversion Number"

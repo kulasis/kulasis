@@ -91,7 +91,7 @@ class BillingStatementReport extends Report {
 
     // Address
     if ($this->data['address'] == 'bill')
-      $this->address($this->data['billing_address']['ADDRESS'], $this->data['billing_address']['CITY'], $this->data['billing_address']['STATE'], $this->data['billing_address']['ZIPCODE']);
+      $this->address($this->data['billing_address']['THOROUGHFARE'], $this->data['billing_address']['LOCALITY'], $this->data['billing_address']['ADMINISTRATIVE_AREA'], $this->data['billing_address']['POSTAL_CODE']);
     else {
       if ($this->data['mail_ADDRESS'] != '')
         $this->address($this->data['mail_ADDRESS'], $this->data['mail_CITY'], $this->data['mail_STATE'], $this->data['mail_ZIPCODE']);
