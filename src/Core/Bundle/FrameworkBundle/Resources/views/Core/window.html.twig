@@ -13,7 +13,7 @@
 {% set requestedNav = kula_core_navigation.getRequestedNavItem() %}
 {% set menuActions = requestedNav.getMenuActions() %}
 {% set menuReports = requestedNav.getMenuReports() %}
-<form id="window_window_num_form" method="post" action="{{ form_action }}" data-navigation-type="{{ requestedNav.getType() }}"{% if requestedNav.getType() == 'report' or requestedNav.getType() == 'menu_report' %} target="_blank"{% endif %}>
+<form id="window_window_num_form" method="post" action="{{ form_action }}" data-navigation-type="{{ requestedNav.getType() }}{% if request.get('_route') == 'core_export_reports_export_download' %}report{% endif %}"{% if requestedNav.getType() == 'report' or requestedNav.getType() == 'menu_report' or request.get('_route') == 'core_export_reports_export_download' %} target="_blank"{% endif %}>
 <div id="window_window_num_menu_bar" class="window_menu_bar group">
   <div id="window_window_num_menu_bar_left" class="window_menu_bar_left">
 {% if menuActions %}

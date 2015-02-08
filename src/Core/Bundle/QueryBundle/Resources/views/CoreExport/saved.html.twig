@@ -30,14 +30,14 @@ Saved Queries
     {{ kula_display_html({ add: true, field: 'Core.Export.SQLQuery.ID', prepend_html: '<td class="data-table-cell-row-num">...</td>' }) }}
   {{ kula_display_html({ add: true, field: 'Core.Export.SQLQuery.ID', prepend_html: '</tr>' }) }}
   {% for query in saved %}
-  <tr id="window_window_num_data_table_fields_{{ query.SQL_QUERY_SAVED_ID }}">
-    {{ kula_field({ delete: true, field: 'Core.Export.SQLQuery.ID', db_row_id: query.SQL_QUERY_SAVED_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-    <td class="data-table-cell-row-num"><a class="data-table-detail-link" data-row-id-prefix="field" data-row-id="{{ query.SQL_QUERY_SAVED_ID }}" href="{# { path('', { id : query.SQL_QUERY_SAVED_ID }) } #}">{{ loop.index }}</a></td>
-    {{ kula_field({ edit: true, field: 'Core.Export.SQLQuery.Category', db_row_id: query.SQL_QUERY_SAVED_ID, value: query.SQL_QUERY_CATEGORY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'Core.Export.SQLQuery.Name', db_row_id: query.SQL_QUERY_SAVED_ID, value: query.SQL_QUERY_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    <td><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_export_query', { id: query.SQL_QUERY_SAVED_ID }) }}">Preview</a></td>
-    <td><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_export_reports_export_download', { id: query.SQL_QUERY_SAVED_ID }) }}">Download</a></td>
-    <td class="data-table-cell-row-detail"><a class="data-table-detail-link" data-row-id-prefix="field" data-row-id="{{ query.SQL_QUERY_SAVED_ID }}" href="{{ path('core_export_saved_detail', { id: query.SQL_QUERY_SAVED_ID }) }}">...</a></td>
+  <tr id="window_window_num_data_table_fields_{{ query.SQL_QUERY_ID }}">
+    {{ kula_field({ delete: true, field: 'Core.Export.SQLQuery.ID', db_row_id: query.SQL_QUERY_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num"><a class="data-table-detail-link" data-row-id-prefix="field" data-row-id="{{ query.SQL_QUERY_ID }}" href="{# { path('', { id : query.SQL_QUERY_ID }) } #}">{{ loop.index }}</a></td>
+    {{ kula_field({ edit: true, field: 'Core.Export.SQLQuery.Category', db_row_id: query.SQL_QUERY_ID, value: query.SQL_QUERY_CATEGORY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Export.SQLQuery.Name', db_row_id: query.SQL_QUERY_ID, value: query.SQL_QUERY_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_export_query', { id: query.SQL_QUERY_ID }) }}">Preview</a></td>
+    <td><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_export_reports_export_download', { id: query.SQL_QUERY_ID }) }}">Download</a></td>
+    <td class="data-table-cell-row-detail"><a class="data-table-detail-link" data-row-id-prefix="field" data-row-id="{{ query.SQL_QUERY_ID }}" href="{{ path('core_export_saved_detail', { id: query.SQL_QUERY_ID }) }}">...</a></td>
   </tr>
   {% endfor %}
 </tbody>

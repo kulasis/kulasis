@@ -56,7 +56,7 @@ class CoreExportController extends Controller {
       //}
       $query_to_execute = $non['query']." LIMIT 25";
       
-      $results = $this->db()->query($query_to_execute)->fetchAll();
+      $results = $this->db()->db_query($query_to_execute)->fetchAll();
       $column_names = array_keys($results[0]);
       $query = $non['query'];
     } else {
@@ -94,7 +94,7 @@ class CoreExportController extends Controller {
     
     $output = '';
     
-    $results = $this->db()->query($non['query'])->fetchAll();
+    $results = $this->db()->db_query($non['query'])->fetchAll();
     
     if ($results) {
       // Generate response
