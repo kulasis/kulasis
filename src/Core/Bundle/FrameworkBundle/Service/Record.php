@@ -100,12 +100,12 @@ class Record {
     if ($this->session->get('portal') == 'teacher') {
       
       $focus = $this->session->get('focus');
-      
-      if (isset($focus[$record_type])) {
-        $this->selected_record_id = $focus[$record_type];
+
+      if (isset($focus[$this->record_type])) {
+        $this->selected_record_id = $focus[$this->record_type];
       }
     
-      $selected_record_type = $record_type;
+      $selected_record_type = $this->record_type;
     }
     
     $this->_setSelectedRecord($this->selected_record_id);

@@ -8,25 +8,24 @@ class TeacherSectionController extends Controller {
   
   public function rosterAction() {
     $this->authorize();
-    $this->setRecordType('SECTION');
-    
-    $dropped_conditions = new \Kula\Component\Database\Query\Predicate('OR');
-    $dropped_conditions = $dropped_conditions->predicate('class.DROPPED', null);
-    $dropped_conditions = $dropped_conditions->predicate('class.DROPPED', 'N');
-    
+    $this->setRecordType('Teacher.HEd.Section');
+
     $students = array();
     
-    $students = $this->db()->select('STUD_STUDENT_CLASSES', 'class')
+    $students = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED'))
-      ->join('STUD_STUDENT_STATUS', 'status', array('STUDENT_STATUS_ID', 'LEVEL', 'GRADE', 'ENTER_CODE'), 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
-      ->join('STUD_STUDENT', 'student', null, 'status.STUDENT_ID = student.STUDENT_ID')
-      ->join('CONS_CONSTITUENT', 'constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'), 'student.STUDENT_ID = constituent.CONSTITUENT_ID')
-      ->left_join('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcentrations', array('CONCENTRATION_ID'), 'stuconcentrations.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
-      ->predicate('class.SECTION_ID', $this->record->getSelectedRecordID())
-      ->predicate($dropped_conditions)
-      ->order_by('DROPPED', 'ASC')
-      ->order_by('LAST_NAME', 'ASC')
-      ->order_by('FIRST_NAME', 'ASC')
+      ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
+      ->fields('status', array('STUDENT_STATUS_ID', 'LEVEL', 'GRADE', 'ENTER_CODE'))
+      ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
+      ->join('CONS_CONSTITUENT', 'constituent', 'student.STUDENT_ID = constituent.CONSTITUENT_ID')
+      ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
+      ->leftJoin('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcentrations', 'stuconcentrations.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
+      ->fields('stuconcentrations', array('CONCENTRATION_ID'))
+      ->condition('class.SECTION_ID', $this->record->getSelectedRecordID())
+      ->condition('class.DROPPED', 0)
+      ->orderBy('DROPPED', 'ASC')
+      ->orderBy('LAST_NAME', 'ASC')
+      ->orderBy('FIRST_NAME', 'ASC')
       ->execute()->fetchAll();
     
     return $this->render('KulaHEdSchedulingBundle:TeacherSection:roster.html.twig', array('students' => $students));
@@ -34,21 +33,24 @@ class TeacherSectionController extends Controller {
 
   public function dropped_rosterAction() {
     $this->authorize();
-    $this->setRecordType('SECTION');
+    $this->setRecordType('Teacher.HEd.Section');
     
     $students = array();
     
-    $students = $this->db()->select('STUD_STUDENT_CLASSES', 'class')
+    $students = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED'))
-      ->join('STUD_STUDENT_STATUS', 'status', array('STUDENT_STATUS_ID', 'LEVEL', 'GRADE', 'ENTER_CODE'), 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
-      ->join('STUD_STUDENT', 'student', null, 'status.STUDENT_ID = student.STUDENT_ID')
-      ->join('CONS_CONSTITUENT', 'constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'), 'student.STUDENT_ID = constituent.CONSTITUENT_ID')
-      ->left_join('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcentrations', array('CONCENTRATION_ID'), 'stuconcentrations.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
-      ->predicate('class.SECTION_ID', $this->record->getSelectedRecordID())
-      ->predicate('class.DROPPED', 'Y')
-      ->order_by('DROPPED', 'ASC')
-      ->order_by('LAST_NAME', 'ASC')
-      ->order_by('FIRST_NAME', 'ASC')
+      ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
+      ->fields('status', array('STUDENT_STATUS_ID', 'LEVEL', 'GRADE', 'ENTER_CODE'))
+      ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
+      ->join('CONS_CONSTITUENT', 'constituent', 'student.STUDENT_ID = constituent.CONSTITUENT_ID')
+      ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
+      ->leftJoin('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcentrations', 'stuconcentrations.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
+      ->fields('stuconcentrations', array('CONCENTRATION_ID'))
+      ->condition('class.SECTION_ID', $this->record->getSelectedRecordID())
+      ->condition('class.DROPPED', '1')
+      ->orderBy('DROPPED', 'ASC')
+      ->orderBy('LAST_NAME', 'ASC')
+      ->orderBy('FIRST_NAME', 'ASC')
       ->execute()->fetchAll();
     
     return $this->render('KulaHEdSchedulingBundle:TeacherSection:roster.html.twig', array('students' => $students));

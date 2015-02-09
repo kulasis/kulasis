@@ -5,3 +5,7 @@ core_home:
 sis_home:
     path:     /sis/home
     defaults: { _controller: KulaCoreHomeBundle:SISHome:home }
+
+teacher_home:
+    path:     /teacher/home
+    defaults: { _controller: KulaCoreHomeBundle:TeacherHome:home }

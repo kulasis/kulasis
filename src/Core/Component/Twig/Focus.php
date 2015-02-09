@@ -30,63 +30,63 @@ class Focus {
     return self::$usergroups;  
   }
   
-  public static function terms($organization, $term, $organizationID, $portal, $administrator = 'N', $user_id = null) {
+  public static function terms($organization, $term, $organizationID, $portal, $administrator = 'N', $user_id = null, $db = null, $focus = null) {
     $terms = array();
     if ($portal == 'sis') {
       $terms['ALL'] = array('id' => 'ALL', 'startdate' => '2100-01-01', 'abbreviation' => 'All');
-    }
-    
-    $termsFromOrganization = $organization->getTermsForOrganization($organizationID);
-    if ($termsFromOrganization) {
-      foreach($termsFromOrganization as $key) {
-        $terms[$key] = array('id' => $key, 'startdate' => $term->getStartDate($key), 'abbreviation' => $term->getTermAbbreviation($key));
+      
+      $termsFromOrganization = $organization->getTermsForOrganization($organizationID);
+      if ($termsFromOrganization) {
+        foreach($termsFromOrganization as $key) {
+          $terms[$key] = array('id' => $key, 'startdate' => $term->getStartDate($key), 'abbreviation' => $term->getTermAbbreviation($key));
+        }
       }
+      
+      usort($terms, function($a, $b) {
+          return $a['startdate'] > $b['startdate'];
+      });
+    
+      foreach($terms as $key => $term) {
+        $return[$term['id']] = $term['abbreviation'];
+      }
+    
+      return $return;
     }
     
-    //var_dump($terms);
-    //die();
+    if ($portal == 'teacher') {
+      
+      $term_results = $db->db_select('CORE_TERM', 'terms')
+        ->distinct()
+        ->fields('terms', array('TERM_ID', 'TERM_ABBREVIATION', 'TERM_NAME'))
+        ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.TERM_ID = terms.TERM_ID')
+        ->condition('orgterm.ORGANIZATION_ID', $focus->getOrganizationID());
+      if ($administrator == '0') {
+        $term_results = $term_results->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', 'stafforgterms.ORGANIZATION_TERM_ID = orgterm.ORGANIZATION_TERM_ID');
+        $term_results = $term_results->condition('stafforgterms.STAFF_ID', $user_id);  
+      }
     
-    /*
-    $term_results = \Kula\Component\Database\DB::connect('read')->select('CORE_TERM', 'terms')
-      ->distinct()
-      ->fields('terms', array('TERM_ID', 'TERM_ABBREVIATION', 'TERM_NAME'))
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', null, 'orgterm.TERM_ID = terms.TERM_ID');
-    if ($portal == 'sis') {
-      $term_results = $term_results->predicate('orgterm.ORGANIZATION_ID', self::$organization_ids);
-    }
-    if ($portal == 'teacher' AND $administrator == 'N') {
-      $term_results = $term_results->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', null, 'stafforgterms.ORGANIZATION_TERM_ID = orgterm.ORGANIZATION_TERM_ID');
-      $term_results = $term_results->predicate('stafforgterms.STAFF_ID', $user_id);  
-    }
-    
-     $term_results = $term_results
-      ->order_by('START_DATE')
-      ->order_by('END_DATE')
-      ->execute();
-    while ($term_row = $term_results->fetch())
-      self::$terms[$term_row['TERM_ID']] = $term_row['TERM_ABBREVIATION'];
-    */
-    
-    usort($terms, function($a, $b) {
-        return $a['startdate'] > $b['startdate'];
-    });
-    
-    foreach($terms as $key => $term) {
-      $return[$term['id']] = $term['abbreviation'];
+       $term_results = $term_results
+        ->orderBy('START_DATE')
+        ->orderBy('END_DATE')
+        ->execute();
+      while ($term_row = $term_results->fetch())
+        $terms[$term_row['TERM_ID']] = $term_row['TERM_ABBREVIATION'];
+      
+      return $terms;
     }
     
-    return $return;
   }
-  /*
-  public static function getTeachers($organization_term_id) {
+  
+  public static function getTeachers($db, $organization_term_id) {
     $instructors = array();
     
     if ($organization_term_id) {
-    $instructors_result = \Kula\Component\Database\DB::connect('read')->select('STUD_STAFF', 'staff')
+    $instructors_result = $db->db_select('STUD_STAFF', 'staff')
       ->fields('staff', array('ABBREVIATED_NAME'))
-      ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', array('STAFF_ORGANIZATION_TERM_ID'), 'stafforgterm.STAFF_ID = staff.STAFF_ID')
-      ->predicate('stafforgterm.ORGANIZATION_TERM_ID', $organization_term_id)
-      ->order_by('ABBREVIATED_NAME')
+      ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', 'stafforgterm.STAFF_ID = staff.STAFF_ID')
+      ->fields('stafforgterm', array('STAFF_ORGANIZATION_TERM_ID'))
+      ->condition('stafforgterm.ORGANIZATION_TERM_ID', $organization_term_id)
+      ->orderBy('ABBREVIATED_NAME')
       ->execute();
     while ($instructors_row = $instructors_result->fetch()) {
       $instructors[$instructors_row['STAFF_ORGANIZATION_TERM_ID']] = $instructors_row['ABBREVIATED_NAME'];
@@ -95,34 +95,29 @@ class Focus {
     return $instructors;
   }
   
-  public static function getSchoolsMenu($school_organization_ids) {
+  public static function getSchoolsMenu($organization, $school_organization_ids) {
     $schools_menu = array();
-    $schools = \Kula\Component\Database\DB::connect('read')->select('CORE_ORGANIZATION')
-      ->fields(null, array('ORGANIZATION_ID', 'ORGANIZATION_NAME', 'ORGANIZATION_ABBREVIATION'))
-      ->predicate('ORGANIZATION_ID', $school_organization_ids)
-      ->predicate('SCHOOL', 'Y')
-      ->order_by('ORGANIZATION_NAME', 'ASC')
-      ->execute();
-    while ($schools_row = $schools->fetch()) {
-      $schools_menu[$schools_row['ORGANIZATION_ID']] = $schools_row['ORGANIZATION_NAME'];
+    foreach($school_organization_ids as $organization_id) {
+      $schools_menu[$organization_id] = $organization->getOrganization($organization_id)->getName();
     }
     return $schools_menu;
   }
   
-  public static function getSectionMenu($staff_organization_term_id) {
+  public static function getSectionMenu($db, $staff_organization_term_id) {
     $section_menu = array();
-    $sections = \Kula\Component\Database\DB::connect('read')->select('STUD_SECTION', 'section')
+    $sections = $db->db_select('STUD_SECTION', 'section')
       ->fields('section', array('SECTION_NUMBER', 'SECTION_ID'))
-      ->join('STUD_COURSE', 'course', array('COURSE_TITLE', 'COURSE_NUMBER'), 'section.COURSE_ID = course.COURSE_ID')
-      ->predicate('STAFF_ORGANIZATION_TERM_ID', $staff_organization_term_id)
-      ->order_by('SECTION_NUMBER', 'ASC')
+      ->join('STUD_COURSE', 'course', 'section.COURSE_ID = course.COURSE_ID')
+      ->fields('course', array('COURSE_TITLE', 'COURSE_NUMBER'))
+      ->condition('STAFF_ORGANIZATION_TERM_ID', $staff_organization_term_id)
+      ->orderBy('SECTION_NUMBER', 'ASC')
       ->execute();
     while ($sections_row = $sections->fetch()) {
       $section_menu[$sections_row['SECTION_ID']] = $sections_row['SECTION_NUMBER'].' | '.$sections_row['COURSE_NUMBER'].' | '.$sections_row['COURSE_TITLE'];
     }
     return $section_menu;
   }
-  */
+  
   public static function getOrganizationMenu($organization, $topOrganizationID) {
     self::createMenuForOrganization($organization->getOrganization($topOrganizationID));
     return self::$organization_menu;

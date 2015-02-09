@@ -51,13 +51,11 @@ class Focus {
       }       
     } 
     
-    /*
     if (!$organization_id AND !$term_id AND $this->session->get('portal') != 'sis') {
-      $this->session->setFocus('organization_id', $this->organization->getSchoolOrganizationIDs()[0]);
+      $this->session->setFocus('organization_id', $this->getSchoolIDs());
     }
-    */
   }
-  /*
+
   public function setSectionFocus($section_id = null, $role_token = null) {
     
     if ($role_token === null) {
@@ -80,13 +78,13 @@ class Focus {
       $section_id = $section['SECTION_ID'];
     } 
     
-    $this->session->setFocus('SECTION', $section_id);
+    $this->session->setFocus('Teacher.HEd.Section', $section_id);
   }
   
   public function getSectionID() {
     $session_focus = $this->session->get('focus');
-    if (isset($session_focus['SECTION']))
-      return $session_focus['SECTION'];
+    if (isset($session_focus['Teacher.HEd.Section']))
+      return $session_focus['Teacher.HEd.Section'];
     else
       return false;
   }
@@ -94,9 +92,9 @@ class Focus {
   public function setTeacherOrganizationTermFocus($teacher_id = null, $role_token = null) {
 
     if ($teacher_id) {
-      if ($teacher_id) $this->session->setFocus('staff_organization_term_id', $teacher_id, $role_token);
-    } elseif ($this->session->get('administrator') == 'Y') {
       $this->session->setFocus('staff_organization_term_id', $teacher_id, $role_token);
+      //} elseif ($this->session->get('administrator') == '1') {
+      //$this->session->setFocus('staff_organization_term_id', $teacher_id, $role_token);
     } else {
       // get staff organization term id for currently set organization and term
       $staff_organization_term_id = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm')
@@ -106,13 +104,14 @@ class Focus {
       $staff_organization_term_id = $staff_organization_term_id->execute()->fetch();
 
       if ($staff_organization_term_id['STAFF_ORGANIZATION_TERM_ID']) {
+        echo 'here';
         $this->session->setFocus('staff_organization_term_id', $staff_organization_term_id['STAFF_ORGANIZATION_TERM_ID'], $teacher_id, $role_token);
       }
       
     }
     
   }
-  
+
   public function getTeacherOrganizationTermID() {
     $session_focus = $this->session->get('focus');
     if (isset($session_focus['staff_organization_term_id']))
@@ -123,22 +122,18 @@ class Focus {
   
   public function getSchoolIDs() {
     if ($this->session->get('portal') == 'sis') {
-      return $this->organization->getSchoolOrganizationIDs();
+      return $this->organization->getSchools($this->getOrganizationID());
     } else {
-      return $this->organization->getSchoolOrganizationIDs()[0];
+      return $this->organization->getSchools($this->getOrganizationID())[0];
     }
   }
-  */
+  
   public function getOrganizationTermIDs() {
     return $this->organization->getOrganizationTerms($this->getOrganizationID(), $this->getTermID());
   }
   
   public function getOrganizationTermID() {
     return $this->organization->getOrganizationTerms($this->getOrganizationID(), $this->getTermID())[0];
-  }
-  
-  public function getSchoolIDs() {
-    return $this->organization->getSchools($this->getOrganizationID());
   }
   
   public function getOrganizationID() {

@@ -15,7 +15,7 @@ class TeacherSectionRecord extends Record {
   
   public function getRecordIDStack() {
     
-    $result = $this->db()->select('STUD_SECTION', 'section')
+    $result = $this->db()->db_select('STUD_SECTION', 'section')
     ->fields('section', array('SECTION_ID' => 'ID'))
     ->condition('section.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
     ->orderBy('SECTION_NUMBER', 'ASC');
@@ -26,7 +26,7 @@ class TeacherSectionRecord extends Record {
   
   public function get($record_id) {
     
-    $result = $this->db()->select('STUD_SECTION', 'section')
+    $result = $this->db()->db_select('STUD_SECTION', 'section')
     ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'STAFF_ORGANIZATION_TERM_ID', 'COURSE_ID', 'ORGANIZATION_TERM_ID', 'STATUS'))
     ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgtrm', 'stafforgtrm.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
     ->leftJoin('STUD_STAFF', 'staff', 'stafforgtrm.STAFF_ID = staff.STAFF_ID')

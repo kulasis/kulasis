@@ -70,16 +70,15 @@ class TwigExtension extends \Twig_Extension {
         'focus_terms' => Focus::terms($this->container->get('kula.core.organization'), $this->container->get('kula.core.term'), $this->session->get('organization_id'), $this->session->get('portal'), $this->session->get('administrator'), $this->session->get('user_id'))
       );
       
-      if ($this->session->get('portal') == 'teacher' OR $this->session->get('portal') == 'student') {
-        $organization = new \Kula\Core\Component\Focus\Organization;
-        $organization->setOrganization($this->session->get('organization_id'));
-        $globals_array += array(
-          'focus_schools' => Focus::getSchoolsMenu($organization->getSchoolOrganizationIDs()),
-          'focus_teachers' => Focus::getTeachers($container->get('kula.focus')->getOrganizationTermIDs()),
-          'focus_sections' => Focus::getSectionMenu($container->get('kula.focus')->getTeacherOrganizationTermID()),
-        );
-      }
-      
+    }
+    
+    if ($this->session->get('portal') == 'teacher' OR $this->session->get('portal') == 'student') {
+      $globals_array += array(
+        'focus_schools' => Focus::getSchoolsMenu($this->container->get('kula.core.organization'), $this->container->get('kula.core.organization')->getSchools($this->session->get('organization_id'))),
+        'focus_terms' => Focus::terms($this->container->get('kula.core.organization'), $this->container->get('kula.core.term'), $this->session->get('organization_id'), $this->session->get('portal'), $this->session->get('administrator'), $this->session->get('user_id'), $this->container->get('kula.core.db'), $this->container->get('kula.core.focus')),
+        'focus_teachers' => Focus::getTeachers($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getOrganizationTermIDs()),
+        'focus_sections' => Focus::getSectionMenu($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getTeacherOrganizationTermID()),
+      );
     }
     
     return $globals_array;

@@ -4,20 +4,20 @@ namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
-class SISClassRosterReportController extends ReportController {
+class TeacherClassRosterReportController extends SISClassRosterReportController {
   
   public function indexAction() {
     $this->authorize();
-    $this->formAction('sis_HEd_offering_sections_report_classroster_generate');
-    if ($this->request->query->get('record_type') == 'SIS.HEd.Section' AND $this->request->query->get('record_id') != '')
-      $this->setRecordType('SIS.HEd.Section');
+    $this->formAction('teacher_HEd_offering_sections_report_classroster_generate');
+    $this->setRecordType('Teacher.HEd.Section');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    return $this->render('KulaHEdSchedulingBundle:SISClassRosterReport:reports_classroster.html.twig');
+    return $this->render('KulaHEdSchedulingBundle:TeacherClassRosterReport:reports_classroster.html.twig');
   }
   
   public function generateAction()
   {  
     $this->authorize();
+    $this->setRecordType('Teacher.HEd.Section');
     
     $pdf = new \Kula\HEd\Bundle\SchedulingBundle\Report\ClassRosterReport("P");
     $pdf->SetFillColor(245,245,245);
@@ -36,7 +36,7 @@ class SISClassRosterReportController extends ReportController {
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0)
       $meeting_result = $meeting_result->condition('section.ORGANIZATION_TERM_ID', $org_term_ids);
-    $record_id = $this->request->request->get('record_id');
+    $record_id = $this->record->getSelectedRecordID();
     if (isset($record_id) AND $record_id != '')
       $meeting_result = $meeting_result->condition('section.SECTION_ID', $record_id);
     $meeting_result = $meeting_result
@@ -91,7 +91,7 @@ class SISClassRosterReportController extends ReportController {
       $result = $result->condition('section.ORGANIZATION_TERM_ID', $org_term_ids);
     
     // Add on selected record
-    $record_id = $this->request->request->get('record_id');
+    $record_id = $this->record->getSelectedRecordID();
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('section.SECTION_ID', $record_id);
     

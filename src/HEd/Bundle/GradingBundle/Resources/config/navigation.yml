@@ -124,3 +124,21 @@ SIS.HEd.Setup.Grading:
       description: "Standings"
       display_name: "Standings"
       route: sis_HEd_setup_grading_standings
+
+Teacher.HEd.Class.Grades:
+  description: "Grades"
+  display_name: "Grades"
+  type: form
+  portal: teacher
+  sort: 2
+  tabs:
+    Roster:
+      description: "Current"
+      display_name: "Current"
+      sort: 1
+      route: teacher_HEd_section_grades_current
+    Dropped:
+      description: "Dropped Roster"
+      display_name: "Dropped"
+      sort: 2
+      route: teacher_HEd_section_grades_dropped

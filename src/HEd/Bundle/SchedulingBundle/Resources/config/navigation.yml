@@ -211,3 +211,30 @@ SIS.HEd.Academic.Staff:
       display_name: "Instructor Schedule"
       sort: 1
       route: sis_HEd_offering_staff_reports_schedule
+
+Teacher.HEd.Class:
+  description: "Class"
+  display_name: "Class"
+  type: form_group
+  portal: teacher
+  forms:
+    Roster:
+      description: "Roster"
+      display_name: "Roster"
+      sort: 1
+      tabs:
+        Roster:
+          description: "Current Roster"
+          display_name: "Current"
+          sort: 1
+          route: teacher_HEd_class_roster
+        Dropped:
+          description: "Dropped Roster"
+          display_name: "Dropped"
+          sort: 2
+          route: teacher_HEd_class_roster_dropped
+      menu_reports:
+        ClassRoster:
+          description: "Class Roster"
+          display_name: "Class Roster"
+          route: teacher_HEd_offering_sections_reports_classroster

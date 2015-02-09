@@ -12,3 +12,10 @@ SIS.Page.Home:
   portal: sis
   route: sis_home
   sort: 1
+Teacher.Page.Home:
+  description: "Home"
+  display_name: "Home"
+  type: page
+  portal: teacher
+  route: teacher_home
+  sort: 1
