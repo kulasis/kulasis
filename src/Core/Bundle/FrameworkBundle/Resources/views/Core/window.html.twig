@@ -11,8 +11,8 @@
 {% block window %}
 <!-- window menu bar -->
 {% set requestedNav = kula_core_navigation.getRequestedNavItem() %}
-{% set menuActions = requestedNav.getMenuActions() %}
-{% set menuReports = requestedNav.getMenuReports() %}
+{% set menuActions = requestedNav.getMenuActions(kula_core_permission) %}
+{% set menuReports = requestedNav.getMenuReports(kula_core_permission) %}
 <form id="window_window_num_form" method="post" action="{{ form_action }}" data-navigation-type="{{ requestedNav.getType() }}{% if request.get('_route') == 'core_export_reports_export_download' %}report{% endif %}"{% if requestedNav.getType() == 'report' or requestedNav.getType() == 'menu_report' or request.get('_route') == 'core_export_reports_export_download' %} target="_blank"{% endif %}>
 <div id="window_window_num_menu_bar" class="window_menu_bar group">
   <div id="window_window_num_menu_bar_left" class="window_menu_bar_left">
@@ -62,7 +62,7 @@ data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDispla
 </div>
 {% endif %}
 {% endif %}
-{% set tabsToDisplay = kula_core_navigation.getRequestedNavItem().getTabs() %}
+{% set tabsToDisplay = kula_core_navigation.getRequestedNavItem().getTabs(kula_core_permission) %}
 {% if tabsToDisplay %}
 <!-- window tab bar -->
 <div id="window_window_num_tab_bar" class="window_tab_bar">

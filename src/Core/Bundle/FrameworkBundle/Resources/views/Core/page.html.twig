@@ -43,13 +43,13 @@
   </div>
   <div id="nav_favorites" style="display:none;">Favorites</div>
   <div id="nav_forms">
-    {% set navFormGroups = kula_core_navigation.getFormGroups() %}
+    {% set navFormGroups = kula_core_navigation.getFormGroups(kula_core_permission) %}
     {% for group_id, group_row in navFormGroups %}
       <div id="drawer-{{ group_id }}" class="navigation-drawer navigation-forms">
         <div class="drawer-header navigation-forms" data-category="forms-{{ group_id }}">{{ group_row.getDisplayName() }}</div>
         <div id="drawer-contents-forms-{{ group_id }}" class="drawer-contents navigation-forms" style="{% if kula_core_navigation.getRequestedNavItem().getParent() == group_row.getName() %}display:block;{% else %}display:none;{% endif %}">
           <ul>
-          {% for form_id, form_row in group_row.getForms() %}
+          {% for form_id, form_row in group_row.getForms(kula_core_permission) %}
             {% if form_row.getName() %}
               <li><a href="{% if form_row.getRoute() %}{{ path(form_row.getRoute()) }}{% endif %}" class="navigation-link">{{ form_row.getDisplayName() }}</a></li>
             {% else %}
@@ -62,13 +62,13 @@
     {% endfor %}
   </div>
   <div id="nav_reports"{% if navigation_info.NAVIGATION_TYPE != 'R' %} style="display:none;"{% endif %}>
-    {% set navReportGroups = kula_core_navigation.getReportGroups() %}
+    {% set navReportGroups = kula_core_navigation.getReportGroups(kula_core_permission) %}
     {% for group_id, group_row in navReportGroups %}
       <div id="drawer-reports-{{ group_id }}" class="navigation-drawer navigation-reports">
         <div class="drawer-header navigation-reports" data-category="reports-{{ group_id }}">{{ group_row.getDisplayName() }}</div>
         <div id="drawer-contents-reports-{{ group_id }}" class="drawer-contents navigation-reports" style="{% if group_row.selected_group == 'Y' %}display:block;{% else %}display:none;{% endif %}">
           <ul>
-          {% for report_id, report_row in group_row.getReports() %}
+          {% for report_id, report_row in group_row.getReports(kula_core_permission) %}
             {% if report_row.getName() %}
               <li><a href="{% if report_row.getRoute() %}{{ path(report_row.getRoute()) }}{% endif %}" class="navigation-link">{{ report_row.getDisplayName() }}</a></li>
             {% else %}

@@ -57,6 +57,7 @@ class TwigExtension extends \Twig_Extension {
       'router' => $this->router,
       'mode' => 'edit',
       'form_action' => $current_request->getBaseUrl().$current_request->getPathInfo(),
+      'kula_core_permission' => $this->container->get('kula.core.permission'),
     );
     
     if ($this->session->get('user_id')) {

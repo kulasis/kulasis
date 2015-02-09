@@ -20,16 +20,59 @@ class Form extends Item {
     $this->tabs[] = $menu;
   }
   
-  public function getMenuActions() {
-    return $this->menuActions;
+  public function getMenuActions($permission = null) {
+    
+    $menu = array();
+    
+    if ($this->menuActions) {
+      
+      foreach($this->menuActions as $id => $menuAction) {
+        
+        if ($permission AND $permission->getPermissionForNavigationObject($menuAction->getName())) {
+          $menu[] = $menuAction;
+        }
+        
+      }
+      
+    }
+    
+    return $menu;
   }
   
-  public function getMenuReports() {
-    return $this->menuReports;
+  public function getMenuReports($permission = null) {
+    
+    $menu = array();
+    
+    if ($this->menuReports) {
+      
+      foreach($this->menuReports as $id => $menuReport) {
+        
+        if ($permission AND $permission->getPermissionForNavigationObject($menuReport->getName())) {
+          $menu[] = $menuReport;
+        }
+        
+      }
+      
+    }
+    
+    return $menu;
   }
   
-  public function getTabs() {
-    return $this->tabs;
+  public function getTabs($permission = null) {
+    
+    $tabs = array();
+    
+    if ($this->tabs) {
+      foreach($this->tabs as $id => $tab) {
+        if ($permission AND $permission->getPermissionForNavigationObject($tab->getName())) {
+          $tabs[] = $tab;
+        }
+        
+      }
+      
+    }
+    
+    return $tabs;
   }
   
   public function getRoute() {

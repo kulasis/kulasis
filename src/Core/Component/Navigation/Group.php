@@ -11,16 +11,42 @@ class Group extends Item {
     $this->forms[] = $form;
   }
 
-  public function getForms() {
-    return $this->forms;
+  public function getForms($permission = null) {
+    
+    $forms = array();
+
+    if ($this->forms) {
+      
+      foreach($this->forms as $id => $form) {
+        if ($permission AND $permission->getPermissionForNavigationObject($form->getName())) {
+          $forms[] = $form;
+        }
+      }
+      
+    }
+    
+    return $forms;
   }
   
   public function addReport(Report $report) {
     $this->reports[] = $report;
   }
   
-  public function getReports() {
-    return $this->reports;
+  public function getReports($permission = null) {
+    
+    $reports = array();
+
+    if ($this->reports) {
+      
+      foreach($this->reports as $id => $report) {
+        if ($permission AND $permission->getPermissionForNavigationObject($report->getName())) {
+          $reports[] = $report;
+        }
+      }
+      
+    }
+    
+    return $reports;
   }
   
   public function getType() {
