@@ -85,6 +85,7 @@ class Permission {
   }
   
   private function loadSchemaPermissionObject() {
+    
     if (!$this->tables AND $this->tablesExists === true)
       $this->loadTablePermissions();
     if (!$this->fields AND $this->fieldsExists === true)
@@ -97,7 +98,6 @@ class Permission {
   }
 
   private function loadNavigationPermissions() {
-
     $usergroup_condition = $this->db->db_or('OR');
     $usergroup_condition = $usergroup_condition->condition('USERGROUP_ID', $this->session->get('usergroup_id'));
     $usergroup_condition = $usergroup_condition->condition('USERGROUP_ID', NULL);
@@ -139,7 +139,6 @@ class Permission {
   }
   
   private function loadTablePermissions() {
-    
     $usergroup_condition = $this->db->db_or('OR');
     $usergroup_condition = $usergroup_condition->condition('USERGROUP_ID', $this->session->get('usergroup_id'));
     $usergroup_condition = $usergroup_condition->condition('USERGROUP_ID', NULL);
@@ -162,10 +161,8 @@ class Permission {
       ->condition($public_condition)
       ->orderBy('ROLE_ID', 'DESC')
       ->orderBy('USERGROUP_ID', 'DESC');
-    //echo $table_result->sql();
     $result =  $result->execute();
     while ($row = $result->fetch()) {
-      
       if (!isset($this->tables[$row['TABLE_NAME']]) && $row['ROLE_ID']) {
         $this->tables[$row['TABLE_NAME']]['add'] = $row['PERMISSION_ADD'];
         $this->tables[$row['TABLE_NAME']]['edit'] = $row['PERMISSION_EDIT'];
@@ -181,7 +178,7 @@ class Permission {
       }
       
     } 
-    
+
     if (!$this->tables)
       $this->tablesExists = false;
   }

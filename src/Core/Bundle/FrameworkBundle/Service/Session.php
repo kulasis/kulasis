@@ -168,7 +168,7 @@ class Session {
       'ORGANIZATION_ID' => $organization_id ? $organization_id : null,
       'TERM_ID' => $term_id,
       'IN_TIME' => date('Y-m-d H:i:s'),
-      'IP_ADDRESS' => isset($this->request->server) ? $this->request->server->get('REMOTE_ADDR') : null,
+      'IP_ADDRESS' => isset($this->request->getCurrentRequest()->server) ? $this->request->getCurrentRequest()->server->get('REMOTE_ADDR') : null,
     );
     $session_id = $this->db->db_insert('LOG_SESSION')->fields($session_data)->execute();
     return $session_id;

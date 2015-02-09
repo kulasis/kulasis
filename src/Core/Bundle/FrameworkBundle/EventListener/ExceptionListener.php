@@ -37,8 +37,6 @@ class ExceptionListener implements EventSubscriberInterface
 {
     public function __construct($container = null)
     {
-      echo 'here';
-        
         $this->container = $container;
     }
 

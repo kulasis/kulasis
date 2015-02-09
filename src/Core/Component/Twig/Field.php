@@ -653,17 +653,18 @@ class Field {
   private static function _displayField($param) {
     $org_term_ids = self::$focus->getOrganizationTermIDs();
     $schema = self::getFieldInfo($param['field']);
+    
     if (
          (
           ($param['add'] OR $param['edit'] OR $param['non']) AND 
             (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1)) AND 
-            self::$permission->getPermissionForSchemaObject($schema->getTable()->getDBName(), $schema->getDBName(), Permission::WRITE)
+            self::$permission->getPermissionForSchemaObject($schema->getTable()->getName(), $schema->getName(), Permission::WRITE)
               
         )
          OR
         (
           ($param['search'] OR self::_getSubmitMode() == 'search' OR $param['report']) AND 
-          self::$permission->getPermissionForSchemaObject($schema->getTable()->getDBName(), $schema->getDBName(), Permission::READ)
+          self::$permission->getPermissionForSchemaObject($schema->getTable()->getName(), $schema->getName(), Permission::READ)
         )
       ) {
           return true;
@@ -672,7 +673,7 @@ class Field {
   
   private static function _displayValue($param) {
     $schema = self::getFieldInfo($param['field']);
-    if (self::$permission->getPermissionForSchemaObject($schema->getTable()->getDBName(), $schema->getDBName(), Permission::READ)
+    if (self::$permission->getPermissionForSchemaObject($schema->getTable()->getName(), $schema->getName(), Permission::READ)
         ) {
           return true;
     }      
