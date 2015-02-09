@@ -23,7 +23,6 @@ Log.Audit.Changes:
       db_column_name: LOG_SESSION_ID
       db_column_type: serial
       db_column_null: true
-      parent: Log.Session.ID
       column_name: "Session Log ID"
       label_name: "Session Log ID"
     CRUDOperation:

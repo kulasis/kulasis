@@ -34,39 +34,43 @@ class ControllerListener implements EventSubscriberInterface {
 
     if ($this->session->get('initial_role') > 0 AND $this->request->get('_route') != 'logout') {
       
-      // Set focus for user token
-      $this->focus->setOrganizationTermFocus($this->getFromRequest('focus_org'), $this->getFromRequest('focus_term'), $this->getFromRequest('role_token'));
+      if ($this->session->get('portal') == 'sis' OR $this->session->get('portal') == 'teacher') {
       
-      if ($this->session->get('portal') == 'teacher') {
+        // Set focus for user token
+        $this->focus->setOrganizationTermFocus($this->getFromRequest('focus_org'), $this->getFromRequest('focus_term'), $this->getFromRequest('role_token'));
+      
+        if ($this->session->get('portal') == 'teacher') {
         
-          // if administrator allow changing teacher focus
-          if ($this->session->get('administrator') == '1') {
-            if ($this->getFromRequest('focus_teacher')) {
-              $this->focus->setTeacherOrganizationTermFocus($this->getFromRequest('focus_teacher'), $this->getFromRequest('role_token'));
-              $this->focus->setSectionFocus(null, $this->getFromRequest('role_token'));
+            // if administrator allow changing teacher focus
+            if ($this->session->get('administrator') == '1') {
+              if ($this->getFromRequest('focus_teacher')) {
+                $this->focus->setTeacherOrganizationTermFocus($this->getFromRequest('focus_teacher'), $this->getFromRequest('role_token'));
+                $this->focus->setSectionFocus(null, $this->getFromRequest('role_token'));
+                $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
+              } elseif (($this->getFromRequest('focus_org') OR $this->getFromRequest('focus_term')) AND $this->request->get('_route') != 'focus_usergroup_change') {
+                $this->focus->setTeacherOrganizationTermFocus(null, $this->getFromRequest('role_token'));
+                $this->focus->setSectionFocus(null, $this->getFromRequest('role_token'));
+                $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
+              }
+              // if focus_org or focus_term changed
+            } elseif ($this->getFromRequest('focus_section') !== null  OR ($this->request->get('_route') != 'focus_usergroup_change' AND ($this->getFromRequest('focus_org') OR $this->getFromRequest('focus_term')))) {
+              $this->focus->setTeacherOrganizationTermFocus();
+              $this->focus->setSectionFocus(null);
               $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
-            } elseif (($this->getFromRequest('focus_org') OR $this->getFromRequest('focus_term')) AND $this->request->get('_route') != 'focus_usergroup_change') {
-              $this->focus->setTeacherOrganizationTermFocus(null, $this->getFromRequest('role_token'));
-              $this->focus->setSectionFocus(null, $this->getFromRequest('role_token'));
-              $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
-            }
-            // if focus_org or focus_term changed
-          } elseif ($this->getFromRequest('focus_section') !== null  OR ($this->request->get('_route') != 'focus_usergroup_change' AND ($this->getFromRequest('focus_org') OR $this->getFromRequest('focus_term')))) {
-            $this->focus->setTeacherOrganizationTermFocus();
-            $this->focus->setSectionFocus(null);
-            $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
-          } // end if administrator
+            } // end if administrator
 
-          if ($this->getFromRequest('focus_section')) {
-            $this->focus->setSectionFocus($this->getFromRequest('focus_section'), $this->getFromRequest('role_token'));
-            $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
-          } 
+            if ($this->getFromRequest('focus_section')) {
+              $this->focus->setSectionFocus($this->getFromRequest('focus_section'), $this->getFromRequest('role_token'));
+              $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
+            } 
       
-          if ($this->focus->getSectionID() == null) {
-            $this->focus->setTeacherOrganizationTermFocus();
-            $this->focus->setSectionFocus(null);
-          }
+            if ($this->focus->getSectionID() == null) {
+              $this->focus->setTeacherOrganizationTermFocus();
+              $this->focus->setSectionFocus(null);
+            }
         
+        }
+      
       }
       
     }
