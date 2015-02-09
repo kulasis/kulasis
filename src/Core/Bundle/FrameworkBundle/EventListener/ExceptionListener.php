@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Kula\Core\Bundle\FrameworkBundle\Exception\NotAuthorizedException;
+use Kula\Core\Component\DB\PosterException;
 
 /**
  * ExceptionListener.
@@ -34,11 +35,9 @@ use Kula\Core\Bundle\FrameworkBundle\Exception\NotAuthorizedException;
  */
 class ExceptionListener implements EventSubscriberInterface
 {
-    protected $logger;
-
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct($container = null)
     {
-        $this->logger = $logger;
+        $this->container = $container;
     }
 
     public function onKernelException(GetResponseForExceptionEvent $event)
@@ -46,9 +45,26 @@ class ExceptionListener implements EventSubscriberInterface
       $exception = $event->getException();
       $request = $event->getRequest();
       
-      if ($exception instanceof NotAuthorizedException) {
+      if ($exception instanceof PosterException) {
+        $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage(), 'fields' => $exception->getFields()), 200, array('X-Status-Code' => 200));
+      } elseif ($exception instanceof \PDOException) {
+        $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage()), 200, array('X-Status-Code' => 200));
+      } elseif ($exception instanceof NotAuthorizedException) {
         $response = new RedirectResponse('/login');
-      } 
+      } else {
+        if (!$exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+        // Error message to be displayed, logged, or mailed
+        $error_message = "\nUNCAUGHT EXCEPTION:\nTEXT: ". $exception->getMessage() .
+                           "\nLOCATION: ".$exception->getFile().", line " .
+                           $exception->getLine() .", at " . date('F j, Y, g:i a') .
+                           "\nShowing backtrace:\n".$exception->getTraceAsString()."\n\n" .
+                           "\n" . print_r($_SESSION, true);
+        // Email the error details, in case SEND_ERROR_MAIL is true
+        if ($this->container->getParameter('exception_send_email') == true)
+          error_log($error_message, 1, $this->container->getParameter('exception_to_email'), "From: " . $this->container->getParameter('exception_from_email') . "\r\nTo: " . $this->container->getParameter('exception_to_email'));
+        }
+      }
+        
       
       if (isset($response))
         $event->setResponse($response);
