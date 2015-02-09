@@ -181,7 +181,7 @@ class BillingStatementReport extends Report {
     if ($previous_balances == 'Y')
       $this->Cell($this->width[0],6,'',1,0,'L', $this->fill);
     else
-      $this->Cell($this->width[0],6, ($row['TRANSACTION_DATE'] != '' AND $row['POSTED'] == 'Y') ? date("m/d/Y", strtotime($row['TRANSACTION_DATE'])) : 'Pending',1,0,'L', $this->fill);
+      $this->Cell($this->width[0],6, ($row['TRANSACTION_DATE'] != '' AND $row['POSTED'] == '1') ? date("m/d/Y", strtotime($row['TRANSACTION_DATE'])) : 'Pending',1,0,'L', $this->fill);
     $this->Cell($this->width[1],6,$row['ORGANIZATION_ABBREVIATION'],1,0,'L',$this->fill);
     $this->Cell($this->width[2],6,$row['TERM_ABBREVIATION'],1,0,'L',$this->fill);
     $this->Cell($this->width[3],6,$row['TRANSACTION_DESCRIPTION'],1,0,'L',$this->fill);
