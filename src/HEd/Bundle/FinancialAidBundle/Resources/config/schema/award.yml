@@ -176,6 +176,17 @@ HEd.FAID.Student.AwardYear.Award:
       field_size: 7
       column_name: "Gross Amount"
       label_name: "Gross Amount"
+    AidMaximum:
+      description: "Aid Maximum"
+      db_column_name: AID_MAXIMUM
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 7
+      column_name: "Aid Maximum"
+      label_name: "Aid Maximum"
 
 HEd.FAID.Student.Award:
   description: "Student Awards"

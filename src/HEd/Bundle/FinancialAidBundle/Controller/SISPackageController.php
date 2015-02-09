@@ -54,6 +54,7 @@ class SISPackageController extends Controller {
               $poster_factory = $this->newPoster()->add('HEd.FAID.Student.AwardYear.Award', 'new', array(
                 'HEd.FAID.Student.AwardYear.Award.AwardYearID' => $award_code_exists['AWARD_YEAR_ID'],
                 'HEd.FAID.Student.AwardYear.Award.AwardCodeID' => $row['HEd.FAID.Student.AwardYear.Award.AwardCodeID'],
+                'HEd.FAID.Student.AwardYear.Award.AidMaximum' => $row['HEd.FAID.Student.AwardYear.Award.AidMaximum'],
                 'HEd.FAID.Student.AwardYear.Award.GrossAmount' => $row['HEd.FAID.Student.AwardYear.Award.GrossAmount'],
               ))->process()->getResult();
                 
@@ -219,7 +220,7 @@ class SISPackageController extends Controller {
         ->join('FAID_AWARD_CODE', 'faidawardcode', 'faidawardcode.AWARD_CODE_ID = stuawards.AWARD_CODE_ID')
         ->fields('faidawardcode', array('AWARD_CODE', 'AWARD_DESCRIPTION'))
         ->leftJoin('FAID_STUDENT_AWARD_YEAR_AWARDS', 'faidstuawardyraward', 'faidstuawardyraward.AWARD_YEAR_ID = faidstuawardyr.AWARD_YEAR_ID AND faidstuawardyraward.AWARD_CODE_ID = stuawards.AWARD_CODE_ID')
-        ->fields('faidstuawardyraward', array('AWARD_YEAR_AWARD_ID', 'GROSS_AMOUNT' => 'yr_GROSS_AMOUNT'))
+        ->fields('faidstuawardyraward', array('AWARD_YEAR_AWARD_ID', 'GROSS_AMOUNT' => 'yr_GROSS_AMOUNT', 'AID_MAXIMUM'))
         ->condition('faidstuawardyr.STUDENT_ID', $this->record->getSelectedRecordID())
         ->condition('faidstuawardyr.AWARD_YEAR', $fin_aid_year['FINANCIAL_AID_YEAR'])
         ->orderBy('faidawardcode.AWARD_CODE', 'ASC')
@@ -228,6 +229,7 @@ class SISPackageController extends Controller {
         $awards[$awards_row['AWARD_CODE_ID']]['AWARD_DESCRIPTION'] = $awards_row['AWARD_DESCRIPTION'];
         $awards[$awards_row['AWARD_CODE_ID']]['AWARD_YEAR_AWARD_ID'] = $awards_row['AWARD_YEAR_AWARD_ID'];
         $awards[$awards_row['AWARD_CODE_ID']]['GROSS_AMOUNT'] = $awards_row['yr_GROSS_AMOUNT'];
+        $awards[$awards_row['AWARD_CODE_ID']]['AID_MAXIMUM'] = $awards_row['AID_MAXIMUM'];
         $awards[$awards_row['AWARD_CODE_ID']]['terms'][$awards_row['AWARD_YEAR_TERM_ID']]['AWARD_ID'] = $awards_row['AWARD_ID'];
         $awards[$awards_row['AWARD_CODE_ID']]['terms'][$awards_row['AWARD_YEAR_TERM_ID']]['GROSS_AMOUNT'] = $awards_row['GROSS_AMOUNT'];
         if (!isset($awards[$awards_row['AWARD_CODE_ID']]['TOTAL'])) $awards[$awards_row['AWARD_CODE_ID']]['TOTAL'] = 0;
