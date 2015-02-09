@@ -184,10 +184,10 @@ class ScheduleService {
       // Update section totals
       $section_row = $this->database->db_select('STUD_SECTION')
         ->fields('STUD_SECTION', array('ENROLLED_TOTAL'))
-        ->condition('SECTION_ID', $section_id)
+        ->condition('SECTION_ID', $class_row['SECTION_ID'])
         ->execute()->fetch();
       
-      $section_poster = $this->posterFactory->newPoster()->edit('HEd.Section', $section_id, array(
+      $section_poster = $this->posterFactory->newPoster()->edit('HEd.Section', $class_row['SECTION_ID'], array(
         'HEd.Section.EnrolledTotal' => $section_row['ENROLLED_TOTAL'] + 1
       ))->process()->getResult();
       

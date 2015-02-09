@@ -171,7 +171,7 @@ class SISEnrollmentController extends Controller {
           
           // Drop all classes
           $schedule_service = $this->get('kula.HEd.scheduling.schedule');
-          $schedule_service->dropAllClassesForStudentStatus($status['STUDENT_STATUS_ID'], $status_data[$status['STUDENT_STATUS_ID']]['LEAVE_DATE']);
+          $schedule_service->dropAllClassesForStudentStatus($status['STUDENT_STATUS_ID'], $enrollmentInfo[key($enrollmentInfo)]['HEd.Student.Enrollment.LeaveDate']);
           
           // Process billing
           $student_billing_service = $this->get('kula.HEd.billing.student');
