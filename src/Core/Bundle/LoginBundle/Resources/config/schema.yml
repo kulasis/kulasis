@@ -64,6 +64,7 @@ Core.User:
       db_column_type: serial
       db_column_null: true
       field_type: select
+      class: Kula\Core\Bundle\SystemBundle\Field\LDAPServer
       column_name: "LDAP Server"
       label_name: "LDAP Server"
     AllowAuthGoogle:

@@ -228,9 +228,10 @@ function processForm(form, url, partial, divToLoad, options, onsuccess, onerrorf
 				if (onerrorfunc) onerrorfunc(msg, options);	
 
 				// set error message
-				var alert_element = $('#' + activeTabID + '_alert');
-				alert_element.html(msg.message);
-				alert_element.addClass('alert alert-error');
+				var alert_element = $('#' + activeTabID + '_content > div.window_content').prepend("<div class=\"alert alert-error\">" + msg.message +"</div>");
+        
+				//alert_element.html(msg.message);
+				//alert_element.addClass('alert alert-error');
 				
 				if (msg.fields) {
 				$.each(msg.fields, function(i, item) {

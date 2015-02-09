@@ -120,7 +120,7 @@ class BillingStatementReport extends Report {
     $this->Ln(4);
     }
     $this->Cell(30,5, 'Payment Plan:', '', 0,'R');
-    $this->Cell(30,5, $this->data['PAYMENT_PLAN'] == 'Y' ? 'Yes' : 'No', '', 0, 'L');
+    $this->Cell(30,5, $this->data['PAYMENT_PLAN'] == '1' ? 'Yes' : 'No', '', 0, 'L');
     $this->Ln(4);
     $this->SetLeftMargin(15);
     $this->Ln(10);

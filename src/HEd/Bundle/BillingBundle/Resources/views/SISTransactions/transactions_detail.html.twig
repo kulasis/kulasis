@@ -15,14 +15,14 @@
 <div class="group-box-header">Transaction</div>
 <div class="group-box-contents group">
 {{ kula_field({ field: 'HEd.Billing.Code.Type', field_name_override: 'Type', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.CODE_TYPE, label: true }) }}
-{% if transaction.POSTED != 'Y' and transaction.VOIDED != 'Y' %}
+{% if transaction.POSTED != '1' and transaction.VOIDED != '1' %}
 {{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.CodeID', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, field_name_override: 'Code', value: transaction.CODE_ID, label: true }) }}
 {% else %}
 {{ kula_field({ field: 'HEd.Billing.Transaction.CodeID', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, field_name_override: 'Code', value: transaction.CODE_ID, label: true }) }}
 {% endif %}
 </div>
 <div class="group-box-contents group">
-{% if transaction.POSTED != 'Y' and transaction.VOIDED != 'Y' %}
+{% if transaction.POSTED != '1' and transaction.VOIDED != '1' %}
 {{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.TransactionDate', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.TRANSACTION_DATE, label: true }) }}
 {% else %}
 {{ kula_field({ field: 'HEd.Billing.Transaction.TransactionDate', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.TRANSACTION_DATE, label: true }) }}
@@ -32,7 +32,7 @@
 <div class="group-box-contents group">
 {{ kula_field({ field: 'HEd.Billing.Transaction.Posted', value: transaction.POSTED, label: true }) }}
 {{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.ShowOnStatement', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.SHOW_ON_STATEMENT, label: true }) }}
-{% if transaction.POSTED != 'Y' and transaction.VOIDED != 'Y' %}
+{% if transaction.POSTED != '1' and transaction.VOIDED != '1' %}
 {{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.Amount', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.AMOUNT, label: true }) }}
 {% else %}
 {{ kula_field({ field: 'HEd.Billing.Transaction.Amount', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.AMOUNT, label: true }) }}

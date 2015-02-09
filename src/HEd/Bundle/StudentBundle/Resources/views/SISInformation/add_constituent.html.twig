@@ -26,7 +26,7 @@
 {{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.Grade', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
 {{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.Level', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
 {{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.Resident', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
-{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.EnterDate', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
+{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.EnterDate', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value:"now"|date("m/d/Y"), label: true }) }}
 {{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.EnterCode', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
 </div>
 </div>
