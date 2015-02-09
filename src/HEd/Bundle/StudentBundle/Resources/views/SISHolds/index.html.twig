@@ -21,7 +21,7 @@ Holds
 </thead>
 <tbody>
   {{ kula_display_html({ add: true, field: 'HEd.Student.Hold.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
-  {{ kula_field({ add: true, field: 'HEd.Student.Hold.StudentID', value: record_obj.getSelectedRecord.STUDENT_ID, hidden: true }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.Hold.StudentID', value: kula_core_record.getSelectedRecord.STUDENT_ID, hidden: true }) }}
   {{ kula_field({ add: true, delete: true, field: 'HEd.Student.Hold.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
   {{ kula_display_html({ add: true, field: 'HEd.Student.Hold.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
   {{ kula_field({ add: true, field: 'HEd.Student.Hold.Date', value:"now"|date("m/d/Y"), prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
