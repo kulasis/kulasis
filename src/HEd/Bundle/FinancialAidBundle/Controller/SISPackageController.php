@@ -22,15 +22,15 @@ class SISPackageController extends Controller {
     
       unset($post_info_add['HEd.FAID.Student.AwardYear']['new_num']);
       unset($post_info_add['HEd.FAID.Student.AwardYear.Award']['new_num']);
+      
 
-     if (isset($post_info_add['HEd.FAID.Student.AwardYear.Award']) AND count($post_info_add['HEd.FAID.Student.AwardYear.Award']) == 0 AND isset($post_info_add['HEd.FAID.Student.AwardYear']) AND count($post_info_add['HEd.FAID.Student.AwardYear']) == 0) {
+     if (isset($post_info_add['HEd.FAID.Student.AwardYear.Award']) AND count($post_info_add['HEd.FAID.Student.AwardYear.Award']) == 0 AND isset($post_info_add['HEd.FAID.Student.Award']) AND count($post_info_add['HEd.FAID.Student.Award']) == 0) {
         unset($post_info_add);
       }
     
     }
     
     if (isset($post_info_add)) {
-
       $transaction = $this->db()->db_transaction();
       
       foreach($post_info_add as $table => $row_info) {
@@ -81,7 +81,6 @@ class SISPackageController extends Controller {
                   } else {
                     $net_amount = $row['HEd.FAID.Student.AwardYear.Award.GrossAmount'] * $percentage;
                   }
-                  echo 'here1';
                   //name="add[HEd.FAID.Student.AwardYear.Award][2][HEd.FAID.Student.AwardYear.Award.AwardCodeID]"
                   $poster_factory = $this->newPoster()->add('HEd.FAID.Student.Award', 'new', array(
                     'HEd.FAID.Student.Award.AwardYearTermID' => $student_award_term['AWARD_YEAR_TERM_ID'],
@@ -99,34 +98,34 @@ class SISPackageController extends Controller {
           } // end if for FAID_STUDENT_AWARD_YEAR_AWARDS records
           
           if ($table == 'HEd.FAID.Student.Award') {
-
-            foreach ($row as $award_row_id => $award) {
-
-            // Split $row_id; [0] = Award Code, [1] = Organization Term ID
-            $row_id_split = explode('/', $award_row_id);
             
-            $award_code_result = $this->db()->db_select('FAID_AWARD_CODE', 'FAID_AWARD_CODE')
-              ->fields('FAID_AWARD_CODE', array('SHOW_ON_STATEMENT', 'ORIGINATION_FEE_PERCENTAGE'))
-              ->condition('AWARD_CODE_ID', $row_id_split[0])
-              ->execute()->fetch();
+            if ($row['HEd.FAID.Student.Award.GrossAmount'] != '') {
             
-            if ($award_code_result['ORIGINATION_FEE_PERCENTAGE'] > 0) {
-              $net_amount = ceil($award['HEd.FAID.Student.AwardYear.Award.GrossAmount'] * ((100.0 - $award_code_result['ORIGINATION_FEE_PERCENTAGE']) * 
-                .01)); // (100 - fee) * .01
-            } else {
-              $net_amount = $award['HEd.FAID.Student.AwardYear.Award.GrossAmount'];
-            }
-            echo 'here2';
-            $poster_factory = $this->newPoster()->add('HEd.FAID.Student.Award', 'new', array(
-              'HEd.FAID.Student.Award.AwardYearTermID' => $row_id_split[1],
-              'HEd.FAID.Student.Award.AwardCodeID' => $row_id_split[0],
-              'HEd.FAID.Student.Award.GrossAmount' => $award['HEd.FAID.Student.AwardYear.Award.GrossAmount'],
-              'HEd.FAID.Student.Award.NetAmount' => $net_amount,
-              'HEd.FAID.Student.Award.AwardStatus' => 'PEND',
-              'HEd.FAID.Student.Award.ShowOnStatement' => $award_code_result['SHOW_ON_STATEMENT']
-            ))->process()->getResult();
-              
-            } // end for
+              // Split $row_id; [0] = Award Code, [1] = Organization Term ID
+              $row_id_split = explode('/', $row_id);
+            
+              $award_code_result = $this->db()->db_select('FAID_AWARD_CODE', 'FAID_AWARD_CODE')
+                ->fields('FAID_AWARD_CODE', array('SHOW_ON_STATEMENT', 'ORIGINATION_FEE_PERCENTAGE'))
+                ->condition('AWARD_CODE_ID', $row_id_split[0])
+                ->execute()->fetch();
+            
+              if ($award_code_result['ORIGINATION_FEE_PERCENTAGE'] > 0) {
+                $net_amount = ceil($row['HEd.FAID.Student.Award.GrossAmount'] * ((100.0 - $award_code_result['ORIGINATION_FEE_PERCENTAGE']) * 
+                  .01)); // (100 - fee) * .01
+              } else {
+                $net_amount = $row['HEd.FAID.Student.Award.GrossAmount'];
+              }
+            
+              $poster_factory = $this->newPoster()->add('HEd.FAID.Student.Award', 'new', array(
+                'HEd.FAID.Student.Award.AwardYearTermID' => $row_id_split[1],
+                'HEd.FAID.Student.Award.AwardCodeID' => $row_id_split[0],
+                'HEd.FAID.Student.Award.GrossAmount' => $row['HEd.FAID.Student.Award.GrossAmount'],
+                'HEd.FAID.Student.Award.NetAmount' => $net_amount,
+                'HEd.FAID.Student.Award.AwardStatus' => 'PEND',
+                'HEd.FAID.Student.Award.ShowOnStatement' => $award_code_result['SHOW_ON_STATEMENT']
+              ))->process()->getResult();
+            
+            } // end if on gross amount check
             
           } // end if for FAID_STUDENT_AWARDS
           
@@ -179,6 +178,15 @@ class SISPackageController extends Controller {
     } else {
       $this->processForm();
     }
+    
+    if (!$this->poster)
+      $this->poster = $this->container->get('kula.core.poster');
+      
+    if ($this->request->request->get('edit'))
+      $this->poster->editMultiple($this->request->request->get('edit'));
+    if ($this->request->request->get('delete'))
+      $this->poster->deleteMultiple($this->request->request->get('delete'));
+    $this->poster->process();
     
     $award_year = array();
     $award_terms = array();
