@@ -32,11 +32,7 @@
 {% block focus %}
   <span>
     <label for="focus_term">Term:</label>
-    {% if session.get('administrator') == 'Y' %}
-    {{ form_select(focus_terms, 'focus_term', focus.getTermID, { id : 'focus_term', class: 'focus_term_admin' }) }}
-    {% else %}
     {{ form_select(focus_terms, 'focus_term', focus.getTermID, { id : 'focus_term' }) }}
-    {% endif %}
   </span>
   <span>
     <label for="focus_term">School:</label>
@@ -54,13 +50,13 @@
     </ul>
   </div>
   <div id="nav_forms">
-    {% set navFormGroups = kula_core_navigation.getFormGroups() %}
+    {% set navFormGroups = kula_core_navigation.getFormGroups(kula_core_permission) %}
     {% for group_id, group_row in navFormGroups %}
       <div id="drawer-{{ group_id }}" class="navigation-drawer navigation-forms">
         <div class="drawer-header navigation-forms" data-category="forms-{{ group_id }}">{{ group_row.getDisplayName() }}</div>
         <div id="drawer-contents-forms-{{ group_id }}" class="drawer-contents navigation-forms" style="{% if kula_core_navigation.getRequestedNavItem().getParent() == group_row.getName() %}display:block;{% else %}display:none;{% endif %}">
           <ul>
-          {% for form_id, form_row in group_row.getForms() %}
+          {% for form_id, form_row in group_row.getForms(kula_core_permission) %}
             {% if form_row.getName() %}
               <li><a href="{% if form_row.getRoute() %}{{ path(form_row.getRoute()) }}{% endif %}" class="navigation-link">{{ form_row.getDisplayName() }}</a></li>
             {% else %}
@@ -78,8 +74,8 @@
   <div id="windows_container">
     <!-- window menu bar -->
 {% set requestedNav = kula_core_navigation.getRequestedNavItem() %}
-{% set menuActions = requestedNav.getMenuActions() %}
-{% set menuReports = requestedNav.getMenuReports() %}
+{% set menuActions = requestedNav.getMenuActions(kula_core_permission) %}
+{% set menuReports = requestedNav.getMenuReports(kula_core_permission) %}
 <form id="window_window_num_form" method="post" action="{{ form_action }}" data-navigation-type="{{ requestedNav.getType() }}{% if request.get('_route') == 'core_export_reports_export_download' %}report{% endif %}"{% if requestedNav.getType() == 'report' or requestedNav.getType() == 'menu_report' or request.get('_route') == 'core_export_reports_export_download' %} target="_blank"{% endif %}>
     <div id="window_window_num_menu_bar" class="window_menu_bar group">
       <div id="window_window_num_menu_bar_left" class="window_menu_bar_left">
@@ -113,7 +109,7 @@
          </div>
           </div>
         </div>
-{% set tabsToDisplay = kula_core_navigation.getRequestedNavItem().getTabs() %}
+{% set tabsToDisplay = kula_core_navigation.getRequestedNavItem().getTabs(kula_core_permission) %}
 {% if tabsToDisplay %}
     <!-- window tab bar -->
     <div id="window_tab_bar" class="window_tab_bar">
