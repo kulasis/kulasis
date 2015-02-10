@@ -7,7 +7,7 @@ class Checkbox extends Field {
   public function html() {
     
     if ($this->value() == '')
-      $this->setValue('Y');
+      $this->setValue('1');
     
     $html = '<input type="checkbox"';
     $html .= $this->attributesToHTML();
