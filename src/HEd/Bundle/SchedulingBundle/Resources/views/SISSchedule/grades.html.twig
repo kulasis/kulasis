@@ -37,7 +37,7 @@ Current Schedule for Grades
     {{ kula_field({ add: true, field: 'HEd.Student.CourseHistory.Mark', table_row: false, db_row_id: class.STUDENT_CLASS_ID, MARK_SCALE_ID: class.MARK_SCALE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}    
     {% endif %}
   </tr>
-  {% if class.ALLOW_COMMENTS == 'Y' or class.REQUIRE_COMMENTS == 'Y' %}
+  {% if class.ALLOW_COMMENTS == '1' or class.REQUIRE_COMMENTS == '1' %}
     <tr>
       <td class="data-table-cell-row-num">{{ loop.index }}</td>
       {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Comments', db_row_id: class.COURSE_HISTORY_ID, value: class.COMMENTS, prepend_html: '<td colspan="8">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}

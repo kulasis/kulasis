@@ -60,7 +60,7 @@ class SISScheduleController extends Controller {
       $edit_grades = $this->request->request->get('edit')['HEd.Student.CourseHistory'];
       foreach($edit_grades as $student_course_history_id => $mark) {
         if (isset($mark['HEd.Student.CourseHistory.Mark']) AND $mark['HEd.Student.CourseHistory.Mark'] != '') 
-          $course_history_service->updateCourseHistoryForClass($student_course_history_id, $mark['HEd.Student.CourseHistory.Mark'], $mark['HEd.Student.CourseHistory.Comments']);
+          $course_history_service->updateCourseHistoryForClass($student_course_history_id, $mark['HEd.Student.CourseHistory.Mark'], isset($mark['HEd.Student.CourseHistory.Comments']) ? $mark['HEd.Student.CourseHistory.Comments'] : null);
         else
           $course_history_service->deleteCourseHistoryForClass($student_course_history_id);
       }
