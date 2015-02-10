@@ -41,17 +41,7 @@ SIS.HEd.Setup:
           sort: 2
           route: sis_HEd_setup_student_holds
 
-SIS.HEd.Reports.Setup:
-  description: "Setup"
-  display_name: "Setup"
-  type: report_group
-  portal: sis
-  reports:
-    InstructorSchedule:
-      description: "Instructor Schedule"
-      display_name: "Instructor Schedule"
-      sort: 1
-      route: sis_HEd_offering_staff_reports_schedule
+
 
 SIS.HEd.Academic:
   description: "Academic"

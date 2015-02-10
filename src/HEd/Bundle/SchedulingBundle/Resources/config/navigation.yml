@@ -41,6 +41,14 @@ SIS.HEd.Student.Schedule:
       sort: 1
       route: sis_HEd_student_schedule_reports_studentschedule
 
+SIS.HEd.Reports.Academic.InstructorSchedule:
+  type: report
+  portal: sis
+  description: "Instructor Schedule"
+  display_name: "Instructor Schedule"
+  sort: 2
+  route: sis_HEd_offering_staff_reports_schedule
+
 SIS.HEd.Reports.Student.StudentSchedule:
   description: "Student Schedule"
   type: report

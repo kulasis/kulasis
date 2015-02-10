@@ -2,7 +2,7 @@ Core.Navigation.Type:
   description: "Navigation Types"
   allow_update: false
   values: 
-    - { code: form_group, description: "From Group", sort: 1 }
+    - { code: form_group, description: "Form Group", sort: 1 }
     - { code: form, description: "Form", sort: 2 }
     - { code: menu_action, description: "Action Menu", sort: 3 }
     - { code: menu_report, description: "Report Menu", sort: 4 }

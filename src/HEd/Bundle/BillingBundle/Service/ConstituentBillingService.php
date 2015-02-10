@@ -226,7 +226,7 @@ class ConstituentBillingService {
       ->condition('CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
       ->execute()->fetch();
     
-    if ($transaction_row['POSTED'] == 'Y') {
+    if ($transaction_row['POSTED'] == '1') {
       $new_amount = $transaction_row['AMOUNT'] * -1;
       
       if ($new_amount < 0)
@@ -236,27 +236,27 @@ class ConstituentBillingService {
       
       // create return payment
       $return_payment_data = array(
-        'CONSTITUENT_ID' => $transaction_row['CONSTITUENT_ID'],
-        'ORGANIZATION_TERM_ID' => $transaction_row['ORGANIZATION_TERM_ID'],
-        'CODE_ID' => $transaction_row['CODE_ID'],
-        'TRANSACTION_DATE' => $transaction_date,
-        'TRANSACTION_DESCRIPTION' => $transaction_description,
-        'AMOUNT' => $new_amount, 
-        'ORIGINAL_AMOUNT' => $new_amount,
-        'APPLIED_BALANCE' => 0,
-        'REFUND_TRANSACTION_ID' => $constituent_transaction_id,
-        'VOIDED_REASON' => $voided_reason,
-        'POSTED' => array('checkbox_hidden' => '', 'checkbox' => 'Y'),
-        'SHOW_ON_STATEMENT' => array('checkbox_hidden' => '', 'checkbox' => 'N')
+        'HEd.Billing.Transaction.ConstituentID' => $transaction_row['CONSTITUENT_ID'],
+        'HEd.Billing.Transaction.OrganizationTermID' => $transaction_row['ORGANIZATION_TERM_ID'],
+        'HEd.Billing.Transaction.CodeID' => $transaction_row['CODE_ID'],
+        'HEd.Billing.Transaction.TransactionDate' => $transaction_date,
+        'HEd.Billing.Transaction.Description' => $transaction_description,
+        'HEd.Billing.Transaction.Amount' => $new_amount, 
+        'HEd.Billing.Transaction.OriginalAmount' => $new_amount,
+        'HEd.Billing.Transaction.AppliedBalance' => 0,
+        'HEd.Billing.Transaction.RefundTransactionID' => $constituent_transaction_id,
+        'HEd.Billing.Transaction.VoidedReason' => $voided_reason,
+        'HEd.Billing.Transaction.Posted' => 1,
+        'HEd.Billing.Transaction.ShowOnStatement' => 0
       );
       
-      if ($transaction_row['STUDENT_CLASS_ID']) $return_payment_data['STUDENT_CLASS_ID'] = $transaction_row['STUDENT_CLASS_ID'];
-      if ($transaction_row['AWARD_ID']) $return_payment_data['AWARD_ID'] = $transaction_row['AWARD_ID'];
+      if ($transaction_row['STUDENT_CLASS_ID']) $return_payment_data['HEd.Billing.Transaction.StudentClassID'] = $transaction_row['STUDENT_CLASS_ID'];
+      if ($transaction_row['AWARD_ID']) $return_payment_data['HEd.Billing.Transaction.AwardID'] = $transaction_row['AWARD_ID'];
       
       $return_payment_affected = $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', $return_payment_data)->process()->getResult();
 
       // set as returned for existing transaction
-      $original_transaction_poster = $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', $constituent_transaction_id, array(
+      $original_transaction_poster = $this->posterFactory->newPoster()->edit('HEd.Billing.Transaction', $constituent_transaction_id, array(
         'HEd.Billing.Transaction.RefundTransactionID' => $return_payment_affected,
         'HEd.Billing.Transaction.AppliedBalance' => 0,
         'HEd.Billing.Transaction.ShowOnStatement' => 1
