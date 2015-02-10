@@ -109,6 +109,7 @@ class SISTransactionsController extends Controller {
   public function transaction_detailAction($constituent_transaction_id) {
     $this->authorize();
     $this->setRecordType('SIS.HEd.Student');
+    $this->processForm();
 
     $edit_post = $this->request->get('edit');
     
