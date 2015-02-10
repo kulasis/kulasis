@@ -123,7 +123,7 @@ class StudentBillingService {
       ->join('STUD_MARK_SCALE', 'markscale', 'markscale.MARK_SCALE_ID = classes.MARK_SCALE_ID')
       ->condition('DROPPED', 0)
       ->condition('classes.STUDENT_STATUS_ID', $student_status_id)
-      ->condition('markscale.AUDIT', 'Y')
+      ->condition('markscale.AUDIT', '1')
       ->execute();
     while ($audit_classes_row = $audit_classes_result->fetch()) {
       $total_audit_credits += $audit_classes_row['total'];
