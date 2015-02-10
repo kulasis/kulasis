@@ -227,7 +227,7 @@ class SISEnrollmentController extends Controller {
           ))->process()->getResult();
           
           // determine tuition rate
-          $constituent_billing_service = $this->get('kula.HEd.billing.student');
+          $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
           $constituent_billing_service->determineTuitionRate($this->record->getSelectedRecordID());
           
           // mandatory transactions
