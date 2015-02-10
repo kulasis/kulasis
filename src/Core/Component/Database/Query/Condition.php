@@ -81,7 +81,7 @@ class Condition implements ConditionInterface, \Countable {
       throw new InvalidQueryException(sprintf("Query condition '%s %s ()' cannot be empty.", $field, $operator));
     }
     
-    if ($value === null) {
+    if ($value === null AND $operator === null) {
       $operator = 'IS NULL';
     }
 
@@ -202,7 +202,6 @@ class Condition implements ConditionInterface, \Countable {
               $operator = $this->mapConditionOperator($condition['operator']);
             }
             $operator += $operator_defaults;
-
             $placeholders = array();
             if ($condition['value'] instanceof SelectInterface) {
               $condition['value']->compile($connection, $queryPlaceholder);
