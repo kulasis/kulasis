@@ -17,7 +17,7 @@ class SISPackageController extends Controller {
     
     // Must remove template records first before determining if add should occur or else edit will never happen
     $post_info_add = $this->request->request->get('add');
-
+    
     if ($post_info_add) {
     
       unset($post_info_add['HEd.FAID.Student.AwardYear']['new_num']);
@@ -81,6 +81,7 @@ class SISPackageController extends Controller {
                   } else {
                     $net_amount = $row['HEd.FAID.Student.AwardYear.Award.GrossAmount'] * $percentage;
                   }
+                  echo 'here1';
                   //name="add[HEd.FAID.Student.AwardYear.Award][2][HEd.FAID.Student.AwardYear.Award.AwardCodeID]"
                   $poster_factory = $this->newPoster()->add('HEd.FAID.Student.Award', 'new', array(
                     'HEd.FAID.Student.Award.AwardYearTermID' => $student_award_term['AWARD_YEAR_TERM_ID'],
@@ -115,7 +116,7 @@ class SISPackageController extends Controller {
             } else {
               $net_amount = $award['HEd.FAID.Student.AwardYear.Award.GrossAmount'];
             }
-            
+            echo 'here2';
             $poster_factory = $this->newPoster()->add('HEd.FAID.Student.Award', 'new', array(
               'HEd.FAID.Student.Award.AwardYearTermID' => $row_id_split[1],
               'HEd.FAID.Student.Award.AwardCodeID' => $row_id_split[0],

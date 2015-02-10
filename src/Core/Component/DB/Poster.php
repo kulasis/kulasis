@@ -69,7 +69,9 @@ class Poster {
     ksort($post);
     foreach($post as $table => $tableRow) {
       foreach($tableRow as $id => $row) {
-        $this->edit($table, $id, $row);
+        if (count($row) > 0) {
+          $this->edit($table, $id, $row);
+        }
       }
     }
   }

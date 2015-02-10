@@ -60,7 +60,7 @@ Package
     {{ kula_field({ edit: true, field: 'HEd.FAID.Student.Award.GrossAmount', db_row_id: award.terms[term_id].AWARD_ID, value: award.terms[term_id].GROSS_AMOUNT, prepend_html: '<td style="text-align:right;">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'text-align:right;' } }) }}
     {% else %}
     {% set row_id = award_code~'/'~term_id %}
-    {{ kula_field({ add: true, field: 'HEd.FAID.Student.Award.GrossAmount', db_row_id: row_id, prepend_html: '<td  style="text-align:right;">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'text-align:right;' } }) }}
+    {{ kula_field({ add: true, field: 'HEd.FAID.Student.Award.GrossAmount', db_row_id: row_id, add_remove: true, prepend_html: '<td  style="text-align:right;">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'text-align:right;' } }) }}
     {% endif %}
     {% endfor %}
     {{ kula_field({ input: false, field: 'HEd.FAID.Student.AwardYear.Award.GrossAmount', db_row_id: award.AWARD_YEAR_AWARD_ID,  value: award.TOTAL, prepend_html: '<td style="text-align:right;">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}

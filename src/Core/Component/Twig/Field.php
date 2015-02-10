@@ -618,7 +618,7 @@ class Field {
     }
 
     $field_name .= '[' . $schema->getTable()->getName() . ']';
-    if ($db_action == 'add' AND $param['table_row']) $field_name .= '[new_num]';
+    if ($db_action == 'add' AND $param['table_row'] AND !isset($param['add_remove'])) $field_name .= '[new_num]';
     if ($db_action == 'add' AND !$param['table_row'] AND !isset($param['add_remove'])) $field_name .= '[new]';
     if ($db_action == 'edit' AND isset($record_object) AND $record_object->getAddMode()) $field_name .= '[0]'; 
     if ($param['db_row_id']) $field_name .= '[' . $param['db_row_id'] . ']';
