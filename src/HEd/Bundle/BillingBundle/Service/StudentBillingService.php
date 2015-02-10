@@ -40,7 +40,7 @@ class StudentBillingService {
       ->fields('term', array('TERM_ABBREVIATION'))
       ->join('CORE_LOOKUP_VALUES', 'grade', "grade.CODE = status.GRADE AND grade.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
       ->fields('grade', array('DESCRIPTION' => 'grade'))
-      ->join('CORE_LOOKUP_VALUES', 'entercode', "entercode.CODE = status.ENTER_CODE AND grade.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.EnterCode')")
+      ->join('CORE_LOOKUP_VALUES', 'entercode', "entercode.CODE = status.ENTER_CODE AND entercode.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.EnterCode')")
       ->fields('entercode', array('DESCRIPTION' => 'entercode'))
       ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = status.STUDENT_ID')
       ->fields('constituent', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'))
