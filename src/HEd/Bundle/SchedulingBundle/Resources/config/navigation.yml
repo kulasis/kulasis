@@ -40,6 +40,11 @@ SIS.HEd.Student.Schedule:
       display_name: "Student Schedule"
       sort: 1
       route: sis_HEd_student_schedule_reports_studentschedule
+    StudentScheduleBill:
+      description: "Student Schedule & Bill"
+      display_name: "Student Schedule & BIll"
+      sort: 2
+      route: sis_HEd_student_schedule_reports_studentschedulebill
 
 SIS.HEd.Reports.Academic.InstructorSchedule:
   type: report
@@ -56,6 +61,14 @@ SIS.HEd.Reports.Student.StudentSchedule:
   display_name: "Student Schedule"
   sort: 5
   route: sis_HEd_student_schedule_reports_studentschedule
+
+SIS.HEd.Reports.Student.StudentScheduleBill:
+  description: "Student Schedule & Bill"
+  type: report
+  portal: sis
+  display_name: "Student Schedule & Bill"
+  sort: 5
+  route: sis_HEd_student_schedule_reports_studentschedulebill
 
 SIS.HEd.Academic:
   description: "Academic"

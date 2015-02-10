@@ -36,14 +36,14 @@ sis_HEd_student_schedule_reports_studentschedule_generate:
   defaults: { _controller: KulaHEdSchedulingBundle:SISStudentScheduleReport:generate }
   methods: [POST]
 
-sis_HEd_student_schedule_reports_ss_studentschedule:
-  path: /student/schedule/reports/ss/studentschedule
-  defaults: { _controller: KulaHEdSchedulingBundle:SISSSStudentScheduleReport:index }
+sis_HEd_student_schedule_reports_studentschedulebill:
+  path: /student/schedule/reports/studentschedulebill
+  defaults: { _controller: KulaHEdSchedulingBundle:SISStudentScheduleBillReport:index }
   methods: [GET]
   
-sis_HEd_student_schedule_reports_ss_studentschedule_generate:
-  path: /student/schedule/reports/ss/studentschedule
-  defaults: { _controller: KulaHEdSchedulingBundle:SISSSStudentScheduleReport:generate }
+sis_HEd_student_schedule_reports_studentschedulebill_generate:
+  path: /student/schedule/reports/studentschedulebill
+  defaults: { _controller: KulaHEdSchedulingBundle:SISStudentScheduleBillReport:generate }
   methods: [POST]
 
 sis_HEd_student_schedule_waitlist:
