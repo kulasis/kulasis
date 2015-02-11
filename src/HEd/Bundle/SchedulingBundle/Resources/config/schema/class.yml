@@ -31,6 +31,8 @@ HEd.Student.Class:
       db_column_name: COURSE_ID
       db_column_type: serial
       db_column_null: true
+      field_type: chooser
+      chooser: HEd.Course
       column_name: "Course ID"
       label_name: "Course ID"
     StartDate:
