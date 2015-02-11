@@ -185,7 +185,7 @@ HEd.Student.Enrollment:
       description: "Enter Date"
       db_column_name: ENTER_DATE
       db_column_type: date
-      db_column_null: false
+      db_column_null: true
       field_type: date
       column_name: "Enter Date"
       label_name: "Enter Date"
@@ -194,7 +194,7 @@ HEd.Student.Enrollment:
       db_column_name: ENTER_CODE
       db_column_type: varchar
       db_column_length: 5
-      db_column_null: false
+      db_column_null: true
       field_type: lookup
       lookup: HEd.Student.Enrollment.EnterCode
       column_name: "Enter Code"
