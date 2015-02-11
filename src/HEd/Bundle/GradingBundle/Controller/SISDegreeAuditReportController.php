@@ -133,7 +133,7 @@ class SISDegreeAuditReportController extends ReportController {
     $elective_req_id = null;
     if (isset($this->pdf->requirements['degree'][$row['DEGREE_ID']])) {
     foreach($this->pdf->requirements['degree'][$row['DEGREE_ID']] as $req_id => $req_row) {
-      if ($req_row['ELECTIVE'] == 'Y') {
+      if ($req_row['ELECTIVE'] == '1') {
         $elective_req_id = $req_id;
       } else {
         $this->outputRequirementSet($req_id, $req_row);
