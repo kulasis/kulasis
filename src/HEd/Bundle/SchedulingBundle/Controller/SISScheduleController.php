@@ -170,14 +170,12 @@ class SISScheduleController extends Controller {
     
     if ($this->request->request->get('search')) {
       $current_section_ids = array();
-      $condition_or = $this->db()->db_or();
-      $condition_or = $condition_or->condition('DROPPED', null)->condition('DROPPED', '0');
       
       // Get current classes
       $current_section_ids_result = $this->db()->db_select('STUD_STUDENT_CLASSES')
         ->fields('STUD_STUDENT_CLASSES', array('SECTION_ID'))
         ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
-        ->condition($condition_or)
+        ->condition('DROPPED', '0')
         ->execute();
       while ($row = $current_section_ids_result->fetch()) {
         $current_section_ids[] = $row['SECTION_ID'];
@@ -197,6 +195,7 @@ class SISScheduleController extends Controller {
       $query = $query->condition('STUD_SECTION.STATUS', null);
       $query = $query->condition('STUD_SECTION.ORGANIZATION_TERM_ID', $this->record->getSelectedRecord()['ORGANIZATION_TERM_ID']);
       if (count($current_section_ids) > 0) $query = $query->condition('STUD_SECTION.SECTION_ID', $current_section_ids, 'NOT IN');
+      $query = $query->leftJoin('CONS_CONSTITUENT', 'CONS_CONSTITUENT', 'CONS_CONSTITUENT.CONSTITUENT_ID = staff.STAFF_ID');
       $query = $query->orderBy('SECTION_NUMBER', 'ASC');
       $query = $query->range(0, 100);
       $search_classes = $query->execute()->fetchAll();
@@ -296,9 +295,6 @@ class SISScheduleController extends Controller {
   private function _currentSchedule() {
     $classes = array();
     
-    $condition_or = $this->db()->db_or();
-    $condition_or = $condition_or->condition('class.DROPPED', null)->condition('class.DROPPED', 'N');
-    
     $classes = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'LEVEL', 'MARK_SCALE_ID', 'CREDITS_ATTEMPTED', 'COURSE_ID'))
       ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
@@ -315,7 +311,7 @@ class SISScheduleController extends Controller {
       ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgtrm.STAFF_ID')
       ->fields('staff', array('ABBREVIATED_NAME'))
       ->condition('class.STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
-      ->condition($condition_or)
+      ->condition('class.DROPPED', '0')
       ->orderBy('SECTION_NUMBER', 'ASC')
       ->execute()->fetchAll();
     

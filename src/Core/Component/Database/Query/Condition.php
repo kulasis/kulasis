@@ -69,6 +69,11 @@ class Condition implements ConditionInterface, \Countable {
    * Implements Kula\Core\Component\Database\Query\ConditionInterface::condition().
    */
   public function condition($field, $value = NULL, $operator = NULL) {
+    
+    if ($value === null AND $operator === null) {
+      $operator = 'IS NULL';
+    }
+    
     if (!isset($operator)) {
       if (is_array($value)) {
         $operator = 'IN';
@@ -79,10 +84,6 @@ class Condition implements ConditionInterface, \Countable {
     }
     if (empty($value) && is_array($value)) {
       throw new InvalidQueryException(sprintf("Query condition '%s %s ()' cannot be empty.", $field, $operator));
-    }
-    
-    if ($value === null AND $operator === null) {
-      $operator = 'IS NULL';
     }
 
     $this->conditions[] = array(
