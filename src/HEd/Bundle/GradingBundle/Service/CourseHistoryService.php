@@ -123,7 +123,7 @@ class CourseHistoryService {
     
     $data += $this->determineAward($mark_scale_id, $data['HEd.Student.CourseHistory.Mark'], $data['HEd.Student.CourseHistory.CreditsAttempted']);
     unset($data['COMMENTS']);
-    return $this->posterFactory->newPoster()->add('HEd.Student.CourseHistory', $id, $data)->process()->getResult();
+    return $this->posterFactory->newPoster()->edit('HEd.Student.CourseHistory', $id, $data)->process()->getResult();
   }
   
   private function determineAward($mark_scale_id, $mark, $credits_attempted) {
