@@ -26,7 +26,7 @@ Pending Awards
     {{ kula_field({ input: false, field: 'HEd.FAID.Student.AwardYear.Term.OrganizationTermID', db_row_id: award.AWARD_ID, value: award.ORGANIZATION_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Constituent.LastName', input: false, value: award.PERMANENT_NUMBER~' '~award.LAST_NAME~', '~award.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.FAID.Student.Award.DisbursementDate', db_row_id: award.AWARD_ID, value: award.DISBURSEMENT_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'HEd.FAID.Student.Award.GrossAmount', db_row_id: award.AWARD_ID, prepend_html: '<td style="text-align:right;">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'text-align:right;' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.FAID.Student.Award.GrossAmount', db_row_id: award.AWARD_ID, value: award.GROSS_AMOUNT, prepend_html: '<td style="text-align:right;">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'text-align:right;' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.FAID.Student.Award.NetAmount', db_row_id: award.AWARD_ID, value: award.NET_AMOUNT, prepend_html: '<td style="text-align:right;">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'text-align:right;' } }) }}
   </tr>
   {% endfor %}
