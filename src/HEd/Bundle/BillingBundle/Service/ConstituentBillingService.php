@@ -259,7 +259,7 @@ class ConstituentBillingService {
       $original_transaction_poster = $this->posterFactory->newPoster()->edit('HEd.Billing.Transaction', $constituent_transaction_id, array(
         'HEd.Billing.Transaction.RefundTransactionID' => $return_payment_affected,
         'HEd.Billing.Transaction.AppliedBalance' => 0,
-        'HEd.Billing.Transaction.ShowOnStatement' => 1
+        'HEd.Billing.Transaction.ShowOnStatement' => 0
       ))->process()->getResult();
         
         // Has an FA award.  Need to set back to pending
