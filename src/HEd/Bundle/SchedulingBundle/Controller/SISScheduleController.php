@@ -202,13 +202,13 @@ class SISScheduleController extends Controller {
       
       foreach($search_classes as $key => $class) {
         $search_classes[$key]['meets'] = '';
-        if ($class['MON'] == 'Y') $search_classes[$key]['meets'] .= 'M';
-        if ($class['TUE'] == 'Y') $search_classes[$key]['meets'] .= 'T';
-        if ($class['WED'] == 'Y') $search_classes[$key]['meets'] .= 'W';
-        if ($class['THU'] == 'Y') $search_classes[$key]['meets'] .= 'R';
-        if ($class['FRI'] == 'Y') $search_classes[$key]['meets'] .= 'F';
-        if ($class['SAT'] == 'Y') $search_classes[$key]['meets'] .= 'S';
-        if ($class['SUN'] == 'Y') $search_classes[$key]['meets'] .= 'U';
+        if ($class['MON'] == '1') $search_classes[$key]['meets'] .= 'M';
+        if ($class['TUE'] == '1') $search_classes[$key]['meets'] .= 'T';
+        if ($class['WED'] == '1') $search_classes[$key]['meets'] .= 'W';
+        if ($class['THU'] == '1') $search_classes[$key]['meets'] .= 'R';
+        if ($class['FRI'] == '1') $search_classes[$key]['meets'] .= 'F';
+        if ($class['SAT'] == '1') $search_classes[$key]['meets'] .= 'S';
+        if ($class['SUN'] == '1') $search_classes[$key]['meets'] .= 'U';
       }
       
       // set start date
@@ -256,7 +256,7 @@ class SISScheduleController extends Controller {
       ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE'))
       ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgtrm', 'section.STAFF_ORGANIZATION_TERM_ID = stafforgtrm.STAFF_ORGANIZATION_TERM_ID')
       ->leftJoin('STUD_SECTION_MEETINGS', 'meetings', 'meetings.SECTION_ID = section.SECTION_ID')
-      ->fields('meetings', array('MON','TUE','WED','THU','FRI','SAT','SUN', 'START_TIME', 'END_TIME'))
+      ->fields('meetings', array('SECTION_MEETING_ID', 'MON','TUE','WED','THU','FRI','SAT','SUN', 'START_TIME', 'END_TIME'))
       ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = meetings.ROOM_ID')
       ->fields('rooms', array('ROOM_NUMBER'))
       ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgtrm.STAFF_ID')
@@ -267,13 +267,13 @@ class SISScheduleController extends Controller {
     
     foreach($classes as $key => $class) {
       $classes[$key]['meets'] = '';
-      if ($class['MON'] == 'Y') $classes[$key]['meets'] .= 'M';
-      if ($class['TUE'] == 'Y') $classes[$key]['meets'] .= 'T';
-      if ($class['WED'] == 'Y') $classes[$key]['meets'] .= 'W';
-      if ($class['THU'] == 'Y') $classes[$key]['meets'] .= 'R';
-      if ($class['FRI'] == 'Y') $classes[$key]['meets'] .= 'F';
-      if ($class['SAT'] == 'Y') $classes[$key]['meets'] .= 'S';
-      if ($class['SUN'] == 'Y') $classes[$key]['meets'] .= 'U';
+      if ($class['MON'] == '1') $classes[$key]['meets'] .= 'M';
+      if ($class['TUE'] == '1') $classes[$key]['meets'] .= 'T';
+      if ($class['WED'] == '1') $classes[$key]['meets'] .= 'W';
+      if ($class['THU'] == '1') $classes[$key]['meets'] .= 'R';
+      if ($class['FRI'] == '1') $classes[$key]['meets'] .= 'F';
+      if ($class['SAT'] == '1') $classes[$key]['meets'] .= 'S';
+      if ($class['SUN'] == '1') $classes[$key]['meets'] .= 'U';
     }
     
     return $this->render('KulaHEdSchedulingBundle:SISSchedule:waitlist.html.twig', array('classes' => $classes));
@@ -305,7 +305,7 @@ class SISScheduleController extends Controller {
       ->fields('course2', array('COURSE_NUMBER' => 'second_COURSE_NUMBER', 'COURSE_TITLE'  => 'second_COURSE_TITLE'))
       ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgtrm', 'section.STAFF_ORGANIZATION_TERM_ID = stafforgtrm.STAFF_ORGANIZATION_TERM_ID')
       ->leftJoin('STUD_SECTION_MEETINGS', 'meetings', 'meetings.SECTION_ID = section.SECTION_ID')
-      ->fields('meetings', array('MON','TUE','WED','THU','FRI','SAT','SUN', 'START_TIME', 'END_TIME'))
+      ->fields('meetings', array('SECTION_MEETING_ID', 'MON','TUE','WED','THU','FRI','SAT','SUN', 'START_TIME', 'END_TIME'))
       ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = meetings.ROOM_ID')
       ->fields('rooms', array('ROOM_NUMBER'))
       ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgtrm.STAFF_ID')
@@ -314,18 +314,18 @@ class SISScheduleController extends Controller {
       ->condition('class.DROPPED', '0')
       ->orderBy('SECTION_NUMBER', 'ASC')
       ->execute()->fetchAll();
-    
+    /*
     foreach($classes as $key => $class) {
       $classes[$key]['meets'] = '';
-      if ($class['MON'] == 'Y') $classes[$key]['meets'] .= 'M';
-      if ($class['TUE'] == 'Y') $classes[$key]['meets'] .= 'T';
-      if ($class['WED'] == 'Y') $classes[$key]['meets'] .= 'W';
-      if ($class['THU'] == 'Y') $classes[$key]['meets'] .= 'R';
-      if ($class['FRI'] == 'Y') $classes[$key]['meets'] .= 'F';
-      if ($class['SAT'] == 'Y') $classes[$key]['meets'] .= 'S';
-      if ($class['SUN'] == 'Y') $classes[$key]['meets'] .= 'U';
+      if ($class['MON'] == '1') $classes[$key]['meets'] .= 'M';
+      if ($class['TUE'] == '1') $classes[$key]['meets'] .= 'T';
+      if ($class['WED'] == '1') $classes[$key]['meets'] .= 'W';
+      if ($class['THU'] == '1') $classes[$key]['meets'] .= 'R';
+      if ($class['FRI'] == '1') $classes[$key]['meets'] .= 'F';
+      if ($class['SAT'] == '1') $classes[$key]['meets'] .= 'S';
+      if ($class['SUN'] == '1') $classes[$key]['meets'] .= 'U';
     }
-    
+    */
     return $classes;  
   }
 }
