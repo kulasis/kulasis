@@ -138,21 +138,21 @@ class SISSectionController extends Controller {
     // Add new grades
     if ($this->request->request->get('add')) {
       $course_history_service = $this->get('kula.HEd.grading.coursehistory');
-      $new_grades = $this->request->request->get('add')['STUD_STUDENT_COURSE_HISTORY']['new'];
+      $new_grades = $this->request->request->get('add')['HEd.Student.CourseHistory']['new'];
       foreach($new_grades as $student_class_id => $mark) {
-        if (isset($mark['MARK']))
-          $course_history_service->insertCourseHistoryForClass($student_class_id, $mark['MARK']);
+        if (isset($mark['HEd.Student.CourseHistory.Mark']))
+          $course_history_service->insertCourseHistoryForClass($student_class_id, $mark['HEd.Student.CourseHistory.Mark']);
       }
     }
     
     // Edit grades
     $edit = $this->request->request->get('edit');
-    if (isset($edit['STUD_STUDENT_COURSE_HISTORY'])) {
+    if (isset($edit['HEd.Student.CourseHistory'])) {
       $course_history_service = $this->get('kula.HEd.grading.coursehistory');
-      $edit_grades = $this->request->request->get('edit')['STUD_STUDENT_COURSE_HISTORY'];
+      $edit_grades = $this->request->request->get('edit')['HEd.Student.CourseHistory'];
       foreach($edit_grades as $student_course_history_id => $mark) {
-        if (isset($mark['MARK']) AND $mark['MARK'] != '')
-          $course_history_service->updateCourseHistoryForClass($student_course_history_id, $mark['MARK'], $mark['COMMENTS']);
+        if (isset($mark['HEd.Student.CourseHistory.Mark']) AND $mark['HEd.Student.CourseHistory.Mark'] != '')
+          $course_history_service->updateCourseHistoryForClass($student_course_history_id, $mark['HEd.Student.CourseHistory.Mark'], isset($mark['HEd.Student.CourseHistory.Comments']) ? $mark['HEd.Student.CourseHistory.Comments'] : null);
         else
           $course_history_service->deleteCourseHistoryForClass($student_course_history_id);
       }
@@ -178,32 +178,28 @@ class SISSectionController extends Controller {
       ->orderBy('FIRST_NAME', 'ASC')
       ->execute()->fetchAll();
     
-    if (isset($edit['STUD_SECTION'])) {
+    if (isset($edit['HEd.Section'])) {
       
-      foreach ($edit['STUD_SECTION'] as $section_id => $section_row) {
+      foreach ($edit['HEd.Section'] as $section_id => $section_row) {
         
-        if (isset($section_row['TEACHER_GRADES_COMPLETED']['checkbox']) AND $section_row['TEACHER_GRADES_COMPLETED']['checkbox'] == 'Y' AND $section_row['TEACHER_GRADES_COMPLETED']['checkbox_hidden'] != 'Y') {
+        if (isset($section_row['HEd.Section.TeacherGradesCompleted']['checkbox']) AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox'] == 'Y' AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox_hidden'] != 'Y') {
           // Set as finalized
-          $poster = $this->newPoster();
-          $info = array('STUD_SECTION' => array($this->record->getSelectedRecordID() => array(
-            'TEACHER_GRADES_COMPLETED' => array('checkbox_hidden' => 'N', 'checkbox' => 'Y'),
-            'TEACHER_GRADES_COMPLETED_USERSTAMP' => $this->session->get('user_id'),
-            'TEACHER_GRADES_COMPLETED_TIMESTAMP' => date('Y-m-d H:i:s')
-          )));
-
-          $poster->newPoster(null, $info);
+          $sectionInfo['HEd.Section.TeacherGradesCompleted'] = 1;
+          $sectionInfo['HEd.Section.TeacherGradesCompletedUserstamp'] = $this->session->get('user_id');
+          $sectionInfo['HEd.Section.TeacherGradesCompletedTimestamp'] = date('Y-m-d H:i:s');
+          
+          $this->newPoster()->edit('HEd.Section', $section_id, $sectionInfo)->process()->getResult();
+          unset($sectionInfo);
         }
         
-        if (!isset($section_row['TEACHER_GRADES_COMPLETED']['checkbox']) AND $section_row['TEACHER_GRADES_COMPLETED']['checkbox_hidden'] == 'Y') {
+        if (!isset($section_row['HEd.Section.TeacherGradesCompleted']['checkbox']) AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox_hidden'] == 'Y') {
           // Unset as finalized
-          $poster = $this->newPoster();
-          $info = array('STUD_SECTION' => array($this->record->getSelectedRecordID() => array(
-            'TEACHER_GRADES_COMPLETED' => array('checkbox_hidden' => 'Y', 'checkbox' => null),
-            'TEACHER_GRADES_COMPLETED_USERSTAMP' => null,
-            'TEACHER_GRADES_COMPLETED_TIMESTAMP' => null
-          )));
-
-          $poster->newPoster(null, $info);
+          $sectionInfo['HEd.Section.TeacherGradesCompleted'] = 0;
+          $sectionInfo['HEd.Section.TeacherGradesCompletedUserstamp'] = null;
+          $sectionInfo['HEd.Section.TeacherGradesCompletedTimestamp'] = null;
+          
+          $this->newPoster()->edit('HEd.Section', $section_id, $sectionInfo)->process()->getResult();
+          unset($sectionInfo);
         }  
         
       }
