@@ -39,7 +39,7 @@ class SISFinalGradesReportController extends ReportController {
       ->fields('advisor', array('ABBREVIATED_NAME' => 'advisor_abbreviated_name'))
       ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
       ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
-      ->leftJoin('CONS_ADDRESS', 'home_address', 'home_address.CONSTITUENT_ID = stucon.CONSTITUENT_ID AND home_address.UNDELIVERABLE = \'N\' AND home_address.SEND_GRADES = \'1\'')
+      ->leftJoin('CONS_ADDRESS', 'home_address', 'home_address.CONSTITUENT_ID = stucon.CONSTITUENT_ID AND home_address.UNDELIVERABLE = \'0\' AND home_address.SEND_GRADES = \'1\'')
       ->fields('home_address', array('THOROUGHFARE' => 'home_ADDRESS', 'LOCALITY' => 'home_CITY', 'ADMINISTRATIVE_AREA' => 'home_STATE', 'POSTAL_CODE' => 'home_ZIPCODE'))
       ->leftJoin('CONS_PHONE', 'phone', 'phone.PHONE_NUMBER_ID = stucon.PRIMARY_PHONE_ID')
       ->fields('phone', array('PHONE_NUMBER'))
