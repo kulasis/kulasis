@@ -77,7 +77,7 @@ class Focus {
       
       $section_id = $section['SECTION_ID'];
     } 
-    
+
     $this->session->setFocus('Teacher.HEd.Section', $section_id);
   }
   
@@ -93,8 +93,47 @@ class Focus {
 
     if ($teacher_id) {
       $this->session->setFocus('staff_organization_term_id', $teacher_id, $role_token);
-      //} elseif ($this->session->get('administrator') == '1') {
-      //$this->session->setFocus('staff_organization_term_id', $teacher_id, $role_token);
+    } elseif ($this->session->get('administrator') == '1') {
+      if ($teacher_id) {
+        $this->session->setFocus('staff_organization_term_id', $teacher_id, $role_token);
+      } elseif ($currentStaffOrgTerm = $this->session->getFocus('staff_organization_term_id', $role_token) !== null) {
+        
+        // get staff org term in new term
+        $newTeacher = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm')
+        ->fields('stafforgterm', array('STAFF_ORGANIZATION_TERM_ID'))
+        ->condition('stafforgterm.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
+        ->join('STUD_STAFF_ORGANIZATION_TERMS', 'oldstafforgterm', 'oldstafforgterm.STAFF_ID = stafforgterm.STAFF_ID')
+        ->condition('oldstafforgterm.STAFF_ORGANIZATION_TERM_ID', $currentStaffOrgTerm)
+        ->execute()->fetch();
+        
+        if ($newTeacher['STAFF_ORGANIZATION_TERM_ID']) {
+          $this->session->setFocus('staff_organization_term_id', $newTeacher['STAFF_ORGANIZATION_TERM_ID'], $role_token);
+        } else {
+          // Set to first teacher in list
+          $firstTeacher = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm')
+          ->fields('stafforgterm', array('STAFF_ORGANIZATION_TERM_ID'))
+          ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stafforgterm.STAFF_ID')
+          ->condition('stafforgterm.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
+          ->orderBy('cons.LAST_NAME')
+          ->orderBy('cons.FIRST_NAME')
+          ->range(0, 1)
+          ->execute()->fetch();
+          $this->session->setFocus('staff_organization_term_id', $firstTeacher['STAFF_ORGANIZATION_TERM_ID'], $role_token);
+        }
+        
+      } else {
+        // Set to first teacher in list
+        $firstTeacher = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm')
+        ->fields('stafforgterm', array('STAFF_ORGANIZATION_TERM_ID'))
+        ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stafforgterm.STAFF_ID')
+        ->condition('stafforgterm.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
+        ->orderBy('cons.LAST_NAME')
+        ->orderBy('cons.FIRST_NAME')
+        ->range(0, 1)
+        ->execute()->fetch();
+        $this->session->setFocus('staff_organization_term_id', $firstTeacher['STAFF_ORGANIZATION_TERM_ID'], $role_token);
+      }
+      
     } else {
       // get staff organization term id for currently set organization and term
       $staff_organization_term_id = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm')
@@ -104,7 +143,6 @@ class Focus {
       $staff_organization_term_id = $staff_organization_term_id->execute()->fetch();
 
       if ($staff_organization_term_id['STAFF_ORGANIZATION_TERM_ID']) {
-        echo 'here';
         $this->session->setFocus('staff_organization_term_id', $staff_organization_term_id['STAFF_ORGANIZATION_TERM_ID'], $teacher_id, $role_token);
       }
       
