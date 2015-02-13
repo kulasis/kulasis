@@ -292,18 +292,35 @@ class PosterRecord {
   }
   
   private function auditLog($fields = null) {
+    
+    $oldFields = $this->originalRecord;
+    if (count($oldFields) > 0) {
+      foreach($oldFields as $fieldName => $fieldValue) {
+        if ($this->schema->getClassDB($this->schema->getTable($this->table)->getDBName(), $fieldName)) {
+          $class = '\\'.$this->schema->getClassDB($this->schema->getTable($this->table)->getDBName(), $fieldName);
+          if (method_exists($class, 'removeFromAuditLog')) {
+            $syntheticField = new $class($this->container);
+            if (call_user_func_array(array($syntheticField, 'removeFromAuditLog'), array()) === true) {
+              unset($oldFields[$fieldName]);
+            }
+          }
+        }
+      }
+    }
+    
     $audit = $this->db->db_connection(array('target' => 'write'))->prepare('INSERT INTO '.$this->schema->getTable('Log.Audit.Changes')->getDBName().' (USER_ID, LOG_SESSION_ID, CRUD_OPERATION, TABLE_NAME, RECORD_ID, OLD_RECORD, NEW_RECORD, CREATED_USERSTAMP, CREATED_TIMESTAMP)
         VALUES (:user_id, :session_id, :crud, :table_name, :record_id, :old_record, :new_record, :created_userstamp, :created_timestamp)');
-    $audit->execute(array(
+    $data = array(
         'user_id' => $this->session->get('user_id'), 
         'session_id' => $this->session->get('session_id'), 
         'crud' => $this->crud,
         'table_name' => $this->schema->getTable($this->table)->getDBName(), 
         'record_id' => $this->id, 
-        'old_record' => isset($this->originalRecord) ? serialize($this->originalRecord) : null, 
+        'old_record' => (isset($this->originalRecord) AND count($oldFields) > 0) ? serialize($oldFields) : null, 
         'new_record' => count($fields) > 0 ? serialize($fields) : null, 
         'created_userstamp' => $this->session->get('user_id'), 
-        'created_timestamp' => date('Y-m-d H:i:s')));
+        'created_timestamp' => date('Y-m-d H:i:s'));
+    $audit->execute($data);
   }
   
   private function execute() {

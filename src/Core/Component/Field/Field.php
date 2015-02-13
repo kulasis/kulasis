@@ -16,4 +16,8 @@ abstract class Field {
     return $this->container->get('kula.core.db');
   }
   
+  public function removeFromAuditLog() {
+    return false;
+  }
+  
 }

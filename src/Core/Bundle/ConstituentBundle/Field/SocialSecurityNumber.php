@@ -24,4 +24,8 @@ class SocialSecurityNumber extends Field {
     return self::REMOVE_FIELD;
   }
   
+  public function removeFromAuditLog() {
+    return true;
+  }
+  
 }

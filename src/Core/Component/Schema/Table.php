@@ -46,6 +46,16 @@ class Table {
     return $this->primary->getDBName();
   }
   
+  public function getDBField($dbFieldName) {
+    
+    foreach($this->fields as $fieldName => $field) {
+      if ($field->getDBName() == $dbFieldName) {
+        return $this->fields[$fieldName];
+        break;
+      }
+    }
+  }
+  
   public function addField(Field $field) {
     $this->fields[$field->getName()] = $field;
     

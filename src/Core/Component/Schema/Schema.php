@@ -66,6 +66,10 @@ class Schema {
     return $this->fields[$fieldName]->getClass();
   }
   
+  public function getClassDB($dbTableName, $dbFieldName) {
+    return $this->db_tables[$dbTableName]->getDBField($dbFieldName)->getClass();
+  }
+  
   public function getFieldType($fieldName) {
     return $this->fields[$fieldName]->getFieldType();
   }
