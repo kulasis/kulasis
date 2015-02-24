@@ -9,12 +9,12 @@ class StaffSchoolTermChooser extends Chooser {
   public function search($q) {
     
     $query_conditions = $this->db()->db_and();
-    $query_conditions = $query_conditions->condtion('stafforgtrm.ORGANIZATION_TERM_ID', $this->focus()->getOrganizationTermIDs());
+    $query_conditions = $query_conditions->condition('stafforgtrm.ORGANIZATION_TERM_ID', $this->focus()->getOrganizationTermIDs());
     
     $query_conditions_or = $this->db()->db_or();
-    $query_conditions_or = $query_conditions_or->condtion('ABBREVIATED_NAME', $q.'%', 'LIKE');
+    $query_conditions_or = $query_conditions_or->condition('ABBREVIATED_NAME', $q.'%', 'LIKE');
     
-    $query_conditions = $query_conditions->condtion($query_conditions_or);
+    $query_conditions = $query_conditions->condition($query_conditions_or);
     
     $data = array();
     
