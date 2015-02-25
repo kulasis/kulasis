@@ -15,7 +15,7 @@ class SISPFAIDSController extends Controller {
       
       // Delete records in external table
       if (isset($pf['action']) AND $pf['action'] == 'reset' AND isset($pf['Core.Integration.Database']['Core.Integration.Database.DatabaseList'])) {
-        $affectedRows = $pfaidsService->pfaids_deleteRecords($pf['Core.Integration.Database']['Core.Integration.Database.DatabaseList']);
+        $affectedRows = $pfaidsService->pfaids_deleteRecords($pf['Core.Integration.Database']['Core.Integration.Database.DatabaseList'], isset($pf['award_year_token']) ? $pf['award_year_token'] : null);
         if ($affectedRows > 0) {
           $this->addFlash('success', 'Deleted '.$affectedRows.' row(s).');
         } else {
@@ -24,8 +24,8 @@ class SISPFAIDSController extends Controller {
       }
       
       // Add records
-       if (isset($pf['action']) AND $pf['action'] == 'load' AND isset($pf['Core.Integration.Database']['Core.Integration.Database.DatabaseList'])) {
-         $affectedRows = $pfaidsService->pfaids_addRecords($pf['Core.Integration.Database']['Core.Integration.Database.DatabaseList']);
+       if (isset($pf['action']) AND $pf['action'] == 'load' AND isset($pf['Core.Integration.Database']['Core.Integration.Database.DatabaseList']) AND isset($pf['award_year_token'])) {
+         $affectedRows = $pfaidsService->pfaids_addRecords($pf['Core.Integration.Database']['Core.Integration.Database.DatabaseList'], $pf['award_year_token']);
          if ($affectedRows['insert_count'] > 0 OR $affectedRows['update_count'] > 0) {
            $this->addFlash('success', 'Inserted '.$affectedRows['insert_count'].' row(s). Updated '.$affectedRows['update_count'].' row(s).');
          } else {

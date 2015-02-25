@@ -39,22 +39,22 @@ class PFAIDSService {
     return $connection;
   }
   
-  public function pfaids_deleteRecords($intgDBID, $ssn = null, $awardYearToken = null) {
+  public function pfaids_deleteRecords($intgDBID, $awardYearToken = null, $ssn = null) {
     
     $connection = $this->pfaids_connect($intgDBID);
     
     $query = "DELETE FROM external_data";
     
-    if ($ssn)
-      $query .= "WHERE ssn = ".str_replace("'", "''", $ssn)." ";
-    if ($ssn AND $awardYearToken)
-      $query .= " AND award_year_token = ".str_replace("'", "''", $awardYearToken)." ";
+    if ($awardYearToken)
+      $query .= "WHERE award_year_token = ".str_replace("'", "''", $awardYearToken)." ";
+    if ($awardYearToken AND $ssn)
+      $query .= " AND ssn = ".str_replace("'", "''", $ssn)." ";
     
     mssql_query($query, $connection);
     return mssql_rows_affected($connection);
   }
   
-  public function pfaids_addRecords($intgDBID, $id = null) {
+  public function pfaids_addRecords($intgDBID, $awardYearToken, $id = null) {
     
     $connection = $this->pfaids_connect($intgDBID);
     
@@ -68,9 +68,6 @@ class PFAIDSService {
       ->fields('stu')
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = stu.STUDENT_ID')
       ->fields('stustatus')
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
-      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
-      ->fields('term', array('FINANCIAL_AID_YEAR'))
       ->condition('stustatus.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
       ->execute();
     while ($stu_row = $students_result->fetch()) {
@@ -81,7 +78,7 @@ class PFAIDSService {
     
         $pf_data = array(
           '[ssn]' => "'".$cleaned_ssn."'",
-          '[award_year_token]' => $stu_row['FINANCIAL_AID_YEAR'],
+          '[award_year_token]' => $awardYearToken,
           '[ALTERnate_id]' => "'".$stu_row['PERMANENT_NUMBER']."'",
           '[last_name]' => "'".str_replace("'", "''", $stu_row['LAST_NAME'])."'",
           '[first_name]' => "'".str_replace("'", "''", $stu_row['FIRST_NAME'])."'",
@@ -91,7 +88,7 @@ class PFAIDSService {
         );
         
         // check if already exists
-        $already_exists = mssql_fetch_array(mssql_query("SELECT ssn, award_year_token FROM external_data WHERE ssn = '".$cleaned_ssn."' AND award_year_token = '".$stu_row['FINANCIAL_AID_YEAR']."'"));
+        $already_exists = mssql_fetch_array(mssql_query("SELECT ssn, award_year_token FROM external_data WHERE ssn = '".$cleaned_ssn."' AND award_year_token = '".$awardYearToken."'"));
         
         if ($already_exists) {
           $inner_sql = array();
@@ -100,7 +97,7 @@ class PFAIDSService {
             $inner_sql[] = $key.' = '.$value;
           }
           
-          $sql = "UPDATE external_data SET ".implode(', ', $inner_sql)." WHERE [ssn] = '".$cleaned_ssn."' AND [award_year_token] = '".$stu_row['FINANCIAL_AID_YEAR']."'";
+          $sql = "UPDATE external_data SET ".implode(', ', $inner_sql)." WHERE [ssn] = '".$cleaned_ssn."' AND [award_year_token] = '".$awardYearToken."'";
           $update_count++;
         } else {
           $sql = "INSERT INTO external_data (".implode(', ', array_keys($pf_data)).") VALUES (".implode(", ", array_values($pf_data)).")";
