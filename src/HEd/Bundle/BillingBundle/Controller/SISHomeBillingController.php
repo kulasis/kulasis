@@ -10,7 +10,7 @@ class SISHomeBillingController extends Controller {
     $this->processForm();
     
     if ($this->request->request->get('void')) {
-      $constituent_billing_service = $this->get('kula.HEd.billing.student');
+      $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
       
       $void = $this->request->request->get('void');
       $non = $this->request->request->get('non');
