@@ -33,6 +33,11 @@ Core.System:
           display_name: "LDAP"
           sort: 2
           route: core_setup_system_ldap
+        IntegrationDatabases:
+          description: "Integration Databases"
+          display_name: "Integration DBs"
+          sort: 3
+          route: core_system_integration_databases
     Lookup:
       description: "Lookup"
       display_name: "Lookup"

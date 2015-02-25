@@ -160,3 +160,7 @@ core_system_nonorganization_chooser:
 core_logs_session:
   path: /monitor/logs/session
   defaults: { _controller: KulaCoreSystemBundle:CoreLogs:session }
+
+core_system_integration_databases:
+  path: /setup/system/integration/databases
+  defaults: { _controller: KulaCoreSystemBundle:CoreIntegration:databases }

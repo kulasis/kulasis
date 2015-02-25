@@ -9,3 +9,4 @@ imports:
     - { resource: schema/user.yml }
     - { resource: schema/permission.yml }
     - { resource: schema/chooser.yml }
+    - { resource: schema/integration.yml }

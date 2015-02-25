@@ -2,3 +2,7 @@ services:
   kula.HEd.FAID:
     class: Kula\HEd\Bundle\FinancialAidBundle\Service\FinancialAidService
     arguments: ["@kula.core.db", "@kula.core.poster", "@kula.core.record", "@kula.core.session"]
+
+  kula.HEd.FAID.PFAIDS:
+    class: Kula\HEd\Bundle\FinancialAidBundle\Service\PFAIDSService
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session", "@kula.core.focus", "%ssn_key%"]

@@ -1,0 +1,3 @@
+Core.Integration.Application:
+  description: "Applications"
+  allow_update: true

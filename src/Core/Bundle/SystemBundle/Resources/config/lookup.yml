@@ -3,3 +3,4 @@ imports:
     - { resource: lookup/navigation.yml }
     - { resource: lookup/permission.yml }
     - { resource: lookup/organization.yml }
+    - { resource: lookup/integration.yml }

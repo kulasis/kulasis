@@ -1,0 +1,42 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+{% block content %}
+<div class="data-table-header-div">
+Integration Databases
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_tabs', 'CORE_INTEGRATION_DATABASE') }}
+</span>
+</div>
+<table id="window_window_num_data_table_tabs" class="data-table">
+<thead>
+  {{ kula_field_name({ delete: true, field: 'Core.Integration.Database.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ edit: true, field: 'Core.Integration.Database.Application', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Integration.Database.Host', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Integration.Database.Username', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Integration.Database.Password', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Integration.Database.Database', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+    {{ kula_display_html({ add: true, field: 'Core.Integration.Database.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+    {{ kula_field({ add: true, delete: true, field: 'Core.Integration.Database.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    {{ kula_display_html({ add: true, field: 'Core.Integration.Database.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+    {{ kula_field({ add: true, field: 'Core.Integration.Database.Application', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.Integration.Database.Host', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.Integration.Database.Username', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.Integration.Database.Password', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.Integration.Database.Database', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_display_html({ add: true, field: 'Core.Integration.Database.ID', prepend_html: '</tr>' }) }}
+  {% for db in databases %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'Core.Integration.Database.ID', db_row_id: db.INTG_DATABASE_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'Core.Integration.Database.Application', db_row_id: db.INTG_DATABASE_ID, value: db.APPLICATION, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Integration.Database.Host', db_row_id: db.INTG_DATABASE_ID, value: db.HOST, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Integration.Database.Username', db_row_id: db.INTG_DATABASE_ID, value: db.USERNAME, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Integration.Database.Password', db_row_id: db.INTG_DATABASE_ID, value: db.PASSWORD, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Integration.Database.Database', db_row_id: db.INTG_DATABASE_ID, value: db.DATABASE_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

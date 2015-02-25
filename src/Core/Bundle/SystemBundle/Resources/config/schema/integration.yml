@@ -1,0 +1,68 @@
+Core.Integration.Database:
+  description: "Integration Databases Table"
+  db_table_name: CORE_INTG_DATABASE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: INTG_DATABASE_ID
+      db_column_type: primary_serial
+      column_name: "ID"
+      label_name: "ID"
+    Application:
+      description: "Application"
+      db_column_name: APPLICATION
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: false
+      field_type: lookup
+      lookup: Core.Integration.Application
+      column_name: "Application"
+      label_name: "Application"
+    Host:
+      description: "Server Host"
+      db_column_name: HOST
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Host"
+      label_name: "Host"
+    Username:
+      description: "Server Username"
+      db_column_name: USERNAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Username"
+      label_name: "Username"
+    Password:
+      description: "Server Username"
+      db_column_name: PASSWORD
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Password"
+      label_name: "Password"
+    Database:
+      description: "Database Name"
+      db_column_name: DATABASE_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Database"
+      label_name: "Database"
+    DatabaseList:
+      description: "Synthetic Database List"
+      field_type: select
+      class: Kula\Core\Bundle\SystemBundle\Field\IntegrationDatabase
+      column_name: "Database"
+      label_name: "Database"

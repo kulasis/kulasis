@@ -15,6 +15,11 @@ SIS.HEd.Admin.FinancialAid:
       display_name: "Posted"
       sort: 2
       route: sis_HEd_home_financialaid_posted
+    PowerFAIDS:
+      description: "PowerFAIDS"
+      display_name: "PowerFAIDS"
+      sort: 3
+      route: sis_HEd_admin_faid_powerfaids
 
 SIS.HEd.Student.FinancialAid:
   description: "Financial Aid"
