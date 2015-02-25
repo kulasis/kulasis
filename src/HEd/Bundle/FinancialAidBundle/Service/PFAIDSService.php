@@ -46,9 +46,9 @@ class PFAIDSService {
     $query = "DELETE FROM external_data";
     
     if ($awardYearToken)
-      $query .= "WHERE award_year_token = ".str_replace("'", "''", $awardYearToken)." ";
+      $query .= " WHERE award_year_token = '".str_replace("'", "''", $awardYearToken)."'";
     if ($awardYearToken AND $ssn)
-      $query .= " AND ssn = ".str_replace("'", "''", $ssn)." ";
+      $query .= " AND ssn = '".str_replace("'", "''", $ssn)."'";
     
     mssql_query($query, $connection);
     return mssql_rows_affected($connection);
@@ -68,6 +68,10 @@ class PFAIDSService {
       ->fields('stu')
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = stu.STUDENT_ID')
       ->fields('stustatus')
+      ->leftJoin('CONS_PHONE', 'phone', 'phone.PHONE_NUMBER_ID = cons.PRIMARY_PHONE_ID')
+      ->fields('phone', array('PHONE_NUMBER'))
+      ->leftJoin('CONS_EMAIL_ADDRESS', 'email', 'email.EMAIL_ADDRESS_ID = cons.PRIMARY_EMAIL_ID')
+      ->fields('email', array('EMAIL_ADDRESS'))
       ->condition('stustatus.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
       ->execute();
     while ($stu_row = $students_result->fetch()) {
@@ -87,6 +91,44 @@ class PFAIDSService {
           '[birth_date]' => $stu_row['BIRTH_DATE'] ? "'".date('mdY', strtotime($stu_row['BIRTH_DATE']))."'" : 'null',
         );
         
+        // Get address
+        if ($stu_row['HOME_ADDRESS_ID']) {
+          $address_id = $stu_row['HOME_ADDRESS_ID'];
+        } elseif ($stu_row['MAILING_ADDRESS_ID']) {
+          $address_id = $stu_row['MAILING_ADDRESS_ID'];
+        } elseif ($stu_row['RESIDENCE_ADDRESS_ID']) {
+          $address_id = $stu_row['RESIDENCE_ADDRESS_ID'];
+        }
+        
+        $primary_address = $this->db->db_select('CONS_ADDRESS', 'addr')
+          ->fields('addr')
+          ->condition('ADDRESS_ID', $address_id)
+          ->execute()->fetch();
+        
+        $pf_data['primary_street1'] = "'".str_replace("'", "''", $primary_address['THOROUGHFARE'])."'";
+        $pf_data['primary_city'] = "'".str_replace("'", "''", $primary_address['LOCALITY'])."'";
+        $pf_data['primary_state'] = "'".str_replace("'", "''", $primary_address['ADMINISTRATIVE_AREA'])."'";
+        $pf_data['primary_zip'] = "'".str_replace("'", "''", $primary_address['POSTAL_CODE'])."'";
+        $pf_data['primary_telephone'] = "'".str_replace("'", "''", $stu_row['PHONE_NUMBER'])."'"; 
+        $pf_data['email_address'] = "'".str_replace("'", "''", $stu_row['EMAIL_ADDRESS'])."'";
+        
+        $pf_data['legal_residence'] = "'".str_replace("'", "''", $primary_address['ADMINISTRATIVE_AREA'])."'";
+        
+        // Get degree information
+        $degree_info = $this->db->db_select('STUD_STUDENT_DEGREES', 'studegree')
+          ->fields('studegree')
+          ->condition('studegree.STUDENT_DEGREE_ID', $stu_row['SEEKING_DEGREE_1_ID'])
+          ->execute()->fetch();
+        
+        $pf_data['grad_date'] = (isset($degree_info['EXPECTED_GRADUATION_DATE']) AND $degree_info['EXPECTED_GRADUATION_DATE']) ? "'".date('mdY', strtotime($degree_info['EXPECTED_GRADUATION_DATE']))."'" : 'null';
+        $pf_data['admission_status'] = "'A'";
+        $pf_data['us_citizen'] = ($stu_row['CITIZENSHIP_COUNTRY'] == 'US') ? '1' : 'null';
+        $pf_data['gender'] = $stu_row['GENDER'] != '' ? "'".$stu_row['GENDER']."'" : 'null';
+        $pf_data['veteran_status'] = ($stu_row['VETERAN'] == '1') ? "'Y'" : 'null';
+        $pf_data['academic_division'] = "'20'";
+        $pf_data['citizen_country'] = $stu_row['CITIZENSHIP_COUNTRY'] ? "'".$stu_row['CITIZENSHIP_COUNTRY']."'" : 'null';
+        $pf_data['transfer_flag'] = ($stu_row['ENTER_CODE'] == '04') ? "'Y'" : 'null';
+        
         // check if already exists
         $already_exists = mssql_fetch_array(mssql_query("SELECT ssn, award_year_token FROM external_data WHERE ssn = '".$cleaned_ssn."' AND award_year_token = '".$awardYearToken."'"));
         
@@ -103,7 +145,7 @@ class PFAIDSService {
           $sql = "INSERT INTO external_data (".implode(', ', array_keys($pf_data)).") VALUES (".implode(", ", array_values($pf_data)).")";
           $insert_count++;
         }
-    
+        //echo $sql.'<br />';
         mssql_query($sql);
       }
       
