@@ -278,7 +278,7 @@ class ConstituentBillingService {
       if ($transaction_row['VOIDED_REASON'] != '')
         $voided_reason = $transaction_row['VOIDED_REASON']. ' | '.$voided_reason;
       
-      $voided_transaction_result = $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', $constituent_transaction_id, array(
+      $voided_transaction_result = $this->posterFactory->newPoster()->edit('HEd.Billing.Transaction', $constituent_transaction_id, array(
         'HEd.Billing.Transaction.Amount' => 0.00, 
         'HEd.Billing.Transaction.AppliedBalance' => 0.00, 
         'HEd.Billing.Transaction.Posted' => 1, 
