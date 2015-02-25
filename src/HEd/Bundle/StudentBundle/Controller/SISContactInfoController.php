@@ -188,7 +188,27 @@ class SISContactInfoController extends Controller {
     $this->processForm();
     $this->setRecordType('SIS.HEd.Student');
     
+    if ($this->poster()) {
+    $email_result = $this->poster()->getAddedIDs('Core.Constituent.EmailAddress');
+      // New phone number
+      if ($email_result) {
+        // Get New Phones Number ID
+        $new_ids = array_values($email_result);
+        // Query to see which are primary
+        $new_emails = $this->db()->db_select('CONS_EMAIL_ADDRESS', 'email')
+          ->fields('email', array('EMAIL_ADDRESS_ID'))
+          ->condition('EMAIL_ADDRESS_ID', $new_ids)
+          ->execute()->fetch();
+        
+        $this->db()->db_update('CONS_CONSTITUENT')
+          ->fields(array('PRIMARY_EMAIL_ID' => $new_emails['EMAIL_ADDRESS_ID']))
+          ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
+          ->execute();
+      }
+    }
+    
     $emails = array();
+    $primary_emails = array();
     
     if ($this->record->getSelectedRecordID()) {
       $emails = $this->db()->db_select('CONS_EMAIL_ADDRESS', 'emails')
@@ -197,9 +217,16 @@ class SISContactInfoController extends Controller {
         ->orderBy('EMAIL_ADDRESS_TYPE')
         ->orderBy('EFFECTIVE_DATE')
         ->execute()->fetchAll();
+    
+      $constituent_primary_emails = $this->db()->db_select('CONS_CONSTITUENT', 'cons')
+        ->fields('cons', array('PRIMARY_EMAIL_ID'))
+        ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
+        ->execute()->fetch();
+      
+      $primary_emails['PRIMARY_EMAIL_ID'] = $constituent_primary_emails['PRIMARY_EMAIL_ID'];
     }
     
-    return $this->render('KulaHEdStudentBundle:SISContactInfo:emailaddresses.html.twig', array('emails' => $emails));
+    return $this->render('KulaHEdStudentBundle:SISContactInfo:emailaddresses.html.twig', array('emails' => $emails, 'primary_emails' => $primary_emails));
   }
   
   public function emergencyContactsAction() {
