@@ -82,13 +82,17 @@ class Organization {
   
   public function getTermsForOrganization($id, $nested = false) {
     if ($nested === false) {
+      $this->terms = array();
+      
       $organization = $this->organizations[$id];
       if ($organization->getTermIDs()) {
         foreach($organization->getTermIDs() as $term) {
           $this->terms[$term] = $term;
         }
       }
-      return $this->terms;
+      if (count($this->terms) > 0) {
+        return $this->terms;
+      }
     }
     $organization = $this->organizations[$id];
     if ($organization->getChildren()) {
@@ -108,6 +112,8 @@ class Organization {
   
   public function getOrganizationTerms($organizationID, $termIDs, $nested = false) {
     if ($nested === false) {
+      $this->organizationTerms = array();
+      
       $organization = $this->organizations[$organizationID];
       if ($organization->getTermIDs()) {
         foreach($organization->getTermIDs() as $term) {
@@ -116,7 +122,9 @@ class Organization {
           }
         }
       }
-      return $this->organizationTerms;
+      if (count($this->organizationTerms) > 0) {
+        return $this->organizationTerms;
+      }
     }
     if ($organizationID AND $termIDs) {
       $organization = $this->organizations[$organizationID];
