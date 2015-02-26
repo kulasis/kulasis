@@ -63,7 +63,7 @@ class SISDegreeController extends Controller {
         ->orderBy('CONCENTRATION_NAME', 'ASC')
         ->execute()->fetchAll();
     
-    return $this->render('KulaHEdGradingBundle:Degree:concentrations.html.twig', array('concentrations' => $concentrations));
+    return $this->render('KulaHEdGradingBundle:SISDegree:concentrations.html.twig', array('concentrations' => $concentrations));
   }
   
 }
