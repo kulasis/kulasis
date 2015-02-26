@@ -137,11 +137,11 @@ class Navigation {
     // check forms
     if ($formGroups = $this->getFormGroups()) {
     foreach($formGroups as $formGroup) {
-      foreach($formGroup->getForms() as $form) {
-        if (count($form->getTabs()) > 0) {
-          $tabs = $form->getTabs();
+      foreach($formGroup->getForms($this->permission) as $form) {
+        if (count($form->getTabs($this->permission)) > 0) {
+          $tabs = $form->getTabs($this->permission);
           return current($tabs)->getRoute();
-        } else {
+        } elseif ($form->getRoute()) {
           return $form->getRoute();
         }
       }
@@ -161,6 +161,7 @@ class Navigation {
   }
   
   public function getFormGroups() {
+    
     if (isset($this->formGroups[$this->session->get('portal')])) {
       $groups = array();
       foreach($this->formGroups[$this->session->get('portal')] as $name => $group) {

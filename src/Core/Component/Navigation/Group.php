@@ -16,8 +16,9 @@ class Group extends Item {
     $forms = array();
 
     if ($this->forms) {
-      
+
       foreach($this->forms as $id => $form) {
+        
         if ($permission AND $permission->getPermissionForNavigationObject($form->getName())) {
           $forms[] = $form;
         }
