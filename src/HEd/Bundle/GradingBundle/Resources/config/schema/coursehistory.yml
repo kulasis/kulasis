@@ -245,15 +245,15 @@ HEd.Student.CourseHistory:
       column_name: "Comments"
       label_name: "Comments"
 
-HEd.Student.CourseHistory.Comment:
-  description: "Student Course History Comments"
-  db_table_name: STUD_STUDENT_COURSE_HISTORY_COMMENT
+HEd.Student.CourseHistory.Term:
+  description: "Student Course History Term Totals"
+  db_table_name: STUD_STUDENT_COURSE_HISTORY_TERMS
   timestamps: true
   fields:
     ID:
       description: "ID"
       primary: true
-      db_column_name: STUDENT_COURSE_HISTORY_COMMENT_ID
+      db_column_name: STUDENT_COURSE_HISTORY_TERM_ID
       db_column_type: primary_serial
       column_name: "Course History Comment ID"
       label_name: "Course History Commment ID"
@@ -265,13 +265,21 @@ HEd.Student.CourseHistory.Comment:
       db_column_null: false
       column_name: "Student ID"
       label_name: "Student ID"
+    StudentStatusID:
+      description: "Student Status ID"
+      parent: HEd.Student.Status.ID
+      db_column_name: STUDENT_STATUS_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Student Status ID"
+      label_name: "Student Status ID"
     CalendarYear:
       description: "Calendar Year"
       db_column_name: CALENDAR_YEAR
       db_column_type: int
       db_column_length: 4
       db_column_null: true
-      field_type: text
+      field_type: text 
       field_size: 6
       column_name: "Calendar Year"
       label_name: "Calendar Year"
@@ -300,7 +308,7 @@ HEd.Student.CourseHistory.Comment:
       db_column_name: LEVEL
       db_column_type: varchar
       db_column_length: 5
-      db_column_null: false
+      db_column_null: true
       field_type: lookup
       lookup: HEd.Student.Enrollment.Level
       column_name: "Level"
@@ -313,3 +321,391 @@ HEd.Student.CourseHistory.Comment:
       field_type: textarea
       column_name: "Comments"
       label_name: "Comments"
+    TermCreditsAttempted:
+      description: "Term Credits Attempted"
+      db_column_name: TERM_CREDITS_ATTEMPTED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Term Credits Attempted"
+      label_name: "Term Credits Attempted"
+    TermCreditsEarned:
+      description: "Term Credits Earned"
+      db_column_name: TERM_CREDITS_EARNED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Term Credits Earned"
+      label_name: "Term Credits Earned"
+    TermHours:
+      description: "Term Hours"
+      db_column_name: TERM_HOURS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Term Hours"
+      label_name: "Term Hours"
+    TermPoints:
+      description: "Term Points"
+      db_column_name: TERM_POINTS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Term Points"
+      label_name: "Term Points"
+    TermGPA:
+      description: "Term GPA"
+      db_column_name: TERM_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Term GPA"
+      label_name: "Term GPA"
+    YTDCreditsAttempted:
+      description: "YTD Credits Attempted"
+      db_column_name: YTD_CREDITS_ATTEMPTED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "YTD Credits Attempted"
+      label_name: "YTD Credits Attempted"
+    YTDCreditsEarned:
+      description: "YTD Credits Earned"
+      db_column_name: YTD_CREDITS_EARNED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "YTD Credits Earned"
+      label_name: "YTD Credits Earned"
+    YTDHours:
+      description: "YTD Hours"
+      db_column_name: YTD_HOURS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "YTD Hours"
+      label_name: "YTD Hours"
+    YTDPoints:
+      description: "YTD Points"
+      db_column_name: YTD_POINTS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "YTD Points"
+      label_name: "YTD Points"
+    YTDGPA:
+      description: "YTD GPA"
+      db_column_name: YTD_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "YTD GPA"
+      label_name: "YTD GPA"
+    CumCreditsAttempted:
+      description: "Cum Credits Attempted"
+      db_column_name: CUM_CREDITS_ATTEMPTED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Cum Credits Attempted"
+      label_name: "Cum Credits Attempted"
+    CumCreditsEarned:
+      description: "Cum Credits Earned"
+      db_column_name: CUM_CREDITS_EARNED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Cum Credits Earned"
+      label_name: "Cum Credits Earned"
+    CumHours:
+      description: "Cum Hours"
+      db_column_name: CUM_HOURS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Cum Hours"
+      label_name: "Cum Hours"
+    CumPoints:
+      description: "Cum Points"
+      db_column_name: CUM_POINTS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Cum Points"
+      label_name: "Cum Points"
+    CumGPA:
+      description: "Cum GPA"
+      db_column_name: CUM_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Cum GPA"
+      label_name: "Cum GPA"
+    InstCreditsAttempted:
+      description: "Inst Credits Attempted"
+      db_column_name: INST_CREDITS_ATTEMPTED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Inst Credits Attempted"
+      label_name: "Inst Credits Attempted"
+    InstCreditsEarned:
+      description: "Inst Credits Earned"
+      db_column_name: INST_CREDITS_EARNED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Inst Credits Earned"
+      label_name: "Inst Credits Earned"
+    InstHours:
+      description: "Inst Hours"
+      db_column_name: INST_HOURS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Inst Hours"
+      label_name: "Inst Hours"
+    InstPoints:
+      description: "Inst Points"
+      db_column_name: INST_POINTS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Inst Points"
+      label_name: "Inst Points"
+    InstGPA:
+      description: "Inst GPA"
+      db_column_name: INST_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Inst GPA"
+      label_name: "Inst GPA"
+    TrnsCreditsAttempted:
+      description: "Trns Credits Attempted"
+      db_column_name: TRNS_CREDITS_ATTEMPTED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Trns Credits Attempted"
+      label_name: "Trns Credits Attempted"
+    TrnsCreditsEarned:
+      description: "Trns Credits Earned"
+      db_column_name: TRNS_CREDITS_EARNED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Trns Credits Earned"
+      label_name: "Trns Credits Earned"
+    TrnsHours:
+      description: "Trns Hours"
+      db_column_name: TRNS_HOURS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Trns Hours"
+      label_name: "Trns Hours"
+    TrnsPoints:
+      description: "Trns Points"
+      db_column_name: TRNS_POINTS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Trns Points"
+      label_name: "Trns Points"
+    TrnsGPA:
+      description: "Trns GPA"
+      db_column_name: TRNS_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Trns GPA"
+      label_name: "Trns GPA"
+    TotalCreditsAttempted:
+      description: "Total Credits Attempted"
+      db_column_name: TOTAL_CREDITS_ATTEMPTED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Total Credits Attempted"
+      label_name: "Total Credits Attempted"
+    TotalCreditsEarned:
+      description: "Total Credits Earned"
+      db_column_name: TOTAL_CREDITS_EARNED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Total Credits Earned"
+      label_name: "Total Credits Earned"
+    TotalHours:
+      description: "Total Hours"
+      db_column_name: TOTAL_HOURS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Total Hours"
+      label_name: "Total Hours"
+    TotalPoints:
+      description: "Total Points"
+      db_column_name: TOTAL_POINTS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Total Points"
+      label_name: "Total Points"
+    TotalGPA:
+      description: "Total GPA"
+      db_column_name: TOTAL_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Total GPA"
+      label_name: "Total GPA"
+    ConcentrationCreditsAttempted:
+      description: "Concentration Credits Attempted"
+      db_column_name: CONCENTRATION_CREDITS_ATTEMPTED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Concentration Credits Attempted"
+      label_name: "Concentration Credits Attempted"
+    ConcentrationCreditsEarned:
+      description: "Concentration Credits Earned"
+      db_column_name: CONCENTRATION_CREDITS_EARNED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Concentration Credits Earned"
+      label_name: "Concentration Credits Earned"
+    ConcentrationHours:
+      description: "Concentration Hours"
+      db_column_name: CONCENTRATION_HOURS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Concentration Hours"
+      label_name: "Concentration Hours"
+    ConcentrationPoints:
+      description: "Concentration Points"
+      db_column_name: CONCENTRATION_POINTS
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Concentration Points"
+      label_name: "Concentration Points"
+    ConcentrationGPA:
+      description: "Concentration GPA"
+      db_column_name: CONCENTRATION_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Concentration GPA"
+      label_name: "Concentration GPA"
+  unique_keys:
+    CourseHistoryTerms: [ 'HEd.Student.CourseHistory.Term.StudentID', 'HEd.Student.CourseHistory.Term.Level', 'HEd.Student.CourseHistory.Term.CalendarYear', 'HEd.Student.CourseHistory.Term.CalendarMonth', 'HEd.Student.CourseHistory.Term.Term' ]
+    StudentStatus: [ 'HEd.Student.CourseHistory.Term.StudentStatusID' ]

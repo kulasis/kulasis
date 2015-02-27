@@ -66,3 +66,5 @@ Core.Integration.Database:
       class: Kula\Core\Bundle\SystemBundle\Field\IntegrationDatabase
       column_name: "Database"
       label_name: "Database"
+  unique_keys:
+    IntegrationDatabases: ['Core.Integration.Database.Application', 'Core.Integration.Database.Host', 'Core.Integration.Database.Database']

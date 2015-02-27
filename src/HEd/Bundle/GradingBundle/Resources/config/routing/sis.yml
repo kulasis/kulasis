@@ -26,9 +26,19 @@ sis_HEd_student_coursehistory_degrees_detail:
   path: /student/coursehistory/{id}/detail/{sub_id}
   defaults: { _controller: KulaHEdGradingBundle:SISStudentDegree:detail }
 
-sis_HEd_student_coursehistory_gpa:
-  path: /student/coursehistory/gpa
-  defaults: { _controller: KulaHEdGradingBundle:SISGPA:index }
+sis_HEd_student_coursehistory_terms:
+  path: /student/coursehistory/terms
+  defaults: { _controller: KulaHEdGradingBundle:SISSummary:terms }
+  
+sis_HEd_student_coursehistory_calculateTermTotals:
+  path: /student/coursehistory/terms/calculate
+  defaults: { _controller: KulaHEdGradingBundle:SISSummary:calculateTermTotals }
+  methods: [GET]
+  
+sis_HEd_student_coursehistory_calculateTermTotals_calculate:
+  path: /student/coursehistory/terms/calculate
+  defaults: { _controller: KulaHEdGradingBundle:SISSummary:performCalculateTermTotals }
+  methods: [POST]
 
 sis_HEd_student_coursehistory_reports_studenttranscript_generate:
   path: /student/coursehistory/reports/studenttranscript
