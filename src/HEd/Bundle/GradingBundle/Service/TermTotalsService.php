@@ -215,42 +215,42 @@ class TermTotalsService {
     // Compute GPAs
     if ($this->totals['HEd.Student.CourseHistory.Term.TermPoints'] > 0) {
       $this->totals['HEd.Student.CourseHistory.Term.TermGPA'] = 
-        bcdiv($this->totals['HEd.Student.CourseHistory.Term.TermPoints'], $this->totals['HEd.Student.CourseHistory.Term.TermHours']);
+        bcdiv($this->totals['HEd.Student.CourseHistory.Term.TermPoints'], $this->totals['HEd.Student.CourseHistory.Term.TermHours'], 3);
     } else {
       $this->totals['HEd.Student.CourseHistory.Term.TermGPA'] = null;
     }
     
     if ($this->totals['HEd.Student.CourseHistory.Term.CumPoints'] > 0) {
       $this->totals['HEd.Student.CourseHistory.Term.CumGPA'] = 
-        bcdiv($this->totals['HEd.Student.CourseHistory.Term.CumPoints'], $this->totals['HEd.Student.CourseHistory.Term.CumHours']);
+        bcdiv($this->totals['HEd.Student.CourseHistory.Term.CumPoints'], $this->totals['HEd.Student.CourseHistory.Term.CumHours'], 3);
     } else {
       $this->totals['HEd.Student.CourseHistory.Term.CumGPA'] = null;
     }
     
     if ($this->totals['HEd.Student.CourseHistory.Term.YTDPoints'] > 0) {
       $this->totals['HEd.Student.CourseHistory.Term.YTDGPA'] = 
-        bcdiv($this->totals['HEd.Student.CourseHistory.Term.YTDPoints'], $this->totals['HEd.Student.CourseHistory.Term.YTDHours']);
+        bcdiv($this->totals['HEd.Student.CourseHistory.Term.YTDPoints'], $this->totals['HEd.Student.CourseHistory.Term.YTDHours'], 3);
     } else {
       $this->totals['HEd.Student.CourseHistory.Term.YTDGPA'] = null;
     }
     
     if ($this->totals['HEd.Student.CourseHistory.Term.TrnsPoints'] > 0) {
       $this->totals['HEd.Student.CourseHistory.Term.TrnsGPA'] = 
-        bcdiv($this->totals['HEd.Student.CourseHistory.Term.TrnsPoints'], $this->totals['HEd.Student.CourseHistory.Term.TrnsHours']);
+        bcdiv($this->totals['HEd.Student.CourseHistory.Term.TrnsPoints'], $this->totals['HEd.Student.CourseHistory.Term.TrnsHours'], 3);
     } else {
       $this->totals['HEd.Student.CourseHistory.Term.TrnsPoints'] = null;
     }
     
     if ($this->totals['HEd.Student.CourseHistory.Term.InstPoints'] > 0) {
       $this->totals['HEd.Student.CourseHistory.Term.InstGPA'] = 
-        bcdiv($this->totals['HEd.Student.CourseHistory.Term.InstPoints'], $this->totals['HEd.Student.CourseHistory.Term.InstHours']);
+        bcdiv($this->totals['HEd.Student.CourseHistory.Term.InstPoints'], $this->totals['HEd.Student.CourseHistory.Term.InstHours'], 3);
     } else {
       $this->totals['HEd.Student.CourseHistory.Term.InstPoints'] = null;
     }
     
     if ($this->totals['HEd.Student.CourseHistory.Term.TotalPoints'] > 0) {
       $this->totals['HEd.Student.CourseHistory.Term.TotalGPA'] = 
-        bcdiv($this->totals['HEd.Student.CourseHistory.Term.TotalPoints'], $this->totals['HEd.Student.CourseHistory.Term.TotalHours']);
+        bcdiv($this->totals['HEd.Student.CourseHistory.Term.TotalPoints'], $this->totals['HEd.Student.CourseHistory.Term.TotalHours'], 3);
     } else {
       $this->totals['HEd.Student.CourseHistory.Term.TotalPoints'] = null;
     }
