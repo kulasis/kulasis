@@ -16,6 +16,7 @@ Majors
   {{ kula_field_name({ field: 'HEd.Degree.Major.EffectiveTermID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Degree.Major.MinimumCredits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Degree.Major.MinimumGPA', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Major.PFCode', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   <th class="data-table-cell-row-header">Requirements</th>
   </tr>
 </thead>
@@ -27,6 +28,7 @@ Majors
   {{ kula_field({ add: true, field: 'HEd.Degree.Major.EffectiveTermID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.Degree.Major.MinimumCredits', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.Degree.Major.MinimumGPA', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Major.PFCode', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
   {{ kula_display_html({ add: true, field: 'HEd.Degree.Requirement.Group.ID', prepend_html: '<td class="data-table-cell-row-num">Requirements</td>' }) }}
   {{ kula_display_html({ add: true, field: 'HEd.Degree.Major.ID', prepend_html: '</tr>' }) }}
   {% for major in majors %}
@@ -37,6 +39,7 @@ Majors
     {{ kula_field({ edit: true, field: 'HEd.Degree.Major.EffectiveTermID', db_row_id: major.MAJOR_ID, value: major.EFFECTIVE_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Degree.Major.MinimumCredits', db_row_id: major.MAJOR_ID, value: major.MINIMUM_CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Degree.Major.MinimumGPA', db_row_id: major.MAJOR_ID, value: major.MINIMUM_GPA, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Major.PFCode', db_row_id: major.MAJOR_ID, value: major.PF_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     <td><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_degrees_requirements_groups', { type: 'major', id: major.MAJOR_ID }) }}">Requirements</a></td>
   </tr>
   {% endfor %}

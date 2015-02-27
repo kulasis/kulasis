@@ -68,10 +68,16 @@ class PFAIDSService {
       ->fields('stu')
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = stu.STUDENT_ID')
       ->fields('stustatus')
+      ->leftJoin('STUD_STUDENT_COURSE_HISTORY_TERMS', 'chterms', 'chterms.STUDENT_STATUS_ID = stustatus.STUDENT_STATUS_ID')
+      ->fields('chterms', array('TOTAL_GPA', 'TOTAL_CREDITS_EARNED', 'TERM_CREDITS_ATTEMPTED', 'TERM_CREDITS_EARNED'))
       ->leftJoin('CONS_PHONE', 'phone', 'phone.PHONE_NUMBER_ID = cons.PRIMARY_PHONE_ID')
       ->fields('phone', array('PHONE_NUMBER'))
       ->leftJoin('CONS_EMAIL_ADDRESS', 'email', 'email.EMAIL_ADDRESS_ID = cons.PRIMARY_EMAIL_ID')
       ->fields('email', array('EMAIL_ADDRESS'))
+      ->leftJoin('CORE_LOOKUP_VALUES', 'race_values', "race_values.CODE = cons.RACE AND race_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'Constituent.Race')")
+      ->fields('race_values', array('PF_CODE' => 'race_PF_CODE'))
+      ->leftJoin('CORE_TERM', 'enterterm', 'enterterm.TERM_ID = stustatus.ENTER_TERM_ID')
+      ->fields('enterterm', array('TERM_ABBREVIATION'))
       ->condition('stustatus.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
       ->execute();
     while ($stu_row = $students_result->fetch()) {
@@ -108,8 +114,8 @@ class PFAIDSService {
         $pf_data['primary_street1'] = "'".str_replace("'", "''", $primary_address['THOROUGHFARE'])."'";
         $pf_data['primary_city'] = "'".str_replace("'", "''", $primary_address['LOCALITY'])."'";
         $pf_data['primary_state'] = "'".str_replace("'", "''", $primary_address['ADMINISTRATIVE_AREA'])."'";
-        $pf_data['primary_zip'] = "'".str_replace("'", "''", $primary_address['POSTAL_CODE'])."'";
-        $pf_data['primary_telephone'] = "'".str_replace("'", "''", $stu_row['PHONE_NUMBER'])."'"; 
+        $pf_data['primary_zip'] = "'".str_replace("'", "''", str_replace(str_split(' -'), '', $primary_address['POSTAL_CODE']))."'";
+        $pf_data['primary_telephone'] = "'".str_replace("'", "''", str_replace(str_split('()- '), '', $stu_row['PHONE_NUMBER']))."'"; 
         $pf_data['email_address'] = "'".str_replace("'", "''", $stu_row['EMAIL_ADDRESS'])."'";
         
         $pf_data['legal_residence'] = "'".str_replace("'", "''", $primary_address['ADMINISTRATIVE_AREA'])."'";
@@ -117,17 +123,61 @@ class PFAIDSService {
         // Get degree information
         $degree_info = $this->db->db_select('STUD_STUDENT_DEGREES', 'studegree')
           ->fields('studegree')
+          ->join('STUD_DEGREE', 'degree', 'degree.DEGREE_ID = studegree.DEGREE_ID')
+          ->fields('degree', array('PF_CODE' => 'degree_PF_CODE'))
+          ->leftJoin('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'studegreecon', 'studegreecon.STUDENT_DEGREE_ID = studegree.STUDENT_DEGREE_ID')
+          ->leftJoin('STUD_DEGREE_CONCENTRATION', 'concentration', 'concentration.CONCENTRATION_ID = studegreecon.CONCENTRATION_ID')
+          ->fields('concentration', array('PF_CODE' => 'concentration_PF_CODE'))
           ->condition('studegree.STUDENT_DEGREE_ID', $stu_row['SEEKING_DEGREE_1_ID'])
           ->execute()->fetch();
         
-        $pf_data['grad_date'] = (isset($degree_info['EXPECTED_GRADUATION_DATE']) AND $degree_info['EXPECTED_GRADUATION_DATE']) ? "'".date('mdY', strtotime($degree_info['EXPECTED_GRADUATION_DATE']))."'" : 'null';
-        $pf_data['admission_status'] = "'A'";
         $pf_data['us_citizen'] = ($stu_row['CITIZENSHIP_COUNTRY'] == 'US') ? '1' : 'null';
         $pf_data['gender'] = $stu_row['GENDER'] != '' ? "'".$stu_row['GENDER']."'" : 'null';
         $pf_data['veteran_status'] = ($stu_row['VETERAN'] == '1') ? "'Y'" : 'null';
-        $pf_data['academic_division'] = "'20'";
+        $pf_data['race'] = ($stu_row['race_PF_CODE'] != '') ? "'".$stu_row['race_PF_CODE']."'" : 'null';
+        $pf_data['hispanic'] = ($stu_row['race_PF_CODE'] == '1') ? "'2'" : 'null';
         $pf_data['citizen_country'] = $stu_row['CITIZENSHIP_COUNTRY'] ? "'".$stu_row['CITIZENSHIP_COUNTRY']."'" : 'null';
+        
+        $pf_data['grad_date'] = (isset($degree_info['EXPECTED_GRADUATION_DATE']) AND $degree_info['EXPECTED_GRADUATION_DATE']) ? "'".date('mdY', strtotime($degree_info['EXPECTED_GRADUATION_DATE']))."'" : 'null';
+        $pf_data['admission_status'] = "'A'";
         $pf_data['transfer_flag'] = ($stu_row['ENTER_CODE'] == '04') ? "'Y'" : 'null';
+        
+        if ($stu_row['COHORT']) {
+          $pf_data['string1_field_id'] = "'2807'";
+          $pf_data['string1_value'] = "'".$stu_row['COHORT']."'";
+        }
+        
+        if ($stu_row['LEVEL']) {
+          $pf_data['string2_field_id'] = "'2802'";
+          $pf_data['string2_value'] = "'".$stu_row['LEVEL']."'";
+        }
+        
+        if ($stu_row['ENTER_TERM_ID']) {
+          $pf_data['string3_field_id'] = "'2801'";
+          $pf_data['string3_value'] = "'".str_replace('-', '', $stu_row['TERM_ABBREVIATION'])."'";
+        }
+        
+        if ($stu_row['ENTER_CODE']) {
+          $pf_data['string4_field_id'] = "'2806'";
+          $pf_data['string4_value'] = "'".$stu_row['ENTER_CODE']."'";
+        }
+        
+        if ($stu_row['LEAVE_CODE']) {
+          $pf_data['string5_field_id'] = "'2805'";
+          $pf_data['string5_value'] = "'".$stu_row['LEAVE_CODE']."'";
+        }
+        
+        $pf_data['academic_division'] = ($degree_info['degree_PF_CODE'] != '') ? "'".$degree_info['degree_PF_CODE']."'" : 'null';
+        $pf_data['major_code'] = ($degree_info['concentration_PF_CODE'] != '') ? "'".$degree_info['concentration_PF_CODE']."'" : 'null';
+        $pf_data['college_gpa'] = ($stu_row['TOTAL_GPA'] != '') ? "'".substr(str_replace('.', '', $stu_row['TOTAL_GPA']), 0, 3)."'" : 'null';
+        
+        // If term credits earned greater than 0, then term ended
+        if ($stu_row['TERM_CREDITS_EARNED'] > 0) {
+          $pf_data['ay_units'] = sprintf('%0.2f', round($stu_row['TOTAL_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP));
+        } else {
+          // need to add total credits and term credits attempted
+          $pf_data['ay_units'] = sprintf('%0.2f', round($stu_row['TOTAL_CREDITS_EARNED'] + $stu_row['TERM_CREDITS_ATTEMPTED'], 2, PHP_ROUND_HALF_UP));
+        }
         
         // check if already exists
         $already_exists = mssql_fetch_array(mssql_query("SELECT ssn, award_year_token FROM external_data WHERE ssn = '".$cleaned_ssn."' AND award_year_token = '".$awardYearToken."'"));

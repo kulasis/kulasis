@@ -14,7 +14,7 @@ class SISDegreeController extends Controller {
     
       // Get Degrees
       $degrees = $this->db()->db_select('STUD_DEGREE')
-        ->fields('STUD_DEGREE', array('DEGREE_ID', 'DEGREE_NAME', 'EFFECTIVE_TERM_ID', 'MINIMUM_GPA', 'MINIMUM_CREDITS'))
+        ->fields('STUD_DEGREE')
         ->orderBy('DEGREE_NAME', 'ASC')
         ->execute()->fetchAll();
     
@@ -29,7 +29,7 @@ class SISDegreeController extends Controller {
     
       // Get Majors
       $majors = $this->db()->db_select('STUD_DEGREE_MAJOR')
-        ->fields('STUD_DEGREE_MAJOR', array('MAJOR_ID', 'MAJOR_NAME', 'EFFECTIVE_TERM_ID', 'MINIMUM_GPA', 'MINIMUM_CREDITS'))
+        ->fields('STUD_DEGREE_MAJOR')
         ->orderBy('MAJOR_NAME', 'ASC')
         ->execute()->fetchAll();
     
@@ -44,7 +44,7 @@ class SISDegreeController extends Controller {
     
       // Get Minors
       $minors = $this->db()->db_select('STUD_DEGREE_MINOR')
-        ->fields('STUD_DEGREE_MINOR', array('MINOR_ID', 'MINOR_NAME', 'EFFECTIVE_TERM_ID', 'MINIMUM_GPA', 'MINIMUM_CREDITS'))
+        ->fields('STUD_DEGREE_MINOR')
         ->orderBy('MINOR_NAME', 'ASC')
         ->execute()->fetchAll();
     
@@ -59,7 +59,7 @@ class SISDegreeController extends Controller {
     
       // Get Concentrations
       $concentrations = $this->db()->db_select('STUD_DEGREE_CONCENTRATION')
-        ->fields('STUD_DEGREE_CONCENTRATION', array('CONCENTRATION_ID', 'CONCENTRATION_NAME', 'EFFECTIVE_TERM_ID', 'MINIMUM_GPA', 'MINIMUM_CREDITS'))
+        ->fields('STUD_DEGREE_CONCENTRATION')
         ->orderBy('CONCENTRATION_NAME', 'ASC')
         ->execute()->fetchAll();
     

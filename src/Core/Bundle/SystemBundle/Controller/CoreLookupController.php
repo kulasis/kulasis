@@ -20,7 +20,7 @@ class CoreLookupController extends Controller {
     if ($this->record->getSelectedRecordID()) {
       // Get Fields
       $values = $this->db()->db_select('CORE_LOOKUP_VALUES')
-        ->fields('CORE_LOOKUP_VALUES', array('LOOKUP_VALUE_ID', 'LOOKUP_TABLE_ID', 'CODE', 'DESCRIPTION', 'SORT', 'INACTIVE_AFTER', 'CONVERSION'))
+        ->fields('CORE_LOOKUP_VALUES')
         ->condition('LOOKUP_TABLE_ID', $this->record->getSelectedRecordID())
         ->orderBy('SORT', 'ASC')
         ->orderBy('CODE', 'ASC')
