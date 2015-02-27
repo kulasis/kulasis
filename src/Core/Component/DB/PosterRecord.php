@@ -29,6 +29,7 @@ class PosterRecord {
   
   private $result;
   private $posted;
+  private $noLog;
   
   const ADD = 'C';
   const EDIT = 'U';
@@ -46,6 +47,7 @@ class PosterRecord {
     $this->fields = $fields;
     $this->hasViolations = false;
     $this->posted = false;
+    $this->noLog = false;
   }
   
   public function process() {
@@ -81,6 +83,10 @@ class PosterRecord {
         }
       }
     }
+  }
+  
+  public function setNoLog($noLog) {
+    $this->noLog = $noLog;
   }
   
   public function getID() {
@@ -335,7 +341,7 @@ class PosterRecord {
 
       if ($this->crud == self::ADD) {
         $transaction = $this->db->db_transaction();
-        $this->id = $this->db->db_insert($this->schema->getTable($this->table)->getDBName())
+        $this->id = $this->db->db_insert($this->schema->getTable($this->table)->getDBName(), array('nolog' => $this->noLog))
           ->fields($fields)
           ->execute();
         $this->auditLog($fields);
@@ -346,7 +352,7 @@ class PosterRecord {
         $transaction = $this->db->db_transaction();
         $affectedRows = 0;
 
-        $affectedRows = $this->db->db_update($this->schema->getTable($this->table)->getDBName())
+        $affectedRows = $this->db->db_update($this->schema->getTable($this->table)->getDBName(), array('nolog' => $this->noLog))
           ->fields($fields)
           ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
           ->execute();
@@ -360,7 +366,7 @@ class PosterRecord {
         $transaction = $this->db->db_transaction();
         $affectedRows = 0;
 
-        $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName())
+        $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName(), array('nolog' => $this->noLog))
           ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)->execute();
         $this->auditLog();
 

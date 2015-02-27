@@ -25,6 +25,7 @@ class Poster {
   private $hasViolations = false;
   private $isPosted = false;
   
+  private $noLog;
 
   public function __construct($container) {
     
@@ -44,8 +45,14 @@ class Poster {
     return $this->isPosted;
   }
   
+  public function noLog() {
+    $this->noLog = true;
+    return $this;
+  }
+  
   public function add($table, $id, $fields) {
     $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::ADD, $table, $id, $fields);
+    $this->records[$table][$id]->setNoLog($this->noLog);
     return $this;
   }
   
@@ -62,6 +69,7 @@ class Poster {
   
   public function edit($table, $id, $fields) {
     $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::EDIT, $table, $id, $fields);
+    $this->records[$table][$id]->setNoLog($this->noLog);
     return $this;
   }
   
@@ -78,6 +86,7 @@ class Poster {
   
   public function delete($table, $id) {
     $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::DELETE, $table, $id);
+    $this->records[$table][$id]->setNoLog($this->noLog);
     return $this;
   }
   

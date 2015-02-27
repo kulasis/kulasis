@@ -70,6 +70,7 @@ class CoreExportController extends Controller {
   
   public function query_downloadAction() {
     $this->authorize();
+    $this->formNewWindow();
     
     $non = $this->request->request->get('non');
     

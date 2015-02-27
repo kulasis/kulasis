@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface as ContainerInterfa
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Kula\Core\Bundle\FrameworkBundle\Exception\NotAuthorizedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class Controller extends BaseController {
   
@@ -142,6 +143,10 @@ class Controller extends BaseController {
     }
   }
   
+  public function formNewWindow() {
+    $this->twig->addGlobal('form_newWindow', true);
+  }
+  
   public function setRecordType($record_type, $add_mode = null, $eager_search_data = null) {
 
     $this->record->setRecordType($record_type, $add_mode, $eager_search_data);
@@ -156,9 +161,9 @@ class Controller extends BaseController {
   }
   
   public function authorize($tables = array()) {
-		if (!($this->session->get('initial_role') > 0)) {
-			throw new NotAuthorizedException();
-		}
+    if (!($this->session->get('initial_role') > 0)) {
+      throw new NotAuthorizedException();
+    }
   }
   
   /**
@@ -172,10 +177,10 @@ class Controller extends BaseController {
    */
   public function forward($routeName, array $query = array(), array $request = array())
   {
-		if ($this->request->isXmlHttpRequest()) {
-			$query['partial'] = 'window';
+    if ($this->request->isXmlHttpRequest()) {
+      $query['partial'] = 'window';
       $query['request'] = 'window';
-		}
+    }
     
       $path['_route'] = $this->request->attributes->get('_route');
       $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate($query, $request, $path, null, null, array('REQUEST_URI' => $this->container->get('router')->generate($routeName, array())));
@@ -184,10 +189,16 @@ class Controller extends BaseController {
       return $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
   }
   
-	public function JSONResponse($data) {
-		$response = new JsonResponse();
-		$response->setData($data);
-		return $response;
-	}
+  public function JSONResponse($data) {
+    $response = new JsonResponse();
+    $response->setData($data);
+    return $response;
+  }
+  
+  public function textResponse($text) {
+    return new Response($text, 200, array(
+      'Content-Type' => 'text/plain'
+    ));;
+  }
 
 }
