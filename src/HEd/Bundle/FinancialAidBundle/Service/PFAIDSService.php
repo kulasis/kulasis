@@ -68,6 +68,9 @@ class PFAIDSService {
       ->fields('stu')
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = stu.STUDENT_ID')
       ->fields('stustatus')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterm.TERM_ID')
+      ->fields('term', array('FINANCIAL_AID_YEAR'))
       ->leftJoin('STUD_STUDENT_COURSE_HISTORY_TERMS', 'chterms', 'chterms.STUDENT_STATUS_ID = stustatus.STUDENT_STATUS_ID')
       ->fields('chterms', array('TOTAL_GPA', 'TOTAL_CREDITS_EARNED', 'TERM_CREDITS_ATTEMPTED', 'TERM_CREDITS_EARNED'))
       ->leftJoin('CONS_PHONE', 'phone', 'phone.PHONE_NUMBER_ID = cons.PRIMARY_PHONE_ID')
@@ -141,6 +144,28 @@ class PFAIDSService {
         $pf_data['grad_date'] = (isset($degree_info['EXPECTED_GRADUATION_DATE']) AND $degree_info['EXPECTED_GRADUATION_DATE']) ? "'".date('mdY', strtotime($degree_info['EXPECTED_GRADUATION_DATE']))."'" : 'null';
         $pf_data['admission_status'] = "'A'";
         $pf_data['transfer_flag'] = ($stu_row['ENTER_CODE'] == '04') ? "'Y'" : 'null';
+        
+        // Get earliest enter date for financial aid year
+        $enterDate = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
+          ->fields('stustatus', array('ENTER_DATE'))
+          ->condition('stustatus.STUDENT_ID', $stu_row['STUDENT_ID'])
+          ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+          ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+          ->condition('term.FINANCIAL_AID_YEAR', $stu_row['FINANCIAL_AID_YEAR'])
+          ->orderBy('ENTER_DATE', 'ASC')
+          ->execute()->fetch();
+        $pf_data['date_enrolled'] = ($enterDate['ENTER_DATE'] != '') ? "'".date('mdY', strtotime($enterDate['ENTER_DATE']))."'" : 'null';
+        
+        // Get latest enter date for financial aid year
+        $enterDate = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
+          ->fields('stustatus', array('LEAVE_DATE', 'STATUS'))
+          ->condition('stustatus.STUDENT_ID', $stu_row['STUDENT_ID'])
+          ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+          ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+          ->condition('term.FINANCIAL_AID_YEAR', $stu_row['FINANCIAL_AID_YEAR'])
+          ->orderBy('LEAVE_DATE', 'DESC')
+          ->execute()->fetch();
+        $pf_data['date_withdrawn'] = ($enterDate['LEAVE_DATE'] != '' AND $enterDate['STATUS'] == 'I') ? "'".date('mdY', strtotime($enterDate['LEAVE_DATE']))."'" : 'null';
         
         if ($stu_row['COHORT']) {
           $pf_data['string1_field_id'] = "'2807'";
