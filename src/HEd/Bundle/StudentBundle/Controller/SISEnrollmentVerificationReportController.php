@@ -34,7 +34,7 @@ class SISEnrollmentVerificationReportController extends ReportController {
       ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
       ->condition($this->db()->db_or()->condition('class.DROPPED', null)->condition('class.DROPPED', 0))
       ->groupBy('STUDENT_STATUS_ID', 'class');
-      if (isset($record_id) AND $record_id != '' AND $record_type == 'STUDENT')
+      if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.HEd.Student')
         $credit_totals = $credit_totals->condition('status.STUDENT_ID', $record_id);
     $credit_totals = $credit_totals->execute();
     while ($credit_total_row = $credit_totals->fetch()) {
@@ -63,7 +63,7 @@ class SISEnrollmentVerificationReportController extends ReportController {
       $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids);
     
     // Add on selected record
-    if (isset($record_id) AND $record_id != '' AND $record_type == 'STUDENT')
+    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.HEd.Student')
       $result = $result->condition('status.STUDENT_ID', $record_id);
     
     $result = $result
