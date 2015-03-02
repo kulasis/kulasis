@@ -198,18 +198,18 @@ class PFAIDSService {
         
         // If term credits earned greater than 0, then term ended
         if ($stu_row['TERM_CREDITS_EARNED'] > 0) {
-          $pf_data['dateint1_field_id'] = "'7752'";
-          $pf_data['dateint1_value'] = sprintf('%0.2f', round($stu_row['TOTAL_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP));
+          $pf_data['decimal1_field_id'] = "'7752'";
+          $pf_data['decimal1_value'] = sprintf('%0.2f', round($stu_row['TOTAL_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP));
         } else {
           // need to add total credits and term credits attempted
-          $pf_data['dateint1_field_id'] = "'7752'";
-          $pf_data['dateint1_value'] = sprintf('%0.2f', round($stu_row['TOTAL_CREDITS_EARNED'] + $stu_row['TERM_CREDITS_ATTEMPTED'], 2, PHP_ROUND_HALF_UP));
+          $pf_data['decimal1_field_id'] = "'7752'";
+          $pf_data['decimal1_value'] = sprintf('%0.2f', round($stu_row['TOTAL_CREDITS_EARNED'] + $stu_row['TERM_CREDITS_ATTEMPTED'], 2, PHP_ROUND_HALF_UP));
         }
         
         // If transfer credits
         if ($stu_row['TRNS_CREDITS_EARNED'] > 0) {
-          $pf_data['dateint2_field_id'] = "'7753'";
-          $pf_data['dateint2_value'] = sprintf('%0.2f', round($stu_row['TRNS_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP));
+          $pf_data['decimal2_field_id'] = "'7753'";
+          $pf_data['decimal2_value'] = sprintf('%0.2f', round($stu_row['TRNS_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP));
         }
         
         // check if already exists
