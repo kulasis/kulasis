@@ -33,8 +33,8 @@ class PFAIDSService {
       ->condition('INTG_DATABASE_ID', $id)
       ->execute()->fetch();
     
-    $connection = mssql_connect($intgDB['HOST'], $intgDB['USERNAME'], $intgDB['PASSWORD']);
-    mssql_select_db($intgDB['DATABASE_NAME'], $connection);
+    $connection = mssql_connect($intgDB['HOST'], $intgDB['USERNAME'], $intgDB['PASSWORD']) or die("Couldn't connect to SQL Server on ".$intgDB['HOST']);
+    mssql_select_db($intgDB['DATABASE_NAME'], $connection) or die("Couldn't open database on SQL Server for ".$intgDB['HOST']);
     
     return $connection;
   }
@@ -72,7 +72,7 @@ class PFAIDSService {
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterm.TERM_ID')
       ->fields('term', array('FINANCIAL_AID_YEAR'))
       ->leftJoin('STUD_STUDENT_COURSE_HISTORY_TERMS', 'chterms', 'chterms.STUDENT_STATUS_ID = stustatus.STUDENT_STATUS_ID')
-      ->fields('chterms', array('TOTAL_GPA', 'TOTAL_CREDITS_EARNED', 'TERM_CREDITS_ATTEMPTED', 'TERM_CREDITS_EARNED'))
+      ->fields('chterms', array('TOTAL_GPA', 'TOTAL_CREDITS_EARNED', 'TERM_CREDITS_ATTEMPTED', 'TERM_CREDITS_EARNED', 'TRNS_CREDITS_EARNED'))
       ->leftJoin('CONS_PHONE', 'phone', 'phone.PHONE_NUMBER_ID = cons.PRIMARY_PHONE_ID')
       ->fields('phone', array('PHONE_NUMBER'))
       ->leftJoin('CONS_EMAIL_ADDRESS', 'email', 'email.EMAIL_ADDRESS_ID = cons.PRIMARY_EMAIL_ID')
@@ -198,10 +198,18 @@ class PFAIDSService {
         
         // If term credits earned greater than 0, then term ended
         if ($stu_row['TERM_CREDITS_EARNED'] > 0) {
-          $pf_data['ay_units'] = sprintf('%0.2f', round($stu_row['TOTAL_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP));
+          $pf_data['dateint1_field_id'] = "'7752'";
+          $pf_data['dateint1_value'] = sprintf('%0.2f', round($stu_row['TOTAL_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP));
         } else {
           // need to add total credits and term credits attempted
-          $pf_data['ay_units'] = sprintf('%0.2f', round($stu_row['TOTAL_CREDITS_EARNED'] + $stu_row['TERM_CREDITS_ATTEMPTED'], 2, PHP_ROUND_HALF_UP));
+          $pf_data['dateint1_field_id'] = "'7752'";
+          $pf_data['dateint1_value'] = sprintf('%0.2f', round($stu_row['TOTAL_CREDITS_EARNED'] + $stu_row['TERM_CREDITS_ATTEMPTED'], 2, PHP_ROUND_HALF_UP));
+        }
+        
+        // If transfer credits
+        if ($stu_row['TRNS_CREDITS_EARNED'] > 0) {
+          $pf_data['dateint2_field_id'] = "'7753'";
+          $pf_data['dateint2_value'] = sprintf('%0.2f', round($stu_row['TRNS_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP));
         }
         
         // check if already exists
