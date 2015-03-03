@@ -1,0 +1,94 @@
+K12.Staff:
+  description: "Staff"
+  db_table_name: STUD_STAFF
+  timestamps: true
+  fields: 
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STAFF_ID
+      db_column_type: primary_serial
+      column_name: "Staff ID"
+      label_name: "Staff ID"
+    ConversionStaffNumber:
+      description: "Conversion Staff Number"
+      db_column_name: CONV_STAFF_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 25
+      column_name: "Conversion Staff Number"
+      label_name: "Conversion Staff Number"
+    AbbreviatedName:
+      description: "Abbreviated Name"
+      db_column_name: ABBREVIATED_NAME
+      db_column_type: varchar
+      db_column_length: 30
+      db_column_null: true
+      field_type: text
+      field_size: 25
+      column_name: "Abbreviated Name"
+      label_name: "Abbreviated Name"
+K12.Staff.OrganizationTerm:
+  description: "Staff in Terms"
+  db_table_name: STUD_STAFF_ORGANIZATION_TERMS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STAFF_ORGANIZATION_TERM_ID
+      db_column_type: primary_serial
+      column_name: "Staff Organization Term ID"
+      label_name: "Staff Organization Term ID"
+    StaffID:
+      description: "Staff ID"
+      parent: K12.Staff.ID
+      db_column_name: STAFF_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: radio
+      column_name: "Staff ID"
+      label_name: "Staff ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    ConversionStaffNumber:
+      description: "Conversion Staff Number"
+      db_column_name: CONV_STAFF_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 25
+      column_name: "Conversion Staff Number"
+      label_name: "Conversion Staff Number"
+    FTE:
+      description: "FTE"
+      db_column_name: FTE
+      db_column_type: float
+      db_column_length: 3
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: FTE
+      label_name: FTE
+    Department:
+      description: "Department"
+      db_column_name: DEPARTMENT
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: K12.Staff.Department
+      column_name: "Department"
+      label_name: "Department"
+  unique_keys:
+    StaffOrganizationTerms: [ 'K12.Staff.OrganizationTerm.StaffID', 'K12.Staff.OrganizationTerm.OrganizationTermID' ]

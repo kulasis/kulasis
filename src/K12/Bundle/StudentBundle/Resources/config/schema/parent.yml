@@ -1,0 +1,137 @@
+K12.Parent:
+  description: "Parent"
+  db_table_name: STUD_PARENT
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      parent: Core.Constituent.ID
+      db_column_name: PARENT_ID
+      db_column_type: serial
+      column_name: "Parent ID"
+      label_name: "Parent ID"
+    Employer:
+      description: "Employer"
+      db_column_name: EMPLOYER
+      db_column_type: varchar
+      db_column_length: 60
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Employer"
+      label_name: "Employer"
+    Occupation:
+      description: "Occupation"
+      db_column_name: OCCUPATION
+      db_column_type: varchar
+      db_column_length: 60
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Occupation"
+      label_name: "Occupation"
+    WorkHoursFrom:
+      description: "Work Hours From"
+      db_column_name: WORK_HOURS_FROM
+      db_column_type: time
+      db_column_null: true
+      field_type: text
+      field_size: 10
+      column_name: "Work Hours From"
+      label_name: "Work Hours From"
+    WorkHoursTo:
+      description: "Work Hours To"
+      db_column_name: WORK_HOURS_TO
+      db_column_type: time
+      db_column_null: true
+      field_type: text
+      field_size: 10
+      column_name: "Work Hours To"
+      label_name: "Work Hours To"
+    Notes:
+      description: "Notes"
+      db_column_name: NOTES
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Notes"
+      label_name: "Notes"
+      
+
+K12.Student.Parent:
+  description: "Parent"
+  db_table_name: STUD_STUDENT_PARENTS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      parent: Core.Constituent.Relationship.ID
+      db_column_name: STUDENT_PARENT_ID
+      db_column_type: serial
+      field_type: radio
+      column_name: "Student Parent ID"
+      label_name: "Student Parent ID"
+    LegalCustody:
+      description: "Legal Custody"
+      db_column_name: LEGAL_CUSTODY
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Legal Custody"
+      label_name: "Legal Custody"
+    PhysicalCustody:
+      description: "Physical Custody"
+      db_column_name: PHYSICAL_CUSTODY
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Physical Custody"
+      label_name: "Physical Custody"
+    Resides:
+      description: "Resides"
+      db_column_name: RESIDES
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Resides"
+      label_name: "Resides"
+    RestrainingOrder:
+      description: "Restraining Order"
+      db_column_name: RESTRAINING_ORDER
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Restraining Order"
+      label_name: "Restraining Order"
+    ContactNotAllowed:
+      description: "Contact Not Allowed"
+      db_column_name: CONTACT_NOT_ALLOWED
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Contact Not Allowed"
+      label_name: "Contact Not Allowed"
+    ReceivesCommunication:
+      description: "Receives Communication"
+      db_column_name: RECEIVES_COMMUNICATION
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Receives Communication"
+      label_name: "Receives Communication"
+    Notes:
+      description: "Notes"
+      db_column_name: NOTES
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Notes"
+      label_name: "Notes"

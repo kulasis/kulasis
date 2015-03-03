@@ -158,10 +158,6 @@ sis_HEd_courses_delete:
   defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:delete }
   methods: [POST]
 
-sis_HEd_courses_fees:
-  path: /offering/courses/fees
-  defaults: { _controller: KulaHEdSchedulingBundle:SISCourseFees:index }
-
 sis_HEd_courses_prerequisites:
   path: /offering/courses/prerequisites
   defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:prerequisites }

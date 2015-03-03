@@ -35,7 +35,7 @@ HEd.Student.EmergencyContact:
       field_type: text
       field_size: 20
       column_name: "Emergency Contact Name"
-      label_name: "Emergency Contact Name"
+      label_name: "Name"
     Phone:
       description: "Emergency Contact Phone"
       db_column_name: EMERGENCY_CONTACT_PHONE
@@ -45,4 +45,14 @@ HEd.Student.EmergencyContact:
       field_type: text
       field_size: 15
       column_name: "Emergency Contact Phone"
-      label_name: "Emergency Contact Phone"
+      label_name: "Phone"
+    Email:
+      description: "Emergency Contact EMAIL"
+      db_column_name: EMERGENCY_CONTACT_EMAIL
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 25
+      column_name: "Emergency Contact Email"
+      label_name: "Email"

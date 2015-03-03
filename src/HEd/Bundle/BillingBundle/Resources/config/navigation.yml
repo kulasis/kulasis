@@ -109,3 +109,19 @@ SIS.HEd.Setup.Billing:
       display_name: "Codes"
       sort: 2
       route: sis_HEd_setup_billing_codes
+
+SIS.HEd.Academic.Courses.Fees:
+  description: "Fees"
+  display_name: "Fees"
+  type: tab
+  portal: sis
+  route: sis_HEd_courses_fees
+  sort: 4
+
+SIS.HEd.Academic.Sections.Fees:
+  description: "Fees"
+  display_name: "Fees"
+  type: tab
+  portal: sis
+  route: sis_HEd_sections_fees
+  sort: 7

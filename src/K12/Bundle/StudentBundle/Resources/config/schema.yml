@@ -1,0 +1,5 @@
+imports:
+    - { resource: schema/student.yml }
+    - { resource: schema/enrollment.yml }
+    - { resource: schema/emergency.yml }
+    - { resource: schema/parent.yml }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\HEd\Bundle\BillingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -41,7 +41,30 @@ class SISCourseFeesController extends Controller {
       ->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
       ->execute()->fetch();
     
-    return $this->render('KulaHEdSchedulingBundle:SISCourseFees:fees_index.html.twig', array('fees' => $fees, 'organization_term_id' => $this->focus->getOrganizationTermID(), 'organization_term_id_display' => $org_term['TERM_ABBREVIATION'] . ' / ' . $org_term['ORGANIZATION_NAME']));
+    return $this->render('KulaHEdBillingBundle:SISCourseFees:fees_index.html.twig', array('fees' => $fees, 'organization_term_id' => $this->focus->getOrganizationTermID(), 'organization_term_id_display' => $org_term['TERM_ABBREVIATION'] . ' / ' . $org_term['ORGANIZATION_NAME']));
+    
+  }
+  
+  public function sectionFeesAction() {
+    $this->authorize();
+    $this->processForm();
+    $this->setRecordType('SIS.HEd.Section');
+    
+    $fees = array();
+    
+    if ($this->record->getSelectedRecordID()) {
+      
+      $fees = $this->db()->db_select('BILL_SECTION_FEE', 'BILL_SECTION_FEE')
+        ->fields('BILL_SECTION_FEE', array('AMOUNT', 'CODE_ID', 'SECTION_FEE_ID'))
+        ->join('BILL_CODE', 'code', 'code.CODE_ID = BILL_SECTION_FEE.CODE_ID')
+        ->fields('code', array('CODE_DESCRIPTION'))
+        ->condition('SECTION_ID', $this->record->getSelectedRecordID())
+        ->orderBy('CODE_DESCRIPTION', 'ASC')
+      ->execute()->fetchAll();
+      
+    }
+    
+    return $this->render('KulaHEdBillingBundle:SISCourseFees:section.html.twig', array('fees' => $fees));
     
   }
 

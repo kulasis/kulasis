@@ -1,0 +1,4 @@
+K12.Staff:
+  class: Kula\K12\Bundle\SchoolBundle\Chooser\StaffChooser
+K12.Staff.SchoolTerm:
+  class: Kula\K12\Bundle\SchoolBundle\Chooser\StaffSchoolTermChooser

@@ -1,6 +1,6 @@
 SIS.HEd.Setup:
-  description: "Setup"
-  display_name: "Setup"
+  description: "Setup (HEd)"
+  display_name: "Setup (HEd)"
   type: form_group
   portal: sis
   sort: 4

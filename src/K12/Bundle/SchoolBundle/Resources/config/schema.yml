@@ -1,0 +1,3 @@
+imports:
+    - { resource: schema/staff.yml }
+    - { resource: schema/term.yml }

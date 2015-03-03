@@ -1,55 +1,55 @@
 sis_HEd_student_billing:
-  path: /sis/student/billing
+  path: /sis/HEd/student/billing
   defaults: { _controller: KulaHEdBillingBundle:SISBilling:balances }
 
 sis_HEd_student_billing_charges_add:
-  path: /sis/student/billing/charges/add
+  path: /sis/HEd/student/billing/charges/add
   defaults: { _controller: KulaHEdBillingBundle:SISTransactions:add_charge }
 
 sis_HEd_student_billing_history:
-  path: /sis/student/billing/history
+  path: /sis/HEd/student/billing/history
   defaults: { _controller: KulaHEdBillingBundle:SISTransactions:history }
 
 sis_HEd_student_billing_payments_add:
-  path: /sis/student/billing/payments/add
+  path: /sis/HEd/student/billing/payments/add
   defaults: { _controller: KulaHEdBillingBundle:SISTransactions:add_payment }
 
 sis_HEd_student_billing_reports_billingledger:
-  path: /sis/student/billing/reports/billingledger
+  path: /sis/HEd/student/billing/reports/billingledger
   defaults: { _controller: KulaHEdBillingBundle:SISBillingConstituentLedgerReport:index }
   methods: [GET]
 
 sis_HEd_student_billing_reports_billingledger_generate:
-  path: /sis/student/billing/reports/billingledger
+  path: /sis/HEd/student/billing/reports/billingledger
   defaults: { _controller: KulaHEdBillingBundle:SISBillingConstituentLedgerReport:generate }
   methods: [POST]
 
 sis_HEd_student_billing_reports_billingreceipt:
-  path: /sis/student/billing/reports/billingreceipt
+  path: /sis/HEd/student/billing/reports/billingreceipt
   defaults: { _controller: KulaHEdBillingBundle:SISBillingReceiptReport:index }
   methods: [GET]
 
 sis_HEd_student_billing_reports_billingreceipt_generate:
-  path: /sis/student/billing/reports/billingreceipt
+  path: /sis/HEd/student/billing/reports/billingreceipt
   defaults: { _controller: KulaHEdBillingBundle:SISBillingReceiptReport:generate }
   methods: [POST]
 
 sis_HEd_student_billing_reports_billingstatement:
-  path: /sis/student/billing/reports/billingstatement
+  path: /sis/HEd/student/billing/reports/billingstatement
   defaults: { _controller: KulaHEdBillingBundle:SISBillingStatementReport:index }
   methods: [GET]
 
 sis_HEd_student_billing_reports_billingstatement_generate:
-  path: /sis/student/billing/reports/billingstatement
+  path: /sis/HEd/student/billing/reports/billingstatement
   defaults: { _controller: KulaHEdBillingBundle:SISBillingStatementReport:generate }
   methods: [POST]
 
 sis_HEd_student_billing_transactiondetail:
-  path: /sis/student/billing/transactions/{constituent_transaction_id}/detail
+  path: /sis/HEd/student/billing/transactions/{constituent_transaction_id}/detail
   defaults: { _controller: KulaHEdBillingBundle:SISTransactions:transaction_detail }
 
 sis_HEd_student_billing_transactions:
-  path: /sis/student/billing/transactions
+  path: /sis/HEd/student/billing/transactions
   defaults: { _controller: KulaHEdBillingBundle:SISTransactions:transactions }
 
 sis_HEd_home_billing_pending:
@@ -61,26 +61,34 @@ sis_HEd_home_billing_pending_all:
     defaults: { _controller: KulaHEdBillingBundle:SISHomeBilling:all_pending }
 
 sis_HEd_home_billing_reports_studentstatement:
-  path: /sis/student/billing/reports/studentstatement
+  path: /sis/HEd/student/billing/reports/studentstatement
   defaults: { _controller: KulaHEdBillingBundle:SISStudentStatementReport:index }
   methods: [GET]
 
 sis_HEd_setup_billing_codes:
-  path: /sis/setup/billing/codes
+  path: /sis/HEd/setup/billing/codes
   defaults: { _controller: KulaHEdBillingBundle:SISCodes:codes }
 
 sis_HEd_setup_billing_tuitionrates:
-  path: /sis/setup/billing/tuitionrates
+  path: /sis/HEd/setup/billing/tuitionrates
   defaults: { _controller: KulaHEdBillingBundle:SISTuitionRates:index }
 
 sis_HEd_setup_billing_tuitionrates_transactions:
-  path: /sis/setup/billing/tuitionrates/{tuition_rate_id}/transactions
+  path: /sis/HEd/setup/billing/tuitionrates/{tuition_rate_id}/transactions
   defaults: { _controller: KulaHEdBillingBundle:SISTuitionRates:transactions }
 
 sis_HEd_setup_billing_tuitionrates_students:
-  path: /sis/setup/billing/tuitionrates/{tuition_rate_id}/students
+  path: /sis/HEd/setup/billing/tuitionrates/{tuition_rate_id}/students
   defaults: { _controller: KulaHEdBillingBundle:SISTuitionRates:students }
 
 sis_HEd_setup_billing_tuitionrates_refunds:
-  path: /sis/setup/billing/tuitionrates/{tuition_rate_id}/refunds
+  path: /sis/HEd/setup/billing/tuitionrates/{tuition_rate_id}/refunds
   defaults: { _controller: KulaHEdBillingBundle:SISTuitionRates:refunds }
+
+sis_HEd_courses_fees:
+  path: /sis/HEd/offering/courses/fees
+  defaults: { _controller: KulaHEdBillingBundle:SISCourseFees:index }
+
+sis_HEd_sections_fees:
+  path: /sis/HEd/offering/sections/fees
+  defaults: { _controller: KulaHEdBillingBundle:SISCourseFees:sectionFees }

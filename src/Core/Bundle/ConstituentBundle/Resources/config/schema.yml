@@ -167,6 +167,8 @@ Core.Constituent:
       field_type: radio
       column_name: "Primary Email ID"
       label_name: "Primary Email ID"
+  unique_keys:
+    PermanentNumber: ['Core.Constituent.PermanentNumber']
 
 Core.Constituent.Address:
   description: "Constituent Address"
@@ -499,6 +501,47 @@ Core.Constituent.Phone:
       lookup: Constituent.Address.Country
       column_name: "Phone Country"
       label_name: "Phone Country"
+      
+Core.Constituent.Relationship:
+  description: "Constituent relationships"
+  db_table_name: CONS_RELATIONSHIP
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: RELATIONSHIP_ID
+      db_column_type: primary_serial
+      column_name: "Relationship ID"
+      label_name: "Relationship ID"
+    ConstituentID:
+      description: "Constituent ID"
+      parent: Core.Constituent.ID
+      db_column_name: CONSTITUENT_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Constituent ID"
+      label_name: "Constituent ID"
+    RelatedConstituentID:
+      description: "Related Constituent ID"
+      parent: Core.Constituent.ID
+      db_column_name: RELATED_CONSTITUENT_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Related Constituent ID"
+      label_name: "Related Constituent ID"
+    Relationship:
+      description: "Relationship"
+      db_column_name: RELATIONSHIP
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Relationship.Type
+      column_name: "Relationship"
+      label_name: "Relationship"
+  unique_keys:
+    ConstituentRelationship: ['Core.Constituent.Relationship.ConstituentID', 'Core.Constituent.Relationship.RelatedConstituentID']
       
 Log.Constituent.Combined:
   description: "Combined Constituents"

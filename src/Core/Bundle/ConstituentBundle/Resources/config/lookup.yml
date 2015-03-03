@@ -394,3 +394,15 @@ Constituent.Phone.Type:
     - { code: PAR, description: "Parent" }
     - { code: RES, description: "Residence" }
     - { code: WOR, description: "Work" }
+
+Constituent.Relationship.Type:
+  description: "Relationship Types"
+  allow_update: true
+  values:
+    - { code: "01", description: "Mother" }
+    - { code: "02", description: "Father" }
+    - { code: "03", description: "Step-Mother" }
+    - { code: "04", description: "Step-Father" }
+    - { code: "05", description: "Foster Mother" }
+    - { code: "06", description: "Foster Father" }
+    - { code: "07", description: "Guardian" }

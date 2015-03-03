@@ -46,8 +46,8 @@ class ExceptionListener implements EventSubscriberInterface
       $exception = $event->getException();
       $request = $event->getRequest();
       
-      if ($exception instanceof PosterException) {
-        $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage(), 'fields' => $exception->getFields()), 200, array('X-Status-Code' => 200));
+      if ($exception instanceof PosterException) { // $exception->getFields()
+        $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage(), 'fields' => null), 200, array('X-Status-Code' => 200));
       } elseif ($exception instanceof \PDOException OR $exception instanceof IntegrityConstraintViolationException) {
         $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage()), 200, array('X-Status-Code' => 200));
       } elseif ($exception instanceof NotAuthorizedException) {

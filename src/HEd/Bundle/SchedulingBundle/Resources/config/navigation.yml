@@ -168,11 +168,6 @@ SIS.HEd.Academic:
           display_name: "Corequisites"
           route: sis_HEd_courses_corequisites
           sort: 3
-        Fees:
-          description: "Fees"
-          display_name: "Fees"
-          route: sis_HEd_courses_fees
-          sort: 4
         Books:
           description: "Books"
           display_name: "Books"

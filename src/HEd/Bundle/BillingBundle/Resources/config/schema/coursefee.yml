@@ -32,7 +32,48 @@ HEd.Billing.CourseFee:
       db_column_type: serial
       db_column_null: false
       field_type: select
-      # class:
+      class: Kula\HEd\Bundle\BillingBundle\Field\TransactionCode
+      column_name: "Code ID"
+      label_name: "Code"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: false
+      field_type: text
+      field_size: 8
+      column_name: "Amount"
+      label_name: "Amount"
+
+HEd.Billing.SectionFee:
+  description: "Billing Section Fees"
+  db_table_name: BILL_SECTION_FEE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SECTION_FEE_ID
+      db_column_type: primary_serial
+      column_name: "Section Fee ID"
+      label_name: "Section Fee ID"
+    SectionID:
+      description: "Section ID"
+      parent: HEd.Section.ID
+      db_column_name: SECTION_ID
+      db_column_type: serial
+      column_name: "Section ID"
+      label_name: "Section ID"
+    CodeID:
+      description: "Transaction Code ID"
+      parent: HEd.Billing.Code.ID
+      db_column_name: CODE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\HEd\Bundle\BillingBundle\Field\TransactionCode
       column_name: "Code ID"
       label_name: "Code"
     Amount:

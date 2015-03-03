@@ -1,0 +1,18 @@
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
+
+
+{% block content %}
+<div class="group-box">
+<div class="group-box-header">Enrollment Status Change</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, table_row: false, field: 'K12.Student.Enrollment.Activity.EffectiveDate', value: effective_date, label: true}) }}
+</div>
+<div class="group-box-contents group">
+  {{ kula_field({ add: true, table_row: false, field: 'K12.Student.Enrollment.Activity.Grade', label: true }) }}
+  {{ kula_field({ add: true, table_row: false, field: 'K12.Student.Enrollment.Activity.Level', label: true }) }}
+  {{ kula_field({ add: true, table_row: false, field: 'K12.Student.Enrollment.Activity.Resident', label: true }) }}
+  {{ kula_field({ add: true, table_row: false, field: 'K12.Student.Enrollment.Activity.FTE', label: true }) }}
+</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,191 @@
+K12.Student:
+  description: "Students"
+  db_table_name: STUD_STUDENT
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      parent: Core.Constituent.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      column_name: "Student ID"
+      label_name: "Student ID"
+    ConversionStudentNumber:
+      description: "Conversion Student Number"
+      db_column_name: CONV_STUDENT_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Conv Student Number"
+      label_name: "Conv Student Number"
+    AlternateNumber1:
+      description: "Alternate Student Number 1"
+      db_column_name: ALTERNATE_NUMBER_1
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Alternate Number 1"
+      label_name: "Alternate Number 1"
+    AlternateNumber2:
+      description: "Alternate Student Number 2"
+      db_column_name: ALTERNATE_NUMBER_2
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Alternate Number 2"
+      label_name: "Alternate Number 2"
+    OriginalEnterDate:
+      description: "Original Enter Date"
+      db_column_name: ORIGINAL_ENTER_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Original Enter Date"
+      label_name: "Original Enter Date"
+    OriginalEnterCode:
+      description: "Original Enter Code"
+      db_column_name: ORIGINAL_ENTER_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: K12.Student.Enrollment.EnterCode
+      column_name: "Original Enter Code"
+      label_name: "Original Enter Code"
+    OriginalEnterTerm:
+      description: "Original Enter Term"
+      db_column_name: ORIGINAL_ENTER_TERM
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Term.ID
+      field_type: chooser
+      chooser: Core.Term
+      column_name: "Original Enter Term"
+      label_name: "Original Enter Term"
+    DiplomaName:
+      description: "Diploma Name"
+      db_column_name: DIPLOMA_NAME
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Diploma Name"
+      label_name: "Diploma Name"
+    OriginalHighSchoolGraduationYear:
+      description: "Original High School Graduation Year"
+      db_column_name: HIGH_SCHOOL_ORIGINAL_GRAD_YEAR
+      db_column_type: int
+      db_column_length: 4
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Original HS Grad Year"
+      label_name: "Original HS Grad Year"
+    HighSchoolGraduationYear:
+      description: "High School Graduation Year; Class of"
+      db_column_name: HIGH_SCHOOL_GRADUATION_YEAR
+      db_column_type: int
+      db_column_length: 4
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "HS Grad Year"
+      label_name: "HS Grad Year"
+    HighSchoolGraduationDate:
+      description: "High School Graduation Date"
+      db_column_name: HIGH_SCHOOL_GRADUATION_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "High School Graduation Date"
+      label_name: "High School Grad Date"
+    HighSchoolState:
+      description: "High School State"
+      db_column_name: HIGH_SCHOOL_STATE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Address.AdministrativeArea
+      column_name: "High School State"
+      label_name: "High School State"
+    HighSchoolDiplomaType:
+      description: "High School Diploma Type"
+      db_column_name: HIGH_SCHOOL_DIPLOMA_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: K12.Student.HighSchool.DiplomaType
+      column_name: "High School Diploma Type"
+      label_name: "HS Diploma Type"
+    ParentGuardian:
+      description: "Parent Guardian"
+      db_column_name: PARENT_GUARDIAN
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Parent Guardian"
+      label_name: "Parent Guardian"
+    CitizenshipCountry:
+      description: "Citizenship Country"
+      db_column_name: CITIZENSHIP_COUNTRY
+      db_column_type: varchar
+      db_column_length: 2
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Address.Country
+      column_name: "Citizenship Country"
+      label_name: "Citizenship Country"
+    HomeAddressID:
+      description: "Home Address ID"
+      db_column_name: HOME_ADDRESS_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Constituent.Address.ID
+      field_type: radio
+      column_name: "Home Address ID"
+      label_name: "Home Address ID"
+    DirectoryPermission:
+      description: "Directory Permission"
+      db_column_name: DIRECTORY_PERMISSION
+      db_column_type: bool
+      db_column_null: false
+      db_column_default: 1
+      field_type: checkbox
+      column_name: "Directory Permission"
+      label_name: "Directory Permission"
+    BillingNotes:
+      description: "Billing Notes"
+      db_column_name: BILLING_NOTES
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Billing Notes"
+      label_name: "Billing Notes"
+    LeadSource:
+      description: "Lead Source"
+      db_column_name: LEAD_SOURCE
+      db_column_type: varchar
+      db_column_length: 200
+      db_column_null: true
+      field_type: text
+      field_size: 25
+      column_name: "Lead Source"
+      label_name: "Lead Source"
+    MedicalNotes:
+      description: "Medical Notes"
+      db_column_name: MEDICAL_NOTES
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Medical Notes"
+      label_name: "Medical Notes"

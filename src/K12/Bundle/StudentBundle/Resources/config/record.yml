@@ -1,0 +1,6 @@
+SIS.K12.Student:
+  class: Kula\K12\Bundle\StudentBundle\Record\SISStudentRecord
+SIS.K12.Student.Status:
+  class: Kula\K12\Bundle\StudentBundle\Record\SISStudentStatusRecord
+SIS.K12.Parent:
+  class: Kula\K12\Bundle\StudentBundle\Record\SISParentRecord

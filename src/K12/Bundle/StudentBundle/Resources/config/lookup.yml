@@ -1,0 +1,98 @@
+K12.Student.Enrollment.EnterCode:
+  description: "Enrollment Enter Codes"
+  allow_update: true
+  values: 
+    - { code: "01", description: "Continuing" }
+    - { code: "02", description: "New" }
+
+K12.Student.Enrollment.LeaveCode:
+  description: "Enrollment Leave Codes"
+  allow_update: true
+  values: 
+    - { code: "01", description: "Withdrawn" }
+    - { code: "02", description: "Dismissed" }
+    - { code: "03", description: "Deceased" }
+    - { code: "04", description: "Closed" }
+    - { code: "05", description: "Forfeit Acceptance" }
+
+K12.Student.HighSchool.DiplomaType:
+  description: "High School Diploma Types"
+  allow_update: true
+  values:
+    - { code: GED, description: "GED", sort: 2 }
+    - { code: HS, description: "High School", sort: 1 }
+
+K12.Student.Enrollment.Grade:
+  description: "Grade Levels"
+  allow_update: true
+  values:
+    - { code: '003', description: "PK 3s" }
+    - { code: '004', description: "PK 4s" }
+    - { code: '005', description: "K" }
+    - { code: '010', description: "01" }
+    - { code: '020', description: "02" }
+    - { code: '030', description: "03" }
+    - { code: '040', description: "04" }
+    - { code: '050', description: "05" }
+    - { code: '060', description: "06" }
+    - { code: '070', description: "07" }
+    - { code: '080', description: "08" }
+    - { code: '090', description: "09" }
+    - { code: '100', description: "10" }
+    - { code: '110', description: "11" }
+    - { code: '120', description: "12" }
+    - { code: '121', description: "12+" }
+
+K12.Student.Enrollment.Level:
+  description: "Levels"
+  allow_update: true
+  values:
+    - { code: EC, description: "Early Childhood" }
+    - { code: ES, description: "Elementary School" }
+    - { code: MS, description: "Middle School" }
+    - { code: HS, description: "High School" }
+
+K12.Student.Enrollment.Resident:
+  description: "Resident"
+  allow_update: true
+  values:
+    - { code: D, description: "Day" }
+    - { code: B, description: "Boarder" }
+
+K12.Student.Enrollment.Cohort:
+  description: "Cohort"
+  allow_update: true
+  values:
+    - { code: 2005, description: "2005-2006" }
+    - { code: 2006, description: "2006-2007" }
+    - { code: 2007, description: "2007-2008" }
+    - { code: 2008, description: "2008-2009" }
+    - { code: 2009, description: "2009-2010" }
+    - { code: 2010, description: "2010-2011" }
+    - { code: 2011, description: "2011-2012" }
+    - { code: 2012, description: "2012-2013" }
+    - { code: 2013, description: "2013-2014" }
+    - { code: 2014, description: "2014-2015" }
+
+K12.Student.EmergencyContact.Relationship.Type:
+  description: "Emergency Contact Relationship Types"
+  allow_update: true
+  values:
+    - { code: 01, description: "Mother" }
+    - { code: 02, description: "Father" }
+    - { code: 03, description: "Step-Mother" }
+    - { code: 04, description: "Step-Father" }
+    - { code: 05, description: "Foster Mother" }
+    - { code: 06, description: "Foster Father" }
+    - { code: 07, description: "Guardian" }
+    - { code: 08, description: "Other" }
+    - { code: 09, description: "Neighbor" }
+    - { code: 10, description: "Babysitter" }
+    - { code: 11, description: "Brother" }
+    - { code: 12, description: "Sister" }
+    - { code: 13, description: "Grandparent" }
+    - { code: 14, description: "Aunt" }
+    - { code: 15, description: "Uncle" }
+    - { code: 16, description: "Nanny" }
+    - { code: 17, description: "Friend" }
+    - { code: 18, description: "Mentor" }

@@ -1,0 +1,52 @@
+sis_K12_school_schoolsetup_general:
+  path: /setup/school/general
+  defaults: { _controller: KulaK12SchoolBundle:SISSchoolSetup:general }
+
+sis_K12_school_schoolsetup_gradelevels:
+  path: /setup/school/gradelevels
+  defaults: { _controller: KulaK12SchoolBundle:SISSchoolSetup:gradelevels }
+
+sis_K12_school_schoolsetup_levels:
+  path: /setup/school/levels
+  defaults: { _controller: KulaK12SchoolBundle:SISSchoolSetup:levels }
+
+sis_K12_school_schoolsetup_levels_fte:
+  path: /setup/school/levels/{level_id}/fte
+  defaults: { _controller: KulaK12SchoolBundle:SISSchoolSetup:fte }
+  
+sis_K12_school_staff:
+  path: /staff
+  defaults: { _controller: KulaK12SchoolBundle:SISStaff:index }
+
+sis_K12_school_staff_add:
+  path: /staff/add
+  defaults: { _controller: KulaK12SchoolBundle:SISStaff:add }
+
+sis_K12_school_staff_add_constituent:
+  path: /staff/add/constituent
+  defaults: { _controller: KulaK12SchoolBundle:SISStaff:add_constituent }
+  methods: [GET]
+
+sis_K12_school_staff_chooser:
+  path: /staff/chooser
+  defaults: { _controller: KulaK12SchoolBundle:SISStaff:staff_chooser }
+  methods: [GET]
+
+sis_K12_school_staff_create_constituent:
+  path: /staff/add/constituent
+  defaults: { _controller: KulaK12SchoolBundle:SISStaff:create_constituent }
+  methods: [POST]
+
+sis_K12_school_staff_delete:
+  path: /staff/delete
+  defaults: { _controller: KulaK12SchoolBundle:SISStaff:delete }
+  methods: [POST]
+
+sis_K12_school_staff_orgterm_chooser:
+  path: /staff/organizationterm/chooser
+  defaults: { _controller: KulaK12SchoolBundle:SISStaff:staff_organizationterm_chooser }
+  methods: [GET]
+
+sis_K12_school_staff_orgterms:
+  path: /staff/orgterms
+  defaults: { _controller: KulaK12SchoolBundle:SISStaff:staff_orgterms }

@@ -1,0 +1,20 @@
+K12.Staff.Department:
+  description: "Departments"
+  allow_update: true
+  values:
+    - { code: BA, description: "Book Arts" }
+    - { code: CE, description: "CE" }
+    - { code: CR, description: "Ceramics" }
+    - { code: DR, description: "DR" }
+    - { code: DA, description: "Drawing" }
+    - { code: EXT, description: "Extension Program" }
+    - { code: FA, description: "Faculty" }
+    - { code: FI, description: "Fibers" }
+    - { code: GS, description: "General Studies" }
+    - { code: GSC, description: "GS" }
+    - { code: MEC, description: "ME" }
+    - { code: ME, description: "Metals" }
+    - { code: PH, description: "Photography" }
+    - { code: WO, description: "Wood" }
+    - { code: ACD, description: "AC+D" }
+    - { code: FD, description: "Foundations" }
