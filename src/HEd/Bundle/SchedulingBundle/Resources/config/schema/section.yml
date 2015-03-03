@@ -29,6 +29,7 @@ HEd.Section:
       label_name: "Status"
     CourseID:
       description: "Course ID"
+      parent: HEd.Course.ID
       db_column_name: COURSE_ID
       db_column_type: serial
       field_type: chooser

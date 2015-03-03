@@ -18,12 +18,9 @@ class SISStaffSchoolTermRecord extends Record {
     if ($record_type == 'SIS.HEd.Staff') {
       $result = $this->db()->db_select('STUD_STAFF_ORGANIZATION_TERMS')
         ->fields('STUD_STAFF_ORGANIZATION_TERMS', array('STAFF_ORGANIZATION_TERM_ID'))
-        ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'STUD_STAFF_ORGANIZATION_TERMS.ORGANIZATION_TERM_ID = orgterm.ORGANIZATION_TERM_ID')
         ->condition('STAFF_ID', $record_id)
-        ->condition('ORGANIZATION_ID', $this->focus->getOrganizationTermIDs());
-      if ($this->session->get('term_id'))
-        $result = $result->condition('TERM_ID', $this->focus->getTermID());
-      $result = $result->execute()->fetch();
+        ->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
+        ->execute()->fetch();
       return $result['STAFF_ORGANIZATION_TERM_ID'];
     }
   }
