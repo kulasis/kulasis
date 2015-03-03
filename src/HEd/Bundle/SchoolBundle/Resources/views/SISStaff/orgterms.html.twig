@@ -33,7 +33,7 @@ Staff Organization Terms
     {{ kula_field({ delete: true, field: 'HEd.Staff.OrganizationTerm.OrganizationTermID', db_row_id: stafforgterm.STAFF_ORGANIZATION_TERM_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
     {{ kula_field({ edit: true, field: 'HEd.Staff.OrganizationTerm.OrganizationTermID', db_row_id: stafforgterm.STAFF_ORGANIZATION_TERM_ID, value: stafforgterm.ORGANIZATION_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'HEd.Staff.OrganizationTerm.ConversionStaffNumber', db_row_id: stafforgterm.STAFF_ORGANIZATION_TERM_ID, value: stafforgterm.CONVERSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Staff.OrganizationTerm.ConversionStaffNumber', db_row_id: stafforgterm.STAFF_ORGANIZATION_TERM_ID, value: stafforgterm.CONV_STAFF_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Staff.OrganizationTerm.TeacherGradesOpen', db_row_id: stafforgterm.STAFF_ORGANIZATION_TERM_ID, value: stafforgterm.TEACHER_GRADES_OPEN, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Staff.OrganizationTerm.TeacherGradesClose', db_row_id: stafforgterm.STAFF_ORGANIZATION_TERM_ID, value: stafforgterm.TEACHER_GRADES_CLOSE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
