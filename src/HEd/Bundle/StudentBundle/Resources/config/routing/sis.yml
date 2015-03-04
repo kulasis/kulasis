@@ -36,9 +36,9 @@ sis_HEd_student_information_emergencycontacts:
   path: /student/information/emergencycontacts
   defaults: { _controller: KulaHEdStudentBundle:SISContactInfo:emergencyContacts }
 
-sis_HEd_student_information_enrollment:
-  path: /student/information/enrollment
-  defaults: { _controller: KulaHEdStudentBundle:SISInformation:enrollment }
+sis_HEd_student_enrollment_edit:
+  path: /student/enrollment/edit
+  defaults: { _controller: KulaHEdStudentBundle:SISEnrollment:edit }
 
 sis_HEd_student_information_otherinfo:
   path: /student/information/otherinfo

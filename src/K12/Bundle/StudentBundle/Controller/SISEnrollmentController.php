@@ -279,15 +279,6 @@ class SISEnrollmentController extends Controller {
         if ($activity_post['K12.Student.Enrollment.Activity.Level']) {
           $activity_data['K12.Student.Enrollment.Activity.Level'] = $activity_post['K12.Student.Enrollment.Activity.Level'];
         }
-        if ($activity_post['K12.Student.Enrollment.Activity.ThesisStatus']) {
-          $activity_data['K12.Student.Enrollment.Activity.ThesisStatus'] = $activity_post['K12.Student.Enrollment.Activity.ThesisStatus'];
-        }
-        if ($activity_post['K12.Student.Enrollment.Activity.SeekingDegree1ID']) {
-          $activity_data['K12.Student.Enrollment.Activity.SeekingDegree1ID'] = $activity_post['K12.Student.Enrollment.Activity.SeekingDegree1ID'];
-        }
-        if ($activity_post['K12.Student.Enrollment.Activity.SeekingDegree2ID']) {
-          $activity_data['K12.Student.Enrollment.Activity.SeekingDegree2ID'] = $activity_post['K12.Student.Enrollment.Activity.SeekingDegree2ID'];
-        }
         
         // Post data to status
         if ($activity_post['K12.Student.Enrollment.Activity.Grade']) {
@@ -301,15 +292,6 @@ class SISEnrollmentController extends Controller {
         }
         if ($activity_post['K12.Student.Enrollment.Activity.Level']) {
           $status_data['K12.Student.Status.Level'] = $activity_post['K12.Student.Enrollment.Activity.Level'];
-        }
-        if ($activity_post['K12.Student.Enrollment.Activity.ThesisStatus']) {
-          $status_data['K12.Student.Status.ThesisStatus'] = $activity_post['K12.Student.Enrollment.Activity.ThesisStatus'];
-        }
-        if ($activity_post['K12.Student.Enrollment.Activity.SeekingDegree1ID']) {
-          $status_data['K12.Student.Status.SeekingDegree1ID'] = $activity_post['K12.Student.Enrollment.Activity.SeekingDegree1ID'];
-        }
-        if ($activity_post['K12.Student.Enrollment.Activity.SeekingDegree2ID']) {
-          $status_data['K12.Student.Status.SeekingDegree2ID'] = $activity_post['K12.Student.Enrollment.Activity.SeekingDegree2ID'];
         }
         
         // Get latest enrollment ID

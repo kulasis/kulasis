@@ -20,11 +20,6 @@ SIS.HEd.Student:
           display_name: "Demographic"
           sort: 2
           route: sis_HEd_student_information_demographic
-        Enrollment:
-          description: "Enrollment"
-          display_name: "Enrollment"
-          sort: 3
-          route: sis_HEd_student_information_enrollment
         Addresses:
           description: "Addresses"
           display_name: "Addresses"
@@ -75,6 +70,12 @@ SIS.HEd.Student:
           record_loaded: true
           route: sis_HEd_student_enrollment_activateinactivate
           sort: 1
+        Edit:
+          description: "Edit Enrollment"
+          display_name: "Edit Enrollment"
+          record_loaded: true
+          sort: 2
+          route: sis_HEd_student_enrollment_edit
       menu_reports:
         EnrollmentVerification:
           description: "Enrollment Verification"
