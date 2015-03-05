@@ -112,14 +112,15 @@ class StudentScheduleBillReport extends BaseReport {
       $this->Cell($this->width[3],6,'TBA','',0,'L',$this->fill);  
     $this->Ln();
     
-    $this->Cell($this->width[0], 6, '', '', 0, 'L', $this->fill);
-    if ($row['START_DATE'] AND $row['END_DATE']) {
-      $this->Cell(49,6,date('M j, Y', strtotime($row['START_DATE'])).' - '.date('M j, Y', strtotime($row['END_DATE'])),'',0,'L',$this->fill);
-    } else {
-      
-    }
+    
     if (isset($row['meetings'])) {
       foreach($row['meetings'] as $meeting) {
+        $this->Cell($this->width[0], 6, '', '', 0, 'L', $this->fill);
+        if ($row['START_DATE'] AND $row['END_DATE']) {
+          $this->Cell(49,6,date('M j, Y', strtotime($row['START_DATE'])).' - '.date('M j, Y', strtotime($row['END_DATE'])),'',0,'L',$this->fill);
+        } else {
+          $this->Cell(49,6,'','',0,'L',$this->fill);
+        }
         $this->Cell(38,6,$meeting['meets'],'',0,'L',$this->fill);
         $this->Cell(40,6,$meeting['START_TIME']. ' - '. $meeting['END_TIME'],'',0,'L',$this->fill);
         $this->Cell(50,6,$meeting['ROOM'],'',0,'L',$this->fill);
@@ -133,8 +134,9 @@ class StudentScheduleBillReport extends BaseReport {
     }
     
     if ($row['NO_CLASS_DATES']) {
+      $this->Ln(2);
       $this->Cell($this->width[0],6,'','',0,'C',$this->fill);
-      $this->Cell(array_sum($this->width) - $this->width[0],6,'No Class Dates: '.$row['NO_CLASS_DATES'],'',0,'L',$this->fill);
+      $this->MultiCell(array_sum($this->width) - $this->width[0],2,'No Class Dates: '.$row['NO_CLASS_DATES'],'','L',$this->fill);
     }
     
     $this->fill = !$this->fill;

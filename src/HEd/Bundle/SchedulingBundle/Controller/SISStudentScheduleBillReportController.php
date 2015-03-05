@@ -70,7 +70,7 @@ class SISStudentScheduleBillReportController extends ReportController {
       ->distinct()
       ->fields('section', array('SECTION_ID', 'SECTION_NUMBER'))
       ->join('STUD_SECTION_MEETINGS', 'meetings', 'meetings.SECTION_ID = section.SECTION_ID')
-      ->fields('meetings', array('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
+      ->fields('meetings', array('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME', 'START_DATE', 'END_DATE'))
       ->join('STUD_STUDENT_CLASSES', 'class', 'class.SECTION_ID = section.SECTION_ID')
       ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = meetings.ROOM_ID')
       ->fields('rooms', array('ROOM_NUMBER'));
@@ -99,6 +99,8 @@ class SISStudentScheduleBillReportController extends ReportController {
       $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['START_TIME'] = date('g:i A', strtotime($meeting_row['START_TIME']));
       $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['END_TIME'] = date('g:i A', strtotime($meeting_row['END_TIME']));
       $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['ROOM'] = $meeting_row['ROOM_NUMBER'];
+      $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['START_DATE'] = $meeting_row['START_DATE'];
+      $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['END_DATE'] = $meeting_row['END_DATE'];
       $i++;
       $section_id = $meeting_row['SECTION_ID'];
     }
@@ -175,6 +177,7 @@ class SISStudentScheduleBillReportController extends ReportController {
       if (isset($meetings[$row['SECTION_ID']]))  {
         $row = array_merge($row, $meetings[$row['SECTION_ID']]);
       }
+
       if ($last_student_status_id != $row['STUDENT_STATUS_ID']) {
         
         $this->pdf->billing_header();
