@@ -29,6 +29,9 @@ class StudentBillingService {
   public function processBilling($student_status_id, $email_subject = 'Student Detail/Tuition Recalculated') {
     
     if ($student_status_id) {
+      
+      // Determine tuition rate
+      $this->constituent_billing_service->determineTuitionRate($student_status_id);
     
     // Get original attempted credits
     $attempted_total_credits = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
@@ -66,17 +69,21 @@ class StudentBillingService {
       ->condition('STUDENT_STATUS_ID', $student_status_id)
       ->execute()->fetch();
     
-    $email_text = 'Student: '.$attempted_total_credits['LAST_NAME'].', '.$attempted_total_credits['FIRST_NAME'].' ('.$attempted_total_credits['PERMANENT_NUMBER'].') | '.$attempted_total_credits['ORGANIZATION_NAME'].' | '.$attempted_total_credits['TERM_ABBREVIATION'].' | '.$attempted_total_credits['LEVEL'].' | '.$attempted_total_credits['grade'].' '.$attempted_total_credits['entercode']."\r\n";
-    $email_text .= 'FTE: '.$attempted_total_credits['FTE'].' -> '.$new_student_info['FTE']."\r\n";
-    $email_text .= 'Total Credits: '.$attempted_total_credits['TOTAL_CREDITS_ATTEMPTED'].' -> '.$new_student_info['TOTAL_CREDITS_ATTEMPTED']."\r\n\r\n\r\n";
+      if ($attempted_total_credits['ORGANIZATION_NAME'] == 'OCAC Degree Programs') {
     
-    $headers = 'From: Kula SIS <kulasis@ocac.edu>' . "\r\n" .
-        'Bcc: Makoa Jacobsen <mjacobsen@ocac.edu>' . "\r\n" .
-        'Reply-To: registrar@ocac.edu' . "\r\n" .
-        'X-Mailer: PHP/' . phpversion();
-    $subject = $email_subject.' for '.$attempted_total_credits['LAST_NAME'].', '.$attempted_total_credits['FIRST_NAME'].' ('.$attempted_total_credits['PERMANENT_NUMBER'].')';
-    $to = 'Registrar <registrar@ocac.edu>, Linda Anderson <landerson@ocac.edu>, Bursar <bursar@ocac.edu>';
-    mail($to, $subject, $email_text, $headers);
+      $email_text = 'Student: '.$attempted_total_credits['LAST_NAME'].', '.$attempted_total_credits['FIRST_NAME'].' ('.$attempted_total_credits['PERMANENT_NUMBER'].') | '.$attempted_total_credits['ORGANIZATION_NAME'].' | '.$attempted_total_credits['TERM_ABBREVIATION'].' | '.$attempted_total_credits['LEVEL'].' | '.$attempted_total_credits['grade'].' '.$attempted_total_credits['entercode']."\r\n";
+      $email_text .= 'FTE: '.$attempted_total_credits['FTE'].' -> '.$new_student_info['FTE']."\r\n";
+      $email_text .= 'Total Credits: '.$attempted_total_credits['TOTAL_CREDITS_ATTEMPTED'].' -> '.$new_student_info['TOTAL_CREDITS_ATTEMPTED']."\r\n\r\n\r\n";
+    
+      $headers = 'From: Kula SIS <kulasis@ocac.edu>' . "\r\n" .
+          'Bcc: Makoa Jacobsen <mjacobsen@ocac.edu>' . "\r\n" .
+          'Reply-To: registrar@ocac.edu' . "\r\n" .
+          'X-Mailer: PHP/' . phpversion();
+      $subject = $email_subject.' for '.$attempted_total_credits['LAST_NAME'].', '.$attempted_total_credits['FIRST_NAME'].' ('.$attempted_total_credits['PERMANENT_NUMBER'].')';
+      $to = 'Registrar <registrar@ocac.edu>, Linda Anderson <landerson@ocac.edu>, Bursar <bursar@ocac.edu>';
+      mail($to, $subject, $email_text, $headers);
+    
+      }
     
     }
   }
@@ -281,6 +288,8 @@ class StudentBillingService {
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
       ->join('BILL_COURSE_FEE', 'coursefees', 'course.COURSE_ID = coursefees.COURSE_ID AND coursefees.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
       ->fields('coursefees', array('CODE_ID', 'AMOUNT'))
+      ->leftJoin('BILL_SECTION_FEE', 'sectionfees', 'section.SECTION_ID = sectionfees.SECTION_ID')
+      ->fields('sectionfees', array('CODE_ID' => 'section_CODE_ID', 'AMOUNT' => 'section_AMOUNT'))
       ->condition('classes.STUDENT_STATUS_ID', $student_status_id)
       ->execute();
     while ($classes_row = $classes_result->fetch()) {
@@ -298,7 +307,7 @@ class StudentBillingService {
         ->execute()->fetch();
 
       // if class dropped and existing fee total is equal to the fee amount, need to determine if to refund
-      if ($classes_row['DROPPED'] == 1 AND $existing_fees['total_amount'] == $classes_row['AMOUNT']) {
+      if ($classes_row['DROPPED'] == 1 AND ($existing_fees['total_amount'] == $classes_row['AMOUNT'] OR $existing_fees['total_amount'] == $classes_row['section_AMOUNT'])) {
         
         // get refund schedule for student status
         $refund = $this->database->db_select('BILL_TUITION_RATE_REFUND', 'tuitionraterefund')

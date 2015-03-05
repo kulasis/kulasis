@@ -69,7 +69,7 @@ class ConstituentBillingService {
       ->execute();
     while ($class_fee_row = $class_fees->fetch()) {
       // Prepare & post payment data
-      return $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', array(
+      $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', array(
         'HEd.Billing.Transaction.ConstituentID' => $class_fee_row['STUDENT_ID'],
         'HEd.Billing.Transaction.OrganizationTermID' => $class_fee_row['ORGANIZATION_TERM_ID'],
         'HEd.Billing.Transaction.CodeID' => $class_fee_row['CODE_ID'],
@@ -81,7 +81,38 @@ class ConstituentBillingService {
         'HEd.Billing.Transaction.Posted' => 1,
         'HEd.Billing.Transaction.ShowOnStatement' => 1,
         'HEd.Billing.Transaction.StudentClassID' => $student_class_id
-      ))->process()->getResult();
+      ))->process();
+    }
+    
+    // Add section fees
+    // Get Class Info
+    $class_fees = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
+      ->fields('class', array('STUDENT_STATUS_ID'))
+      ->join('STUD_STUDENT_STATUS', 'status', 'class.STUDENT_STATUS_ID = status.STUDENT_STATUS_ID')
+      ->fields('status', array('STUDENT_ID'))
+      ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
+      ->fields('section', array('ORGANIZATION_TERM_ID'))
+      ->join('BILL_SECTION_FEE', 'crsfee', 'crsfee.SECTION_ID = section.SECTION_ID')
+      ->fields('crsfee', array('CODE_ID', 'AMOUNT'))
+      ->join('BILL_CODE', 'code', 'code.CODE_ID = crsfee.CODE_ID')
+      ->fields('code', array('CODE_DESCRIPTION'))
+      ->condition('class.STUDENT_CLASS_ID', $student_class_id)
+      ->execute();
+    while ($class_fee_row = $class_fees->fetch()) {
+      // Prepare & post payment data
+      $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', array(
+        'HEd.Billing.Transaction.ConstituentID' => $class_fee_row['STUDENT_ID'],
+        'HEd.Billing.Transaction.OrganizationTermID' => $class_fee_row['ORGANIZATION_TERM_ID'],
+        'HEd.Billing.Transaction.CodeID' => $class_fee_row['CODE_ID'],
+        'HEd.Billing.Transaction.TransactionDate' => date('Y-m-d'),
+        'HEd.Billing.Transaction.Description' => $class_fee_row['CODE_DESCRIPTION'],
+        'HEd.Billing.Transaction.Amount' => $class_fee_row['AMOUNT'], 
+        'HEd.Billing.Transaction.OriginalAmount' => $class_fee_row['AMOUNT'],
+        'HEd.Billing.Transaction.AppliedBalance' => $class_fee_row['AMOUNT'],
+        'HEd.Billing.Transaction.Posted' => 1,
+        'HEd.Billing.Transaction.ShowOnStatement' => 1,
+        'HEd.Billing.Transaction.StudentClassID' => $student_class_id
+      ))->process();
     }
     
   }
