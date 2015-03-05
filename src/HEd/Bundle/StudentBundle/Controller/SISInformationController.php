@@ -111,6 +111,8 @@ class SISInformationController extends Controller {
     
     $student = $this->db()->db_select('STUD_STUDENT', 'STUD_STUDENT')
       ->fields('STUD_STUDENT')
+      ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = STUD_STUDENT.STUDENT_ID')
+      ->fields('cons', array('NOTES'))
       ->condition('STUDENT_ID', $this->record->getSelectedRecord()['STUDENT_ID'])
       ->execute()->fetch();
     
