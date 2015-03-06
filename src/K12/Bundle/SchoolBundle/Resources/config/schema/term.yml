@@ -69,6 +69,7 @@ K12.School.Term.GradeLevel:
       db_column_name: NEXT_GRADE
       db_column_type: varchar
       db_column_length: 5
+      db_column_null: true
       field_type: lookup
       lookup: K12.Student.Enrollment.Grade
       column_name: "Next Grade"
@@ -79,6 +80,7 @@ K12.School.Term.GradeLevel:
       db_column_type: numeric
       db_column_length: 7
       db_column_precision: 3
+      db_column_default: 0.000
       field_type: text
       field_size: 8
       column_name: "Max Hours"
