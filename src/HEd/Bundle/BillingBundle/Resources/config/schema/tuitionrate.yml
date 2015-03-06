@@ -226,6 +226,8 @@ HEd.TuitionRate.Transaction:
       db_column_length: 10
       db_column_precision: 2
       db_column_null: true
+      field_type: text
+      field_size: 7
       column_name: "Amount"
       label_name: "Amount"
     Rule:
