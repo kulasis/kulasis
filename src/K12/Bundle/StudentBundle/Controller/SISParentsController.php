@@ -33,7 +33,7 @@ class SISParentsController extends Controller {
       ->join('CONS_RELATIONSHIP', 'conrel', 'conrel.RELATIONSHIP_ID = stupar.STUDENT_PARENT_ID')
       ->fields('conrel', array('RELATIONSHIP'))
       ->join('CONS_CONSTITUENT', 'conpar', 'conpar.CONSTITUENT_ID = conrel.RELATED_CONSTITUENT_ID')
-      ->fields('conpar', array('LAST_NAME', 'FIRST_NAME'))
+      ->fields('conpar', array('LAST_NAME', 'FIRST_NAME', 'CONSTITUENT_ID' => 'PARENT_ID'))
       ->condition('conrel.CONSTITUENT_ID', $this->record->getSelectedRecordID())
       ->execute()->fetchAll();
     }
