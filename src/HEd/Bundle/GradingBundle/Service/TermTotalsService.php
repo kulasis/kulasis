@@ -152,7 +152,7 @@ class TermTotalsService {
     $studentStatusID = null;
     
     $ch = $this->db->db_select('STUD_STUDENT_COURSE_HISTORY', 'coursehistory', array('nolog' => true))
-      ->fields('coursehistory', array('ORGANIZATION_ID', 'LEVEL', 'CREDITS_ATTEMPTED', 'CREDITS_EARNED', 'QUALITY_POINTS', 'CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'NON_ORGANIZATION_ID'))
+      ->fields('coursehistory', array('ORGANIZATION_ID', 'LEVEL', 'CREDITS_ATTEMPTED', 'CREDITS_EARNED', 'QUALITY_POINTS', 'CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'NON_ORGANIZATION_ID', 'TRANSFER_CREDITS'))
       ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = coursehistory.ORGANIZATION_ID')
       ->fields('org', array('ORGANIZATION_NAME'))
       ->leftJoin('CORE_NON_ORGANIZATION', 'nonorg', 'nonorg.NON_ORGANIZATION_ID = coursehistory.NON_ORGANIZATION_ID')
@@ -169,26 +169,26 @@ class TermTotalsService {
       
       $this->totals['HEd.Student.CourseHistory.Term.TermCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
       $this->totals['HEd.Student.CourseHistory.Term.TermCreditsEarned'] += $row['CREDITS_EARNED'];
-      if ($row['ORGANIZATION_ID'])
+      if ($row['TRANSFER_CREDITS'] == 0)
         $this->totals['HEd.Student.CourseHistory.Term.TermHours'] += $row['CREDITS_ATTEMPTED'];
       $this->totals['HEd.Student.CourseHistory.Term.TermPoints'] += $row['QUALITY_POINTS'];
     
       $this->totals['HEd.Student.CourseHistory.Term.CumCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
       $this->totals['HEd.Student.CourseHistory.Term.CumCreditsEarned'] += $row['CREDITS_EARNED'];
-      if ($row['ORGANIZATION_ID'])
+      if ($row['TRANSFER_CREDITS'] == 0)
         $this->totals['HEd.Student.CourseHistory.Term.CumHours'] += $row['CREDITS_ATTEMPTED'];
       $this->totals['HEd.Student.CourseHistory.Term.CumPoints'] += $row['QUALITY_POINTS'];
     
       $this->totals['HEd.Student.CourseHistory.Term.YTDCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
       $this->totals['HEd.Student.CourseHistory.Term.YTDCreditsEarned'] += $row['CREDITS_EARNED'];
-      if ($row['ORGANIZATION_ID'])
+      if ($row['TRANSFER_CREDITS'] == 0)
         $this->totals['HEd.Student.CourseHistory.Term.YTDHours'] += $row['CREDITS_ATTEMPTED'];
       $this->totals['HEd.Student.CourseHistory.Term.YTDPoints'] += $row['QUALITY_POINTS'];
     
-      if ($row['NON_ORGANIZATION_ID']) {
+      if ($row['TRANSFER_CREDITS'] == 1) {
         $this->totals['HEd.Student.CourseHistory.Term.TrnsCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
         $this->totals['HEd.Student.CourseHistory.Term.TrnsCreditsEarned'] += $row['CREDITS_EARNED'];
-      } elseif ($row['ORGANIZATION_ID']) {
+      } elseif ($row['TRANSFER_CREDITS'] == 0) {
         $this->totals['HEd.Student.CourseHistory.Term.InstCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
         $this->totals['HEd.Student.CourseHistory.Term.InstCreditsEarned'] += $row['CREDITS_EARNED'];
         $this->totals['HEd.Student.CourseHistory.Term.InstHours'] += $row['CREDITS_ATTEMPTED'];
@@ -197,7 +197,7 @@ class TermTotalsService {
       
       $this->totals['HEd.Student.CourseHistory.Term.TotalCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
       $this->totals['HEd.Student.CourseHistory.Term.TotalCreditsEarned'] += $row['CREDITS_EARNED'];
-      if ($row['ORGANIZATION_ID'])
+      if ($row['TRANSFER_CREDITS'] == 0)
         $this->totals['HEd.Student.CourseHistory.Term.TotalHours'] += $row['CREDITS_ATTEMPTED'];
       $this->totals['HEd.Student.CourseHistory.Term.TotalPoints'] += $row['QUALITY_POINTS'];
       

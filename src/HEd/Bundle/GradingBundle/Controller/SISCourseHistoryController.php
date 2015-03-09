@@ -74,7 +74,7 @@ class SISCourseHistoryController extends Controller {
     $course_history = array();
     
     $course_history = $this->db()->db_select('STUD_STUDENT_COURSE_HISTORY', 'ch')
-      ->fields('ch', array('COURSE_HISTORY_ID', 'COURSE_ID', 'ORGANIZATION_ID', 'NON_ORGANIZATION_ID', 'START_DATE', 'COMPLETED_DATE', 'STAFF_ID', 'STAFF_NAME', 'MARK_SCALE_ID', 'GPA_VALUE', 'QUALITY_POINTS', 'STUDENT_CLASS_ID', 'DEGREE_REQ_GRP_ID'))
+      ->fields('ch', array('COURSE_HISTORY_ID', 'COURSE_ID', 'ORGANIZATION_ID', 'NON_ORGANIZATION_ID', 'START_DATE', 'COMPLETED_DATE', 'STAFF_ID', 'STAFF_NAME', 'MARK_SCALE_ID', 'GPA_VALUE', 'QUALITY_POINTS', 'STUDENT_CLASS_ID', 'DEGREE_REQ_GRP_ID', 'TRANSFER_CREDITS'))
       ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
       ->condition('COURSE_HISTORY_ID', $sub_id)
       ->execute()->fetch();

@@ -153,7 +153,7 @@ class Log {
       if (empty($stack[$i]['class'])) {
         $stack[$i]['class'] = '';
       }
-      if (strpos($stack[$i]['class'], __NAMESPACE__) === FALSE && strpos($stack[$i + 1]['function'], 'db_') === FALSE && !empty($stack[$i]['file'])) {
+      if (isset($stack[$i]) AND isset($stack[$i + 1]) AND strpos($stack[$i]['class'], __NAMESPACE__) === FALSE && strpos($stack[$i + 1]['function'], 'db_') === FALSE && !empty($stack[$i]['file'])) {
         $stack[$i] += array('file' => '?', 'line' => '?', 'args' => array());
         return array(
           'file' => $stack[$i]['file'],

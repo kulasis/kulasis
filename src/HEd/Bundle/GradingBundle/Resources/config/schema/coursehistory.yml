@@ -204,6 +204,15 @@ HEd.Student.CourseHistory:
       field_type: checkbox
       column_name: "Teacher Set"
       label_name: "Teacher Set"
+    TransferCredits:
+      description: "Transfer Credit"
+      db_column_name: TRANSFER_CREDITS
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Transfer Credits"
+      label_name: "Transfer Credits"
     GPAValue:
       description: "GPA Value"
       db_column_name: GPA_VALUE

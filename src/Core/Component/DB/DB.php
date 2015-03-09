@@ -247,13 +247,13 @@ class DB {
   
   public function startLogger() {
     if (in_array($this->environment, array('dev', 'test'))) {
-      Database::startLog('request');
+     Database::startLog('request');
     }
   }
   
   public function stopLogger() {
     if (in_array($this->environment, array('dev', 'test'))) {
-      Database::stopLog('request');
+     Database::stopLog('request');
     }
   }
 
