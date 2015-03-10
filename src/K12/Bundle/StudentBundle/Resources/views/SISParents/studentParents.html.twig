@@ -23,7 +23,7 @@ Parents
   <tr>
     {{ kula_field({ delete: true, field: 'K12.Student.Parent.ID', db_row_id: parent.STUDENT_PARENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
-    <td><a href="{{ path('sis_K12_parent') }}" data-record-type="SIS.K12.Parent" data-record-id="{{ parent.PARENT_ID }}" class="normal-link-new-window">{{ kula_field({ input: false, field: 'Core.Constituent.LastName', db_row_id: parent.STUDENT_PARENT_ID, value: parent.LAST_NAME~', '~parent.FIRST_NAME }) }}</a></td>
+    <td><a href="{{ path('sis_K12_parent_basic') }}" data-record-type="SIS.K12.Parent" data-record-id="{{ parent.PARENT_ID }}" class="normal-link-new-window">{{ kula_field({ input: false, field: 'Core.Constituent.LastName', db_row_id: parent.STUDENT_PARENT_ID, value: parent.LAST_NAME~', '~parent.FIRST_NAME }) }}</a></td>
     {{ kula_field({ edit: true, field: 'Core.Constituent.Relationship.Relationship', db_row_id: parent.STUDENT_PARENT_ID, value: parent.RELATIONSHIP, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'K12.Student.Parent.LegalCustody', db_row_id: parent.STUDENT_PARENT_ID, value: parent.LEGAL_CUSTODY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'K12.Student.Parent.PhysicalCustody', db_row_id: parent.STUDENT_PARENT_ID, value: parent.PHYSICAL_CUSTODY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}

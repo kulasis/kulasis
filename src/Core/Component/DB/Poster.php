@@ -100,7 +100,6 @@ class Poster {
   }
   
   public function process() {
-    
     if (count($this->records) > 0) {
       $transaction = $this->db->db_transaction();
       foreach($this->records as $table => $tableRow) {

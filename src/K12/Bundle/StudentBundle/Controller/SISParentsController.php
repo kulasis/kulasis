@@ -6,14 +6,6 @@ use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
 class SISParentsController extends Controller {
   
-  public function indexAction() {
-    $this->authorize();
-    $this->processForm();
-    $this->setRecordType('SIS.K12.Parent');
-    
-    return $this->render('KulaK12StudentBundle:SISParents:index.html.twig');
-  }
-  
   public function studentParentsAction() {
     $this->authorize();
     $this->processForm();
@@ -125,20 +117,6 @@ class SISParentsController extends Controller {
       $transaction->rollback();
       throw new \Kula\Core\Component\DB\PosterException('Changes not saved.');
     }
-    
-  }
-  
-  public function deleteAction() {
-    $this->authorize();
-    $this->setRecordType('SIS.K12.Parent');
-    
-    if ($this->newPoster()->delete('K12.Parent', $this->record->getSelectedRecordID())->process()->getResult()) {
-      $this->addFlash('success', 'Deleted parent.');
-    } else {
-      $this->addFlash('error', 'Unable to delete parent.');
-    }
-    
-    return $this->forward('sis_K12_parent');
     
   }
   

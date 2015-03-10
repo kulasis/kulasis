@@ -1,0 +1,47 @@
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Phone Numbers
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_phones', 'CONS_PHONE') }}
+</span>
+</div>
+<table id="window_window_num_data_table_phones" class="data-table">
+<thead>
+    {{ kula_field_name({ delete: true, field: 'Core.Constituent.Phone.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'Core.Constituent.PrimaryPhoneID', field_name_override: 'Primary', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Phone.EffectiveDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Phone.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Phone.Number', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Phone.Extension', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Phone.Country', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, field: 'Core.Constituent.Phone.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+  {{ kula_field({ add: true, field: 'Core.Constituent.Phone.ConstituentID', value: kula_core_record.getSelectedRecord.PARENT_ID, hidden: true }) }}
+  {{ kula_field({ add: true, delete: true, field: 'Core.Constituent.Phone.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'Core.Constituent.Phone.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'Core.Constituent.Phone.ID', prepend_html: '<td class="data-table-cell">&nbsp;</td>' }) }}
+  {{ kula_field({ add: true, field: 'Core.Constituent.Phone.EffectiveDate', value:"now"|date("m/d/Y") , prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'Core.Constituent.Phone.Type', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'Core.Constituent.Phone.Number', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'Core.Constituent.Phone.Extension', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'Core.Constituent.Phone.Country', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input', style: 'width:150px;' } }) }}
+  {{ kula_display_html({ add: true, field: 'Core.Constituent.Phone.ID', prepend_html: '</tr>' }) }}
+  {% for phone in phones %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'Core.Constituent.Phone.ID', db_row_id: phone.PHONE_NUMBER_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'Core.Constituent.PrimaryPhoneID', db_row_id: kula_core_record.getSelectedRecord.PARENT_ID, value: phone.PHONE_NUMBER_ID, value_to_compare: primary_phones.PRIMARY_PHONE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.EffectiveDate', db_row_id: phone.PHONE_NUMBER_ID, value: phone.EFFECTIVE_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.Type', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.Number', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.Extension', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_EXTENSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.Country', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_COUNTRY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'width:150px;' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

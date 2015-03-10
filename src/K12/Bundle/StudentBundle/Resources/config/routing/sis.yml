@@ -82,14 +82,38 @@ sis_K12_student_enrollment_enrollmentdetail:
   path: /student/enrollment/enrollments/{student_status_id}
   defaults: { _controller: KulaK12StudentBundle:SISEnrollment:enrollments }
 
-sis_K12_parent:
+sis_K12_parent_basic:
   path: /student/parents
-  defaults: { _controller: KulaK12StudentBundle:SISParents:index }
+  defaults: { _controller: KulaK12StudentBundle:SISParent:index }
+
+sis_K12_parent_children:
+  path: /student/parents/children
+  defaults: { _controller: KulaK12StudentBundle:SISParent:children }
 
 sis_K12_parent_delete:
   path: /student/parent/delete
-  defaults: { _controller: KulaK12StudentBundle:SISParents:delete }
+  defaults: { _controller: KulaK12StudentBundle:SISParent:delete }
   methods: [POST]
+
+sis_K12_parent_addresses:
+  path: /student/parent/addresses
+  defaults: { _controller: KulaK12StudentBundle:SISParentsContactInfo:addresses }
+
+sis_K12_parent_addresses_detail:
+  path: /student/parent/{id}/addresses/detail/{sub_id}
+  defaults: { _controller: KulaK12StudentBundle:SISParentsContactInfo:detail }
+
+sis_K12_parent_addresses_add:
+  path: /student/parent/addresses/add
+  defaults: { _controller: KulaK12StudentBundle:SISParentsContactInfo:add_address }
+
+sis_K12_parent_phones:
+  path: /student/parent/phones
+  defaults: { _controller: KulaK12StudentBundle:SISParentsContactInfo:phones }
+  
+sis_K12_parent_emailaddress:
+  path: /student/parent/emailaddresses
+  defaults: { _controller: KulaK12StudentBundle:SISParentsContactInfo:emailAddresses }
 
 sis_K12_student_enrollment_reports_enrollmentverification:
   path: /student/enrollment/reports/enrollmentverification

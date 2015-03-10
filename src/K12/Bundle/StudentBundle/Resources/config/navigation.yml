@@ -91,12 +91,44 @@ SIS.K12.Student:
     Parents:
       description: "Parents"
       display_name: "Parents"
-      route: sis_K12_parent
       sort: 3
+      tabs:
+        Basic:
+          description: "Basic"
+          display_name: "Basic"
+          sort: 1
+          route: sis_K12_parent_basic
+        Children:
+          description: "Children"
+          display_name: "Children"
+          sort: 2
+          route: sis_K12_parent_children
+        Addresses:
+          description: "Addresses"
+          display_name: "Addresses"
+          sort: 4
+          route: sis_K12_parent_addresses
+        Phones:
+          description: "Phones"
+          display_name: "Phones"
+          sort: 5
+          route: sis_K12_parent_phones
+        EmailAddresses:
+          description: "Email Addresses"
+          display_name: "Email Addresses"
+          sort: 6
+          route: sis_K12_parent_emailaddress
       menu_actions:
+        NewAddress:
+          description: "New Address"
+          display_name: "New Address"
+          record_loaded: true
+          route: sis_K12_parent_addresses_add
+          sort: 1
         Delete:
           description: "Delete Parent"
           display_name: "Delete Parent"
           record_loaded: true
+          divider_before: true
           route: sis_K12_parent_delete
-          sort: 1
+          sort: 2
