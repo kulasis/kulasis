@@ -161,7 +161,7 @@ function navigation_drawerItemListenerExistingWindow(event) {
 function navigation_drawerItemListenerNewWindow(invokedOn) {
   //event.preventDefault();
   url = invokedOn.attr('href');
-	
+
 	navigation_createFirstWindow();
 	
 	var options = new Array();
@@ -355,6 +355,7 @@ function navigation_tabListeners(windowNum) {
 	}
 	
 	$('#window_' + windowNum + '_content').on('click', 'a.normal-link', navigation_link);
+  $('#window_' + windowNum + '_content').on('click', 'a.normal-link-new-window', navigation_link_newWindow);
 
 	form_formContentListeners(elementToFind);
 }
@@ -381,6 +382,46 @@ function navigation_link(event) {
 		$('#window_' + windowNumber).html(msg);
 		navigation_windowListeners(windowNumber);
 	});
+}
+
+function navigation_link_newWindow(event) {
+  event.preventDefault();
+  url = $(this).attr('href');
+
+	navigation_createFirstWindow();
+	
+	var options = new Array();
+	options['windowTitle'] = $(this).text();
+  
+	// Get current window number
+	var windowNumber = $('#window_bar .selected-window-element').data('window');
+  
+	// Get current active tab 
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	
+	if (activeTabID == undefined) {
+		// not in tab
+		activeTabID = 'window_' + windowNumber + '_tab_';
+	}
+	var urlToAdd = '';
+	if ($(this).data('record-id')) urlToAdd += 'record_id=' + $(this).data('record-id');
+	if ($(this).data('record-type')) urlToAdd += '&record_type=' + $(this).data('record-type');
+
+  if (url.indexOf('?') != -1) {
+    var url = url + '&' + urlToAdd;
+  } else {
+    var url = url + '?' + urlToAdd;
+  }
+  
+  getLink(url, 'window', 'windows_container', options, function(msg, options) {
+		// create new window
+		var newWindowNum = navigation_createWindow(options['url']);
+		// replace all {panel_num} with new window number
+		msg = navigation_replaceAllWindowIDPlaceholders(msg, newWindowNum);
+		navigation_updateWindow(newWindowNum, msg, options['windowTitle'], url);
+		// Set listeners on Window Bar
+		navigation_windowBarListeners(newWindowNum);
+	}); 
 }
 
 function navigation_createFirstWindow() {
