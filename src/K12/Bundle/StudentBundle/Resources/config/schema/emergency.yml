@@ -32,6 +32,7 @@ K12.Student.EmergencyContact:
       db_column_name: EMERGENCY_CONTACT_NAME
       db_column_type: varchar
       db_column_length: 50
+      db_column_null: true
       field_type: text
       field_size: 20
       column_name: "Emergency Contact Name"

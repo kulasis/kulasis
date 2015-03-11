@@ -157,6 +157,16 @@ K12.Student.Status:
       field_type: checkbox
       column_name: "Off Campus"
       label_name: "Off Campus"
+    ShirtSize:
+      description: "Shirt Size"
+      db_column_name: SHIRT_SIZE
+      db_column_type: text
+      db_column_length: 20
+      db_column_null: true
+      field_type: text
+      field_size: 10
+      column_name: "Shirt Size"
+      label_name: "Shirt Size"
   unique_keys:
     StudentOrganizationTermID: [ "K12.Student.Status.StudentID", "K12.Student.Status.OrganizationTermID" ]
 K12.Student.Enrollment:

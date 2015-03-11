@@ -20,7 +20,13 @@ class SISParentRecord extends Record {
     ->distinct()
     ->fields('par', array('PARENT_ID' => 'ID'))
     ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = par.PARENT_ID')
-    ->fields('constituent', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'));
+    ->fields('constituent', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
+    ->join('CONS_RELATIONSHIP', 'rel', 'rel.RELATED_CONSTITUENT_ID = par.PARENT_ID')
+    ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = rel.CONSTITUENT_ID')
+    ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'stustatus.ORGANIZATION_TERM_ID = orgterm.ORGANIZATION_TERM_ID')
+    ->condition('ORGANIZATION_ID', $this->focus->getSchoolIDs());
+    if ($this->focus->getTermID())
+      $result = $result->condition('TERM_ID', $this->focus->getTermID());
     $result = $result->orderBy('LAST_NAME')
       ->orderBy('FIRST_NAME')
       ->orderBy('MIDDLE_NAME')
@@ -50,6 +56,12 @@ class SISParentRecord extends Record {
   
   public function modifySearchDBOBject($db_obj) {
     $db_obj =  $db_obj->join('CONS_CONSTITUENT', null, 'CONS_CONSTITUENT.CONSTITUENT_ID = STUD_PARENT.PARENT_ID');
+    $db_obj =  $db_obj->join('CONS_RELATIONSHIP', 'rel', 'rel.RELATED_CONSTITUENT_ID = STUD_PARENT.PARENT_ID')
+    ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = rel.CONSTITUENT_ID')
+    ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'stustatus.ORGANIZATION_TERM_ID = orgterm.ORGANIZATION_TERM_ID')
+    ->condition('ORGANIZATION_ID', $this->focus->getSchoolIDs());
+    if ($this->focus->getTermID())
+      $db_obj = $db_obj->condition('TERM_ID', $this->focus->getTermID());
     $db_obj =  $db_obj->orderBy('LAST_NAME', 'ASC');
     $db_obj =  $db_obj->orderBy('FIRST_NAME', 'ASC');
     return $db_obj;

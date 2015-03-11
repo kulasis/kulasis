@@ -33,6 +33,7 @@
 {{ kula_field({ edit: true, field: 'Core.Constituent.SocialSecurityNumber', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: student.STUDENT_ID, label: true  }) }}
 {{ kula_field({ edit: true, field: 'K12.Student.AlternateNumber1', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: student.ALTERNATE_NUMBER_1, label: true  }) }}
 {{ kula_field({ edit: true, field: 'K12.Student.AlternateNumber2', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: student.ALTERNATE_NUMBER_2, label: true  }) }}
+{{ kula_field({ edit: true, field: 'K12.Student.ConversionStudentNumber', db_row_id: student.STUDENT_ID, value: student.CONV_STUDENT_NUMBER, label: true}) }}
 </div>
 </div>
 <div class="group-box">

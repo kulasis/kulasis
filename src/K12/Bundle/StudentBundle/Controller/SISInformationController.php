@@ -108,13 +108,25 @@ class SISInformationController extends Controller {
     $this->setRecordType('SIS.K12.Student');
     
     $student = array();
+    $student_status = array();
     
     $student = $this->db()->db_select('STUD_STUDENT', 'STUD_STUDENT')
       ->fields('STUD_STUDENT')
+      ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = STUD_STUDENT.STUDENT_ID')
+      ->fields('constituent', array('NOTES'))
       ->condition('STUDENT_ID', $this->record->getSelectedRecord()['STUDENT_ID'])
       ->execute()->fetch();
     
-    return $this->render('KulaK12StudentBundle:SISInformation:other_info.html.twig', array('student' => $student));
+    if ($this->record->getSelectedRecordID()) {
+    
+    $student_status = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+      ->fields('stustatus')
+      ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
+      ->execute()->fetch();
+    
+    }
+    
+    return $this->render('KulaK12StudentBundle:SISInformation:other_info.html.twig', array('student' => $student, 'student_status' => $student_status));
   }
   
   public function addAction() {
