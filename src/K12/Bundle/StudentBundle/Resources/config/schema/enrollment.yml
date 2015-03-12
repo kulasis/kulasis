@@ -163,8 +163,8 @@ K12.Student.Status:
       db_column_type: text
       db_column_length: 20
       db_column_null: true
-      field_type: text
-      field_size: 10
+      field_type: lookup
+      lookup: K12.Student.Enrollment.ShirtSize
       column_name: "Shirt Size"
       label_name: "Shirt Size"
     Age:

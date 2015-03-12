@@ -96,3 +96,15 @@ K12.Student.EmergencyContact.Relationship.Type:
     - { code: 16, description: "Nanny" }
     - { code: 17, description: "Friend" }
     - { code: 18, description: "Mentor" }
+    
+K12.Student.Enrollment.ShirtSize:
+  description: "Shirt Size"
+  allow_update: true
+  values:
+    - { code: YS, description: "Youth Small", sort: 1 }
+    - { code: YM, description: "Youth Medium", sort: 2 }
+    - { code: YL, description: "Youth Large", sort: 3 }
+    - { code: YXL, description: "Youth X-Large", sort: 4 }
+    - { code: AS, description: "Adult Small", sort: 5 }
+    - { code: AM, description: "Adult Medium", sort: 6 }
+    - { code: AL, description: "Adult Large", sort: 7 }
