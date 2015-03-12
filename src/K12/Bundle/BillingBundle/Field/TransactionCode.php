@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\BillingBundle\Field;
+namespace Kula\K12\Bundle\BillingBundle\Field;
 
 use Kula\Core\Component\Field\Field;
 

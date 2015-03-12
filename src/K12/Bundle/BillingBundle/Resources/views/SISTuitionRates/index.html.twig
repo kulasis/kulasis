@@ -51,9 +51,9 @@ Tuition Rates
     {{ kula_field({ edit: true, field: 'K12.TuitionRate.FullTimeCredits', db_row_id: rate.TUITION_RATE_ID, value: rate.FULL_TIME_CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'K12.TuitionRate.MaxFullTimeCredits', db_row_id: rate.TUITION_RATE_ID, value: rate.MAX_FULL_TIME_CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     <td>
-      <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_setup_billing_tuitionrates_students', { tuition_rate_id: rate.TUITION_RATE_ID }) }}">Students</a>
-      <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_setup_billing_tuitionrates_refunds', { tuition_rate_id: rate.TUITION_RATE_ID }) }}">Refunds</a>
-      <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_setup_billing_tuitionrates_transactions', { tuition_rate_id: rate.TUITION_RATE_ID }) }}">Transactions</a>
+      <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_K12_setup_billing_tuitionrates_students', { tuition_rate_id: rate.TUITION_RATE_ID }) }}">Students</a>
+      <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_K12_setup_billing_tuitionrates_refunds', { tuition_rate_id: rate.TUITION_RATE_ID }) }}">Refunds</a>
+      <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_K12_setup_billing_tuitionrates_transactions', { tuition_rate_id: rate.TUITION_RATE_ID }) }}">Transactions</a>
     </td>
   </tr>
   {% endfor %}

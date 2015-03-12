@@ -1,4 +1,5 @@
 imports:
+    - { resource: schema/code.yml }
     - { resource: schema/tuitionrate.yml }
 
 K12.Student.Status:
