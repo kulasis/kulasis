@@ -1,0 +1,15 @@
+sis_K12_setup_billing_tuitionrates:
+  path: /sis/K12/setup/billing/tuitionrates
+  defaults: { _controller: KulaK12BillingBundle:SISTuitionRates:index }
+
+sis_K12_setup_billing_tuitionrates_transactions:
+  path: /sis/K12/setup/billing/tuitionrates/{tuition_rate_id}/transactions
+  defaults: { _controller: KulaK12BillingBundle:SISTuitionRates:transactions }
+
+sis_K12_setup_billing_tuitionrates_students:
+  path: /sis/K12/setup/billing/tuitionrates/{tuition_rate_id}/students
+  defaults: { _controller: KulaK12BillingBundle:SISTuitionRates:students }
+
+sis_K12_setup_billing_tuitionrates_refunds:
+  path: /sis/K12/setup/billing/tuitionrates/{tuition_rate_id}/refunds
+  defaults: { _controller: KulaK12BillingBundle:SISTuitionRates:refunds }

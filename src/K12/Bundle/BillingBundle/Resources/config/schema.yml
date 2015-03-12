@@ -1,0 +1,23 @@
+imports:
+    - { resource: schema/tuitionrate.yml }
+
+K12.Student.Status:
+  fields:
+    PaymentPlan:
+      description: "On Payment Plan"
+      db_column_name: PAYMENT_PLAN
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Payment Plan"
+      label_name: "Payment Plan"
+    TuitionRateID:
+      description: "Tuition Rate ID"
+      db_column_name: TUITION_RATE_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: select
+      class: Kula\K12\Bundle\BillingBundle\Field\TuitionRate
+      column_name: "Tuition Rate ID"
+      label_name: "Tuition Rate"

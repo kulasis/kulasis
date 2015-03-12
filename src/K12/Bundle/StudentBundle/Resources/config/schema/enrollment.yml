@@ -167,6 +167,16 @@ K12.Student.Status:
       field_size: 10
       column_name: "Shirt Size"
       label_name: "Shirt Size"
+    Age:
+      description: "Age"
+      db_column_name: AGE
+      db_column_type: int
+      db_column_size: tiny
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "Age"
+      label_name: "Age"
   unique_keys:
     StudentOrganizationTermID: [ "K12.Student.Status.StudentID", "K12.Student.Status.OrganizationTermID" ]
 K12.Student.Enrollment:

@@ -1,0 +1,12 @@
+SIS.K12.Setup.Billing:
+  description: "Billing"
+  type: form
+  portal: sis
+  display_name: "Billing"
+  sort: 1
+  tabs:
+    TuitionRates:
+      description: "Tuition Rates"
+      display_name: "Tuition Rates"
+      sort: 1
+      route: sis_K12_setup_billing_tuitionrates

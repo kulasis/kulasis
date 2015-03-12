@@ -6,10 +6,11 @@
 <div class="group-box-header">Community Programs</div>
 <div class="group-box-contents group">
 {{ kula_field({ edit: true, field: 'K12.Student.School', db_row_id: student.STUDENT_ID, value: student.SCHOOL, label: true}) }}
-{% if kula_core_record.getSelectedRecord.GRADE %}
+{% if student_status.STUDENT_STATUS_ID %}
   {{ kula_field({ edit: true, field: 'K12.Student.Status.GroupWith', db_row_id: student_status.STUDENT_STATUS_ID, value: student_status.GROUP_WITH, label: true}) }}
   {{ kula_field({ edit: true, field: 'K12.Student.Status.OffCampus', db_row_id: student_status.STUDENT_STATUS_ID, value: student_status.OFF_CAMPUS, label: true}) }}
   {{ kula_field({ edit: true, field: 'K12.Student.Status.ShirtSize', db_row_id: student_status.STUDENT_STATUS_ID, value: student_status.SHIRT_SIZE, label: true}) }}
+  {{ kula_field({ edit: true, field: 'K12.Student.Status.Age', db_row_id: student_status.STUDENT_STATUS_ID, value: student_status.AGE, label: true}) }}
 {% endif %}
 </div>
 </div>

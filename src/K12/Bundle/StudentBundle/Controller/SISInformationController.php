@@ -121,9 +121,8 @@ class SISInformationController extends Controller {
     
     $student_status = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
       ->fields('stustatus')
-      ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
+      ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecord()['STUDENT_STATUS_ID'])
       ->execute()->fetch();
-    
     }
     
     return $this->render('KulaK12StudentBundle:SISInformation:other_info.html.twig', array('student' => $student, 'student_status' => $student_status));
