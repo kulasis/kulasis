@@ -77,6 +77,7 @@ class StudentService {
       'K12.Student.Status.StudentID' => $statusInfo['StudentID'],
       'K12.Student.Status.OrganizationTermID' => $statusInfo['OrganizationTermID'],
       'K12.Student.Status.Grade' => $statusInfo['K12.Student.Status.Grade'],
+      'K12.Student.Status.Age' => $statusInfo['K12.Student.Status.Age'],
       'K12.Student.Status.Level' => $statusInfo['K12.Student.Status.Level'],
       'K12.Student.Status.Resident' => $statusInfo['K12.Student.Status.Resident'],
       'K12.Student.Status.EnterDate' => $statusInfo['K12.Student.Status.EnterDate'],
