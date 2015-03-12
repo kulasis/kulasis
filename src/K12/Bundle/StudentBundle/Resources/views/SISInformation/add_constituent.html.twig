@@ -24,6 +24,7 @@
 <div class="group-box-header">Enrollment</div>
 <div class="group-box-contents group">
 {{ kula_field({ add: true, table_row: false, field: 'K12.Student.Status.Grade', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
+{{ kula_field({ add: true, table_row: false, field: 'K12.Student.Status.Age', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
 {{ kula_field({ add: true, table_row: false, field: 'K12.Student.Status.Level', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
 {{ kula_field({ add: true, table_row: false, field: 'K12.Student.Status.Resident', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
 {{ kula_field({ add: true, table_row: false, field: 'K12.Student.Status.EnterDate', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value:"now"|date("m/d/Y"), label: true }) }}
