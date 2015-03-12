@@ -257,7 +257,7 @@ class SISStudentTranscriptReportController extends ReportController {
         // Comments info
         $comments_info = array();
         
-        $comments_info_result = $this->db()->db_select('STUD_STUDENT_COURSE_HISTORY_COMMENT', 'chcomment')
+        $comments_info_result = $this->db()->db_select('STUD_STUDENT_COURSE_HISTORY_TERMS', 'chcomment')
           ->fields('chcomment', array('CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'LEVEL', 'COMMENTS'))
           ->condition('chcomment.STUDENT_ID', $row['STUDENT_ID']);
         if (isset($level['STUD_STUDENT_COURSE_HISTORY']['LEVEL']) AND $level['STUD_STUDENT_COURSE_HISTORY']['LEVEL'] != '') {
