@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Kula\Core\Bundle\FrameworkBundle\Exception\NotAuthorizedException;
 use Kula\Core\Component\DB\PosterException;
 use Kula\Core\Component\Database\IntegrityConstraintViolationException;
+use Kula\Core\Component\Database\DatabaseExceptionWrapper;
 
 /**
  * ExceptionListener.
@@ -48,7 +49,7 @@ class ExceptionListener implements EventSubscriberInterface
       
       if ($exception instanceof PosterException) { // $exception->getFields()
         $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage(), 'fields' => null), 200, array('X-Status-Code' => 200));
-      } elseif ($exception instanceof \PDOException OR $exception instanceof IntegrityConstraintViolationException) {
+      } elseif ($exception instanceof \PDOException OR $exception instanceof IntegrityConstraintViolationException OR $exception instanceof DatabaseExceptionWrapper) {
         $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage()), 200, array('X-Status-Code' => 200));
       } elseif ($exception instanceof NotAuthorizedException) {
         $response = new RedirectResponse('/login');
