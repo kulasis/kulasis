@@ -1,30 +1,30 @@
 <?php
 
-namespace Kula\HEd\Bundle\GradingBundle\Validator;
+namespace Kula\K12\Bundle\StudentBundle\Validator;
 
 use Kula\Core\Component\Validator\Validator as BaseValidator;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class StudentCourseHistoryValidator extends BaseValidator {
+class StudentStatusValidator extends BaseValidator {
   
   public function setRequiredContraints() {
     
-    //$constraints['LOOKUP_ID'] = array(new Assert\NotNull());
-    //$constraints['CODE'] = array(new Assert\NotNull());
-  //  $constraints['DESCRIPTION'] = array(new Assert\NotNull());
+    $constraints['LEVEL'] = array(new Assert\NotNull());
+    $constraints['GRADE'] = array(new Assert\NotNull());
+    $constraints['ENTER_DATE'] = array(new Assert\NotNull());
+    $constraints['ENTER_CODE'] = array(new Assert\NotNull());
     
-    //return $constraints;
+    return $constraints;
   }
   
   public function setOptionalConstraints() {
-    $constraints['CALENDAR_MONTH'] = array(new Assert\GreaterThanOrEqual(1), new Assert\LessThanOrEqual(12));
     /*
     $constraints['object'] = new Assert\Expression(array(
             'expression' => 'this in ["ORGANIZATION_ID", "NON_ORGANIZATION_ID"] and this.ORGANIZATION_ID == "" and this.NON_ORGANIZATION_ID == ""',
             'message' => 'Both Organization and Non-Organization cannot be set.'));
     */
-    return $constraints;
+    //return $constraints;
   }
   
 }

@@ -2,6 +2,7 @@ K12.Student.Status:
   description: "Students Status"
   db_table_name: STUD_STUDENT_STATUS
   timestamps: true
+  class: Kula\K12\Bundle\StudentBundle\Validator\StudentStatusValidator
   fields:
     ID:
       description: "ID"
