@@ -53,7 +53,7 @@ class SISStudentRecord extends Record {
       ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'RACE', 'MAIDEN_NAME', 'PREFERRED_NAME'));
     if ($this->focus->getTermID()) {
       $result = $result->join('STUD_STUDENT_STATUS', 'stustatus', 'stu.STUDENT_ID = stustatus.STUDENT_ID');
-      $result = $result->fields('stustatus', array('STUDENT_STATUS_ID', 'STATUS','GRADE', 'RESIDENT'));
+      $result = $result->fields('stustatus', array('STUDENT_STATUS_ID', 'STATUS','GRADE', 'RESIDENT', 'AGE'));
       $result = $result->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'stustatus.ORGANIZATION_TERM_ID = orgterm.ORGANIZATION_TERM_ID');
       $result = $result->fields('orgterm', array('ORGANIZATION_TERM_ID'));
       $result = $result->join('CORE_ORGANIZATION', 'org', 'orgterm.ORGANIZATION_ID = org.ORGANIZATION_ID');
