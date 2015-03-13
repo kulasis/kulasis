@@ -30,6 +30,7 @@ use Kula\Core\Component\DB\PosterException;
 use Kula\Core\Component\Database\IntegrityConstraintViolationException;
 use Kula\Core\Component\Database\DatabaseExceptionWrapper;
 
+
 /**
  * ExceptionListener.
  *

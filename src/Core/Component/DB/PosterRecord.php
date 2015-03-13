@@ -10,6 +10,8 @@ use Kula\Core\Component\Field\Field as Field;
 
 use Kula\Core\Component\Permission\Permission;
 
+use Symfony\Component\Validator\ConstraintViolationList;
+
 class PosterRecord {
   
   protected $container;
@@ -48,6 +50,7 @@ class PosterRecord {
     $this->hasViolations = false;
     $this->posted = false;
     $this->noLog = false;
+    $this->violations = new ConstraintViolationList();
   }
   
   public function process() {
@@ -80,6 +83,17 @@ class PosterRecord {
         if (!$this->hasViolations) {
           $this->result = $this->execute();
           $this->posted = true;
+        } else {
+          
+          $violation_string = '';
+          foreach($this->violations as $violation) {
+            $violation_string .= '<li>' . $violation->getPropertyPath() . ': '.$violation->getMessage().'</li>';
+          }
+          if ($this->container->get('request_stack')->getCurrentRequest()->isXmlHttpRequest()) {
+            throw new PosterException('Changes not saved.<ul>' . $violation_string . '</ul>');
+          } else {
+            $this->container->get('session.flash_bag')->add('error', 'Changes not saved.<ul>' . $violation_string . '</ul>');
+          }
         }
       }
     }
@@ -233,12 +247,19 @@ class PosterRecord {
     // begin validation
     $schema = $this->schema->getTable($this->table);
     if ($validator = $schema->getDBClass()) {
+      
+      $fields = array();
+      foreach($this->fields as $fieldName => $field) {
+        $fields[$this->schema->getField($fieldName)->getDBName()] = $field;
+      }
+      
       // merge new data with existing row
       if ($this->crud == self::EDIT) {
-        $row_to_validate = array_merge($this->originalRecord, $this->fields);
+        $row_to_validate = array_merge($this->originalRecord, $fields);
       } else {
-        $row_to_validate = $this->fields;
+        $row_to_validate = $fields;
       }
+      //var_dump($row_to_validate);
       $validator_obj = new \Kula\Core\Bundle\FrameworkBundle\Service\Validator($validator, $row_to_validate);
       $violations = $validator_obj->getViolations();
       $this->violations->addAll($violations);
@@ -278,7 +299,7 @@ class PosterRecord {
     
     if (count($permission_violations) > 0) {
       $this->hasViolations = true;
-      $this->violations = new \Symfony\Component\Validator\ConstraintViolationList($permission_violations);
+      $this->violations = new $this->violations->addAll($permission_violations);
     }
   }
   

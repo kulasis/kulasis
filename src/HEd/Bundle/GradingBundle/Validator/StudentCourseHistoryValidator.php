@@ -1,10 +1,12 @@
 <?php
 
-namespace Kula\Bundle\HEd\CourseHistoryBundle\Validator;
+namespace Kula\HEd\Bundle\GradingBundle\Validator;
+
+use Kula\Core\Component\Validator\Validator as BaseValidator;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class StudentCourseHistoryValidator extends \Kula\Component\Validator\BaseValidator {
+class StudentCourseHistoryValidator extends BaseValidator {
 	
 	public function setRequiredContraints() {
 		

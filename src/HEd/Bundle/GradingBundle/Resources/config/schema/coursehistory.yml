@@ -2,6 +2,7 @@ HEd.Student.CourseHistory:
   description: "Student Course History"
   db_table_name: STUD_STUDENT_COURSE_HISTORY
   timestamps: true
+  class: Kula\HEd\Bundle\GradingBundle\Validator\StudentCourseHistoryValidator
   fields:
     ID:
       description: "ID"
