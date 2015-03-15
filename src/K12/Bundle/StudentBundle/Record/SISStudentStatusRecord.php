@@ -15,7 +15,7 @@ class SISStudentStatusRecord extends Record {
   }
   
   public function getFromDifferentType($record_type, $record_id) {
-    if ($record_type == 'SIS.K12.Student') {
+    if ($record_type == 'SIS.K12.Student' OR $record_type == 'SIS.HEd.Student') {
       $result = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
         ->fields('stustatus', array('STUDENT_STATUS_ID'))
         ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'stustatus.ORGANIZATION_TERM_ID = orgterm.ORGANIZATION_TERM_ID')
@@ -25,6 +25,9 @@ class SISStudentStatusRecord extends Record {
         $result = $result->condition('TERM_ID', $this->focus->getTermID());
       $result = $result->execute()->fetch();
       return $result['STUDENT_STATUS_ID'];
+    }
+    if ($record_type == 'SIS.K12.Student.Status') {
+      return $record_id;
     }
   }
   

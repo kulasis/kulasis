@@ -30,6 +30,8 @@ class ScheduleService {
     // Get Student Status
     $student_status_info = $this->database->db_select('STUD_STUDENT_STATUS')
       ->fields('STUD_STUDENT_STATUS', array('LEVEL'))
+      ->leftJoin('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = STUD_STUDENT_STATUS.TUITION_RATE_ID')
+      ->fields('tuitionrate', array('BILLING_MODE'))
       ->condition('STUDENT_STATUS_ID', $student_status_id)
       ->execute()->fetch();
       
@@ -59,8 +61,9 @@ class ScheduleService {
     }
     
     // process course fees
-    //$billing_service = new \Kula\Bundle\HEd\StudentBillingBundle\ConstituentBillingService($this->database, $this->posterFactory, $this->record, $this->session);
-    //$billing_service->addCourseFees($student_class_id);
+    if ($student_status_info['BILLING_MODE'] == 'FEES') {
+      $this->get('kula.HEd.billing.constituent')->addCourseFees($student_class_id);
+    }
     
     if ($student_class_id) {
       
@@ -159,6 +162,9 @@ class ScheduleService {
     $class_row = $this->database->db_select('STUD_STUDENT_CLASSES')
       ->fields('STUD_STUDENT_CLASSES')
       ->condition('STUDENT_CLASS_ID', $class_id)
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = STUD_STUDENT_CLASSES.STUDENT_STATUS_ID')
+      ->leftJoin('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = stustatus.TUITION_RATE_ID')
+      ->fields('tuitionrate', array('BILLING_MODE'))
       ->execute()->fetch();
     
     $class_data = array(
@@ -174,13 +180,10 @@ class ScheduleService {
     if ($class_poster) {
       
       // process course fees
-      //if ($drop_date < $class_row['START_DATE']) {
-      //  $billing_service = new \Kula\Bundle\HEd\StudentBillingBundle\ConstituentBillingService($this->database, 
-      //  $this->posterFactory, $this->record, $this->session);
-      //  $billing_service->removeCourseFees($class_id);
-      //}
+      if ($student_status_info['BILLING_MODE'] == 'FEES' AND $drop_date < $class_row['START_DATE']) {
+        $this->get('kula.HEd.billing.constituent')->removeCourseFees($student_class_id);
+      }
       
-      // Update section totals
       // Update section totals
       $section_row = $this->database->db_select('STUD_SECTION')
         ->fields('STUD_SECTION', array('ENROLLED_TOTAL'))
