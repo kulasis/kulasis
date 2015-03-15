@@ -286,7 +286,7 @@ class StudentBillingService {
       ->fields('status', array('STUDENT_ID', 'TOTAL_CREDITS_ATTEMPTED'))
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = classes.SECTION_ID')
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
-      ->join('BILL_COURSE_FEE', 'coursefees', 'course.COURSE_ID = coursefees.COURSE_ID AND coursefees.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
+      ->leftJoin('BILL_COURSE_FEE', 'coursefees', 'course.COURSE_ID = coursefees.COURSE_ID AND coursefees.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
       ->fields('coursefees', array('CODE_ID', 'AMOUNT'))
       ->leftJoin('BILL_SECTION_FEE', 'sectionfees', 'section.SECTION_ID = sectionfees.SECTION_ID')
       ->fields('sectionfees', array('CODE_ID' => 'section_CODE_ID', 'AMOUNT' => 'section_AMOUNT'))

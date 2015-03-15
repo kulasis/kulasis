@@ -83,7 +83,6 @@ class ConstituentBillingService {
         'HEd.Billing.Transaction.StudentClassID' => $student_class_id
       ))->process();
     }
-    
     // Add section fees
     // Get Class Info
     $class_fees = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
@@ -99,6 +98,7 @@ class ConstituentBillingService {
       ->condition('class.STUDENT_CLASS_ID', $student_class_id)
       ->execute();
     while ($class_fee_row = $class_fees->fetch()) {
+      
       // Prepare & post payment data
       $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', array(
         'HEd.Billing.Transaction.ConstituentID' => $class_fee_row['STUDENT_ID'],
@@ -129,7 +129,7 @@ class ConstituentBillingService {
   }
   
   public function determineTuitionRate($student_status_id) {
-    
+
     // Get Student Status Info
     $student_status = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
       ->fields('status', array('STUDENT_STATUS_ID', 'ORGANIZATION_TERM_ID', 'ENTER_CODE', 'LEVEL'))

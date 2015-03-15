@@ -13,11 +13,13 @@ class ScheduleService {
   public function __construct(\Kula\Core\Component\DB\DB $db, 
                               \Kula\Core\Component\DB\PosterFactory $poster_factory,
                               $record = null, 
-                              $session = null) {
+                              $session = null,
+                              $billing = null) {
     $this->database = $db;
     $this->record = $record;
     $this->posterFactory = $poster_factory;
     $this->session = $session;
+    $this->billing = $billing;
   }
   
   public function addClassForStudentStatus($student_status_id, $section_id, $start_date) {
@@ -62,7 +64,7 @@ class ScheduleService {
     
     // process course fees
     if ($student_status_info['BILLING_MODE'] == 'FEES') {
-      $this->get('kula.HEd.billing.constituent')->addCourseFees($student_class_id);
+      $this->billing->addCourseFees($student_class_id);
     }
     
     if ($student_class_id) {
@@ -181,7 +183,7 @@ class ScheduleService {
       
       // process course fees
       if ($student_status_info['BILLING_MODE'] == 'FEES' AND $drop_date < $class_row['START_DATE']) {
-        $this->get('kula.HEd.billing.constituent')->removeCourseFees($student_class_id);
+        $this->billing->removeCourseFees($student_class_id);
       }
       
       // Update section totals

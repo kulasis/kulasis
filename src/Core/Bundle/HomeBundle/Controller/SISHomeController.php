@@ -89,8 +89,11 @@ class SISHomeController extends Controller {
         $fte_data[$full_fte_row['GRADE']][$full_fte_row['LEVEL']] += $fte_amount;  
       } else {
         // not full FTE
-        $fte_amount = bcdiv($full_fte_row['total_credits'], $full_fte_row['FULL_TIME_CREDITS'], 3);
-        $fte_data[$full_fte_row['GRADE']][$full_fte_row['LEVEL']] += $fte_amount;
+        $fte_amount = 0;
+        if ($full_fte_row['FULL_TIME_CREDITS']) {
+          $fte_amount = bcdiv($full_fte_row['total_credits'], $full_fte_row['FULL_TIME_CREDITS'], 3);
+          $fte_data[$full_fte_row['GRADE']][$full_fte_row['LEVEL']] += $fte_amount;
+        }
       }
       
       if (!isset($totals_fte_data[$full_fte_row['LEVEL']]))
