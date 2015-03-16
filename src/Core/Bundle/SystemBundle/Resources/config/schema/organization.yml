@@ -50,6 +50,16 @@ Core.Organization:
       lookup: Core.Organization.Type
       column_name: "Organization Type"
       label_name: "Organization Type"
+    Target:
+      description: "Target"
+      db_column_name: TARGET
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Core.Organization.Target
+      column_name: "Target"
+      label_name: "Target"
     Active:
       description: "Active"
       db_column_name: ACTIVE

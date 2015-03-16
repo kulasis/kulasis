@@ -18,3 +18,10 @@ Core.NonOrganization.Type:
     - { code: RU, description: "Private University" }
     - { code: TE, description: "Technical" }
     - { code: HS, description: "High School" }
+
+Core.Organization.Target:
+  description: "Organization Targets"
+  allow_update: true
+  values:
+    - { code: HEd, description: "Higher Ed" }
+    - { code: K12, description: "K12" }

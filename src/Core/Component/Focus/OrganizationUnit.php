@@ -8,19 +8,21 @@ class OrganizationUnit {
   private $name;
   private $abbreviation;
   private $type;
+  private $target;
   
   private $parent;
   private $children = array();
   
   private $terms = array();
   
-  public function __construct($id, $name, $abbreviation, $type, $parent = null) {
+  public function __construct($id, $name, $abbreviation, $type, $target, $parent = null) {
     
     $this->id = $id;
     $this->name = $name;
     $this->abbreviation = $abbreviation;
     $this->type = $type;
     $this->parent = $parent;
+    $this->target = $target;
     
   }
   
@@ -34,6 +36,10 @@ class OrganizationUnit {
   
   public function getType() {
     return $this->type;
+  }
+  
+  public function getTarget() {
+    return $this->target;
   }
   
   public function addChild($child) {

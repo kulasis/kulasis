@@ -174,6 +174,10 @@ class Focus {
     return $this->organization->getOrganizationTerms($this->getOrganizationID(), $this->getTermID())[0];
   }
   
+  public function getOrganizationTarget() {
+    return $this->organization->getOrganization($this->getOrganizationID())->getTarget();
+  }
+  
   public function getOrganizationID() {
     if ($this->session->getFocus('organization_id'))
       return $this->session->getFocus('organization_id');
