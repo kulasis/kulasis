@@ -144,13 +144,24 @@ class SISInformationController extends Controller {
       $constituents = $query->execute()->fetchAll();
     }
     
-    return $this->render('KulaHEdStudentBundle:SISInformation:add.html.twig', array('constituents' => $constituents));
+    $defaults = $this->db()->db_select('STUD_SCHOOL')
+      ->fields('STUD_SCHOOL')
+      ->condition('SCHOOL_ID', $this->focus->getOrganizationID())
+      ->execute()->fetch();
+    
+    return $this->render('KulaHEdStudentBundle:SISInformation:add.html.twig', array('constituents' => $constituents, 'defaults' => $defaults));
   }
   
   public function add_constituentAction() {
     $this->authorize();
     $this->formAction('sis_HEd_student_information_create_constituent');
-    return $this->render('KulaHEdStudentBundle:SISInformation:add_constituent.html.twig');
+    
+    $defaults = $this->db()->db_select('STUD_SCHOOL')
+      ->fields('STUD_SCHOOL')
+      ->condition('SCHOOL_ID', $this->focus->getOrganizationID())
+      ->execute()->fetch();
+    
+    return $this->render('KulaHEdStudentBundle:SISInformation:add_constituent.html.twig', array('defaults' => $defaults));
   }
   
   public function create_constituentAction() {

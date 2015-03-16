@@ -23,11 +23,11 @@
 <div class="group-box">
 <div class="group-box-header">Add Student</div>
 <div class="group-box-contents group">
-{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.Grade', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
-{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.Level', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
+{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.Grade', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: defaults.DEFAULT_GRADE, label: true }) }}
+{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.Level', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: defaults.DEFAULT_LEVEL,label: true }) }}
 {{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.Resident', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
 {{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.EnterDate', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value:"now"|date("m/d/Y"), label: true }) }}
-{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.EnterCode', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, label: true }) }}
+{{ kula_field({ add: true, table_row: false, field: 'HEd.Student.Status.EnterCode', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: defaults.DEFAULT_ENTER_CODE, label: true }) }}
 </div>
 </div>
 <div class="group-box">

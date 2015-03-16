@@ -1,0 +1,32 @@
+HEd.School:
+  fields: 
+    DefaultLevel:
+      description: "Default Level"
+      db_column_name: DEFAULT_LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      columnn_name: "Default Level"
+      label_name: "Default Level"
+    DefaultEnterCode:
+      description: "Default Enter Code"
+      db_column_name: DEFAULT_ENTER_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.EnterCode
+      column_name: "Default Enter Code"
+      label_name: "Default Enter Code"
+    DefaultGrade:
+      description: "Grade"
+      db_column_name: DEFAULT_GRADE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Grade
+      column_name: "Default Grade"
+      label_name: "Default Grade"

@@ -18,8 +18,15 @@ class SISSchoolSetupController extends Controller {
     );
     
     $schoolterm = array();
+    $school = array();
     
     if ($this->record->getSelectedRecordID()) {
+      
+      $school = $this->db()->db_select('STUD_SCHOOL', 'school')
+        ->fields('school')
+        ->condition('SCHOOL_ID', $this->focus->getSchoolIDs())
+        ->execute()
+        ->fetch();
       
       $schoolterm = $this->db()->db_select('STUD_SCHOOL_TERM', 'schoolterm')
         ->fields('schoolterm')
@@ -27,12 +34,16 @@ class SISSchoolSetupController extends Controller {
         ->execute()
         ->fetch();
       
+      if ($school['SCHOOL_ID'] == null) {
+        $this->newPoster()->add('K12.School', 'new', array('K12.School.ID' => $this->focus->getSchoolIDs()))->process();
+      }
+      
       if ($schoolterm['SCHOOL_TERM_ID'] == null) {
         $this->newPoster()->add('K12.School.Term', 'new', array('K12.School.Term.ID' => $this->record->getSelectedRecordID()))->process();
       }
     }
     
-    return $this->render('KulaK12SchoolBundle:SISSchoolSetup:general.html.twig', array('schoolterm' => $schoolterm));
+    return $this->render('KulaK12SchoolBundle:SISSchoolSetup:general.html.twig', array('schoolterm' => $schoolterm, 'school' => $school));
     
   }
   

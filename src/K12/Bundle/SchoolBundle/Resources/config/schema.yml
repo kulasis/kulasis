@@ -1,3 +1,4 @@
 imports:
     - { resource: schema/staff.yml }
     - { resource: schema/term.yml }
+    - { resource: schema/school.yml }
