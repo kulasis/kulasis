@@ -197,6 +197,13 @@ class SISDegreeAuditReportController extends ReportController {
         $this->pdf->req_grp_row($req_id, $req_crs_row);
       }
       }
+      foreach($this->pdf->course_history_data as $course_id => $row) {
+        foreach($row as $row_id => $row_data) {
+        if (!isset($row_data['used']) AND $course_id != 'elective' AND $req_id == $row_data['DEGREE_REQ_GRP_ID']) {
+          $this->pdf->req_grp_row($req_id, $row, 'Y');
+        }
+        }
+      }
     }
     $this->pdf->req_grp_footer_row($req_id, $req_row);  
   }
@@ -220,11 +227,13 @@ class SISDegreeAuditReportController extends ReportController {
 
     $current_schedule = array();
     $current_schedule_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'DEGREE_REQ_GRP_ID'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'DEGREE_REQ_GRP_ID', 'COURSE_ID' => 'class_COURSE_ID'))
       ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
       ->join('STUD_COURSE', 'course' , 'course.COURSE_ID = section.COURSE_ID')
       ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE', 'CREDITS', 'COURSE_ID'))
+      ->leftJoin('STUD_COURSE', 'class_course' , 'class_course.COURSE_ID = class.COURSE_ID')
+      ->fields('class_course', array('COURSE_NUMBER' => 'class_COURSE_NUMBER', 'COURSE_TITLE' => 'class_COURSE_TITLE', 'CREDITS' => 'class_CREDITS'))
       ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
@@ -234,6 +243,14 @@ class SISDegreeAuditReportController extends ReportController {
       ->condition('stucrshis.COURSE_HISTORY_ID', null)
       ->execute();
     while ($current_schedule_row = $current_schedule_result->fetch()) {
+      
+      if ($current_schedule_row['class_COURSE_ID']) {
+        $current_schedule_row['COURSE_ID'] = $current_schedule_row['class_COURSE_ID'];
+        $current_schedule_row['COURSE_NUMBER'] = $current_schedule_row['class_COURSE_NUMBER'];
+        $current_schedule_row['COURSE_TITLE'] = $current_schedule_row['class_COURSE_TITLE'];
+        $current_schedule_row['CREDITS'] = $current_schedule_row['CREDITS'];
+      }
+      
       if (!isset($course_history[$current_schedule_row['COURSE_ID']]))
         $course_history[$current_schedule_row['COURSE_ID']][] = $current_schedule_row;
     }

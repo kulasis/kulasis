@@ -118,7 +118,7 @@ class SISScheduleController extends Controller {
     $class = array();
     
     $class = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'CHANGE_REASON', 'CHANGE_NOTES', 'DEGREE_REQ_GRP_ID'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'CHANGE_REASON', 'CHANGE_NOTES', 'DEGREE_REQ_GRP_ID', 'COURSE_ID'))
       ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
       ->condition('STUDENT_CLASS_ID', $sub_id)
       ->execute()->fetch();
