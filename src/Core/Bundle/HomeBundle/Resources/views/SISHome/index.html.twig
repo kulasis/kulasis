@@ -69,7 +69,7 @@ Enrollment List
   {% for student in enrolled_list %}
   <tr>
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
-    <td>{{ student.GRADE }}</td>
+    <td>{{ student.GRADE }} {{ student.GRADE_code }}</td>
     <td>{{ student.LEVEL }}</td>
     <td>{{ student.LAST_NAME }}, {{ student.FIRST_NAME }} {{ student.MIDDLE_NAME }}</td>
     <td>{{ student.GENDER }}</td>

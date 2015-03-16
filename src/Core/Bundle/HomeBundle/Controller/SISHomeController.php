@@ -24,16 +24,20 @@ class SISHomeController extends Controller {
     if (count($this->focus->getOrganizationTermIDs()) > 0 AND count($this->focus->getOrganizationTermIDs()) < 5) {
       
     $enrolled = $this->db()->db_select('STUD_STUDENT_STATUS')
-      ->fields('STUD_STUDENT_STATUS', array('LEVEL', 'GRADE'))
+      ->fields('STUD_STUDENT_STATUS', array('LEVEL', 'GRADE' => 'GRADE_code'))
       ->expression('COUNT(*)', 'count')
       ->leftJoin('CORE_LOOKUP_VALUES', 'value', "value.CODE = STUD_STUDENT_STATUS.GRADE AND value.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = '".$this->focus->getOrganizationTarget().".Student.Enrollment.Grade')")
       ->fields('value', array('DESCRIPTION' => 'GRADE'))
       ->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
       ->condition('STATUS', null)
       ->groupBy('LEVEL')
-      ->groupBy('GRADE');
+      ->groupBy('GRADE')
+      ->groupBy('GRADE_code');
     $enrolled = $enrolled->execute();
     while ($enrolled_row = $enrolled->fetch()) {
+      
+      if ($enrolled_row['GRADE'] == '') $enrolled_row['GRADE'] = $enrolled_row['GRADE_code'];
+      
       $levels[$enrolled_row['LEVEL']] = $enrolled_row['LEVEL'];
       $enrolled_data[$enrolled_row['GRADE']][$enrolled_row['LEVEL']] = $enrolled_row['count'];
       if (!isset($totals_enrolled_data[$enrolled_row['LEVEL']]))
@@ -44,7 +48,7 @@ class SISHomeController extends Controller {
     $total_credits = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
       ->expression('SUM(classes.CREDITS_ATTEMPTED)', 'total_credits')
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = classes.STUDENT_STATUS_ID')
-      ->fields('stustatus', array('LEVEL', 'GRADE'))
+      ->fields('stustatus', array('LEVEL', 'GRADE' => 'GRADE_code'))
       ->join('STUD_MARK_SCALE', 'markscale', 'markscale.MARK_SCALE_ID = classes.MARK_SCALE_ID')
       ->leftJoin('CORE_LOOKUP_VALUES', 'value', "value.CODE = stustatus.GRADE AND value.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = '".$this->focus->getOrganizationTarget().".Student.Enrollment.Grade')")
       ->fields('value', array('DESCRIPTION' => 'GRADE'))
@@ -52,9 +56,12 @@ class SISHomeController extends Controller {
       ->condition('stustatus.STATUS', null)
       ->condition('markscale.AUDIT', '0')
       ->groupBy('stustatus.LEVEL')
-      ->groupBy('GRADE');
+      ->groupBy('GRADE')
+      ->groupBy('GRADE_code');
     $total_credits = $total_credits->execute();
     while ($total_credits_row = $total_credits->fetch()) {
+      if ($total_credits_row['GRADE'] == '') $total_credits_row['GRADE'] = $total_credits_row['GRADE_code'];
+      
       $credits[$total_credits_row['GRADE']][$total_credits_row['LEVEL']] = $total_credits_row['total_credits'];
       if (!isset($totals_credit_data[$total_credits_row['LEVEL']]))
         $totals_credit_data[$total_credits_row['LEVEL']] = 0;
@@ -65,7 +72,7 @@ class SISHomeController extends Controller {
     $full_fte = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
       ->expression('SUM(classes.CREDITS_ATTEMPTED)', 'total_credits')
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = classes.STUDENT_STATUS_ID')
-      ->fields('stustatus', array('LEVEL', 'FTE', 'GRADE'))
+      ->fields('stustatus', array('LEVEL', 'FTE', 'GRADE' => 'GRADE_code'))
       ->join('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = stustatus.TUITION_RATE_ID')
       ->fields('tuitionrate', array('FULL_TIME_CREDITS'))
       ->join('STUD_MARK_SCALE', 'markscale', 'markscale.MARK_SCALE_ID = classes.MARK_SCALE_ID')
@@ -76,9 +83,13 @@ class SISHomeController extends Controller {
       ->condition('markscale.AUDIT', '0')
       ->groupBy('stustatus.LEVEL')
       ->groupBy('GRADE')
+      ->groupBy('GRADE_code')
       ->groupBy('classes.STUDENT_STATUS_ID');
     $full_fte = $full_fte->execute();
     while ($full_fte_row = $full_fte->fetch()) {
+      
+      
+      if ($full_fte_row['GRADE'] == '') $full_fte_row['GRADE'] = $full_fte_row['GRADE_code'];
       
       if (!isset($fte_data[$full_fte_row['GRADE']][$full_fte_row['LEVEL']]))
         $fte_data[$full_fte_row['GRADE']][$full_fte_row['LEVEL']] = 0;
@@ -104,7 +115,7 @@ class SISHomeController extends Controller {
     
     
     $enrolled_list = $this->db()->db_select('STUD_STUDENT_STATUS', 'status')
-      ->fields('status', array('LEVEL', 'ENTER_DATE', 'STATUS', 'LEAVE_DATE', 'GRADE'))
+      ->fields('status', array('LEVEL', 'ENTER_DATE', 'STATUS', 'LEAVE_DATE', 'GRADE' => 'GRADE_code'))
       ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = status.STUDENT_ID')
       ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
       ->leftJoin('CORE_LOOKUP_VALUES', 'value', "value.CODE = status.GRADE AND value.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = '".$this->focus->getOrganizationTarget().".Student.Enrollment.Grade')")
