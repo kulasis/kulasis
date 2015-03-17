@@ -97,7 +97,7 @@ class Record {
   
     }
     
-    if ($this->session->get('portal') == 'student' AND $this->record_type == 'Student.HEd.Student.Status' AND !isset($focus[$this->record_type])) {
+    if ($this->session->get('portal') == 'student' AND $this->record_type == 'Student.HEd.Student.Status' AND $this->focus->getStudentStatusID() == '') {
       $this->focus->setStudentStatusFocus();
     }
     
