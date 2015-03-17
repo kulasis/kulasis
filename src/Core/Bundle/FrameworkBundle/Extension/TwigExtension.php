@@ -76,9 +76,18 @@ class TwigExtension extends \Twig_Extension {
     if ($this->session->get('portal') == 'teacher' OR $this->session->get('portal') == 'student') {
       $globals_array += array(
         'focus_schools' => Focus::getSchoolsMenu($this->container->get('kula.core.organization'), $this->container->get('kula.core.organization')->getSchools($this->session->get('organization_id'))),
-        'focus_terms' => Focus::terms($this->container->get('kula.core.organization'), $this->container->get('kula.core.term'), $this->session->get('organization_id'), $this->session->get('portal'), $this->session->get('administrator'), $this->session->get('user_id'), $this->container->get('kula.core.db'), $this->container->get('kula.core.focus')),
+        'focus_terms' => Focus::terms($this->container->get('kula.core.organization'), $this->container->get('kula.core.term'), $this->session->get('organization_id'), $this->session->get('portal'), $this->session->get('administrator'), $this->session->get('user_id'), $this->container->get('kula.core.db'), $this->container->get('kula.core.focus'))
+      );
+    }
+    if ($this->session->get('portal') == 'teacher') {
+      $globals_array += array(
         'focus_teachers' => Focus::getTeachers($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getOrganizationTermIDs()),
         'focus_sections' => Focus::getSectionMenu($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getTeacherOrganizationTermID()),
+      );
+    }
+    if ($this->session->get('portal') == 'student') {
+      $globals_array += array(
+        'focus_students' => Focus::getStudents($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getOrganizationTermIDs()),
       );
     }
     

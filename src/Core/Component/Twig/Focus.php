@@ -75,6 +75,28 @@ class Focus {
       return $terms;
     }
     
+    if ($portal == 'student') {
+      
+      $term_results = $db->db_select('CORE_TERM', 'terms')
+        ->distinct()
+        ->fields('terms', array('TERM_ID', 'TERM_ABBREVIATION', 'TERM_NAME'))
+        ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.TERM_ID = terms.TERM_ID')
+        ->condition('orgterm.ORGANIZATION_ID', $focus->getOrganizationID());
+      if ($administrator == '0') {
+        $term_results = $term_results->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.ORGANIZATION_TERM_ID = orgterm.ORGANIZATION_TERM_ID');
+        $term_results = $term_results->condition('stustatus.STUDENT_ID', $user_id);  
+      }
+    
+       $term_results = $term_results
+        ->orderBy('START_DATE')
+        ->orderBy('END_DATE')
+        ->execute();
+      while ($term_row = $term_results->fetch())
+        $terms[$term_row['TERM_ID']] = $term_row['TERM_ABBREVIATION'];
+      
+      return $terms;
+    }
+    
   }
   
   public static function getTeachers($db, $organization_term_id) {
@@ -121,6 +143,26 @@ class Focus {
   public static function getOrganizationMenu($organization, $topOrganizationID) {
     self::createMenuForOrganization($organization->getOrganization($topOrganizationID));
     return self::$organization_menu;
+  }
+  
+  public static function getStudents($db, $organization_term_id) {
+    $students = array();
+
+    if ($organization_term_id) {
+    $students_result = $db->db_select('STUD_STUDENT', 'stu')
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = stu.STUDENT_ID')
+      ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL'))
+      ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER', 'GENDER'))
+      ->condition('stustatus.ORGANIZATION_TERM_ID', $organization_term_id)
+      ->orderBy('LAST_NAME')
+      ->orderBy('FIRST_NAME')
+      ->execute();
+    while ($students_row = $students_result->fetch()) {
+      $students[$students_row['STUDENT_STATUS_ID']] = $students_row['LAST_NAME'].', '.$students_row['FIRST_NAME'].' | '.$students_row['GENDER'].' | '.$students_row['LEVEL'] .' | '.$students_row['PERMANENT_NUMBER'].' ';
+    }
+    }
+    return $students;
   }
   
   private static function createMenuForOrganization($organization, $dashes = null) {

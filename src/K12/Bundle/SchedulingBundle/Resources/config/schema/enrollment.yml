@@ -1,0 +1,13 @@
+HEd.Student.Status:
+  fields:
+    TotalCreditsAttempted:
+      description: "Total Credits Attempted"
+      db_column_name: TOTAL_CREDITS_ATTEMPTED
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 7
+      column_name: "Total Credits Attempted"
+      label_name: "Total Credits Attempted"

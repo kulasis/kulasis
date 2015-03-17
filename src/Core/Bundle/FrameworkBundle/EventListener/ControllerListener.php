@@ -34,7 +34,7 @@ class ControllerListener implements EventSubscriberInterface {
 
     if ($this->session->get('initial_role') > 0 AND $this->request->get('_route') != 'logout') {
       
-      if ($this->session->get('portal') == 'sis' OR $this->session->get('portal') == 'teacher') {
+      if ($this->session->get('portal') == 'sis' OR $this->session->get('portal') == 'teacher' OR $this->session->get('portal') == 'student') {
       
         // Set focus for user token
         $this->focus->setOrganizationTermFocus($this->getFromRequest('focus_org'), $this->getFromRequest('focus_term'), $this->getFromRequest('role_token'));
@@ -69,6 +69,24 @@ class ControllerListener implements EventSubscriberInterface {
               $this->focus->setSectionFocus(null);
             }
         
+        }
+        
+        if ($this->session->get('portal') == 'student') {
+          // if administrator allow changing teacher focus
+          if ($this->session->get('administrator') == '1') {
+            if ($this->getFromRequest('focus_student')) {
+              $this->focus->setStudentStatusFocus($this->getFromRequest('focus_student'), $this->getFromRequest('role_token'));
+              $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
+            } elseif (($this->getFromRequest('focus_org') OR $this->getFromRequest('focus_term')) AND $this->request->get('_route') != 'focus_usergroup_change') {
+              $this->focus->setStudentStatusFocus(null, $this->getFromRequest('role_token'));
+              $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
+            }
+            // if focus_org or focus_term changed
+          } elseif (($this->request->get('_route') != 'focus_usergroup_change' AND ($this->getFromRequest('focus_org') OR $this->getFromRequest('focus_term')))) {
+            $this->focus->setStudentStatusFocus();
+            $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
+          } // end if administrator
+          
         }
       
       }

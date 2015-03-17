@@ -254,3 +254,16 @@ Teacher.HEd.Class:
           description: "Class Roster"
           display_name: "Class Roster"
           route: teacher_HEd_offering_sections_reports_classroster
+
+Student.HEd.Student:
+  description: "Student"
+  display_name: "Student"
+  type: form_group
+  portal: student
+  sort: 1
+  forms:
+    Schedule:
+      description: "Schedule"
+      display_name: "Schedule"
+      sort: 1
+      route: student_HEd_student_schedule

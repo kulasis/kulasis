@@ -4,3 +4,6 @@ SIS.HEd.Student:
   class: Kula\HEd\Bundle\StudentBundle\Record\SISStudentRecord
 SIS.HEd.Student.Status:
   class: Kula\HEd\Bundle\StudentBundle\Record\SISStudentStatusRecord
+  
+Student.HEd.Student.Status:
+  class: Kula\HEd\Bundle\StudentBundle\Record\StudentStudentStatusRecord

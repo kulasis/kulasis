@@ -1,0 +1,49 @@
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Current Schedule for Grades
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+  <tr>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Section.SectionNumber', field_name_override: 'Section', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Course.CourseNumber', field_name_override: 'Course', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Course.Title', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Staff.AbbreviatedName', field_name_override: 'Instructor', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.Dropped', field_name_override: 'Dropped', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.DropDate', field_name_override: 'Drop Date', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Section.Credits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Mark', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</tr>
+</thead>
+<tbody>
+  {% for class in classes %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ field: 'HEd.Section.SectionNumber', input: false, value: class.SECTION_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Course.CourseNumber', input: false, value: class.COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Course.Title', input: false, value: class.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Staff.AbbreviatedName', input: false, value: class.ABBREVIATED_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Student.Class.Dropped', input: false, value: class.DROPPED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Student.Class.DropDate', input: false, value: class.DROP_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Section.Credits', input: false, value: class.CREDITS_ATTEMPTED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% if class.COURSE_HISTORY_ID %}
+    {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Mark', db_row_id: class.COURSE_HISTORY_ID, value: class.MARK, MARK_SCALE_ID: class.MARK_SCALE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% else %}
+    {{ kula_field({ add: true, field: 'HEd.Student.CourseHistory.Mark', table_row: false, db_row_id: class.STUDENT_CLASS_ID, MARK_SCALE_ID: class.MARK_SCALE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}    
+    {% endif %}
+  </tr>
+  {% if class.ALLOW_COMMENTS == '1' or class.REQUIRE_COMMENTS == '1' %}
+    <tr>
+      <td class="data-table-cell-row-num">{{ loop.index }}</td>
+      {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Comments', db_row_id: class.COURSE_HISTORY_ID, value: class.COMMENTS, prepend_html: '<td colspan="8">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    </tr>
+  {% endif %}
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

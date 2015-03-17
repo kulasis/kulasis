@@ -113,3 +113,10 @@ SIS.HEd.Admin.Holds:
   display_name: "Holds"
   route: sis_HEd_home_holds
   sort: 3
+  
+Student.HEd.Student:
+  description: "Student"
+  display_name: "Student"
+  type: form_group
+  portal: student
+  sort: 1

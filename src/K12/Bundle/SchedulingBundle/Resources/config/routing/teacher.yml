@@ -1,0 +1,16 @@
+teacher_HEd_class_roster:
+  path: /class/roster
+  defaults: { _controller: KulaHEdSchedulingBundle:TeacherSection:roster }
+
+teacher_HEd_class_roster_dropped:
+  path: /class/roster/dropped
+  defaults: { _controller: KulaHEdSchedulingBundle:TeacherSection:dropped_roster }
+
+teacher_HEd_offering_sections_report_classroster_generate:
+  path: /offering/section/reports/roster/generate
+  defaults: { _controller: KulaHEdSchedulingBundle:TeacherClassRosterReport:generate }
+  methods: [POST]
+
+teacher_HEd_offering_sections_reports_classroster:
+  path: /offering/sections/reports/classroster
+  defaults: { _controller: KulaHEdSchedulingBundle:TeacherClassRosterReport:index }

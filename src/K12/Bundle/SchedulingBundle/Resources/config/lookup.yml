@@ -1,0 +1,81 @@
+HEd.Course.Type:
+  description: "Course Types"
+  allow_update: true
+  values: 
+    - { code: "ACAD", description: "Academic" }
+    - { code: "EXTEN", description: "Extension" }
+    - { code: "STUDI", description: "Studio" }
+    
+HEd.Course.Department:
+  description: "Departments"
+  allow_update: true
+  values:
+    - { code: BA, description: "Book Arts" }
+    - { code: CE, description: "CE" }
+    - { code: CR, description: "Ceramics" }
+    - { code: DR, description: "DR" }
+    - { code: DA, description: "Drawing" }
+    - { code: EXT, description: "Extension Program" }
+    - { code: FA, description: "Faculty" }
+    - { code: FI, description: "Fibers" }
+    - { code: GS, description: "General Studies" }
+    - { code: GSC, description: "GS" }
+    - { code: MEC, description: "ME" }
+    - { code: ME, description: "Metals" }
+    - { code: PH, description: "Photography" }
+    - { code: WO, description: "Wood" }
+    - { code: ACD, description: "AC+D" }
+    - { code: FD, description: "Foundations" }
+
+HEd.Section.ScheduleType:
+  description: "Schedule Type"
+  allow_update: true
+  values:
+    - { code: LEC, description: "Lecture" }
+    - { code: STD, description: "Studio" }
+    - { code: ONL, description: "Online" }
+    - { code: DST, description: "Directed Study" }
+    - { code: LAB, description: "Laboratory" }
+    - { code: WSP, description: "Workshop" }
+    - { code: EXT, description: "Extension" }
+    - { code: ACA, description: "Academic" }
+    
+HEd.Schedule.ChangeReason:
+  description: "Change Reasons"
+  allow_update: true
+  values:
+    - { code: SR, description: "Student Request" }
+    - { code: CL, description: "Closed Section" }
+    
+HEd.Schedule.RegistrationType:
+  description: "Registration Type"
+  allow_update: true
+  values:
+    - { code: PHO, description: "Phone" }
+    - { code: ONL, description: "Online" }
+    - { code: MAI, description: "Mail" }
+    - { code: PAP, description: "Paper" }
+    - { code: FD, description: "Front Desk" }
+    
+HEd.Room.Buildings:
+  description: "Buildings"
+  allow_update: true
+  values:
+    - { code: ADM, description: "Administration" }
+    - { code: BNR, description: "Barnes Road" }
+    - { code: BA, description: "Book Arts" }
+    - { code: CE, description: "Centrum" }
+    - { code: CR, description: "Ceramics" }
+    - { code: DPP, description: "DPP" }
+    - { code: FI, description: "Fibers" }
+    - { code: GR, description: "Graduate" }
+    - { code: ME, description: "Metals" }
+    - { code: PO, description: "Portable" }
+    - { code: SH, description: "School House" }
+    - { code: SS, description: "Student Service" }
+    - { code: WO, description: "Wood" }
+    - { code: BB, description: "Bison Building" }
+    - { code: BP, description: "Barnes Portable" }
+    - { code: PH, description: "Photography" }
+    - { code: DP, description: "Draw/Paint" }
+    - { code: GDM, description: "Goodman (PNCA)" }

@@ -158,6 +158,75 @@ class Focus {
       return false;
   }
   
+  public function setStudentStatusFocus($student_status_id = null, $role_token = null) {
+
+    if ($student_status_id) {
+      $this->session->setFocus('Student.HEd.Student.Status', $student_status_id, $role_token);
+    } elseif ($this->session->get('administrator') == '1') {
+      if ($student_status_id) {
+        $this->session->setFocus('Student.HEd.Student.Status', $student_status_id, $role_token);
+      } elseif ($student_status_id = $this->session->getFocus('Student.HEd.Student.Status', $role_token) !== null) {
+        
+        // get student in new term
+        $newStudent = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('STUDENT_STATUS_ID'))
+        ->condition('stustatus.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
+        ->join('STUD_STUDENT_STATUS', 'oldstudentstatus', 'oldstudentstatus.STUDENT_ID = studentstatus.STUDENT_ID')
+        ->condition('oldstudentstatus.STUDENT_STATUS_ID', $student_status_id)
+        ->execute()->fetch();
+        
+        if ($newStudent['STUDENT_STATUS_ID']) {
+          $this->session->setFocus('Student.HEd.Student.Status', $newStudent['STUDENT_STATUS_ID'], $role_token);
+        } else {
+          // Set to first student in list
+          $firstStudent = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
+          ->fields('stustatus', array('STUDENT_STATUS_ID'))
+          ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID')
+          ->condition('stustatus.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
+          ->orderBy('cons.LAST_NAME')
+          ->orderBy('cons.FIRST_NAME')
+          ->range(0, 1)
+          ->execute()->fetch();
+          $this->session->setFocus('Student.HEd.Student.Status', $firstStudent['STUDENT_STATUS_ID'], $role_token);
+        }
+        
+      } else {
+        // Set to first teacher in list
+        $firstStudent = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('STUDENT_STATUS_ID'))
+        ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID')
+        ->condition('stustatus.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
+        ->orderBy('cons.LAST_NAME')
+        ->orderBy('cons.FIRST_NAME')
+        ->range(0, 1)
+        ->execute()->fetch();
+        $this->session->setFocus('Student.HEd.Student.Status', $firstStudent['STUDENT_STATUS_ID'], $role_token);
+      }
+      
+    } else {
+      // get student status id for currently set organization and term
+      $student_status_id = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('STUDENT_STATUS_ID'))
+        ->condition('stustatus.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
+        ->condition('stustatus.STUDENT_ID', $this->session->get('user_id'));
+      $student_status_id = $student_status_id->execute()->fetch();
+
+      if ($student_status_id['STUDENT_STATUS_ID']) {
+        $this->session->setFocus('Student.HEd.Student.Status', $student_status_id['STUDENT_STATUS_ID'], $role_token);
+      }
+      
+    }
+    
+  }
+  
+  public function getStudentStatusID() {
+    $session_focus = $this->session->get('focus');
+    if (isset($session_focus['Student.HEd.Student.Status']))
+      return $session_focus['Student.HEd.Student.Status'];
+    else
+      return false;
+  }
+  
   public function getSchoolIDs() {
     if ($this->session->get('portal') == 'sis') {
       return $this->organization->getSchools($this->getOrganizationID());

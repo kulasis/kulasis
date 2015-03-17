@@ -1,0 +1,3 @@
+student_HEd_student_schedule:
+  path: /student/schedule
+  defaults: { _controller: KulaHEdSchedulingBundle:StudentSchedule:index }

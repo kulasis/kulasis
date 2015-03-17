@@ -326,6 +326,6 @@ class SISScheduleController extends Controller {
       if ($class['SUN'] == '1') $classes[$key]['meets'] .= 'U';
     }
     */
-    return $classes;  
+    return $classes;
   }
 }

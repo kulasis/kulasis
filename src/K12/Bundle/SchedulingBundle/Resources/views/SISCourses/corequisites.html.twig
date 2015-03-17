@@ -1,0 +1,38 @@
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Corequisites
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_requirement_groups', 'STUD_COURSE_COREQUISITES') }}
+</span>
+</div>
+<table id="window_window_num_data_table_requirement_groups" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ delete: true, field: 'HEd.Course.Corequisite.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Course.Corequisite.CorequisiteCourseID', field_name_override: 'Course Corequisite', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  </tr>
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, field: 'HEd.Course.Corequisite.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+  {{ kula_field({ add: true, field: 'HEd.Course.Corequisite.CourseID', value: kula_core_record.getSelectedRecordID(), hidden: true }) }}
+  {{ kula_field({ add: true, delete: true, field: 'HEd.Course.Corequisite.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Course.Corequisite.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_field({ add: true, field: 'HEd.Course.Corequisite.CorequisiteCourseID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Course.Corequisite.ID', prepend_html: '</tr>' }) }}
+  {% for coreq in corequisites %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'HEd.Course.Corequisite.ID', db_row_id: coreq.COURSE_COREQUISITE_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {% if coreq.COREQUISITE_COURSE_ID == kula_core_record.getSelectedRecordID() %}
+    {{ kula_field({ edit: true, field: 'HEd.Course.Corequisite.CourseID', db_row_id: coreq.COURSE_COREQUISITE_ID, value: coreq.COURSE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% else %}
+    {{ kula_field({ edit: true, field: 'HEd.Course.Corequisite.CorequisiteCourseID', db_row_id: coreq.COURSE_COREQUISITE_ID, value: coreq.COREQUISITE_COURSE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% endif %}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

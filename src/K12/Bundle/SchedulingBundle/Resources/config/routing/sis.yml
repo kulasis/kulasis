@@ -1,0 +1,172 @@
+sis_HEd_offering_staff_schedule:
+  path: /offering/staff/schedule
+  defaults: { _controller: KulaHEdSchedulingBundle:SISStaff:staff_schedule }
+
+sis_HEd_student_schedule:
+  path: /student/schedule
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSchedule:index }
+
+sis_HEd_student_schedule_add:
+  path: /student/schedule/add
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSchedule:add }
+
+sis_HEd_student_schedule_calculateTotals:
+  path: /student/schedule/calculateTotals
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSchedule:calculateTotals }
+
+sis_HEd_student_schedule_detail_edit:
+  path: /student/{id}/schedule/detail/{sub_id}
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSchedule:detail }
+
+sis_HEd_student_schedule_grades:
+  path: /student/schedule/grades
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSchedule:grades }
+
+sis_HEd_student_schedule_history:
+  path: /student/schedule/history
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSchedule:history }
+
+sis_HEd_student_schedule_reports_studentschedule:
+  path: /student/schedule/reports/studentschedule
+  defaults: { _controller: KulaHEdSchedulingBundle:SISStudentScheduleReport:index }
+  methods: [GET]
+
+sis_HEd_student_schedule_reports_studentschedule_generate:
+  path: /student/schedule/reports/studentschedule
+  defaults: { _controller: KulaHEdSchedulingBundle:SISStudentScheduleReport:generate }
+  methods: [POST]
+
+sis_HEd_student_schedule_reports_studentschedulebill:
+  path: /student/schedule/reports/studentschedulebill
+  defaults: { _controller: KulaHEdSchedulingBundle:SISStudentScheduleBillReport:index }
+  methods: [GET]
+  
+sis_HEd_student_schedule_reports_studentschedulebill_generate:
+  path: /student/schedule/reports/studentschedulebill
+  defaults: { _controller: KulaHEdSchedulingBundle:SISStudentScheduleBillReport:generate }
+  methods: [POST]
+
+sis_HEd_student_schedule_waitlist:
+  path: /student/schedule/waitlist
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSchedule:waitlist }
+
+sis_HEd_offering_sections:
+  path: /offering/sections
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSection:index }
+
+sis_HEd_offering_sections_add:
+  path: /offering/section/add
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSection:add }
+  methods: [GET]
+
+sis_HEd_offering_sections_create:
+  path: /offering/section/add
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSection:create }
+  methods: [POST]
+
+sis_HEd_offering_sections_delete:
+  path: /offering/section/delete
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSection:delete }
+  methods: [POST]
+
+sis_HEd_offering_sections_grades:
+  path: /offering/section/grades
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSection:grades }
+
+sis_HEd_offering_sections_inactivate:
+  path: /offering/sections/inactivate
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSection:inactivate }
+  methods: [POST]
+
+sis_HEd_offering_sections_report_classroster_generate:
+  path: /offering/section/reports/roster/generate
+  defaults: { _controller: KulaHEdSchedulingBundle:SISClassRosterReport:generate }
+  methods: [POST]
+
+sis_HEd_offering_sections_reports_classroster:
+  path: /offering/sections/reports/classroster
+  defaults: { _controller: KulaHEdSchedulingBundle:SISClassRosterReport:index }
+
+sis_HEd_offering_sections_reports_masterschedule:
+  path: /offering/sections/reports/masterschedule
+  defaults: { _controller: KulaHEdSchedulingBundle:SISMasterScheduleReport:index }
+  methods: [GET]
+
+sis_HEd_offering_sections_reports_masterschedule_generate:
+  path: /offering/section/reports/masterschedule
+  defaults: { _controller: KulaHEdSchedulingBundle:SISMasterScheduleReport:generate }
+  methods: [POST]
+
+sis_HEd_offering_sections_roster:
+  path: /offering/section/roster
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSection:roster }
+
+sis_HEd_offering_sections_waitlist:
+  path: /offering/sections/waitlist
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSection:waitlist }
+
+sis_HEd_offering_staff_reports_schedule:
+  path: /offering/staff/reports/schedule
+  defaults: { _controller: KulaHEdSchedulingBundle:SISStaffScheduleReport:index }
+  methods: [GET]
+
+sis_HEd_offering_staff_schedule_reports_staffschedule_generate:
+  path: /offering/staff/reports/schedule
+  defaults: { _controller: KulaHEdSchedulingBundle:SISStaffScheduleReport:generate }
+  methods: [POST]
+
+sis_HEd_offering_sections_recalculateSectionTotals:
+  path: /offering/sections/recalculateTotals
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSection:recalculate_section_totals }
+
+sis_HEd_offering_sections_courses:
+  path: /offering/sections/courses
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSection:courses }
+
+sis_HEd_offering_sections_staff:
+  path: /offering/sections/staff
+  defaults: { _controller: KulaHEdSchedulingBundle:SISSection:staff }
+
+sis_HEd_course_chooser:
+  path: /offering/course/chooser
+  defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:chooser }
+
+sis_HEd_courses:
+  path: /offering/courses
+  defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:index }
+
+sis_HEd_courses_add:
+  path: /offering/courses/add
+  defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:add }
+  methods: [GET]
+
+sis_HEd_courses_books:
+  path: /offering/courses/books
+  defaults: { _controller: KulaHEdSchedulingBundle:SISBooks:books }
+
+sis_HEd_courses_corequisites:
+  path: /offering/courses/corequisites
+  defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:corequisites }
+
+sis_HEd_courses_create:
+  path: /offering/courses/add
+  defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:create }
+  methods: [POST]
+
+sis_HEd_courses_delete:
+  path: /offering/courses/delete
+  defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:delete }
+  methods: [POST]
+
+sis_HEd_courses_prerequisites:
+  path: /offering/courses/prerequisites
+  defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:prerequisites }
+
+sis_HEd_room_chooser:
+  path: /offering/room/chooser
+  defaults: { _controller: KulaHEdSchedulingBundle:SISRooms:chooser }
+  methods: [GET]
+
+sis_HEd_rooms:
+  path: /offering/rooms
+  defaults: { _controller: KulaHEdSchedulingBundle:SISRooms:index }
