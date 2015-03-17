@@ -50,7 +50,7 @@ Current Schedule
     {% else %}
     {{ kula_field({ delete: true, field: 'HEd.Student.Class.ID', db_row_id: class.STUDENT_CLASS_ID, post_type: 'drop', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ index }}</td>
-    {{ kula_field({ field: 'HEd.Section.SectionNumber', input: false, value: class.SECTION_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td><a href="{{ path('sis_HEd_offering_sections') }}" data-record-type="SIS.HEd.Section" data-record-id="{{ class.SECTION_ID }}" class="normal-link-new-window">{{ kula_field({ field: 'HEd.Section.SectionNumber', input: false, value: class.SECTION_NUMBER }) }}</a></td>
     {% if class.COURSE_ID %}
     {{ kula_field({ field: 'HEd.Course.CourseNumber', input: false, value: class.second_COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Course.Title', input: false, value: class.second_COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
