@@ -92,7 +92,7 @@ class PosterRecord {
           if ($this->container->get('request_stack')->getCurrentRequest()->isXmlHttpRequest()) {
             throw new PosterException('Changes not saved.<ul>' . $violation_string . '</ul>');
           } else {
-            $this->container->get('session.flash_bag')->add('error', 'Changes not saved.<ul>' . $violation_string . '</ul>');
+            $this->container->get('session')->getFlashBag()->add('error', 'Changes not saved.<ul>' . $violation_string . '</ul>');
           }
         }
       }
@@ -284,7 +284,7 @@ class PosterRecord {
       // Check for permission
       foreach($this->fields as $attribute => $value) {
         if (!$this->permission->getPermissionForSchemaObject($this->table, $attribute, Permission::WRITE)) {
-          $this->violations->add(new \Symfony\Component\Validator\ConstraintViolation('Attempted to {crud}' . $table . '.' . $attribute . ' with no write permission.', 'Attempted to {crud} {field} with no permission.', array('field' => $attribute, 'crud' => $this->crud), 'Array', $attribute, $value));
+          $this->violations->add(new \Symfony\Component\Validator\ConstraintViolation('Attempted to ' . $this->crud. ' ' . $this->table . '.' . $attribute . ' with no write permission.', 'Attempted to {crud} {field} with no permission.', array('field' => $attribute, 'crud' => $this->crud), 'Array', $attribute, $value));
           $permission_violations = true;
           unset($this->fields[$attribute]);
         }
