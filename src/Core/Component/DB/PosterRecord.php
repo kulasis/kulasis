@@ -299,7 +299,7 @@ class PosterRecord {
     
     if (count($permission_violations) > 0) {
       $this->hasViolations = true;
-      $this->violations = new $this->violations->addAll($permission_violations);
+      $this->violations = $this->violations->addAll($permission_violations);
     }
   }
   
