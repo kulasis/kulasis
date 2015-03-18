@@ -224,7 +224,6 @@ class SISStudentTranscriptReportController extends ReportController {
         
         // Grade status info
         $status_info = $this->db()->db_select('STUD_STUDENT_STATUS', 'status')
-          ->fields('status')
           ->join('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
           ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
           ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
