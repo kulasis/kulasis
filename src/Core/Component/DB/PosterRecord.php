@@ -271,11 +271,12 @@ class PosterRecord {
   
   private function verifyPermissions() {
 
-    $permission_violations = array();
+    $permission_violations = false;
     if ($this->crud == self::ADD) {
       // Check for permission to insert into table
       if (!$this->permission->getPermissionForSchemaObject($this->table, null, Permission::ADD)) {
-        $permission_violations[] = new \Symfony\Component\Validator\ConstraintViolation('Attempted to insert into ' . $this->table  . ' with no permission to insert into table.', 'Attempted to insert into {table} with no permission to insert into table.', array('table' => $this->table), 'Array', $this->table, null);
+        $this->violations->add(new \Symfony\Component\Validator\ConstraintViolation('Attempted to insert into ' . $this->table  . ' with no permission to insert into table.', 'Attempted to insert into {table} with no permission to insert into table.', array('table' => $this->table), 'Array', $this->table, null));
+        $permission_violations = true;
       } 
     }
     
@@ -283,7 +284,8 @@ class PosterRecord {
       // Check for permission
       foreach($this->fields as $attribute => $value) {
         if (!$this->permission->getPermissionForSchemaObject($this->table, $attribute, Permission::WRITE)) {
-          $permission_violations[] = new \Symfony\Component\Validator\ConstraintViolation('Attempted to {crud}' . $table . '.' . $attribute . ' with no write permission.', 'Attempted to {crud} {field} with no permission.', array('field' => $attribute, 'crud' => $this->crud), 'Array', $attribute, $value);
+          $this->violations->add(new \Symfony\Component\Validator\ConstraintViolation('Attempted to {crud}' . $table . '.' . $attribute . ' with no write permission.', 'Attempted to {crud} {field} with no permission.', array('field' => $attribute, 'crud' => $this->crud), 'Array', $attribute, $value));
+          $permission_violations = true;
           unset($this->fields[$attribute]);
         }
       }
@@ -292,12 +294,13 @@ class PosterRecord {
     if ($this->crud == self::DELETE) {
       // Check for permission to delete from table
       if (!$this->permission->getPermissionForSchemaObject($this->table, null, Permission::DELETE)) {
-        $permission_violations[] = new \Symfony\Component\Validator\ConstraintViolation('Attempted to delete from ' . $this->table  . ' with no permission to delete.', 'Attempted to delete from {table} with no permission to delete.', array('table' => $this->table), 'Array', $this->table, null);
+        $this->violations->add(new \Symfony\Component\Validator\ConstraintViolation('Attempted to delete from ' . $this->table  . ' with no permission to delete.', 'Attempted to delete from {table} with no permission to delete.', array('table' => $this->table), 'Array', $this->table, null));
+        $permission_violations = true;
       }
       
     }
     
-    if (count($permission_violations) > 0) {
+    if ($permission_violations) {
       $this->hasViolations = true;
       $this->violations = $this->violations->addAll($permission_violations);
     }
