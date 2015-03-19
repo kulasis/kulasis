@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\K12\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -9,7 +9,7 @@ class SISScheduleController extends Controller {
   public function indexAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Student.Status');
+    $this->setRecordType('SIS.K12.Student.Status');
     
     // set start date
     $term_info = $this->db()->db_select('CORE_TERM')
@@ -25,10 +25,10 @@ class SISScheduleController extends Controller {
     
     if ($this->request->request->get('drop')) {
       
-      $schedule_service = $this->get('kula.HEd.scheduling.schedule');
+      $schedule_service = $this->get('kula.K12.scheduling.schedule');
       
-      $classes_to_delete = $this->request->request->get('drop')['HEd.Student.Class'];
-      $drop_date = date('Y-m-d', strtotime($this->request->request->get('non')['HEd.Student.Class']['HEd.Student.Class.DropDate']));
+      $classes_to_delete = $this->request->request->get('drop')['K12.Student.Class'];
+      $drop_date = date('Y-m-d', strtotime($this->request->request->get('non')['K12.Student.Class']['K12.Student.Class.DropDate']));
       
       foreach($classes_to_delete as $class_id => $class_row) {
         $schedule_service->dropClassForStudentStatus($class_id, $drop_date);
@@ -36,31 +36,31 @@ class SISScheduleController extends Controller {
       
     }
 
-    return $this->render('KulaHEdSchedulingBundle:SISSchedule:index.html.twig', array('drop_date' => $drop_date, 'classes' => $this->_currentSchedule()));
+    return $this->render('KulaK12SchedulingBundle:SISSchedule:index.html.twig', array('drop_date' => $drop_date, 'classes' => $this->_currentSchedule()));
   }
   
   public function gradesAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Student.Status');
+    $this->setRecordType('SIS.K12.Student.Status');
     
     // Add new grades
     if ($this->request->request->get('add')) {
-      $course_history_service = $this->get('kula.HEd.grading.coursehistory');
-      $new_grades = $this->request->request->get('add')['HEd.Student.CourseHistory']['new'];
+      $course_history_service = $this->get('kula.K12.grading.coursehistory');
+      $new_grades = $this->request->request->get('add')['K12.Student.CourseHistory']['new'];
       foreach($new_grades as $student_class_id => $mark) {
-        if (isset($mark['HEd.Student.CourseHistory.Mark']))
-          $course_history_service->insertCourseHistoryForClass($student_class_id, $mark['HEd.Student.CourseHistory.Mark']);
+        if (isset($mark['K12.Student.CourseHistory.Mark']))
+          $course_history_service->insertCourseHistoryForClass($student_class_id, $mark['K12.Student.CourseHistory.Mark']);
       }
     }
     
     // Edit grades
     $edit_request = $this->request->request->get('edit');
-    if (isset($edit_request['HEd.Student.CourseHistory'])) {
-      $course_history_service = $this->get('kula.HEd.grading.coursehistory');
-      $edit_grades = $this->request->request->get('edit')['HEd.Student.CourseHistory'];
+    if (isset($edit_request['K12.Student.CourseHistory'])) {
+      $course_history_service = $this->get('kula.K12.grading.coursehistory');
+      $edit_grades = $this->request->request->get('edit')['K12.Student.CourseHistory'];
       foreach($edit_grades as $student_course_history_id => $mark) {
-        if (isset($mark['HEd.Student.CourseHistory.Mark']) AND $mark['HEd.Student.CourseHistory.Mark'] != '') 
-          $course_history_service->updateCourseHistoryForClass($student_course_history_id, $mark['HEd.Student.CourseHistory.Mark'], isset($mark['HEd.Student.CourseHistory.Comments']) ? $mark['HEd.Student.CourseHistory.Comments'] : null);
+        if (isset($mark['K12.Student.CourseHistory.Mark']) AND $mark['K12.Student.CourseHistory.Mark'] != '') 
+          $course_history_service->updateCourseHistoryForClass($student_course_history_id, $mark['K12.Student.CourseHistory.Mark'], isset($mark['K12.Student.CourseHistory.Comments']) ? $mark['K12.Student.CourseHistory.Comments'] : null);
         else
           $course_history_service->deleteCourseHistoryForClass($student_course_history_id);
       }
@@ -87,13 +87,13 @@ class SISScheduleController extends Controller {
       ->orderBy('DROP_DATE', 'ASC')
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdSchedulingBundle:SISSchedule:grades.html.twig', array('classes' => $classes));
+    return $this->render('KulaK12SchedulingBundle:SISSchedule:grades.html.twig', array('classes' => $classes));
   }
   
   public function historyAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Student.Status');
+    $this->setRecordType('SIS.K12.Student.Status');
     
     $classes = array();
     
@@ -107,13 +107,13 @@ class SISScheduleController extends Controller {
       ->orderBy('SECTION_NUMBER', 'ASC')
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdSchedulingBundle:SISSchedule:history.html.twig', array('classes' => $classes));
+    return $this->render('KulaK12SchedulingBundle:SISSchedule:history.html.twig', array('classes' => $classes));
   }
   
   public function detailAction($id, $sub_id) {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Student.Status');
+    $this->setRecordType('SIS.K12.Student.Status');
       
     $class = array();
     
@@ -123,20 +123,20 @@ class SISScheduleController extends Controller {
       ->condition('STUDENT_CLASS_ID', $sub_id)
       ->execute()->fetch();
         
-    return $this->render('KulaHEdSchedulingBundle:SISSchedule:schedule_detail.html.twig', array('class' => $class));  
+    return $this->render('KulaK12SchedulingBundle:SISSchedule:schedule_detail.html.twig', array('class' => $class));  
   }
   
   public function addAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Student.Status');
+    $this->setRecordType('SIS.K12.Student.Status');
     $start_date = '';
     
     if ($this->request->request->get('add')) {  
-      $schedule_service = $this->get('kula.HEd.scheduling.schedule');
+      $schedule_service = $this->get('kula.K12.scheduling.schedule');
 
-      if (isset($this->request->request->get('add')['HEd.Student.Class']['new']['HEd.Student.Class.SectionID']))
-        $new_classes = $this->request->request->get('add')['HEd.Student.Class']['new']['HEd.Student.Class.SectionID'];
-      $start_date = date('Y-m-d', strtotime($this->request->request->get('add')['HEd.Student.Class']['new']['HEd.Student.Class.StartDate']));
+      if (isset($this->request->request->get('add')['K12.Student.Class']['new']['K12.Student.Class.SectionID']))
+        $new_classes = $this->request->request->get('add')['K12.Student.Class']['new']['K12.Student.Class.SectionID'];
+      $start_date = date('Y-m-d', strtotime($this->request->request->get('add')['K12.Student.Class']['new']['K12.Student.Class.StartDate']));
       
       if (isset($new_classes)) {
         foreach($new_classes as $new_class) {
@@ -146,10 +146,10 @@ class SISScheduleController extends Controller {
     }
     
     if ($this->request->request->get('wait_list')) {
-      $schedule_service = $this->get('kula.HEd.scheduling.schedule');
+      $schedule_service = $this->get('kula.K12.scheduling.schedule');
       
-      if (isset($this->request->request->get('wait_list')['HEd.Student.WaitList']['HEd.Student.WaitList.SectionID']))
-        $new_classes = $this->request->request->get('wait_list')['HEd.Student.WaitList']['HEd.Student.WaitList.SectionID'];
+      if (isset($this->request->request->get('wait_list')['K12.Student.WaitList']['K12.Student.WaitList.SectionID']))
+        $new_classes = $this->request->request->get('wait_list')['K12.Student.WaitList']['K12.Student.WaitList.SectionID'];
       
       if (isset($new_classes)) {
         foreach($new_classes as $new_class) {
@@ -159,11 +159,11 @@ class SISScheduleController extends Controller {
     }
     
     if ($this->request->request->get('add')) {
-      return $this->forward('sis_HEd_student_schedule', array('record_type' => 'SIS.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
+      return $this->forward('sis_K12_student_schedule', array('record_type' => 'SIS.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
     }
     
     if ($this->request->request->get('wait_list')) {
-      return $this->forward('sis_HEd_student_schedule_waitlist', array('record_type' => 'SIS.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
+      return $this->forward('sis_K12_student_schedule_waitlist', array('record_type' => 'SIS.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
     }
     
     $search_classes = array();
@@ -228,18 +228,18 @@ class SISScheduleController extends Controller {
       
     }
     
-    return $this->render('KulaHEdSchedulingBundle:SISSchedule:add.html.twig', array('search_classes' => $search_classes, 'classes' => $this->_currentSchedule(), 'start_date' => $start_date));  
+    return $this->render('KulaK12SchedulingBundle:SISSchedule:add.html.twig', array('search_classes' => $search_classes, 'classes' => $this->_currentSchedule(), 'start_date' => $start_date));  
   }
   
   public function waitlistAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Student.Status');
+    $this->setRecordType('SIS.K12.Student.Status');
     
     if ($this->request->request->get('drop')) {
       
-      $schedule_service = $this->get('kula.HEd.scheduling.schedule');
+      $schedule_service = $this->get('kula.K12.scheduling.schedule');
       
-      $classes_to_delete = $this->request->request->get('drop')['HEd.Student.WaitList'];
+      $classes_to_delete = $this->request->request->get('drop')['K12.Student.WaitList'];
       
       foreach($classes_to_delete as $class_id => $class_row) {
         $schedule_service->dropWaitListClassForStudentStatus($class_id);
@@ -276,20 +276,20 @@ class SISScheduleController extends Controller {
       if ($class['SUN'] == '1') $classes[$key]['meets'] .= 'U';
     }
     
-    return $this->render('KulaHEdSchedulingBundle:SISSchedule:waitlist.html.twig', array('classes' => $classes));
+    return $this->render('KulaK12SchedulingBundle:SISSchedule:waitlist.html.twig', array('classes' => $classes));
   }
   
   public function calculateTotalsAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Student.Status');
+    $this->setRecordType('SIS.K12.Student.Status');
     
-    $student_billing_service = $this->get('kula.HEd.billing.student');
+    $student_billing_service = $this->get('kula.K12.billing.student');
     
     $student_billing_service->processBilling($this->record->getSelectedRecordID(), 'Schedule Changed');
     
     $this->addFlash('success', 'Recalculated bill.');
     
-    return $this->forward('sis_HEd_student_schedule', array('record_type' => 'SIS.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
+    return $this->forward('sis_K12_student_schedule', array('record_type' => 'SIS.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
   }
   
   private function _currentSchedule() {

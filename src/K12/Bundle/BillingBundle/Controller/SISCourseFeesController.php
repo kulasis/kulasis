@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\BillingBundle\Controller;
+namespace Kula\K12\Bundle\BillingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -9,7 +9,7 @@ class SISCourseFeesController extends Controller {
   public function indexAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Course');
+    $this->setRecordType('SIS.K12.Course');
     
     $fees = array();
     
@@ -41,14 +41,14 @@ class SISCourseFeesController extends Controller {
       ->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
       ->execute()->fetch();
     
-    return $this->render('KulaHEdBillingBundle:SISCourseFees:fees_index.html.twig', array('fees' => $fees, 'organization_term_id' => $this->focus->getOrganizationTermID(), 'organization_term_id_display' => $org_term['TERM_ABBREVIATION'] . ' / ' . $org_term['ORGANIZATION_NAME']));
+    return $this->render('KulaK12BillingBundle:SISCourseFees:fees_index.html.twig', array('fees' => $fees, 'organization_term_id' => $this->focus->getOrganizationTermID(), 'organization_term_id_display' => $org_term['TERM_ABBREVIATION'] . ' / ' . $org_term['ORGANIZATION_NAME']));
     
   }
   
   public function sectionFeesAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Section');
+    $this->setRecordType('SIS.K12.Section');
     
     $fees = array();
     
@@ -64,7 +64,7 @@ class SISCourseFeesController extends Controller {
       
     }
     
-    return $this->render('KulaHEdBillingBundle:SISCourseFees:section.html.twig', array('fees' => $fees));
+    return $this->render('KulaK12BillingBundle:SISCourseFees:section.html.twig', array('fees' => $fees));
     
   }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\K12\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
@@ -8,18 +8,18 @@ class SISMasterScheduleReportController extends ReportController {
   
   public function indexAction() {
     $this->authorize();
-    $this->formAction('sis_HEd_offering_sections_reports_masterschedule_generate');
-    if ($this->request->query->get('record_type') == 'SIS.HEd.Section' AND $this->request->query->get('record_id') != '')
-      $this->setRecordType('SIS.HEd.Section');
+    $this->formAction('sis_K12_offering_sections_reports_masterschedule_generate');
+    if ($this->request->query->get('record_type') == 'SIS.K12.Section' AND $this->request->query->get('record_id') != '')
+      $this->setRecordType('SIS.K12.Section');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    return $this->render('KulaHEdSchedulingBundle:SISMasterScheduleReport:reports_masterschedule.html.twig');
+    return $this->render('KulaK12SchedulingBundle:SISMasterScheduleReport:reports_masterschedule.html.twig');
   }
   
   public function generateAction()
   {  
     $this->authorize();
     
-    $pdf = new \Kula\HEd\Bundle\SchedulingBundle\Report\MasterScheduleReport("L");
+    $pdf = new \Kula\K12\Bundle\SchedulingBundle\Report\MasterScheduleReport("L");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
     

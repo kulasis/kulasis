@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\BillingBundle\Controller;
+namespace Kula\K12\Bundle\BillingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -8,21 +8,21 @@ class SISTransactionsController extends Controller {
   
   public function transactionsAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Student');
+    $this->setRecordType('SIS.K12.Student');
     
     if ($this->request->request->get('void')) {
-      $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
+      $constituent_billing_service = $this->get('kula.K12.billing.constituent');
       
       $void = $this->request->request->get('void');
       $non = $this->request->request->get('non');
         
-      if (isset($non['HEd.Billing.Transaction']['HEd.Billing.Transaction.TransactionDate']))
-        $transaction_date = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.TransactionDate'];
+      if (isset($non['K12.Billing.Transaction']['K12.Billing.Transaction.TransactionDate']))
+        $transaction_date = $non['K12.Billing.Transaction']['K12.Billing.Transaction.TransactionDate'];
       else 
         $transaction_date = null;
       
-      if (isset($non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason']))
-        $reason = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason'];
+      if (isset($non['K12.Billing.Transaction']['K12.Billing.Transaction.VoidedReason']))
+        $reason = $non['K12.Billing.Transaction']['K12.Billing.Transaction.VoidedReason'];
       else 
         $reason = null;
       
@@ -53,26 +53,26 @@ class SISTransactionsController extends Controller {
       
     }
     
-    return $this->render('KulaHEdBillingBundle:SISTransactions:transactions.html.twig', array('transactions' => $transactions));
+    return $this->render('KulaK12BillingBundle:SISTransactions:transactions.html.twig', array('transactions' => $transactions));
   }
   
   public function historyAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Student');
+    $this->setRecordType('SIS.K12.Student');
     
     if ($this->request->request->get('void')) {
-      $constituent_billing_service = $this->get('kula.HEd.billing.student');
+      $constituent_billing_service = $this->get('kula.K12.billing.student');
       
       $void = $this->request->request->get('void');
       $non = $this->request->request->get('non');
         
-      if (isset($non['HEd.Billing.Transaction']['TransactionDate']))
-        $transaction_date = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.TransactionDate'];
+      if (isset($non['K12.Billing.Transaction']['TransactionDate']))
+        $transaction_date = $non['K12.Billing.Transaction']['K12.Billing.Transaction.TransactionDate'];
       else 
         $transaction_date = null;
       
-      if (isset($non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason']))
-        $reason = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason'];
+      if (isset($non['K12.Billing.Transaction']['K12.Billing.Transaction.VoidedReason']))
+        $reason = $non['K12.Billing.Transaction']['K12.Billing.Transaction.VoidedReason'];
       else 
         $reason = null;
       
@@ -103,22 +103,22 @@ class SISTransactionsController extends Controller {
       
     }
     
-    return $this->render('KulaHEdBillingBundle:SISTransactions:transactions.html.twig', array('transactions' => $transactions));
+    return $this->render('KulaK12BillingBundle:SISTransactions:transactions.html.twig', array('transactions' => $transactions));
   }
 
   public function transaction_detailAction($constituent_transaction_id) {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Student');
+    $this->setRecordType('SIS.K12.Student');
     $this->processForm();
 
     $edit_post = $this->request->get('edit');
     
-    if (isset($edit_post['HEd.Billing.Transaction'])) {
+    if (isset($edit_post['K12.Billing.Transaction'])) {
       // set balance amount
-      foreach($edit_post['HEd.Billing.Transaction'] as $row_id => $row) {
-        if (isset($row['HEd.Billing.Transaction.Amount'])) {
-          $charge_detail_poster = $this->newPoster()->edit('HEd.Billing.Transaction', $row_id, array(
-            'HEd.Billing.Transaction.AppliedBalance' => $row['HEd.Billing.Transaction.Amount']
+      foreach($edit_post['K12.Billing.Transaction'] as $row_id => $row) {
+        if (isset($row['K12.Billing.Transaction.Amount'])) {
+          $charge_detail_poster = $this->newPoster()->edit('K12.Billing.Transaction', $row_id, array(
+            'K12.Billing.Transaction.AppliedBalance' => $row['K12.Billing.Transaction.Amount']
           ))->process();
         }
       }
@@ -147,7 +147,7 @@ class SISTransactionsController extends Controller {
       $query_conditions_or = $query_conditions_or->condition('CHARGE_TRANSACTION_ID', $constituent_transaction_id);
       $query_conditions_or = $query_conditions_or->condition('PAYMENT_TRANSACTION_ID', $constituent_transaction_id);
       /*
-      $applied_transactions = $this->db()->db_select('HEd.Billing.Transaction_APPLIED')
+      $applied_transactions = $this->db()->db_select('K12.Billing.Transaction_APPLIED')
         ->condition($query_conditions_or)
         ->execute()->fetchAll();
       
@@ -157,7 +157,7 @@ class SISTransactionsController extends Controller {
       */
     }
     
-    return $this->render('KulaHEdBillingBundle:SISTransactions:transactions_detail.html.twig', array('transaction' => $transaction, 'applied_transactions' => $applied_transactions, 'applied_transactions_total' => $applied_transactions_total));
+    return $this->render('KulaK12BillingBundle:SISTransactions:transactions_detail.html.twig', array('transaction' => $transaction, 'applied_transactions' => $applied_transactions, 'applied_transactions_total' => $applied_transactions_total));
   }
   
   public function add_chargeAction() {
@@ -170,22 +170,22 @@ class SISTransactionsController extends Controller {
   
   public function add($code_type) {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Student');
+    $this->setRecordType('SIS.K12.Student');
     
     if ($this->record->getSelectedRecordID()) {
         
       if ($this->request->request->get('add')) {
         
-        $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
+        $constituent_billing_service = $this->get('kula.K12.billing.constituent');
         $add = $this->request->request->get('add');
-        $constituent_billing_service->addTransaction($this->record->getSelectedRecord()['STUDENT_ID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.OrganizationTermID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.CodeID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.TransactionDate'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Description'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Amount']);
+        $constituent_billing_service->addTransaction($this->record->getSelectedRecord()['STUDENT_ID'], $add['K12.Billing.Transaction']['new_num']['K12.Billing.Transaction.OrganizationTermID'], $add['K12.Billing.Transaction']['new_num']['K12.Billing.Transaction.CodeID'], $add['K12.Billing.Transaction']['new_num']['K12.Billing.Transaction.TransactionDate'], $add['K12.Billing.Transaction']['new_num']['K12.Billing.Transaction.Description'], $add['K12.Billing.Transaction']['new_num']['K12.Billing.Transaction.Amount']);
         
-        return $this->forward('sis_HEd_student_billing_transactions', array('record_type' => 'SIS.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
+        return $this->forward('sis_K12_student_billing_transactions', array('record_type' => 'SIS.K12.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.K12.Student', 'record_id' => $this->record->getSelectedRecordID()));
       }
         
     }
     
-    return $this->render('KulaHEdBillingBundle:SISTransactions:transactions_add.html.twig', array('code_type' => $code_type));
+    return $this->render('KulaK12BillingBundle:SISTransactions:transactions_add.html.twig', array('code_type' => $code_type));
   }
   
 }

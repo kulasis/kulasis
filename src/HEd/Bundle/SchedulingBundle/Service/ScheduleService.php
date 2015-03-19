@@ -182,7 +182,7 @@ class ScheduleService {
     if ($class_poster) {
       
       // process course fees
-      if ($student_status_info['BILLING_MODE'] == 'FEES' AND $drop_date < $class_row['START_DATE']) {
+      if ($class_row'BILLING_MODE'] == 'FEES' AND $drop_date < $class_row['START_DATE']) {
         $this->billing->removeCourseFees($student_class_id);
       }
       

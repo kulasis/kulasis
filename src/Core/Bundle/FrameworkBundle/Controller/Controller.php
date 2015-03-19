@@ -164,6 +164,14 @@ class Controller extends BaseController {
     if (!($this->session->get('initial_role') > 0)) {
       throw new NotAuthorizedException();
     }
+    
+    if ($this->session->get('portal') == 'student') {
+      if (!substr($this->request->server->get('REQUEST_URI'), 0, 9) == "/student/") {
+        $this->flash->add('error', 'Unauthorized access.');
+        throw new NotAuthorizedException();
+      }
+      
+    }
   }
   
   /**

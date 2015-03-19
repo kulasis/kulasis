@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\K12\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
@@ -8,18 +8,18 @@ class SISStudentScheduleBillReportController extends ReportController {
   
   public function indexAction() {
     $this->authorize();
-    $this->formAction('sis_HEd_student_schedule_reports_studentschedulebill_generate');
-    if ($this->request->query->get('record_type') == 'SIS.HEd.Student.Status' AND $this->request->query->get('record_id') != '')
-      $this->setRecordType('SIS.HEd.Student.Status');
+    $this->formAction('sis_K12_student_schedule_reports_studentschedulebill_generate');
+    if ($this->request->query->get('record_type') == 'SIS.K12.Student.Status' AND $this->request->query->get('record_id') != '')
+      $this->setRecordType('SIS.K12.Student.Status');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    return $this->render('KulaHEdSchedulingBundle:SISStudentScheduleReport:reports_studentschedule.html.twig');
+    return $this->render('KulaK12SchedulingBundle:SISStudentScheduleReport:reports_studentschedule.html.twig');
   }
   
   public function generateAction()
   {  
     $this->authorize();
     
-    $this->pdf = new \Kula\HEd\Bundle\SchedulingBundle\Report\StudentScheduleBillReport("P");
+    $this->pdf = new \Kula\K12\Bundle\SchedulingBundle\Report\StudentScheduleBillReport("P");
     $this->pdf->SetFillColor(245,245,245);
     $this->pdf->row_count = 0;
     
@@ -56,7 +56,7 @@ class SISStudentScheduleBillReportController extends ReportController {
     //var_dump($terms_with_balances_result->arguments());
     //die();
     // Add on selected record
-    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.HEd.Student')
+    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.K12.Student')
       $terms_with_balances_result = $terms_with_balances_result->condition('transactions.CONSTITUENT_ID', $record_id);
     $terms_with_balances_result = $terms_with_balances_result->execute();
     while ($balance_row = $terms_with_balances_result->fetch()) {

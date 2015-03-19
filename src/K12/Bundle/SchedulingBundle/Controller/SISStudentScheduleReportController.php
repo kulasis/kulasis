@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\K12\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
@@ -8,18 +8,18 @@ class SISStudentScheduleReportController extends ReportController {
   
   public function indexAction() {
     $this->authorize();
-    $this->formAction('sis_HEd_student_schedule_reports_studentschedule_generate');
-    if ($this->request->query->get('record_type') == 'SIS.HEd.Student.Status' AND $this->request->query->get('record_id') != '')
-      $this->setRecordType('SIS.HEd.Student.Status');
+    $this->formAction('sis_K12_student_schedule_reports_studentschedule_generate');
+    if ($this->request->query->get('record_type') == 'SIS.K12.Student.Status' AND $this->request->query->get('record_id') != '')
+      $this->setRecordType('SIS.K12.Student.Status');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    return $this->render('KulaHEdSchedulingBundle:SISStudentScheduleReport:reports_studentschedule.html.twig');
+    return $this->render('KulaK12SchedulingBundle:SISStudentScheduleReport:reports_studentschedule.html.twig');
   }
   
   public function generateAction()
   {  
     $this->authorize();
     
-    $pdf = new \Kula\HEd\Bundle\SchedulingBundle\Report\StudentScheduleReport("P");
+    $pdf = new \Kula\K12\Bundle\SchedulingBundle\Report\StudentScheduleReport("P");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
     
@@ -71,7 +71,7 @@ class SISStudentScheduleReportController extends ReportController {
       ->fields('markscale', array('MARK_SCALE_NAME'))
       ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
       ->fields('status', array('STUDENT_STATUS_ID'))
-      ->leftJoin('CORE_LOOKUP_VALUES', 'grvalue', "grvalue.CODE = status.GRADE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
+      ->leftJoin('CORE_LOOKUP_VALUES', 'grvalue', "grvalue.CODE = status.GRADE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'K12.Student.Enrollment.Grade')")
       ->fields('grvalue', array('DESCRIPTION' => 'GRADE'))
       ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
       ->leftJoin('STUD_DEGREE', 'degree', 'studdegrees.DEGREE_ID = degree.DEGREE_ID')

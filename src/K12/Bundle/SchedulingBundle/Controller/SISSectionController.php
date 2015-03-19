@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\K12\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -9,7 +9,7 @@ class SISSectionController extends Controller {
   public function indexAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Section');
+    $this->setRecordType('SIS.K12.Section');
     
     $section = $this->db()->db_select('STUD_SECTION', 'section')
       ->fields('section', array('SECTION_ID','CREDITS', 'START_DATE', 'END_DATE', 'CAPACITY', 'MINIMUM', 'ENROLLED_TOTAL', 'WAIT_LISTED_TOTAL', 'MARK_SCALE_ID'))
@@ -21,38 +21,38 @@ class SISSectionController extends Controller {
       ->condition('SECTION_ID', $this->record->getSelectedRecordID())
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdSchedulingBundle:SISSection:index.html.twig', array('section' => $section, 'meeting_times' => $meeting_times));
+    return $this->render('KulaK12SchedulingBundle:SISSection:index.html.twig', array('section' => $section, 'meeting_times' => $meeting_times));
   }
   
   public function coursesAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Section');
+    $this->setRecordType('SIS.K12.Section');
     
     $courses = $this->db()->db_select('STUD_SECTION_COURSES', 'courses')
       ->fields('courses', array('SECTION_COURSE_ID', 'COURSE_ID'))
       ->condition('courses.SECTION_ID', $this->record->getSelectedRecordID())
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdSchedulingBundle:SISSection:courses.html.twig', array('courses' => $courses));
+    return $this->render('KulaK12SchedulingBundle:SISSection:courses.html.twig', array('courses' => $courses));
   }
   
   public function staffAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Section');
+    $this->setRecordType('SIS.K12.Section');
     
     $staff = $this->db()->db_select('STUD_SECTION_STAFF', 'staff')
       ->fields('staff', array('SECTION_STAFF_ID', 'SECTION_ID', 'STAFF_ORGANIZATION_TERM_ID'))
       ->condition('staff.SECTION_ID', $this->record->getSelectedRecordID())
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdSchedulingBundle:SISSection:staff.html.twig', array('staff' => $staff));
+    return $this->render('KulaK12SchedulingBundle:SISSection:staff.html.twig', array('staff' => $staff));
   }
   
   public function rosterAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Section');
+    $this->setRecordType('SIS.K12.Section');
     
     $students = array();
     
@@ -70,7 +70,7 @@ class SISSectionController extends Controller {
     
     if ($this->request->request->get('delete')) {
       
-      $schedule_service = $this->get('kula.HEd.scheduling.schedule');
+      $schedule_service = $this->get('kula.K12.scheduling.schedule');
       
       $classes_to_delete = $this->request->request->get('delete')['STUD_STUDENT_CLASSES'];
       $drop_date = date('Y-m-d', strtotime($this->request->request->get('edit')['STUD_STUDENT_CLASSES']['DROP_DATE']));
@@ -94,18 +94,18 @@ class SISSectionController extends Controller {
       ->orderBy('FIRST_NAME', 'ASC')
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdSchedulingBundle:SISSection:roster.html.twig', array('students' => $students, 'drop_date' => $drop_date));
+    return $this->render('KulaK12SchedulingBundle:SISSection:roster.html.twig', array('students' => $students, 'drop_date' => $drop_date));
   }
   
   public function waitlistAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Section');
+    $this->setRecordType('SIS.K12.Section');
     
     $students = array();
     
     if ($this->request->request->get('delete')) {
       
-      $schedule_service = $this->get('kula.HEd.scheduling.schedule');
+      $schedule_service = $this->get('kula.K12.scheduling.schedule');
       
       $classes_to_delete = $this->request->request->get('delete')['STUD_STUDENT_WAIT_LIST'];
       
@@ -128,31 +128,31 @@ class SISSectionController extends Controller {
       ->orderBy('FIRST_NAME', 'ASC')
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdSchedulingBundle:SISSection:waitlist.html.twig', array('students' => $students));
+    return $this->render('KulaK12SchedulingBundle:SISSection:waitlist.html.twig', array('students' => $students));
   }
   
   public function gradesAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Section');
+    $this->setRecordType('SIS.K12.Section');
     
     // Add new grades
     if ($this->request->request->get('add')) {
-      $course_history_service = $this->get('kula.HEd.grading.coursehistory');
-      $new_grades = $this->request->request->get('add')['HEd.Student.CourseHistory']['new'];
+      $course_history_service = $this->get('kula.K12.grading.coursehistory');
+      $new_grades = $this->request->request->get('add')['K12.Student.CourseHistory']['new'];
       foreach($new_grades as $student_class_id => $mark) {
-        if (isset($mark['HEd.Student.CourseHistory.Mark']))
-          $course_history_service->insertCourseHistoryForClass($student_class_id, $mark['HEd.Student.CourseHistory.Mark']);
+        if (isset($mark['K12.Student.CourseHistory.Mark']))
+          $course_history_service->insertCourseHistoryForClass($student_class_id, $mark['K12.Student.CourseHistory.Mark']);
       }
     }
     
     // Edit grades
     $edit = $this->request->request->get('edit');
-    if (isset($edit['HEd.Student.CourseHistory'])) {
-      $course_history_service = $this->get('kula.HEd.grading.coursehistory');
-      $edit_grades = $this->request->request->get('edit')['HEd.Student.CourseHistory'];
+    if (isset($edit['K12.Student.CourseHistory'])) {
+      $course_history_service = $this->get('kula.K12.grading.coursehistory');
+      $edit_grades = $this->request->request->get('edit')['K12.Student.CourseHistory'];
       foreach($edit_grades as $student_course_history_id => $mark) {
-        if (isset($mark['HEd.Student.CourseHistory.Mark']) AND $mark['HEd.Student.CourseHistory.Mark'] != '')
-          $course_history_service->updateCourseHistoryForClass($student_course_history_id, $mark['HEd.Student.CourseHistory.Mark'], isset($mark['HEd.Student.CourseHistory.Comments']) ? $mark['HEd.Student.CourseHistory.Comments'] : null);
+        if (isset($mark['K12.Student.CourseHistory.Mark']) AND $mark['K12.Student.CourseHistory.Mark'] != '')
+          $course_history_service->updateCourseHistoryForClass($student_course_history_id, $mark['K12.Student.CourseHistory.Mark'], isset($mark['K12.Student.CourseHistory.Comments']) ? $mark['K12.Student.CourseHistory.Comments'] : null);
         else
           $course_history_service->deleteCourseHistoryForClass($student_course_history_id);
       }
@@ -178,27 +178,27 @@ class SISSectionController extends Controller {
       ->orderBy('FIRST_NAME', 'ASC')
       ->execute()->fetchAll();
     
-    if (isset($edit['HEd.Section'])) {
+    if (isset($edit['K12.Section'])) {
       
-      foreach ($edit['HEd.Section'] as $section_id => $section_row) {
+      foreach ($edit['K12.Section'] as $section_id => $section_row) {
         
-        if (isset($section_row['HEd.Section.TeacherGradesCompleted']['checkbox']) AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox'] == 'Y' AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox_hidden'] != 'Y') {
+        if (isset($section_row['K12.Section.TeacherGradesCompleted']['checkbox']) AND $section_row['K12.Section.TeacherGradesCompleted']['checkbox'] == 'Y' AND $section_row['K12.Section.TeacherGradesCompleted']['checkbox_hidden'] != 'Y') {
           // Set as finalized
-          $sectionInfo['HEd.Section.TeacherGradesCompleted'] = 1;
-          $sectionInfo['HEd.Section.TeacherGradesCompletedUserstamp'] = $this->session->get('user_id');
-          $sectionInfo['HEd.Section.TeacherGradesCompletedTimestamp'] = date('Y-m-d H:i:s');
+          $sectionInfo['K12.Section.TeacherGradesCompleted'] = 1;
+          $sectionInfo['K12.Section.TeacherGradesCompletedUserstamp'] = $this->session->get('user_id');
+          $sectionInfo['K12.Section.TeacherGradesCompletedTimestamp'] = date('Y-m-d H:i:s');
           
-          $this->newPoster()->edit('HEd.Section', $section_id, $sectionInfo)->process()->getResult();
+          $this->newPoster()->edit('K12.Section', $section_id, $sectionInfo)->process()->getResult();
           unset($sectionInfo);
         }
         
-        if (!isset($section_row['HEd.Section.TeacherGradesCompleted']['checkbox']) AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox_hidden'] == 'Y') {
+        if (!isset($section_row['K12.Section.TeacherGradesCompleted']['checkbox']) AND $section_row['K12.Section.TeacherGradesCompleted']['checkbox_hidden'] == 'Y') {
           // Unset as finalized
-          $sectionInfo['HEd.Section.TeacherGradesCompleted'] = 0;
-          $sectionInfo['HEd.Section.TeacherGradesCompletedUserstamp'] = null;
-          $sectionInfo['HEd.Section.TeacherGradesCompletedTimestamp'] = null;
+          $sectionInfo['K12.Section.TeacherGradesCompleted'] = 0;
+          $sectionInfo['K12.Section.TeacherGradesCompletedUserstamp'] = null;
+          $sectionInfo['K12.Section.TeacherGradesCompletedTimestamp'] = null;
           
-          $this->newPoster()->edit('HEd.Section', $section_id, $sectionInfo)->process()->getResult();
+          $this->newPoster()->edit('K12.Section', $section_id, $sectionInfo)->process()->getResult();
           unset($sectionInfo);
         }  
         
@@ -214,52 +214,51 @@ class SISSectionController extends Controller {
       ->condition('section.SECTION_ID', $this->record->getSelectedRecordID())
       ->execute()->fetch();
 
-    return $this->render('KulaHEdSchedulingBundle:SISSection:grades.html.twig', array('students' => $students, 'section_info' => $submitted_grades_info));
+    return $this->render('KulaK12SchedulingBundle:SISSection:grades.html.twig', array('students' => $students, 'section_info' => $submitted_grades_info));
   }
   
   public function addAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Section', 'Y');
-    $this->formAction('sis_HEd_offering_sections_create');
-    return $this->render('KulaHEdSchedulingBundle:SISSection:add.html.twig');
+    $this->setRecordType('SIS.K12.Section', 'Y');
+    $this->formAction('sis_K12_offering_sections_create');
+    return $this->render('KulaK12SchedulingBundle:SISSection:add.html.twig');
   }
   
   public function createAction() {
     $this->authorize();
     
-    if ($sectionInfo = $this->form('add', 'HEd.Section', 0)) {
+    if ($sectionInfo = $this->form('add', 'K12.Section', 0)) {
       
       $transaction = $this->db()->db_transaction();
       
       // Get Course
       $course_info = $this->db()->db_select('STUD_COURSE', 'course')
         ->fields('course', array('MARK_SCALE_ID', 'COURSE_NUMBER'))
-        ->condition('course.COURSE_ID', $sectionInfo['HEd.Section.CourseID'])
+        ->condition('course.COURSE_ID', $sectionInfo['K12.Section.CourseID'])
         ->execute()->fetch();
       
       // Get last section number
       $section_number = $this->db()->db_select('STUD_SECTION', 'section')
         ->fields('section', array('SECTION_NUMBER'))
-        ->condition('section.COURSE_ID', $sectionInfo['HEd.Section.CourseID'])
-        ->condition('section.ORGANIZATION_TERM_ID', $sectionInfo['HEd.Section.OrganizationTermID'])
+        ->condition('section.COURSE_ID', $sectionInfo['K12.Section.CourseID'])
+        ->condition('section.ORGANIZATION_TERM_ID', $sectionInfo['K12.Section.OrganizationTermID'])
         ->orderBy('SECTION_NUMBER', 'DESC', 'section')
         ->execute()->fetch();
       if ($section_number['SECTION_NUMBER']) {
         // Split section
         $split_section = explode('-', $section_number['SECTION_NUMBER']);
         $new_number = str_pad($split_section[1] + 1, 2, '0', STR_PAD_LEFT);
-        $sectionInfo['HEd.Section.SectionNumber'] = $course_info['COURSE_NUMBER'].'-'.$new_number;
+        $sectionInfo['K12.Section.SectionNumber'] = $course_info['COURSE_NUMBER'].'-'.$new_number;
       } else {
-        $sectionInfo['HEd.Section.SectionNumber'] = $course_info['COURSE_NUMBER'].'-01';
+        $sectionInfo['K12.Section.SectionNumber'] = $course_info['COURSE_NUMBER'].'-01';
       }
-      $sectionInfo['HEd.Section.MarkScaleID'] = $course_info['MARK_SCALE_ID'];
       
-      $sectionID = $this->newPoster()->add('HEd.Section', 0, $sectionInfo)->process()->getResult();
+      $sectionID = $this->newPoster()->add('K12.Section', 0, $sectionInfo)->process()->getResult();
       
       if ($sectionID) {
         $transaction->commit();
         $this->addFlash('success', 'Created section.');
-        return $this->forward('sis_HEd_offering_sections', array('record_type' => 'SIS.HEd.Section', 'record_id' => $sectionID), array('record_type' => 'SIS.HEd.Section', 'record_id' => $sectionID));
+        return $this->forward('sis_K12_offering_sections', array('record_type' => 'SIS.K12.Section', 'record_id' => $sectionID), array('record_type' => 'SIS.K12.Section', 'record_id' => $sectionID));
       } else {
         $transaction->rollback();
       }
@@ -268,34 +267,34 @@ class SISSectionController extends Controller {
   
   public function deleteAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Section');
+    $this->setRecordType('SIS.K12.Section');
     
-    $deletedSection = $this->newPoster()->delete('HEd.Section', $this->record->getSelectedRecordID())->process()->getResult();
+    $deletedSection = $this->newPoster()->delete('K12.Section', $this->record->getSelectedRecordID())->process()->getResult();
     
     if ($deletedSection == 1) {
       $this->addFlash('success', 'Deleted section.');
     }
     
-    return $this->forward('sis_HEd_offering_sections');
+    return $this->forward('sis_K12_offering_sections');
   }
   
   public function inactivateAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Section');
+    $this->setRecordType('SIS.K12.Section');
     
     
     if ($this->record->getSelectedRecord()['STATUS'] == 'I') {
-      $rows_affected = $this->newPoster()->edit('HEd.Section', $this->record->getSelectedRecordID(), array('HEd.Section.Status' => null))->process()->getResult();
+      $rows_affected = $this->newPoster()->edit('K12.Section', $this->record->getSelectedRecordID(), array('K12.Section.Status' => null))->process()->getResult();
       $success_message = 'Activated section.';
     } else {
-      $rows_affected = $this->newPoster()->edit('HEd.Section', $this->record->getSelectedRecordID(), array('HEd.Section.Status' => 'I'))->process()->getResult();
+      $rows_affected = $this->newPoster()->edit('K12.Section', $this->record->getSelectedRecordID(), array('K12.Section.Status' => 'I'))->process()->getResult();
       $success_message = 'Inactivated section.';
     }
     
     if ($rows_affected == 1) {
       $this->addFlash('success', $success_message);
       
-      return $this->forward('sis_HEd_offering_sections', array('record_type' => 'SIS.HEd.Section', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.HEd.Section', 'record_id' => $this->record->getSelectedRecordID()));
+      return $this->forward('sis_K12_offering_sections', array('record_type' => 'SIS.K12.Section', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'SIS.K12.Section', 'record_id' => $this->record->getSelectedRecordID()));
     }
   }
   
@@ -342,15 +341,15 @@ class SISSectionController extends Controller {
       ->execute();
     while ($sections_row = $sections_result->fetch()) {
 
-      $this->newPoster()->edit('HEd.Section', $sections_row['SECTION_ID'], array(
-        'HEd.Section.EnrolledTotal' => (isset($enrolled_totals[$sections_row['SECTION_ID']]) AND $enrolled_totals[$sections_row['SECTION_ID']] > 0) ? $enrolled_totals[$sections_row['SECTION_ID']] : 0,
-        'HEd.Section.WaitListedTotal' => (isset($waitlist_totals[$sections_row['SECTION_ID']]) AND $waitlist_totals[$sections_row['SECTION_ID']] > 0) ? $waitlist_totals[$sections_row['SECTION_ID']] : 0
+      $this->newPoster()->edit('K12.Section', $sections_row['SECTION_ID'], array(
+        'K12.Section.EnrolledTotal' => (isset($enrolled_totals[$sections_row['SECTION_ID']]) AND $enrolled_totals[$sections_row['SECTION_ID']] > 0) ? $enrolled_totals[$sections_row['SECTION_ID']] : 0,
+        'K12.Section.WaitListedTotal' => (isset($waitlist_totals[$sections_row['SECTION_ID']]) AND $waitlist_totals[$sections_row['SECTION_ID']] > 0) ? $waitlist_totals[$sections_row['SECTION_ID']] : 0
       ))->process();
       
     }
     
     $this->addFlash('success', 'Recalculated section totals.');
-    return $this->forward('sis_HEd_offering_sections');
+    return $this->forward('sis_K12_offering_sections');
     
   }
   

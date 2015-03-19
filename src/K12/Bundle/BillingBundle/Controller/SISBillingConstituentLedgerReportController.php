@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\BillingBundle\Controller;
+namespace Kula\K12\Bundle\BillingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
@@ -17,8 +17,8 @@ class SISBillingConstituentLedgerReportController extends ReportController {
   public function indexAction() {
     $this->authorize();
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    if ($this->request->query->get('record_type') == 'SIS.HEd.Student' AND $this->request->query->get('record_id') != '')
-      $this->setRecordType('SIS.HEd.Student');
+    if ($this->request->query->get('record_type') == 'SIS.K12.Student' AND $this->request->query->get('record_id') != '')
+      $this->setRecordType('SIS.K12.Student');
     $financial_aid_menu[] = '';
     $financial_aid_year_result = $this->db()->db_select('CORE_TERM', 'term')
       ->fields('term', array('FINANCIAL_AID_YEAR'))
@@ -29,14 +29,14 @@ class SISBillingConstituentLedgerReportController extends ReportController {
       $financial_aid_menu[$financial_aid_year_row['FINANCIAL_AID_YEAR']] = $financial_aid_year_row['FINANCIAL_AID_YEAR'];
     }
     
-    return $this->render('KulaHEdBillingBundle:SISBillingConstituentLedgerReport:reports_billingledger.html.twig', array('fa_menu' => $financial_aid_menu));
+    return $this->render('KulaK12BillingBundle:SISBillingConstituentLedgerReport:reports_billingledger.html.twig', array('fa_menu' => $financial_aid_menu));
   }
   
   public function generateAction()
   {  
     $this->authorize();
     
-    $this->pdf = new \Kula\HEd\Bundle\BillingBundle\Report\BillingConstituentLedgerReport("P");
+    $this->pdf = new \Kula\K12\Bundle\BillingBundle\Report\BillingConstituentLedgerReport("P");
     $this->pdf->SetFillColor(245,245,245);
     $this->pdf->row_count = 0;
 
@@ -63,9 +63,9 @@ class SISBillingConstituentLedgerReportController extends ReportController {
     if ($this->session->get('term_id') != '' AND isset($org_term_ids) AND count($org_term_ids) > 0) {
       $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids)
         ->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID')
-        ->leftJoin('CORE_LOOKUP_VALUES', 'entercode_values', "entercode_values.CODE = status.ENTER_CODE AND entercode_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.EnterCode')")
+        ->leftJoin('CORE_LOOKUP_VALUES', 'entercode_values', "entercode_values.CODE = status.ENTER_CODE AND entercode_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'K12.Student.Enrollment.EnterCode')")
         ->fields('entercode_values', array('DESCRIPTION' => 'ENTER_CODE'))
-        ->leftJoin('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
+        ->leftJoin('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'K12.Student.Enrollment.Grade')")
         ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
         ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
         ->leftJoin('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
@@ -75,7 +75,7 @@ class SISBillingConstituentLedgerReportController extends ReportController {
     }
     
     // Add on selected record
-    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.HEd.Student')
+    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.K12.Student')
       $result = $result->condition('student.STUDENT_ID', $record_id);
 
     $result = $result

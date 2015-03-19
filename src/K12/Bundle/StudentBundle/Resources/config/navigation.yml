@@ -132,3 +132,16 @@ SIS.K12.Student:
           divider_before: true
           route: sis_K12_parent_delete
           sort: 2
+
+SIS.K12.Reports.Student:
+  description: "Student (K12)"
+  display_name: "Student (K12)"
+  type: report_group
+  portal: sis
+  sort: 1
+  reports:
+    EnrollmentVerification:
+      description: "Enrollment Verification"
+      display_name: "Enrollment Verification"
+      route: sis_K12_student_enrollment_reports_enrollmentverification
+      sort: 1

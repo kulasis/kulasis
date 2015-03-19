@@ -1,4 +1,4 @@
-HEd.Section:
+K12.Section:
   description: "Section"
   db_table_name: STUD_SECTION
   timestamps: true
@@ -19,6 +19,16 @@ HEd.Section:
       field_size: 10
       column_name: "Section Number"
       label_name: "Section Number"
+    Name:
+      description: "Section Name"
+      db_column_name: SECTION_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      field_type: text
+      field_size: 25
+      column_name: "Section Name"
+      label_name: "Section Name"
     Status:
       description: "Status"
       db_column_name: STATUS
@@ -29,11 +39,11 @@ HEd.Section:
       label_name: "Status"
     CourseID:
       description: "Course ID"
-      parent: HEd.Course.ID
+      parent: K12.Course.ID
       db_column_name: COURSE_ID
       db_column_type: serial
       field_type: chooser
-      chooser: HEd.Course
+      chooser: K12.Course
       column_name: "Course ID"
       label_name: "Course ID"
     OrganizationTermID:
@@ -46,12 +56,12 @@ HEd.Section:
       label_name: "Organization Term ID"
     StaffOrganizationTermID:
       description: "Staff Organization Term ID"
-      parent: HEd.Staff.OrganizationTerm.ID
+      parent: K12.Staff.OrganizationTerm.ID
       db_column_name: STAFF_ORGANIZATION_TERM_ID
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser: HEd.Staff.SchoolTerm
+      chooser: K12.Staff.SchoolTerm
       column_name: "Staff Organization Term ID"
       label_name: "Staff Organization Term ID"
     StartDate:
@@ -166,7 +176,7 @@ HEd.Section:
     Meets:
       description: "Meetings"
       field_type: text
-      class: Kula\HEd\Bundle\SchedulingBundle\Field\Meets
+      class: Kula\K12\Bundle\SchedulingBundle\Field\Meets
       column_name: "Meets"
       label_name: "Meets"
     Available:
@@ -175,7 +185,7 @@ HEd.Section:
       column_name: "Available"
       label_name: "Available"
 
-HEd.Section.Course:
+K12.Section.Course:
   description: "Section Courses"
   db_table_name: STUD_SECTION_COURSES
   timestamps: true
@@ -189,7 +199,7 @@ HEd.Section.Course:
       label_name: "Section Course ID"
     SectionID:
       description: "Section ID"
-      parent: HEd.Section.ID
+      parent: K12.Section.ID
       db_column_name: SECTION_ID
       db_column_type: serial
       db_column_null: false
@@ -197,16 +207,16 @@ HEd.Section.Course:
       label_name: "Section ID"
     CourseID:
       description: "Additional Course ID"
-      parent: HEd.Course.ID
+      parent: K12.Course.ID
       db_column_name: COURSE_ID
       db_column_type: serial
       db_column_null: false
       field_type: chooser
-      chooser: HEd.Course
+      chooser: K12.Course
       column_name: "Course ID"
       label_name: "Course ID"
 
-HEd.Section.Meeting:
+K12.Section.Meeting:
   description: "Section Meetings"
   db_table_name: STUD_SECTION_MEETINGS
   timestamps: true
@@ -220,7 +230,7 @@ HEd.Section.Meeting:
       label_name: "Section Meeting ID"
     SectionID:
       description: "Section ID"
-      parent: HEd.Section.ID
+      parent: K12.Section.ID
       db_column_name: SECTION_ID
       db_column_type: serial
       db_column_null: false
@@ -328,7 +338,7 @@ HEd.Section.Meeting:
       db_column_length: 5
       db_column_null: true
       field_type: lookup
-      lookup: HEd.Section.ScheduleType
+      lookup: K12.Section.ScheduleType
       column_name: "Schedule Type"
       label_name: "Schedule Type"
     RoomID:
@@ -336,12 +346,12 @@ HEd.Section.Meeting:
       db_column_name: ROOM_ID
       db_column_type: serial
       db_column_null: true
-      parent: HEd.Room.ID
+      parent: K12.Room.ID
       field_type: chooser
-      chooser: HEd.Room
+      chooser: K12.Room
       column_name: "Room ID"
       label_name: "Room ID"
-HEd.Section.Staff:
+K12.Section.Staff:
   description: "Section Staff"
   db_table_name: STUD_SECTION_STAFF
   timestamps: true
@@ -355,7 +365,7 @@ HEd.Section.Staff:
       label_name: "Section Staff ID"
     SectionID:
       description: "Section ID"
-      parent: HEd.Section.ID
+      parent: K12.Section.ID
       db_column_name: SECTION_ID
       db_column_type: serial
       db_column_null: false
@@ -363,7 +373,7 @@ HEd.Section.Staff:
       label_name: "Section ID"
     SectionMeetingID:
       description: "Section Meeting ID"
-      parent: HEd.Section.Meeting.ID
+      parent: K12.Section.Meeting.ID
       db_column_name: SECTION_MEETING_ID
       db_column_type: serial
       db_column_null: true
@@ -371,12 +381,12 @@ HEd.Section.Staff:
       label_name: "Section Meeting ID"
     StaffOrganizationTermID:
       description: "Staff Organization Term ID"
-      parent: HEd.Staff.OrganizationTerm.ID
+      parent: K12.Staff.OrganizationTerm.ID
       db_column_name: STAFF_ORGANIZATION_TERM_ID
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser: HEd.Staff.SchoolTerm
+      chooser: K12.Staff.SchoolTerm
       column_name: "Staff Organization Term ID"
       label_name: "Staff Organization Term ID"
     PrimaryInstructor:

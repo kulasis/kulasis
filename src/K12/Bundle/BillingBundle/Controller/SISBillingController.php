@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\BillingBundle\Controller;
+namespace Kula\K12\Bundle\BillingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -9,7 +9,7 @@ class SISBillingController extends Controller {
   public function balancesAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Student');
+    $this->setRecordType('SIS.K12.Student');
     
     $transactions = array();
     $terms_with_balances = array();
@@ -70,7 +70,7 @@ class SISBillingController extends Controller {
         
     }
     
-    return $this->render('KulaHEdBillingBundle:SISBilling:balances.html.twig', array('terms_wtih_balances' => $terms_with_balances, 'transactions' => $transactions, 'transactions_total' => $transactions_total, 'terms_total' => $terms_total, 'status' => $status));
+    return $this->render('KulaK12BillingBundle:SISBilling:balances.html.twig', array('terms_wtih_balances' => $terms_with_balances, 'transactions' => $transactions, 'transactions_total' => $transactions_total, 'terms_total' => $terms_total, 'status' => $status));
   }
   
 }

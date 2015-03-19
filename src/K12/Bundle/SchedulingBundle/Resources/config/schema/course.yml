@@ -1,4 +1,4 @@
-HEd.Course:
+K12.Course:
   description: "Courses"
   db_table_name: STUD_COURSE
   timestamps: true
@@ -55,7 +55,7 @@ HEd.Course:
       db_column_length: 5
       db_column_null: true
       field_type: lookup
-      lookup: HEd.Course.Type
+      lookup: K12.Course.Type
       column_name: "Course Type"
       label_name: "Course Type"
     Description:
@@ -96,7 +96,7 @@ HEd.Course:
       db_column_length: 5
       db_column_null: true
       field_type: lookup
-      lookup: HEd.Course.Department
+      lookup: K12.Course.Department
       column_name: "Department"
       label_name: "Department"
     Level:
@@ -106,10 +106,10 @@ HEd.Course:
       db_column_length: 5
       db_column_null: true
       field_type: lookup
-      lookup: HEd.Student.Enrollment.Level
+      lookup: K12.Student.Enrollment.Level
       column_name: "Level"
       label_name: "Level"
-HEd.Course.Book:
+K12.Course.Book:
   description: "Courses"
   db_table_name: STUD_COURSE_BOOK
   timestamps: true
@@ -123,7 +123,7 @@ HEd.Course.Book:
       label_name: "Course Book ID"
     CourseID:
       description: "Course ID"
-      parent: HEd.Course.ID
+      parent: K12.Course.ID
       db_column_name: COURSE_ID
       db_column_type: serial
       column_name: "Course ID"
@@ -187,7 +187,7 @@ HEd.Course.Book:
       field_size: 5
       column_name: "Cost"
       label_name: "Cost"
-HEd.Course.Corequisite:
+K12.Course.Corequisite:
   description: "Course Corequisite"
   db_table_name: STUD_COURSE_COREQUISITES
   timestamps: true
@@ -201,21 +201,21 @@ HEd.Course.Corequisite:
       label_name: "Course Corequisite ID"
     CourseID:
       description: "Course ID"
-      parent: HEd.Course.ID
+      parent: K12.Course.ID
       db_column_name: COURSE_ID
       db_column_type: serial
       column_name: "Course ID"
       label_name: "Course ID"
     CorequisiteCourseID:
       description: "Corequisite Course ID"
-      parent: HEd.Course.ID
+      parent: K12.Course.ID
       db_column_name: COREQUISITE_COURSE_ID
       db_column_type: serial
       field_type: chooser
-      chooser: HEd.Course
+      chooser: K12.Course
       column_name: "Corequisite Course ID"
       label_name: "Corequisite Course ID"
-HEd.Course.Prerequisite:
+K12.Course.Prerequisite:
   description: "Course Prerequisite"
   db_table_name: STUD_COURSE_PREREQUISITES
   timestamps: true
@@ -229,18 +229,18 @@ HEd.Course.Prerequisite:
       label_name: "Course Prerequisite ID"
     CourseID:
       description: "Course ID"
-      parent: HEd.Course.ID
+      parent: K12.Course.ID
       db_column_name: COURSE_ID
       db_column_type: serial
       column_name: "Course ID"
       label_name: "Course ID"
     PrerequisiteCourseID:
       description: "Prerequisite Course ID"
-      parent: HEd.Course.ID
+      parent: K12.Course.ID
       db_column_name: PREREQUISITE_COURSE_ID
       db_column_type: serial
       field_type: chooser
-      chooser: HEd.Course
+      chooser: K12.Course
       column_name: "Prerequisite Course ID"
       label_name: "Prerequisite Course ID"
     MinimumMark:

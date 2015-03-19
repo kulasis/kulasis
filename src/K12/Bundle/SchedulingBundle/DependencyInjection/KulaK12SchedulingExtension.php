@@ -11,14 +11,14 @@
  * Extend Symfony's FrameworkBundle functionality.
  */
 
-namespace Kula\HEd\Bundle\SchedulingBundle\DependencyInjection;
+namespace Kula\K12\Bundle\SchedulingBundle\DependencyInjection;
 
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension as BaseFrameworkExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 
-class KulaHEdSchedulingExtension extends BaseFrameworkExtension {
+class KulaK12SchedulingExtension extends BaseFrameworkExtension {
 
   public function load(array $configs, ContainerBuilder $container) {
       parent::load($configs, $container);

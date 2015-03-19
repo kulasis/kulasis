@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\K12\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -28,13 +28,13 @@ class SISRoomsController extends Controller {
       
     }
     
-    return $this->render('KulaHEdSchedulingBundle:SISRooms:index.html.twig', array('rooms' => $rooms));
+    return $this->render('KulaK12SchedulingBundle:SISRooms:index.html.twig', array('rooms' => $rooms));
     
   }
   
   public function chooserAction() {
     $this->authorize();
-    $data = $this->chooser('HEd.Room')->createChooserMenu($this->request->query->get('q'));
+    $data = $this->chooser('K12.Room')->createChooserMenu($this->request->query->get('q'));
     return $this->JSONResponse($data);
   }
   

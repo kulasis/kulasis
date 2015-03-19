@@ -1,4 +1,4 @@
-HEd.Student.Class:
+K12.Student.Class:
   description: "Classes"
   db_table_name: STUD_STUDENT_CLASSES
   timestamps: true
@@ -12,14 +12,14 @@ HEd.Student.Class:
       label_name: "Student Class ID"
     StudentStatusID:
       description: "Student Status ID"
-      parent: HEd.Student.Status.ID
+      parent: K12.Student.Status.ID
       db_column_name: STUDENT_STATUS_ID
       db_column_type: serial
       column_name: "Student Status ID"
       label_name: "Student Status ID"
     SectionID:
       description: "Section ID"
-      parent: HEd.Section.ID
+      parent: K12.Section.ID
       db_column_name: SECTION_ID
       db_column_type: serial
       field_type: multicheckbox
@@ -27,12 +27,12 @@ HEd.Student.Class:
       label_name: "Section ID"
     CourseID:
       description: "Course ID"
-      parent: HEd.Course.ID
+      parent: K12.Course.ID
       db_column_name: COURSE_ID
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser: HEd.Course
+      chooser: K12.Course
       column_name: "Course ID"
       label_name: "Course ID"
     StartDate:
@@ -58,7 +58,7 @@ HEd.Student.Class:
       db_column_length: 5
       db_column_null: true
       field_type: lookup
-      lookup: HEd.Student.Enrollment.Level
+      lookup: K12.Student.Enrollment.Level
       column_name: "Level"
       label_name: "Level"
     CreditsAttempted:
@@ -96,7 +96,7 @@ HEd.Student.Class:
       db_column_length: 5
       db_column_null: true
       field_type: lookup
-      lookup: HEd.Schedule.ChangeReason
+      lookup: K12.Schedule.ChangeReason
       column_name: "Change Reason"
       label_name: "Change Reason"
     ChangeNotes:
@@ -124,6 +124,6 @@ HEd.Student.Class:
       db_column_length: 5
       db_column_null: true
       field_type: lookup
-      lookup: HEd.Schedule.RegistrationType
+      lookup: K12.Schedule.RegistrationType
       column_name: "Registration Type"
       label_name: "Registration Type"

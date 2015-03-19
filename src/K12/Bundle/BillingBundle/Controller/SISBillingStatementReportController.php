@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\BillingBundle\Controller;
+namespace Kula\K12\Bundle\BillingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
@@ -17,16 +17,16 @@ class SISBillingStatementReportController extends ReportController {
   public function indexAction() {
     $this->authorize();
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    if ($this->request->query->get('record_type') == 'SIS.HEd.Student' AND $this->request->query->get('record_id') != '')
-      $this->setRecordType('SIS.HEd.Student');
-    return $this->render('KulaHEdBillingBundle:SISBillingStatementReport:reports_billingstatement.html.twig');
+    if ($this->request->query->get('record_type') == 'SIS.K12.Student' AND $this->request->query->get('record_id') != '')
+      $this->setRecordType('SIS.K12.Student');
+    return $this->render('KulaK12BillingBundle:SISBillingStatementReport:reports_billingstatement.html.twig');
   }
   
   public function generateAction()
   {  
     $this->authorize();
     
-    $this->pdf = new \Kula\HEd\Bundle\BillingBundle\Report\BillingStatementReport("P");
+    $this->pdf = new \Kula\K12\Bundle\BillingBundle\Report\BillingStatementReport("P");
     $this->pdf->SetFillColor(245,245,245);
     $this->pdf->row_count = 0;
 
@@ -74,7 +74,7 @@ class SISBillingStatementReportController extends ReportController {
     }
     
     // Add on selected record
-    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.HEd.Student')
+    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.K12.Student')
       $students_with_balances_result = $students_with_balances_result->condition('transactions.CONSTITUENT_ID', $record_id);
     $students_with_balances_result = $students_with_balances_result->execute();
     while ($balance_row = $students_with_balances_result->fetch()) {
@@ -110,7 +110,7 @@ class SISBillingStatementReportController extends ReportController {
     //var_dump($terms_with_balances_result->arguments());
     //die();
     // Add on selected record
-    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.HEd.Student')
+    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.K12.Student')
       $terms_with_balances_result = $terms_with_balances_result->condition('transactions.CONSTITUENT_ID', $record_id);
     $terms_with_balances_result = $terms_with_balances_result->execute();
     while ($balance_row = $terms_with_balances_result->fetch()) {
@@ -136,9 +136,9 @@ class SISBillingStatementReportController extends ReportController {
       $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids)
         ->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID')
         ->fields('status', array('PAYMENT_PLAN'))
-        ->leftJoin('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
+        ->leftJoin('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'K12.Student.Enrollment.Grade')")
         ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
-        ->leftJoin('CORE_LOOKUP_VALUES', 'entercode_values', "entercode_values.CODE = status.ENTER_CODE AND entercode_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.EnterCode')")
+        ->leftJoin('CORE_LOOKUP_VALUES', 'entercode_values', "entercode_values.CODE = status.ENTER_CODE AND entercode_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'K12.Student.Enrollment.EnterCode')")
         ->fields('entercode_values', array('DESCRIPTION' => 'ENTER_CODE'))
         ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
         ->leftJoin('STUD_DEGREE', 'degree', 'degree.DEGREE_ID = studdegrees.DEGREE_ID')  
@@ -159,7 +159,7 @@ class SISBillingStatementReportController extends ReportController {
     }
     
     // Add on selected record
-    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.HEd.Student')
+    if (isset($record_id) AND $record_id != '' AND $record_type == 'SIS.K12.Student')
       $result = $result->condition('student.STUDENT_ID', $record_id);
 
     if (isset($report_settings['student']) AND $report_settings['student'] != '') {

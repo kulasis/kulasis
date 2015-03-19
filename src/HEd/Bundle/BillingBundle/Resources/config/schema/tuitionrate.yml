@@ -71,28 +71,6 @@ HEd.TuitionRate:
       field_size: 6
       column_name: "Max Full Time Credits"
       label_name: "Max Full Time Credits"
-    CreditHourRate:
-      description: "Credit Hour Rate"
-      db_column_name: CREDIT_HOUR_RATE
-      db_column_type: numeric
-      db_column_length: 10
-      db_column_precision: 2
-      db_column_null: true
-      field_type: text
-      field_size: 6
-      column_name: "Credit Hour Rate"
-      label_name: "Credit Hour Rate"
-    CreditHourAuditRate:
-      description: "Credit Hour Audit Rate"
-      db_column_name: CREDIT_HOUR_AUDIT_RATE
-      db_column_type: numeric
-      db_column_length: 10
-      db_column_precision: 2
-      db_column_null: true
-      field_type: text
-      field_size: 6
-      column_name: "Credit Hour Audit Rate"
-      label_name: "Credit Hour Audit Rate"
     CourseFees:
       description: "Course Fees"
       db_column_name: COURSE_FEES
@@ -230,6 +208,39 @@ HEd.TuitionRate.Transaction:
       field_size: 7
       column_name: "Amount"
       label_name: "Amount"
+    CreditHourRate:
+      description: "Fees Credit Hour Rate"
+      db_column_name: FEES_CREDIT_HOUR_RATE
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Fees Credit Hour Rate"
+      label_name: "Fees Credit Hour Rate"
+    CreditHourAuditRate:
+      description: "Credit Hour Audit Rate"
+      db_column_name: CREDIT_HOUR_AUDIT_RATE
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Credit Hour Audit Rate"
+      label_name: "Credit Hour Audit Rate"
+    FullTimeFlatRate:
+      description: "Fees Full Time Flat Rate"
+      db_column_name: FEES_FULL_TIME_FLAT_RATE
+      db_column_type: numeric
+      db_column_lenght: 10
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Fees Full Time Flat Rate"
+      label_name: "Fees Full Time Flat Rate"
     Rule:
       description: "Rule"
       db_column_name: RULE

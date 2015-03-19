@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Service;
+namespace Kula\K12\Bundle\SchedulingBundle\Service;
 
 class ScheduleService {
   
@@ -37,20 +37,19 @@ class ScheduleService {
       ->condition('STUDENT_STATUS_ID', $student_status_id)
       ->execute()->fetch();
       
-    $class_info['HEd.Student.Class.StudentStatusID'] = $student_status_id;  
-    $class_info['HEd.Student.Class.SectionID'] = $section_id;
-    $class_info['HEd.Student.Class.CreditsAttempted'] = $section_info['CREDITS'];
-    $class_info['HEd.Student.Class.MarkScaleID'] = $section_info['MARK_SCALE_ID'];
-    $class_info['HEd.Student.Class.Level'] = $student_status_info['LEVEL'];
+    $class_info['K12.Student.Class.StudentStatusID'] = $student_status_id;  
+    $class_info['K12.Student.Class.SectionID'] = $section_id;
+    $class_info['K12.Student.Class.CreditsAttempted'] = $section_info['CREDITS'];
+    $class_info['K12.Student.Class.Level'] = $student_status_info['LEVEL'];
   
     if ($section_info['START_DATE'] < $start_date)
-      $class_info['HEd.Student.Class.StartDate'] = $start_date;
+      $class_info['K12.Student.Class.StartDate'] = $start_date;
     else
-      $class_info['HEd.Student.Class.StartDate'] = $section_info['START_DATE'];
+      $class_info['K12.Student.Class.StartDate'] = $section_info['START_DATE'];
     
     $transaction = $this->database->db_transaction();
     
-    $student_class_id = $this->posterFactory->newPoster()->add('HEd.Student.Class', 'new', $class_info)->process()->getResult();
+    $student_class_id = $this->posterFactory->newPoster()->add('K12.Student.Class', 'new', $class_info)->process()->getResult();
     
     // check if exists in wait list
     $waitlist_info = $this->database->db_select('STUD_STUDENT_WAIT_LIST')
@@ -59,7 +58,7 @@ class ScheduleService {
       ->condition('SECTION_ID', $section_id)
       ->execute()->fetch();
     if ($waitlist_info['STUDENT_WAIT_LIST_ID']) {
-      $waitlist_poster = $this->posterFactory->newPoster()->delete('HEd.Student.WaitList', $waitlist_info['STUDENT_WAIT_LIST_ID'])->process();
+      $waitlist_poster = $this->posterFactory->newPoster()->delete('K12.Student.WaitList', $waitlist_info['STUDENT_WAIT_LIST_ID'])->process();
     }
     
     // process course fees
@@ -75,8 +74,8 @@ class ScheduleService {
         ->condition('SECTION_ID', $section_id)
         ->execute()->fetch();
       
-      $section_poster = $this->posterFactory->newPoster()->edit('HEd.Section', $section_id, array(
-        'HEd.Section.EnrolledTotal' => $section_row['ENROLLED_TOTAL'] + 1
+      $section_poster = $this->posterFactory->newPoster()->edit('K12.Section', $section_id, array(
+        'K12.Section.EnrolledTotal' => $section_row['ENROLLED_TOTAL'] + 1
       ))->process()->getResult();
 
       if ($section_poster) {
@@ -98,10 +97,10 @@ class ScheduleService {
     
     $transaction = $this->database->db_transaction();
     
-    $waitlist_id = $this->posterFactory->newPoster()->add('HEd.Student.WaitList', 'new', array(
-      'HEd.Student.WaitList.StudentStatusID' => $student_status_id,
-      'HEd.Student.WaitList.SectionID' => $section_id,
-      'HEd.Student.WaitList.AddedTimestamp' => date('Y-m-d H:i:s')
+    $waitlist_id = $this->posterFactory->newPoster()->add('K12.Student.WaitList', 'new', array(
+      'K12.Student.WaitList.StudentStatusID' => $student_status_id,
+      'K12.Student.WaitList.SectionID' => $section_id,
+      'K12.Student.WaitList.AddedTimestamp' => date('Y-m-d H:i:s')
     ))->process()->getResult();
     
     if ($waitlist_id) {
@@ -112,8 +111,8 @@ class ScheduleService {
       ->condition('SECTION_ID', $section_id)
       ->execute()->fetch();
       
-      $section_poster = $this->posterFactory->newPoster()->edit('HEd.Section', $section_id, array(
-        'HEd.Section.WaitListedTotal' => $section_row['WAIT_LISTED_TOTAL'] + 1
+      $section_poster = $this->posterFactory->newPoster()->edit('K12.Section', $section_id, array(
+        'K12.Section.WaitListedTotal' => $section_row['WAIT_LISTED_TOTAL'] + 1
       ))->process()->getResult();
       
       if ($section_poster) {
@@ -170,19 +169,19 @@ class ScheduleService {
       ->execute()->fetch();
     
     $class_data = array(
-      'HEd.Student.Class.Dropped' => 1,
-      'HEd.Student.Class.DropDate' => $drop_date,
-      'HEd.Student.Class.EndDate' => ($drop_date >= $class_row['START_DATE']) ? $drop_date : $end_date
+      'K12.Student.Class.Dropped' => 1,
+      'K12.Student.Class.DropDate' => $drop_date,
+      'K12.Student.Class.EndDate' => ($drop_date >= $class_row['START_DATE']) ? $drop_date : $end_date
     );
     
-    if ($drop_date < $class_row['START_DATE']) $class_data['HEd.Student.Class.StartDate'] = null;
+    if ($drop_date < $class_row['START_DATE']) $class_data['K12.Student.Class.StartDate'] = null;
     
-    $class_poster = $this->posterFactory->newPoster()->edit('HEd.Student.Class', $class_id, $class_data)->process()->getResult();
+    $class_poster = $this->posterFactory->newPoster()->edit('K12.Student.Class', $class_id, $class_data)->process()->getResult();
         
     if ($class_poster) {
       
       // process course fees
-      if ($student_status_info['BILLING_MODE'] == 'FEES' AND $drop_date < $class_row['START_DATE']) {
+      if ($class_row['BILLING_MODE'] == 'FEES' AND $drop_date < $class_row['START_DATE']) {
         $this->billing->removeCourseFees($student_class_id);
       }
       
@@ -192,8 +191,8 @@ class ScheduleService {
         ->condition('SECTION_ID', $class_row['SECTION_ID'])
         ->execute()->fetch();
       
-      $section_poster = $this->posterFactory->newPoster()->edit('HEd.Section', $class_row['SECTION_ID'], array(
-        'HEd.Section.EnrolledTotal' => $section_row['ENROLLED_TOTAL'] + 1
+      $section_poster = $this->posterFactory->newPoster()->edit('K12.Section', $class_row['SECTION_ID'], array(
+        'K12.Section.EnrolledTotal' => $section_row['ENROLLED_TOTAL'] + 1
       ))->process()->getResult();
       
       if ($section_poster) {
@@ -215,7 +214,7 @@ class ScheduleService {
     
     $transaction = $this->database->db_transaction();
     
-    $waitlist_poster = $this->posterFactory->newPoster()->delete('HEd.Student.WaitList', $waitlist_id)->process()->getResult();
+    $waitlist_poster = $this->posterFactory->newPoster()->delete('K12.Student.WaitList', $waitlist_id)->process()->getResult();
 
     if ($waitlist_poster) {
       // Update section totals
@@ -224,8 +223,8 @@ class ScheduleService {
         ->condition('SECTION_ID', $class_row['SECTION_ID'])
         ->execute()->fetch();
       
-      $section_poster = $this->posterFactory->newPoster()->edit('HEd.Section', $class_row['SECTION_ID'], array(
-        'HEd.Section.WaitListedTotal' => $section_row['WAIT_LISTED_TOTAL'] - 1
+      $section_poster = $this->posterFactory->newPoster()->edit('K12.Section', $class_row['SECTION_ID'], array(
+        'K12.Section.WaitListedTotal' => $section_row['WAIT_LISTED_TOTAL'] - 1
       ))->process()->getResult();
       
       if ($section_poster) {
@@ -274,21 +273,21 @@ class ScheduleService {
       if ($student_activity_record['EFFECTIVE_DATE'] == date('Y-m-d')) {
         
         // update existing record
-        $enrollment_activity_poster = $this->posterFactory->newPoster()->edit('HEd.Student.Enrollment.Activity', $student_activity_record['ENROLLMENT_ACTIVITY_ID'], array(
-          'HEd.Student.Enrollment.Activity.FTE' => $fte
+        $enrollment_activity_poster = $this->posterFactory->newPoster()->edit('K12.Student.Enrollment.Activity', $student_activity_record['ENROLLMENT_ACTIVITY_ID'], array(
+          'K12.Student.Enrollment.Activity.FTE' => $fte
         ))->process()->getResult();
       } else {
         // create new record
-        $enrollment_activity_poster = $this->posterFactory->newPoster()->add('HEd.Student.Enrollment.Activity', 'new', array(
-          'HEd.Student.Enrollment.Activity.EffectiveDate' => date('Y-m-d'),
-          'HEd.Student.Enrollment.Activity.EnrollmentID' => $student_activity_record['ENROLLMENT_ID'],
-          'HEd.Student.Enrollment.Activity.FTE' => $fte
+        $enrollment_activity_poster = $this->posterFactory->newPoster()->add('K12.Student.Enrollment.Activity', 'new', array(
+          'K12.Student.Enrollment.Activity.EffectiveDate' => date('Y-m-d'),
+          'K12.Student.Enrollment.Activity.EnrollmentID' => $student_activity_record['ENROLLMENT_ID'],
+          'K12.Student.Enrollment.Activity.FTE' => $fte
         ))->process()->getResult();
       }
       
       // update existing status
-      $status_poster = $this->posterFactory->newPoster()->edit('HEd.Student.Status', $student_status_id, array(
-        'HEd.Student.Status.FTE' => $fte
+      $status_poster = $this->posterFactory->newPoster()->edit('K12.Student.Status', $student_status_id, array(
+        'K12.Student.Status.FTE' => $fte
       ))->process()->getResult();
       return $status_poster;
       
@@ -305,8 +304,8 @@ class ScheduleService {
       ->condition('DROPPED', '0')
       ->execute()->fetch();
     
-    return $this->posterFactory->newPoster()->edit('HEd.Student.Status', $student_status_id, array(
-      'HEd.Student.Status.TotalCreditsAttempted' => $classes['total_credits_attempted']
+    return $this->posterFactory->newPoster()->edit('K12.Student.Status', $student_status_id, array(
+      'K12.Student.Status.TotalCreditsAttempted' => $classes['total_credits_attempted']
     ))->process()->getResult();
   }
   

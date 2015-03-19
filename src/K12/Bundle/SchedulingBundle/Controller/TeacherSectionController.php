@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\K12\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -8,7 +8,7 @@ class TeacherSectionController extends Controller {
   
   public function rosterAction() {
     $this->authorize();
-    $this->setRecordType('Teacher.HEd.Section');
+    $this->setRecordType('Teacher.K12.Section');
 
     $students = array();
     
@@ -28,12 +28,12 @@ class TeacherSectionController extends Controller {
       ->orderBy('FIRST_NAME', 'ASC')
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdSchedulingBundle:TeacherSection:roster.html.twig', array('students' => $students));
+    return $this->render('KulaK12SchedulingBundle:TeacherSection:roster.html.twig', array('students' => $students));
   }
 
   public function dropped_rosterAction() {
     $this->authorize();
-    $this->setRecordType('Teacher.HEd.Section');
+    $this->setRecordType('Teacher.K12.Section');
     
     $students = array();
     
@@ -53,7 +53,7 @@ class TeacherSectionController extends Controller {
       ->orderBy('FIRST_NAME', 'ASC')
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdSchedulingBundle:TeacherSection:roster.html.twig', array('students' => $students));
+    return $this->render('KulaK12SchedulingBundle:TeacherSection:roster.html.twig', array('students' => $students));
   }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\K12\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -9,7 +9,7 @@ class SISBooksController extends Controller {
   public function booksAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Course');
+    $this->setRecordType('SIS.K12.Course');
     $books = array();
     if ($this->record->getSelectedRecordID()) {
       
@@ -37,7 +37,7 @@ class SISBooksController extends Controller {
       ->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
       ->execute()->fetch();
     
-    return $this->render('KulaHEdSchedulingBundle:SISBooks:books.html.twig', array('books' => $books, 'organization_term_id' => $this->focus->getOrganizationTermID(), 'organization_term_id_display' => $org_term['TERM_ABBREVIATION'] . ' / ' . $org_term['ORGANIZATION_NAME']));
+    return $this->render('KulaK12SchedulingBundle:SISBooks:books.html.twig', array('books' => $books, 'organization_term_id' => $this->focus->getOrganizationTermID(), 'organization_term_id_display' => $org_term['TERM_ABBREVIATION'] . ' / ' . $org_term['ORGANIZATION_NAME']));
   }
   
 }

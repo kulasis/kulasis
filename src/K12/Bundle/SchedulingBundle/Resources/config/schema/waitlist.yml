@@ -1,4 +1,4 @@
-HEd.Student.WaitList:
+K12.Student.WaitList:
   description: "Wait List"
   db_table_name: STUD_STUDENT_WAIT_LIST
   timestamps: true
@@ -12,14 +12,14 @@ HEd.Student.WaitList:
       label_name: "Student Wait List ID"
     StudentStatusID:
       description: "Student Status ID"
-      parent: HEd.Student.Status.ID
+      parent: K12.Student.Status.ID
       db_column_name: STUDENT_STATUS_ID
       db_column_type: serial
       column_name: "Student Status ID"
       label_name: "Student Status ID"
     SectionID:
       description: "Section ID"
-      parent: HEd.Section.ID
+      parent: K12.Section.ID
       db_column_name: SECTION_ID
       db_column_type: serial
       field_type: multicheckbox

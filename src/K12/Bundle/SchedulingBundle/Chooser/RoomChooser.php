@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Chooser;
+namespace Kula\K12\Bundle\SchedulingBundle\Chooser;
 
 use Kula\Core\Component\Chooser\Chooser;
 
@@ -40,7 +40,7 @@ class RoomChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'sis_HEd_room_chooser';
+    return 'sis_K12_room_chooser';
   }
   
 }

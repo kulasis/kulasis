@@ -1,10 +1,10 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle;
+namespace Kula\K12\Bundle\SchedulingBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class KulaHEdSchedulingBundle extends Bundle {
+class KulaK12SchedulingBundle extends Bundle {
     
   public function boot() {
 

@@ -1,21 +1,21 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Record;
+namespace Kula\K12\Bundle\SchedulingBundle\Record;
 
 use Kula\Core\Component\Record\Record;
 
 class SISSectionRecord extends Record {
   
   public function getSelectedRecordBarTemplate() {
-    return 'KulaHEdSchedulingBundle::SISRecord/selected_record_section.html.twig';
+    return 'KulaK12SchedulingBundle::SISRecord/selected_record_section.html.twig';
   }
   
   public function getRecordBarTemplate() {
-    return 'KulaHEdSchedulingBundle::SISRecord/record_section.html.twig';
+    return 'KulaK12SchedulingBundle::SISRecord/record_section.html.twig';
   }
   
   public function getRecordBarTeacherTemplate() {
-    return 'KulaHEdSchedulingBundle::TeacherRecord/teacher_record_section.html.twig';
+    return 'KulaK12SchedulingBundle::TeacherRecord/teacher_record_section.html.twig';
   }
   
   public function getRecordIDStack() {
@@ -32,7 +32,7 @@ class SISSectionRecord extends Record {
   public function get($record_id) {
     
     $result = $this->db()->db_select('STUD_SECTION', 'section')
-    ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'STAFF_ORGANIZATION_TERM_ID', 'COURSE_ID', 'ORGANIZATION_TERM_ID', 'STATUS'))
+    ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME', 'STAFF_ORGANIZATION_TERM_ID', 'COURSE_ID', 'ORGANIZATION_TERM_ID', 'STATUS'))
     ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgtrm', 'stafforgtrm.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
     ->leftJoin('STUD_STAFF', 'staff', 'stafforgtrm.STAFF_ID = staff.STAFF_ID')
     ->fields('staff', array('ABBREVIATED_NAME'))
@@ -48,11 +48,11 @@ class SISSectionRecord extends Record {
   }
   
   public function getBaseTable() {
-    return 'HEd.Section';
+    return 'K12.Section';
   }
   
   public function getBaseKeyFieldName() {
-    return 'HEd.Section.ID';
+    return 'K12.Section.ID';
   }
   
   public function modifySearchDBOBject($db_obj) {

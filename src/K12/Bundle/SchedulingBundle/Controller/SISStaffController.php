@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\K12\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -9,7 +9,7 @@ class SISStaffController extends Controller {
   public function staff_scheduleAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Staff.SchoolTerm');
+    $this->setRecordType('SIS.K12.Staff.SchoolTerm');
     
     $classes = array();
     
@@ -32,7 +32,7 @@ class SISStaffController extends Controller {
     
     }
     
-    return $this->render('KulaHEdSchedulingBundle:SISStaff:schedule.html.twig', array('classes' => $classes));  
+    return $this->render('KulaK12SchedulingBundle:SISStaff:schedule.html.twig', array('classes' => $classes));  
   }
   
 }

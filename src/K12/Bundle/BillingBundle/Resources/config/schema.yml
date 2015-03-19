@@ -1,6 +1,9 @@
 imports:
     - { resource: schema/code.yml }
     - { resource: schema/tuitionrate.yml }
+    - { resource: schema/coursefee.yml }
+    - { resource: schema/transactions.yml }
+
 
 K12.Student.Status:
   fields:

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Record;
+namespace Kula\K12\Bundle\SchedulingBundle\Record;
 
 use Kula\Core\Component\Record\Record;
 
@@ -10,7 +10,7 @@ class TeacherSectionRecord extends Record {
   }
   
   public function getRecordBarTemplate() {
-    return 'KulaHEdSchedulingBundle::TeacherRecord/teacher_record_section.html.twig';
+    return 'KulaK12SchedulingBundle::TeacherRecord/teacher_record_section.html.twig';
   }
   
   public function getRecordIDStack() {
@@ -43,11 +43,11 @@ class TeacherSectionRecord extends Record {
   }
   
   public function getBaseTable() {
-    return 'HEd.Section';
+    return 'K12.Section';
   }
   
   public function getBaseKeyFieldName() {
-    return 'HEd.Section.ID';
+    return 'K12.Section.ID';
   }
   
   public function modifySearchDBOBject($db_obj) {

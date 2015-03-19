@@ -1,0 +1,8 @@
+services:
+  kula.K12.billing.constituent:
+    class: Kula\K12\Bundle\BillingBundle\Service\ConstituentBillingService
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session"]
+
+  kula.K12.billing.student:
+    class: Kula\K12\Bundle\BillingBundle\Service\StudentBillingService
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session", "@kula.K12.billing.constituent", "@kula.K12.scheduling.schedule"]

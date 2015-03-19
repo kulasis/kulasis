@@ -5,28 +5,27 @@
 <div class="group-box">
 <div class="group-box-header">Course</div>
 <div class="group-box-contents group">
-    {{ kula_field({ edit: true, field: 'HEd.Course.Type', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: kula_core_record.getSelectedRecord.COURSE_TYPE, label: true }) }}
-    {{ kula_field({ edit: true, field: 'HEd.Course.Department', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: kula_core_record.getSelectedRecord.DEPARTMENT, label: true }) }}
-  {{ kula_field({ edit: true, field: 'HEd.Course.ConversionCourseNumber', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: kula_core_record.getSelectedRecord.CONV_COURSE_NUMBER, label: true }) }}
+    {{ kula_field({ edit: true, field: 'K12.Course.Type', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: kula_core_record.getSelectedRecord.COURSE_TYPE, label: true }) }}
+    {{ kula_field({ edit: true, field: 'K12.Course.Department', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: kula_core_record.getSelectedRecord.DEPARTMENT, label: true }) }}
+  {{ kula_field({ edit: true, field: 'K12.Course.ConversionCourseNumber', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: kula_core_record.getSelectedRecord.CONV_COURSE_NUMBER, label: true }) }}
 </div>
 </div>
 
 <div class="group-box">
 <div class="group-box-header">Grading</div>
 <div class="group-box-contents group">
-  {{ kula_field({ edit: true, field: 'HEd.Course.Credits', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: kula_core_record.getSelectedRecord.CREDITS, label: true }) }}
-  {{ kula_field({ edit: true, field: 'HEd.Course.Level', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: kula_core_record.getSelectedRecord.LEVEL, label: true }) }}
-  {{ kula_field({ edit: true, field: 'HEd.Course.MarkScaleID', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: kula_core_record.getSelectedRecord.MARK_SCALE_ID, label: true }) }}
+  {{ kula_field({ edit: true, field: 'K12.Course.Credits', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: kula_core_record.getSelectedRecord.CREDITS, label: true }) }}
+  {{ kula_field({ edit: true, field: 'K12.Course.Level', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: kula_core_record.getSelectedRecord.LEVEL, label: true }) }}
 </div>
 </div>
 
 <div class="group-box">
 <div class="group-box-header">Description</div>
 <div class="group-box-contents group">
-  {{ kula_field({ edit: true, field: 'HEd.Course.Description', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: course.COURSE_DESCRIPTION, label: true }) }}
+  {{ kula_field({ edit: true, field: 'K12.Course.Description', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: course.COURSE_DESCRIPTION, label: true }) }}
 </div>
 <div class="group-box-contents group">
-  {{ kula_field({ edit: true, field: 'HEd.Course.PrerequisiteDescription', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: course.PREREQUISITE_DESCRIPTION, label: true }) }}
+  {{ kula_field({ edit: true, field: 'K12.Course.PrerequisiteDescription', db_row_id: kula_core_record.getSelectedRecord.COURSE_ID, value: course.PREREQUISITE_DESCRIPTION, label: true }) }}
 </div>
 </div>
 {% endblock %}

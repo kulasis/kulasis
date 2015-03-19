@@ -1,3 +1,74 @@
+sis_K12_student_billing:
+  path: /sis/K12/student/billing
+  defaults: { _controller: KulaK12BillingBundle:SISBilling:balances }
+
+sis_K12_student_billing_charges_add:
+  path: /sis/K12/student/billing/charges/add
+  defaults: { _controller: KulaK12BillingBundle:SISTransactions:add_charge }
+
+sis_K12_student_billing_history:
+  path: /sis/K12/student/billing/history
+  defaults: { _controller: KulaK12BillingBundle:SISTransactions:history }
+
+sis_K12_student_billing_payments_add:
+  path: /sis/K12/student/billing/payments/add
+  defaults: { _controller: KulaK12BillingBundle:SISTransactions:add_payment }
+
+sis_K12_student_billing_reports_billingledger:
+  path: /sis/K12/student/billing/reports/billingledger
+  defaults: { _controller: KulaK12BillingBundle:SISBillingConstituentLedgerReport:index }
+  methods: [GET]
+
+sis_K12_student_billing_reports_billingledger_generate:
+  path: /sis/K12/student/billing/reports/billingledger
+  defaults: { _controller: KulaK12BillingBundle:SISBillingConstituentLedgerReport:generate }
+  methods: [POST]
+
+sis_K12_student_billing_reports_billingreceipt:
+  path: /sis/K12/student/billing/reports/billingreceipt
+  defaults: { _controller: KulaK12BillingBundle:SISBillingReceiptReport:index }
+  methods: [GET]
+
+sis_K12_student_billing_reports_billingreceipt_generate:
+  path: /sis/K12/student/billing/reports/billingreceipt
+  defaults: { _controller: KulaK12BillingBundle:SISBillingReceiptReport:generate }
+  methods: [POST]
+
+sis_K12_student_billing_reports_billingstatement:
+  path: /sis/K12/student/billing/reports/billingstatement
+  defaults: { _controller: KulaK12BillingBundle:SISBillingStatementReport:index }
+  methods: [GET]
+
+sis_K12_student_billing_reports_billingstatement_generate:
+  path: /sis/K12/student/billing/reports/billingstatement
+  defaults: { _controller: KulaK12BillingBundle:SISBillingStatementReport:generate }
+  methods: [POST]
+
+sis_K12_student_billing_transactiondetail:
+  path: /sis/K12/student/billing/transactions/{constituent_transaction_id}/detail
+  defaults: { _controller: KulaK12BillingBundle:SISTransactions:transaction_detail }
+
+sis_K12_student_billing_transactions:
+  path: /sis/K12/student/billing/transactions
+  defaults: { _controller: KulaK12BillingBundle:SISTransactions:transactions }
+
+sis_K12_home_billing_pending:
+    path:     /home/billing/pending
+    defaults: { _controller: KulaK12BillingBundle:SISHomeBilling:pending }
+
+sis_K12_home_billing_pending_all:
+    path:     /home/billing/pending/all
+    defaults: { _controller: KulaK12BillingBundle:SISHomeBilling:all_pending }
+
+sis_K12_home_billing_reports_studentstatement:
+  path: /sis/K12/student/billing/reports/studentstatement
+  defaults: { _controller: KulaK12BillingBundle:SISStudentStatementReport:index }
+  methods: [GET]
+
+sis_K12_setup_billing_codes:
+  path: /sis/K12/setup/billing/codes
+  defaults: { _controller: KulaK12BillingBundle:SISCodes:codes }
+
 sis_K12_setup_billing_tuitionrates:
   path: /sis/K12/setup/billing/tuitionrates
   defaults: { _controller: KulaK12BillingBundle:SISTuitionRates:index }
@@ -13,3 +84,11 @@ sis_K12_setup_billing_tuitionrates_students:
 sis_K12_setup_billing_tuitionrates_refunds:
   path: /sis/K12/setup/billing/tuitionrates/{tuition_rate_id}/refunds
   defaults: { _controller: KulaK12BillingBundle:SISTuitionRates:refunds }
+
+sis_K12_courses_fees:
+  path: /sis/K12/offering/courses/fees
+  defaults: { _controller: KulaK12BillingBundle:SISCourseFees:index }
+
+sis_K12_sections_fees:
+  path: /sis/K12/offering/sections/fees
+  defaults: { _controller: KulaK12BillingBundle:SISCourseFees:sectionFees }

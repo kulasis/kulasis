@@ -1,4 +1,4 @@
-HEd.Room:
+K12.Room:
   description: "Room List"
   db_table_name: STUD_ROOM
   timestamps: true
@@ -25,7 +25,7 @@ HEd.Room:
       db_column_length: 10
       db_column_null: true
       field_type: lookup
-      lookup: HEd.Room.Buildings
+      lookup: K12.Room.Buildings
       column_name: "Building"
       label_name: "Building"
     Name:

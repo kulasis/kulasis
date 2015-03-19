@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Report;
+namespace Kula\K12\Bundle\SchedulingBundle\Report;
 
 use Kula\Core\Bundle\FrameworkBundle\Report\Report as BaseReport;
 

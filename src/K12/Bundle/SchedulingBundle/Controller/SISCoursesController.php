@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\K12\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -9,7 +9,7 @@ class SISCoursesController extends Controller {
   public function indexAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Course');
+    $this->setRecordType('SIS.K12.Course');
     $course = array();
     if ($this->record->getSelectedRecordID()) {
       
@@ -20,13 +20,13 @@ class SISCoursesController extends Controller {
         ->execute()->fetch();
     }
     
-    return $this->render('KulaHEdSchedulingBundle:SISCourses:index.html.twig', array('course' => $course));
+    return $this->render('KulaK12SchedulingBundle:SISCourses:index.html.twig', array('course' => $course));
   }
   
   public function prerequisitesAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Course');
+    $this->setRecordType('SIS.K12.Course');
     $prerequisites = array();
     $course_info = array();
     if ($this->record->getSelectedRecordID()) {
@@ -44,13 +44,13 @@ class SISCoursesController extends Controller {
         ->execute()->fetchAll();
     }
     
-    return $this->render('KulaHEdSchedulingBundle:SISCourses:prerequisites.html.twig', array('course_info' => $course_info, 'prerequisites' => $prerequisites));
+    return $this->render('KulaK12SchedulingBundle:SISCourses:prerequisites.html.twig', array('course_info' => $course_info, 'prerequisites' => $prerequisites));
   }
   
   public function corequisitesAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('SIS.HEd.Course');
+    $this->setRecordType('SIS.K12.Course');
     $corequisites = array();
     if ($this->record->getSelectedRecordID()) {
       
@@ -65,26 +65,26 @@ class SISCoursesController extends Controller {
         ->execute()->fetchAll();
     }
     
-    return $this->render('KulaHEdSchedulingBundle:SISCourses:corequisites.html.twig', array('corequisites' => $corequisites));
+    return $this->render('KulaK12SchedulingBundle:SISCourses:corequisites.html.twig', array('corequisites' => $corequisites));
   }
   
   public function addAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Course', 'Y');
-    $this->formAction('sis_HEd_courses_create');
-    return $this->render('KulaHEdSchedulingBundle:SISCourses:add.html.twig');
+    $this->setRecordType('SIS.K12.Course', 'Y');
+    $this->formAction('sis_K12_courses_create');
+    return $this->render('KulaK12SchedulingBundle:SISCourses:add.html.twig');
   }
   
   public function createAction() {
     $this->authorize();
     $this->processForm();
     $id = $this->poster()->getResult();
-    return $this->forward('sis_HEd_courses', array('record_type' => 'SIS.HEd.Course', 'record_id' => $id), array('record_type' => 'SIS.HEd.Course', 'record_id' => $id));
+    return $this->forward('sis_K12_courses', array('record_type' => 'SIS.K12.Course', 'record_id' => $id), array('record_type' => 'SIS.K12.Course', 'record_id' => $id));
   }
   
   public function deleteAction() {
     $this->authorize();
-    $this->setRecordType('SIS.HEd.Course');
+    $this->setRecordType('SIS.K12.Course');
     
     $rows_affected = $this->db()->db_delete('STUD_COURSE')
         ->condition('COURSE_ID', $this->record->getSelectedRecordID())->execute();
@@ -93,12 +93,12 @@ class SISCoursesController extends Controller {
       $this->addFlash('success', 'Deleted course.');
     }
     
-    return $this->forward('sis_HEd_courses');
+    return $this->forward('sis_K12_courses');
   }
   
   public function chooserAction() {
     $this->authorize();
-    $data = $this->chooser('HEd.Course')->createChooserMenu($this->request->query->get('q'));
+    $data = $this->chooser('K12.Course')->createChooserMenu($this->request->query->get('q'));
     return $this->JSONResponse($data);
   }
 

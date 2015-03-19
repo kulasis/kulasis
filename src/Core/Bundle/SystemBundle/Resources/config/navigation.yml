@@ -172,10 +172,17 @@ Core.User:
           sort: 2
 
 SIS.HEd.Admin:
-  description: "Administration"
+  description: "Administration (HEd)"
   type: form_group
   portal: sis
-  display_name: "Administration"
+  display_name: "Administration (HEd)"
+  sort: 4
+
+SIS.K12.Admin:
+  description: "Administration (K12)"
+  type: form_group
+  portal: sis
+  display_name: "Administration (K12)"
   sort: 4
   
 SIS.HEd.System:

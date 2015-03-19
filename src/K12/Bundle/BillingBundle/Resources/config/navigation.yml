@@ -1,3 +1,97 @@
+SIS.K12.Admin.Billing:
+  description: "Billing"
+  type: form
+  portal: sis
+  display_name: "Billing"
+  sort: 3
+  tabs:
+    Pending:
+      description: "Pending"
+      display_name: "Pending"
+      sort: 1
+      route: sis_K12_home_billing_pending
+    AllPending:
+      description: "All Pending"
+      display_name: "All Pending"
+      sort: 2
+      route: sis_K12_home_billing_pending_all
+
+SIS.K12.Student.Billing:
+  description: "Billing"
+  type: form
+  portal: sis
+  display_name: "Billing"
+  sort: 5
+  tabs:
+    Balances:
+      description: "Balances"
+      display_name: "Balances"
+      sort: 1
+      route: sis_K12_student_billing
+    Transactions:
+      description: "Transactions"
+      display_name: "Transactions"
+      sort: 2
+      route: sis_K12_student_billing_transactions
+    History:
+      description: "History"
+      display_name: "History"
+      sort: 3
+      route: sis_K12_student_billing_history
+  menu_actions:
+    AddCharge:
+      description: "Add Charge"
+      display_name: "Add Charge"
+      sort: 1
+      record_loaded: true
+      route: sis_K12_student_billing_charges_add
+    AddPayment:
+      description: "Add Payment"
+      display_name: "Add Payment"
+      sort: 2
+      record_loaded: true
+      divider_before: true
+      route: sis_K12_student_billing_payments_add
+  menu_reports:
+    BillingStatement:
+      description: "Billing Statement"
+      display_name: "Billing Statement"
+      sort: 1
+      route: sis_K12_student_billing_reports_billingstatement
+    BillingReceipt:
+      description: "Billing Receipt"
+      display_name: "Billing Receipt"
+      sort: 2
+      route: sis_K12_student_billing_reports_billingreceipt
+    BillingLedger:
+      description: "Billing Ledger"
+      display_name: "Billing Ledger"
+      sort: 3
+      route: sis_K12_student_billing_reports_billingledger
+
+SIS.K12.Reports.Billing:
+  description: "Billing"
+  display_name: "Billing"
+  type: report_group
+  portal: sis
+  sort: 3
+  reports:
+    BillingStatement:
+      description: "Billing Statement"
+      display_name: "Billing Statement"
+      sort: 1
+      route: sis_K12_student_billing_reports_billingstatement
+    BillingReceipt:
+      description: "Billing Receipt"
+      display_name: "Billing Receipt"
+      sort: 2
+      route: sis_K12_student_billing_reports_billingreceipt
+    BillingLedger:
+      description: "Billing Ledger"
+      display_name: "Billing Ledger"
+      sort: 3
+      route: sis_K12_student_billing_reports_billingledger
+
 SIS.K12.Setup.Billing:
   description: "Billing"
   type: form
@@ -10,3 +104,24 @@ SIS.K12.Setup.Billing:
       display_name: "Tuition Rates"
       sort: 1
       route: sis_K12_setup_billing_tuitionrates
+    Codes:
+      description: "Codes"
+      display_name: "Codes"
+      sort: 2
+      route: sis_K12_setup_billing_codes
+
+SIS.K12.Academic.Courses.Fees:
+  description: "Fees"
+  display_name: "Fees"
+  type: tab
+  portal: sis
+  route: sis_K12_courses_fees
+  sort: 4
+
+SIS.K12.Academic.Sections.Fees:
+  description: "Fees"
+  display_name: "Fees"
+  type: tab
+  portal: sis
+  route: sis_K12_sections_fees
+  sort: 7

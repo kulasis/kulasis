@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Record;
+namespace Kula\K12\Bundle\SchedulingBundle\Record;
 
 use Kula\Core\Component\Record\Record;
 
@@ -11,7 +11,7 @@ class SISCourseRecord extends Record {
   }
   
   public function getRecordBarTemplate() {
-    return 'KulaHEdSchedulingBundle::SISRecord/record_course.html.twig';
+    return 'KulaK12SchedulingBundle::SISRecord/record_course.html.twig';
   }
   
   public function getRecordIDStack() {
@@ -35,11 +35,11 @@ class SISCourseRecord extends Record {
   }
   
   public function getBaseTable() {
-    return 'HEd.Course';
+    return 'K12.Course';
   }
   
   public function getBaseKeyFieldName() {
-    return 'HEd.Course.ID';
+    return 'K12.Course.ID';
   }
   
   public function modifySearchDBOBject($db_obj) {

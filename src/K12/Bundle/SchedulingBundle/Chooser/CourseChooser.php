@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Chooser;
+namespace Kula\K12\Bundle\SchedulingBundle\Chooser;
 
 use Kula\Core\Component\Chooser\Chooser;
 
@@ -36,7 +36,7 @@ class CourseChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'sis_HEd_course_chooser';
+    return 'sis_K12_course_chooser';
   }
   
 }

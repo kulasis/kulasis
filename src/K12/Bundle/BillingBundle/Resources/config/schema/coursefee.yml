@@ -1,0 +1,89 @@
+K12.Billing.CourseFee:
+  description: "Billing Course Fees"
+  db_table_name: BILL_COURSE_FEE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: COURSE_FEE_ID
+      db_column_type: primary_serial
+      column_name: "Course Fee ID"
+      label_name: "Course Fee ID"
+    CourseID:
+      description: "Course ID"
+      parent: K12.Course.ID
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      column_name: "Course ID"
+      label_name: "Course ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    CodeID:
+      description: "Transaction Code ID"
+      parent: K12.Billing.Code.ID
+      db_column_name: CODE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\K12\Bundle\BillingBundle\Field\TransactionCode
+      column_name: "Code ID"
+      label_name: "Code"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: false
+      field_type: text
+      field_size: 8
+      column_name: "Amount"
+      label_name: "Amount"
+
+K12.Billing.SectionFee:
+  description: "Billing Section Fees"
+  db_table_name: BILL_SECTION_FEE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SECTION_FEE_ID
+      db_column_type: primary_serial
+      column_name: "Section Fee ID"
+      label_name: "Section Fee ID"
+    SectionID:
+      description: "Section ID"
+      parent: K12.Section.ID
+      db_column_name: SECTION_ID
+      db_column_type: serial
+      column_name: "Section ID"
+      label_name: "Section ID"
+    CodeID:
+      description: "Transaction Code ID"
+      parent: K12.Billing.Code.ID
+      db_column_name: CODE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\K12\Bundle\BillingBundle\Field\TransactionCode
+      column_name: "Code ID"
+      label_name: "Code"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: false
+      field_type: text
+      field_size: 8
+      column_name: "Amount"
+      label_name: "Amount"

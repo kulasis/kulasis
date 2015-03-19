@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Field;
+namespace Kula\K12\Bundle\SchedulingBundle\Field;
 
 use Kula\Core\Component\Field\Field;
 

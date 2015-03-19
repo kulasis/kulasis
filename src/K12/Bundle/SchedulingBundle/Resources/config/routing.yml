@@ -1,7 +1,7 @@
-_HEd_scheduling_sis:
-    resource: "@KulaHEdSchedulingBundle/Resources/config/routing/sis.yml"
-    prefix: sis/HEd
+_K12_scheduling_sis:
+    resource: "@KulaK12SchedulingBundle/Resources/config/routing/sis.yml"
+    prefix: sis/K12
 
-_HEd_scheduling_teacher:
-    resource: "@KulaHEdSchedulingBundle/Resources/config/routing/teacher.yml"
-    prefix: teacher/HEd
+_K12_scheduling_teacher:
+    resource: "@KulaK12SchedulingBundle/Resources/config/routing/teacher.yml"
+    prefix: teacher/K12

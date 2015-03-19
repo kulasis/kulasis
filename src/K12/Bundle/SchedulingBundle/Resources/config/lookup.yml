@@ -1,4 +1,4 @@
-HEd.Course.Type:
+K12.Course.Type:
   description: "Course Types"
   allow_update: true
   values: 
@@ -6,7 +6,7 @@ HEd.Course.Type:
     - { code: "EXTEN", description: "Extension" }
     - { code: "STUDI", description: "Studio" }
     
-HEd.Course.Department:
+K12.Course.Department:
   description: "Departments"
   allow_update: true
   values:
@@ -27,7 +27,7 @@ HEd.Course.Department:
     - { code: ACD, description: "AC+D" }
     - { code: FD, description: "Foundations" }
 
-HEd.Section.ScheduleType:
+K12.Section.ScheduleType:
   description: "Schedule Type"
   allow_update: true
   values:
@@ -40,14 +40,14 @@ HEd.Section.ScheduleType:
     - { code: EXT, description: "Extension" }
     - { code: ACA, description: "Academic" }
     
-HEd.Schedule.ChangeReason:
+K12.Schedule.ChangeReason:
   description: "Change Reasons"
   allow_update: true
   values:
     - { code: SR, description: "Student Request" }
     - { code: CL, description: "Closed Section" }
     
-HEd.Schedule.RegistrationType:
+K12.Schedule.RegistrationType:
   description: "Registration Type"
   allow_update: true
   values:
@@ -57,7 +57,7 @@ HEd.Schedule.RegistrationType:
     - { code: PAP, description: "Paper" }
     - { code: FD, description: "Front Desk" }
     
-HEd.Room.Buildings:
+K12.Room.Buildings:
   description: "Buildings"
   allow_update: true
   values:

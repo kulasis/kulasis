@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
+namespace Kula\K12\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
@@ -8,17 +8,17 @@ class SISStaffScheduleReportController extends ReportController {
   
   public function indexAction() {
     $this->authorize();
-    if (($this->request->query->get('record_type') == 'SIS.HEd.Staff' || $this->request->query->get('record_type') == 'SIS.HEd.Staff.SchoolTerm') AND $this->request->query->get('record_id') != '')
-      $this->setRecordType('SIS.HEd.Staff.SchoolTerm');
+    if (($this->request->query->get('record_type') == 'SIS.K12.Staff' || $this->request->query->get('record_type') == 'SIS.K12.Staff.SchoolTerm') AND $this->request->query->get('record_id') != '')
+      $this->setRecordType('SIS.K12.Staff.SchoolTerm');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    return $this->render('KulaHEdSchedulingBundle:SISStaffScheduleReport:reports_staffschedule.html.twig');
+    return $this->render('KulaK12SchedulingBundle:SISStaffScheduleReport:reports_staffschedule.html.twig');
   }
   
   public function generateAction()
   {  
     $this->authorize();
     
-    $pdf = new \Kula\HEd\Bundle\SchedulingBundle\Report\StaffScheduleReport("P");
+    $pdf = new \Kula\K12\Bundle\SchedulingBundle\Report\StaffScheduleReport("P");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
     

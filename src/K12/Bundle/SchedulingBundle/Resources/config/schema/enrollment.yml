@@ -1,4 +1,4 @@
-HEd.Student.Status:
+K12.Student.Status:
   fields:
     TotalCreditsAttempted:
       description: "Total Credits Attempted"
