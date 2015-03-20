@@ -36,48 +36,29 @@ class SISInformationController extends Controller {
 
       }
       
-      $address_result = $this->db()->db_select('CONS_ADDRESS', null)
+      $addresses = $this->db()->db_select('CONS_ADDRESS', null)
         ->fields(null, array('ADDRESS_ID', 'ADDRESS_TYPE', 'EFFECTIVE_DATE', 'THOROUGHFARE', 'LOCALITY', 'ADMINISTRATIVE_AREA', 'POSTAL_CODE', 'COUNTRY'))
         ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
+        ->condition('ACTIVE', 1)
         ->orderBy('ADDRESS_TYPE')
         ->orderBy('EFFECTIVE_DATE')
-        ->execute();
-      $address_type = '';
-      while ($address_row = $address_result->fetch()) {
-        if ($address_type != $address_row['ADDRESS_TYPE'])
-          $addresses[$address_row['ADDRESS_TYPE']] = $address_row;
-        $address_type = $address_row['ADDRESS_TYPE'];
-      }
+        ->execute()->fetchAll();
       
-      $phone_result = $this->db()->db_select('CONS_PHONE', null)
+      $phones = $this->db()->db_select('CONS_PHONE', null)
         ->fields(null, array('PHONE_NUMBER_ID', 'EFFECTIVE_DATE', 'PHONE_TYPE', 'PHONE_NUMBER', 'PHONE_EXTENSION', 'PHONE_COUNTRY'))
         ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
+        ->condition('ACTIVE', 1)
         ->orderBy('PHONE_TYPE')
         ->orderBy('EFFECTIVE_DATE')
-        ->execute();
-      $phone_type = '';
-      while ($phone_row = $phone_result->fetch()) {
-        if ($phone_type != $phone_row['PHONE_TYPE'])
-          $phones[$phone_row['PHONE_TYPE']] = $phone_row;
-        $phone_type = $phone_row['PHONE_TYPE'];
-      }
+        ->execute()->fetchAll();
       
-      $email_result = $this->db()->db_select('CONS_EMAIL_ADDRESS', null)
+      $emails = $this->db()->db_select('CONS_EMAIL_ADDRESS', null)
         ->fields(null, array('EMAIL_ADDRESS_ID', 'EMAIL_ADDRESS_TYPE', 'EFFECTIVE_DATE', 'EMAIL_ADDRESS'))
         ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
+        ->condition('ACTIVE', 1)
         ->orderBy('EMAIL_ADDRESS_TYPE')
         ->orderBy('EFFECTIVE_DATE')
-        ->execute();
-      $email_type = '';
-      $i = 0;
-      while ($email_row = $email_result->fetch()) {
-        if ($email_row['EMAIL_ADDRESS_TYPE'] == null)
-          $email_row['EMAIL_ADDRESS_TYPE'] = 'OT' . $i;
-        if ($email_type != $email_row['EMAIL_ADDRESS_TYPE'])
-          $emails[$email_row['EMAIL_ADDRESS_TYPE']] = $email_row;
-        $email_type = $email_row['EMAIL_ADDRESS_TYPE'];
-        $i++;
-      }
+        ->execute()->fetchAll();
       
       
     } // end if selected record
