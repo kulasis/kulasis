@@ -202,9 +202,9 @@ class SISInformationController extends Controller {
     $enrollmentInfo = array_merge($enrollmentInfo, $this->form('add', 'K12.Student.Status', 'new'));
     $enrollment = $this->get('kula.K12.student')->enrollStudent($enrollmentInfo);
     
-    $this->get('kula.HEd.billing.constituent')->determineTuitionRate($enrollment['student_status']);
+    $this->get('kula.K12.billing.constituent')->determineTuitionRate($enrollment['student_status']);
     
-    $this->get('kula.HEd.billing.student')->checkMandatoryTransactions($enrollment['student_status']);
+    $this->get('kula.K12.billing.student')->checkMandatoryTransactions($enrollment['student_status']);
     
     if ($enrollment['enrollment_activity_id']) {
       $transaction->commit();
