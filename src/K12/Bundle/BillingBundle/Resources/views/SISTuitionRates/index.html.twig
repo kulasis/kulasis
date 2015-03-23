@@ -14,10 +14,6 @@ Tuition Rates
   <th class="data-table-cell-row-header">#</th>
   {{ kula_field_name({ field: 'K12.TuitionRate.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'K12.TuitionRate.BillingMode', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'K12.TuitionRate.CourseFees', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'K12.TuitionRate.CreditHourRate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'K12.TuitionRate.CreditHourAuditRate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'K12.TuitionRate.FullTimeFlatRate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'K12.TuitionRate.FullTimeCredits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'K12.TuitionRate.MaxFullTimeCredits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   <th class="data-table-cell-row-header">Actions</th>
@@ -30,10 +26,6 @@ Tuition Rates
   {{ kula_display_html({ add: true, field: 'K12.TuitionRate.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
   {{ kula_field({ add: true, field: 'K12.TuitionRate.Name', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'K12.TuitionRate.BillingMode', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-  {{ kula_field({ add: true, field: 'K12.TuitionRate.CourseFees', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-  {{ kula_field({ add: true, field: 'K12.TuitionRate.CreditHourRate', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-  {{ kula_field({ add: true, field: 'K12.TuitionRate.CreditHourAuditRate', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-  {{ kula_field({ add: true, field: 'K12.TuitionRate.FullTimeFlatRate', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'K12.TuitionRate.FullTimeCredits', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'K12.TuitionRate.MaxFullTimeCredits', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
     {{ kula_display_html({ add: true, field: 'K12.TuitionRate.ID', prepend_html: '<td class="data-table-cell-row-num">Actions</td>' }) }}
@@ -44,10 +36,6 @@ Tuition Rates
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
     {{ kula_field({ edit: true, field: 'K12.TuitionRate.Name', db_row_id: rate.TUITION_RATE_ID, value: rate.TUITION_RATE_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'K12.TuitionRate.BillingMode', db_row_id: rate.TUITION_RATE_ID, value: rate.BILLING_MODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'K12.TuitionRate.CourseFees', db_row_id: rate.TUITION_RATE_ID, value: rate.COURSE_FEES, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'K12.TuitionRate.CreditHourRate', db_row_id: rate.TUITION_RATE_ID, value: rate.CREDIT_HOUR_RATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'K12.TuitionRate.CreditHourAuditRate', db_row_id: rate.TUITION_RATE_ID, value: rate.CREDIT_HOUR_AUDIT_RATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'K12.TuitionRate.FullTimeFlatRate', db_row_id: rate.TUITION_RATE_ID, value: rate.FULL_TIME_FLAT_RATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'K12.TuitionRate.FullTimeCredits', db_row_id: rate.TUITION_RATE_ID, value: rate.FULL_TIME_CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'K12.TuitionRate.MaxFullTimeCredits', db_row_id: rate.TUITION_RATE_ID, value: rate.MAX_FULL_TIME_CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     <td>

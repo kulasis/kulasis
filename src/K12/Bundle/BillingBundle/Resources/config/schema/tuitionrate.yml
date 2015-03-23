@@ -38,17 +38,6 @@ K12.TuitionRate:
       class: Kula\K12\Bundle\BillingBundle\Field\BillingMode
       column_name: "Billing Mode"
       label_name: "Billing Mode"
-    FullTimeFlatRate:
-      description: "Full Time Flat Rate"
-      db_column_name: FULL_TIME_FLAT_RATE
-      db_column_type: numeric
-      db_column_lenght: 10
-      db_column_precision: 2
-      db_column_null: true
-      field_type: text
-      field_size: 6
-      column_name: "Full Time Flat Rate"
-      label_name: "Full Time Flat Rate"
     FullTimeCredits:
       description: "Full Time Credits"
       db_column_name: FULL_TIME_CREDITS
@@ -71,37 +60,6 @@ K12.TuitionRate:
       field_size: 6
       column_name: "Max Full Time Credits"
       label_name: "Max Full Time Credits"
-    CreditHourRate:
-      description: "Credit Hour Rate"
-      db_column_name: CREDIT_HOUR_RATE
-      db_column_type: numeric
-      db_column_length: 10
-      db_column_precision: 2
-      db_column_null: true
-      field_type: text
-      field_size: 6
-      column_name: "Credit Hour Rate"
-      label_name: "Credit Hour Rate"
-    CreditHourAuditRate:
-      description: "Credit Hour Audit Rate"
-      db_column_name: CREDIT_HOUR_AUDIT_RATE
-      db_column_type: numeric
-      db_column_length: 10
-      db_column_precision: 2
-      db_column_null: true
-      field_type: text
-      field_size: 6
-      column_name: "Credit Hour Audit Rate"
-      label_name: "Credit Hour Audit Rate"
-    CourseFees:
-      description: "Course Fees"
-      db_column_name: COURSE_FEES
-      db_column_type: bool
-      db_column_default: 1
-      db_column_null: false
-      field_type: checkbox
-      column_name: "Course Fees"
-      label_name: "Course Fees"
 
 K12.TuitionRate.Refund:
   description: "Tuition Rate Refunds"
@@ -230,6 +188,28 @@ K12.TuitionRate.Transaction:
       field_size: 7
       column_name: "Amount"
       label_name: "Amount"
+    CreditHourRate:
+      description: "Credit Hour Rate"
+      db_column_name: CREDIT_HOUR_RATE
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 9
+      column_name: "Credit Hour Rate"
+      label_name: "Credit Hour Rate"
+    FullTimeFlatRate:
+      description: "Full Time Flat Rate"
+      db_column_name: FULL_TIME_FLAT_RATE
+      db_column_type: numeric
+      db_column_lenght: 10
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 9
+      column_name: "Full Time Flat Rate"
+      label_name: "Full Time Flat Rate"
     Rule:
       description: "Rule"
       db_column_name: RULE

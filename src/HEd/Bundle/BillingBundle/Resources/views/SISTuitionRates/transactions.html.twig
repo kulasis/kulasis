@@ -20,6 +20,8 @@ Transactions
   {{ kula_field_name({ field: 'HEd.TuitionRate.Transaction.MinimumCredits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.TuitionRate.Transaction.TransactionCodeID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.TuitionRate.Transaction.Amount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.TuitionRate.Transaction.CreditHourRate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.TuitionRate.Transaction.FullTimeFlatRate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   </tr>
 </thead>
 <tbody>
@@ -31,6 +33,8 @@ Transactions
   {{ kula_field({ add: true, field: 'HEd.TuitionRate.Transaction.MinimumCredits', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.TuitionRate.Transaction.TransactionCodeID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.TuitionRate.Transaction.Amount', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.TuitionRate.Transaction.CreditHourRate', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.TuitionRate.Transaction.FullTimeFlatRate', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_display_html({ add: true, field: 'HEd.TuitionRate.Transaction.ID', prepend_html: '</tr>' }) }}
   {% for transaction in transactions %}
   <tr>
@@ -40,6 +44,8 @@ Transactions
     {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Transaction.MinimumCredits', db_row_id: transaction.TUITION_RATE_TRANSACTION_ID, value: transaction.MIN_CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Transaction.TransactionCodeID', db_row_id: transaction.TUITION_RATE_TRANSACTION_ID, value: transaction.TRANSACTION_CODE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Transaction.Amount', db_row_id: transaction.TUITION_RATE_TRANSACTION_ID, value: transaction.AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Transaction.CreditHourRate', db_row_id: transaction.TUITION_RATE_TRANSACTION_ID, value: transaction.CREDIT_HOUR_RATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Transaction.FullTimeFlatRate', db_row_id: transaction.TUITION_RATE_TRANSACTION_ID, value: transaction.FULL_TIME_FLAT_RATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
   {% endfor %}
 </tbody>

@@ -149,7 +149,7 @@ class StudentBillingService {
       
       // Get audit code
       $audit_code = $this->database->db_select('BILL_TUITION_RATE_TRANSACTIONS', 'tuition_rate_trans')
-        ->fields('tuition_rate_trans', array('TRANSACTION_CODE_ID'))
+        ->fields('tuition_rate_trans', array('TRANSACTION_CODE_ID', 'CREDIT_HOUR_RATE'))
         ->condition('TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
         ->condition('RULE', 'AUDIT')
         ->execute()->fetch()['TRANSACTION_CODE_ID'];
@@ -201,7 +201,14 @@ class StudentBillingService {
     $student_status = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
       ->fields('status', array('TUITION_RATE_ID', 'TOTAL_CREDITS_ATTEMPTED', 'STUDENT_ID', 'ORGANIZATION_TERM_ID'))
       ->join('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = status.TUITION_RATE_ID AND tuitionrate.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
-      ->fields('tuitionrate', array('BILLING_MODE', 'FULL_TIME_CREDITS', 'FULL_TIME_FLAT_RATE', 'MAX_FULL_TIME_CREDITS', 'CREDIT_HOUR_RATE', 'CREDIT_HOUR_AUDIT_RATE'))
+      ->fields('tuitionrate', array('BILLING_MODE', 'FULL_TIME_CREDITS','MAX_FULL_TIME_CREDITS'))
+      ->join('BILL_TUITION_RATE_TRANSACTIONS', 'tuition_rate_trans', 'tuition_rate_trans.TUITION_RATE_ID = tuitionrate.TUITION_RATE_ID')
+      ->fields('tuition_rate_trans', array('TRANSACTION_CODE_ID', 'FULL_TIME_FLAT_RATE', 'CREDIT_HOUR_RATE', 'CREDIT_HOUR_AUDIT_RATE'))
+      ->condition($this->database->db_or()
+        ->condition('tuition_rate_trans.FULL_TIME_FLAT_RATE', null, 'IS NOT NULL')
+        ->condition('tuition_rate_trans.CREDIT_HOUR_RATE', null, 'IS NOT NULL')
+        ->condition('tuition_rate_trans.CREDIT_HOUR_AUDIT_RATE', null, 'IS NOT NULL')
+      )
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
       ->execute()->fetch();
     // If Standard, 
@@ -233,11 +240,7 @@ class StudentBillingService {
     // ------
     
     // Get tuition code
-    $tuition_code = $this->database->db_select('BILL_TUITION_RATE_TRANSACTIONS', 'tuition_rate_trans')
-      ->fields('tuition_rate_trans', array('TRANSACTION_CODE_ID'))
-      ->condition('TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
-      ->condition('RULE', 'TUITION')
-      ->execute()->fetch()['TRANSACTION_CODE_ID'];
+    $tuition_code = $student_status['TRANSACTION_CODE_ID'];
     
     if ($tuition_code) {
       // Compare calculated tuition total to what has been billed
