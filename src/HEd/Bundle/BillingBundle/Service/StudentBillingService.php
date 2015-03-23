@@ -141,11 +141,11 @@ class StudentBillingService {
       $student_status = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
         ->fields('status', array('TUITION_RATE_ID', 'TOTAL_CREDITS_ATTEMPTED', 'STUDENT_ID', 'ORGANIZATION_TERM_ID'))
         ->join('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = status.TUITION_RATE_ID AND tuitionrate.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
-        ->fields('tuitionrate', array('CREDIT_HOUR_AUDIT_RATE'))
+        ->fields('tuitionrate', array('CREDIT_HOUR_RATE'))
         ->condition('status.STUDENT_STATUS_ID', $student_status_id)
         ->execute()->fetch();
       
-      $audit_charge_total = $student_status['CREDIT_HOUR_AUDIT_RATE'] * $total_audit_credits;
+      $audit_charge_total = $student_status['CREDIT_HOUR_RATE'] * $total_audit_credits;
       
       // Get audit code
       $audit_code = $this->database->db_select('BILL_TUITION_RATE_TRANSACTIONS', 'tuition_rate_trans')
@@ -203,12 +203,8 @@ class StudentBillingService {
       ->join('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = status.TUITION_RATE_ID AND tuitionrate.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
       ->fields('tuitionrate', array('BILLING_MODE', 'FULL_TIME_CREDITS','MAX_FULL_TIME_CREDITS'))
       ->join('BILL_TUITION_RATE_TRANSACTIONS', 'tuition_rate_trans', 'tuition_rate_trans.TUITION_RATE_ID = tuitionrate.TUITION_RATE_ID')
-      ->fields('tuition_rate_trans', array('TRANSACTION_CODE_ID', 'FULL_TIME_FLAT_RATE', 'CREDIT_HOUR_RATE', 'CREDIT_HOUR_AUDIT_RATE'))
-      ->condition($this->database->db_or()
-        ->condition('tuition_rate_trans.FULL_TIME_FLAT_RATE', null, 'IS NOT NULL')
-        ->condition('tuition_rate_trans.CREDIT_HOUR_RATE', null, 'IS NOT NULL')
-        ->condition('tuition_rate_trans.CREDIT_HOUR_AUDIT_RATE', null, 'IS NOT NULL')
-      )
+      ->fields('tuition_rate_trans', array('TRANSACTION_CODE_ID', 'FULL_TIME_FLAT_RATE', 'CREDIT_HOUR_RATE'))
+      ->condition('tuition_rate_trans.RULE', 'TUITION')
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
       ->execute()->fetch();
     // If Standard, 
