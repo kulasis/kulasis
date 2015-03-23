@@ -186,7 +186,7 @@ class SISScheduleController extends Controller {
       $query = $query->join('STUD_COURSE', 'course', 'STUD_SECTION.COURSE_ID = course.COURSE_ID');
       $query = $query->fields('course', array('COURSE_NUMBER','COURSE_TITLE'));
       $query = $query->leftJoin('STUD_SECTION_MEETINGS', 'meetings', 'meetings.SECTION_ID = STUD_SECTION.SECTION_ID');
-      $query = $query->fields('meetings', array('MON','TUE','WED','THU','FRI','SAT','SUN', 'START_TIME', 'END_TIME'));
+      $query = $query->fields('meetings', array('SECTION_MEETING_ID', 'START_TIME', 'END_TIME'));
       $query = $query->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = meetings.ROOM_ID');
       $query = $query->fields('rooms', array('ROOM_NUMBER'));
       $query = $query->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', 'stafforgterm.STAFF_ORGANIZATION_TERM_ID = STUD_SECTION.STAFF_ORGANIZATION_TERM_ID');
@@ -199,17 +199,6 @@ class SISScheduleController extends Controller {
       $query = $query->orderBy('SECTION_NUMBER', 'ASC');
       $query = $query->range(0, 100);
       $search_classes = $query->execute()->fetchAll();
-      
-      foreach($search_classes as $key => $class) {
-        $search_classes[$key]['meets'] = '';
-        if ($class['MON'] == '1') $search_classes[$key]['meets'] .= 'M';
-        if ($class['TUE'] == '1') $search_classes[$key]['meets'] .= 'T';
-        if ($class['WED'] == '1') $search_classes[$key]['meets'] .= 'W';
-        if ($class['THU'] == '1') $search_classes[$key]['meets'] .= 'R';
-        if ($class['FRI'] == '1') $search_classes[$key]['meets'] .= 'F';
-        if ($class['SAT'] == '1') $search_classes[$key]['meets'] .= 'S';
-        if ($class['SUN'] == '1') $search_classes[$key]['meets'] .= 'U';
-      }
       
       // set start date
       $term_info = $this->db()->db_select('CORE_TERM')
