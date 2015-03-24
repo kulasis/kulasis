@@ -198,7 +198,7 @@ class StudentBillingService {
   public function calculateTuition($student_status_id) {
     
     // Get tuition rate
-    $student_status = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
+    $student_status_result = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
       ->fields('status', array('TUITION_RATE_ID', 'TOTAL_CREDITS_ATTEMPTED', 'STUDENT_ID', 'ORGANIZATION_TERM_ID'))
       ->join('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = status.TUITION_RATE_ID AND tuitionrate.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
       ->fields('tuitionrate', array('BILLING_MODE', 'FULL_TIME_CREDITS','MAX_FULL_TIME_CREDITS'))
@@ -206,74 +206,77 @@ class StudentBillingService {
       ->fields('tuition_rate_trans', array('TRANSACTION_CODE_ID', 'FULL_TIME_FLAT_RATE', 'CREDIT_HOUR_RATE'))
       ->condition('tuition_rate_trans.RULE', 'TUITION')
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
-      ->execute()->fetch();
-    // If Standard, 
-    if ($student_status['BILLING_MODE'] == 'STAND') {
-      // determine if at flat rate first
-      if ($student_status['TOTAL_CREDITS_ATTEMPTED'] >= $student_status['FULL_TIME_CREDITS']) {
+      ->execute();
+    while ($student_status = $student_status_result->fetch()) {
+    
+      // If Standard, 
+      if ($student_status['BILLING_MODE'] == 'STAND') {
+        // determine if at flat rate first
+        if ($student_status['TOTAL_CREDITS_ATTEMPTED'] >= $student_status['FULL_TIME_CREDITS']) {
         
-        $new_tuition_total = $student_status['FULL_TIME_FLAT_RATE'];
+          $new_tuition_total = $student_status['FULL_TIME_FLAT_RATE'];
         
-        // if over, overage to hourly
-        if ($student_status['TOTAL_CREDITS_ATTEMPTED'] > $student_status['MAX_FULL_TIME_CREDITS']) {
+          // if over, overage to hourly
+          if ($student_status['TOTAL_CREDITS_ATTEMPTED'] > $student_status['MAX_FULL_TIME_CREDITS']) {
         
-          // Determine overage
-          $overage_hours = $student_status['TOTAL_CREDITS_ATTEMPTED'] - $student_status['MAX_FULL_TIME_CREDITS'];
-          $new_tuition_total += $overage_hours * $student_status['CREDIT_HOUR_RATE'];
+            // Determine overage
+            $overage_hours = $student_status['TOTAL_CREDITS_ATTEMPTED'] - $student_status['MAX_FULL_TIME_CREDITS'];
+            $new_tuition_total += $overage_hours * $student_status['CREDIT_HOUR_RATE'];
         
+          }
+        
+        } else {
+          $new_tuition_total = $student_status['TOTAL_CREDITS_ATTEMPTED'] * $student_status['CREDIT_HOUR_RATE'];
         }
-        
-      } else {
+      
+      // If not, then hourly, multiply credit total by credit hour price
+      } elseif ($student_status['BILLING_MODE'] == 'HOUR') {
+      
         $new_tuition_total = $student_status['TOTAL_CREDITS_ATTEMPTED'] * $student_status['CREDIT_HOUR_RATE'];
-      }
-      
-    // If not, then hourly, multiply credit total by credit hour price
-    } elseif ($student_status['BILLING_MODE'] == 'HOUR') {
-      
-      $new_tuition_total = $student_status['TOTAL_CREDITS_ATTEMPTED'] * $student_status['CREDIT_HOUR_RATE'];
-      
-    }
-    // ------
-    
-    // Get tuition code
-    $tuition_code = $student_status['TRANSACTION_CODE_ID'];
-    
-    if ($tuition_code) {
-      // Compare calculated tuition total to what has been billed
-      $billed_tuition = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
-        ->expression('SUM(AMOUNT)', 'billed_amount')
-        ->condition('CONSTITUENT_ID', $student_status['STUDENT_ID'])
-        ->condition('ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID'])
-        ->condition('CODE_ID', $tuition_code)
-        ->execute()->fetch()['billed_amount'];
-    
-      // Determine difference to post
-      $amount_to_post = $new_tuition_total - $billed_tuition;
-    
-      if ($amount_to_post < 0) {
-        
-        // Get latest drop date
-        $drop_date = $this->schedule_service->calculateLatestDropDate($student_status_id);
-        $transaction_description = 'REFUND';
-        
-      // Apply refund policy
-      $refund_percentage = $this->database->db_select('BILL_TUITION_RATE_REFUND', 'tuition_rate_refund')
-        ->fields('tuition_rate_refund', array('REFUND_PERCENTAGE'))
-        ->condition('TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
-        ->condition('REFUND_TYPE', 'TUITION')
-        ->condition('END_DATE', $drop_date, '>=')
-        ->orderBy('END_DATE', 'ASC')
-        ->execute()->fetch()['REFUND_PERCENTAGE'];
-        
-      $amount_to_post = $amount_to_post * $refund_percentage * .01;
       
       }
-      // Post transaction
-      if ($amount_to_post != 0) {
-        $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $tuition_code, date('Y-m-d'), isset($transaction_description) ? $transaction_description : '', $amount_to_post);
-        $this->constituent_billing_service->postTransaction($new_transaction_id);
-      }
-    } // end $tuition_code
+      // ------
+    
+      // Get tuition code
+      $tuition_code = $student_status['TRANSACTION_CODE_ID'];
+    
+      if ($tuition_code) {
+        // Compare calculated tuition total to what has been billed
+        $billed_tuition = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+          ->expression('SUM(AMOUNT)', 'billed_amount')
+          ->condition('CONSTITUENT_ID', $student_status['STUDENT_ID'])
+          ->condition('ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID'])
+          ->condition('CODE_ID', $tuition_code)
+          ->execute()->fetch()['billed_amount'];
+    
+        // Determine difference to post
+        $amount_to_post = $new_tuition_total - $billed_tuition;
+    
+        if ($amount_to_post < 0) {
+        
+          // Get latest drop date
+          $drop_date = $this->schedule_service->calculateLatestDropDate($student_status_id);
+          $transaction_description = 'REFUND';
+        
+        // Apply refund policy
+        $refund_percentage = $this->database->db_select('BILL_TUITION_RATE_REFUND', 'tuition_rate_refund')
+          ->fields('tuition_rate_refund', array('REFUND_PERCENTAGE'))
+          ->condition('TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
+          ->condition('REFUND_TYPE', 'TUITION')
+          ->condition('END_DATE', $drop_date, '>=')
+          ->orderBy('END_DATE', 'ASC')
+          ->execute()->fetch()['REFUND_PERCENTAGE'];
+        
+        $amount_to_post = $amount_to_post * $refund_percentage * .01;
+      
+        }
+        // Post transaction
+        if ($amount_to_post != 0) {
+          $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $tuition_code, date('Y-m-d'), isset($transaction_description) ? $transaction_description : '', $amount_to_post);
+          $this->constituent_billing_service->postTransaction($new_transaction_id);
+        }
+      } // end $tuition_code
+    } // end $student_status_result 
   }
   
   public function calculateCourseFees($student_status_id, $previous_credit_total = null) {
