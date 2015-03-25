@@ -48,9 +48,9 @@ class SISParentsController extends Controller {
     
     if ($this->request->request->get('search')) {
       $query = $this->searcher->prepareSearch($this->request->request->get('search'), 'CONS_CONSTITUENT', 'CONSTITUENT_ID');
-      $query = $query->fields('CONS_CONSTITUENT', array('CONSTITUENT_ID', 'PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'BIRTH_DATE', 'GENDER'));
+      $query = $query->fields('CONS_CONSTITUENT', array('CONSTITUENT_ID', 'PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'BIRTH_DATE', 'GENDER'))->distinct();
       $query = $query->leftJoin('CONS_RELATIONSHIP', 'conrel', 'conrel.RELATED_CONSTITUENT_ID = CONS_CONSTITUENT.CONSTITUENT_ID');
-      $query = $query->leftJoin('STUD_STUDENT_PARENTS', 'stupar', 'stupar.STUDENT_PARENT_ID = conrel.RELATIONSHIP_ID')->fields('stupar', array('STUDENT_PARENT_ID'));
+      $query = $query->leftJoin('STUD_STUDENT_PARENTS', 'stupar', "stupar.STUDENT_PARENT_ID = conrel.RELATIONSHIP_ID AND conrel.CONSTITUENT_ID = ".$this->record->getSelectedRecordID())->fields('stupar', array('STUDENT_PARENT_ID'));
       $query = $query->orderBy('LAST_NAME', 'ASC');
       $query = $query->orderBy('FIRST_NAME', 'ASC');
       $query = $query->range(0, 100);
