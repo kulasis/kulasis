@@ -16,6 +16,7 @@ Emergency Contacts
   {{ kula_field_name({ field: 'K12.Student.EmergencyContact.Phone', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'K12.Student.EmergencyContact.Email', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'K12.Student.EmergencyContact.AuthorizedDriver', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'K12.Student.EmergencyContact.EmergencyContact', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </thead>
 <tbody>
   {{ kula_display_html({ add: true, field: 'K12.Student.EmergencyContact.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
@@ -27,6 +28,7 @@ Emergency Contacts
   {{ kula_field({ add: true, field: 'K12.Student.EmergencyContact.Phone', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'K12.Student.EmergencyContact.Email', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'K12.Student.EmergencyContact.AuthorizedDriver', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'K12.Student.EmergencyContact.EmergencyContact', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_display_html({ add: true, field: 'K12.Student.EmergencyContact.ID', prepend_html: '</tr>' }) }}
   {% for emergency in emergency_contacts %}
   <tr>
@@ -37,6 +39,7 @@ Emergency Contacts
     {{ kula_field({ edit: true, field: 'K12.Student.EmergencyContact.Phone', db_row_id: emergency.EMERGENCY_CONTACT_ID, value: emergency.EMERGENCY_CONTACT_PHONE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'K12.Student.EmergencyContact.Email', db_row_id: emergency.EMERGENCY_CONTACT_ID, value: emergency.EMERGENCY_CONTACT_EMAIL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'K12.Student.EmergencyContact.AuthorizedDriver', db_row_id: emergency.EMERGENCY_CONTACT_ID, value: emergency.AUTHORIZED_DRIVER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'K12.Student.EmergencyContact.EmergencyContact', db_row_id: emergency.EMERGENCY_CONTACT_ID, value: emergency.EMERGENCY_CONTACT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
   {% endfor %}
 </tbody>
