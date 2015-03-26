@@ -11,7 +11,7 @@
 </div>
 </div>
 
-{% if constituents %}
+{% if request.request.has('search') %}
 <div class="group-box">
 <div class="group-box-header">Add Staff</div>
 <div class="group-box-contents group">

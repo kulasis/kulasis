@@ -122,7 +122,7 @@ class SISStaffController extends Controller {
     
     if ($staff_orgterm_poster) {
       $transaction->commit();
-      return $this->forward('sis_HEd_school_staff', array('record_type' => 'HEd.Staff', 'record_id' => $constituent_poster), array('record_type' => 'HEd.Staff', 'record_id' => $constituent_poster));
+      return $this->forward('sis_HEd_school_staff', array('record_type' => 'SIS.HEd.Staff', 'record_id' => $constituent_poster), array('record_type' => 'SIS.HEd.Staff', 'record_id' => $constituent_poster));
     } else {
       $transaction->rollback();
       throw new \Kula\Core\Component\DB\PosterException('Changes not saved.');  
