@@ -54,7 +54,7 @@ class StudentBillingService {
     $this->schedule_service->calculateTotalAttemptedCredits($student_status_id);
     
     // Check mandatory 
-    $this->constituent_billing_service->checkMandatoryTransactions($student_status_id);
+    $this->schedule_service->checkMandatoryTransactions($student_status_id);
     
     // Calculate FTE
     $this->schedule_service->calculateFTE($student_status_id);
