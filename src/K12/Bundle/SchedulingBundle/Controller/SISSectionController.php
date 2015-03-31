@@ -12,7 +12,7 @@ class SISSectionController extends Controller {
     $this->setRecordType('SIS.K12.Section');
     
     $section = $this->db()->db_select('STUD_SECTION', 'section')
-      ->fields('section', array('SECTION_ID','CREDITS', 'START_DATE', 'END_DATE', 'CAPACITY', 'MINIMUM', 'ENROLLED_TOTAL', 'WAIT_LISTED_TOTAL', 'MARK_SCALE_ID'))
+      ->fields('section', array('SECTION_ID','CREDITS', 'START_DATE', 'END_DATE', 'CAPACITY', 'MINIMUM', 'ENROLLED_TOTAL', 'WAIT_LISTED_TOTAL', 'MARK_SCALE_ID', 'NO_CLASS_DATES', 'SUPPLIES_REQUIRED', 'SUPPLIES_OPTIONAL', 'SUPPLIES_PRICE'))
       ->condition('section.SECTION_ID', $this->record->getSelectedRecordID())
       ->execute()->fetch();
     
