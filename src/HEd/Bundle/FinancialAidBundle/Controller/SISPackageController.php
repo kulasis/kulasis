@@ -9,6 +9,7 @@ class SISPackageController extends Controller {
   public function indexAction() {
     $this->authorize();
     $this->setRecordType('SIS.HEd.Student');
+    $addOrDelete = false;
     
     $fin_aid_year = $this->db()->db_select('CORE_TERM', 'term')
       ->fields('term', array('FINANCIAL_AID_YEAR'))
@@ -24,15 +25,20 @@ class SISPackageController extends Controller {
       unset($post_info_add['HEd.FAID.Student.AwardYear.Award']['new_num']);
       
 
-     if (isset($post_info_add['HEd.FAID.Student.AwardYear.Award']) AND count($post_info_add['HEd.FAID.Student.AwardYear.Award']) == 0 AND isset($post_info_add['HEd.FAID.Student.Award']) AND count($post_info_add['HEd.FAID.Student.Award']) == 0) {
-        unset($post_info_add);
-      }
+     if (isset($post_info_add['HEd.FAID.Student.AwardYear.Award']) AND count($post_info_add['HEd.FAID.Student.AwardYear.Award']) == 0) {
+       unset($post_info_add['HEd.FAID.Student.AwardYear.Award']);
+     }
+     if (isset($post_info_add['HEd.FAID.Student.AwardYear']) AND count($post_info_add['HEd.FAID.Student.AwardYear']) == 0) {
+      unset($post_info_add['HEd.FAID.Student.AwardYear']);
+     }
+     if (isset($post_info_add['HEd.FAID.Student.Award']) AND count($post_info_add['HEd.FAID.Student.Award']) == 0) {
+      unset($post_info_add['HEd.FAID.Student.Award']);
+     }
     
     }
-    
-    if (isset($post_info_add)) {
+    if (isset($post_info_add) AND count($post_info_add) > 0) {
       $transaction = $this->db()->db_transaction();
-      
+      $addOrDelete = true;
       foreach($post_info_add as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
           
@@ -134,14 +140,17 @@ class SISPackageController extends Controller {
       
       $transaction->commit();
       
-    } elseif ($this->request->request->get('delete')) {  
-      
+    } 
+    
+    if ($this->request->request->get('delete')) {  
+      $addOrDelete = true;
       $post_delete = $this->request->request->get('delete');
-      
+
       $transaction = $this->db()->db_transaction();
       
       foreach($post_delete as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
+          
           if ($row['delete_row'] == 'Y') {
             // get AWARD_YEAR_ID
             $award_term_ids = array();
@@ -172,21 +181,14 @@ class SISPackageController extends Controller {
       $poster_factory = $this->newPoster();
       $poster_factory->deleteMultiple($post_delete);
       $poster_factory = $poster_factory->process()->getResult();
-      
+
       $transaction->commit();
       
-    } else {
-      $this->processForm();
     }
     
-    if (!$this->poster)
-      $this->poster = $this->container->get('kula.core.poster');
-      
-    if ($this->request->request->get('edit'))
-      $this->poster->editMultiple($this->request->request->get('edit'));
-    if ($this->request->request->get('delete'))
-      $this->poster->deleteMultiple($this->request->request->get('delete'));
-    $this->poster->process();
+    if (!$addOrDelete) {
+      $this->processForm();
+    }
     
     $award_year = array();
     $award_terms = array();
