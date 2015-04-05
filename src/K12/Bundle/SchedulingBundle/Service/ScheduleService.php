@@ -182,7 +182,7 @@ class ScheduleService {
       
       // process course fees
       if ($class_row['BILLING_MODE'] == 'FEES' AND $drop_date < $class_row['START_DATE']) {
-        $this->billing->removeCourseFees($student_class_id);
+        $this->billing->removeCourseFees($class_id);
       }
       
       // Update section totals
