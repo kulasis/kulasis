@@ -86,7 +86,16 @@ sis_HEd_offering_sections_report_classroster_generate:
 sis_HEd_offering_sections_reports_classroster:
   path: /offering/sections/reports/classroster
   defaults: { _controller: KulaHEdSchedulingBundle:SISClassRosterReport:index }
+  
+sis_HEd_offering_sections_reports_classroster_directory:
+  path: /offering/sections/reports/classrosterdirectory
+  defaults: { _controller: KulaHEdSchedulingBundle:SISClassRosterDirectoryReport:index }
 
+sis_HEd_offering_sections_report_classroster_directory_generate:
+  path: /offering/section/reports/classrosterdirectory/generate
+  defaults: { _controller: KulaHEdSchedulingBundle:SISClassRosterDirectoryReport:generate }
+  methods: [POST]
+  
 sis_HEd_offering_sections_reports_masterschedule:
   path: /offering/sections/reports/masterschedule
   defaults: { _controller: KulaHEdSchedulingBundle:SISMasterScheduleReport:index }

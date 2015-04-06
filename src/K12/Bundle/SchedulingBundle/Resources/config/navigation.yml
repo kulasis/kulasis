@@ -138,11 +138,21 @@ SIS.K12.Academic:
           display_name: "Class Roster"
           route: sis_K12_offering_sections_reports_classroster
           sort: 1
+        ClassRosterSignInOut:
+          description: "Class Roster Sign In Out"
+          display_name: "Class Roster Sign In Out"
+          route: sis_K12_offering_sections_reports_classroster_signinout
+          sort: 2
+        AAClassRoster:
+          description: "AA Class Roster"
+          display_name: "AA Class Roster"
+          route: sis_K12_offering_sections_reports_classroster_aa
+          sort: 3
         MasterSchedule:
           description: "Master Schedule"
           display_name: "Master Schedule"
           route: sis_K12_offering_sections_reports_masterschedule
-          sort: 2
+          sort: 4
     Courses:
       description: "Courses"
       display_name: "Courses"
@@ -199,11 +209,16 @@ SIS.K12.Reports.Academic:
       display_name: "Class Roster"
       route: sis_K12_offering_sections_reports_classroster
       sort: 1
+    ClassRosterSignInOut:
+      description: "Class Roster Sign In Out"
+      display_name: "Class Roster Sign In Out"
+      route: sis_K12_offering_sections_reports_classroster_signinout
+      sort: 2
     MasterSchedule:
       description: "Master Schedule"
       display_name: "Master Schedule"
       route: sis_K12_offering_sections_reports_masterschedule
-      sort: 2
+      sort: 3
       
 SIS.K12.Academic.Staff:
   description: "Staff"

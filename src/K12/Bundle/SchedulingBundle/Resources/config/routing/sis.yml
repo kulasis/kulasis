@@ -87,6 +87,24 @@ sis_K12_offering_sections_reports_classroster:
   path: /offering/sections/reports/classroster
   defaults: { _controller: KulaK12SchedulingBundle:SISClassRosterReport:index }
 
+sis_K12_offering_sections_reports_classroster_signinout:
+    path: /offering/sections/reports/classrostersigninout
+    defaults: { _controller: KulaK12SchedulingBundle:SISClassRosterSignInOutReport:index }
+
+sis_K12_offering_sections_report_classroster_signinout_generate:
+  path: /offering/section/reports/classrostersigninout/generate
+  defaults: { _controller: KulaK12SchedulingBundle:SISClassRosterSignInOutReport:generate }
+  methods: [POST]
+  
+sis_K12_offering_sections_report_classroster_aa_generate:
+  path: /offering/section/reports/roster/aa/generate
+  defaults: { _controller: KulaK12SchedulingBundle:SISAAClassRosterReport:generate }
+  methods: [POST]
+
+sis_K12_offering_sections_reports_classroster_aa:
+  path: /offering/sections/reports/classroster/aa
+  defaults: { _controller: KulaK12SchedulingBundle:SISAAClassRosterReport:index }
+
 sis_K12_offering_sections_reports_masterschedule:
   path: /offering/sections/reports/masterschedule
   defaults: { _controller: KulaK12SchedulingBundle:SISMasterScheduleReport:index }

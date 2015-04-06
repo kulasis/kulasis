@@ -143,11 +143,16 @@ SIS.HEd.Academic:
           display_name: "Class Roster"
           route: sis_HEd_offering_sections_reports_classroster
           sort: 1
+        ClassRosterDirectory:
+          description: "Class Roster Directory"
+          display_name: "Class Roster Directory"
+          route: sis_HEd_offering_sections_reports_classroster_directory
+          sort: 2
         MasterSchedule:
           description: "Master Schedule"
           display_name: "Master Schedule"
           route: sis_HEd_offering_sections_reports_masterschedule
-          sort: 2
+          sort: 4
     Courses:
       description: "Courses"
       display_name: "Courses"
@@ -204,11 +209,16 @@ SIS.HEd.Reports.Academic:
       display_name: "Class Roster"
       route: sis_HEd_offering_sections_reports_classroster
       sort: 1
+    ClassRosterDirectory:
+      description: "Class Roster Directory"
+      display_name: "Class Roster Directory"
+      route: sis_HEd_offering_sections_reports_classroster_directory
+      sort: 2
     MasterSchedule:
       description: "Master Schedule"
       display_name: "Master Schedule"
       route: sis_HEd_offering_sections_reports_masterschedule
-      sort: 2
+      sort: 4
       
 SIS.HEd.Academic.Staff:
   description: "Staff"
