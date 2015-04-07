@@ -47,13 +47,13 @@ class SISClassRosterDirectoryReportController extends ReportController {
     while ($meeting_row = $meeting_result->fetch()) {
       if ($section_id != $meeting_row['SECTION_ID']) $i = 0;
       $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] = '';
-      if ($meeting_row['MON'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'M';
-      if ($meeting_row['TUE'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'T';
-      if ($meeting_row['WED'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'W';
-      if ($meeting_row['THU'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'R';
-      if ($meeting_row['FRI'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'F';
-      if ($meeting_row['SAT'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'S';
-      if ($meeting_row['SUN'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'U';
+      if ($meeting_row['MON'] == '1') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'M';
+      if ($meeting_row['TUE'] == '1') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'T';
+      if ($meeting_row['WED'] == '1') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'W';
+      if ($meeting_row['THU'] == '1') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'R';
+      if ($meeting_row['FRI'] == '1') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'F';
+      if ($meeting_row['SAT'] == '1') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'S';
+      if ($meeting_row['SUN'] == '1') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'U';
       $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['START_TIME'] = date('g:i A', strtotime($meeting_row['START_TIME']));
       $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['END_TIME'] = date('g:i A', strtotime($meeting_row['END_TIME']));
       $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['ROOM'] = $meeting_row['ROOM_NUMBER'];
@@ -77,10 +77,10 @@ class SISClassRosterDirectoryReportController extends ReportController {
       ->join('STUD_STUDENT_CLASSES', 'class', 'class.SECTION_ID = section.SECTION_ID')
       ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE'))
       ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
-      ->fields('status', array('STUDENT_STATUS_ID', 'SEEKING_DEGREE_1_ID'))
+      ->fields('status', array('STUDENT_ID', 'STUDENT_STATUS_ID', 'SEEKING_DEGREE_1_ID'))
       ->leftJoin('CORE_LOOKUP_VALUES', 'grvalue', "grvalue.CODE = status.GRADE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
       ->fields('grvalue', array('DESCRIPTION' => 'GRADE'))
-      ->leftJoin('CORE_LOOKUP_VALUES', 'entercodevalue', "entercodevalue.CODE = status.ENTER_CODE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.EnterCode')")
+      ->leftJoin('CORE_LOOKUP_VALUES', 'entercodevalue', "entercodevalue.CODE = status.ENTER_CODE AND entercodevalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.EnterCode')")
       ->fields('entercodevalue', array('DESCRIPTION' => 'ENTER_CODE'))
       ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
       ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
@@ -118,19 +118,23 @@ class SISClassRosterDirectoryReportController extends ReportController {
         $pdf->AddPage();
       }
       
-      // Get student concentrations
-      $student_concentrations = array();
-      $student_concentrations_result = $this->db()->db_select('STUD_STUDENT_DEGREES', 'studeg')
-        ->fields('studeg')
-        ->join('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcen', 'studeg.STUDENT_DEGREE_ID = stuconcen.STUDENT_DEGREE_ID')
-        ->join('STUD_DEGREE_CONCENTRATION', 'concen', 'concen.CONCENTRATION_ID = stuconcen.CONCENTRATION_ID')
-        ->fields('concen', array('CONCENTRATION_NAME'))
-        ->condition('studeg.STUDENT_DEGREE_ID', $row['SEEKING_DEGREE_1_ID'])
-        ->execute();
-      while ($student_concentrations_row = $student_concentrations_result->fetch()) {
-        $student_concentrations[] = $student_concentrations_row['CONCENTRATION_NAME'];
-      }
-      $row['concentrations'] = implode(", ", $student_concentrations);
+      // Get Address
+      $row['address'] = $this->db()->db_select('CONS_ADDRESS', 'address')
+        ->fields('address', array('THOROUGHFARE', 'LOCALITY', 'ADMINISTRATIVE_AREA', 'POSTAL_CODE'))
+        ->join('CONS_CONSTITUENT', 'constituent', 'constituent.RESIDENCE_ADDRESS_ID = address.ADDRESS_ID OR constituent.MAILING_ADDRESS_ID = address.ADDRESS_ID')
+        ->condition('constituent.CONSTITUENT_ID', $row['STUDENT_ID'])->execute()->fetch();
+      
+      // Get phone
+      $row['phone'] = $this->db()->db_select('CONS_PHONE', 'phone')
+        ->fields('phone', array('PHONE_NUMBER', 'PHONE_TYPE'))
+        ->join('CONS_CONSTITUENT', 'constituent', 'constituent.PRIMARY_PHONE_ID = phone.PHONE_NUMBER_ID')
+        ->condition('constituent.CONSTITUENT_ID', $row['STUDENT_ID'])->execute()->fetch();
+      
+      // Get email
+      $row['email'] = $this->db()->db_select('CONS_EMAIL_ADDRESS', 'email')
+        ->fields('email', array('EMAIL_ADDRESS', 'EMAIL_ADDRESS_TYPE'))
+        ->join('CONS_CONSTITUENT', 'constituent', 'constituent.PRIMARY_EMAIL_ID = email.EMAIL_ADDRESS_ID')
+        ->condition('constituent.CONSTITUENT_ID', $row['STUDENT_ID'])->execute()->fetch();
       
       $pdf->table_row($row);
       $last_section_id = $row['SECTION_ID'];

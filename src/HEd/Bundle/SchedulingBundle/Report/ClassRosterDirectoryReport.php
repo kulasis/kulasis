@@ -48,7 +48,7 @@ class ClassRosterDirectoryReport extends BaseReport {
 
     $this->SetDrawColor(0,0,0);
     $this->SetLineWidth(.1);
-      $header = array('#', 'Student ID', 'Last Name', 'First Name', 'Grade', 'Enter Code', 'Concentration(s)'); // 'Final Grade'
+      $header = array('#', 'Student ID', 'Last Name', 'First Name', 'Grade', 'Enter Code'); // 'Final Grade'
       for($i=0;$i<count($header);$i++)
           $this->Cell($this->width[$i],6,$header[$i],1,0,'L');
       $this->Ln();
@@ -66,8 +66,14 @@ class ClassRosterDirectoryReport extends BaseReport {
     $this->Cell($this->width[3],6,$row['FIRST_NAME'].' '.$middle_initial,'',0,'L',$this->fill);
     $this->Cell($this->width[4],6,$row['GRADE'],'',0,'L',$this->fill);
     $this->Cell($this->width[5],6,$row['ENTER_CODE'],'',0,'L',$this->fill);
-    //$this->Cell($this->width[5],6,'','LRTB',0,'L',$this->fill);
-    $this->Cell($this->width[6],6,$row['concentrations'],'',0,'L',$this->fill);
+    $this->Ln();
+    $this->Cell(70, 4, $row['address']['THOROUGHFARE'],'', 0,'L',$this->fill);
+    $this->Cell(25, 4, $row['phone']['PHONE_NUMBER'],'', 0,'L',$this->fill);
+    $this->Cell(51, 4, $row['email']['EMAIL_ADDRESS'],'', 0,'L',$this->fill);
+    $this->Ln();
+    $this->Cell(70, 6, ($row['address']['LOCALITY'] != '') ? $row['address']['LOCALITY'].', '.$row['address']['ADMINISTRATIVE_AREA'].' '.$row['address']['POSTAL_CODE'] : '','', 0,'L',$this->fill);
+    $this->Cell(25, 6, '','', 0,'L',$this->fill);
+    $this->Cell(51, 6, '','', 0,'L',$this->fill);
     $this->Ln();
     $this->fill = !$this->fill;
   }
