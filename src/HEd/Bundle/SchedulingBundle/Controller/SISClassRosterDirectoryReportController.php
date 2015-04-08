@@ -84,7 +84,7 @@ class SISClassRosterDirectoryReportController extends ReportController {
       ->fields('entercodevalue', array('DESCRIPTION' => 'ENTER_CODE'))
       ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
       ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
-      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
+      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'PREFERRED_NAME'))
       ->condition('DROPPED', '0');
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0)
@@ -135,6 +135,12 @@ class SISClassRosterDirectoryReportController extends ReportController {
         ->fields('email', array('EMAIL_ADDRESS', 'EMAIL_ADDRESS_TYPE'))
         ->join('CONS_CONSTITUENT', 'constituent', 'constituent.PRIMARY_EMAIL_ID = email.EMAIL_ADDRESS_ID')
         ->condition('constituent.CONSTITUENT_ID', $row['STUDENT_ID'])->execute()->fetch();
+      
+      // Check how far from bottom
+      $current_y = $pdf->GetY();
+      if (270 - $current_y < 30) {
+        $pdf->Ln(270 - $current_y);
+      }
       
       $pdf->table_row($row);
       $last_section_id = $row['SECTION_ID'];
