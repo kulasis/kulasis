@@ -19,51 +19,13 @@ class SISClassRosterSignInOutReportController extends ReportController {
   {  
     $this->authorize();
     
-    $pdf = new \Kula\K12\Bundle\SchedulingBundle\Report\ClassRosterSignInOutReport("P");
+    $pdf = new \Kula\K12\Bundle\SchedulingBundle\Report\ClassRosterSignInOutReport("L");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
     
-    $meetings = array();
-    // Get meeting data
-    $meeting_result = $this->db()->db_select('STUD_SECTION', 'section')
-      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER'))
-      ->join('STUD_SECTION_MEETINGS', 'meetings', 'meetings.SECTION_ID = section.SECTION_ID')
-      ->fields('meetings', array('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
-      ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = meetings.ROOM_ID')
-      ->fields('rooms', array('ROOM_NUMBER'))
-      ->condition('section.STATUS', null);
-    
-    $org_term_ids = $this->focus->getOrganizationTermIDs();
-    if (isset($org_term_ids) AND count($org_term_ids) > 0)
-      $meeting_result = $meeting_result->condition('section.ORGANIZATION_TERM_ID', $org_term_ids);
-    $record_id = $this->request->request->get('record_id');
-    if (isset($record_id) AND $record_id != '')
-      $meeting_result = $meeting_result->condition('section.SECTION_ID', $record_id);
-    $meeting_result = $meeting_result
-      ->orderBy('SECTION_ID');
-    $meeting_result = $meeting_result->execute();
-    $i = 0;
-    $section_id = 0;
-    while ($meeting_row = $meeting_result->fetch()) {
-      if ($section_id != $meeting_row['SECTION_ID']) $i = 0;
-      $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] = '';
-      if ($meeting_row['MON'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'M';
-      if ($meeting_row['TUE'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'T';
-      if ($meeting_row['WED'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'W';
-      if ($meeting_row['THU'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'R';
-      if ($meeting_row['FRI'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'F';
-      if ($meeting_row['SAT'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'S';
-      if ($meeting_row['SUN'] == 'Y') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'U';
-      $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['START_TIME'] = date('g:i A', strtotime($meeting_row['START_TIME']));
-      $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['END_TIME'] = date('g:i A', strtotime($meeting_row['END_TIME']));
-      $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['ROOM'] = $meeting_row['ROOM_NUMBER'];
-      $i++;
-      $section_id = $meeting_row['SECTION_ID'];
-    }
-    
     // Get Data and Load
     $result = $this->db()->db_select('STUD_SECTION', 'section')
-      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER'))
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME', 'START_DATE', 'END_DATE'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
       ->fields('course', array('COURSE_TITLE'))
       ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
@@ -77,7 +39,7 @@ class SISClassRosterSignInOutReportController extends ReportController {
       ->join('STUD_STUDENT_CLASSES', 'class', 'class.SECTION_ID = section.SECTION_ID')
       ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE'))
       ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
-      ->fields('status', array('STUDENT_STATUS_ID', 'SEEKING_DEGREE_1_ID'))
+      ->fields('status', array('STUDENT_STATUS_ID', 'STUDENT_ID', 'SEEKING_DEGREE_1_ID'))
       ->leftJoin('CORE_LOOKUP_VALUES', 'grvalue', "grvalue.CODE = status.GRADE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'K12.Student.Enrollment.Grade')")
       ->fields('grvalue', array('DESCRIPTION' => 'GRADE'))
       ->leftJoin('CORE_LOOKUP_VALUES', 'entercodevalue', "entercodevalue.CODE = status.ENTER_CODE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'K12.Student.Enrollment.EnterCode')")
@@ -118,19 +80,32 @@ class SISClassRosterSignInOutReportController extends ReportController {
         $pdf->AddPage();
       }
       
-      // Get student concentrations
-      $student_concentrations = array();
-      $student_concentrations_result = $this->db()->db_select('STUD_STUDENT_DEGREES', 'studeg')
-        ->fields('studeg')
-        ->join('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcen', 'studeg.STUDENT_DEGREE_ID = stuconcen.STUDENT_DEGREE_ID')
-        ->join('STUD_DEGREE_CONCENTRATION', 'concen', 'concen.CONCENTRATION_ID = stuconcen.CONCENTRATION_ID')
-        ->fields('concen', array('CONCENTRATION_NAME'))
-        ->condition('studeg.STUDENT_DEGREE_ID', $row['SEEKING_DEGREE_1_ID'])
+      // Get parents
+      $parentsStr = array();
+      $parents = $this->db()->db_select('CONS_CONSTITUENT', 'constituent')
+        ->fields('constituent', array('LAST_NAME', 'FIRST_NAME'))
+        ->join('CONS_RELATIONSHIP', 'relationship', 'relationship.RELATED_CONSTITUENT_ID = constituent.CONSTITUENT_ID')
+        ->condition('relationship.CONSTITUENT_ID', $row['STUDENT_ID'])
+        ->join('STUD_STUDENT_PARENTS', 'stupar', 'stupar.STUDENT_PARENT_ID = relationship.RELATIONSHIP_ID')
+        ->condition('stupar.CONTACT_NOT_ALLOWED', 0)
+        ->condition('stupar.RESTRAINING_ORDER', 0)
         ->execute();
-      while ($student_concentrations_row = $student_concentrations_result->fetch()) {
-        $student_concentrations[] = $student_concentrations_row['CONCENTRATION_NAME'];
+      while ($parent = $parents->fetch()) {
+        $parentsStr[] = $parent['FIRST_NAME'].' '.$parent['LAST_NAME'];
       }
-      $row['concentrations'] = implode(", ", $student_concentrations);
+      $row['parents'] = implode(', ', $parentsStr);
+      
+      // Get authorized drivers
+      $authorizeDriverStr = array();
+      $authorizedDrivers = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'drivers')
+        ->fields('drivers', array('EMERGENCY_CONTACT_NAME'))
+        ->condition('drivers.STUDENT_ID', $row['STUDENT_ID'])
+        ->condition('drivers.AUTHORIZED_DRIVER', 1)
+        ->execute();
+      while ($authorizedDriver = $authorizedDrivers->fetch()) {
+        $authorizeDriverStr[] = $authorizedDriver['EMERGENCY_CONTACT_NAME'];
+      }
+      $row['authorized_drivers'] = implode(', ', $authorizeDriverStr);
       
       $pdf->table_row($row);
       $last_section_id = $row['SECTION_ID'];

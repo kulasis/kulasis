@@ -38,7 +38,13 @@ class Report extends \fpdf\FPDF {
     $this->SetAutoPageBreak(true, 10);
     $this->setAutoFillForForPageBreak(true);
     $this->SetFont('Arial','',8);
-    $this->SetMargins(19.05, 19.05);
+    if ($this->DefOrientation == 'L' AND $this->show_logo) {
+      $this->SetMargins(10, 25);
+    } elseif ($this->DefOrientation == 'L') {
+      $this->SetMargins(15, 15);
+    } else {
+      $this->SetMargins(19.05, 19.05);
+    }
     $this->SetAutoPageBreak(true, 25);
   }
   
@@ -48,7 +54,11 @@ class Report extends \fpdf\FPDF {
       if ($this->show_logo) {
         // School Logo
         $image1 = KULA_ROOT . $this->reportLogo;
-        $this->Cell(1,0, $this->Image($image1, 15, 15), 0, 0, 'L');
+        if ($this->DefOrientation == 'L') {
+          $this->Cell(1,0, $this->Image($image1, 10, 7), 0, 0, 'L');
+        } else {
+          $this->Cell(1,0, $this->Image($image1, 15, 15), 0, 0, 'L');
+        }
       }
       // Report Title
       $this->Cell(0,0, $this->report_title, 0, 0,'C');
