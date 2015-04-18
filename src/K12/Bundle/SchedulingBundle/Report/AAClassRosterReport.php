@@ -49,11 +49,17 @@ class AAClassRosterReport extends BaseReport {
     $this->Cell(20,6,'Phones:','L',0,'L',false);
     $this->Cell(157,6,$row['phones'],'R',0,'L',false);
     $this->Ln();
-    $this->Cell(20,6,'Health Info:','L',0,'L',false);
-    $this->MultiCell(157, 6, trim($row['MEDICAL_NOTES']), 'R', 'L');
-    $this->Cell(20,6,'Notes:','L',0,'L',false);
-    $this->MultiCell(157, 6, trim($row['NOTES']), 'R', 'L');
-    $this->Cell(177,2,'','B',0,'L',false);
+    $this->Cell(88.5,6,'Health Info:','L',0,'L',false);
+    $this->Cell(88.5,6,'Notes:','R',0,'L',false);
+    $this->Ln();
+    $x = $this->GetX();
+    $y = $this->GetY();
+    $this->MultiCell(88.5, 6, trim($row['MEDICAL_NOTES']), 'L', 'L');
+    //$this->SetX($x);
+    //$this->SetY($y);
+    //$this->MultiCell(88.5, 6, trim($row['NOTES']), 'R', 'L');
+    //$this->SetX($x);
+    $this->Cell(177,2,'','LBR',0,'L',false);
     $this->Ln();
   }
   

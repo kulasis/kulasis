@@ -184,7 +184,7 @@ class BillingStatementReport extends Report {
       $this->Cell($this->width[0],6, ($row['TRANSACTION_DATE'] != '' AND $row['POSTED'] == '1') ? date("m/d/Y", strtotime($row['TRANSACTION_DATE'])) : 'Pending',1,0,'L', $this->fill);
     $this->Cell($this->width[1],6,$row['ORGANIZATION_ABBREVIATION'],1,0,'L',$this->fill);
     $this->Cell($this->width[2],6,$row['TERM_ABBREVIATION'],1,0,'L',$this->fill);
-    $this->Cell($this->width[3],6,$row['TRANSACTION_DESCRIPTION'],1,0,'L',$this->fill);
+    $this->Cell($this->width[3],6,substr($row['TRANSACTION_DESCRIPTION'], 0, 65),1,0,'L',$this->fill);
     $this->Cell($this->width[4],6,'$ '.number_format($row['AMOUNT'], 2),1,0,'R',$this->fill);
     $this->Cell($this->width[5],6,'$ '.number_format(bcdiv($this->balance, 100, 2), 2),1,0,'R',$this->fill);
     
@@ -198,7 +198,7 @@ class BillingStatementReport extends Report {
     $this->Cell($this->width[0],6, 'Pending',1,0,'L', $this->fill);
     $this->Cell($this->width[1],6,$row['ORGANIZATION_ABBREVIATION'],1,0,'L',$this->fill);
     $this->Cell($this->width[2],6,$row['TERM_ABBREVIATION'],1,0,'L',$this->fill);
-    $this->Cell($this->width[3],6,$row['AWARD_DESCRIPTION'],1,0,'L',$this->fill);
+    $this->Cell($this->width[3],6,substr($row['TRANSACTION_DESCRIPTION'], 0, 65),1,0,'L',$this->fill);
     $this->Cell($this->width[4],6,'$ '.number_format(bcdiv($amount, 100, 2), 2),1,0,'R',$this->fill);
     $this->Cell($this->width[5],6,'$ '.number_format(bcdiv($this->balance, 100, 2), 2),1,0,'R',$this->fill);
     
