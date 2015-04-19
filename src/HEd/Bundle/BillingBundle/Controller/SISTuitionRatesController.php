@@ -68,16 +68,25 @@ class SISTuitionRatesController extends Controller {
     );
     
     $students = array();
+    $degrees = array();
     if ($this->record->getSelectedRecordID()) {
       $students = $this->db()->db_select('BILL_TUITION_RATE_STUDENTS', 'tuitionrategrades')
         ->fields('tuitionrategrades')
         ->condition('tuitionrategrades.TUITION_RATE_ID', $tuition_rate_id)
+        ->condition('tuitionrategrades.DEGREE_ID', null)
         ->orderBy('LEVEL')
         ->orderBy('ENTER_CODE')
         ->execute()->fetchAll();
+      
+      $degrees = $this->db()->db_select('BILL_TUITION_RATE_STUDENTS', 'tuitionrategrades')
+        ->fields('tuitionrategrades')
+        ->condition('tuitionrategrades.TUITION_RATE_ID', $tuition_rate_id)
+        ->isNotNull('tuitionrategrades.DEGREE_ID')
+        ->join('STUD_DEGREE', 'degree', 'degree.DEGREE_ID = tuitionrategrades.DEGREE_ID')
+        ->orderBy('DEGREE_NAME')
+        ->execute()->fetchAll();
     }
-    
-    return $this->render('KulaHEdBillingBundle:SISTuitionRates:students.html.twig', array('students' => $students, 'tuition_rate_id' => $tuition_rate_id));
+    return $this->render('KulaHEdBillingBundle:SISTuitionRates:students.html.twig', array('students' => $students, 'tuition_rate_id' => $tuition_rate_id, 'degrees' => $degrees));
   }
   
   public function refundsAction($tuition_rate_id) {

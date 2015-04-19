@@ -133,8 +133,27 @@ class ConstituentBillingService {
     // Get Student Status Info
     $student_status = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
       ->fields('status', array('STUDENT_STATUS_ID', 'ORGANIZATION_TERM_ID', 'ENTER_CODE', 'LEVEL'))
+      ->leftJoin('STUD_STUDENT_DEGREES', 'studegrees', 'studegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
+      ->fields('studegrees', array('DEGREE_ID'))
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
       ->execute()->fetch();
+    
+    $degree_tuition_rates = array();
+    
+    // Get valid degree rates to consider
+    if ($student_status['DEGREE_ID']) {
+      $degree_tuition_rate = $this->database->db_select('BILL_TUITION_RATE_STUDENTS', 'trstu')
+        ->join('BILL_TUITION_RATE', 'tr', 'tr.TUITION_RATE_ID = trstu.TUITION_RATE_ID')
+        ->fields('tr', array('TUITION_RATE_ID'))
+        ->condition('trstu.DEGREE_ID', $student_status['DEGREE_ID'])
+        ->condition('tr.ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID'])
+        ->execute()->fetchAll();
+      if (count($degree_tuition_rate) > 0) {
+        foreach($degree_tuition_rate as $id => $row) {
+          $degree_tuition_rates[] = $row['TUITION_RATE_ID'];
+        }
+      }
+    }
     
     // Get Tuition Rate
     $tuition_rate = $this->database->db_select('BILL_TUITION_RATE_STUDENTS', 'trstu')
@@ -143,8 +162,11 @@ class ConstituentBillingService {
       ->fields('tr', array('TUITION_RATE_ID'))
       ->condition('trstu.LEVEL', $student_status['LEVEL'])
       ->condition('trstu.ENTER_CODE', $student_status['ENTER_CODE'])
-      ->condition('tr.ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID'])
-      ->execute()->fetch();
+      ->condition('tr.ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID']);
+    if (count($degree_tuition_rates) > 0) {
+      $tuition_rate = $tuition_rate->condition('tr.TUITION_RATE_ID', $degree_tuition_rates);
+    }
+    $tuition_rate = $tuition_rate->execute()->fetch();
     
     if ($tuition_rate['TUITION_RATE_ID']) {
       // post tuition rate

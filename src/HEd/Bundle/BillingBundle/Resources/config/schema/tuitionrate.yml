@@ -148,6 +148,15 @@ HEd.TuitionRate.Students:
       lookup: HEd.Student.Enrollment.EnterCode
       column_name: "Enter Code"
       label_name: "Enter Code"
+    DegreeID:
+      description: "Degree ID"
+      db_column_name: DEGREE_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\DegreeName
+      column_name: "Degree ID"
+      label_name: "Degree ID"
 
 HEd.TuitionRate.Transaction:
   description: "Tuition Rate Transactions"
