@@ -27,12 +27,16 @@ class SISSchoolSetupController extends Controller {
         ->condition('SCHOOL_ID', $this->focus->getSchoolIDs())
         ->execute()
         ->fetch();
-      
+
       $schoolterm = $this->db()->db_select('STUD_SCHOOL_TERM', 'schoolterm')
         ->fields('schoolterm')
         ->condition('SCHOOL_TERM_ID', $this->record->getSelectedRecordID())
         ->execute()
         ->fetch();
+      
+      if ($school['SCHOOL_ID'] == null) {
+        $this->newPoster()->add('HEd.School', 'new', array('HEd.School.ID' => $this->focus->getSchoolIDs()))->process();
+      }
       
       if ($schoolterm['SCHOOL_TERM_ID'] == null) {
         $this->newPoster()->add('HEd.School.Term', 'new', array('HEd.School.Term.ID' => $this->record->getSelectedRecordID()))->process();

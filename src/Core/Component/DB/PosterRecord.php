@@ -70,6 +70,7 @@ class PosterRecord {
       $this->processCheckboxFields();
       $this->processDateFields();
       $this->processTimeFields();
+      $this->processDateTimeFields();
       $this->processChoosers();
     
       $this->processBlankValues();
