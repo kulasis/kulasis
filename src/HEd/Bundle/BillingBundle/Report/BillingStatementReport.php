@@ -198,7 +198,7 @@ class BillingStatementReport extends Report {
     $this->Cell($this->width[0],6, 'Pending',1,0,'L', $this->fill);
     $this->Cell($this->width[1],6,$row['ORGANIZATION_ABBREVIATION'],1,0,'L',$this->fill);
     $this->Cell($this->width[2],6,$row['TERM_ABBREVIATION'],1,0,'L',$this->fill);
-    $this->Cell($this->width[3],6,substr($row['TRANSACTION_DESCRIPTION'], 0, 65),1,0,'L',$this->fill);
+    $this->Cell($this->width[3],6,substr($row['AWARD_DESCRIPTION'], 0, 65),1,0,'L',$this->fill);
     $this->Cell($this->width[4],6,'$ '.number_format(bcdiv($amount, 100, 2), 2),1,0,'R',$this->fill);
     $this->Cell($this->width[5],6,'$ '.number_format(bcdiv($this->balance, 100, 2), 2),1,0,'R',$this->fill);
     
