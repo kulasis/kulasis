@@ -14,8 +14,6 @@ Tuition Rates
   <th class="data-table-cell-row-header">#</th>
   {{ kula_field_name({ field: 'HEd.TuitionRate.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.TuitionRate.BillingMode', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'HEd.TuitionRate.FullTimeCredits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'HEd.TuitionRate.MaxFullTimeCredits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   <th class="data-table-cell-row-header">Actions</th>
   </tr>
 </thead>
@@ -26,8 +24,6 @@ Tuition Rates
   {{ kula_display_html({ add: true, field: 'HEd.TuitionRate.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
   {{ kula_field({ add: true, field: 'HEd.TuitionRate.Name', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.TuitionRate.BillingMode', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-  {{ kula_field({ add: true, field: 'HEd.TuitionRate.FullTimeCredits', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-  {{ kula_field({ add: true, field: 'HEd.TuitionRate.MaxFullTimeCredits', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
     {{ kula_display_html({ add: true, field: 'HEd.TuitionRate.ID', prepend_html: '<td class="data-table-cell-row-num">Actions</td>' }) }}
   {{ kula_display_html({ add: true, field: 'HEd.TuitionRate.ID', prepend_html: '</tr>' }) }}
   {% for rate in rates %}
@@ -36,8 +32,6 @@ Tuition Rates
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
     {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Name', db_row_id: rate.TUITION_RATE_ID, value: rate.TUITION_RATE_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.TuitionRate.BillingMode', db_row_id: rate.TUITION_RATE_ID, value: rate.BILLING_MODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'HEd.TuitionRate.FullTimeCredits', db_row_id: rate.TUITION_RATE_ID, value: rate.FULL_TIME_CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'HEd.TuitionRate.MaxFullTimeCredits', db_row_id: rate.TUITION_RATE_ID, value: rate.MAX_FULL_TIME_CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     <td>
       <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_setup_billing_tuitionrates_students', { tuition_rate_id: rate.TUITION_RATE_ID }) }}">Students</a>
       <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('sis_HEd_setup_billing_tuitionrates_refunds', { tuition_rate_id: rate.TUITION_RATE_ID }) }}">Refunds</a>

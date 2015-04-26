@@ -272,13 +272,20 @@ class ScheduleService {
       
       // if effective date same as today
       if ($student_activity_record['EFFECTIVE_DATE'] == date('Y-m-d')) {
-        
         // update existing record
         $enrollment_activity_poster = $this->posterFactory->newPoster()->edit('HEd.Student.Enrollment.Activity', $student_activity_record['ENROLLMENT_ACTIVITY_ID'], array(
           'HEd.Student.Enrollment.Activity.FTE' => $fte
         ))->process()->getResult();
       } else {
         // create new record
+        $student_activity_record = $this->database->db_select('STUD_STUDENT_ENROLLMENT', 'enrollment')
+          ->fields('enrollment', array('ENROLLMENT_ID'))
+          ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = enrollment.STUDENT_STATUS_ID')
+          ->condition('status.STUDENT_STATUS_ID', $student_status_id)
+          //->condition('enrollment.LEAVE_DATE', null)
+          ->orderBy('enrollment.ENTER_DATE', 'DESC')
+          ->execute()->fetch();
+        
         $enrollment_activity_poster = $this->posterFactory->newPoster()->add('HEd.Student.Enrollment.Activity', 'new', array(
           'HEd.Student.Enrollment.Activity.EffectiveDate' => date('Y-m-d'),
           'HEd.Student.Enrollment.Activity.EnrollmentID' => $student_activity_record['ENROLLMENT_ID'],

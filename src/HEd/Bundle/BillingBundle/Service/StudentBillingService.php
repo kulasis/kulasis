@@ -204,9 +204,9 @@ class StudentBillingService {
     $student_status_result = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
       ->fields('status', array('TUITION_RATE_ID', 'TOTAL_CREDITS_ATTEMPTED', 'STUDENT_ID', 'ORGANIZATION_TERM_ID'))
       ->join('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = status.TUITION_RATE_ID AND tuitionrate.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
-      ->fields('tuitionrate', array('BILLING_MODE', 'FULL_TIME_CREDITS','MAX_FULL_TIME_CREDITS'))
+      ->fields('tuitionrate', array('BILLING_MODE'))
       ->join('BILL_TUITION_RATE_TRANSACTIONS', 'tuition_rate_trans', 'tuition_rate_trans.TUITION_RATE_ID = tuitionrate.TUITION_RATE_ID')
-      ->fields('tuition_rate_trans', array('TRANSACTION_CODE_ID', 'FULL_TIME_FLAT_RATE', 'CREDIT_HOUR_RATE'))
+      ->fields('tuition_rate_trans', array('TRANSACTION_CODE_ID', 'FULL_TIME_CREDITS','MAX_FULL_TIME_CREDITS', 'FULL_TIME_FLAT_RATE', 'CREDIT_HOUR_RATE'))
       ->condition('tuition_rate_trans.RULE', 'TUITION')
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
       ->execute();

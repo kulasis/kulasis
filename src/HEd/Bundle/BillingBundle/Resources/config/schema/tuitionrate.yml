@@ -38,28 +38,6 @@ HEd.TuitionRate:
       class: Kula\HEd\Bundle\BillingBundle\Field\BillingMode
       column_name: "Billing Mode"
       label_name: "Billing Mode"
-    FullTimeCredits:
-      description: "Full Time Credits"
-      db_column_name: FULL_TIME_CREDITS
-      db_column_type: numeric
-      db_column_lenght: 6
-      db_column_precision: 3
-      db_column_null: true
-      field_type: text
-      field_size: 6
-      column_name: "Full Time Credits"
-      label_name: "Full Time Credits"
-    MaxFullTimeCredits:
-      description: "Full Time Credits"
-      db_column_name: MAX_FULL_TIME_CREDITS
-      db_column_type: numeric
-      db_column_lenght: 5
-      db_column_precision: 3
-      db_column_null: true
-      field_type: text
-      field_size: 6
-      column_name: "Max Full Time Credits"
-      label_name: "Max Full Time Credits"
 
 HEd.TuitionRate.Refund:
   description: "Tuition Rate Refunds"
@@ -239,4 +217,25 @@ HEd.TuitionRate.Transaction:
       field_size: 6
       column_name: "Minimum Credits"
       label_name: "Minimum Credits"
-      
+    FullTimeCredits:
+      description: "Full Time Credits"
+      db_column_name: FULL_TIME_CREDITS
+      db_column_type: numeric
+      db_column_lenght: 6
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Full Time Credits"
+      label_name: "Full Time Credits"
+    MaxFullTimeCredits:
+      description: "Full Time Credits"
+      db_column_name: MAX_FULL_TIME_CREDITS
+      db_column_type: numeric
+      db_column_lenght: 5
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Max Full Time Credits"
+      label_name: "Max Full Time Credits"
