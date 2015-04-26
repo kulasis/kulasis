@@ -53,14 +53,15 @@ class PosterRecord {
     $this->violations = new ConstraintViolationList();
   }
   
-  public function process() {
+  public function process($options = array()) {
     $this->getOriginalRecord();
     
     if ($this->crud == self::DELETE) {
       if ($this->fields['delete_row'] == 'Y') {
         unset($this->fields['delete_row']);
       }
-      $this->verifyPermissions();
+      if (!isset($options['VERIFY_PERMISSIONS']) OR (isset($options['VERIFY_PERMISSIONS']) AND $options['VERIFY_PERMISSIONS'] === true))
+        $this->verifyPermissions();
       if (!$this->hasViolations) {
         $this->result = $this->execute();
       }
@@ -78,7 +79,8 @@ class PosterRecord {
         $this->processSameValues();
       }
       if (count($this->fields) > 0) {
-        $this->verifyPermissions();
+        if (!isset($options['VERIFY_PERMISSIONS']) OR (isset($options['VERIFY_PERMISSIONS']) AND $options['VERIFY_PERMISSIONS'] === true))
+          $this->verifyPermissions();
         $this->validate();
     
         if (!$this->hasViolations) {

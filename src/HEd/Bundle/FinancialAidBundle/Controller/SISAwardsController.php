@@ -40,15 +40,18 @@ class SISAwardsController extends Controller {
       $transaction->commit();
     }
     
-    $awards = array();
-    
     $fin_aid_year = $this->db()->db_select('CORE_TERM', 'term')
       ->fields('term', array('FINANCIAL_AID_YEAR'))
       ->condition('TERM_ID', $this->focus->getTermID())
       ->execute()->fetch();
     
+    $awards = array();
+    
     if ($this->record->getSelectedRecordID()) {
 
+      $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
+      $pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $this->record->getSelectedRecord()['PERMANENT_NUMBER']);
+    
       $awards = $this->db()->db_select('FAID_STUDENT_AWARDS', 'faidstuawrds')
         ->fields('faidstuawrds', array('AWARD_ID', 'AWARD_STATUS', 'DISBURSEMENT_DATE', 'GROSS_AMOUNT', 'NET_AMOUNT', 'ORIGINAL_AMOUNT', 'SHOW_ON_STATEMENT', 'AWARD_CODE_ID'))
         ->join('FAID_AWARD_CODE', 'awardcode', 'faidstuawrds.AWARD_CODE_ID = awardcode.AWARD_CODE_ID')

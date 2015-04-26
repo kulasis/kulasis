@@ -65,6 +65,9 @@ class SISTermsController extends Controller {
     }
     
     if ($this->record->getSelectedRecordID()) {
+      
+      $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
+      $pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $this->record->getSelectedRecord()['PERMANENT_NUMBER']);
 
       $award_terms = $this->db()->db_select('FAID_STUDENT_AWARD_YEAR_TERMS', 'faidstuawrdyrtrm')
         ->fields('faidstuawrdyrtrm', array('AWARD_YEAR_TERM_ID', 'AWARD_YEAR_ID', 'PERCENTAGE', 'ORGANIZATION_TERM_ID', 'SEQUENCE'))

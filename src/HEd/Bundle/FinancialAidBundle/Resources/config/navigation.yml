@@ -71,3 +71,8 @@ SIS.HEd.Setup.FinancialAid:
       display_name: "Award Codes"
       sort: 1
       route: sis_HEd_setup_financialaid_awardcodes
+    PowerFAIDS:
+      description: "PowerFAIDS"
+      display_name: "PowerFAIDS"
+      sort: 3
+      route: sis_HEd_setup_financialaid_powerfaids

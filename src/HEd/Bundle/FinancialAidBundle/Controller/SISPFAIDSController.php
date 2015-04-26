@@ -35,6 +35,51 @@ class SISPFAIDSController extends Controller {
       
     }
     
+    if ($this->request->request->get('load_all_students') == 'Y') {
+      
+      $fin_aid_year = $this->db()->db_select('CORE_TERM', 'term')
+        ->fields('term', array('FINANCIAL_AID_YEAR'))
+        ->condition('TERM_ID', $this->focus->getTermID())
+        ->execute()->fetch();
+      
+      $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
+      $pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR']);
+      
+      $this->addFlash('success', 'Loaded PowerFAIDS data to Kula.');
+    }
+    
     return $this->render('KulaHEdFinancialAidBundle:SISPFAIDS:admin.html.twig');
+  }
+  
+  public function configAction() {
+    $this->authorize();
+    $this->processForm();
+    
+    // Get term fin aid year
+    $fin_aid_year = $this->db()->db_select('CORE_TERM', 'term')
+      ->fields('term', array('FINANCIAL_AID_YEAR'))
+      ->condition('TERM_ID', $this->focus->getTermID())
+      ->execute()->fetch();
+    
+    $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
+    $pfaidsService->synchronizePOEs($fin_aid_year['FINANCIAL_AID_YEAR']);
+
+    $poes_pfaids = $pfaidsService->getPOEs();
+    $data = array();
+    
+    $poes = $this->db()->db_select('FAID_PFAID_POE', 'poe')
+      ->fields('poe')->execute();
+    $i = 0;
+    while ($poe = $poes->fetch()) {
+      if ($fin_aid_year['FINANCIAL_AID_YEAR'] == '' OR 
+      ($poes_pfaids[$poe['poe_token']]['award_year_token'] == $fin_aid_year['FINANCIAL_AID_YEAR'])) {
+        $data[$i] = $poes_pfaids[$poe['poe_token']];
+        $data[$i]['poe_token'] = $poe['poe_token'];
+        $data[$i]['TERM_ID'] = $poe['TERM_ID'];
+        $i++;
+      }
+    }
+
+    return $this->render('KulaHEdFinancialAidBundle:SISPFAIDS:config.html.twig', array('poes' => $data));
   }
 }

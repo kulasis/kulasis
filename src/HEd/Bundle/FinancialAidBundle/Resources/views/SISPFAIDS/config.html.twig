@@ -1,0 +1,25 @@
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+POEs
+</div>
+<table id="window_window_num_data_table_poe" class="data-table">
+<thead>
+  <tr>
+  <th class="data-table-cell-row-header">#</th>
+  <th class="data-table-cell-row-header">Name</th>
+  {{ kula_field_name({ field: 'HEd.FAID.PFAID.POE.TermID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  </tr>
+</thead>
+<tbody>
+  {% for poe in poes %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    <td>{{ poe.attend_desc }}</td>
+    {{ kula_field({ edit: true, field: 'HEd.FAID.PFAID.POE.TermID', db_row_id: poe.poe_token, value: poe.TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

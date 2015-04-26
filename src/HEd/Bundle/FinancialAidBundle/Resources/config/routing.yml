@@ -38,3 +38,7 @@ sis_HEd_setup_financialaid_awardcodes:
 sis_HEd_admin_faid_powerfaids:
   path: /sis/admin/financialaid/powerfaids
   defaults: { _controller: KulaHEdFinancialAidBundle:SISPFAIDS:admin }
+  
+sis_HEd_setup_financialaid_powerfaids:
+  path: /sis/setup/financialaid/powerfaids
+  defaults: { _controller: KulaHEdFinancialAidBundle:SISPFAIDS:config }

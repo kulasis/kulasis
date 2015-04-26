@@ -202,6 +202,9 @@ class SISPackageController extends Controller {
         ->condition('TERM_ID', $this->focus->getTermID())
         ->execute()->fetch();
       
+      $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
+      $pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $this->record->getSelectedRecord()['PERMANENT_NUMBER']);
+      
       $award_year = $this->db()->db_select('FAID_STUDENT_AWARD_YEAR', 'faidstuawardyr')
         ->fields('faidstuawardyr', array('AWARD_YEAR_ID', 'AWARD_YEAR', 'PRIMARY_EFC', 'SECONDARY_EFC', 'TOTAL_INCOME', 'TOTAL_COST_OF_ATTENDANCE'))
         ->condition('faidstuawardyr.STUDENT_ID', $this->record->getSelectedRecordID())

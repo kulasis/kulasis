@@ -24,14 +24,16 @@ class PFAIDSService {
     $this->ssn_key = $ssn_key;
   }
   
-  private function pfaids_connect($id) {
+  private function pfaids_connect($application, $id = null) {
     
     // Get database connection parameters
     $intgDB = $this->db->db_select('CORE_INTG_DATABASE')
       ->fields('CORE_INTG_DATABASE')
-      ->condition('APPLICATION', 'PFAIDEU')
-      ->condition('INTG_DATABASE_ID', $id)
-      ->execute()->fetch();
+      ->condition('APPLICATION', $application);
+    if ($id) {
+      $intgDB = $intgDB->condition('INTG_DATABASE_ID', $id);
+    }
+      $intgDB = $intgDB->execute()->fetch();
     
     $connection = mssql_connect($intgDB['HOST'], $intgDB['USERNAME'], $intgDB['PASSWORD']) or die("Couldn't connect to SQL Server on ".$intgDB['HOST']);
     mssql_select_db($intgDB['DATABASE_NAME'], $connection) or die("Couldn't open database on SQL Server for ".$intgDB['HOST']);
@@ -41,7 +43,7 @@ class PFAIDSService {
   
   public function pfaids_deleteRecords($intgDBID, $awardYearToken = null, $ssn = null) {
     
-    $connection = $this->pfaids_connect($intgDBID);
+    $connection = $this->pfaids_connect('PFAIDEU', $intgDBID);
     
     $query = "DELETE FROM external_data";
     
@@ -56,7 +58,7 @@ class PFAIDSService {
   
   public function pfaids_addRecords($intgDBID, $awardYearToken, $id = null) {
     
-    $connection = $this->pfaids_connect($intgDBID);
+    $connection = $this->pfaids_connect('PFAIDEU', $intgDBID);
     
     $insert_count = 0;
     $update_count = 0;
@@ -242,6 +244,276 @@ class PFAIDSService {
     return $results;
   }
 
+  public function synchronizePOEs($faid_award_year = null) {
+    
+     $connection = $this->pfaids_connect('PFAIDR');
+     
+     $query = "SELECT poe_token FROM poe";
+     if (isset($faid_award_year)) 
+       $query .= " WHERE award_year_token = '".$faid_award_year."'";
+     $poes_result = mssql_query($query);
+     while ($poes_row = mssql_fetch_array($poes_result)) {
+       
+       $kula_poe = $this->db->db_select('FAID_PFAID_POE', 'pfaid_poe')
+         ->fields('pfaid_poe')->condition('poe_token', $poes_row['poe_token'])
+         ->execute()->fetch();
+       if ($kula_poe['poe_token'] == '') {
+         
+         $this->posterFactory->newPoster()->noLog()->add('HEd.FAID.PFAID.POE', 'new', array(
+           'HEd.FAID.PFAID.POE.POEToken' => $poes_row['poe_token']
+         ))->process()->getResult();
+         
+       }
+       
+     }
+    
+  }
   
+  public function getPOEs($faid_award_year = null) {
+    $connection = $this->pfaids_connect('PFAIDR');
+    
+    $poe = array();
+    
+    $query = "SELECT * FROM poe";
+    if (isset($faid_award_year)) 
+      $query .= " WHERE award_year_token = '".$faid_award_year."'";
+    $poes_result = mssql_query($query);
+    while ($poes_row = mssql_fetch_array($poes_result)) {
+      $poe[$poes_row['poe_token']] = $poes_row;
+    }
+    
+    return $poe;
+  }
+  
+  public function synchronizeStudentAwardInfo($faid_award_year = null, $permanent_number = null) {
+    $connection = $this->pfaids_connect('PFAIDR');
+
+    $pf_stu_award_query = "SELECT say_fm_stu.stu_award_year_token, stu_award_year.award_year_token, primary_efc, secondary_efc, total_income, student.alternate_id, tot_budget
+      FROM stu_award_year 
+      JOIN student ON student.student_token = stu_award_year.student_token
+      LEFT JOIN say_fm_stu ON say_fm_stu.stu_award_year_token = stu_award_year.stu_award_year_token
+      LEFT JOIN stu_ay_sum_data ON stu_ay_sum_data.stu_award_year_token = stu_award_year.stu_award_year_token
+      WHERE 1 = 1 AND alternate_id != ''";
+      if ($faid_award_year) {
+        $pf_stu_award_query .= " AND award_year_token = '".$faid_award_year."'";
+      }
+      if ($permanent_number) {
+        $pf_stu_award_query .= " AND alternate_id = '".$permanent_number."'";
+      }
+
+    $pf_stu_awards = mssql_query($pf_stu_award_query);
+    while ($pf_stu_award = mssql_fetch_array($pf_stu_awards)) {
+
+      // check if award year exists
+      $award_year = $this->db->db_select('FAID_STUDENT_AWARD_YEAR', 'awardyear', array('nolog' => true))
+        ->fields('awardyear', array('AWARD_YEAR_ID'))
+        ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = awardyear.STUDENT_ID')
+        ->condition('cons.PERMANENT_NUMBER', $pf_stu_award['alternate_id'])
+        ->condition('awardyear.AWARD_YEAR', $pf_stu_award['award_year_token'])
+        ->condition('awardyear.ORGANIZATION_ID', $this->focus->getOrganizationID())
+        ->execute()->fetch();
+      
+      if ($award_year['AWARD_YEAR_ID']) {
+        
+        // Update data
+        $this->posterFactory->newPoster()->noLog()->edit('HEd.FAID.Student.AwardYear', $award_year['AWARD_YEAR_ID'], array(
+          'HEd.FAID.Student.AwardYear.PrimaryEFC' => $pf_stu_award['primary_efc'],
+          'HEd.FAID.Student.AwardYear.SecondaryEFC' => $pf_stu_award['secondary_efc'],
+          'HEd.FAID.Student.AwardYear.TotalIncome' => $pf_stu_award['total_income'],
+          'HEd.FAID.Student.AwardYear.TotalCostOfAttendance' => $pf_stu_award['tot_budget'],
+        ))->process()->getResult();
+        
+      } else {
+        
+        // Get student_id
+        $student_id = $this->db->db_select('CONS_CONSTITUENT', 'constituent', array('nolog' => true))
+          ->fields('constituent', array('CONSTITUENT_ID'))
+          ->condition('constituent.PERMANENT_NUMBER', $pf_stu_award['alternate_id'])
+          ->execute()->fetch();
+        
+        if ($student_id['CONSTITUENT_ID']) {
+        
+          // Insert Data
+          $award_year['AWARD_YEAR_ID'] = $this->posterFactory->newPoster()->noLog()->add('HEd.FAID.Student.AwardYear', 'new', array(
+            'HEd.FAID.Student.AwardYear.StudentID' => $student_id['CONSTITUENT_ID'],
+            'HEd.FAID.Student.AwardYear.AwardYear' => $pf_stu_award['award_year_token'],
+            'HEd.FAID.Student.AwardYear.OrganizationID' => $this->focus->getOrganizationID(),
+            'HEd.FAID.Student.AwardYear.PrimaryEFC' => $pf_stu_award['primary_efc'],
+            'HEd.FAID.Student.AwardYear.SecondaryEFC' => $pf_stu_award['secondary_efc'],
+            'HEd.FAID.Student.AwardYear.TotalIncome' => $pf_stu_award['total_income'],
+            'HEd.FAID.Student.AwardYear.TotalCostOfAttendance' => $pf_stu_award['tot_budget']
+          ))->process()->getResult();
+          
+        } else {
+          $award_year['AWARD_YEAR_ID'] = null;
+        }
+        
+      } // end if on award_year_id
+      
+      // award year now exists
+      if ($award_year['AWARD_YEAR_ID']) {
+        
+        // get POE terms and percentages
+        $pf_stu_award_year_terms = mssql_query("SELECT DISTINCT poe.poe_token, poe_dcycle_seqn, att_pct_yr
+          FROM stu_award_transactions
+          JOIN poe ON poe.poe_token = stu_award_transactions.poe_token
+          WHERE stu_award_transactions.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."' AND scheduled_amount > 0");
+        while ($pf_stu_award_year_term = mssql_fetch_array($pf_stu_award_year_terms)) {
+          
+          // determine org term id
+          $organization_term_id = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'orgterms', array('nolog' => true))
+            ->fields('orgterms', array('ORGANIZATION_TERM_ID'))
+            ->join('FAID_PFAID_POE', 'poe', 'poe.TERM_ID = orgterms.TERM_ID')
+            ->condition('orgterms.ORGANIZATION_ID', $this->focus->getOrganizationID())
+            ->condition('poe.poe_token', $pf_stu_award_year_term['poe_token'])
+            ->execute()->fetch();
+          
+          // check if term exists
+          $award_year_term = $this->db->db_select('FAID_STUDENT_AWARD_YEAR_TERMS', 'awardterms', array('nolog' => true))
+            ->fields('awardterms', array('AWARD_YEAR_TERM_ID'))
+            ->condition('AWARD_YEAR_ID', $award_year['AWARD_YEAR_ID'])
+            ->condition('ORGANIZATION_TERM_ID', $organization_term_id['ORGANIZATION_TERM_ID'])
+            ->condition('SEQUENCE', $pf_stu_award_year_term['poe_dcycle_seqn'])
+            ->execute()->fetch();
+          
+          // check if award term exists
+          if (!$award_year_term['AWARD_YEAR_TERM_ID']) {
+            
+            $this->posterFactory->newPoster()->noLog()->add('HEd.FAID.Student.AwardYear.Term', 'new', array(
+              'HEd.FAID.Student.AwardYear.Term.AwardYearID' => $award_year['AWARD_YEAR_ID'],
+              'HEd.FAID.Student.AwardYear.Term.OrganizationTermID' => $organization_term_id['ORGANIZATION_TERM_ID'],
+              'HEd.FAID.Student.AwardYear.Term.Sequence' => $pf_stu_award_year_term['poe_dcycle_seqn'],
+              'HEd.FAID.Student.AwardYear.Term.Percentage' => $pf_stu_award_year_term['att_pct_yr']
+            ))->process()->getResult();
+            
+          } // end if award term exists
+          
+        } // end while on student award terms
+        
+      } // end if on 2nd level check
+      
+      // get award year awards
+      $pf_stu_award_year_awards = mssql_query("SELECT actual_amt, fund_ledger_number
+        FROM stu_award
+        JOIN funds ON funds.fund_token = stu_award.fund_ay_token
+        WHERE stu_award.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."'");
+      while ($pf_stu_award_year_award = mssql_fetch_array($pf_stu_award_year_awards)) {
+        
+        // check if award year award exists
+        $award_year_award = $this->db->db_select('FAID_STUDENT_AWARD_YEAR_AWARDS', 'awardyearaward', array('nolog' => true))
+          ->fields('awardyearaward', array('AWARD_YEAR_AWARD_ID'))
+          ->join('FAID_AWARD_CODE', 'code', 'code.AWARD_CODE_ID = awardyearaward.AWARD_CODE_ID')
+          ->condition('AWARD_YEAR_ID', $award_year['AWARD_YEAR_ID'])
+          ->condition('AWARD_CODE', $pf_stu_award_year_award['fund_ledger_number'])
+          ->execute()->fetch();
+        
+        if ($award_year_award['AWARD_YEAR_AWARD_ID']) {
+          
+          // update award
+          $this->posterFactory->newPoster()->noLog()->edit('HEd.FAID.Student.AwardYear.Award', $award_year_award['AWARD_YEAR_AWARD_ID'], array(
+            'HEd.FAID.Student.AwardYear.Award.GrossAmount' => $pf_stu_award_year_award['actual_amt']
+          ))->process()->getResult();
+          
+        } else {
+          
+          if ($award_year['AWARD_YEAR_ID']) {
+          
+            // get award code ID
+            $award_code_id = $this->db->db_select('FAID_AWARD_CODE', 'code', array('nolog' => true))
+              ->fields('code', array('AWARD_CODE_ID'))
+              ->condition('AWARD_CODE', $pf_stu_award_year_award['fund_ledger_number'])
+              ->execute()->fetch();
+            
+            if ($award_code_id['AWARD_CODE_ID']) {
+            
+              // insert award
+              $this->posterFactory->newPoster()->noLog()->add('HEd.FAID.Student.AwardYear.Award', 'new', array(
+                'HEd.FAID.Student.AwardYear.Award.AwardYearID' => $award_year['AWARD_YEAR_ID'],
+                'HEd.FAID.Student.AwardYear.Award.AwardCodeID' => $award_code_id['AWARD_CODE_ID'],
+                'HEd.FAID.Student.AwardYear.Award.GrossAmount' => $pf_stu_award_year_award['actual_amt']
+              ))->process()->getResult();
+            
+            }
+          
+          }
+        
+        } 
+        
+        
+      } // end while on award year awards
+      
+      // get awards for terms
+      $pf_stu_term_awards = mssql_query("SELECT poe.poe_token, poe_dcycle_seqn, fund_ledger_number, scheduled_date, scheduled_amount, gross_disbursement_amount, net_disbursement_amount
+        FROM stu_award_transactions
+        JOIN poe ON poe.poe_token = stu_award_transactions.poe_token
+        JOIN stu_award ON stu_award.stu_award_token = stu_award_transactions.stu_award_token
+        JOIN funds ON funds.fund_token = stu_award.fund_ay_token
+        WHERE stu_award_transactions.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."' AND scheduled_amount > 0");
+      while ($pf_stu_term_award = mssql_fetch_array($pf_stu_term_awards)) {
+      
+        // determine org term id
+        $organization_term_id = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'orgterms', array('nolog' => true))
+          ->fields('orgterms', array('ORGANIZATION_TERM_ID'))
+          ->join('FAID_PFAID_POE', 'poe', 'poe.TERM_ID = orgterms.TERM_ID')
+          ->condition('orgterms.ORGANIZATION_ID', $this->focus->getOrganizationID())
+          ->condition('poe.poe_token', $pf_stu_term_award['poe_token'])
+          ->execute()->fetch();
+        
+        // get award code ID
+        $award_code_id = $this->db->db_select('FAID_AWARD_CODE', 'code', array('nolog' => true))
+          ->fields('code', array('AWARD_CODE_ID', 'SHOW_ON_STATEMENT'))
+          ->condition('AWARD_CODE', $pf_stu_term_award['fund_ledger_number'])
+          ->execute()->fetch();
+        
+        $award_term = $this->db->db_select('FAID_STUDENT_AWARD_YEAR_TERMS', 'awardterms', array('nolog' => true))
+          ->fields('awardterms', array('AWARD_YEAR_TERM_ID'))
+          ->condition('awardterms.AWARD_YEAR_ID', $award_year['AWARD_YEAR_ID'])
+          ->condition('awardterms.ORGANIZATION_TERM_ID', $organization_term_id['ORGANIZATION_TERM_ID'])
+          ->condition('awardterms.SEQUENCE', $pf_stu_term_award['poe_dcycle_seqn'])
+          ->execute()->fetch();
+        
+        $award = $this->db->db_select('FAID_STUDENT_AWARDS', 'awards', array('nolog' => true))
+          ->fields('awards', array('AWARD_ID'))
+          ->condition('awards.AWARD_YEAR_TERM_ID', $award_term['AWARD_YEAR_TERM_ID'])
+          ->condition('awards.AWARD_CODE_ID', $award_code_id['AWARD_CODE_ID'])
+          ->execute()->fetch();
+      
+        // check if award exists
+        if ($award['AWARD_ID']) {
+          
+          // update award
+          $this->posterFactory->newPoster()->noLog()->edit('HEd.FAID.Student.Award', $award['AWARD_ID'], array(
+            'HEd.FAID.Student.Award.AwardStatus' => 'PEND',
+            'HEd.FAID.Student.Award.DisbursementDate' => ($pf_stu_term_award['scheduled_date'] != '') ? date('Y-m-d', strtotime($pf_stu_term_award['scheduled_date'])) : null,
+            'HEd.FAID.Student.Award.GrossAmount' => $pf_stu_term_award['scheduled_amount'],
+            'HEd.FAID.Student.Award.NetAmount' => ($pf_stu_term_award['net_disbursement_amount'] > 0) ? $pf_stu_term_award['net_disbursement_amount'] : $pf_stu_term_award['scheduled_amount']
+          ))->process()->getResult();
+          
+        } else {
+          
+          if ($award_term['AWARD_YEAR_TERM_ID'] AND $award_code_id['AWARD_CODE_ID']) {
+          
+            // insert data
+            $this->posterFactory->newPoster()->noLog()->add('HEd.FAID.Student.Award', 'new', array(
+              'HEd.FAID.Student.Award.AwardYearTermID' => $award_term['AWARD_YEAR_TERM_ID'],
+              'HEd.FAID.Student.Award.AwardCodeID' => $award_code_id['AWARD_CODE_ID'],
+              'HEd.FAID.Student.Award.AwardStatus' => 'PEND',
+              'HEd.FAID.Student.Award.DisbursementDate' => ($pf_stu_term_award['scheduled_date'] != '') ? date('Y-m-d', strtotime($pf_stu_term_award['scheduled_date'])) : null,
+              'HEd.FAID.Student.Award.GrossAmount' => $pf_stu_term_award['scheduled_amount'],
+              'HEd.FAID.Student.Award.NetAmount' => ($pf_stu_term_award['net_disbursement_amount'] > 0) ? $pf_stu_term_award['net_disbursement_amount'] : $pf_stu_term_award['scheduled_amount'],
+              'HEd.FAID.Student.Award.OriginalAmount' => $pf_stu_term_award['scheduled_amount'],
+              'HEd.FAID.Student.Award.ShowOnStatement' => $award_code_id['SHOW_ON_STATEMENT']
+            ))->process()->getResult();
+            
+          }
+          
+        }
+      
+      
+      } // end while on student awards
+      
+    } // end while on $stu_awards
+    
+  }
 
 }

@@ -89,4 +89,27 @@ HEd.FAID.Code:
       field_size: 20
       column_name: "Conversion Award Code"
       label_name: "Conversion Award Code"
-      
+
+HEd.FAID.PFAID.POE:
+  description: "PowerFAID POE Mapping"
+  db_table_name: FAID_PFAID_POE
+  timestamps: true
+  fields:
+    POEToken:
+      description: "POE Token"
+      primary: true
+      db_column_name: poe_token
+      db_column_type: int
+      db_column_null: false
+      column_name: "POE Token"
+      label_name: "POE Token"
+    TermID:
+      description: "Term ID"
+      parent: Core.Term.ID
+      db_column_name: TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.Term
+      column_name: "Term ID"
+      label_name: "Term ID"
