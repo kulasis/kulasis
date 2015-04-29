@@ -108,10 +108,12 @@ class SISClassRosterReportController extends ReportController {
     while ($row = $result->fetch()) {
       
       if (isset($meetings[$row['SECTION_ID']]))  {
-      $pdf->setData(array_merge($row, $meetings[$row['SECTION_ID']]));
+        $pdf->setData(array_merge($row, $meetings[$row['SECTION_ID']]));
       } else {
         $pdf->setData($row);  
       }
+      
+      
       if ($last_section_id != $row['SECTION_ID']) {
         $pdf->row_count = 1;
         $pdf->StartPageGroup();
