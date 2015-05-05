@@ -288,7 +288,7 @@ class PFAIDSService {
   public function synchronizeStudentAwardInfo($faid_award_year = null, $permanent_number = null) {
     $connection = $this->pfaids_connect('PFAIDR');
 
-    $pf_stu_award_query = "SELECT say_fm_stu.stu_award_year_token, stu_award_year.award_year_token, primary_efc, secondary_efc, total_income, student.alternate_id, tot_budget
+    $pf_stu_award_query = "SELECT say_fm_stu.stu_award_year_token, stu_award_year.award_year_token, primary_efc, secondary_efc, stu_award_year.fisap_income, student.alternate_id, tot_budget
       FROM stu_award_year 
       JOIN student ON student.student_token = stu_award_year.student_token
       LEFT JOIN say_fm_stu ON say_fm_stu.stu_award_year_token = stu_award_year.stu_award_year_token
@@ -319,7 +319,7 @@ class PFAIDSService {
         $this->posterFactory->newPoster()->noLog()->edit('HEd.FAID.Student.AwardYear', $award_year['AWARD_YEAR_ID'], array(
           'HEd.FAID.Student.AwardYear.PrimaryEFC' => $pf_stu_award['primary_efc'],
           'HEd.FAID.Student.AwardYear.SecondaryEFC' => $pf_stu_award['secondary_efc'],
-          'HEd.FAID.Student.AwardYear.TotalIncome' => $pf_stu_award['total_income'],
+          'HEd.FAID.Student.AwardYear.TotalIncome' => $pf_stu_award['fisap_income'],
           'HEd.FAID.Student.AwardYear.TotalCostOfAttendance' => $pf_stu_award['tot_budget'],
         ))->process()->getResult();
         
@@ -340,7 +340,7 @@ class PFAIDSService {
             'HEd.FAID.Student.AwardYear.OrganizationID' => $this->focus->getOrganizationID(),
             'HEd.FAID.Student.AwardYear.PrimaryEFC' => $pf_stu_award['primary_efc'],
             'HEd.FAID.Student.AwardYear.SecondaryEFC' => $pf_stu_award['secondary_efc'],
-            'HEd.FAID.Student.AwardYear.TotalIncome' => $pf_stu_award['total_income'],
+            'HEd.FAID.Student.AwardYear.TotalIncome' => $pf_stu_award['fisap_income'],
             'HEd.FAID.Student.AwardYear.TotalCostOfAttendance' => $pf_stu_award['tot_budget']
           ))->process()->getResult();
           
