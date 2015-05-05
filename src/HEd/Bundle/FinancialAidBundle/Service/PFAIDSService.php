@@ -288,7 +288,7 @@ class PFAIDSService {
   public function synchronizeStudentAwardInfo($faid_award_year = null, $permanent_number = null) {
     $connection = $this->pfaids_connect('PFAIDR');
 
-    $pf_stu_award_query = "SELECT say_fm_stu.stu_award_year_token, stu_award_year.award_year_token, primary_efc, secondary_efc, stu_award_year.fisap_income, student.alternate_id, tot_budget
+    $pf_stu_award_query = "SELECT say_fm_stu.stu_award_year_token, stu_award_year.award_year_token, primary_efc, secondary_efc, say_fm_stu.fisap_income, student.alternate_id, tot_budget
       FROM stu_award_year 
       JOIN student ON student.student_token = stu_award_year.student_token
       LEFT JOIN say_fm_stu ON say_fm_stu.stu_award_year_token = stu_award_year.stu_award_year_token
