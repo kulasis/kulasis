@@ -61,7 +61,7 @@ class SISTransactionsController extends Controller {
     $this->setRecordType('SIS.K12.Student');
     
     if ($this->request->request->get('void')) {
-      $constituent_billing_service = $this->get('kula.K12.billing.student');
+      $constituent_billing_service = $this->get('kula.K12.billing.constituent');
       
       $void = $this->request->request->get('void');
       $non = $this->request->request->get('non');
