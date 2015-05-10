@@ -362,7 +362,7 @@ class SISStudentTranscriptReportController extends ReportController {
         }
       }
       
-      if ($last_calendar_month !== $row['CALENDAR_MONTH'] || $last_calendar_year !== $row['CALENDAR_YEAR'] || $last_term !== $row['TERM'] || $last_non_organization_name != $row['NON_ORGANIZATION_NAME'] || $last_organization_name != $row['ORGANIZATION_NAME']) {
+      if ($last_calendar_month !== $row['CALENDAR_MONTH'] || $last_calendar_year !== $row['CALENDAR_YEAR'] || $last_term !== $row['TERM']) {
         if ($last_calendar_month !== 0) $pdf->gpa_table_row($totals);
         
         // Check how far from bottom
@@ -393,6 +393,10 @@ class SISStudentTranscriptReportController extends ReportController {
         $totals['TERM']['HRS'] = 0.0;
         $totals['TERM']['PTS'] = 0.0;
         unset($organization_name, $current_y, $height_for_rows, $total_height);
+      } else {
+        if ($last_non_organization_name != $row['NON_ORGANIZATION_NAME'] || $last_organization_name != $row['ORGANIZATION_NAME']) {
+          $pdf->term_table_row($row, 'Y');
+        }
       }
       
       $pdf->ch_table_row($row);

@@ -172,7 +172,7 @@ class StudentTranscriptReport extends BaseReport {
     $this->Ln(3);
   }
 
-  public function term_table_row($row) {
+  public function term_table_row($row, $comments = null) {
     $this->SetFont('Arial', '', 7);
     if ($row['NON_ORGANIZATION_NAME']) {
       $this->Cell(63,3,$row['NON_ORGANIZATION_NAME'],0,0,'L');
@@ -190,12 +190,14 @@ class StudentTranscriptReport extends BaseReport {
       $this->Cell(63,3,$row['ORGANIZATION_NAME'],0,0,'R');
     }
     $this->Ln(3);
-    // Comments
-    if (isset($this->data['comments'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]))
-      $this->MultiCell(98, 3, $this->data['comments'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]);
-    // Standings
-    if (isset($this->data['standings'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]))
-      $this->MultiCell(98, 3, $this->data['standings'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]);
+    if ($comments === null) {
+      // Comments
+      if (isset($this->data['comments'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]))
+        $this->MultiCell(98, 3, $this->data['comments'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]);
+      // Standings
+      if (isset($this->data['standings'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]))
+        $this->MultiCell(98, 3, $this->data['standings'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]);
+    }
   }
   
   public function ch_table_row($row) {
