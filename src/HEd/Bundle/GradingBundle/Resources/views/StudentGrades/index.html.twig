@@ -1,0 +1,77 @@
+{% extends 'KulaCoreFrameworkBundle::student.html.twig' %}
+
+{% block content %}
+<div align="center">***This Grade Report is Unofficial***</div>
+<div class="data-table-header-div">
+Grades
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Section.SectionNumber', field_name_override: 'Section', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Course.CourseNumber', field_name_override: 'Course', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Course.Title', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.Level', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Staff.AbbreviatedName', field_name_override: 'Instructor', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Section.Credits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Mark', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+  {% for class in classes %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ field: 'HEd.Section.SectionNumber', input: false, value: class.SECTION_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Course.CourseNumber', input: false, value: class.COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Course.Title', input: false, value: class.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.Class.Level', db_row_id: class.STUDENT_CLASS_ID, lookup: 'C', value: class.LEVEL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Staff.AbbreviatedName', input: false, value: class.ABBREVIATED_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.Class.CreditsAttempted', db_row_id: class.STUDENT_CLASS_ID, value: class.CREDITS_ATTEMPTED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Mark', value: class.MARK, MARK_SCALE_ID: class.MARK_SCALE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% if class.ALLOW_COMMENTS == '1' or class.REQUIRE_COMMENTS == '1' %}
+      <tr>
+        <td class="data-table-cell-row-num">{{ loop.index }}</td>
+        {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Comments', value: class.COMMENTS, prepend_html: '<td colspan="7">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+      </tr>
+    {% endif %}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+<div align="center" style="margin-top:1em;">***This Grade Report is Unofficial***</div>
+<div class="data-table-header-div">
+Term Summary
+</div>
+<table id="window_window_num_data_table_standings" class="data-table">
+<thead>
+  <tr>
+    <th class="data-table-cell-row-header">&nbsp;</th>
+    {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Term.TermCreditsAttempted', field_name_override: 'Attempted Credits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+    {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Term.TermCreditsEarned', field_name_override: 'Earned Credits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+    {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Term.TermHours', field_name_override: 'GPA Hours', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+    {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Term.TermPoints', field_name_override: 'Grade Points', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+    {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Term.TermGPA', field_name_override: 'GPA', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  </tr>
+</thead>
+<tbody>
+  {% for term in gpa %}
+  <tr>
+    <td class="data-table-cell-input" align="right">Term</td>
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.TermCreditsAttempted', value: term.TERM_CREDITS_ATTEMPTED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.TermCreditsEarned', value: term.TERM_CREDITS_EARNED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.TermHours', value: term.TERM_HOURS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.TermPoints', value: term.TERM_POINTS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.TermGPA', value: term.TERM_GPA, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  <tr>
+    <td class="data-table-cell-input" align="right">Cumulative</td>
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.CumCreditsAttempted', value: term.CUM_CREDITS_ATTEMPTED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.CumCreditsEarned', value: term.CUM_CREDITS_EARNED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.CumHours', value: term.CUM_HOURS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.CumPoints', value: term.CUM_POINTS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.CumGPA', value: term.CUM_GPA, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+<div align="center" style="margin-top:1em;">***This Grade Report is Unofficial***</div>
+{% endblock %}

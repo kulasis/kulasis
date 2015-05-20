@@ -148,3 +148,16 @@ Teacher.HEd.Class.Grades:
       display_name: "Dropped"
       sort: 2
       route: teacher_HEd_section_grades_dropped
+
+Student.HEd.Student:
+  description: "Student"
+  display_name: "Student"
+  type: form_group
+  portal: student
+  sort: 1
+  forms:
+    Grades:
+      description: "Grades"
+      display_name: "Grades"
+      sort: 2
+      route: student_HEd_student_grades
