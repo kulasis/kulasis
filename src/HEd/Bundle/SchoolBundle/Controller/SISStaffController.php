@@ -29,7 +29,7 @@ class SISStaffController extends Controller {
     $this->setRecordType('SIS.HEd.Staff');
     
     $stafforgterms = $this->db()->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgtrm')
-      ->fields('stafforgtrm', array('STAFF_ORGANIZATION_TERM_ID', 'ORGANIZATION_TERM_ID', 'CONV_STAFF_NUMBER'))
+      ->fields('stafforgtrm', array('STAFF_ORGANIZATION_TERM_ID', 'ORGANIZATION_TERM_ID', 'CONV_STAFF_NUMBER', 'TEACHER_GRADES_OPEN', 'TEACHER_GRADES_CLOSE'))
       ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stafforgtrm.ORGANIZATION_TERM_ID')
       ->join('CORE_TERM', 'term', 'orgterms.TERM_ID = term.TERM_ID')
       ->condition('stafforgtrm.STAFF_ID', $this->record->getSelectedRecordID())
