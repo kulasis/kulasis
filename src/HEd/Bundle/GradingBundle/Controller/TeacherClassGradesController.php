@@ -20,7 +20,7 @@ class TeacherClassGradesController extends Controller {
         $new_grades = $this->request->request->get('add')['HEd.Student.CourseHistory']['new'];
         foreach($new_grades as $student_class_id => $mark) {
           if (isset($mark['HEd.Student.CourseHistory.Mark']))
-            $course_history_service->insertCourseHistoryForClass($student_class_id, $mark['HEd.Student.CourseHistory.Mark'], 'Y');
+            $course_history_service->insertCourseHistoryForClass($student_class_id, $mark['HEd.Student.CourseHistory.Mark'], '1');
         }
       }
     
@@ -31,7 +31,7 @@ class TeacherClassGradesController extends Controller {
         $edit_grades = $this->request->request->get('edit')['HEd.Student.CourseHistory'];
         foreach($edit_grades as $student_course_history_id => $mark) {
           if (isset($mark['HEd.Student.CourseHistory.Mark']) AND $mark['HEd.Student.CourseHistory.Mark'] != '')
-            $course_history_service->updateCourseHistoryForClass($student_course_history_id, $mark['HEd.Student.CourseHistory.Mark'], isset($mark['HEd.Student.CourseHistory.Comments']) ? $mark['HEd.Student.CourseHistory.Comments'] : null, 'Y');
+            $course_history_service->updateCourseHistoryForClass($student_course_history_id, $mark['HEd.Student.CourseHistory.Mark'], isset($mark['HEd.Student.CourseHistory.Comments']) ? $mark['HEd.Student.CourseHistory.Comments'] : null, '1');
           else
             $course_history_service->deleteCourseHistoryForClass($student_course_history_id);
         }
@@ -87,8 +87,6 @@ class TeacherClassGradesController extends Controller {
         'HEd.Section.TeacherGradesCompletedUserstamp' => $this->session->get('user_id'),
         'HEd.Section.TeacherGradesCompletedTimestamp' => date('Y-m-d H:i:s')
       ))->process();
-
-      $poster->newPoster(null, $info);
       
       $submitted_grades_info = $this->db()->db_select('STUD_SECTION', 'section')
         ->fields('section', array('TEACHER_GRADES_COMPLETED', 'TEACHER_GRADES_COMPLETED_TIMESTAMP'))

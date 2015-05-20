@@ -21,7 +21,7 @@ class Mark extends Field {
       ->orderBy('SORT', 'ASC');
     
     if (isset($param['TEACHER']) AND $param['TEACHER']) {
-      $result = $result->condition('marks.ALLOW_TEACHER', 'Y');
+      $result = $result->condition('marks.ALLOW_TEACHER', '1');
     }
       
     $result = $result->execute();

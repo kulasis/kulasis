@@ -20,7 +20,7 @@ class CourseHistoryService {
   }
   
   // insert course history
-  public function insertCourseHistoryForClass($student_class_id, $mark, $teacher_set = 'N') {
+  public function insertCourseHistoryForClass($student_class_id, $mark, $teacher_set = '0') {
     
     if ($mark) {
     
@@ -61,7 +61,7 @@ class CourseHistoryService {
     $course_history_data['HEd.Student.CourseHistory.MarkScaleID'] = $course_info['MARK_SCALE_ID'];
     $course_history_data['HEd.Student.CourseHistory.CreditsAttempted'] = $course_info['CREDITS'];
     $course_history_data['HEd.Student.CourseHistory.Mark'] = $mark;
-    $course_history_data['HEd.Student.CourseHistory.TeacherSet'] = 0;
+    $course_history_data['HEd.Student.CourseHistory.TeacherSet'] = $teacher_set;
     
     // Get award data
     $award_data = $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS']);
