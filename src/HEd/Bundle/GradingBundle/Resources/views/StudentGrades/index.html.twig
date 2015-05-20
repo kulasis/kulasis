@@ -55,7 +55,7 @@ Term Summary
 <tbody>
   {% for term in gpa %}
   <tr>
-    <td class="data-table-cell-input" align="right">Term</td>
+    <td align="right">Term</td>
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.TermCreditsAttempted', value: term.TERM_CREDITS_ATTEMPTED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.TermCreditsEarned', value: term.TERM_CREDITS_EARNED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.TermHours', value: term.TERM_HOURS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
@@ -63,7 +63,7 @@ Term Summary
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.TermGPA', value: term.TERM_GPA, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
   <tr>
-    <td class="data-table-cell-input" align="right">Cumulative</td>
+    <td align="right">Cumulative</td>
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.CumCreditsAttempted', value: term.CUM_CREDITS_ATTEMPTED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.CumCreditsEarned', value: term.CUM_CREDITS_EARNED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term.CumHours', value: term.CUM_HOURS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
