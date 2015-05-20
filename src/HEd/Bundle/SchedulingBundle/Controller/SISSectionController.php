@@ -182,7 +182,8 @@ class SISSectionController extends Controller {
       
       foreach ($edit['HEd.Section'] as $section_id => $section_row) {
         
-        if (isset($section_row['HEd.Section.TeacherGradesCompleted']['checkbox']) AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox'] == 'Y' AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox_hidden'] != 'Y') {
+        if (isset($section_row['HEd.Section.TeacherGradesCompleted']['checkbox']) AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox'] == '1' AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox_hidden'] != '1') {
+          
           // Set as finalized
           $sectionInfo['HEd.Section.TeacherGradesCompleted'] = 1;
           $sectionInfo['HEd.Section.TeacherGradesCompletedUserstamp'] = $this->session->get('user_id');
@@ -192,7 +193,7 @@ class SISSectionController extends Controller {
           unset($sectionInfo);
         }
         
-        if (!isset($section_row['HEd.Section.TeacherGradesCompleted']['checkbox']) AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox_hidden'] == 'Y') {
+        if (!isset($section_row['HEd.Section.TeacherGradesCompleted']['checkbox']) AND $section_row['HEd.Section.TeacherGradesCompleted']['checkbox_hidden'] == '1') {
           // Unset as finalized
           $sectionInfo['HEd.Section.TeacherGradesCompleted'] = 0;
           $sectionInfo['HEd.Section.TeacherGradesCompletedUserstamp'] = null;

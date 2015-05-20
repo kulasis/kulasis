@@ -231,7 +231,8 @@ class SISEnrollmentController extends Controller {
           $constituent_billing_service->determineTuitionRate($this->record->getSelectedRecordID());
           
           // mandatory transactions
-          $constituent_billing_service->checkMandatoryTransactions($this->record->getSelectedRecordID());
+          $student_billing_service = $this->get('kula.HEd.billing.student');
+          $student_billing_service->checkMandatoryTransactions($this->record->getSelectedRecordID());
           
           if ($statusPoster AND $enrollmentPoster AND $activityPoster) {
             $transaction->commit();
