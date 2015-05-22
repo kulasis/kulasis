@@ -82,14 +82,14 @@ class TermTotalsService {
       // Compute Classes in Progress
       $coursesInProgress = $this->calculateClassesInProgress($studentID, $term['FINANCIAL_AID_YEAR']);
       if ($coursesInProgress) {
-        //$this->updateDatabase($this->totals);
+        $this->updateDatabase($this->totals);
       }
       
       $lastRow = $term;
     }
     $terms = null;
     unset($terms);
-    /*
+    
     if ($coursesInProgress === false) {
       // Compute Classes in Progress
       $this->resetTermTotals();
@@ -98,7 +98,7 @@ class TermTotalsService {
       if ($coursesInProgressOut) 
         $this->updateDatabase($this->totals);
     }
-    */
+    
   }
   
   private function calculateClassesInProgress($studentID, $financialAidYear = null) {
