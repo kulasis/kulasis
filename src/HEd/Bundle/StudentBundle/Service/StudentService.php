@@ -20,6 +20,11 @@ class StudentService {
       // Post data
       $constituentID = $this->poster->newPoster()->add('Core.Constituent', 0, $constituentInfo)->process()->getID();
       
+      // if ssn, update ssn
+      if (isset($constituentInfo['Core.Constituent.SocialSecurityNumber']) AND $constituentInfo['Core.Constituent.SocialSecurityNumber'] != '') {
+        $this->poster->newPoster()->edit('Core.Constituent', $constituentID, array('Core.Constituent.SocialSecurityNumber' => $constituentInfo['Core.Constituent.SocialSecurityNumber']))->process();
+      }
+      
       // Get 
       $this->poster->newPoster()->add('HEd.Student', 0, array(
         'HEd.Student.ID' => $constituentID,
