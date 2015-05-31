@@ -148,11 +148,16 @@ SIS.K12.Academic:
           display_name: "AA Class Roster"
           route: sis_K12_offering_sections_reports_classroster_aa
           sort: 3
+        AAClassRosterLabels:
+          description: "AA Class Roster Labels"
+          display_name: "AA Class Roster Labels"
+          route: sis_K12_offering_sections_reports_classroster_labels_aa
+          sort: 4
         MasterSchedule:
           description: "Master Schedule"
           display_name: "Master Schedule"
           route: sis_K12_offering_sections_reports_masterschedule
-          sort: 4
+          sort: 5
     Courses:
       description: "Courses"
       display_name: "Courses"
