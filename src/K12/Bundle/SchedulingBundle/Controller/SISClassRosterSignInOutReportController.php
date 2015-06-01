@@ -19,6 +19,8 @@ class SISClassRosterSignInOutReportController extends ReportController {
   {  
     $this->authorize();
     
+    $form = $this->request->request->get('non');
+    
     $pdf = new \Kula\K12\Bundle\SchedulingBundle\Report\ClassRosterSignInOutReport("L");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
@@ -56,6 +58,10 @@ class SISClassRosterSignInOutReportController extends ReportController {
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('section.SECTION_ID', $record_id);
+    
+	  if (isset($form['section_number'])) {
+		  $result = $result->condition('section.SECTION_NUMBER', $form['section_number'], 'LIKE');
+	  }
     
     $result = $result
       ->orderBy('term.START_DATE', 'ASC')

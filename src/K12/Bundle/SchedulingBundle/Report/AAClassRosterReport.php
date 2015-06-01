@@ -54,12 +54,31 @@ class AAClassRosterReport extends BaseReport {
     $this->Ln();
     $x = $this->GetX();
     $y = $this->GetY();
+    
+    $height_of_cell = 0;
+    $notes_height = $this->getHeightOfCell($row['NOTES'], 6);
+    $medical_notes_height = $this->getHeightOfCell($row['MEDICAL_NOTES'], 6);
+    if ($notes_height > $medical_notes_height) {
+      $height_of_cell = $notes_height;
+    } else {
+      $height_of_cell = $medical_notes_height;
+    }
+    
     $this->MultiCell(88.5, 6, trim($row['MEDICAL_NOTES']), 'L', 'L');
-    //$this->SetX($x);
-    //$this->SetY($y);
-    //$this->MultiCell(88.5, 6, trim($row['NOTES']), 'R', 'L');
-    //$this->SetX($x);
-    $this->Cell(177,2,'','LBR',0,'L',false);
+    $this->SetX($x + 88.5);
+    $this->SetLeftMargin($x + 88.5);
+    $this->SetY($y);
+    $this->MultiCell(88.5, 6, trim($row['NOTES']), 'R', 'L');
+    
+    $this->SetLeftMargin($x);
+    // Draw closing right line
+    $this->SetX($x);
+    $this->SetY($y);
+    $this->Cell(88.5,$height_of_cell,'','L',0,'L',false);
+    $this->Cell(88.5,$height_of_cell,'','R',0,'L',false);
+    $this->SetX($x);
+    $this->Ln();
+    $this->Cell(177,5,'','LBR',0,'L',false);
     $this->Ln();
   }
   

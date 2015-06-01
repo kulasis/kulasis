@@ -51,6 +51,7 @@ class Report extends \fpdf\FPDF {
   // Page header
   public function Header()
   {
+      $this->SetFont('Arial','',8);
       if ($this->show_logo) {
         // School Logo
         $image1 = KULA_ROOT . $this->reportLogo;
@@ -76,7 +77,8 @@ class Report extends \fpdf\FPDF {
   
   // Page footer
   public function Footer()
-  {
+  { 
+      $this->SetFont('Arial','',8);
       $this->AliasNbPages();
       // Position at 1.5 cm from bottom
       $this->SetY(-18);
@@ -95,6 +97,18 @@ class Report extends \fpdf\FPDF {
       // Reset Values
       $this->row_page_count = 0;
       $this->fill = false;
+  }
+  
+  public function getHeightOfCell($text, $height_of_line)
+  {
+    // http://stackoverflow.com/questions/1748158/fpdf-multicell-issue
+    // Get the number of lines this multi-line content will generate. I subtracted 1
+    // from column width as a kind of cell padding
+    $total_string_width = $this->GetStringWidth(trim($text) == '' ? ' ' : trim($text));
+    $number_of_lines = ceil( $total_string_width / (60 - 1) );
+
+    // Determine the height of the resulting multi-line cell.
+    return ceil( $number_of_lines * $height_of_line ); 
   }
   
   // set report title

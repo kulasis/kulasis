@@ -19,6 +19,8 @@ class SISAAClassRosterReportController extends ReportController {
   {  
     $this->authorize();
     
+    $form = $this->request->request->get('non');
+    
     $pdf = new \Kula\K12\Bundle\SchedulingBundle\Report\AAClassRosterReport("P");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
@@ -57,6 +59,10 @@ class SISAAClassRosterReportController extends ReportController {
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('section.SECTION_ID', $record_id);
+    
+	  if (isset($form['section_number'])) {
+		  $result = $result->condition('section.SECTION_NUMBER', $form['section_number'], 'LIKE');
+	  }
     
     $result = $result
       ->orderBy('term.START_DATE', 'ASC')
@@ -119,6 +125,12 @@ class SISAAClassRosterReportController extends ReportController {
         unset($phonesStrElement);
       }
       $row['phones'] = implode(', ', $phonesStr);
+      
+      // Check how far from bottom
+      $current_y = $pdf->GetY();
+      if (300 - $current_y < 100) {
+        $pdf->Ln(300 - $current_y);
+      }
       
       $pdf->table_row($row);
       $last_section_id = $row['SECTION_ID'];
