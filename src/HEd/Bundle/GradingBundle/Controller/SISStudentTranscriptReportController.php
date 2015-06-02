@@ -416,10 +416,11 @@ class SISStudentTranscriptReportController extends ReportController {
       if ($row['TRANSFER_CREDITS']) {
         $totals['transfer']['ATT'] += $row['CREDITS_ATTEMPTED'];
         $totals['transfer']['ERN'] += $row['CREDITS_EARNED'];
-      } elseif ($row['GPA_VALUE'] != '' AND $row['TRANSFER_CREDITS'] == 0) {
+      } else {
         $totals['institution']['ATT'] += $row['CREDITS_ATTEMPTED'];
         $totals['institution']['ERN'] += $row['CREDITS_EARNED'];
-        $totals['institution']['HRS'] += $row['CREDITS_ATTEMPTED'];
+        if ($row['GPA_VALUE'] != '' AND $row['TRANSFER_CREDITS'] == 0)
+          $totals['institution']['HRS'] += $row['CREDITS_ATTEMPTED'];
         $totals['institution']['PTS'] += $row['QUALITY_POINTS'];  
       }
       
