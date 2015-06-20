@@ -310,15 +310,15 @@ class TermTotalsService {
       $exists = $this->db->db_select('STUD_STUDENT_COURSE_HISTORY_TERMS', 'chterms', array('nolog' => true))
         ->fields('chterms', array('STUDENT_COURSE_HISTORY_TERM_ID'))
         ->condition('chterms.STUDENT_ID', $data['HEd.Student.CourseHistory.Term.StudentID'])
-        ->condition($this->db->db_or()->condition(
-        $this->db->db_and()
+        //->condition($this->db->db_or()->condition(
+        //$this->db->db_and()
           ->condition('chterms.LEVEL', $data['HEd.Student.CourseHistory.Term.Level'])
           ->condition('chterms.CALENDAR_YEAR', $data['HEd.Student.CourseHistory.Term.CalendarYear'])
           ->condition('chterms.CALENDAR_MONTH', $data['HEd.Student.CourseHistory.Term.CalendarMonth'])
           ->condition('chterms.TERM', $data['HEd.Student.CourseHistory.Term.Term'])
-            )
-          ->condition('chterms.STUDENT_STATUS_ID', $data['HEd.Student.CourseHistory.Term.StudentStatusID'])
-        )
+          //  )
+          //->condition('chterms.STUDENT_STATUS_ID', $data['HEd.Student.CourseHistory.Term.StudentStatusID'])
+        //)
       ->execute()->fetch();
     
       if ($exists['STUDENT_COURSE_HISTORY_TERM_ID']) {

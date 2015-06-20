@@ -165,7 +165,6 @@ class SISPackageController extends Controller {
               $award_term_ids[] = $award_year_id_row['AWARD_YEAR_TERM_ID'];
               $award_code_id = $award_year_id_row['AWARD_CODE_ID'];
             }
-            
             $awardsToDelete = $this->db()->db_select('FAID_STUDENT_AWARDS', 'awards')
               ->fields('awards', array('AWARD_ID'))
               ->condition('AWARD_YEAR_TERM_ID', $award_term_ids)

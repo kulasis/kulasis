@@ -55,7 +55,7 @@ class PosterRecord {
   
   public function process($options = array()) {
     $this->getOriginalRecord();
-    
+
     if ($this->crud == self::DELETE) {
       if ($this->fields['delete_row'] == 'Y') {
         unset($this->fields['delete_row']);
@@ -73,11 +73,12 @@ class PosterRecord {
       $this->processTimeFields();
       $this->processDateTimeFields();
       $this->processChoosers();
-    
+
       $this->processBlankValues();
       if ($this->crud == self::EDIT) {
         $this->processSameValues();
       }
+      
       if (count($this->fields) > 0) {
         if (!isset($options['VERIFY_PERMISSIONS']) OR (isset($options['VERIFY_PERMISSIONS']) AND $options['VERIFY_PERMISSIONS'] === true))
           $this->verifyPermissions();
