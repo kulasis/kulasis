@@ -38,6 +38,21 @@ core_system_nonorganization:
   path: /system/nonorganization
   defaults: { _controller: KulaCoreSystemBundle:CoreNonOrganization:index }
 
+core_system_nonorganization_add:
+  path: /system/nonorganization/new
+  defaults: { _controller: KulaCoreSystemBundle:CoreNonOrganization:add }
+  methods: [GET]
+
+core_system_nonorganization_create:
+  path: /system/nonorganization/new
+  defaults: { _controller: KulaCoreSystemBundle:CoreNonOrganization:create }
+  methods: [POST]
+  
+core_system_nonorganization_delete:
+  path: /system/nonorganization/delete
+  defaults: { _controller: KulaCoreSystemBundle:CoreNonOrganization:delete }
+  methods: [POST]
+
 core_system_nonorganization_chooser:
   path: /system/nonorganization/chooser
   defaults: { _controller: KulaCoreSystemBundle:CoreNonOrganization:chooser }

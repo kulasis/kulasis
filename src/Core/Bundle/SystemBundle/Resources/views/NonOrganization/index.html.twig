@@ -1,39 +1,12 @@
 {% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
-<div class="data-table-header-div">
-Non Organizations
-<span class="data-table-header-buttons">
-  {{ kula_table_add('window_window_num_data_table_nonorganizations', 'CORE_NON_ORGANIZATION') }}
-</span>
+
+<div class="group-box">
+<div class="group-box-header">Non Organization Info</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'Core.NonOrganization.ConversionNonOrganizationNumber', db_row_id: kula_core_record.getSelectedRecord.NON_ORGANIZATION_ID, value: nonorganization.CONV_NON_ORGANIZATION_NUMBER, label: true }) }}
 </div>
-<table id="window_window_num_data_table_nonorganizations" class="data-table">
-<thead>
-  <tr>
-  <th class="data-table-cell-row-header">#</th>
-  {{ kula_field_name({ delete: true, field: 'Core.NonOrganization.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ edit: true, field: 'Core.NonOrganization.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ edit: true, field: 'Core.NonOrganization.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ edit: true, field: 'Core.NonOrganization.ConversionNonOrganizationNumber', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-</tr>
-</thead>
-<tbody>
-  {{ kula_display_html({ add: true, field: 'Core.NonOrganization.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
-    {{ kula_field({ add: true, delete: true, field: 'Core.NonOrganization.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-    {{ kula_display_html({ add: true, field: 'Core.NonOrganization.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
-    {{ kula_field({ add: true, field: 'Core.NonOrganization.Type', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ add: true, field: 'Core.NonOrganization.Name', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ add: true, field: 'Core.NonOrganization.ConversionNonOrganizationNumber', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-  {{ kula_display_html({ add: true, field: 'Core.NonOrganization.ID', prepend_html: '</tr>' }) }}
-  {% for nonorganization in nonorganizations %}
-  <tr>
-    {{ kula_field({ delete: true, field: 'Core.NonOrganization.ID', db_row_id: nonorganization.NON_ORGANIZATION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-    <td class="data-table-cell-row-num">{{ loop.index }}</td>
-    {{ kula_field({ edit: true, field: 'Core.NonOrganization.Type', db_row_id: nonorganization.NON_ORGANIZATION_ID, value: nonorganization.NON_ORGANIZATION_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'Core.NonOrganization.Name', db_row_id: nonorganization.NON_ORGANIZATION_ID, value: nonorganization.NON_ORGANIZATION_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'Core.NonOrganization.ConversionNonOrganizationNumber', db_row_id: nonorganization.NON_ORGANIZATION_ID, value: nonorganization.CONV_NON_ORGANIZATION_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-  </tr>
-  {% endfor %}
-</tbody>
-</table>
+</div>
+
 {% endblock %}

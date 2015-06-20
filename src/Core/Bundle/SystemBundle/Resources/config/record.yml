@@ -10,6 +10,8 @@ Core.Organization.School:
   class: Kula\Core\Bundle\SystemBundle\Record\SchoolRecord
 Core.Organization.School.Term:
   class: Kula\Core\Bundle\SystemBundle\Record\SchoolTermRecord
+Core.NonOrganization:
+  class: Kula\Core\Bundle\SystemBundle\Record\NonOrganizationRecord
   
 SIS.Lookup:
   class: Kula\Core\Bundle\SystemBundle\Record\LookupRecord
@@ -17,3 +19,5 @@ SIS.Organization.School:
   class: Kula\Core\Bundle\SystemBundle\Record\SchoolRecord
 SIS.Organization.School.Term:
   class: Kula\Core\Bundle\SystemBundle\Record\SchoolTermRecord
+SIS.NonOrganization:
+  class: Kula\Core\Bundle\SystemBundle\Record\NonOrganizationRecord

@@ -62,6 +62,20 @@ Core.System:
       display_name: "Non Organization"
       route: core_system_nonorganization
       sort: 3
+      menu_actions:
+        New: 
+          description: "New Non Organization"
+          display_name: "New Non Organization"
+          route: core_system_nonorganization_add
+          sort: 1
+        Delete:
+          description: "Delete Non Organization"
+          display_name: "Delete Non Organization"
+          divider_before: true
+          record_loaded: true
+          route: core_system_nonorganization_delete
+          confirmation_message: "Are you sure you want to delete non organization?"
+          sort: 2
     Organization:
       description: "Organization"
       display_name: "Organization"
@@ -216,6 +230,20 @@ SIS.HEd.System:
       display_name: "Non Organization"
       route: core_system_nonorganization
       sort: 3
+      menu_actions:
+        New: 
+          description: "New Non Organization"
+          display_name: "New Non Organization"
+          route: core_system_nonorganization_add
+          sort: 1
+        Delete:
+          description: "Delete Non Organization"
+          display_name: "Delete Non Organization"
+          divider_before: true
+          record_loaded: true
+          route: core_system_nonorganization_delete
+          confirmation_message: "Are you sure you want to delete non organization?"
+          sort: 2
     Organization:
       description: "Organization"
       display_name: "Organization"
