@@ -1,0 +1,84 @@
+Core.JobQueue:
+  description: "Job Queue"
+  db_table_name: CORE_JOB_QUEUE
+  timestamps: true
+  fields:
+    ID:
+      description: "Record Type ID"
+      primary: true
+      db_column_name: JOB_QUEUE_ID
+      db_column_type: primary_serial
+      column_name: "Job Queue ID"
+      label_name: "Job Queue ID"
+    RoleID:
+      description: "Role ID"
+      parent: Core.User.Role.ID
+      db_column_name: "ROLE_ID"
+      db_column_type: serial
+      column_name: "Role ID"
+      label_name: "Role ID"
+    NavigationID:
+      description: "Navigation ID"
+      parent: Core.Navigation.ID
+      db_column_name: "NAVIGATION_ID"
+      db_column_type: serial
+      column_name: "Navigation ID"
+      label_name: "Navigation ID"
+    ReportNumber:
+      description: "Report Number"
+      db_column_name: REPORT_NUMBER
+      db_column_type: varchar
+      db_column_length: 20
+      db_column_null: false
+      field_type: text
+      field_size: 15
+      column_name: "Report Number"
+      label_name: "Report Number"
+    ReportName:
+      description: "Report Name"
+      db_column_name: REPORT_NAME
+      db_column_type: varchar
+      db_column_length: 200
+      db_column_null: false
+      field_type: text
+      field_size: 30
+      column_name: "Report Name"
+      label_name: "Report Name"
+    Status:
+      description: "Job Status"
+      db_column_name: STATUS
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: false
+      field_type: select
+      column_name: "Job Status"
+      label_name: "Job Status"
+    ReportOutput:
+      description: "Report Output"
+      db_column_name: REPORT_OUTPUT
+      db_column_type: blob
+      db_column_size: big
+      db_column_null: true
+      column_name: "Report Output"
+      label_name: "Report Output"
+    AddedTime:
+      description: "Added Time"
+      db_column_name: ADDED_TIME
+      db_column_type: datetime
+      db_column_null: false
+      column_name: "Added Time"
+      label_name: "Added Time"
+    StartTime:
+      description: "Start Processing Time"
+      db_column_name: START_TIME
+      db_column_type: datetime
+      db_column_null: true
+      column_name: "Start Time"
+      label_name: "Start Time"
+    EndTime:
+      description: "End Processing Time"
+      db_column_name: END_TIME
+      db_column_type: datetime
+      db_column_null: true
+      column_name: "End Time"
+      label_name: "End Time"

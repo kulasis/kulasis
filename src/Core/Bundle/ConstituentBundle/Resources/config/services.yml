@@ -1,0 +1,4 @@
+services:
+  kula.Core.Combine:
+    class: Kula\Core\Bundle\ConstituentBundle\Service\CombineService
+    arguments: ["@kula.core.db"]

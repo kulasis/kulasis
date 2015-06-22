@@ -10,10 +10,21 @@ Core.Constituent:
       display_name: "Constituent"
       route: sis_core_constituent_constituent
       sort: 1
-      menu_actions:
-        CombineDeleteConstituent:
-          description: "Combine & Delete Constituent"
-          display_name: "Combine & Delete Constituent"
-          route: sis_core_constituent_constituent_combine_delete_constituent
-          record_loaded: true
+
+SIS.Utility:
+  description: "Utility"
+  display_name: Utility
+  type: form_group
+  portal: sis
+  sort: 5
+  forms:
+    Combiner:
+      description: "Combiner"
+      display_name: "Combiner"
+      sort: 1
+      tabs:
+        Constituent:
+          description: "Constituent Combiner"
+          display_name: "Constituent"
+          route: sis_core_constituent_combiner
           sort: 1

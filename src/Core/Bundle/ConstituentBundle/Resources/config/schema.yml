@@ -8,6 +8,8 @@ Core.Constituent:
       primary: true
       db_column_name: CONSTITUENT_ID
       db_column_type: primary_serial
+      field_type: chooser
+      chooser: Core.Constituent
       column_name: "Constituent ID"
       label_name: "Constituent ID"
     LastName:
@@ -543,18 +545,24 @@ Core.Constituent.Relationship:
   unique_keys:
     ConstituentRelationship: ['Core.Constituent.Relationship.ConstituentID', 'Core.Constituent.Relationship.RelatedConstituentID']
       
-Log.Constituent.Combined:
-  description: "Combined Constituents"
-  db_table_name: LOG_CONSTITUENT_COMBINED
+Log.Combined:
+  description: "Combined Log"
+  db_table_name: LOG_COMBINED
   timestamps: true
   fields:
-    DeletedConstituentID:
-      description: "Deleted Constituent ID"
-      primary: true
-      db_column_name: DELETED_CONSTITUENT_ID
+    DeletedTable:
+      description: "Deleted Table"
+      db_column_name: DELETED_TABLE
+      db_column_type: varchar
+      db_column_length: 255
+      column_name: "Deleted Table Name"
+      label_name: "Deleted Table Name"
+    DeletedID:
+      description: "Deleted ID"
+      db_column_name: DELETED_ID
       db_column_type: serial
-      column_name: "Deleted Constituent ID"
-      label_name: "Deleted Constituent ID"
+      column_name: "Deleted ID"
+      label_name: "Deleted ID"
     DeletedConversionNumber:
       description: "Deleted Conversion Number"
       db_column_name: DELETED_CONV_NUMBER
@@ -563,12 +571,18 @@ Log.Constituent.Combined:
       db_column_null: true
       column_name: "Deleted Conversion Number"
       label_name: "Deleted Conversion Number"
-    MergedConstituentID:
-      description: "Merged Constituent ID"
-      db_column_name: MERGED_CONSTITUENT_ID
+    DeletedData:
+      description: "Deleted Data"
+      db_column_type: text
+      db_column_null: true
+      column_name: "Deleted Data"
+      label_name: "Deleted Data"
+    MergedID:
+      description: "Merged ID"
+      db_column_name: MERGED_ID
       db_column_type: serial
-      column_name: "Merged Constituent ID"
-      label_name: "Merged Constituent ID"
+      column_name: "Merged ID"
+      label_name: "Merged ID"
     MergedConversionNumber:
       description: "Merged Conversion Number"
       db_column_name: MERGED_CONV_NUMBER
