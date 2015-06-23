@@ -85,6 +85,10 @@ class Session {
       $role['focus']['term_id'] = $latest_term['TERM_ID'];
     }
     
+    if ($role['focus']['term_id'] != '' AND $role_info['USERGROUP_NAME'] == 'Student') {
+      $role['focus']['term_id'] = $this->firstTermForStudentRole($role['role_id'], $role['focus']['organization_id']);
+    }
+    
     // Log session and get session ID and token
     $role['session_id'] = $this->logOpenedSession($role['user_id'], $role['role_id'], $role['focus']['organization_id'], $role['focus']['term_id']);
     
@@ -193,6 +197,33 @@ class Session {
       ->execute()
       ->fetch();
     return $term_results;
+  }
+  
+  private function termInEnrollmentHistory($role_id, $term_id, $organization_id) {
+    $first_term_results = $this->db->db_select('CORE_USER_ROLES', 'role')
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = role.USER_ID')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+      ->fields('orgterms', array('TERM_ID'))
+      ->condition('role.ROLE_ID', $role_id)
+      ->condition('orgterms.ORGANIZATION_ID', $organization_id)
+      ->condition('orgterms.TERM_ID', $term_id)
+      ->execute()->fetch();
+    
+    if ($first_term_results['TERM_ID'] != '')
+      return true;
+    else
+      return false;
+  }
+  
+  private function firstTermForStudentRole($role_id, $organization_id) {
+    $first_term_results = $this->db->db_select('CORE_USER_ROLES', 'role')
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = role.USER_ID')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+      ->fields('orgterms', array('TERM_ID'))
+      ->condition('role.ROLE_ID', $role_id)
+      ->condition('orgterms.ORGANIZATION_ID', $organization_id)
+        ->execute()->fetch();
+    return $first_term_results['TERM_ID'];
   }
   
 }

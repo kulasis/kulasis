@@ -573,6 +573,7 @@ Log.Combined:
       label_name: "Deleted Conversion Number"
     DeletedData:
       description: "Deleted Data"
+      db_column_name: DELETED_DATA
       db_column_type: text
       db_column_null: true
       column_name: "Deleted Data"
