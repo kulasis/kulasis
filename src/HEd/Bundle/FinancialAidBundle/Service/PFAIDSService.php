@@ -443,12 +443,12 @@ class PFAIDSService {
       } // end while on award year awards
       
       // get awards for terms
-      $pf_stu_term_awards = mssql_query("SELECT poe.poe_token, poe_dcycle_seqn, fund_ledger_number, scheduled_date, scheduled_amount, gross_disbursement_amount, net_disbursement_amount
+      $pf_stu_term_awards = mssql_query("SELECT poe.poe_token, poe_dcycle_seqn, fund_ledger_number, scheduled_date, scheduled_amount, gross_disbursement_amount, net_disbursement_amount, stu_award.status
         FROM stu_award_transactions
         JOIN poe ON poe.poe_token = stu_award_transactions.poe_token
         JOIN stu_award ON stu_award.stu_award_token = stu_award_transactions.stu_award_token
         JOIN funds ON funds.fund_token = stu_award.fund_ay_token
-        WHERE stu_award_transactions.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."' AND scheduled_amount > 0");
+        WHERE stu_award_transactions.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."' AND scheduled_amount > 0 AND stu_award.status IN ('A','P')");
       while ($pf_stu_term_award = mssql_fetch_array($pf_stu_term_awards)) {
       
         // determine org term id
@@ -481,9 +481,15 @@ class PFAIDSService {
         // check if award exists
         if ($award['AWARD_ID']) {
           
+          // determine award status
+          if ($pf_stu_term_award['status'] == 'P')
+            $award_status = 'PEND';
+          if ($pf_stu_term_award['status'] == 'A')
+            $award_status = 'APPR';
+          
           // update award
           $this->posterFactory->newPoster()->noLog()->edit('HEd.FAID.Student.Award', $award['AWARD_ID'], array(
-            'HEd.FAID.Student.Award.AwardStatus' => 'PEND',
+            'HEd.FAID.Student.Award.AwardStatus' => ($award_status != '') ? $award_status : null,
             'HEd.FAID.Student.Award.DisbursementDate' => ($pf_stu_term_award['scheduled_date'] != '') ? date('Y-m-d', strtotime($pf_stu_term_award['scheduled_date'])) : null,
             'HEd.FAID.Student.Award.GrossAmount' => $pf_stu_term_award['scheduled_amount'],
             'HEd.FAID.Student.Award.NetAmount' => ($pf_stu_term_award['net_disbursement_amount'] > 0) ? $pf_stu_term_award['net_disbursement_amount'] : $pf_stu_term_award['scheduled_amount']
@@ -497,7 +503,7 @@ class PFAIDSService {
             $this->posterFactory->newPoster()->noLog()->add('HEd.FAID.Student.Award', 'new', array(
               'HEd.FAID.Student.Award.AwardYearTermID' => $award_term['AWARD_YEAR_TERM_ID'],
               'HEd.FAID.Student.Award.AwardCodeID' => $award_code_id['AWARD_CODE_ID'],
-              'HEd.FAID.Student.Award.AwardStatus' => 'PEND',
+              'HEd.FAID.Student.Award.AwardStatus' => ($award_status != '') ? $award_status : null,
               'HEd.FAID.Student.Award.DisbursementDate' => ($pf_stu_term_award['scheduled_date'] != '') ? date('Y-m-d', strtotime($pf_stu_term_award['scheduled_date'])) : null,
               'HEd.FAID.Student.Award.GrossAmount' => $pf_stu_term_award['scheduled_amount'],
               'HEd.FAID.Student.Award.NetAmount' => ($pf_stu_term_award['net_disbursement_amount'] > 0) ? $pf_stu_term_award['net_disbursement_amount'] : $pf_stu_term_award['scheduled_amount'],
@@ -508,6 +514,8 @@ class PFAIDSService {
           }
           
         }
+        
+        unset($award_status);
       
       
       } // end while on student awards
