@@ -287,6 +287,8 @@ class PFAIDSService {
   
   public function synchronizeStudentAwardInfo($faid_award_year = null, $permanent_number = null) {
     $connection = $this->pfaids_connect('PFAIDR');
+    
+    $kula_awards = array();
 
     $pf_stu_award_query = "SELECT say_fm_stu.stu_award_year_token, stu_award_year.award_year_token, primary_efc, secondary_efc, say_fm_stu.fisap_income, student.alternate_id, tot_budget
       FROM stu_award_year 
@@ -480,7 +482,7 @@ class PFAIDSService {
       
         // check if award exists
         if ($award['AWARD_ID']) {
-          
+          $kula_award[] = $award['AWARD_ID'];
           // determine award status
           if ($pf_stu_term_award['status'] == 'P')
             $award_status = 'PEND';
@@ -500,7 +502,7 @@ class PFAIDSService {
           if ($award_term['AWARD_YEAR_TERM_ID'] AND $award_code_id['AWARD_CODE_ID']) {
           
             // insert data
-            $this->posterFactory->newPoster()->noLog()->add('HEd.FAID.Student.Award', 'new', array(
+            $kula_award[] = $this->posterFactory->newPoster()->noLog()->add('HEd.FAID.Student.Award', 'new', array(
               'HEd.FAID.Student.Award.AwardYearTermID' => $award_term['AWARD_YEAR_TERM_ID'],
               'HEd.FAID.Student.Award.AwardCodeID' => $award_code_id['AWARD_CODE_ID'],
               'HEd.FAID.Student.Award.AwardStatus' => ($award_status != '') ? $award_status : null,
@@ -510,7 +512,7 @@ class PFAIDSService {
               'HEd.FAID.Student.Award.OriginalAmount' => $pf_stu_term_award['scheduled_amount'],
               'HEd.FAID.Student.Award.ShowOnStatement' => $award_code_id['SHOW_ON_STATEMENT']
             ))->process()->getResult();
-            
+
           }
           
         }
@@ -519,6 +521,39 @@ class PFAIDSService {
       
       
       } // end while on student awards
+      
+      // Loop through awards not updated or added in kula
+      $untouched_awards_result = $this->db->db_select('FAID_STUDENT_AWARDS', 'faidstuawrds')
+        ->fields('faidstuawrds', array('AWARD_ID', 'AWARD_STATUS', 'DISBURSEMENT_DATE', 'GROSS_AMOUNT', 'NET_AMOUNT', 'ORIGINAL_AMOUNT', 'SHOW_ON_STATEMENT', 'AWARD_CODE_ID'))
+        ->join('FAID_AWARD_CODE', 'awardcode', 'faidstuawrds.AWARD_CODE_ID = awardcode.AWARD_CODE_ID')
+        ->fields('awardcode', array('AWARD_CODE', 'AWARD_DESCRIPTION'))
+        ->join('FAID_STUDENT_AWARD_YEAR_TERMS', 'faidstuawrdyrtrm', 'faidstuawrds.AWARD_YEAR_TERM_ID = faidstuawrdyrtrm.AWARD_YEAR_TERM_ID')
+        ->fields('faidstuawrdyrtrm', array('AWARD_YEAR_TERM_ID', 'PERCENTAGE', 'ORGANIZATION_TERM_ID', 'SEQUENCE'))
+        ->join('FAID_STUDENT_AWARD_YEAR', 'faidstuawardyr', 'faidstuawrdyrtrm.AWARD_YEAR_ID = faidstuawardyr.AWARD_YEAR_ID')
+        ->fields('faidstuawardyr', array('AWARD_YEAR_ID', 'AWARD_YEAR'))
+        ->join('FAID_STUDENT_AWARD_YEAR_AWARDS', 'faidawardyearawards', 'faidawardyearawards.AWARD_YEAR_ID = faidstuawardyr.AWARD_YEAR_ID AND awardcode.AWARD_CODE_ID = faidawardyearawards.AWARD_CODE_ID')
+        ->fields('faidawardyearawards', array('AWARD_YEAR_AWARD_ID'))
+        ->condition('faidstuawardyr.STUDENT_ID', $pf_stu_award['alternate_id'])
+        ->condition('faidstuawardyr.AWARD_YEAR', $pf_stu_award['award_year_token'])
+        ->condition('faidstuawrds.AWARD_ID', $kula_award, 'NOT IN')
+        ->execute();
+      while ($untouched_award = $untouched_awards_result->fetch()) {
+      
+        $this->posterFactory->newPoster()->noLog()->delete('HEd.FAID.Student.Award', $untouched_award['AWARD_ID'])->process();
+        
+        // check if award year record still has children
+        $faid_student_award_year = $this->db->db_select('FAID_STUDENT_AWARDS', 'stuawardsyears')
+          ->expressions('stuawardyears', array('COUNT(*)' => 'total'))
+          ->join('FAID_STUDENT_AWARD_YEAR_TERMS', 'stuawardyearterms', 'stuawardyearterms.AWARD_YEAR_TERM_ID = stuawardsyears.AWARD_YEAR_TERM_ID')
+          ->condition('stuawardsyears.AWARD_CODE_ID', $untouched_award['AWARD_CODE_ID'])
+          ->condition('stuawardyearterms.AWARD_YEAR_ID', $untouched_award['AWARD_YEAR_ID'])
+          ->execute()->fetch();
+        if ($faid_student_award_year == 0) {
+          $this->posterFactory->newPoster()->noLog()->delete('HEd.FAID.Student.AwardYear.Award', $untouched_award['AWARD_YEAR_AWARD_ID'])->process();
+        }
+                // FAID_STUDENT_AWARD_YEAR_AWARDS
+      
+      } // end while
       
     } // end while on $stu_awards
     
