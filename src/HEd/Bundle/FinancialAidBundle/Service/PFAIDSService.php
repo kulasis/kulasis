@@ -533,17 +533,19 @@ class PFAIDSService {
         ->fields('faidstuawardyr', array('AWARD_YEAR_ID', 'AWARD_YEAR'))
         ->join('FAID_STUDENT_AWARD_YEAR_AWARDS', 'faidawardyearawards', 'faidawardyearawards.AWARD_YEAR_ID = faidstuawardyr.AWARD_YEAR_ID AND awardcode.AWARD_CODE_ID = faidawardyearawards.AWARD_CODE_ID')
         ->fields('faidawardyearawards', array('AWARD_YEAR_AWARD_ID'))
-        ->condition('faidstuawardyr.STUDENT_ID', $pf_stu_award['alternate_id'])
-        ->condition('faidstuawardyr.AWARD_YEAR', $pf_stu_award['award_year_token'])
-        ->condition('faidstuawrds.AWARD_ID', $kula_award, 'NOT IN')
-        ->execute();
+        ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = faidstuawardyr.STUDENT_ID')
+        ->condition('cons.PERMANENT_NUMBER', $pf_stu_award['alternate_id'])
+        ->condition('faidstuawardyr.AWARD_YEAR', $pf_stu_award['award_year_token']);
+      if (count($kula_award) > 0) {
+        $untouched_awards_result = $untouched_awards_result->condition('faidstuawrds.AWARD_ID', $kula_award, 'NOT IN');
+      }
+        $untouched_awards_result = $untouched_awards_result->execute();
       while ($untouched_award = $untouched_awards_result->fetch()) {
-      
         $this->posterFactory->newPoster()->noLog()->delete('HEd.FAID.Student.Award', $untouched_award['AWARD_ID'])->process();
         
         // check if award year record still has children
         $faid_student_award_year = $this->db->db_select('FAID_STUDENT_AWARDS', 'stuawardsyears')
-          ->expressions('stuawardyears', array('COUNT(*)' => 'total'))
+          ->expression('COUNT(*)', 'total')
           ->join('FAID_STUDENT_AWARD_YEAR_TERMS', 'stuawardyearterms', 'stuawardyearterms.AWARD_YEAR_TERM_ID = stuawardsyears.AWARD_YEAR_TERM_ID')
           ->condition('stuawardsyears.AWARD_CODE_ID', $untouched_award['AWARD_CODE_ID'])
           ->condition('stuawardyearterms.AWARD_YEAR_ID', $untouched_award['AWARD_YEAR_ID'])
@@ -551,7 +553,6 @@ class PFAIDSService {
         if ($faid_student_award_year == 0) {
           $this->posterFactory->newPoster()->noLog()->delete('HEd.FAID.Student.AwardYear.Award', $untouched_award['AWARD_YEAR_AWARD_ID'])->process();
         }
-                // FAID_STUDENT_AWARD_YEAR_AWARDS
       
       } // end while
       
