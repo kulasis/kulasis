@@ -297,7 +297,7 @@ class SISBillingStatementReportController extends ReportController {
       ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION'))
       ->condition('faidstuawardyr.STUDENT_ID', $student_id)
       ->condition('term.TERM_ID', $term_id)
-      ->condition('faidstuawrds.AWARD_STATUS', 'PEND')
+      ->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'AWAR'))
       ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
       ->condition('faidstuawrds.NET_AMOUNT', 0, '>')
       ->execute();
