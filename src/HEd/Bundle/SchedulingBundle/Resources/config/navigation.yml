@@ -277,3 +277,21 @@ Student.HEd.Student:
       display_name: "Schedule"
       sort: 1
       route: student_HEd_student_schedule
+
+SIS.Utility:
+  description: "Utility"
+  display_name: Utility
+  type: form_group
+  portal: sis
+  sort: 5
+  forms:
+    Combiner:
+      description: "Combiner"
+      display_name: "Combiner"
+      sort: 1
+      tabs:
+        Course:
+          description: "Course Combiner"
+          display_name: "Course"
+          route: sis_HEd_courses_combiner
+          sort: 2

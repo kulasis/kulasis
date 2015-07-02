@@ -149,6 +149,10 @@ sis_HEd_courses_add:
   defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:add }
   methods: [GET]
 
+sis_HEd_courses_combiner: 
+    path:     /offering/courses/combiner
+    defaults: { _controller: KulaHEdSchedulingBundle:SISCourses:combine }
+
 sis_HEd_courses_books:
   path: /offering/courses/books
   defaults: { _controller: KulaHEdSchedulingBundle:SISBooks:books }

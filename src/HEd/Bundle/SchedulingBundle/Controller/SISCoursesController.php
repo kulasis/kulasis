@@ -101,5 +101,22 @@ class SISCoursesController extends Controller {
     $data = $this->chooser('HEd.Course')->createChooserMenu($this->request->query->get('q'));
     return $this->JSONResponse($data);
   }
+  
+  public function combineAction() {
+    $this->authorize();
+    
+    $combine = $this->request->request->get('non');
+    if (isset($combine['HEd.Course']['delete']['HEd.Course.ID']['value']) AND isset($combine['HEd.Course']['keep']['HEd.Course.ID']['value'])) {
+      
+      if ($result = $this->get('kula.Core.Combine')->combine('STUD_COURSE', $combine['HEd.Course']['delete']['HEd.Course.ID']['value'], $combine['HEd.Course']['keep']['HEd.Course.ID']['value'])) {
+        $this->addFlash('success', 'Combined courses.');
+      } else {
+        $this->addFlash('error', 'Unable to combined courses.');
+      }
+      
+    }
 
+    return $this->render('KulaHEdSchedulingBundle:SISCourses:combine.html.twig');
+  }
+  
 }
