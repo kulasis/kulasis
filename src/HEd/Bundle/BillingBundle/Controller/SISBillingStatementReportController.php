@@ -103,8 +103,11 @@ class SISBillingStatementReportController extends ReportController {
       ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
       ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
       ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
-      ->condition($or_query_conditions)
-      ->groupBy('CONSTITUENT_ID')
+      ->condition($or_query_conditions);
+    if (isset($report_settings['ONLY_FOCUS_ORGANIZATION_BALANCES']) AND $report_settings['ONLY_FOCUS_ORGANIZATION_BALANCES'] == 'Y') {
+      $terms_with_balances_result = $terms_with_balances_result->condition('org.ORGANIZATION_ID', $this->focus->getSchoolIDs());
+    }
+    $terms_with_balances_result = $terms_with_balances_result->groupBy('CONSTITUENT_ID')
       ->orderBy('CONSTITUENT_ID');
     //echo $terms_with_balances_result->sql();
     //var_dump($terms_with_balances_result->arguments());
