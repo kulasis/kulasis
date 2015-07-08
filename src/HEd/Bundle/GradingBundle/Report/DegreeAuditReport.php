@@ -153,7 +153,7 @@ class DegreeAuditReport extends BaseReport {
     $this->SetFont('Arial', '', 7);
     $this->Cell(65,3,$row['GROUP_NAME'],'LT',0,'L');
     $this->Cell(5, 3, 'Min:', 'T', 0, 'R');
-    $this->Cell(8,3,sprintf('%0.2f', round($row['CREDITS_REQUIRED'])), 'T',0,'R');
+    $this->Cell(8,3,sprintf('%0.2f', round($row['CREDITS_REQUIRED'], 2, PHP_ROUND_HALF_UP)), 'T',0,'R');
     $this->Cell(5,6,'','T',0,'L');
     $this->Cell(15,6,'','RT',0,'L');
     $this->Ln(3);
@@ -336,18 +336,18 @@ class DegreeAuditReport extends BaseReport {
     if (!isset($this->req_grp_totals[$req_id]))
       $this->req_grp_totals[$req_id] = 0;
     $this->total_degree_completed += $this->req_grp_totals[$req_id];
-    $this->Cell(30,3,'Credits Completed: '.sprintf('%0.2f', round($this->req_grp_totals[$req_id])),'LB',0,'L');
-    $this->Cell(68,3,'Credits Remaining: '.sprintf('%0.2f', round($row['CREDITS_REQUIRED'] - $this->req_grp_totals[$req_id])),'RB',0,'L');
+    $this->Cell(30,3,'Credits Completed: '.sprintf('%0.2f', round($this->req_grp_totals[$req_id], 2, PHP_ROUND_HALF_UP)),'LB',0,'L');
+    $this->Cell(68,3,'Credits Remaining: '.sprintf('%0.2f', round($row['CREDITS_REQUIRED'] - $this->req_grp_totals[$req_id], 2, PHP_ROUND_HALF_UP)),'RB',0,'L');
     $this->Ln(7);
   }
   
   public function degree_footer_row() {
     $this->SetFont('Arial', '', 7);
-    $this->Cell(30,3,'Total Credits Minimum: '.sprintf('%0.2f', round($this->total_degree_needed)),0,0,'L');
+    $this->Cell(30,3,'Total Credits Minimum: '.sprintf('%0.2f', round($this->total_degree_needed, 2, PHP_ROUND_HALF_UP)),0,0,'L');
     $this->Ln(3);
-    $this->Cell(30,3,'Total Credits Completed: '.sprintf('%0.2f', round($this->total_degree_completed)),0,0,'L');
+    $this->Cell(30,3,'Total Credits Completed: '.sprintf('%0.2f', round($this->total_degree_completed, 2, PHP_ROUND_HALF_UP)),0,0,'L');
     $this->Ln(3);
-    $this->Cell(20,3,'Total Credits Remaining: '.sprintf('%0.2f', round($this->total_degree_needed - $this->total_degree_completed)),0,0,'L');
+    $this->Cell(20,3,'Total Credits Remaining: '.sprintf('%0.2f', round($this->total_degree_needed - $this->total_degree_completed, 2, PHP_ROUND_HALF_UP)),0,0,'L');
     $this->Ln(7);
   }
   
