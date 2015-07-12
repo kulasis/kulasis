@@ -538,7 +538,7 @@ function navigation_menuListener(event) {
 			// replace all {panel_num} with new window number
 			msg = navigation_replaceAllWindowIDPlaceholders(msg, currentWindow);
 			navigation_updateWindow(currentWindow, msg, options['windowTitle'], null);
-		}, method, confirmText); 
+    }, method, confirmText); 
 }
 
 function navigation_tabListener(event) {
@@ -764,8 +764,10 @@ function getLink(url, divWindow, divToLoad, options, onsuccess, method, confirmT
 			$('#myModal').show();
 		},
 		success: function(msg) {
+      
 		  // update url & history
 			if (msg.type == 'form_error') {
+
 				// Get current window number
 				var windowNumber = $('#window_bar .selected-window-element').data('window');
 				// Get current active tab 
@@ -777,7 +779,7 @@ function getLink(url, divWindow, divToLoad, options, onsuccess, method, confirmT
 				}
 				
 				// set error message		
-				var alert_element = $('#' + activeTabID + '_alert');
+        var alert_element = $('#' + activeTabID + '_content > div.window_content').prepend("<div class=\"alert alert-error\">" + msg.message +"</div>");
 				alert_element.html(msg.message);
 				alert_element.addClass('alert alert-error');
 			} else {
