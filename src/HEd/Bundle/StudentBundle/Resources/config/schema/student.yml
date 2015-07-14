@@ -205,7 +205,7 @@ HEd.Student:
       description: "Alien Number"
       db_column_name: ALIEN_NUMBER
       db_column_type: varchar
-      db_column_length: 5
+      db_column_length: 50
       db_column_null: true
       field_type: text
       field_size: 15
