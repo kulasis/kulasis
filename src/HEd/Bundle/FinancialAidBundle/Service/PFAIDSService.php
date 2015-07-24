@@ -290,7 +290,7 @@ class PFAIDSService {
     
     if ($connection) {
     
-    $kula_awards = array();
+    $kula_award = array();
 
     $pf_stu_award_query = "SELECT say_fm_stu.stu_award_year_token, stu_award_year.award_year_token, primary_efc, secondary_efc, say_fm_stu.fisap_income, student.alternate_id, tot_budget
       FROM stu_award_year 

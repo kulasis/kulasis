@@ -45,7 +45,7 @@ class SISHomeFinancialAidController extends Controller {
       ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID'))
       ->condition('awardterms.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
       ->condition('transactions.CONSTITUENT_TRANSACTION_ID', null)
-      ->condition('faidstuawrds.AWARD_STATUS', 'PEND')
+      ->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'APPR'), 'IN')
       ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
       ->condition('faidstuawrds.AWARD_CODE_ID', $this->record->getSelectedRecordID())
       ->orderBy('LAST_NAME', 'ASC', 'constituent')
