@@ -477,7 +477,7 @@ class PFAIDSService {
           ->execute()->fetch();
         
         $award = $this->db->db_select('FAID_STUDENT_AWARDS', 'awards', array('nolog' => true))
-          ->fields('awards', array('AWARD_ID'))
+          ->fields('awards', array('AWARD_ID', 'AWARD_STATUS'))
           ->condition('awards.AWARD_YEAR_TERM_ID', $award_term['AWARD_YEAR_TERM_ID'])
           ->condition('awards.AWARD_CODE_ID', $award_code_id['AWARD_CODE_ID'])
           ->execute()->fetch();
@@ -488,6 +488,8 @@ class PFAIDSService {
           $award_status = 'PEND';
         if ($pf_stu_term_award['status'] == 'A')
           $award_status = 'APPR';
+        if ($award['AWARD_STATUS'] == 'AWAR')
+          $award_status = 'AWAR';
       
         // check if award exists
         if ($award['AWARD_ID']) {
