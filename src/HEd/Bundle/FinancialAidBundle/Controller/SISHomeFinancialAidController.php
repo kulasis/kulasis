@@ -48,6 +48,7 @@ class SISHomeFinancialAidController extends Controller {
       ->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'APPR'), 'IN')
       ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
       ->condition('faidstuawrds.AWARD_CODE_ID', $this->record->getSelectedRecordID())
+      ->orderBy('AWARD_STATUS', 'ASC', 'faidstuawrds')
       ->orderBy('LAST_NAME', 'ASC', 'constituent')
       ->orderBy('FIRST_NAME', 'ASC', 'constituent')
       ->orderBy('PERMANENT_NUMBER', 'ASC', 'constituent')
