@@ -193,6 +193,7 @@ class SISPackageController extends Controller {
     $award_terms = array();
     $awards = array();
     $awards_terms_totals = array();
+    $pfaids_exempt = array();
     
     if ($this->record->getSelectedRecordID()) {
     
@@ -201,8 +202,16 @@ class SISPackageController extends Controller {
         ->condition('TERM_ID', $this->focus->getTermID())
         ->execute()->fetch();
       
-      $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
-      $pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $this->record->getSelectedRecord()['PERMANENT_NUMBER']);
+      $pfaids_exempt = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('PFAIDS_EXEMPT'))
+        ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
+        ->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
+        ->execute()->fetch();
+      
+      if ($pfaids_exempt['PFAIDS_EXEMPT'] == '0') {
+        $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
+        $pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $this->record->getSelectedRecord()['PERMANENT_NUMBER']);
+      }
       
       $award_year = $this->db()->db_select('FAID_STUDENT_AWARD_YEAR', 'faidstuawardyr')
         ->fields('faidstuawardyr', array('AWARD_YEAR_ID', 'AWARD_YEAR', 'PRIMARY_EFC', 'SECONDARY_EFC', 'TOTAL_INCOME', 'TOTAL_COST_OF_ATTENDANCE'))
@@ -256,6 +265,6 @@ class SISPackageController extends Controller {
       }
 
     }
-    return $this->render('KulaHEdFinancialAidBundle:SISPackage:package_index.html.twig', array('award_year' => $award_year, 'award_terms' => $award_terms, 'awards' => $awards, 'awards_terms_totals' => $awards_terms_totals));
+    return $this->render('KulaHEdFinancialAidBundle:SISPackage:package_index.html.twig', array('award_year' => $award_year, 'award_terms' => $award_terms, 'awards' => $awards, 'awards_terms_totals' => $awards_terms_totals, 'pfaids_exempt' => $pfaids_exempt));
   }
 }
