@@ -397,10 +397,11 @@ class PFAIDSService {
       } // end if on 2nd level check
       
       // get award year awards
-      $pf_stu_award_year_awards = mssql_query("SELECT actual_amt, fund_ledger_number
+      $pf_stu_award_year_awards = mssql_query("SELECT sum(actual_amt) AS [actual_amt], fund_ledger_number
         FROM stu_award
         JOIN funds ON funds.fund_token = stu_award.fund_ay_token
-        WHERE stu_award.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."'");
+        WHERE stu_award.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."'
+		GROUP BY fund_ledger_number");
       while ($pf_stu_award_year_award = mssql_fetch_array($pf_stu_award_year_awards)) {
         
         // check if award year award exists
@@ -447,12 +448,15 @@ class PFAIDSService {
       } // end while on award year awards
       
       // get awards for terms
-      $pf_stu_term_awards = mssql_query("SELECT poe.poe_token, poe_dcycle_seqn, fund_ledger_number, scheduled_date, cod_disbursement_date, scheduled_amount, gross_disbursement_amount, net_disbursement_amount, stu_award.status
+      $pf_stu_term_awards = mssql_query("SELECT poe.poe_token, poe_dcycle_seqn, fund_ledger_number, max(scheduled_date) as [scheduled_date], 
+	  max(cod_disbursement_date) AS [cod_disbursement_date], sum(scheduled_amount) AS [scheduled_amount], 
+	  sum(gross_disbursement_amount) as [gross_disbursement_amount], sum(net_disbursement_amount) AS [net_disbursement_amount], stu_award.status
         FROM stu_award_transactions
         JOIN poe ON poe.poe_token = stu_award_transactions.poe_token
         JOIN stu_award ON stu_award.stu_award_token = stu_award_transactions.stu_award_token
         JOIN funds ON funds.fund_token = stu_award.fund_ay_token
-        WHERE stu_award_transactions.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."' AND scheduled_amount > 0 AND stu_award.status IN ('A','P')");
+        WHERE stu_award_transactions.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."' AND scheduled_amount > 0 AND stu_award.status IN ('A','P')
+		GROUP BY poe.poe_token, poe_dcycle_seqn, fund_ledger_number, stu_award.status");
       while ($pf_stu_term_award = mssql_fetch_array($pf_stu_term_awards)) {
       
         // determine org term id
@@ -495,13 +499,15 @@ class PFAIDSService {
         if ($award['AWARD_ID']) {
           $kula_award[] = $award['AWARD_ID'];
           
-          // update award
-          $this->posterFactory->newPoster()->noLog()->edit('HEd.FAID.Student.Award', $award['AWARD_ID'], array(
-            'HEd.FAID.Student.Award.AwardStatus' => ($award_status != '') ? $award_status : null,
-            'HEd.FAID.Student.Award.DisbursementDate' => ($pf_stu_term_award['cod_disbursement_date'] != '') ? date('Y-m-d', strtotime($pf_stu_term_award['cod_disbursement_date'])) : null,
-            'HEd.FAID.Student.Award.GrossAmount' => $pf_stu_term_award['scheduled_amount'],
-            'HEd.FAID.Student.Award.NetAmount' => ($pf_stu_term_award['net_disbursement_amount'] > 0) ? $pf_stu_term_award['net_disbursement_amount'] : $pf_stu_term_award['scheduled_amount']
-          ))->process()->getResult();
+		  if ($award_status != 'AWAR') {
+			  // update award
+			  $this->posterFactory->newPoster()->noLog()->edit('HEd.FAID.Student.Award', $award['AWARD_ID'], array(
+				'HEd.FAID.Student.Award.AwardStatus' => ($award_status != '') ? $award_status : null,
+				'HEd.FAID.Student.Award.DisbursementDate' => ($pf_stu_term_award['cod_disbursement_date'] != '') ? date('Y-m-d', strtotime($pf_stu_term_award['cod_disbursement_date'])) : null,
+				'HEd.FAID.Student.Award.GrossAmount' => $pf_stu_term_award['scheduled_amount'],
+				'HEd.FAID.Student.Award.NetAmount' => ($pf_stu_term_award['net_disbursement_amount'] > 0) ? $pf_stu_term_award['net_disbursement_amount'] : $pf_stu_term_award['scheduled_amount']
+			  ))->process()->getResult();
+			}
           
         } else {
           
