@@ -300,12 +300,30 @@ class SISBillingStatementReportController extends ReportController {
       ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION'))
       ->condition('faidstuawardyr.STUDENT_ID', $student_id)
       ->condition('term.TERM_ID', $term_id)
-      ->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'APPR'))
+      ->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'APPR', 'AWAR'))
       ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
       ->condition('faidstuawrds.NET_AMOUNT', 0, '>')
       ->execute();
     while ($awards_row = $awards_result->fetch()) {
-      $this->pdf->fa_table_row($awards_row);
+
+      if ($awards_row['AWARD_STATUS'] == 'AWAR') {
+
+        // Check if fully awarded on bill
+        $trans_awards = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+          ->expression('SUM(AMOUNT)', 'total_amount')
+          ->condition('transactions.CONSTITUENT_ID', $student_id)
+          ->condition('transactions.AWARD_ID', $awards_row['AWARD_ID'])
+          ->execute()->fetch();
+
+        if ($trans_awards['total_amount'] < $awards_row['NET_AMOUNT']) {
+          $awards_row['NET_AMOUNT'] = $awards_row['NET_AMOUNT'] - (-1*$trans_awards['total_amount']);
+          $this->pdf->fa_table_row($awards_row);
+        }
+        
+      } else {
+        $this->pdf->fa_table_row($awards_row);
+      }
+      
     }
     
   }
