@@ -1,0 +1,38 @@
+{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Emergency Contacts
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_emergency', 'STUD_STUDENT_EMERGENCY_CONTACT') }}
+</span>
+</div>
+<table id="window_window_num_data_table_emergency" class="data-table">
+<thead>
+  {{ kula_field_name({ delete: true, field: 'HEd.Student.EmergencyContact.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Student.EmergencyContact.Sort', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.EmergencyContact.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.EmergencyContact.Phone', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, field: 'HEd.Student.EmergencyContact.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.EmergencyContact.StudentID', value: kula_core_record.getSelectedRecord.STAFF_ID, hidden: true }) }}
+  {{ kula_field({ add: true, delete: true, field: 'HEd.Student.EmergencyContact.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.EmergencyContact.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.EmergencyContact.Sort', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.EmergencyContact.Name', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.EmergencyContact.Phone', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Student.EmergencyContact.ID', prepend_html: '</tr>' }) }}
+  {% for emergency in emergency_contacts %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'HEd.Student.EmergencyContact.ID', db_row_id: emergency.EMERGENCY_CONTACT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'HEd.Student.EmergencyContact.Sort', db_row_id: emergency.EMERGENCY_CONTACT_ID, value: emergency.SORT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.EmergencyContact.Name', db_row_id: emergency.EMERGENCY_CONTACT_ID, value: emergency.EMERGENCY_CONTACT_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.EmergencyContact.Phone', db_row_id: emergency.EMERGENCY_CONTACT_ID, value: emergency.EMERGENCY_CONTACT_PHONE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

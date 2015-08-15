@@ -50,3 +50,27 @@ sis_HEd_school_staff_orgterm_chooser:
 sis_HEd_school_staff_orgterms:
   path: /staff/orgterms
   defaults: { _controller: KulaHEdSchoolBundle:SISStaff:staff_orgterms }
+
+sis_HEd_school_staff_addresses:
+  path: /staff/addresses
+  defaults: { _controller: KulaHEdSchoolBundle:SISContactInfo:addresses }
+
+sis_HEd_school_staff_addresses_detail:
+  path: /staff/addresses/detail/{sub_id}
+  defaults: { _controller: KulaHEdSchoolBundle:SISContactInfo:detail }
+
+sis_HEd_school_staff_emailaddress:
+  path: /staff/emailaddresses
+  defaults: { _controller: KulaHEdSchoolBundle:SISContactInfo:emailAddresses }
+
+sis_HEd_school_staff_emergencycontacts:
+  path: /staff/emergencycontacts
+  defaults: { _controller: KulaHEdSchoolBundle:SISContactInfo:emergencyContacts }
+
+sis_HEd_school_staff_phones:
+  path: /staff/phones
+  defaults: { _controller: KulaHEdSchoolBundle:SISContactInfo:phones }
+
+sis_HEd_school_staff_addresses_add:
+  path: /staff/addresses/add
+  defaults: { _controller: KulaHEdSchoolBundle:SISContactInfo:add_address }
