@@ -46,7 +46,7 @@ class SISBillingController extends Controller {
         ->execute()->fetchAll();
       
       foreach($terms_with_balances as $term_with_balance) {
-        $terms_total += $term_with_balance['total_amount'];
+        $terms_total = bcadd($term_with_balance['total_amount'], $terms_total, 2);
       }
 
       $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
@@ -65,7 +65,7 @@ class SISBillingController extends Controller {
         ->execute()->fetchAll();
     
         foreach($transactions as $transaction) {
-          $transactions_total += $transaction['AMOUNT'];
+          $transactions_total = bcadd($transaction['AMOUNT'], $transactions_total, 2);
         }
         
     }
