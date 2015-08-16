@@ -40,3 +40,83 @@ Core.NonOrganization:
       field_size: 30
       column_name: "Conversion Non Organization Number"
       label_name: "Conv Non Org Number"
+    SchoolCodeNumber:
+      description: "School Code Number"
+      db_column_name: SCHOOL_CODE_NUMBER
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: true
+      field_type: text
+      field_size: 13
+      column_name: "School Code Number"
+      label_name: "School Code Number"
+    Address:
+      description: "Address"
+      db_column_name: ADDRESS
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Address"
+      label_name: "Address"
+    City:
+      description: "City"
+      db_column_name: CITY
+      db_column_type: varchar
+      db_column_length: 200
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "City"
+      label_name: "City"
+    State:
+      description: "State"
+      db_column_name: STATE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "State"
+      label_name: "State"
+    ZipCode:
+      description: "Zip Code"
+      db_column_name: ZIP_CODE
+      db_column_type: varchar
+      db_column_length: 15
+      db_column_null: true
+      field_type: text
+      field_size: 15
+      column_name: "Zip Code"
+      label_name: "Zip Code"
+    Province:
+      description: "Province"
+      db_column_name: PROVINCE
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Province"
+      label_name: "Province"
+    Country:
+      description: "Country"
+      db_column_name: COUNTRY
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Country"
+      label_name: "Country"
+    PostalCode:
+      description: "Postal Code"
+      db_column_name: POSTAL_CODE
+      db_column_type: varchar
+      db_column_length: 30
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Postal Code"
+      label_name: "Postal Code"
