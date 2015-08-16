@@ -153,6 +153,16 @@ HEd.Student:
       lookup: Constituent.Address.Country
       column_name: "Citizenship Country"
       label_name: "Citizenship Country"
+    CitizenshipCountry2:
+      description: "Citizenship Country 2"
+      db_column_name: CITIZENSHIP_COUNTRY_2
+      db_column_type: varchar
+      db_column_length: 2
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.Address.Country
+      column_name: "Citizenship 2 Country"
+      label_name: "Citizenship 2 Country"
     Veteran:
       description: "Veteran"
       db_column_name: VETERAN
