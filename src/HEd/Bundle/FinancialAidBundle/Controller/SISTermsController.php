@@ -66,9 +66,17 @@ class SISTermsController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       
-      $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
-      $pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $this->record->getSelectedRecord()['PERMANENT_NUMBER']);
-
+      $pfaids_exempt = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('PFAIDS_EXEMPT'))
+        ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
+        ->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
+        ->execute()->fetch();
+      
+      if ($pfaids_exempt['PFAIDS_EXEMPT'] == '0') {
+        $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
+        $pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $this->record->getSelectedRecord()['PERMANENT_NUMBER']);
+      }
+      
       $award_terms = $this->db()->db_select('FAID_STUDENT_AWARD_YEAR_TERMS', 'faidstuawrdyrtrm')
         ->fields('faidstuawrdyrtrm', array('AWARD_YEAR_TERM_ID', 'AWARD_YEAR_ID', 'PERCENTAGE', 'ORGANIZATION_TERM_ID', 'SEQUENCE'))
         ->join('FAID_STUDENT_AWARD_YEAR', 'faidstuawardyr', 'faidstuawrdyrtrm.AWARD_YEAR_ID = faidstuawardyr.AWARD_YEAR_ID')

@@ -49,9 +49,17 @@ class SISAwardsController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
 
-      $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
-      $pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $this->record->getSelectedRecord()['PERMANENT_NUMBER']);
-    
+      $pfaids_exempt = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('PFAIDS_EXEMPT'))
+        ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
+        ->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
+        ->execute()->fetch();
+      
+      if ($pfaids_exempt['PFAIDS_EXEMPT'] == '0') {
+        $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
+        $pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $this->record->getSelectedRecord()['PERMANENT_NUMBER']);
+      }
+      
       $awards = $this->db()->db_select('FAID_STUDENT_AWARDS', 'faidstuawrds')
         ->fields('faidstuawrds', array('AWARD_ID', 'AWARD_STATUS', 'DISBURSEMENT_DATE', 'GROSS_AMOUNT', 'NET_AMOUNT', 'ORIGINAL_AMOUNT', 'SHOW_ON_STATEMENT', 'AWARD_CODE_ID'))
         ->join('FAID_AWARD_CODE', 'awardcode', 'faidstuawrds.AWARD_CODE_ID = awardcode.AWARD_CODE_ID')
