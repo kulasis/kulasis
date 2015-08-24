@@ -9,9 +9,9 @@ class CourseChooser extends Chooser {
   public function search($q) {
     
     $query_conditions = $this->db()->db_or();
-    $query_conditions = $query_conditions->condition('COURSE_TITLE', $q.'%', 'LIKE');
-    $query_conditions = $query_conditions->condition('COURSE_NUMBER', $q.'%', 'LIKE');
-    $query_conditions = $query_conditions->condition('SHORT_TITLE', $q.'%', 'LIKE');
+    $query_conditions = $query_conditions->condition('COURSE_TITLE', '%'.$q.'%', 'LIKE');
+    $query_conditions = $query_conditions->condition('COURSE_NUMBER', '%'.$q.'%', 'LIKE');
+    $query_conditions = $query_conditions->condition('SHORT_TITLE', '%'.$q.'%', 'LIKE');
     
     $data = array();
     
