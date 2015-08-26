@@ -315,7 +315,7 @@ class SISBillingStatementReportController extends ReportController {
           ->condition('transactions.AWARD_ID', $awards_row['AWARD_ID'])
           ->execute()->fetch();
 
-        if ($trans_awards['total_amount'] < $awards_row['NET_AMOUNT']) {
+        if (-1 * $trans_awards['total_amount'] < $awards_row['NET_AMOUNT']) {
           $awards_row['NET_AMOUNT'] = $awards_row['NET_AMOUNT'] - (-1*$trans_awards['total_amount']);
           $this->pdf->fa_table_row($awards_row);
         }
