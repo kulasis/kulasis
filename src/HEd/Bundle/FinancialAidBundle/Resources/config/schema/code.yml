@@ -113,3 +113,23 @@ HEd.FAID.PFAID.POE:
       chooser: Core.Term
       column_name: "Term ID"
       label_name: "Term ID"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    CustomFieldTermCreditTotal:
+      description: "Custom Field Term Credit Total"
+      db_column_name: CUSTOM_TERM_CREDIT_TOTAL
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: true
+      field_type: text
+      field_size: 12
+      column_name: "Custom Field Term Credit Total"
+      label_name: "Custom Field Term Credit Total"

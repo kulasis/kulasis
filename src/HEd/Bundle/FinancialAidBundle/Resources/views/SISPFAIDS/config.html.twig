@@ -10,6 +10,8 @@ POEs
   <th class="data-table-cell-row-header">#</th>
   <th class="data-table-cell-row-header">Name</th>
   {{ kula_field_name({ field: 'HEd.FAID.PFAID.POE.TermID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.FAID.PFAID.POE.Level', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.FAID.PFAID.POE.CustomFieldTermCreditTotal', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   </tr>
 </thead>
 <tbody>
@@ -18,6 +20,8 @@ POEs
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
     <td>{{ poe.attend_desc }}</td>
     {{ kula_field({ edit: true, field: 'HEd.FAID.PFAID.POE.TermID', db_row_id: poe.poe_token, value: poe.TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.FAID.PFAID.POE.Level', db_row_id: poe.poe_token, value: poe.LEVEL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.FAID.PFAID.POE.CustomFieldTermCreditTotal', db_row_id: poe.poe_token, value: poe.CUSTOM_TERM_CREDIT_TOTAL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
   {% endfor %}
 </tbody>

@@ -76,6 +76,8 @@ class SISPFAIDSController extends Controller {
         $data[$i] = $poes_pfaids[$poe['poe_token']];
         $data[$i]['poe_token'] = $poe['poe_token'];
         $data[$i]['TERM_ID'] = $poe['TERM_ID'];
+        $data[$i]['LEVEL'] = $poe['LEVEL'];
+        $data[$i]['CUSTOM_TERM_CREDIT_TOTAL'] = $poe['CUSTOM_TERM_CREDIT_TOTAL'];
         $i++;
       }
     }

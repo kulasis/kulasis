@@ -214,6 +214,24 @@ class PFAIDSService {
           $pf_data['decimal2_value'] = sprintf('%0.2f', round($stu_row['TRNS_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP));
         }
         
+        // Loop through POEs
+        $poes_result = $this->db->db_select('FAID_PFAID_POE', 'poes', array('nolog' => true))
+        ->fields('poes', array('CUSTOM_TERM_CREDIT_TOTAL'))
+        ->join('CORE_TERM', 'term', 'term.TERM_ID = poes.TERM_ID')
+        ->join('STUD_STUDENT_COURSE_HISTORY_TERMS', 'crshisterms', 'crshisterms.TERM = term.TERM_NAME AND crshisterms.LEVEL = poes.LEVEL')
+        ->fields('crshisterms', array('TERM_CREDITS_ATTEMPTED'))
+        ->isNotNull('CUSTOM_TERM_CREDIT_TOTAL')
+        ->condition('crshisterms.STUDENT_ID', $stu_row['STUDENT_ID'])
+        ->execute();
+        $decimal_key = 3;
+        while ($poes = $poes_result->fetch()) {
+          
+          $pf_data['decimal'.$decimal_key.'_field_id'] = "'".$poes['CUSTOM_TERM_CREDIT_TOTAL']."'";
+          $pf_data['decimal'.$decimal_key.'_value'] = sprintf('%0.2f', round($stu_row['TERM_CREDITS_ATTEMPTED'], 2, PHP_ROUND_HALF_UP));
+          
+          $decimal_key++;
+        }
+        
         // check if already exists
         $already_exists = mssql_fetch_array(mssql_query("SELECT ssn, award_year_token FROM external_data WHERE ssn = '".$cleaned_ssn."' AND award_year_token = '".$awardYearToken."'"));
         
