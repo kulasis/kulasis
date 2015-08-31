@@ -14,6 +14,7 @@ HEd.FAID.Award.Status:
     - { code: AWAR, description: "Awarded", sort: 1 }
     - { code: APPR, description: "Approved", sort: 2 }
     - { code: PEND, description: "Pending", sort: 3 }
+    - { code: DENI, description: "Denied", sort: 4 }
 
 Core.Integration.Application:
   description: "Applications"

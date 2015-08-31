@@ -473,7 +473,8 @@ class PFAIDSService {
         JOIN poe ON poe.poe_token = stu_award_transactions.poe_token
         JOIN stu_award ON stu_award.stu_award_token = stu_award_transactions.stu_award_token
         JOIN funds ON funds.fund_token = stu_award.fund_ay_token
-        WHERE stu_award_transactions.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."' AND scheduled_amount > 0 AND stu_award.status IN ('A','P')
+        WHERE stu_award_transactions.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."' AND 
+              ((scheduled_amount > 0 AND stu_award.status IN ('A','P')) OR (stu_award.status IN ('D')))
 		GROUP BY poe.poe_token, poe_dcycle_seqn, fund_ledger_number, stu_award.status");
       while ($pf_stu_term_award = mssql_fetch_array($pf_stu_term_awards)) {
       
@@ -510,6 +511,8 @@ class PFAIDSService {
           $award_status = 'PEND';
         if ($pf_stu_term_award['status'] == 'A')
           $award_status = 'APPR';
+        if ($pf_stu_term_award['status'] == 'D')
+          $award_status = 'DENI';
         if ($award['AWARD_STATUS'] == 'AWAR')
           $award_status = 'AWAR';
       
