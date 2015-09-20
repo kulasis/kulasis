@@ -14,3 +14,7 @@ teacher_HEd_offering_sections_report_classroster_generate:
 teacher_HEd_offering_sections_reports_classroster:
   path: /offering/sections/reports/classroster
   defaults: { _controller: KulaHEdSchedulingBundle:TeacherClassRosterReport:index }
+
+teacher_HEd_advisory_student_schedule:
+  path: /advisory/student/schedule
+  defaults: { _controller: KulaHEdSchedulingBundle:TeacherStudentSchedule:index }

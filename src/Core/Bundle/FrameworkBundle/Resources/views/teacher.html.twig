@@ -109,6 +109,14 @@
          </div>
           </div>
         </div>
+{% if selected_record_bar_template_path %}
+{% if kula_core_record.getSelectedRecord() %}
+<!-- window selected record bar -->
+<div id="window_window_num_selected_record_bar" class="window_selected_record_bar group">
+  {% include selected_record_bar_template_path %}
+</div>
+{% endif %}
+{% endif %}
 {% set tabsToDisplay = kula_core_navigation.getRequestedNavItem().getTabs(kula_core_permission) %}
 {% if tabsToDisplay %}
     <!-- window tab bar -->

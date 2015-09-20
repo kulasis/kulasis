@@ -164,6 +164,26 @@ class Focus {
     }
     return $students;
   }
+
+  public static function getAdvisingStudentsMenu($db, $staff_organization_term_id) {
+    $students = array();
+
+    if ($staff_organization_term_id) {
+    $students_result = $db->db_select('STUD_STUDENT', 'stu')
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = stu.STUDENT_ID')
+      ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL'))
+      ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER', 'GENDER'))
+      ->condition('stustatus.ADVISOR_ID', $staff_organization_term_id)
+      ->orderBy('LAST_NAME')
+      ->orderBy('FIRST_NAME')
+      ->execute();
+    while ($students_row = $students_result->fetch()) {
+      $students[$students_row['STUDENT_STATUS_ID']] = $students_row['LAST_NAME'].', '.$students_row['FIRST_NAME'].' | '.$students_row['GENDER'].' | '.$students_row['LEVEL'] .' | '.$students_row['PERMANENT_NUMBER'].' ';
+    }
+    }
+    return $students;
+  }
   
   private static function createMenuForOrganization($organization, $dashes = null) {
     

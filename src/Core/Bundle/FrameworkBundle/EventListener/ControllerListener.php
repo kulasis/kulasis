@@ -63,7 +63,12 @@ class ControllerListener implements EventSubscriberInterface {
               $this->focus->setSectionFocus($this->getFromRequest('focus_section'), $this->getFromRequest('role_token'));
               $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
             } 
-      
+            
+            if ($this->getFromRequest('focus_advisor_student')) {
+              $this->focus->setAdvisorStudentFocus($this->getFromRequest('focus_advisor_student'), $this->getFromRequest('role_token'));
+              $event->setController(array(new \Kula\Core\Bundle\FrameworkBundle\Controller\FocusController, 'set_focusAction'));
+            } 
+            
             if ($this->focus->getSectionID() == null) {
               $this->focus->setTeacherOrganizationTermFocus();
               $this->focus->setSectionFocus(null);

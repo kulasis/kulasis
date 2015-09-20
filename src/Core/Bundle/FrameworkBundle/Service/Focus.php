@@ -81,6 +81,33 @@ class Focus {
     $this->session->setFocus('Teacher.HEd.Section', $section_id);
   }
   
+  public function setAdvisorStudentFocus($student_status_id = null, $role_token = null) {
+    
+    if ($role_token === null) {
+      $role_token = $this->session->get('initial_role');
+    }
+    
+    // Get focus session info for role
+    $staff_organization_term_id = $this->session->getFocus('staff_organization_term_id');
+    
+    if (!$student_status_id) {
+      $students_result = $db->db_select('STUD_STUDENT', 'stu')
+        ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = stu.STUDENT_ID')
+        ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL'))
+        ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
+        ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER', 'GENDER'))
+        ->condition('stustatus.ADVISOR_ID', $staff_organization_term_id)
+        ->orderBy('LAST_NAME')
+        ->orderBy('FIRST_NAME')
+        ->range(0, 1)
+        ->execute()->fetch();
+      
+      $student_status_id = $students_result['STUDENT_STATUS_ID'];
+    } 
+
+    $this->session->setFocus('Teacher.HEd.Advisor.Student', $student_status_id);
+  }
+  
   public function getSectionID() {
     $session_focus = $this->session->get('focus');
     if (isset($session_focus['Teacher.HEd.Section']))
@@ -143,7 +170,7 @@ class Focus {
       $staff_organization_term_id = $staff_organization_term_id->execute()->fetch();
 
       if ($staff_organization_term_id['STAFF_ORGANIZATION_TERM_ID']) {
-        $this->session->setFocus('staff_organization_term_id', $staff_organization_term_id['STAFF_ORGANIZATION_TERM_ID'], $teacher_id, $role_token);
+        $this->session->setFocus('staff_organization_term_id', $staff_organization_term_id['STAFF_ORGANIZATION_TERM_ID'], $role_token);
       }
       
     }
@@ -157,6 +184,14 @@ class Focus {
     else
       return false;
   }
+  
+  public function getTeacherStaffOrganizationTermID() {
+    $session_focus = $this->session->get('focus');
+    if (isset($session_focus['staff_organization_term_id']))
+      return $session_focus['staff_organization_term_id'];
+    else
+      return false;
+  } 
   
   public function setStudentStatusFocus($student_status_id = null, $role_token = null) {
     
