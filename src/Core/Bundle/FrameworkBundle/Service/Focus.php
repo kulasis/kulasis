@@ -263,6 +263,8 @@ class Focus {
       return $this->term->getAllTermIDs();
     } elseif ($this->session->get('term_id')) {  
       return $this->session->get('term_id');
+    } else {
+      return $this->term->getCurrentTermID();
     }
   }
   

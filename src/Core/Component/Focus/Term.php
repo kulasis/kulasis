@@ -43,6 +43,19 @@ class Term {
     return $this->terms[$termID]['START_DATE'];
   }
   
+  public function getCurrentTermID() {
+    $today = date('Y-m-d');
+    
+    $last_start_date_id = null;
+    
+    foreach ($this->terms as $key => $value) {
+      if ($value['START_DATE'] > $today) {
+        return $last_start_date_id;
+      }
+      $last_start_date_id = $key;
+    }
+  }
+  
   public function __sleep() {
     $this->db = null;
     
