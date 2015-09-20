@@ -10,9 +10,12 @@ class CoreTermsController extends Controller {
     $this->authorize();
     $this->processForm();
     
+    $term_service = $this->get('kula.core.term');
+    
     // Get terms
     $terms = $this->db()->db_select('CORE_TERM')
       ->fields('CORE_TERM')
+      ->condition('START_DATE', $term_service->getStartDate($this->focus->getTermID()), '>=')
       ->orderBy('START_DATE', 'ASC')
       ->orderBy('END_DATE', 'ASC')
       ->orderBy('TERM_ABBREVIATION', 'ASC')
