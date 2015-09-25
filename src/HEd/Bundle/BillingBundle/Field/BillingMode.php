@@ -11,7 +11,7 @@ class BillingMode extends Field {
     $menu = array(
       'STAND' => 'Standard',
       'HOUR' => 'Hourly',
-      'FESS' => 'Fees'
+      'FEES' => 'Fees'
     );
     
     return $menu;
