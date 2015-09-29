@@ -6,3 +6,7 @@ services:
   kula.HEd.grading.termtotals:
     class: Kula\HEd\Bundle\GradingBundle\Service\TermTotalsService
     arguments: ["@kula.core.db", "@kula.core.poster_factory"]
+    
+  kula.HEd.grading.degreeaudit:
+    class: Kula\HEd\Bundle\GradingBundle\Service\DegreeAuditService
+    arguments: ["@kula.core.db"]

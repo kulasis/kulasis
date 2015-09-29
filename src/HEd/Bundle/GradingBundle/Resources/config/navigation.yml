@@ -149,6 +149,19 @@ Teacher.HEd.Class.Grades:
       sort: 2
       route: teacher_HEd_section_grades_dropped
 
+Teacher.HEd.Advisor:
+  description: "Advisor"
+  display_name: "Advisor"
+  type: form_group
+  portal: teacher
+  sort: 2
+  forms:
+    DegreeAudit:
+      description: "Degree Audit"
+      display_name: "Degree Audit"
+      sort: 3
+      route: teacher_HEd_student_degreeaudit
+
 Student.HEd.Student:
   description: "Student"
   display_name: "Student"
