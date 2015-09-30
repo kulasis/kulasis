@@ -175,6 +175,7 @@ class Focus {
       ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
       ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER', 'GENDER'))
       ->condition('stustatus.ADVISOR_ID', $staff_organization_term_id)
+      ->isNull('stustatus.STATUS')
       ->orderBy('LAST_NAME')
       ->orderBy('FIRST_NAME')
       ->execute();
