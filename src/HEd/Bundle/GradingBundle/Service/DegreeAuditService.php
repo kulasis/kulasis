@@ -11,12 +11,27 @@ class DegreeAuditService {
   protected $course_history;
   
   protected $req_grp_totals;
+  
+  protected $degrees;
+  protected $majors;
+  protected $minors;
+  protected $concentrations;
+  
+
+  protected $total_degree_needed;
+  protected $total_degree_completed;
 
   public function __construct(\Kula\Core\Component\DB\DB $db) {
     $this->db = $db;
     $this->output = array();
     $this->course_history = array();
     $this->req_grp_totals = array();
+    $this->degrees = array();
+    $this->majors = array();
+    $this->minors = array();
+    $this->concentrations = array();
+    $total_degree_needed = 0;
+    $total_degree_completed = 0;
   }
   
   public function getDegreeAuditForStudentStatus($student_status_id) {
@@ -36,6 +51,8 @@ class DegreeAuditService {
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
       ->execute()->fetch();
     
+    $this->degrees[] = $student['DEGREE_NAME'];
+    
     // Get Majors
     $row['majors'] = array();
     $majors_result = $this->db->db_select('STUD_STUDENT_DEGREES_MAJORS', 'studmajor')
@@ -46,7 +63,7 @@ class DegreeAuditService {
       ->orderBy('major.MAJOR_NAME', 'ASC')
       ->execute();
     while ($majors_row = $majors_result->fetch()) {
-      $row['majors'][] = $majors_row['MAJOR_NAME'];
+      $this->majors[] = $majors_row['MAJOR_NAME'];
       $row['major_ids'][] = $majors_row['MAJOR_ID'];
     }
     
@@ -60,7 +77,7 @@ class DegreeAuditService {
       ->orderBy('minor.MINOR_NAME', 'ASC')
       ->execute();
     while ($minors_row = $minors_result->fetch()) {
-      $row['minors'][] = $minors_row['MINOR_NAME'];
+      $this->minors[] = $minors_row['MINOR_NAME'];
       $row['minor_ids'][] = $minors_row['MINOR_ID'];
     }
     
@@ -74,7 +91,7 @@ class DegreeAuditService {
       ->orderBy('concentration.CONCENTRATION_NAME', 'ASC')
       ->execute();
     while ($concentrations_row = $concentrations_result->fetch()) {
-      $row['concentrations'][] = $concentrations_row['CONCENTRATION_NAME'];
+      $this->concentrations[] = $concentrations_row['CONCENTRATION_NAME'];
       $row['concentration_ids'][] = $concentrations_row['CONCENTRATION_ID'];
     }
     
@@ -118,7 +135,12 @@ class DegreeAuditService {
     if (isset($requirements['degree'][$student['DEGREE_ID']][$elective_req_id])) {
       $this->outputRequirementSet($elective_req_id, $requirements['degree'][$student['DEGREE_ID']][$elective_req_id], 'Y');
     }
+    
     /*
+    echo "<pre>";
+    print_r($this->course_history);
+    echo "</pre>";
+    
     echo "<pre>";
     print_r($this->output);
     echo "</pre>";
@@ -130,7 +152,7 @@ class DegreeAuditService {
     
     $this->output[$req_id] = $req_row;
     // Loop through courses
-    if ($elective ) { // AND isset($this->pdf->course_history_data['elective'])
+    if ($elective) { // AND isset($this->pdf->course_history_data['elective'])
       if (isset($req_row['courses'])) {
       foreach($req_row['courses'] as $req_crs_id => $req_crs_row) {
         $this->output[$req_id]['courses'][$req_crs_id] = $req_crs_row;
@@ -157,8 +179,12 @@ class DegreeAuditService {
         }
       }
     }
-    $this->output[$req_id]['credits_earned'] = sprintf('%0.2f', round($this->req_grp_totals[$req_id], 2, PHP_ROUND_HALF_UP),'LB',0,'L');
-    $this->output[$req_id]['credits_remain'] = sprintf('%0.2f', round($this->output[$req_id]['CREDITS_REQUIRED'] - $this->req_grp_totals[$req_id], 2, PHP_ROUND_HALF_UP),'LB',0,'L');
+    
+    $this->total_degree_needed += $this->output[$req_id]['CREDITS_REQUIRED'];
+    $this->total_degree_completed += $this->req_grp_totals[$req_id];
+    
+    $this->output[$req_id]['credits_earned'] = sprintf('%0.2f', round($this->req_grp_totals[$req_id], 2, PHP_ROUND_HALF_UP));
+    $this->output[$req_id]['credits_remain'] = sprintf('%0.2f', round($this->output[$req_id]['CREDITS_REQUIRED'] - $this->req_grp_totals[$req_id], 2, PHP_ROUND_HALF_UP));
     
   }
   
@@ -169,6 +195,7 @@ class DegreeAuditService {
       // elective
       if ($elective) {
         foreach($row as $ch_index => $ch) {
+          if ($ch['COURSE_ID']) {
           if (isset($ch['STUDENT_CLASS_ID'])) {
             $ch['status'] = 'In Prog';
             $ch['display_credits'] = $ch['CREDITS'];
@@ -176,10 +203,11 @@ class DegreeAuditService {
             $ch['status'] = 'Comp';
             $ch['display_credits'] = $ch['CREDITS_EARNED'];
           }
-          $this->output[$req_id]['courses'][$row_id] = $ch;
+          $this->output[$req_id]['courses'][] = $ch;
         
           $this->course_history[$ch['COURSE_ID']][0]['used'] = 'Y';
           $this->req_grp_totals[$req_id] += isset($ch['CREDITS_EARNED']) ? $ch['CREDITS_EARNED'] : 0;
+          }
         }
         
       } elseif (isset($this->course_history[$row['COURSE_ID']]) AND count($this->course_history) > 0) {
@@ -242,14 +270,15 @@ class DegreeAuditService {
       // if nothing
       } else {
       
-        if ($row['SHOW_AS_OPTION']) {
+        if ($row['SHOW_AS_OPTION'] == '1') {
          $this->output[$req_id]['courses'][$row_id] = $row;
          if ($row['REQUIRED']) {
            $this->output[$req_id]['courses'][$row_id]['status'] = 'Remain';
          }
-         $this->output[$req_id]['courses'][$row_id]['display_credits'] = $row['CREDITS_REQUIRED'];
-       }
-    }
+         $this->output[$req_id]['courses'][$row_id]['display_credits'] = $row['CREDITS'];
+       
+         }
+      }
   }
   
   private function getCourseHistoryForStudent($student_id, $level, $student_status_id) {
@@ -293,12 +322,12 @@ class DegreeAuditService {
         $current_schedule_row['COURSE_NUMBER'] = $current_schedule_row['class_COURSE_NUMBER'];
         $current_schedule_row['COURSE_TITLE'] = $current_schedule_row['class_COURSE_TITLE'];
         $current_schedule_row['CREDITS'] = $current_schedule_row['CREDITS'];
+        $current_schedule_row['TERM_ABBREVIATION'] = $current_schedule_row['TERM_ABBREVIATION'];
       }
       
       if (!isset($course_history[$current_schedule_row['COURSE_ID']]))
         $course_history[$current_schedule_row['COURSE_ID']][] = $current_schedule_row;
     }
-
     return $course_history;
   }
   
@@ -373,6 +402,34 @@ class DegreeAuditService {
     }
     
     return $requirements;
+  }
+  
+  public function getDegrees() {
+    return $this->degrees;
+  }
+  
+  public function getMajors() {
+    return $this->majors;
+  }
+  
+  public function getMinors() {
+    return $this->minors;
+  }
+  
+  public function getConcentrations() {
+    return $this->concentrations;
+  }
+  
+  public function getTotalDegreeNeeded() {
+    return sprintf('%0.2f', round($this->total_degree_needed, 2, PHP_ROUND_HALF_UP));
+  }
+  
+  public function getTotalDegreeCompleted() {
+    return sprintf('%0.2f', round($this->total_degree_completed, 2, PHP_ROUND_HALF_UP));
+  }
+  
+  public function getTotalDegreeRemaining() {
+    return sprintf('%0.2f', round($this->total_degree_needed - $this->total_degree_completed, 2, PHP_ROUND_HALF_UP));
   }
   
 }

@@ -1,10 +1,30 @@
 {% extends 'KulaCoreFrameworkBundle::teacher.html.twig' %}
 
 {% block content %}
+  <div class="data-table-header-div">
+  Degree Information
+  </div>
+  <table id="window_window_num_data_table_terms" class="data-table">
+  <thead>
+    <th>Degree</th>
+    <th>Majors</th>
+    <th>Minors</th>
+    <th>Concentrations</th>
+  </thead>
+  <tbody>
+    <tr>
+    <td>{{ degrees }}</td>
+    <td>{{ majors }}</td>
+    <td>{{ minors }}</td>
+    <td>{{ concentrations }}</td>
+  </tr>
+    <tr>
+    <td colspan="4">Minimum Credits Needed: {{ total_needed }} | Credits Completed: {{ total_completed }} | Credits Remaining: {{ total_remaining }}</td>
+  </tr>
+  </tbody>
+  </table>
 <div class="data-table-header-div">
 Degree Audit
-<span class="data-table-header-buttons">
-</span>
 </div>
 <table id="window_window_num_data_table_terms" class="data-table">
 <thead>
@@ -24,8 +44,9 @@ Degree Audit
         <th class="data-table-cell-row-header" colspan="2">&nbsp;</th>
       </tr>
       {% for reqgrpcrsid, reqgrpcrs in reqgrp.courses %}
+        {% if reqgrpcrs.SHOW_AS_OPTION or reqgrpcrs.display_credits != '' %}
   <tr>
-    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term', value: reqgrpcrs.TERM, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term', value: reqgrpcrs.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Degree.Requirement.Group.Course.Required', value: reqgrpcrs.REQUIRED ? 'R' : '', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.CourseNumber', value: reqgrpcrs.COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.CourseTitle', value: reqgrpcrs.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
@@ -33,6 +54,7 @@ Degree Audit
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Mark', value: reqgrpcrs.MARK, MARK_SCALE_ID: reqgrpcrs.MARK_SCALE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Degree.Requirement.Group.Course.Required', value: reqgrpcrs.status, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
+      {% endif %}
     {% endfor %}
     <tr>
       <td colspan="7">Credits Completed: {{ reqgrp.credits_earned }} | Credits Remaining: {{ reqgrp.credits_remain }}</td>
