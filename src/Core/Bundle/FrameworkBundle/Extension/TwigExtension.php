@@ -83,7 +83,7 @@ class TwigExtension extends \Twig_Extension {
       $globals_array += array(
         'focus_teachers' => Focus::getTeachers($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getOrganizationTermIDs()),
         'focus_sections' => Focus::getSectionMenu($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getTeacherOrganizationTermID()),
-        'focus_advisor_students' => Focus::getAdvisingStudentsMenu($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getTeacherOrganizationTermID()),
+        'focus_advisor_students' => Focus::getAdvisingStudentsMenu($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getTeacherOrganizationTermID(), $this->container->get('kula.core.focus')->getOrganizationTermIDs()),
       );
     }
     if ($this->session->get('portal') == 'student') {
