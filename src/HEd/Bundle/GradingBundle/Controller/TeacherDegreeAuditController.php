@@ -18,6 +18,7 @@ class TeacherDegreeAuditController extends Controller {
     
     $total_needed = 0;
     $total_completed = 0;
+    $total_remaining = 0;
     
     if ($this->record->getSelectedRecordID()) {
     

@@ -97,8 +97,9 @@ class DegreeAuditService {
     
     $this->course_history = $this->getCourseHistoryForStudent($student['STUDENT_ID'], $student['LEVEL'], $student['STUDENT_STATUS_ID']);
     
+    if ($student['DEGREE_ID']) {
     $requirements = $this->requirements($student['DEGREE_ID'], (isset($row['major_ids'])) ? $row['major_ids'] : null, (isset($row['minor_ids'])) ? $row['minor_ids'] : null, (isset($row['concentration_ids'])) ? $row['concentration_ids'] : null);
-    
+    }
     
     // Get Degree Requirements but not requirement marked as elective
     $elective_req_id = null;
