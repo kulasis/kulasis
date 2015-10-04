@@ -21,7 +21,6 @@ class TeacherDegreeAuditController extends Controller {
     $total_remaining = 0;
     
     if ($this->record->getSelectedRecordID()) {
-    
       $degree_audit_service = $this->get('kula.HEd.grading.degreeaudit');
       $degree_audit = $degree_audit_service->getDegreeAuditForStudentStatus($this->record->getSelectedRecordID());
       $degrees = (count($degree_audit_service->getDegrees()) > 0) ? implode(', ', $degree_audit_service->getDegrees()) : '';

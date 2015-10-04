@@ -41,7 +41,6 @@ class TeacherAdvisorStudentRecord extends Record {
       ->fields('org', array('ORGANIZATION_NAME'))
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
-      ->condition('ADVISOR_ID', $this->focus->getTeacherStaffOrganizationTermID())
       ->condition('STUDENT_STATUS_ID', $record_id)
       ->execute()->fetch();
     return $result;
