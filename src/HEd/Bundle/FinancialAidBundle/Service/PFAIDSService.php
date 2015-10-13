@@ -474,8 +474,9 @@ class PFAIDSService {
         JOIN stu_award ON stu_award.stu_award_token = stu_award_transactions.stu_award_token
         JOIN funds ON funds.fund_token = stu_award.fund_ay_token
         WHERE stu_award_transactions.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."' AND 
-              ((scheduled_amount > 0 AND stu_award.status IN ('A','P')) OR (stu_award.status IN ('D')))
+              ((stu_award.status IN ('A','P')) OR (stu_award.status IN ('D')))
 		GROUP BY poe.poe_token, poe_dcycle_seqn, fund_ledger_number, stu_award.status");
+    // Original line: ((scheduled_amount > 0 AND stu_award.status IN ('A','P')) OR (stu_award.status IN ('D')))
       while ($pf_stu_term_award = mssql_fetch_array($pf_stu_term_awards)) {
       
         // determine org term id
@@ -583,7 +584,7 @@ class PFAIDSService {
           ->condition('stuawardsyears.AWARD_CODE_ID', $untouched_award['AWARD_CODE_ID'])
           ->condition('stuawardyearterms.AWARD_YEAR_ID', $untouched_award['AWARD_YEAR_ID'])
           ->execute()->fetch();
-        if ($faid_student_award_year == 0) {
+        if ($faid_student_award_year['total'] == 0) {
           $this->posterFactory->newPoster()->noLog()->delete('HEd.FAID.Student.AwardYear.Award', $untouched_award['AWARD_YEAR_AWARD_ID'])->process();
         }
       

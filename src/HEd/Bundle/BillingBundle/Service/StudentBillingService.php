@@ -111,8 +111,10 @@ class StudentBillingService {
         ->condition('ratetrans.TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
         ->execute();
         while ($transactions_all_row = $transactions_all_result->fetch()) {
-          $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $transactions_all_row['TRANSACTION_CODE_ID'], date('Y-m-d'), '', $transactions_all_row['AMOUNT']);
-          $this->constituent_billing_service->postTransaction($new_transaction_id);
+          if ($transactions_all_row['AMOUNT'] > 0) {
+            $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $transactions_all_row['TRANSACTION_CODE_ID'], date('Y-m-d'), '', $transactions_all_row['AMOUNT']);
+            $this->constituent_billing_service->postTransaction($new_transaction_id);
+          }
         }
       // Get transactions for new students, add if do not exist
     } elseif ($student_status['STATUS'] == 'I') {
