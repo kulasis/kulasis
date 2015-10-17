@@ -55,8 +55,8 @@ class SISMasterScheduleReportController extends ReportController {
       if ($meeting_row['FRI'] == '1') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'F';
       if ($meeting_row['SAT'] == '1') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'S';
       if ($meeting_row['SUN'] == '1') $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['meets'] .= 'U';
-      $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['START_TIME'] = date('g:i A', strtotime($meeting_row['START_TIME']));
-      $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['END_TIME'] = date('g:i A', strtotime($meeting_row['END_TIME']));
+      $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['START_TIME'] = ($meeting_row['START_TIME'] != '') ? date('g:i A', strtotime($meeting_row['START_TIME'])) : null;
+      $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['END_TIME'] = ($meeting_row['END_TIME'] != '') ? date('g:i A', strtotime($meeting_row['END_TIME'])) : null;
       $meetings[$meeting_row['SECTION_ID']]['meetings'][$i]['ROOM'] = $meeting_row['ROOM_NUMBER'];
       $i++;
       $section_id = $meeting_row['SECTION_ID'];
