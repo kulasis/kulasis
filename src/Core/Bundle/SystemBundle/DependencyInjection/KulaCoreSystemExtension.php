@@ -22,7 +22,7 @@ use Symfony\Component\Config\FileLocator;
 
 
 class KulaCoreSystemExtension extends BaseFrameworkExtension {
-  /*
+  
   public function load(array $configs, ContainerBuilder $container) {
       parent::load($configs, $container);
       
@@ -30,5 +30,5 @@ class KulaCoreSystemExtension extends BaseFrameworkExtension {
       $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
       $loader->load('services.yml');
   }
-*/
+
 }
