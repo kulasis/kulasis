@@ -1,0 +1,24 @@
+Core.Job.Status:
+  description: "Job Status"
+  allow_update: false
+  values: 
+    - { code: Q, description: "Queued", sort: 1 }
+    - { code: P, description: "In Process", sort: 2 }
+    - { code: E, description: "Error", sort: 3 }
+    - { code: F, description: "Finished", sort: 4 }
+    - { code: C, description: "Cancelled", sort: 5 }
+
+Core.Job.Type:
+  description: "Job Type"
+  allow_update: false
+  values: 
+    - { code: N, description: "Normal", sort: 1 }
+    - { code: R, description: "Recurring", sort: 2 }
+    
+Core.Job.OutputType:
+  description: "Output Type"
+  allow_update: false
+  values: 
+    - { code: PDF, description: "PDF", sort: 1 }
+    - { code: CSV, description: "CSV", sort: 2 }
+    - { code: XLS, description: "Excel", sort: 3 }

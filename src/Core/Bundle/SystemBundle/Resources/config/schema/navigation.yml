@@ -110,3 +110,13 @@ Core.Navigation:
       field_cols: 40
       column_name: "Confirmation"
       label_name: "Confirmation"
+    JavaPath:
+      description: "Java Path"
+      db_column_name: JAVA_PATH
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      field_rows: 15
+      field_cols: 40
+      column_name: "Java Path"
+      label_name: "Java Path"

@@ -1,0 +1,7 @@
+parameters:
+  kula.core.poster_factory.class: Kula\Core\Component\DB\PosterFactory
+
+services:
+  kula.job:
+    class: Kula\Core\Bundle\SystemBundle\Service\JobQueueService
+    arguments: ["@kula.core.db", "@kula.core.session", "@kula.core.focus", "@kula.core.navigation"]

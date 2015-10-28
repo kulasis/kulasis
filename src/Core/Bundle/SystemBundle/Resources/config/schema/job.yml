@@ -1,15 +1,15 @@
-Core.JobQueue:
-  description: "Job Queue"
-  db_table_name: CORE_JOB_QUEUE
+Core.Job:
+  description: "Job"
+  db_table_name: CORE_JOB
   timestamps: true
   fields:
     ID:
-      description: "Record Type ID"
+      description: "Job ID"
       primary: true
-      db_column_name: JOB_QUEUE_ID
+      db_column_name: JOB_ID
       db_column_type: primary_serial
-      column_name: "Job Queue ID"
-      label_name: "Job Queue ID"
+      column_name: "Job ID"
+      label_name: "Job ID"
     RoleID:
       description: "Role ID"
       parent: Core.User.Role.ID
@@ -24,61 +24,162 @@ Core.JobQueue:
       db_column_type: serial
       column_name: "Navigation ID"
       label_name: "Navigation ID"
-    ReportNumber:
-      description: "Report Number"
-      db_column_name: REPORT_NUMBER
+    JobNumber:
+      description: "Job Number"
+      db_column_name: JOB_NUMBER
       db_column_type: varchar
       db_column_length: 20
       db_column_null: false
       field_type: text
       field_size: 15
-      column_name: "Report Number"
-      label_name: "Report Number"
-    ReportName:
-      description: "Report Name"
-      db_column_name: REPORT_NAME
+      column_name: "Job Number"
+      label_name: "Job Number"
+    JobName:
+      description: "Job Name"
+      db_column_name: JOB_NAME
       db_column_type: varchar
       db_column_length: 200
       db_column_null: false
       field_type: text
       field_size: 30
-      column_name: "Report Name"
-      label_name: "Report Name"
-    Status:
-      description: "Job Status"
-      db_column_name: STATUS
+      column_name: "Job Name"
+      label_name: "Job Name"
+    JobType:
+      description: "Job Type"
+      db_column_name: JOB_TYPE
       db_column_type: char
       db_column_length: 1
       db_column_null: false
-      field_type: select
+      field_type: lookup
+      lookup: Core.Job.Type
+      column_name: "Job Type"
+      label_name: "Job Type"
+    JobDefinition:
+      description: "Job Definition"
+      db_column_name: JOB_DEFINITION
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Job Definition"
+      label_name: "Job Definition"
+    JobStatus:
+      description: "Job Status"
+      db_column_name: JOB_STATUS
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: false
+      field_type: lookup
+      lookup: Core.Job.Status
       column_name: "Job Status"
       label_name: "Job Status"
-    ReportOutput:
-      description: "Report Output"
-      db_column_name: REPORT_OUTPUT
+    JobStatusMessage:
+      description: "Job Status Message"
+      db_column_name: JOB_STATUS_MESSAGE
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Job Status Message"
+      label_name: "Job Status Message"
+    OutputType:
+      description: "Output Type"
+      db_column_name: OUTPUT_TYPE
+      db_column_type: varchar
+      db_column_length: 7
+      db_column_null: true
+      field_type: lookup
+      lookup: Core.Job.OutputType
+      column_name: "Output Type"
+      label_name: "Output Type"
+    OrganizationID:
+      description: "Organization ID"
+      parent: Core.Organization.ID
+      db_column_name: ORGANIZATION_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Organization ID"
+      label_name: "Organization ID"
+    TermID:
+      description: "Term ID"
+      parent: Core.Term.ID
+      db_column_name: TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Term ID"
+      label_name: "Term ID"
+    Output:
+      description: "Output"
+      db_column_name: OUTPUT
       db_column_type: blob
       db_column_size: big
       db_column_null: true
-      column_name: "Report Output"
-      label_name: "Report Output"
-    AddedTime:
+      column_name: "Output"
+      label_name: "Output"
+    AddedDateTime:
       description: "Added Time"
       db_column_name: ADDED_TIME
       db_column_type: datetime
       db_column_null: false
       column_name: "Added Time"
       label_name: "Added Time"
-    StartTime:
+    StartDateTime:
       description: "Start Processing Time"
       db_column_name: START_TIME
       db_column_type: datetime
       db_column_null: true
       column_name: "Start Time"
       label_name: "Start Time"
-    EndTime:
+    EndDateTime:
       description: "End Processing Time"
       db_column_name: END_TIME
       db_column_type: datetime
       db_column_null: true
       column_name: "End Time"
       label_name: "End Time"
+
+Core.Job.Result:
+  description: "Job Result"
+  db_table_name: CORE_JOB_RESULT
+  timestamps: true
+  fields:
+    ID:
+      description: "Job Result ID"
+      primary: true
+      db_column_name: JOB_RESULT_ID
+      db_column_type: primary_serial
+      column_name: "Job Result ID"
+      label_name: "Job Result ID"
+    JobID:
+      description: "Job ID"
+      parent: Core.Job.ID
+      db_column_name: "JOB_ID"
+      db_column_type: serial
+      column_name: "Job ID"
+      label_name: "Job ID"
+    Sort:
+      description: "Sort"
+      db_column_name: SORT
+      db_column_type: int
+      db_column_size: tiny
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "Sort"
+      label_name: "Sort"
+    OutputType:
+      description: "Output Type"
+      db_column_name: OUTPUT_TYPE
+      db_column_type: varchar
+      db_column_length: 7
+      db_column_null: true
+      field_type: text
+      field_size: 10
+      column_name: "Output Type"
+      label_name: "Output Type"
+    Output:
+      description: "Output"
+      db_column_name: OUTPUT
+      db_column_type: blob
+      db_column_size: big
+      db_column_null: true
+      column_name: "Output"
+      label_name: "Output"
