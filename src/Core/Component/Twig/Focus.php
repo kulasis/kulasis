@@ -182,19 +182,23 @@ class Focus {
             
     $students_result = $db->db_select('STUD_STUDENT', 'stu')
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = stu.STUDENT_ID')
-      ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL'))
+      ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL', 'STATUS'))
       ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
       ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER', 'GENDER'))
       ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', 'stafforgterm.STAFF_ORGANIZATION_TERM_ID = stustatus.ADVISOR_ID')
       ->join('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterm.STAFF_ID')
       ->condition('stustatus.ORGANIZATION_TERM_ID', $organization_term_id)
       ->condition('stustatus.ADVISOR_ID', $staff_organization_term_ids)
-      ->isNull('stustatus.STATUS')
       ->orderBy('LAST_NAME')
       ->orderBy('FIRST_NAME')
       ->execute();
     while ($students_row = $students_result->fetch()) {
-      $students[$students_row['STUDENT_STATUS_ID']] = $students_row['LAST_NAME'].', '.$students_row['FIRST_NAME'].' | '.$students_row['GENDER'].' | '.$students_row['LEVEL'] .' | '.$students_row['PERMANENT_NUMBER'].' ';
+      $students[$students_row['STUDENT_STATUS_ID']] = 
+      ($students_row['STATUS'] != '') ?
+        '( '.$students_row['LAST_NAME'].', '.$students_row['FIRST_NAME'].' | '.$students_row['GENDER'].' | '.$students_row['LEVEL'] .' | '.$students_row['PERMANENT_NUMBER'].' )'
+      : 
+        $students_row['LAST_NAME'].', '.$students_row['FIRST_NAME'].' | '.$students_row['GENDER'].' | '.$students_row['LEVEL'] .' | '.$students_row['PERMANENT_NUMBER'].' ';
+      
     }
     }
     return $students;
