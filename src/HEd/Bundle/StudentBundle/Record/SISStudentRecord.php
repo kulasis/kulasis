@@ -54,7 +54,7 @@ class SISStudentRecord extends Record {
       ->fields('stu', array('STUDENT_ID', 'DIRECTORY_PERMISSION'))
       ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = stu.STUDENT_ID')
       ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'RACE', 'MAIDEN_NAME', 'PREFERRED_NAME'));
-    if ($this->focus->getTermID()) {
+    if ($this->focus->getOrganizationTermID()) {
       $result = $result->join('STUD_STUDENT_STATUS', 'stustatus', 'stu.STUDENT_ID = stustatus.STUDENT_ID');
       $result = $result->fields('stustatus', array('STUDENT_STATUS_ID', 'STATUS','GRADE', 'RESIDENT'));
       $result = $result->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'stustatus.ORGANIZATION_TERM_ID = orgterm.ORGANIZATION_TERM_ID');
@@ -63,7 +63,8 @@ class SISStudentRecord extends Record {
       $result = $result->fields('org', array('ORGANIZATION_NAME'));
       $result = $result->join('CORE_TERM', 'term', 'term.TERM_ID = orgterm.TERM_ID');
       $result = $result->fields('term', array('TERM_ABBREVIATION'));
-      $result = $result->condition('orgterm.TERM_ID', $this->focus->getTermID());
+      $result = $result->condition('orgterm.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID());
+     // $result = $result->condition('orgterm.TERM_ID', $this->focus->getTermID());
     }
     $result = $result->condition('stu.STUDENT_ID', $record_id);
     $result = $result->execute()->fetch();
