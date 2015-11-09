@@ -93,7 +93,8 @@ class PosterRecord {
           foreach($this->violations as $violation) {
             $violation_string .= '<li>' . $violation->getPropertyPath() . ': '.$violation->getMessage().'</li>';
           }
-          if ($this->container->get('request_stack')->getCurrentRequest()->isXmlHttpRequest()) {
+          
+          if ($this->container->get('request_stack')->getCurrentRequest() != '' AND $this->container->get('request_stack')->getCurrentRequest()->isXmlHttpRequest()) {
             throw new PosterException('Changes not saved.<ul>' . $violation_string . '</ul>');
           } else {
             $this->container->get('session')->getFlashBag()->add('error', 'Changes not saved.<ul>' . $violation_string . '</ul>');
