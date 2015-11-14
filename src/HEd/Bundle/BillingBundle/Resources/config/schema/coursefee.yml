@@ -47,6 +47,63 @@ HEd.Billing.CourseFee:
       column_name: "Amount"
       label_name: "Amount"
 
+HEd.Billing.CourseFee.Refund:
+  description: "Billing Course Fees Refund"
+  db_table_name: BILL_COURSE_FEE_REFUND
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: COURSE_FEE_REFUND_ID
+      db_column_type: primary_serial
+      column_name: "Course Fee ID"
+      label_name: "Course Fee ID"
+    CourseID:
+      description: "Course ID"
+      parent: HEd.Course.ID
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      column_name: "Course ID"
+      label_name: "Course ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    CodeID:
+      description: "Transaction Code ID"
+      parent: HEd.Billing.Code.ID
+      db_column_name: CODE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\HEd\Bundle\BillingBundle\Field\TransactionCode
+      column_name: "Code ID"
+      label_name: "Code"
+    EndDate:
+      description: "End Date"
+      db_column_name: END_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "End Date"
+      label_name: "End Date"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: false
+      field_type: text
+      field_size: 8
+      column_name: "Amount"
+      label_name: "Amount"
+
 HEd.Billing.SectionFee:
   description: "Billing Section Fees"
   db_table_name: BILL_SECTION_FEE
@@ -76,6 +133,55 @@ HEd.Billing.SectionFee:
       class: Kula\HEd\Bundle\BillingBundle\Field\TransactionCode
       column_name: "Code ID"
       label_name: "Code"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: false
+      field_type: text
+      field_size: 8
+      column_name: "Amount"
+      label_name: "Amount"
+
+HEd.Billing.SectionFee.Refund:
+  description: "Billing Section Fees Refunds"
+  db_table_name: BILL_SECTION_FEE_REFUND
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SECTION_FEE_REFUND_ID
+      db_column_type: primary_serial
+      column_name: "Section Fee ID"
+      label_name: "Section Fee ID"
+    SectionID:
+      description: "Section ID"
+      parent: HEd.Section.ID
+      db_column_name: SECTION_ID
+      db_column_type: serial
+      column_name: "Section ID"
+      label_name: "Section ID"
+    CodeID:
+      description: "Transaction Code ID"
+      parent: HEd.Billing.Code.ID
+      db_column_name: CODE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\HEd\Bundle\BillingBundle\Field\TransactionCode
+      column_name: "Code ID"
+      label_name: "Code"
+    EndDate:
+      description: "End Date"
+      db_column_name: END_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "End Date"
+      label_name: "End Date"
     Amount:
       description: "Amount"
       db_column_name: AMOUNT
