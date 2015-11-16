@@ -22,6 +22,14 @@ Section Fee Charges
     {{ kula_field({ add: true, field: 'K12.Billing.SectionFee.CodeID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ add: true, field: 'K12.Billing.SectionFee.Amount', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
     {{ kula_display_html({ add: true, field: 'K12.Billing.SectionFee.ID', prepend_html: '</tr>' }) }}
+  {% for course_fee in course_fees %}
+  <tr>
+    {{ kula_field({ input: false, school_term_only: true, field: 'K12.Billing.CourseFee.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, school_term_only: true, field: 'K12.Billing.CourseFee.CodeID', value: course_fee.CODE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, school_term_only: true, field: 'K12.Billing.CourseFee.Amount', value: course_fee.AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
   {% for fee in fees %}
   <tr>
     {{ kula_field({ delete: true, school_term_only: true, field: 'K12.Billing.SectionFee.ID', db_row_id: fee.SECTION_FEE_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
@@ -56,6 +64,15 @@ Section Fee Refunds
     {{ kula_field({ add: true, field: 'K12.Billing.SectionFee.Refund.CodeID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ add: true, field: 'K12.Billing.SectionFee.Refund.Amount', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
     {{ kula_display_html({ add: true, field: 'K12.Billing.SectionFee.Refund.ID', prepend_html: '</tr>' }) }}
+  {% for course_refund_fee in course_refund_fees %}
+  <tr>
+    {{ kula_field({ input: false, school_term_only: true, field: 'K12.Billing.CourseFee.Refund.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, school_term_only: true, field: 'K12.Billing.CourseFee.Refund.EndDate', value: course_refund_fee.END_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, school_term_only: true, field: 'K12.Billing.CourseFee.Refund.CodeID', value: course_refund_fee.CODE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, school_term_only: true, field: 'K12.Billing.CourseFee.Refund.Amount', value: course_refund_fee.AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
   {% for refund_fee in refund_fees %}
   <tr>
     {{ kula_field({ delete: true, school_term_only: true, field: 'K12.Billing.SectionFee.Refund.ID', db_row_id: refund_fee.SECTION_FEE_REFUND_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
