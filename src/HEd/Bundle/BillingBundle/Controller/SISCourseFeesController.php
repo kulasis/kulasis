@@ -29,7 +29,7 @@ class SISCourseFeesController extends Controller {
         ->condition('COURSE_ID', $this->record->getSelectedRecordID())
         ->condition('orgterms.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
         ->orderBy('term.START_DATE', 'DESC')
-        ->orderBy('CODE_DESCRIPTION', 'ASC')
+        ->orderBy('CODE', 'ASC')
       ->execute()->fetchAll();
     
       $refund_fees = $this->db()->db_select('BILL_COURSE_FEE_REFUND', 'BILL_COURSE_FEE_REFUND')
@@ -44,7 +44,8 @@ class SISCourseFeesController extends Controller {
         ->condition('COURSE_ID', $this->record->getSelectedRecordID())
         ->condition('orgterms.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
         ->orderBy('term.START_DATE', 'DESC')
-        ->orderBy('CODE_DESCRIPTION', 'ASC')
+        ->orderBy('BILL_COURSE_FEE_REFUND.END_DATE', 'ASC')
+        ->orderBy('CODE', 'ASC')
       ->execute()->fetchAll();
     }
     
@@ -78,7 +79,7 @@ class SISCourseFeesController extends Controller {
         ->join('BILL_CODE', 'code', 'code.CODE_ID = BILL_SECTION_FEE.CODE_ID')
         ->fields('code', array('CODE_DESCRIPTION'))
         ->condition('SECTION_ID', $this->record->getSelectedRecordID())
-        ->orderBy('CODE_DESCRIPTION', 'ASC')
+        ->orderBy('CODE', 'ASC')
       ->execute()->fetchAll();
       
       $course_fees = $this->db()->db_select('BILL_COURSE_FEE', 'BILL_COURSE_FEE')
@@ -94,7 +95,7 @@ class SISCourseFeesController extends Controller {
         ->condition('sec.SECTION_ID', $this->record->getSelectedRecordID())
         ->condition('orgterms.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
         ->orderBy('term.START_DATE', 'DESC')
-        ->orderBy('CODE_DESCRIPTION', 'ASC')
+        ->orderBy('CODE', 'ASC')
       ->execute()->fetchAll();
       
       $course_refund_fees = $this->db()->db_select('BILL_COURSE_FEE_REFUND', 'BILL_COURSE_FEE_REFUND')
@@ -110,7 +111,8 @@ class SISCourseFeesController extends Controller {
         ->condition('sec.SECTION_ID', $this->record->getSelectedRecordID())
         ->condition('orgterms.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
         ->orderBy('term.START_DATE', 'DESC')
-        ->orderBy('CODE_DESCRIPTION', 'ASC')
+        ->orderBy('BILL_COURSE_FEE_REFUND.END_DATE', 'ASC')
+        ->orderBy('CODE', 'ASC')
       ->execute()->fetchAll();
       
       $refund_fees = $this->db()->db_select('BILL_SECTION_FEE_REFUND', 'BILL_SECTION_FEE')
@@ -118,7 +120,8 @@ class SISCourseFeesController extends Controller {
         ->join('BILL_CODE', 'code', 'code.CODE_ID = BILL_SECTION_FEE.CODE_ID')
         ->fields('code', array('CODE_DESCRIPTION'))
         ->condition('SECTION_ID', $this->record->getSelectedRecordID())
-        ->orderBy('CODE_DESCRIPTION', 'ASC')
+        ->orderBy('BILL_SECTION_FEE.END_DATE', 'ASC')
+        ->orderBy('CODE', 'ASC')
       ->execute()->fetchAll();
       
     }
