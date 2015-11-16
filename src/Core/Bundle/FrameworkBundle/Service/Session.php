@@ -48,7 +48,8 @@ class Session {
       ->fields('user', array('USERNAME', 'USER_ID'))
       ->join('CONS_CONSTITUENT', 'constituent', 'user.USER_ID = constituent.CONSTITUENT_ID')
       ->fields('constituent', array('FIRST_NAME', 'LAST_NAME'))
-      ->condition('roles.USER_ID', $user_id);
+      ->condition('roles.USER_ID', $user_id)
+      ->condition('roles.ACTIVE', 1);
     if ($role_id) {
       $role_info = $role_info->condition('roles.ROLE_ID', $role_id);
     }

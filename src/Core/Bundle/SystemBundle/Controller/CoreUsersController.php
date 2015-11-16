@@ -25,7 +25,7 @@ class CoreUsersController extends Controller {
     $this->setRecordType('Core.User');
     
     $usergroups = $this->db()->db_select('CORE_USER_ROLES', 'usrgrps')
-      ->fields('usrgrps', array('ROLE_ID', 'ORGANIZATION_ID', 'TERM_ID', 'DEFAULT_ROLE', 'ADMINISTRATOR'))
+      ->fields('usrgrps', array('ROLE_ID', 'ORGANIZATION_ID', 'TERM_ID', 'DEFAULT_ROLE', 'ADMINISTRATOR', 'ACTIVE'))
       ->join('CORE_USERGROUP', 'usrgrp', 'usrgrps.USERGROUP_ID = usrgrp.USERGROUP_ID')
       ->fields('usrgrp', array('USERGROUP_ID'))
       ->condition('USER_ID', $this->record->getSelectedRecordID())

@@ -173,6 +173,15 @@ Core.User.Role:
       field_type: checkbox
       column_name: "Term All"
       label_name: "Term All"
+    Active:
+      description: "Active"
+      db_column_name: ACTIVE
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Active"
+      label_name: "Active"
     DefaultRole:
       description: "Default Role"
       db_column_name: DEFAULT_ROLE

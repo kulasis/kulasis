@@ -19,6 +19,7 @@ class Focus {
       ->leftJoin('CORE_ORGANIZATION', 'organization', 'roles.ORGANIZATION_ID = organization.ORGANIZATION_ID')
       ->fields('organization', array('ORGANIZATION_ABBREVIATION'))
       ->condition('roles.USER_ID', $user_id)
+      ->condition('roles.ACTIVE', 1)
       ->execute();
     while ($row = $results->fetch()) {
       self::$usergroups[$row['ROLE_ID']] = $row['USERGROUP_NAME'];
