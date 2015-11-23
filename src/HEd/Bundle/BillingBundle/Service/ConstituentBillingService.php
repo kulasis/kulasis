@@ -128,6 +128,83 @@ class ConstituentBillingService {
     }
   }
   
+  public function refundCourseFees($student_class_id) {
+    
+    // lookup student and class info
+    $class_info = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
+      ->fields('class', array('DROP_DATE', 'SECTION_ID'))
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
+      ->join('STUD_SECTION', 'sect', 'sect.SECTION_ID = class.SECTION_ID')
+      ->fields('sect', array('COURSE_ID'))
+      ->fields('stustatus', array('STUDENT_ID', 'ORGANIZATION_TERM_ID'))
+      ->condition('class.STUDENT_CLASS_ID', $student_class_id)
+      ->execute()->fetch();
+    
+    // get course refund end date
+    $course_fee_refund_end_date = $this->database->db_select('BILL_COURSE_FEE_REFUND', 'crsrefund')
+      ->expresion('MIN(END_DATE)', 'enddate')
+      ->condition('crsrefund.ORGANIZATION_TERM_ID', $class_info['ORGANIZATION_TERM_ID'])
+      ->condition('crsrefund.COURSE_ID', $class_info['COURSE_ID'])
+      ->condition('crsrefund.END_DATE', $class_info['DROP_DATE'], '>=')
+      ->execute()->fetch()['enddate'];
+    
+    // loop through transactions to refund
+    $course_fee_refund = $this->database->db_select('BILL_COURSE_FEE_REFUND', 'crsrefund')
+      ->fields('crsrefund', array('CODE_ID', 'AMOUNT'))
+      ->join('STUD_STUDENT_CLASSES', 'class')
+      ->join('STUD_SECTION', 'sect', 'class.SECTION_ID = class.SECTION_ID')
+      ->condition('crsrefund.ORGANIZATION_TERM_ID = crsrefund.ORGANIZATION_TERM_ID AND sect.COURSE_ID = crsrefund.COURSE_ID')
+      ->condition('crsrefund.END_DATE', $course_fee_refund_end_date)
+      ->execute();
+    while ($course_fee_refund_row = $course_fee_refund->fetch()) {
+      // if type same and amount same, then use removeTransaction method, else post as new transaction  
+      // get existing fee with same code and amount
+      $existing_class_fee = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+        ->fields('trans', array('CONSTITUENT_TRANSACTION_ID'))
+        ->condition('STUDENT_CLASS_ID', $student_class_id)
+        ->condition('CODE_ID', $course_fee_refund_row['CODE_ID'])
+        ->condition('AMOUNT', $course_fee_refund_row['AMOUNT'])
+        ->execute()->fetch();
+      if ($existing_class_fee['CONSTITUENT_TRANSACTION_ID']) {
+        $this->removeTransaction($existing_class_fee['CONSTITUENT_TRANSACTION_ID'], 'Schedule change (auto)', date('Y-m-d'));
+      } else {
+        $this->addTransaction($class_info['STUDENT_ID'], $class_info['ORGANIZATION_TERM_ID'], $course_fee_refund_row['CODE_ID'], date('Y-m-d'), null, $course_fee_refund_row['AMOUNT']);
+      }
+    }
+    
+    // repeat for section refunds
+    // get section refund end date
+    $section_fee_refund_end_date = $this->database->db_select('BILL_SECTION_FEE_REFUND', 'sectrefund')
+      ->expresion('MIN(END_DATE)', 'enddate')
+      ->condition('sectrefund.END_DATE', $class_info['DROP_DATE'], '>=')
+      ->condition('sectrefund.SECITON_ID', $class_info['SECTION_ID'])
+      ->execute()->fetch()['enddate'];
+    
+    // loop through transactions to refund
+    $section_fee_refund = $this->database->db_select('BILL_SECTION_FEE_REFUND', 'sectrefund')
+      ->fields('sectrefund', array('CODE_ID', 'AMOUNT'))
+      ->condition('sectrefund.SECTION_ID', $class_info['SECTION_ID'])
+      ->condition('sectrefund.END_DATE', $course_fee_refund_end_date)
+      ->execute();
+    while ($section_fee_refund_row = $section_fee_refund->fetch()) {
+      // if type same and amount same, then use removeTransaction method, else post as new transaction  
+      // get existing fee with same code and amount
+      $existing_class_fee = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+        ->fields('trans', array('CONSTITUENT_TRANSACTION_ID'))
+        ->condition('STUDENT_CLASS_ID', $student_class_id)
+        ->condition('CODE_ID', $section_fee_refund_row['CODE_ID'])
+        ->condition('AMOUNT', $section_fee_refund_row['AMOUNT'])
+        ->execute()->fetch();
+      if ($existing_class_fee['CONSTITUENT_TRANSACTION_ID']) {
+        $this->removeTransaction($existing_class_fee['CONSTITUENT_TRANSACTION_ID'], 'Schedule change (auto)', date('Y-m-d'));
+      } else {
+        $this->addTransaction($class_info['STUDENT_ID'], $class_info['ORGANIZATION_TERM_ID'], $section_fee_refund_row['CODE_ID'], date('Y-m-d'), null, $section_fee_refund_row['AMOUNT']);
+      }
+    }
+    
+    // TODO: What about refunding discounts...
+  }
+  
   public function determineTuitionRate($student_status_id) {
 
     // Get Student Status Info

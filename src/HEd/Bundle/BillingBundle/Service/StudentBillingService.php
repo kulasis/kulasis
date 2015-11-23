@@ -343,6 +343,9 @@ class StudentBillingService {
           
         }
         
+      } elseif ($classes_row['DROPPED'] == 1) {
+        // Look at classes dropped for any refund transactions
+        $this->constituent_billing_service->refundCourseFees($classes_row);
       } elseif ($classes_row['DROPPED'] == 0) {
         // class not dropped
         
