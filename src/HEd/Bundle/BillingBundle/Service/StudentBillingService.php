@@ -300,18 +300,25 @@ class StudentBillingService {
       ->condition('classes.STUDENT_STATUS_ID', $student_status_id)
       ->execute();
     while ($classes_row = $classes_result->fetch()) {
-      
+
       $condition_or = $this->database->db_or();
-      $condition_or = $condition_or->condition('bill.AMOUNT', $classes_row['AMOUNT'])->condition('bill.AMOUNT', $classes_row['AMOUNT']*-1);
-      
+	  $code_condition = $this->database->db_and();
+      if ($classes_row['section_AMOUNT']) {
+		$condition_or = $condition_or->condition('bill.AMOUNT', $classes_row['section_AMOUNT'])->condition('bill.AMOUNT', $classes_row['section_AMOUNT']*-1);
+		$code_condition = $code_condition->condition('CODE_ID', $classes_row['section_CODE_ID']);
+      } else {
+		$condition_or = $condition_or->condition('bill.AMOUNT', $classes_row['AMOUNT'])->condition('bill.AMOUNT', $classes_row['AMOUNT']*-1);
+		$code_condition = $code_condition->condition('CODE_ID', $classes_row['CODE_ID']);
+      }
+	  
       // get existing fees for classes
       $existing_fees = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'bill')
         ->expression('SUM(AMOUNT)', 'total_amount')
-        ->condition('CODE_ID', $classes_row['CODE_ID'])
+        ->condition($code_condition)
         ->condition('STUDENT_CLASS_ID', $classes_row['STUDENT_CLASS_ID'])
         ->condition('CONSTITUENT_ID', $classes_row['STUDENT_ID'])
         ->condition($condition_or)
-        ->execute()->fetch();
+		->execute()->fetch();
 
       // if class dropped and existing fee total is equal to the fee amount, need to determine if to refund
       if ($classes_row['DROPPED'] == 1 AND ($existing_fees['total_amount'] == $classes_row['AMOUNT'] OR $existing_fees['total_amount'] == $classes_row['section_AMOUNT'])) {
