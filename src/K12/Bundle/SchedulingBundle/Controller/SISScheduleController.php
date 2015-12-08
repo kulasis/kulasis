@@ -87,7 +87,27 @@ class SISScheduleController extends Controller {
       ->orderBy('DROP_DATE', 'ASC')
       ->execute()->fetchAll();
     
-    return $this->render('KulaK12SchedulingBundle:SISSchedule:grades.html.twig', array('classes' => $classes));
+    $classes_history = array();
+    
+    $classes_history = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
+      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED', 'DROP_DATE', 'CREATED_TIMESTAMP'))
+      ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'CREDITS'))
+      ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
+      ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE'))
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->fields('term', array('TERM_ABBREVIATION'))
+      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_ABBREVIATION'))
+      ->condition('org.ORGANIZATION_ID', $this->focus->getSchoolIDs())
+      ->condition('stustatus.STUDENT_ID', $this->record->getSelectedRecord()['STUDENT_ID'])
+      ->orderBy('START_DATE', 'DESC', 'term')
+      ->orderBy('SECTION_NUMBER', 'ASC')
+      ->execute()->fetchAll();
+    
+    return $this->render('KulaK12SchedulingBundle:SISSchedule:grades.html.twig', array('classes' => $classes,  'classes_history' => $classes_history));
   }
   
   public function historyAction() {
