@@ -205,6 +205,14 @@ HEd.Student.Class:
       class: Kula\HEd\Bundle\GradingBundle\Field\MarkScale
       column_name: "Mark Scale ID"
       label_name: "Mark Scale ID"
+    NotForGrade:
+      description: "Not for Grade"
+      db_column_name: NOT_FOR_GRADE
+      db_column_type: bool
+      db_column_default: 0
+      field_type: checkbox
+      column_name: "Not For Grade"
+      label_name: "Not For Grade"
 
 HEd.Staff.OrganizationTerm:
   fields:

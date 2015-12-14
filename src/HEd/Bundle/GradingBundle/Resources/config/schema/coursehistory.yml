@@ -719,3 +719,16 @@ HEd.Student.CourseHistory.Term:
   unique_keys:
     CourseHistoryTerms: [ 'HEd.Student.CourseHistory.Term.StudentID', 'HEd.Student.CourseHistory.Term.Level', 'HEd.Student.CourseHistory.Term.CalendarYear', 'HEd.Student.CourseHistory.Term.CalendarMonth', 'HEd.Student.CourseHistory.Term.Term' ]
     StudentStatus: [ 'HEd.Student.CourseHistory.Term.StudentStatusID' ]
+
+HEd.Student.Class:
+  fields:
+    CourseForGradeID:
+      description: "Course for Grade ID"
+      db_column_name: COURSE_FOR_GRADE_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: HEd.Course.ID
+      field_type: chooser
+      chooser: HEd.Course
+      column_name: "Course For Grade ID"
+      label_name: "Course For Grade ID"

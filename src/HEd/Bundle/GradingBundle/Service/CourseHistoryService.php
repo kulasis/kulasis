@@ -26,7 +26,7 @@ class CourseHistoryService {
     
     // Get course history data
     $course_info = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('START_DATE', 'STUDENT_CLASS_ID', 'LEVEL', 'MARK_SCALE_ID'))
+      ->fields('class', array('START_DATE', 'STUDENT_CLASS_ID', 'LEVEL', 'MARK_SCALE_ID', 'COURSE_FOR_GRADE_ID'))
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
       ->fields('section', array('END_DATE', 'CREDITS'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
@@ -45,7 +45,11 @@ class CourseHistoryService {
       ->execute()->fetch();
     
     $course_history_data['HEd.Student.CourseHistory.StudentID'] = $course_info['STUDENT_ID'];
-    $course_history_data['HEd.Student.CourseHistory.CourseID'] = $course_info['COURSE_ID'];
+    if ($course_info['COURSE_FOR_GRADE_ID']) {
+      $course_history_data['HEd.Student.CourseHistory.CourseID'] = $course_info['COURSE_FOR_GRADE_ID'];
+    } else {
+      $course_history_data['HEd.Student.CourseHistory.CourseID'] = $course_info['COURSE_ID'];
+    }
     $course_history_data['HEd.Student.CourseHistory.OrganizationID'] = $course_info['ORGANIZATION_ID'];
     $course_history_data['HEd.Student.CourseHistory.CalendarYear'] = date('Y', strtotime($course_info['term_END_DATE']));
     $course_history_data['HEd.Student.CourseHistory.CalendarMonth'] = date('n', strtotime($course_info['term_END_DATE']));
