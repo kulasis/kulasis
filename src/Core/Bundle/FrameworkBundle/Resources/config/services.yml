@@ -79,3 +79,11 @@ services:
   kula.core.record:
     class: Kula\Core\Bundle\FrameworkBundle\Service\Record
     arguments: ["@kula.core.db", "@kula.core.session", "@kula.core.schema", "@kula.core.focus", "@request_stack", "@flash", "@kula.core.permission", "@kula.core.record_type", "@kula.core.searcher"]
+
+  kula.core.cache.apc:
+    class: Kula\Core\Component\Cache\APCCache
+    arguments: ["@service_container"]
+  
+  kula.core.cache.kv:
+    class: Kula\Core\Component\Cache\KVCache
+    arguments: ["@service_container", "@kula.core.cache.apc"]

@@ -10,12 +10,13 @@ class SchemaStore implements WarmableInterface {
   
   private $schema;
   
-  public function __construct($db, $fileName, $cacheDir, $debug, $kernel) {
+  public function __construct($db, $fileName, $cacheDir, $debug, $kernel, $cache) {
     $this->db = $db;
     $this->cacheDir = $cacheDir;
     $this->fileName = $fileName;
     $this->debug = $debug;
     $this->kernel = $kernel;
+    $this->cache = $cache;
   }
   
   public function warmUp($cacheDir) {
@@ -34,7 +35,7 @@ class SchemaStore implements WarmableInterface {
       unset($schema_obj);
       
       //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - finish compiling<br />\n";
-      $schema = new Schema($this->db);
+      $schema = new Schema($this->db, $this->cache);
       //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - make schema<br />\n";
       $schema->loadTables();
       //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - load tables<br />\n";
@@ -47,9 +48,11 @@ class SchemaStore implements WarmableInterface {
       //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - unset schema<br />\n";
 
     }
-    if (!$this->schema)
+    if (!$this->schema) {
       $this->schema = unserialize(file_get_contents((string) $cache));
-     //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - loaded schema file<br />\n";
+      $this->schema->setCache($this->cache);
+    }
+    //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - loaded schema file<br />\n";
   }
   
   public function getSchema() {

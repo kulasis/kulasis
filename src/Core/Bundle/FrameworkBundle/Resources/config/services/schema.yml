@@ -11,11 +11,11 @@ services:
   
   kula.core.schema_store:
     class: Kula\Core\Component\Schema\SchemaStore
-    arguments: ["@kula.core.db", %kula.schema.options.cache_class%, %kernel.cache_dir%, %kernel.debug%, "@kernel"] 
+    arguments: ["@kula.core.db", %kula.schema.options.cache_class%, %kernel.cache_dir%, %kernel.debug%, "@kernel", "@kula.core.cache.kv"] 
     public: false
     
   kula.core.schema:
     class: Kula\Core\Component\Schema\Schema
     factory_service: kula.core.schema_store
     factory_method: getSchema
-    arguments: ["@kula.core.db"] 
+    arguments: ["@kula.core.db", "@kula.core.cache.kv"] 

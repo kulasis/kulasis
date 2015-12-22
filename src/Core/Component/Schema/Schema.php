@@ -13,9 +13,15 @@ class Schema {
   private $db_tables = array();
   
   private $db;
+  private $cache;
   
-  public function __construct($db) {
+  public function __construct($db, $cache) {
     $this->db = $db;
+    $this->cache = $cache;
+  }
+  
+  public function setCache($cache) {
+    $this->cache = $cache;
   }
   
   public function loadTables() {
@@ -26,8 +32,10 @@ class Schema {
     while ($tableRow = $tableResults->fetch()) {
       $table = new Table($tableRow['TABLE_NAME'], $tableRow['SCHEMA_TABLE_ID'], $tableRow['DB_TABLE_NAME'], $tableRow['SCHEMA_CLASS'], $tableRow['TIMESTAMPS']);
       
-      $this->tables[$tableRow['TABLE_NAME']] = $table;
-      $this->db_tables[$tableRow['DB_TABLE_NAME']] = $table;
+      $this->cache->add('schema.'.$tableRow['TABLE_NAME'], $table);
+      
+      //$this->tables[$tableRow['TABLE_NAME']] = $table;
+      //$this->db_tables[$tableRow['DB_TABLE_NAME']] = $table;
       unset($table);
     }
     
@@ -46,50 +54,61 @@ class Schema {
       ->execute();
     while ($fieldRow = $fieldResults->fetch()) {
       
-      $this->fields[$fieldRow['FIELD_NAME']] = new Field($this->tables[$fieldRow['TABLE_NAME']], $fieldRow['FIELD_NAME'], $fieldRow['SCHEMA_FIELD_ID'], $fieldRow['DB_COLUMN_NAME'], $fieldRow['DB_COLUMN_TYPE'], $fieldRow['DB_COLUMN_LENGTH'], $fieldRow['DB_COLUMN_PRECISION'], $fieldRow['DB_COLUMN_NULL'], $fieldRow['DB_COLUMN_DEFAULT'], $fieldRow['DB_COLUMN_PRIMARY'], $fieldRow['parentfield_FIELD_NAME'], $fieldRow['FIELD_NAME'], $fieldRow['FIELD_TYPE'], $fieldRow['FIELD_SIZE'], $fieldRow['FIELD_COLUMN_LENGTH'], $fieldRow['FIELD_ROW_HEIGHT'], $fieldRow['CLASS'], $fieldRow['LOOKUP'], $fieldRow['CHOOSER'], $fieldRow['COLUMN_NAME'], $fieldRow['LABEL_NAME'], $fieldRow['LABEL_POSITION'], $fieldRow['updatefield_FIELD_NAME']);
+      //$this->fields[$fieldRow['FIELD_NAME']] = new Field($fieldRow['TABLE_NAME'], $fieldRow['FIELD_NAME'], $fieldRow['SCHEMA_FIELD_ID'], $fieldRow['DB_COLUMN_NAME'], $fieldRow['DB_COLUMN_TYPE'], $fieldRow['DB_COLUMN_LENGTH'], $fieldRow['DB_COLUMN_PRECISION'], $fieldRow['DB_COLUMN_NULL'], $fieldRow['DB_COLUMN_DEFAULT'], $fieldRow['DB_COLUMN_PRIMARY'], $fieldRow['parentfield_FIELD_NAME'], $fieldRow['FIELD_NAME'], $fieldRow['FIELD_TYPE'], $fieldRow['FIELD_SIZE'], $fieldRow['FIELD_COLUMN_LENGTH'], $fieldRow['FIELD_ROW_HEIGHT'], $fieldRow['CLASS'], $fieldRow['LOOKUP'], $fieldRow['CHOOSER'], $fieldRow['COLUMN_NAME'], $fieldRow['LABEL_NAME'], $fieldRow['LABEL_POSITION'], $fieldRow['updatefield_FIELD_NAME']);
       
-      $this->tables[$fieldRow['TABLE_NAME']]->addField($this->fields[$fieldRow['FIELD_NAME']]);
+      $this->cache->add('schema.'.$fieldRow['FIELD_NAME'], new Field($fieldRow['TABLE_NAME'], $fieldRow['FIELD_NAME'], $fieldRow['SCHEMA_FIELD_ID'], $fieldRow['DB_COLUMN_NAME'], $fieldRow['DB_COLUMN_TYPE'], $fieldRow['DB_COLUMN_LENGTH'], $fieldRow['DB_COLUMN_PRECISION'], $fieldRow['DB_COLUMN_NULL'], $fieldRow['DB_COLUMN_DEFAULT'], $fieldRow['DB_COLUMN_PRIMARY'], $fieldRow['parentfield_FIELD_NAME'], $fieldRow['FIELD_NAME'], $fieldRow['FIELD_TYPE'], $fieldRow['FIELD_SIZE'], $fieldRow['FIELD_COLUMN_LENGTH'], $fieldRow['FIELD_ROW_HEIGHT'], $fieldRow['CLASS'], $fieldRow['LOOKUP'], $fieldRow['CHOOSER'], $fieldRow['COLUMN_NAME'], $fieldRow['LABEL_NAME'], $fieldRow['LABEL_POSITION'], $fieldRow['updatefield_FIELD_NAME']));
+      
+      //$this->tables[$fieldRow['TABLE_NAME']]->addField($this->fields[$fieldRow['FIELD_NAME']]);
       
     }
     
   }
   
   public function getField($fieldName) {
-    return $this->fields[$fieldName];
+    //return $this->fields[$fieldName];
+    return $this->cache->get('schema.'.$fieldName);
   }
   
   public function getTable($tableName) {
-    return $this->tables[$tableName];
+    //return $this->tables[$tableName];
+    return $this->cache->get('schema.'.$tableName);
   }
   
   public function getClass($fieldName) {
-    return $this->fields[$fieldName]->getClass();
+    //return $this->fields[$fieldName]->getClass();
+    return $this->cache->get('schema.'.$fieldName)->getClass();
   }
   
   public function getClassDB($dbTableName, $dbFieldName) {
-    if ($field = $this->db_tables[$dbTableName]->getDBField($dbFieldName)) {
-      return $field->getClass();
-    }
+    echo 'called it!';
+    //if ($field = $this->db_tables[$dbTableName]->getDBField($dbFieldName)) {
+    //  return $this->cache->get('schema.'.$field)->getClass();
+    //}
   }
   
   public function getFieldType($fieldName) {
-    return $this->fields[$fieldName]->getFieldType();
+    return $this->cache->get('schema.'.$fieldName)->getFieldType();
+    //return $this->fields[$fieldName]->getFieldType();
   }
   
   public function getDBTable($tableName) {
-    return $this->tables[$tableName]->getDBName();
+    return $this->cache->get('schema.'.$tableName)->getDBName();
+    //return $this->tables[$tableName]->getDBName();
   }
   
   public function getDBField($fieldName) {
-    return $this->fields[$fieldName]->getDBName();
+    return $this->cache->get('schema.'.$fieldName)->getDBName();
+    //return $this->fields[$fieldName]->getDBName();
   }
   
   public function getDBPrimaryColumnForTable($tableName) {
-    return $this->tables[$tableName]->getDBPrimaryColumnName();
+    return $this->cache->get('schema.'.$tableName)->getDBPrimaryColumnName();
+    //return $this->tables[$tableName]->getDBPrimaryColumnName();
   }
   
   public function getDBPrimaryColumnForDBTable($tableName) {
-    return $this->db_tables[$tableName]->getDBPrimaryColumnName();
+    return $this->cache->get('schema.'.$tableName)->getDBPrimaryColumnName();
+    //return $this->db_tables[$tableName]->getDBPrimaryColumnName();
   }
   
   public function __sleep() {

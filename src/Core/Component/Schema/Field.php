@@ -31,7 +31,7 @@ class Field {
   
   private $table;
 
-  public function __construct(Table $table, $name, $db_ID, $db_Name, $db_Type, $db_Length, $db_Precision, $db_Null, $db_Default, $db_Primary, $db_ParentField, $field_Name, $field_Type, $field_Size, $field_ColumnLength, $field_RowHeight, $field_Class, $lookup, $chooser, $columnName, $labelName, $labelPosition, $updateField) {
+  public function __construct($table, $name, $db_ID, $db_Name, $db_Type, $db_Length, $db_Precision, $db_Null, $db_Default, $db_Primary, $db_ParentField, $field_Name, $field_Type, $field_Size, $field_ColumnLength, $field_RowHeight, $field_Class, $lookup, $chooser, $columnName, $labelName, $labelPosition, $updateField) {
     
     $this->table = $table;
     

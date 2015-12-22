@@ -42,7 +42,7 @@ class Field {
     
     if ($param['delete']) {
       $field = self::getFieldInfo($param['field']);
-      if (self::$permission->getPermissionForSchemaObject($field->getTable()->getDBName(), null, Permission::DELETE)) {
+      if (self::$permission->getPermissionForSchemaObject(self::$schema->getDBTable($field->getTable()), null, Permission::DELETE)) {
         if (isset($param['field_name_override'])) {
           $html = $param['field_name_override'];
         } else {
@@ -180,17 +180,17 @@ class Field {
     
     $html = '';
     
-    if ($param['add'] AND !self::$permission->getPermissionForSchemaObject($field->getTable()->getDBName(), null, Permission::ADD)) {
+    if ($param['add'] AND !self::$permission->getPermissionForSchemaObject(self::$schema->getDBTable($field->getTable()), null, Permission::ADD)) {
       return null;
     }
     
     // generate checkboxes for deleting
     $org_term_ids = self::$focus->getOrganizationTermIDs();
     if ($param['delete'] AND 
-    self::$permission->getPermissionForSchemaObject($field->getTable()->getDBName(), null, Permission::DELETE) AND 
+    self::$permission->getPermissionForSchemaObject(self::$schema->getDBTable($field->getTable()), null, Permission::DELETE) AND 
     (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1))) {
       
-      if ($param['add'] AND self::$permission->getPermissionForSchemaObject($field->getTable()->getDBName(), null, Permission::ADD))
+      if ($param['add'] AND self::$permission->getPermissionForSchemaObject(self::$schema->getDBTable($field->getTable()), null, Permission::ADD))
         $param['attributes_html']['class'] = 'form-delete-checkbox-add';
       else   
         $param['attributes_html']['class'] = 'form-delete-checkbox';
@@ -617,7 +617,7 @@ class Field {
       $field_name = strtolower($db_action);
     }
 
-    $field_name .= '[' . $schema->getTable()->getName() . ']';
+    $field_name .= '[' . $schema->getTable() . ']';
     if ($db_action == 'add' AND $param['table_row'] AND !isset($param['add_remove'])) $field_name .= '[new_num]';
     if ($db_action == 'add' AND !$param['table_row'] AND !isset($param['add_remove'])) $field_name .= '[new]';
     if ($db_action == 'edit' AND isset($record_object) AND $record_object->getAddMode()) $field_name .= '[0]'; 
@@ -658,13 +658,13 @@ class Field {
          (
           ($param['add'] OR $param['edit'] OR $param['non']) AND 
             (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1)) AND 
-            self::$permission->getPermissionForSchemaObject($schema->getTable()->getName(), $schema->getName(), Permission::WRITE)
+            self::$permission->getPermissionForSchemaObject($schema->getTable(), $schema->getName(), Permission::WRITE)
               
         )
          OR
         (
           ($param['search'] OR self::_getSubmitMode() == 'search' OR $param['report']) AND 
-          self::$permission->getPermissionForSchemaObject($schema->getTable()->getName(), $schema->getName(), Permission::READ)
+          self::$permission->getPermissionForSchemaObject($schema->getTable(), $schema->getName(), Permission::READ)
         )
       ) {
           return true;
@@ -673,7 +673,7 @@ class Field {
   
   private static function _displayValue($param) {
     $schema = self::getFieldInfo($param['field']);
-    if (self::$permission->getPermissionForSchemaObject($schema->getTable()->getName(), $schema->getName(), Permission::READ)
+    if (self::$permission->getPermissionForSchemaObject($schema->getTable(), $schema->getName(), Permission::READ)
         ) {
           return true;
     }      
