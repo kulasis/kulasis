@@ -25,6 +25,7 @@ class PosterRecord {
   private $fields;
   
   private $originalRecord;
+  private $originalRecordWithFieldNames;
   
   private $violations;
   private $hasViolations;
@@ -50,6 +51,7 @@ class PosterRecord {
     $this->hasViolations = false;
     $this->posted = false;
     $this->noLog = false;
+    $this->originalRecordWithFieldNames = array();
     $this->violations = new ConstraintViolationList();
   }
   
@@ -175,6 +177,7 @@ class PosterRecord {
   
   private function processSameValues() {
     foreach($this->fields as $fieldName => $field) {
+      $this->originalRecordWithFieldNames[] = $fieldName;
       if (array_key_exists($this->schema->getField($fieldName)->getDBName(), $this->originalRecord) AND $this->originalRecord[$this->schema->getField($fieldName)->getDBName()] === $this->fields[$fieldName]) {
         unset($this->fields[$fieldName]);
       }
@@ -183,6 +186,7 @@ class PosterRecord {
   
   private function processCheckboxFields() {
     foreach($this->fields as $fieldName => $field) {
+      $this->originalRecordWithFieldNames[] = $fieldName;
       if ($this->schema->getFieldType($fieldName) == 'checkbox') {
         if (isset($field['checkbox_hidden']) OR isset($field['checkbox'])) {
           // Checkbox originally unchecked, now checked.
@@ -201,6 +205,7 @@ class PosterRecord {
   
   private function processDateFields() {
     foreach($this->fields as $fieldName => $field) {
+      $this->originalRecordWithFieldNames[] = $fieldName;
       if ($this->schema->getFieldType($fieldName) == 'date') {
         if ($field != '') {
           // Check if slashes or dashes in place
@@ -218,6 +223,7 @@ class PosterRecord {
   
   private function processTimeFields() {
     foreach($this->fields as $fieldName => $field) {
+      $this->originalRecordWithFieldNames[] = $fieldName;
       if ($this->schema->getFieldType($fieldName) == 'time') {
         if ($field != '') {
           $this->fields[$fieldName] = date('H:i:s', strtotime($field));
@@ -228,6 +234,7 @@ class PosterRecord {
   
   private function processDateTimeFields() {
     foreach($this->fields as $fieldName => $field) {
+      $this->originalRecordWithFieldNames[] = $fieldName;
       if ($this->schema->getFieldType($fieldName) == 'datetime') {
         if ($field != '') {
           $this->fields[$fieldName] = date('Y-m-d H:i:s', strtotime($field));
@@ -238,6 +245,7 @@ class PosterRecord {
   
   private function processChoosers() {
     foreach($this->fields as $fieldName => $field) {
+      $this->originalRecordWithFieldNames[] = $fieldName;
       if ($this->schema->getFieldType($fieldName) == 'chooser') {
         if (isset($field['value'])) {
           $this->fields[$fieldName] = $field['value'];
@@ -328,10 +336,10 @@ class PosterRecord {
   private function auditLog($fields = null) {
     
     $oldFields = $this->originalRecord;
-    if (count($oldFields) > 0) {
-      foreach($oldFields as $fieldName => $fieldValue) {
-        if ($this->schema->getClassDB($this->schema->getTable($this->table)->getDBName(), $fieldName)) {
-          $class = '\\'.$this->schema->getClassDB($this->schema->getTable($this->table)->getDBName(), $fieldName);
+    if (count($this->originalRecordWithFieldNames) > 0) {
+      foreach($this->originalRecordWithFieldNames as $fieldName) {
+        if ($this->schema->getClass($fieldName)) {
+          $class = '\\'.$this->schema->getClass($fieldName);
           if (method_exists($class, 'removeFromAuditLog')) {
             $syntheticField = new $class($this->container);
             if (call_user_func_array(array($syntheticField, 'removeFromAuditLog'), array()) === true) {

@@ -138,7 +138,7 @@ class Record {
   
   private function _setSelectedRecord($record_id) {
     $this->selected_record = $this->delegate->get($record_id);
-    $this->selected_record_id = $this->selected_record[$this->schema->getField($this->delegate->getBaseKeyFieldName())->getDBName()];
+    $this->selected_record_id = $this->selected_record[$this->schema->getDBField($this->delegate->getBaseKeyFieldName())];
     return $this->selected_record_id;
   }
   

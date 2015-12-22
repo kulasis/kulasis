@@ -28,9 +28,12 @@ class Schema {
     
     $tableResults = $this->db->db_select('CORE_SCHEMA_TABLES', 'tables')
       ->fields('tables')
+      ->leftJoin('CORE_SCHEMA_FIELDS', 'fields', 'fields.SCHEMA_TABLE_ID = tables.SCHEMA_TABLE_ID AND fields.DB_COLUMN_PRIMARY = 1')
+      ->fields('fields', array('FIELD_NAME', 'DB_COLUMN_NAME'))
       ->execute();
     while ($tableRow = $tableResults->fetch()) {
       $table = new Table($tableRow['TABLE_NAME'], $tableRow['SCHEMA_TABLE_ID'], $tableRow['DB_TABLE_NAME'], $tableRow['SCHEMA_CLASS'], $tableRow['TIMESTAMPS']);
+      $table->setPrimary($tableRow['FIELD_NAME'], $tableRow['DB_COLUMN_NAME']);
       
       $this->cache->add('schema.'.$tableRow['TABLE_NAME'], $table);
       
@@ -80,6 +83,8 @@ class Schema {
   }
   
   public function getClassDB($dbTableName, $dbFieldName) {
+    throw new Exception();
+    echo $dbFieldName;
     echo 'called it!';
     //if ($field = $this->db_tables[$dbTableName]->getDBField($dbFieldName)) {
     //  return $this->cache->get('schema.'.$field)->getClass();

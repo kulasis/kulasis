@@ -15,6 +15,7 @@ class Table {
   private $fields;
   
   private $primary;
+  private $primaryDB;
 
   public function __construct($name, $db_id, $db_Name, $db_Class, $db_Timestamps) {
     
@@ -42,8 +43,13 @@ class Table {
     return $this->db_Class;
   }
   
+  public function setPrimary($primary, $primaryDB) {
+    $this->primary = $primary;
+    $this->primaryDB = $primaryDB;
+  }
+  
   public function getDBPrimaryColumnName() {
-    return $this->primary->getDBName();
+    return $this->primaryDB;
   }
   
   public function getDBField($dbFieldName) {
