@@ -6,6 +6,11 @@ services:
     class: Symfony\Component\HttpFoundation\Session\Flash\FlashBag
     factory: ["@session", "getFlashBag"]
    
+  kula.listener.requestmobile:
+      class: Kula\Core\Bundle\FrameworkBundle\KulaCoreFrameworkBundle
+      tags:
+        - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+   
   kula.routing_loader:
     class: Kula\Core\Bundle\FrameworkBundle\Routing\BundleLoader
     arguments: ["@kernel"]

@@ -175,6 +175,26 @@ class Controller extends BaseController {
   }
   
   /**
+   * Renders a view.
+   *
+   * @param string   $view       The view name
+   * @param array    $parameters An array of parameters to pass to the view
+   * @param Response $response   A response instance
+   *
+   * @return Response A Response instance
+   */
+  public function render($view, array $parameters = array(), Response $response = null)
+  {
+    try {
+      $format = $this->getRequest()->getRequestFormat();
+      $mobileView = str_replace('.html.', '.'.$format.'.', $view);
+      return parent::render($mobileView, $parameters, $response);
+    } catch (\InvalidArgumentException $e) {
+      return parent::render($view, $parameters, $response);
+    }
+  }
+  
+  /**
    * Forwards the request to another controller.
    *
    * @param string $controller The controller name (a string like BlogBundle:Post:index)
