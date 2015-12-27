@@ -39,4 +39,14 @@ class KVCache {
       return true;
     }
   }
+  
+  public function verifyCacheLoaded($key) {
+    if ($this->apc->checkForAPC())
+      return $this->apc->verifyCacheLoaded($key);
+  }
+  
+  public function setCacheLoaded($key) {
+    if ($this->apc->checkForAPC())
+      return $this->apc->setCacheLoaded($key);
+  }
 }

@@ -82,15 +82,6 @@ class Schema {
     return $this->cache->get('schema.'.$fieldName)->getClass();
   }
   
-  public function getClassDB($dbTableName, $dbFieldName) {
-    throw new Exception();
-    echo $dbFieldName;
-    echo 'called it!';
-    //if ($field = $this->db_tables[$dbTableName]->getDBField($dbFieldName)) {
-    //  return $this->cache->get('schema.'.$field)->getClass();
-    //}
-  }
-  
   public function getFieldType($fieldName) {
     return $this->cache->get('schema.'.$fieldName)->getFieldType();
     //return $this->fields[$fieldName]->getFieldType();

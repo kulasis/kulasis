@@ -22,7 +22,7 @@ class SchemaStore implements WarmableInterface {
   public function warmUp($cacheDir) {
     $cache = new DBConfigCache($cacheDir.'/'.$this->fileName.'.php', $this->debug, $this->db, array('CORE_SCHEMA_TABLES', 'CORE_SCHEMA_FIELDS'));
 
-    if (!$cache->isFresh()) {
+    if (!$cache->isFresh() OR !$this->cache->verifyCacheLoaded('schema')) {
       
        //echo round(memory_get_usage(true)/1048576,2).' of '.ini_get('memory_limit')." - start schema loader<br />\n";
       
@@ -46,7 +46,7 @@ class SchemaStore implements WarmableInterface {
       $schema = null;
       unset($schema);
       //echo round(memory_get_usage()/1048576,2).' of '.ini_get('memory_limit')." - unset schema<br />\n";
-
+      $this->cache->setCacheLoaded('schema');
     }
     if (!$this->schema) {
       $this->schema = unserialize(file_get_contents((string) $cache));

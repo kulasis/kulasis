@@ -31,4 +31,12 @@ class APCCache {
     }
   }
   
+  public function verifyCacheLoaded($key) {
+    return $this->get('cache.'.$key);
+  }
+  
+  public function setCacheLoaded($key) {
+    return $this->add('cache.'.$key, time());
+  }
+  
 }
