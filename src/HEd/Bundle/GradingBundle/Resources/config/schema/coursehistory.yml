@@ -718,7 +718,7 @@ HEd.Student.CourseHistory.Term:
       label_name: "Concentration GPA"
   unique_keys:
     CourseHistoryTerms: [ 'HEd.Student.CourseHistory.Term.StudentID', 'HEd.Student.CourseHistory.Term.Level', 'HEd.Student.CourseHistory.Term.CalendarYear', 'HEd.Student.CourseHistory.Term.CalendarMonth', 'HEd.Student.CourseHistory.Term.Term' ]
-    StudentStatus: [ 'HEd.Student.CourseHistory.Term.StudentStatusID' ]
+    StudentStatus: [ 'HEd.Student.CourseHistory.Term.StudentStatusID', 'HEd.Student.CourseHistory.Term.Level' ]
 
 HEd.Student.Class:
   fields:
