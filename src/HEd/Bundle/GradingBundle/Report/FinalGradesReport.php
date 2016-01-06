@@ -77,10 +77,10 @@ class FinalGradesReport extends BaseReport {
     $this->Ln();
     
     if ($row['COMMENTS']) {
-      $this->Cell($this->width[0],6,'',1,0,'C',$this->fill);
+      $this->Cell($this->width[0],6,'',0,0,'C',false);
       $width = array_sum($this->width) - $this->width[0];
-      $this->MultiCell($width,6,$row['COMMENTS'],1,0,'J',$this->fill);
-      $this->Ln();
+      //$this->Cell($width,6,$row['COMMENTS'],1,0,'J',$this->fill);
+      $this->MultiCell($width,5,$row['COMMENTS'],1,'J',$this->fill);
     }
 
     $this->fill = !$this->fill;
