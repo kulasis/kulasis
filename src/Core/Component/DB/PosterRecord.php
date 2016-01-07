@@ -133,8 +133,15 @@ class PosterRecord {
   private function getOriginalRecord() {
     if ($this->crud == self::ADD)
       return false;
+	
+	$old_fields = array();
+	
+	foreach($this->fields as $fieldName => $field) {
+		$old_fields[] = $this->schema->getField($fieldName)->getDBName();
+	}
+  
     $this->originalRecord = $this->db->db_select($this->schema->getTable($this->table)->getDBName(), 'originalTable')
-      ->fields('originalTable')
+      ->fields('originalTable', $old_fields)
       ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
       ->execute()->fetch();
   }
