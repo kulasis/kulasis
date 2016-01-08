@@ -25,6 +25,7 @@ class PosterRecord {
   private $fields;
   
   private $originalRecord;
+  private $originalRecordForValidation;
   private $originalRecordWithFieldNames;
   
   private $violations;
@@ -142,6 +143,11 @@ class PosterRecord {
   
     $this->originalRecord = $this->db->db_select($this->schema->getTable($this->table)->getDBName(), 'originalTable')
       ->fields('originalTable', $old_fields)
+      ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
+      ->execute()->fetch();
+	 
+	$this->originalRecordForValidation = $this->db->db_select($this->schema->getTable($this->table)->getDBName(), 'originalTable')
+      ->fields('originalTable')
       ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
       ->execute()->fetch();
   }
@@ -275,14 +281,16 @@ class PosterRecord {
       
       // merge new data with existing row
       if ($this->crud == self::EDIT) {
-        $row_to_validate = array_merge($this->originalRecord, $fields);
+        $row_to_validate = array_merge($this->originalRecordForValidation, $fields);
       } else {
         $row_to_validate = $fields;
       }
       //var_dump($row_to_validate);
+	  //echo $validator;
       $validator_obj = new \Kula\Core\Bundle\FrameworkBundle\Service\Validator($validator, $row_to_validate);
       $violations = $validator_obj->getViolations();
-      $this->violations->addAll($violations);
+     // var_dump($violations);
+	  $this->violations->addAll($violations);
       if (count($violations) > 0) {
         $this->hasViolations = true;
       }
