@@ -63,7 +63,6 @@ class CourseHistoryService {
     $course_history_data['HEd.Student.CourseHistory.StaffID'] = $course_info['STAFF_ID'];
     $course_history_data['HEd.Student.CourseHistory.Staff'] = $course_info['ABBREVIATED_NAME'];
     $course_history_data['HEd.Student.CourseHistory.MarkScaleID'] = $course_info['MARK_SCALE_ID'];
-    $course_history_data['HEd.Student.CourseHistory.CreditsAttempted'] = $course_info['CREDITS'];
     $course_history_data['HEd.Student.CourseHistory.Mark'] = $mark;
     $course_history_data['HEd.Student.CourseHistory.TeacherSet'] = $teacher_set;
     
@@ -72,6 +71,7 @@ class CourseHistoryService {
     $course_history_data['HEd.Student.CourseHistory.CreditsEarned'] = $award_data['HEd.Student.CourseHistory.CreditsEarned'];
     $course_history_data['HEd.Student.CourseHistory.GPAValue'] = $award_data['HEd.Student.CourseHistory.GPAValue'];
     $course_history_data['HEd.Student.CourseHistory.QualityPoints'] = $award_data['HEd.Student.CourseHistory.QualityPoints'];
+    $course_history_data['HEd.Student.CourseHistory.CreditsAttempted'] = $award_data['HEd.Student.CourseHistory.CreditsAttempted'];
     
     return $this->posterFactory->newPoster()->add('HEd.Student.CourseHistory', 'new', $course_history_data)->process()->getResult();
     
@@ -86,9 +86,10 @@ class CourseHistoryService {
       ->fields('STUD_STUDENT_COURSE_HISTORY', array('MARK_SCALE_ID', 'CREDITS_ATTEMPTED', 'TEACHER_SET'))
       ->condition('COURSE_HISTORY_ID', $course_history_id)
       ->execute()->fetch();
-    
+
     // Get award data
     $award_data = $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS_ATTEMPTED']);
+	
     $course_history_data['HEd.Student.CourseHistory.Mark'] = $mark;
     
     if ((isset($award_data['COMMENTS']) AND $award_data['COMMENTS'] == 'Y' AND $teacher_set == 1) OR $teacher_set == 0) {
@@ -101,6 +102,7 @@ class CourseHistoryService {
     $course_history_data['HEd.Student.CourseHistory.GPAValue'] = $award_data['HEd.Student.CourseHistory.GPAValue'];
     $course_history_data['HEd.Student.CourseHistory.QualityPoints'] = $award_data['HEd.Student.CourseHistory.QualityPoints'];
     $course_history_data['HEd.Student.CourseHistory.TeacherSet'] = $teacher_set;
+    $course_history_data['HEd.Student.CourseHistory.CreditsAttempted'] = $award_data['HEd.Student.CourseHistory.CreditsAttempted'];
     
     return $this->posterFactory->newPoster()->edit('HEd.Student.CourseHistory', $course_history_id, $course_history_data)->process()->getResult();
   }
@@ -135,13 +137,21 @@ class CourseHistoryService {
     // Get GPA Value
     $mark_info = $this->database->db_select('STUD_MARK_SCALE_MARKS')
       ->fields('STUD_MARK_SCALE_MARKS', array('MARK', 'GETS_CREDIT', 'GPA_VALUE', 'ALLOW_COMMENTS', 'REQUIRE_COMMENTS'))
-      ->condition('MARK_SCALE_ID', $mark_scale_id)
+	  ->join('STUD_MARK_SCALE', 'STUD_MARK_SCALE', 'STUD_MARK_SCALE.MARK_SCALE_ID = STUD_MARK_SCALE_MARKS.MARK_SCALE_ID')
+	  ->fields('STUD_MARK_SCALE', array('AUDIT'))
+      ->condition('STUD_MARK_SCALE_MARKS.MARK_SCALE_ID', $mark_scale_id)
       ->condition('MARK', $mark)
       ->execute()->fetch();
     
     if ($mark_info['MARK'] == '')
       $award_data['HEd.Student.CourseHistory.Mark'] = null;
     
+	if ($mark_info['AUDIT'] == 1) {
+		$award_data['HEd.Student.CourseHistory.CreditsAttempted'] = 0.0;
+	} else {
+		$award_data['HEd.Student.CourseHistory.CreditsAttempted'] = $credits_attempted;
+	}
+	
     // Determine credit
     if ($mark_info['GETS_CREDIT'] == 1)
       $award_data['HEd.Student.CourseHistory.CreditsEarned'] = $credits_attempted;
