@@ -24,6 +24,7 @@ class PosterRecord {
   private $id;
   private $fields;
   
+  private $originalFields;
   private $originalRecord;
   private $originalRecordForValidation;
   private $originalRecordWithFieldNames;
@@ -49,6 +50,7 @@ class PosterRecord {
     $this->table = $table;
     $this->id = $id;
     $this->fields = $fields;
+	$this->originalFields = array();
     $this->hasViolations = false;
     $this->posted = false;
     $this->noLog = false;
@@ -138,6 +140,7 @@ class PosterRecord {
 	$old_fields = array();
 	
 	foreach($this->fields as $fieldName => $field) {
+		$this->originalFields[] = $fieldName;
 		$old_fields[] = $this->schema->getField($fieldName)->getDBName();
 	}
   
@@ -351,14 +354,16 @@ class PosterRecord {
   private function auditLog($fields = null) {
     
     $oldFields = $this->originalRecord;
-    if (count($this->originalRecordWithFieldNames) > 0) {
-      foreach($this->originalRecordWithFieldNames as $fieldName) {
-        if ($this->schema->getClass($fieldName)) {
+	
+    if (count($this->originalFields) > 0) {
+      foreach($this->originalFields as $fieldName) {
+		if ($this->schema->getClass($fieldName)) {
           $class = '\\'.$this->schema->getClass($fieldName);
-          if (method_exists($class, 'removeFromAuditLog')) {
+		  if (method_exists($class, 'removeFromAuditLog')) {
             $syntheticField = new $class($this->container);
             if (call_user_func_array(array($syntheticField, 'removeFromAuditLog'), array()) === true) {
-              unset($oldFields[$fieldName]);
+				$dbname = $this->schema->getDBField($fieldName);
+              unset($oldFields[$dbname]);
             }
           }
         }
@@ -377,7 +382,8 @@ class PosterRecord {
         'new_record' => count($fields) > 0 ? serialize($fields) : null, 
         'created_userstamp' => $this->session->get('user_id'), 
         'created_timestamp' => date('Y-m-d H:i:s'));
-    $audit->execute($data);
+	
+	$audit->execute($data);
   }
   
   private function execute() {

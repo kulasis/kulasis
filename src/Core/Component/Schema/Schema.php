@@ -79,7 +79,9 @@ class Schema {
   
   public function getClass($fieldName) {
     //return $this->fields[$fieldName]->getClass();
-    return $this->cache->get('schema.fields.'.$fieldName)->getClass();
+	if (method_exists($this->cache->get('schema.fields.'.$fieldName), 'getClass')) {
+	return $this->cache->get('schema.fields.'.$fieldName)->getClass();
+	}
   }
   
   public function getFieldType($fieldName) {
