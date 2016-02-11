@@ -84,7 +84,7 @@ class StudentBillingService {
           'X-Mailer: PHP/' . phpversion();
       $subject = $email_subject.' for '.$attempted_total_credits['LAST_NAME'].', '.$attempted_total_credits['FIRST_NAME'].' ('.$attempted_total_credits['PERMANENT_NUMBER'].')';
       $to = 'Registrar <registrar@ocac.edu>, Linda Anderson <landerson@ocac.edu>, Bursar <bursar@ocac.edu>';
-      mail($to, $subject, $email_text, $headers);
+      //mail($to, $subject, $email_text, $headers);
     
       }
     
@@ -142,36 +142,29 @@ class StudentBillingService {
     }
     
     if ($total_audit_credits > 0) {
-      
-      $student_status = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
+      $student_status_result = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
         ->fields('status', array('TUITION_RATE_ID', 'TOTAL_CREDITS_ATTEMPTED', 'STUDENT_ID', 'ORGANIZATION_TERM_ID'))
         ->join('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = status.TUITION_RATE_ID AND tuitionrate.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
-        ->fields('tuitionrate', array('CREDIT_HOUR_RATE'))
+        ->join('BILL_TUITION_RATE_TRANSACTIONS', 'transactions', 'transactions.TUITION_RATE_ID = tuitionrate.TUITION_RATE_ID')
+        ->condition('transactions.RULE', 'AUDIT')
+        ->fields('transactions', array('CREDIT_HOUR_RATE', 'TRANSACTION_CODE_ID'))
         ->condition('status.STUDENT_STATUS_ID', $student_status_id)
-        ->execute()->fetch();
-      
+        ->execute();
+      while ($student_status = $student_status_result->fetch()) {
+
       $audit_charge_total = $student_status['CREDIT_HOUR_RATE'] * $total_audit_credits;
-      
-      // Get audit code
-      $audit_code = $this->database->db_select('BILL_TUITION_RATE_TRANSACTIONS', 'tuition_rate_trans')
-        ->fields('tuition_rate_trans', array('TRANSACTION_CODE_ID', 'CREDIT_HOUR_RATE'))
-        ->condition('TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
-        ->condition('RULE', 'AUDIT')
-        ->execute()->fetch()['TRANSACTION_CODE_ID'];
-      
-      if ($audit_code) {
       
         // Compare calculated tuition total to what has been billed
         $billed_audit = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
           ->expression('SUM(AMOUNT)', 'billed_amount')
           ->condition('CONSTITUENT_ID', $student_status['STUDENT_ID'])
           ->condition('ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID'])
-          ->condition('CODE_ID', $audit_code)
+          ->condition('CODE_ID', $student_status['TRANSACTION_CODE_ID'])
           ->execute()->fetch()['billed_amount'];
-      
+  
         // Determine difference to post
         $amount_to_post = $audit_charge_total - $billed_audit;
-    
+
         if ($amount_to_post < 0) {
         
           // Get latest drop date
@@ -192,11 +185,11 @@ class StudentBillingService {
         }
       
         if ($amount_to_post != 0) {
-          $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $audit_code, date('Y-m-d'), isset($transaction_description) ? $transaction_description : '', $amount_to_post);
+          $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $student_status['TRANSACTION_CODE_ID'], date('Y-m-d'), isset($transaction_description) ? $transaction_description : '', $amount_to_post);
           $this->constituent_billing_service->postTransaction($new_transaction_id);
         }
-      }
-    }
+      } // end while loop
+    } // end if greater than 0 for credit total
           
   }
   
