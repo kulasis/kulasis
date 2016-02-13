@@ -8,7 +8,7 @@ class SISAAClassRosterLabelsReportController extends ReportController {
   
   public function indexAction() {
     $this->authorize();
-    $this->formAction('sis_K12_offering_sections_reports_classroster_labels_aa_generate');
+    //$this->formAction('sis_K12_offering_sections_reports_classroster_labels_aa_generate');
     if ($this->request->query->get('record_type') == 'SIS.K12.Section' AND $this->request->query->get('record_id') != '')
       $this->setRecordType('SIS.K12.Section');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
@@ -76,7 +76,7 @@ class SISAAClassRosterLabelsReportController extends ReportController {
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('section.SECTION_ID', $record_id);
     
-	  if (isset($form['section_number'])) {
+	  if (isset($form['section_number']) AND $form['section_number'] != '') {
 		  $result = $result->condition('section.SECTION_NUMBER', $form['section_number'], 'LIKE');
 	  }
 	

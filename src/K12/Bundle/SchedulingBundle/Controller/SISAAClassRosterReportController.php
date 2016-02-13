@@ -60,7 +60,7 @@ class SISAAClassRosterReportController extends ReportController {
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('section.SECTION_ID', $record_id);
     
-	  if (isset($form['section_number'])) {
+	  if (isset($form['section_number']) AND $form['section_number'] != '') {
 		  $result = $result->condition('section.SECTION_NUMBER', $form['section_number'], 'LIKE');
 	  }
     
