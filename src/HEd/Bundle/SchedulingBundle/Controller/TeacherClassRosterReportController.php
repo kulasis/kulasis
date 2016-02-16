@@ -8,7 +8,6 @@ class TeacherClassRosterReportController extends CoreClassRosterReportController
   
   public function indexAction() {
     $this->authorize();
-    $this->formAction('teacher_HEd_offering_sections_report_classroster_generate');
     $this->setRecordType('Teacher.HEd.Section');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
     return $this->render('KulaHEdSchedulingBundle:TeacherClassRosterReport:reports_classroster.html.twig');

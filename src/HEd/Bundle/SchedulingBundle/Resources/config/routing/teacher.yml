@@ -1,14 +1,20 @@
 Teacher_HEd_Roster:
   path: /class/roster
-  defaults: { _controller: KulaHEdSchedulingBundle:TeacherSection:roster }
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:TeacherSection:roster
+    _navigation: Teacher.HEd.Roster.Current
 
 Teacher_HEd_Roster_Dropped:
   path: /class/roster/dropped
-  defaults: { _controller: KulaHEdSchedulingBundle:TeacherSection:dropped_roster }
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:TeacherSection:dropped_roster
+    _navigation: Teacher.HEd.Roster.Dropped
 
 Teacher_HEd_Reports_ClassRoster:
   path: /class/reports/class_roster
-  defaults: { _controller: KulaHEdSchedulingBundle:TeacherClassRosterReport:index }
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:TeacherClassRosterReport:index
+    _navigation: Teacher.HEd.Roster.ClassRoster
   methods: [GET]
 
 Teacher_HEd_Reports_ClassRoster_Generate:
@@ -18,4 +24,6 @@ Teacher_HEd_Reports_ClassRoster_Generate:
 
 Teacher_HEd_Student_Schedule:
   path: /student/schedule
-  defaults: { _controller: KulaHEdSchedulingBundle:TeacherStudentSchedule:index }
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:TeacherStudentSchedule:index
+    _navigation: Teacher.HEd.Advisee.Schedule

@@ -103,11 +103,15 @@ class Navigation {
   
   public function getTabs($nav_key) {
     if ($this->permission->getPermissionForNavigationObject($nav_key)) {
-      
+
       $tabsToOutput = array();
-      
-      // Get parent
-      $tabs = $this->getProperty($this->getProperty($nav_key, 'parent'), 'tabs');
+
+      if ($this->getProperty($nav_key, 'tabs')) {
+        $tabs = $this->getProperty($nav_key, 'tabs');
+      } else {
+        // Get parent
+        $tabs = $this->getProperty($this->getProperty($nav_key, 'parent'), 'tabs');
+      }
 
       // Get tabs from parent
       if ($tabs) {
@@ -139,18 +143,19 @@ class Navigation {
   } 
   
   public function getReportsMenu($nav_key) {
-    
-    $nav_key = $this->determineParentKey($nav_key);
-    
-    if ($this->permission->getPermissionForNavigationObject($nav_key)) {
-      // Get parent
-      $tabs = $this->getProperty($nav_key, 'menu_reports');
+    if ($this->getProperty($nav_key, 'type') != 'menu_report') {    
+      $nav_key = $this->determineParentKey($nav_key);
       
-      // Get tabs from parent
-      if ($tabs) {
-        return $tabs;
+      if ($this->permission->getPermissionForNavigationObject($nav_key)) {
+        // Get parent
+        $tabs = $this->getProperty($nav_key, 'menu_reports');
+        
+        // Get tabs from parent
+        if ($tabs) {
+          return $tabs;
+        }
+        
       }
-      
     }
   }
   

@@ -32,6 +32,10 @@
   margin: auto;
 }
 
+.nav-tabs {
+  padding-left: 10px;
+}
+
 /*
 .navbar-nav > li > a {
   padding-top: 15px;

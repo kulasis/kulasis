@@ -116,12 +116,13 @@ Core.HEd.Grading.GradingSetup:
       display_name: "Standings"
       route: Core_HEd_Grading_GradingSetup_Standings
 
-Teacher.HEd.Class.Grades:
+Teacher.HEd.Grades:
+  parent: Teacher.HEd
+  type: form
   description: "Grades"
   display_name: "Grades"
-  type: form
   tabs:
-    Roster:
+    Current:
       description: "Current"
       display_name: "Current"
       route: teacher_HEd_section_grades_current
@@ -130,15 +131,12 @@ Teacher.HEd.Class.Grades:
       display_name: "Dropped"
       route: teacher_HEd_section_grades_dropped
 
-Teacher.HEd.Advisor:
-  description: "Advisor"
-  display_name: "Advisor"
-  type: dir
-  forms:
-    DegreeAudit:
-      description: "Degree Audit"
-      display_name: "Degree Audit"
-      route: teacher_HEd_student_degreeaudit
+Teacher.HEd.Advisee.DegreeAudit:
+  parent: Teacher.HEd.Advisee
+  type: tab
+  description: "Degree Audit"
+  display_name: "Degree Audit"
+  route: teacher_HEd_student_degreeaudit
 
 Student.HEd.Grades:
   description: "Grades"

@@ -92,10 +92,10 @@ class Focus {
     }
     
     // Get focus session info for role
-    $staff_organization_term_id = $this->session->getFocus('staff_organization_term_id');
+    $staff_organization_term_id = $this->session->getFocus('Teacher.Staff.OrgTerm');
     
     if (!$student_status_id) {
-      $students_result = $db->db_select('STUD_STUDENT', 'stu')
+      $students_result = $this->db->db_select('STUD_STUDENT', 'stu')
         ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = stu.STUDENT_ID')
         ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL'))
         ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')

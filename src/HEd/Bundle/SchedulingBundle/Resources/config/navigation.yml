@@ -187,7 +187,7 @@ Teacher.HEd.Roster:
   parent: Teacher.HEd
   type: form
   tabs:
-    Roster:
+    Current:
       description: "Current Roster"
       display_name: "Current"
       route: Teacher_HEd_Roster
@@ -201,9 +201,9 @@ Teacher.HEd.Roster:
       display_name: "Class Roster"
       route: Teacher_HEd_Reports_ClassRoster
       
-Teacher.HEd.Student:
-  description: "Student"
-  display_name: "Student"
+Teacher.HEd.Advisee:
+  description: "Advisee"
+  display_name: "Advisee"
   parent: Teacher.HEd
   type: form
   tabs:

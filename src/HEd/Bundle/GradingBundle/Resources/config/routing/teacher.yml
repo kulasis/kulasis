@@ -1,11 +1,17 @@
 teacher_HEd_section_grades_current:
   path: /section/grades
-  defaults: { _controller: KulaHEdGradingBundle:TeacherClassGrades:current }
+  defaults: 
+    _controller: KulaHEdGradingBundle:TeacherClassGrades:current
+    _navigation: Teacher.HEd.Grades.Current
 
 teacher_HEd_section_grades_dropped:
   path: /section/grades/dropped
-  defaults: { _controller: KulaHEdGradingBundle:TeacherClassGrades:dropped }
+  defaults: 
+    _controller: KulaHEdGradingBundle:TeacherClassGrades:dropped
+    _navigation: Teacher.HEd.Grades.Dropped
 
 teacher_HEd_student_degreeaudit:
   path: /student/degree_audit
-  defaults: { _controller: KulaHEdGradingBundle:TeacherDegreeAudit:index }
+  defaults: 
+    _controller: KulaHEdGradingBundle:TeacherDegreeAudit:index
+    _navigation: Teacher.HEd.Advisee.DegreeAudit
