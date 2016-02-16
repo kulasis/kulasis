@@ -1,21 +1,23 @@
-Core.Page.Home:
+Core.Home:
   description: "Home"
   display_name: "Home"
-  type: page
+  type: form
+  route: Core_Home
+  first: core
   portal: core
-  route: core_home
-  sort: 1
-SIS.Page.Home:
+
+Teacher.Home:
   description: "Home"
   display_name: "Home"
-  type: page
-  portal: sis
-  route: sis_home
-  sort: 1
-Teacher.Page.Home:
-  description: "Home"
-  display_name: "Home"
-  type: page
+  type: form
+  route: Teacher_Home
+  first: teacher
   portal: teacher
-  route: teacher_home
-  sort: 1
+  
+Student.Home:
+  description: "Home"
+  display_name: "Home"
+  type: form
+  route: Student_Home
+  first: student
+  portal: student

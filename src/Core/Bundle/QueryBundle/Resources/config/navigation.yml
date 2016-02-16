@@ -1,25 +1,10 @@
 Core.Utility:
   description: "Utility"
   display_name: Utility
-  type: form_group
+  type: dir
   portal: core
-  sort: 5
   forms:
     Export:
       description: "Export"
       display_name: "Export"
-      route: core_export_savedqueries
-      sort: 1
-
-SIS.Utility:
-  description: "Utility"
-  display_name: Utility
-  type: form_group
-  portal: sis
-  sort: 5
-  forms:
-    Export:
-      description: "Export"
-      display_name: "Export"
-      route: core_export_savedqueries
-      sort: 1
+      route: Core_Export_SavedQueries

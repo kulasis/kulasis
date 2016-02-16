@@ -11,11 +11,11 @@ services:
   
   kula.core.navigation_store:
     class: Kula\Core\Component\Navigation\NavigationStore
-    arguments: ["@kula.core.db", %kula.navigation.options.cache_class%, %kernel.cache_dir%, %kernel.debug%, "@kernel", "@kula.core.session", "@kula.core.permission", "@request_stack"] 
+    arguments: ["@kula.core.db", %kula.navigation.options.cache_class%, %kernel.cache_dir%, %kernel.debug%, "@kernel", "@kula.core.session", "@kula.core.permission", "@request_stack", "@kula.core.cache.kv"] 
     public: false
     
   kula.core.navigation:
     class: Kula\Core\Component\Navigation\Navigation
     factory_service: kula.core.navigation_store
     factory_method: getNavigation
-    arguments: ["@kula.core.db"] 
+    arguments: ["@kula.core.db", "@kula.core.cache.kv"] 

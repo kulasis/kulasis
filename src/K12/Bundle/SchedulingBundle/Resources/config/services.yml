@@ -1,4 +1,4 @@
 services:
   kula.K12.scheduling.schedule:
     class: Kula\K12\Bundle\SchedulingBundle\Service\ScheduleService
-    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session", "@kula.K12.billing.constituent"]
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session"] # , "@kula.K12.billing.constituent"

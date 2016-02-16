@@ -31,7 +31,7 @@ class StaffChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'sis_HEd_school_staff_chooser';
+    return 'core_HEd_school_staff_chooser';
   }
   
 }

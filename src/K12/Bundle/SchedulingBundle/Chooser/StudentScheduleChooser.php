@@ -53,7 +53,7 @@ class StudentScheduleChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'sis_K12_classes_student_chooser';
+    return 'Core_K12_Scheduling_StudentClasses_Chooser';
   }
   
 }

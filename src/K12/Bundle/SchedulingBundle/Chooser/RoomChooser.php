@@ -40,7 +40,7 @@ class RoomChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'sis_K12_room_chooser';
+    return 'Core_K12_Setup_Rooms_Chooser';
   }
   
 }

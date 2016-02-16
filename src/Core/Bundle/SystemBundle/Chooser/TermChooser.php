@@ -32,7 +32,7 @@ class TermChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'core_system_terms_chooser';
+    return 'Core_System_Terms_Chooser';
   }
   
 }

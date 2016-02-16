@@ -10,7 +10,7 @@ class TermStore {
   
   private $term;
   
-  public function __construct($db, $fileName, $cacheDir, $debug, $kernel, $session, $permission, $request) {
+  public function __construct($db, $fileName, $cacheDir, $debug, $kernel, $session, $permission, $request, $cache) {
     $this->db = $db;
     $this->cacheDir = $cacheDir;
     $this->fileName = $fileName;
@@ -19,22 +19,27 @@ class TermStore {
     $this->session = $session;
     $this->permission = $permission;
     $this->request = $request;
+    $this->cache = $cache;
   }
   
   public function warmUp($cacheDir) {
     
     $cache = new DBConfigCache($cacheDir.'/'.$this->fileName.'.php', $this->debug, $this->db, array('CORE_TERM'));
     
-    if (!$cache->isDBFresh()) {
+    if (!$cache->isDBFresh() OR !$this->cache->verifyCacheLoaded('term')) {
       
-      $term = new Term($this->db);
-      $term->loadTerms();
+      $termLoader = new TermLoader($this->db, $this->cache);
+      $term = $termLoader->loadTerms();
       $cache->write(serialize($term));
       
+      $this->cache->setCacheLoaded('term');
     }
     
-    $this->term = unserialize(file_get_contents((string) $cache));
-    $this->term->awake($this->db);
+    if (!$this->cache->verifyCacheLoaded('term')) {
+      $term = unserialize(file_get_contents((string) $cache));
+    }
+    $this->term = new Term($this->cache);
+  
   }
   
   public function getTerm() {

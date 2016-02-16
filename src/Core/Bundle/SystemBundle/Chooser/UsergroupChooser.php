@@ -34,7 +34,7 @@ class UsergroupChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'core_system_usergroups_chooser';
+    return 'Core_System_Usergroups_Chooser';
   }
   
 }

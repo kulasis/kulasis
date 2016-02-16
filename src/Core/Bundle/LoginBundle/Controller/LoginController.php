@@ -63,11 +63,13 @@ class LoginController extends Controller {
     }
   }
   
-  public function change_usergroupAction() {
+  public function roleListAction() {
+    return $this->render('KulaCoreLoginBundle:Login:roles.html.twig', array());
+  }
+  
+  public function change_usergroupAction($id) {
 
-    $new_usergroup = $this->getRequest()->get('focus_usergroup');
-
-    $this->get('kula.login')->changeRole($new_usergroup);
+    $this->get('kula.login')->changeRole($id);
     // Determine first route that can be used
     $first_route = $this->get('kula.core.navigation')->getFirstRoute();
     if ($first_route) {

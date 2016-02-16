@@ -1,266 +1,142 @@
-Core.Monitor:
-  description: "Monitor"
+Core.System.Monitor:
+  type: dir
+  parent: Core.System
+  description: "Forms that display activity in system."
   display_name: "Monitor"
-  type: form_group
-  portal: core
-  sort: 1
-  forms:
-    Logs:
-      description: "Logs"
-      display_name: "Logs"
-      sort: 1
-      route: core_logs_session
-
-Core.System:
-  description: "System"
-  display_name: "System"
-  type: form_group
-  portal: core
-  sort: 3
-  forms: 
-    Setup:
-      description: "Setup"
-      display_name: "Setup"
-      sort: 1
-      tabs:
-        General:
-          description: "General"
-          display_name: "General"
-          sort: 1
-          route: core_setup_system
-        LDAP:
-          description: "LDAP"
-          display_name: "LDAP"
-          sort: 2
-          route: core_setup_system_ldap
-        IntegrationDatabases:
-          description: "Integration Databases"
-          display_name: "Integration DBs"
-          sort: 3
-          route: core_system_integration_databases
-    Lookup:
-      description: "Lookup"
-      display_name: "Lookup"
-      route: core_system_lookup
-      sort: 2
-      menu_actions:
-        New:
-          description: "New Lookup"
-          display_name: "New Lookup"
-          route: core_system_lookup_add
-          sort: 1
-        Delete:
-          description: "Delete Lookup"
-          display_name: "Delete Lookup"
-          divider_before: true
-          record_loaded: true
-          route: core_system_lookup_delete
-          confirmation_message: "Are you sure you want to delete lookup?"
-          sort: 2
-    NonOrganization:
-      description: "Non Organization"
-      display_name: "Non Organization"
-      route: core_system_nonorganization
-      sort: 3
-      menu_actions:
-        New: 
-          description: "New Non Organization"
-          display_name: "New Non Organization"
-          route: core_system_nonorganization_add
-          sort: 1
-        Delete:
-          description: "Delete Non Organization"
-          display_name: "Delete Non Organization"
-          divider_before: true
-          record_loaded: true
-          route: core_system_nonorganization_delete
-          confirmation_message: "Are you sure you want to delete non organization?"
-          sort: 2
-    Organization:
-      description: "Organization"
-      display_name: "Organization"
-      sort: 4
-      tabs:
-        OrganizationTerms:
-          description: "Organization Terms"
-          display_name: "Organization Terms"
-          route: core_system_organization_terms
-          sort: 1
-        Organization:
-          description: "Organization"
-          display_name: "Organization"
-          route: core_system_organization
-          sort: 2
-    Terms:
-      description: "Terms"
-      display_name: "Terms"
-      sort: 5
-      route: core_system_terms
-Core.Security:
-  description: "Security"
-  display_name: "Security"
-  type: form_group
-  portal: core
-  sort: 4
-  forms:
-    NavigationPermissions:
-      description: "Navigation Permissions"
-      display_name: "Navigation Permissions"
-      sort: 2
-      tabs:
-        UserGroup:
-          description: "User Group"
-          display_name: "User Group"
-          route: core_system_navpermissions_usergroup	
-          sort: 1
-        Public:
-          description: "Public"
-          display_name: "Public"
-          route: core_system_navpermissions_public
-          sort: 2
-        Role:
-          description: "Role"
-          display_name: "Role"
-          route: core_system_navpermissions_role
-          sort: 3
-    SchemaPermissions:
-      description: "Schema Permissions"
-      display_name: "Schema Permissions"
-      sort: 3
-      tabs:
-        UserGroup:
-          description: "User Group"
-          display_name: "User Group"
-          route: core_system_schemapermissions_usergroup
-          sort: 1
-        Public:
-          description: "Public"
-          display_name: "Public"
-          route: core_system_schemapermissions_public
-          sort: 2
-        Role:
-          description: "Role"
-          display_name: "Role"
-          route: core_system_schemapermissions_role
-          sort: 3
-Core.User:
-  description: "User"
-  display_name: "User"
-  type: form_group
-  portal: core
-  sort: 5
-  forms:
-    UserGroups:
-      description: "User Groups"
-      display_name: "User Groups"
-      route: core_system_usergroups
-      sort: 1
-    Users:
-      description: "Users"
-      display_name: "Users"
-      sort: 2
-      tabs:
-        Information:
-          description: "User Information"
-          display_name: "Information"
-          sort: 1
-          route: core_system_users
-        UserGroups:
-          description: "Roles"
-          display_name: "Roles"
-          sort: 2
-          route: core_system_users_usergroups
-      menu_actions:
-        Add:
-          description: "Add User"
-          display_name: "Add User"
-          route: core_system_users_add
-          sort: 1
-        Delete:
-          description: "Delete User"
-          display_name: "Delete User"
-          route: core_system_users_delete
-          divider_before: true
-          record_loaded: true
-          confirmation_message: "Are you sure you want to delete user?"
-          sort: 2
-
-SIS.HEd.Admin:
-  description: "Administration (HEd)"
-  type: form_group
-  portal: sis
-  display_name: "Administration (HEd)"
-  sort: 4
-
-SIS.K12.Admin:
-  description: "Administration (K12)"
-  type: form_group
-  portal: sis
-  display_name: "Administration (K12)"
-  sort: 4
   
-SIS.HEd.System:
-  description: "System"
-  type: form_group
-  portal: sis
-  display_name: "System"
-  sort: 6
-  forms:
-    Lookup:
-      description: "Lookup"
-      display_name: "Lookup"
-      route: core_system_lookup
-      sort: 2
-      menu_actions:
-        New:
-          description: "New Lookup"
-          display_name: "New Lookup"
-          route: core_system_lookup_add
-          sort: 1
-        Delete:
-          description: "Delete Lookup"
-          display_name: "Delete Lookup"
-          divider_before: true
-          record_loaded: true
-          route: core_system_lookup_delete
-          confirmation_message: "Are you sure you want to delete lookup?"
-          sort: 2
-    NonOrganization:
-      description: "Non Organization"
-      display_name: "Non Organization"
-      route: core_system_nonorganization
-      sort: 3
-      menu_actions:
-        New: 
-          description: "New Non Organization"
-          display_name: "New Non Organization"
-          route: core_system_nonorganization_add
-          sort: 1
-        Delete:
-          description: "Delete Non Organization"
-          display_name: "Delete Non Organization"
-          divider_before: true
-          record_loaded: true
-          route: core_system_nonorganization_delete
-          confirmation_message: "Are you sure you want to delete non organization?"
-          sort: 2
+Core.System.Monitor.Logs:
+  type: form
+  parent: Core.System.Monitor
+  description: "Logs"
+  display_name: "Logs"
+  route: Core_Logs_Session
+
+Core.System.Setup:
+  type: form
+  parent: Core.System
+  description: "Setup"
+  display_name: "Setup"
+  tabs:
+    General:
+      description: "General"
+      display_name: "General"
+      route: Core_Setup_System
+    LDAP:
+      description: "LDAP"
+      display_name: "LDAP"
+      route: Core_Setup_System_LDAP
+    IntegrationDatabases:
+      description: "Integration Databases"
+      display_name: "Integration DBs"
+      route: Core_System_Integration_Databases
+    
+Core.System.Lookup:
+  type: form
+  parent: Core.System
+  description: "Lookup"
+  display_name: "Lookup"
+  route: Core_System_Lookup
+  button_add:
+    route: Core_System_Lookup_Add
+  button_delete:
+    route: Core_System_Lookup_Delete
+    confirmation_message: "Are you sure you want to delete lookup?"
+
+Core.System.NonOrganization:
+  type: form
+  parent: Core.System
+  description: "Non Organization"
+  display_name: "Non Organization"
+  route: Core_System_NonOrganization
+  button_add: 
+    route: Core_System_NonOrganization_Add
+  button_delete:
+    route: Core_System_NonOrganization_Delete
+    confirmation_message: "Are you sure you want to delete non organization?"
+
+Core.System.Organization:
+  type: form
+  parent: Core.System
+  description: "Organization"
+  display_name: "Organization"
+  tabs:
+    OrganizationTerms:
+      description: "Organization Terms"
+      display_name: "Organization Terms"
+      route: Core_System_Organization_Terms
     Organization:
       description: "Organization"
       display_name: "Organization"
-      sort: 4
-      tabs:
-        OrganizationTerms:
-          description: "Organization Terms"
-          display_name: "Organization Terms"
-          route: core_system_organization_terms
-          sort: 1
-        Organization:
-          description: "Organization"
-          display_name: "Organization"
-          route: core_system_organization
-          sort: 2
-    Terms:
-      description: "Terms"
-      display_name: "Terms"
-      sort: 5
-      route: core_system_terms
+      route: Core_System_Organization
+
+Core.System.Terms:
+  type: form
+  parent: Core.System
+  description: "Terms"
+  display_name: "Terms"
+  route: Core_System_Terms
+
+Core.System.NavigationPermissions:
+  type: form
+  parent: Core.System
+  description: "Navigation Permissions"
+  display_name: "Navigation Permissions"
+  tabs:
+    UserGroup:
+      description: "User Group"
+      display_name: "User Group"
+      route: Core_System_NavPermissions_Usergroup	
+    Public:
+      description: "Public"
+      display_name: "Public"
+      route: Core_System_NavPermissions_Public
+    Role:
+      description: "Role"
+      display_name: "Role"
+      route: Core_System_NavPermissions_Role
+
+Core.System.SchemaPermissions:
+  type: form
+  parent: Core.System
+  description: "Schema Permissions"
+  display_name: "Schema Permissions"
+  tabs:
+    UserGroup:
+      description: "User Group"
+      display_name: "User Group"
+      route: Core_System_SchemaPermissions_Usergroup
+    Public:
+      description: "Public"
+      display_name: "Public"
+      route: Core_System_SchemaPermissions_Public
+    Role:
+      description: "Role"
+      display_name: "Role"
+      route: Core_System_SchemaPermissions_Role
+
+Core.System.UserGroups:
+  type: form
+  parent: Core.System
+  description: "User Groups"
+  display_name: "User Groups"
+  route: Core_System_Usergroups
+  
+Core.System.Users:
+  type: form
+  parent: Core.System
+  description: "Users"
+  display_name: "Users"
+  tabs:
+    Information:
+      description: "User Information"
+      display_name: "Information"
+      route: Core_System_Users
+    UserGroups:
+      description: "Roles"
+      display_name: "Roles"
+      route: Core_System_Users_Usergroups
+  button_add:
+    route: Core_System_Users_Add
+  button_delete:
+    route: Core_System_Users_Delete
+    confirmation_message: "Are you sure you want to delete user?"

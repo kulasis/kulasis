@@ -10,10 +10,11 @@ class Session {
   
   public function __construct(\Symfony\Component\HttpFoundation\Session\Session $session,
                               \Kula\Core\Component\DB\DB $db, 
-                              $request) {
+                              $request, $organization) {
       $this->db = $db;
       $this->session = $session;
       $this->request = $request;
+      $this->organization = $organization;
   }
   
   /**
@@ -90,6 +91,9 @@ class Session {
       $role['focus']['term_id'] = $this->firstTermForStudentRole($role['role_id'], $role['focus']['organization_id']);
     }
     
+    // Get target
+    $role['focus']['target'] = $this->organization->getTarget($role['focus']['organization_id']);
+    
     // Log session and get session ID and token
     $role['session_id'] = $this->logOpenedSession($role['user_id'], $role['role_id'], $role['focus']['organization_id'], $role['focus']['term_id']);
     
@@ -150,6 +154,7 @@ class Session {
   }
   
   public function setFocus($key, $value, $role_token = null) {
+    
     if ($role_token === null) {
       $role_token = $this->session->get('initial_role');
     }
@@ -222,8 +227,10 @@ class Session {
       ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
       ->fields('orgterms', array('TERM_ID'))
       ->condition('role.ROLE_ID', $role_id)
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->condition('term.END_DATE', date('Y-m-d', strtotime('-7 days')), '>=')
       ->condition('orgterms.ORGANIZATION_ID', $organization_id)
-        ->execute()->fetch();
+      ->execute()->fetch();
     return $first_term_results['TERM_ID'];
   }
   

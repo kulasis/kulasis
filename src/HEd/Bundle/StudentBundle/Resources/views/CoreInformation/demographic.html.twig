@@ -1,0 +1,86 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+{% if mode == 'edit' %}
+<div class="group-box">
+<div class="group-box-header">Name</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'Core.Constituent.LastName', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.LAST_NAME, label: true }) }}
+{{ kula_field({ edit: true, field: 'Core.Constituent.FirstName', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.FIRST_NAME, label: true  }) }}
+{{ kula_field({ edit: true, field: 'Core.Constituent.MiddleName', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.MIDDLE_NAME, label: true  }) }}
+{% if mode == 'edit' %}
+{{ kula_field({ edit: true, field: 'Core.Constituent.Gender', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.GENDER, label: true, lookup: 'C'  }) }}
+{% endif %}
+{{ kula_field({ edit: true, field: 'Core.Constituent.MaidenName', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.MAIDEN_NAME, label: true  }) }}
+{{ kula_field({ edit: true, field: 'Core.Constituent.PreferredName', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.PREFERRED_NAME, label: true  }) }}
+</div>
+</div>
+{% endif %}
+<div class="group-box">
+<div class="group-box-header">Original Enrollment</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'HEd.Student.OriginalEnterDate', db_row_id: student.STUDENT_ID, value: student.ORIGINAL_ENTER_DATE, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.OriginalEnterCode', db_row_id: student.STUDENT_ID, value: student.ORIGINAL_ENTER_CODE, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.OriginalEnterTerm', db_row_id: student.STUDENT_ID, value: student.ORIGINAL_ENTER_TERM, label: true}) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Unique Identifiers</div>
+<div class="group-box-contents group">
+{% if mode == 'edit' %}
+{{ kula_field({ edit: true, field: 'Core.Constituent.PermanentNumber', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.PERMANENT_NUMBER, label: true  }) }}
+{% endif %}
+{{ kula_field({ edit: true, field: 'Core.Constituent.SocialSecurityNumber', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: student.STUDENT_ID, label: true  }) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.AlternateNumber1', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: student.ALTERNATE_NUMBER_1, label: true  }) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.AlternateNumber2', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: student.ALTERNATE_NUMBER_2, label: true  }) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Birth Info / Origin Info</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'Core.Constituent.BirthDate', db_row_id: student.STUDENT_ID, value: student.BIRTH_DATE, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.OriginState', db_row_id: student.STUDENT_ID, value: student.ORIGIN_STATE, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.ResidentCounty', db_row_id: student.STUDENT_ID, value: student.RESIDENT_COUNTY, label: true}) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Race/Ethnicity, Veteran, Disability</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'Core.Constituent.Hispanic', db_row_id: student.STUDENT_ID, value: student.HISPANIC, label: true}) }}
+{{ kula_field({ edit: true, field: 'Core.Constituent.Race', db_row_id: student.STUDENT_ID, value: student.RACE, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.Veteran', db_row_id: student.STUDENT_ID, value: student.VETERAN, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.Disability', db_row_id: student.STUDENT_ID, value: student.DISABILITY, label: true}) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Citizenship</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'HEd.Student.CitizenshipCountry', db_row_id: student.STUDENT_ID, value: student.CITIZENSHIP_COUNTRY, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.CitizenshipCountry2', db_row_id: student.STUDENT_ID, value: student.CITIZENSHIP_COUNTRY_2, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.VisaType', db_row_id: student.STUDENT_ID, value: student.VISA_TYPE, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.AlienNumber', db_row_id: student.STUDENT_ID, value: student.ALIEN_NUMBER, label: true}) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">High School</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'HEd.Student.HighSchoolGraduationDate', db_row_id: student.STUDENT_ID, value: student.HIGH_SCHOOL_GRADUATION_DATE, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.HighSchoolState', db_row_id: student.STUDENT_ID, value: student.HIGH_SCHOOL_STATE, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.HighSchoolDiplomaType', db_row_id: student.STUDENT_ID, value: student.HIGH_SCHOOL_DIPLOMA_TYPE, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.GEDDate', db_row_id: student.STUDENT_ID, value: student.GED_DATE, label: true}) }}
+{{ kula_field({ edit: true, field: 'HEd.Student.GEDState', db_row_id: student.STUDENT_ID, value: student.GED_STATE, label: true}) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Permissions</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'HEd.Student.DirectoryPermission', db_row_id: student.STUDENT_ID, value: student.DIRECTORY_PERMISSION, label: true}) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Diploma Name</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'HEd.Student.DiplomaName', db_row_id: student.STUDENT_ID, value: student.DIPLOMA_NAME, label: true}) }}
+</div>
+</div>
+{% endblock %}

@@ -1,81 +1,111 @@
 {% extends partial == "window" ? 'KulaCoreFrameworkBundle:Core:window_partial.html.twig' : 'KulaCoreFrameworkBundle:Core:page.html.twig' %}
 
 {% block navigation_title %}
-{% if navigation_info.NAVIGATION_TYPE == 'F' %}
-{{ navigation_info.NAME }}
+{% if kula_core_navigation.getProperty(request.get('_navigation'), 'type')  == 'form' %}
+{{ kula_core_navigation.getProperty(request.get('_navigation'), 'display_name') }}
 {% else %}
-{{ navigation_info.form.NAME }}
+{{ kula_core_navigation.getProperty(kula_core_navigation.getProperty(request.get('_navigation'), 'parent'), 'display_name') }}
 {% endif %}
 {% endblock %}
 
 {% block window %}
 <!-- window menu bar -->
-{% set requestedNav = kula_core_navigation.getRequestedNavItem() %}
-{% set menuActions = requestedNav.getMenuActions(kula_core_permission) %}
-{% set menuReports = requestedNav.getMenuReports(kula_core_permission) %}
-<form id="window_window_num_form" method="post" action="{{ form_action }}" data-navigation-type="{% if form_newWindow == true  %}report{% else %}{{ requestedNav.getType() }}{% endif %}"{% if requestedNav.getType() == 'report' or requestedNav.getType() == 'menu_report' or form_newWindow == true %} target="_blank"{% endif %}>
+{% set requestedNav = kula_core_navigation.getCurrentRequestNav() %}
+{% set menuActions = kula_core_navigation.getActionMenu(requestedNav) %}
+{% set menuReports = kula_core_navigation.getReportsMenu(requestedNav) %}
+{% set addButton = kula_core_navigation.getAddButton(requestedNav) %}
+{% set deleteButton = kula_core_navigation.getDeleteButton(requestedNav) %}
+<form id="window_window_num_form" method="post" action="{{ form_action }}" data-navigation-type="{% if form_newWindow == true  %}report{% else %}{{ kula_core_navigation.getProperty(requestedNav, 'type') }}{% endif %}"{% if kula_core_navigation.getProperty(requestedNav, 'type') == 'report' or kula_core_navigation.getProperty(requestedNav, 'type') == 'menu_report' or form_newWindow == true %} target="_blank"{% endif %}>
 <div id="window_window_num_menu_bar" class="window_menu_bar group">
   <div id="window_window_num_menu_bar_left" class="window_menu_bar_left">
+
+<div class="window_menu_bar_form_buttons" data-form-id="window_window_num_form">
+ <input id="window_window_num_form_mode" type="hidden" name="mode" value="{{ mode }}" />
 {% if menuActions %}
-<div id="window_window_num_menu_actions" class="dropdown">
-    <a href="#" data-toggle="dropdown" class="menu-button"><img src="{{ asset('images/actions_menu.png') }}" /> <span class="caret"></span></a>
-  <ul id="window_window_num_menu_actions_contents" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-    {% for menuAction in menuActions %}
-    {% if menuAction.getDividerBefore() %}
+  <div class="btn-group" role="group">
+  <div class="dropdown">
+<button id="window_window_num_menu_actions" type="button" class="btn btn-default dropdown-toggle glyphicon glyphicon-cog" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+<span class="caret"></span>
+</button>
+<ul id="window_window_num_menu_actions_contents" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+  {% for menuAction in menuActions %}
+    {% if kula_core_navigation.getProperty(menuAction, 'divider_before') %}
     <li role="presentation" class="divider"></li>
     {% endif %}
-    <li role="presentation">{% if menuAction.getRecordLoaded() == false or (menuAction.getRecordLoaded() == true and kula_core_record.getSelectedRecordID() != '') %}<a role="menuitem" tabindex="-1" href="{{ path(menuAction.getRoute(), { record_type: kula_core_record.getRecordType(), record_id: kula_core_record.getSelectedRecordID() } ) }}" 
-data-http-method="{% if getMethodsForRoute(router, menuAction.getRoute()) %}{{ getMethodsForRoute(router, menuAction.getRoute()).0 }}{% else %}GET{% endif %}"
-data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDisplayName() }}</a>{% else %}<div role="menuitem" tabindex="-1" class="disabled">{{ menuAction.getDisplayName() }}</div>{% endif %}</li>
+    {% if kula_core_navigation.getProperty(menuAction, 'record_loaded') == false or (kula_core_navigation.getProperty(menuAction, 'record_loaded') == true and kula_core_record.getSelectedRecordID() != '') %}<li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path(kula_core_navigation.getProperty(menuAction, 'route'), { record_type: kula_core_record.getRecordType(), record_id: kula_core_record.getSelectedRecordID() } ) }}" 
+data-http-method="{% if getMethodsForRoute(router, kula_core_navigation.getProperty(menuAction, 'route')) %}{{ getMethodsForRoute(router, kula_core_navigation.getProperty(menuAction, 'route')).0 }}{% else %}GET{% endif %}"
+data-confirm="{{ kula_core_navigation.getProperty(menuAction, 'confirmation_message') }}">{{ kula_core_navigation.getProperty(menuAction, 'display_name') }}</a></li>{% else %}<li role="presentation" class="disabled"><a href="#">{{ kula_core_navigation.getProperty(menuAction, 'display_name') }}</a></li>{% endif %}
     {% endfor %}
-  </ul>
-</div>
+</ul>
+  </div>
+   </div>
 {% endif %}
 {% if menuReports %}
-<div id="window_window_num_menu_reports" class="dropdown">
-    <a href="#" data-toggle="dropdown" class="menu-button"><img src="{{ asset('images/reports_menu.png') }}" /> <span class="caret"></span></a>
-  <ul id="window_window_num_menu_reports_contents" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-    {% for menuReport in menuReports %}
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path(menuReport.getRoute()) }}">{{ menuReport.getDisplayName() }}</a></li>
-    {% endfor %}
-  </ul>
+    <div class="btn-group" role="group">
+    <div class="dropdown">
+<button id="window_window_num_menu_actions" type="button" class="btn btn-default dropdown-toggle glyphicon glyphicon-file" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+<span class="caret"></span>
+</button>
+<ul id="window_window_num_menu_actions_contents" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+  {% for menuReport in menuReports %}
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path(kula_core_navigation.getProperty(menuReport, 'route')) }}">{{ kula_core_navigation.getProperty(menuReport, 'display_name') }}</a></li>
+    {% endfor %}</ul>
+  </div>
+ </div>
+{% endif %}
+ <div class="btn-group window_menu_bar_record" role="group"{% if kula_core_record.getRecordType() == '' %} style="display:none;"{% endif %}>
+   <button id="window_window_num_menu_bar_record_prev" type="button" class="btn btn-default glyphicon glyphicon-chevron-left" data-scrubber="previous" data-record-type="{{ kula_core_record.getRecordType() }}" data-record-id="{{ kula_core_record.getSelectedRecordID() }}"></button>
+   <button id="window_window_num_menu_bar_record_search" type="button" class="btn btn-default glyphicon glyphicon-search"></button>
+   <button id="window_window_num_menu_bar_record_next" type="button" class="btn btn-default glyphicon glyphicon-chevron-right" data-scrubber="next" data-record-type="{{ kula_core_record.getRecordType() }}" data-record-id="{{ kula_core_record.getSelectedRecordID() }}"></button>
+ </div>
+ <div class="btn-group" role="group">
+ {% if mode == 'search' %}
+ <input id="window_window_num_form_search" type="submit" name="search" value="Search" class="btn btn-default" />
+ {% else %}
+ <input id="window_window_num_form_submit" type="submit" name="submit" value="Submit" class="btn btn-default" />
+ {% endif %}
+ </div>
+ <div class="btn-group" role="group">
+  <button type="button" type="button" class="btn btn-default" id="window_window_num_button_reload">Reload</button>
+ </div>
+ {% if addButton %}
+ <div class="btn-group" role="group">
+  <button type="button" type="button" class="btn btn-default" id="window_window_num_button_add" data-href="{{ path(kula_core_navigation.getRoute(addButton)) }}" data-http-method="{% if getMethodsForRoute(router, kula_core_navigation.getProperty(addButton, 'route')) %}{{ getMethodsForRoute(router, kula_core_navigation.getProperty(addButton, 'route')).0 }}{% else %}GET{% endif %}"
+data-confirm="{{ kula_core_navigation.getProperty(addButton, 'confirmation_message') }}">Add</button>
+ </div>
+ {% endif %}
+ {% if deleteButton %}
+ <div class="btn-group" role="group">
+  <button type="button" type="button" class="btn btn-default" id="window_window_num_button_delete" data-href="{{ path(kula_core_navigation.getRoute(deleteButton)) }}" data-http-method="{% if getMethodsForRoute(router, kula_core_navigation.getProperty(deleteButton, 'route')) %}{{ getMethodsForRoute(router, kula_core_navigation.getProperty(deleteButton, 'route')).0 }}{% else %}GET{% endif %}"
+data-confirm="{{ kula_core_navigation.getProperty(deleteButton, 'confirmation_message') }}"{% if kula_core_record.getSelectedRecordID() == '' %} disabled="disabled"{% endif %}>Delete</button>
 </div>
 {% endif %}
-     <div class="window_menu_bar_record"{% if kula_core_record.getRecordType() == '' %} style="display:none;"{% endif %}>
-<span id="window_window_num_menu_bar_record_prev" data-scrubber="previous" data-record-type="{{ kula_core_record.getRecordType() }}" data-record-id="{{ kula_core_record.getSelectedRecordID() }}"><img src="{{ asset('images/left_record.png') }}" /></span>
-<span id="window_window_num_menu_bar_record_search" data-scrubber="search"><img src="{{ asset('images/search_record.png') }}" /></span>
-<span id="window_window_num_menu_bar_record_next" data-scrubber="next" data-record-type="{{ kula_core_record.getRecordType() }}" data-record-id="{{ kula_core_record.getSelectedRecordID() }}"><img src="{{ asset('images/right_record.png') }}" /></span>
-     </div>
-     <div class="window_menu_bar_form_buttons" data-form-id="window_window_num_form">
- <input id="window_window_num_form_mode" type="hidden" name="mode" value="{{ mode }}" />
-  <input id="window_window_num_form_submit" type="submit" name="submit" value="{% if mode == 'search' %}Search{% else %}Submit{% endif %}" />
-  <button id="window_window_num_button_reload" class="button-reload">Reload</button>
      </div>
      <div id="window_window_num_form_status" class="window_menu_bar_form_status"></div>
   </div>
 </div>
+{% set tabsToDisplay = kula_core_navigation.getTabs(request.get('_navigation')) %}
 {% if selected_record_bar_template_path %}
 {% if kula_core_record.getSelectedRecord() %}
 <!-- window selected record bar -->
-<div id="window_window_num_selected_record_bar" class="window_selected_record_bar group">
+<div id="window_window_num_selected_record_bar" class="window_selected_record_bar group{% if tabsToDisplay == false %} window_selected_record_bar_no_tabs{% endif %}">
   {% include selected_record_bar_template_path %}
 </div>
 {% endif %}
 {% endif %}
-{% set tabsToDisplay = kula_core_navigation.getRequestedNavItem().getTabs(kula_core_permission) %}
 {% if tabsToDisplay %}
 <!-- window tab bar -->
 <div id="window_window_num_tab_bar" class="window_tab_bar">
-  <ul class="tabs">
+    <ul class="nav nav-tabs">
     {% for tab in tabsToDisplay %}
-<li{% if tab.getRoute() == request.get('_route') %} class="active"{% endif %}><a id="window_window_num_tab_{{tab.getDBID()}}" href="{{ path(tab.getRoute()) }}" class="window-tab-link" data-window="window_num">{{ tab.getDisplayName() }}</a></li>
+<li{% if kula_core_navigation.getRoute(tab) == request.get('_route') %} class="active"{% endif %}><a id="window_window_num_tab_{{ kula_core_navigation.getProperty(tab, 'id') }}" href="{{ path(kula_core_navigation.getRoute(tab)) }}" class="window-tab-link" data-window="window_num">{{ kula_core_navigation.getProperty(tab, 'display_name') }}</a></li>
     {% endfor %}
-  </ul>
+    </ul>
 </div>
 {% endif %}
 <!-- content -->
 <div id="window_window_num_content">
-  <div id="window_window_num_tab_{{ kula_core_navigation.getRequestedTab().getDBID() }}_content" class="tab_content" data-window-url="{{ request.getBaseUrl()~request.getPathInfo() }}">
+  <div id="window_window_num_tab_{% if tabsToDisplay %}{{ kula_core_navigation.getProperty(request.get('_navigation'), 'id') }}{% endif %}_content" class="tab_content" data-window-url="{{ request.getBaseUrl()~request.getPathInfo() }}">
     <div class="record_bar_tab_menu_data" style="display:none;" data-mode="{{ mode }}" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}"></div>
     {% if record_type %}
     <div class="record_bar group">
@@ -86,7 +116,7 @@ data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDispla
 {% include 'KulaCoreFrameworkBundle:Base:flash.html.twig' %}
     {% block content %}
     {% endblock %}
-    <div id="window_window_num_tab_{% if kula_core_navigation.getRequestedTab().getDBID() %}{{kula_core_navigation.getRequestedTab().getDBID()}}{% endif %}_detail">
+    <div id="window_window_num_tab_{% if kula_core_navigation.getProperty(request.get('_navigation'), 'id') and kula_core_navigation.getProperty(request.get('_navigation'), 'type') == 'tab' %}{{ kula_core_navigation.getProperty(request.get('_navigation'), 'id') }}{% endif %}_detail">
     {% block detail %}
     {% endblock %}
     </div>

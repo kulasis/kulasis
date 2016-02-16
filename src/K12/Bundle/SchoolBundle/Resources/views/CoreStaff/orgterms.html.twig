@@ -1,0 +1,43 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Staff Organization Terms
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_orgterms', 'STUD_STAFF_ORGANIZATION_TERMS') }}
+</span>
+</div>
+<table id="window_window_num_data_table_orgterms" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ delete: true, field: 'K12.Staff.OrganizationTerm.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ edit: true, field: 'K12.Staff.OrganizationTerm.OrganizationTermID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'K12.Staff.OrganizationTerm.ConversionStaffNumber', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'K12.Staff.OrganizationTerm.TeacherGradesOpen', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'K12.Staff.OrganizationTerm.TeacherGradesClose', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  </tr>
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, field: 'K12.Staff.OrganizationTerm.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+  {{ kula_field({ add: true, field: 'K12.Staff.OrganizationTerm.StaffID', value: kula_core_record.getSelectedRecord.STAFF_ID, hidden: true }) }}
+  {{ kula_field({ add: true, delete: true, field: 'K12.Staff.OrganizationTerm.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'K12.Staff.OrganizationTerm.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_field({ add: true, field: 'K12.Staff.OrganizationTerm.OrganizationTermID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'K12.Staff.OrganizationTerm.ConversionStaffNumber', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'K12.Staff.OrganizationTerm.TeacherGradesOpen', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'K12.Staff.OrganizationTerm.TeacherGradesClose', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'K12.Staff.OrganizationTerm.ID', prepend_html: '</tr>' }) }}
+  {% for stafforgterm in stafforgterms %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'K12.Staff.OrganizationTerm.OrganizationTermID', db_row_id: stafforgterm.STAFF_ORGANIZATION_TERM_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'K12.Staff.OrganizationTerm.OrganizationTermID', db_row_id: stafforgterm.STAFF_ORGANIZATION_TERM_ID, value: stafforgterm.ORGANIZATION_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'K12.Staff.OrganizationTerm.ConversionStaffNumber', db_row_id: stafforgterm.STAFF_ORGANIZATION_TERM_ID, value: stafforgterm.CONV_STAFF_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'K12.Staff.OrganizationTerm.TeacherGradesOpen', db_row_id: stafforgterm.STAFF_ORGANIZATION_TERM_ID, value: stafforgterm.TEACHER_GRADES_OPEN, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'K12.Staff.OrganizationTerm.TeacherGradesClose', db_row_id: stafforgterm.STAFF_ORGANIZATION_TERM_ID, value: stafforgterm.TEACHER_GRADES_CLOSE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

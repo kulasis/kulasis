@@ -28,15 +28,17 @@ abstract class Chooser {
   }
   
   protected function addToChooserMenu($value, $option) {
-    if (count($this->chooser_menu) == 0)
-      $this->chooser_menu[] = array('ID' => '', 'OPTION' => '');
+    //if (count($this->chooser_menu) == 0)
+    //  $this->chooser_menu[] = array('id' => '', 'text' => '');
     
-    $this->chooser_menu[] = array('ID' => $value, 'OPTION' => $option);
+    $this->chooser_menu[] = array('id' => $value, 'text' => $option);
   }
   
   public function createChooserMenu($search_string) {
-    $this->search($search_string);
     
+    if ($search_string) {
+      $this->search($search_string);
+    }
     return $this->getChooserMenu();
   }
   

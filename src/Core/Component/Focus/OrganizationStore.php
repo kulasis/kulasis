@@ -10,31 +10,33 @@ class OrganizationStore {
   
   private $organization;
   
-  public function __construct($db, $fileName, $cacheDir, $debug, $kernel, $session, $permission, $request) {
+  public function __construct($db, $fileName, $cacheDir, $debug, $kernel, $request, $cache) {
     $this->db = $db;
     $this->cacheDir = $cacheDir;
     $this->fileName = $fileName;
     $this->debug = $debug;
     $this->kernel = $kernel;
-    $this->session = $session;
-    $this->permission = $permission;
     $this->request = $request;
+    $this->cache = $cache;
   }
   
   public function warmUp($cacheDir) {
     
     $cache = new DBConfigCache($cacheDir.'/'.$this->fileName.'.php', $this->debug, $this->db, array('CORE_ORGANIZATION', 'CORE_ORGANIZATION_TERMS'));
-    
-    if (!$cache->isDBFresh()) {
-      
-      $organization = new Organization($this->db);
-      $organization->loadOrganization();
+
+    if (!$cache->isDBFresh() OR !$this->cache->verifyCacheLoaded('organization')) {
+     
+      $organizationLoader = new OrganizationLoader($this->db, $this->cache);
+      $organization = $organizationLoader->loadOrganization();
       $cache->write(serialize($organization));
       
+      $this->cache->setCacheLoaded('organization');
     }
     
-    $this->organization = unserialize(file_get_contents((string) $cache));
-    $this->organization->awake($this->db);
+    if (!$this->cache->verifyCacheLoaded('organization')) {
+      $term = unserialize(file_get_contents((string) $cache));
+    }
+    $this->organization = new Organization($this->cache);
   }
   
   public function getOrganization() {

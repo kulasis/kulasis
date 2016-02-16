@@ -1,3 +1,3 @@
 _K12_student:
-    resource: "@KulaK12StudentBundle/Resources/config/routing/sis.yml"
-    prefix: sis/K12
+    resource: "@KulaK12StudentBundle/Resources/config/routing/core.yml"
+    prefix: core/K12

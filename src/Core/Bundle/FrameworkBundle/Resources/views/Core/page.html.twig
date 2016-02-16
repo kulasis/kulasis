@@ -1,5 +1,9 @@
 {% extends 'KulaCoreFrameworkBundle:Base:kula.html.twig' %}
 
+{% block stylesheets %}
+{{ parent() }}
+{% endblock %}
+
 {% block javascripts %}
   {{ parent() }}
         {% javascripts 
@@ -17,15 +21,6 @@
 {% endblock %}
 
 {% block navigation_bar %}
-  <div id="nav_bar_navigation">
-    <ul>
-      <li id="nav_bar_navigation_favorites" data-nav-panel="nav_favorites"><a href="#"><img src="{{ asset('images/favorites_regular.png') }}" /></a></li>
-      <li id="nav_bar_navigation_forms" data-nav-panel="nav_forms" class="nav-bar-navigation-open"><a href="#"><img src="{{ asset('images/forms_regular.png') }}" /></a></li>
-      <li id="nav_bar_navigation_reports" data-nav-panel="nav_reports"><a href="#"><img src="{{ asset('images/reports_regular.png') }}" /></a></li>
-      <li id="nav_bar_navigation_filters" data-nav-panel="nav_filters"><a href="#"><img src="{{ asset('images/filters_regular.png') }}" /></a></li>
-      <li id="nav_bar_navigation_queries" data-nav-panel="nav_queries"><a href="#"><img src="{{ asset('images/query_regular.png') }}" /></a></li>
-    </ul>
-  </div>
 <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none" >
     <li><a tabindex="-1" data-action="newtab">Open in New Tab</a></li>
     <li><div role="menuitem" tabindex="-1" class="disabled">Open in New Window</div></li>
@@ -33,70 +28,57 @@
 {% endblock %}
 
 {% block navigation_pane %}
-  <div id="nav_pages">
-    {% set navPages = kula_core_navigation.getPages() %}
-    <ul>
-    {% for page_id, page_row in navPages %}
-      <li><a href="{% if page_row.getRoute() %}{{ path(page_row.getRoute()) }}{% endif %}" class="navigation-link-page">{{ page_row.getDisplayName() }}</a></li>
-    {% endfor %}
-    </ul>
-  </div>
-  <div id="nav_favorites" style="display:none;">Favorites</div>
-  <div id="nav_forms">
-    {% set navFormGroups = kula_core_navigation.getFormGroups(kula_core_permission) %}
-    {% for group_id, group_row in navFormGroups %}
-      <div id="drawer-{{ group_id }}" class="navigation-drawer navigation-forms">
-        <div class="drawer-header navigation-forms" data-category="forms-{{ group_id }}">{{ group_row.getDisplayName() }}</div>
-        <div id="drawer-contents-forms-{{ group_id }}" class="drawer-contents navigation-forms" style="{% if kula_core_navigation.getRequestedNavItem().getParent() == group_row.getName() %}display:block;{% else %}display:none;{% endif %}">
-          <ul>
-          {% for form_id, form_row in group_row.getForms(kula_core_permission) %}
-            {% if form_row.getName() %}
-              <li><a href="{% if form_row.getRoute() %}{{ path(form_row.getRoute()) }}{% endif %}" class="navigation-link">{{ form_row.getDisplayName() }}</a></li>
-            {% else %}
-              <li class="none">None</li>
-            {% endif %}
-          {% endfor %}
-          </ul>
-        </div>
-      </div>  
-    {% endfor %}
-  </div>
-  <div id="nav_reports"{% if navigation_info.NAVIGATION_TYPE != 'R' %} style="display:none;"{% endif %}>
-    {% set navReportGroups = kula_core_navigation.getReportGroups(kula_core_permission) %}
-    {% for group_id, group_row in navReportGroups %}
-      <div id="drawer-reports-{{ group_id }}" class="navigation-drawer navigation-reports">
-        <div class="drawer-header navigation-reports" data-category="reports-{{ group_id }}">{{ group_row.getDisplayName() }}</div>
-        <div id="drawer-contents-reports-{{ group_id }}" class="drawer-contents navigation-reports" style="{% if group_row.selected_group == 'Y' %}display:block;{% else %}display:none;{% endif %}">
-          <ul>
-          {% for report_id, report_row in group_row.getReports(kula_core_permission) %}
-            {% if report_row.getName() %}
-              <li><a href="{% if report_row.getRoute() %}{{ path(report_row.getRoute()) }}{% endif %}" class="navigation-link">{{ report_row.getDisplayName() }}</a></li>
-            {% else %}
-              <li class="none">None</li>
-            {% endif %}
-          {% endfor %}
-          </ul>
-        </div>
-      </div>  
-    {% endfor %}
-  </div>
-  <div id="nav_filters" style="display:none;">Filters</div>
-  <div id="nav_queries" style="display:none;">Queries</div>
+<div class="tree">
+  <ul>
+{% set topOfTree = kula_core_navigation.getNavigationTreeTop() %}
+{% for top_name in topOfTree %}
+  {% if kula_core_navigation.getProperty(top_name, 'type') == 'dir' %}
+    {{ _self.loadDirectories(top_name, true) }}
+  {% endif %}
+  {% if kula_core_navigation.getProperty(top_name, 'type') == 'form' or kula_core_navigation.getProperty(top_name, 'type') == 'report' %}
+    {% if kula_core_navigation.getProperty(top_name, 'original') != '' %}
+      {% set original_nav = kula_core_navigation.getProperty(top_name, 'original') %}
+    <li><a href="{% if kula_core_navigation.getRoute(original_nav) %}{{ path(kula_core_navigation.getRoute(original_nav)) }}{% endif %}" class="navigation-link">{% if kula_core_navigation.getProperty(top_name, 'display_name') %}{{ kula_core_navigation.getProperty(top_name, 'display_name') }}{% else %}{{ kula_core_navigation.getProperty(original_nav, 'display_name') }}{% endif %}</a></li>
+    {% else %}
+    <li><a href="{% if kula_core_navigation.getRoute(top_name) %}{{ path(kula_core_navigation.getRoute(top_name)) }}{% endif %}" class="navigation-link">{{ kula_core_navigation.getProperty(top_name, 'display_name') }}</a></li>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+  </ul>
+</div>
 {% endblock %}
+
+{% macro loadDirectories(directory, open) %}
+{# and kula_core_navigation.shouldOpenNode(kula_core_navigation.getCurrentRequestNav(), directory) == false #}
+<li class="parent_li"{% if open == false %} style="display:none;"{% endif %}>
+<span class="closed">{{ kula_core_navigation.getProperty(directory, 'display_name') }}</span>
+{% set dirs = kula_core_navigation.getProperty(directory, 'children') %}
+{% if dirs %}
+<ul>
+  {% for dir in dirs %}
+  {% if kula_core_navigation.getProperty(dir, 'type') == 'form' or kula_core_navigation.getProperty(dir, 'type') == 'report' %}
+    {% if kula_core_navigation.getProperty(dir, 'original') != '' %}
+      {% set original_nav = kula_core_navigation.getProperty(dir, 'original') %}
+    <li style="display:none;"><a href="{% if kula_core_navigation.getRoute(original_nav) %}{{ path(kula_core_navigation.getRoute(original_nav)) }}{% endif %}" class="navigation-link">{% if kula_core_navigation.getProperty(dir, 'display_name') %}{{ kula_core_navigation.getProperty(dir, 'display_name') }}{% else %}{{ kula_core_navigation.getProperty(original_nav, 'display_name') }}{% endif %}</a></li>
+    {% else %}
+    <li style="display:none;"><a href="{% if kula_core_navigation.getRoute(dir) %}{{ path(kula_core_navigation.getRoute(dir)) }}{% endif %}" class="navigation-link">{{ kula_core_navigation.getProperty(dir, 'display_name') }}</a></li>
+    {% endif %}
+  {% endif %}
+  {% if kula_core_navigation.getProperty(dir, 'type') == 'dir' %}
+    {{ _self.loadDirectories(dir, false) }}
+  {% endif %}
+  {% endfor %}
+</ul>
+</li>
+{% endif %}
+{% endmacro %}
 
 {% block main %}
   <div id="window_bar">
-      <ul>
-        <li id="windowTitle_1" data-window="1" class="selected-window-element" data-window-url="{{ request.getBaseUrl()~request.getPathInfo() }}" data-focus-org="{{ session.getFocus('organization_id') }}" data-focus-term="{{ session.getFocus('term_id') }}"><div><span class="close-window">x</span>
-          {{ kula_core_navigation.getRequestedNavItem().getDisplayName() }}
-          {% block navigation_title %}{% endblock %}</div></li>
+      <ul class="nav nav-tabs">
+        <li id="windowTitle_1" data-window="1" class="active" data-window-url="{{ request.getBaseUrl()~request.getPathInfo() }}" data-focus-org="{{ session.getFocus('organization_id') }}" data-focus-term="{{ session.getFocus('term_id') }}"><a href="#"><span class="close-window">x</span>
+          {% block navigation_title %}{% endblock %}</a></li>
       </ul>
-      <div id="nav_bar_status">
-        <span id="nav_bar_status_loading">Loading...<img src="{{ asset('images/loader.gif') }}" /></span>
-        <span id="nav_bar_status_success">Complete</span>
-        <span id="nav_bar_status_error">Error</span>
-        <span id="nav_bar_status_ready">Ready</span>
-      </div>
   </div>
   <div id="windows_container">
     {% block window %}

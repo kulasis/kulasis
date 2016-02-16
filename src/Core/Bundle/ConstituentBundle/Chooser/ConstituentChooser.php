@@ -32,7 +32,7 @@ class ConstituentChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'sis_core_constituent_chooser';
+    return 'Core_Constituent_Chooser';
   }
   
 }

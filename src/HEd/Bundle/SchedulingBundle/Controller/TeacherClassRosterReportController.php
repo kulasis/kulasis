@@ -4,7 +4,7 @@ namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
-class TeacherClassRosterReportController extends SISClassRosterReportController {
+class TeacherClassRosterReportController extends CoreClassRosterReportController {
   
   public function indexAction() {
     $this->authorize();

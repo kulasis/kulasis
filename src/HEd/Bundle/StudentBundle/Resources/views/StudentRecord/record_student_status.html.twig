@@ -1,0 +1,6 @@
+<div class="nav navbar-nav navbar-left pull-left">
+  {{ form_select(kula_core_record.getAllSchools(kula_core_record.getSelectedRecord.STUDENT_ID), 'focus_school', focus.getOrganizationID(), { id : 'focus_school' }) }}
+</div>
+<div class="nav navbar-nav navbar-right pull-right">
+  {{ form_select(kula_core_record.getAllTermsForSchool(kula_core_record.getSelectedRecord.STUDENT_ID), 'focus_term', focus.getTermID(), { id : 'focus_term' }) }}
+</div>

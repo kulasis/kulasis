@@ -1,4 +1,4 @@
-{% extends 'KulaCoreFrameworkBundle::sis.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
 <div class="data-table-header-div">
@@ -35,9 +35,9 @@ Saved Queries
     <td class="data-table-cell-row-num"><a class="data-table-detail-link" data-row-id-prefix="field" data-row-id="{{ query.SQL_QUERY_ID }}" href="{# { path('', { id : query.SQL_QUERY_ID }) } #}">{{ loop.index }}</a></td>
     {{ kula_field({ edit: true, field: 'Core.Export.SQLQuery.Category', db_row_id: query.SQL_QUERY_ID, value: query.SQL_QUERY_CATEGORY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Export.SQLQuery.Name', db_row_id: query.SQL_QUERY_ID, value: query.SQL_QUERY_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    <td><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_export_query', { id: query.SQL_QUERY_ID }) }}">Preview</a></td>
-    <td><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_export_reports_export_download', { id: query.SQL_QUERY_ID }) }}">Download</a></td>
-    <td class="data-table-cell-row-detail"><a class="data-table-detail-link" data-row-id-prefix="field" data-row-id="{{ query.SQL_QUERY_ID }}" href="{{ path('core_export_saved_detail', { id: query.SQL_QUERY_ID }) }}">...</a></td>
+    <td><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Export_Query', { id: query.SQL_QUERY_ID }) }}">Preview</a></td>
+    <td><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Export_Reports_Export_Download', { id: query.SQL_QUERY_ID }) }}">Download</a></td>
+    <td class="data-table-cell-row-detail"><a class="data-table-detail-link" data-row-id-prefix="field" data-row-id="{{ query.SQL_QUERY_ID }}" href="{{ path('Core_Export_Saved_Detail', { id: query.SQL_QUERY_ID }) }}">...</a></td>
   </tr>
   {% endfor %}
 </tbody>

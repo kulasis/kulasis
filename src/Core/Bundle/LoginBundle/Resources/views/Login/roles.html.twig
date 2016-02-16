@@ -1,0 +1,11 @@
+{% extends 'KulaCoreFrameworkBundle::'~session.get('portal')~'.html.twig' %}
+
+{% block content %}
+<ul>
+{% for role_id, role in focus_usergroups %}
+  {% if role_id != session.get('role_id') %}
+      <li>{{ linkTo(role, 'focus_usergroup_change', { id: role_id } ) }}</a></li>
+  {% endif %}
+{% endfor %}
+</ul>
+{% endblock %}

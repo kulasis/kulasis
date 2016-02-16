@@ -44,7 +44,7 @@ class OrganizationTermChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'core_system_organization_orgterm_chooser';
+    return 'Core_System_Organization_OrgTerm_Chooser';
   }
   
 }

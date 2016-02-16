@@ -139,16 +139,18 @@ class PosterRecord {
 	
 	$old_fields = array();
 	
-	foreach($this->fields as $fieldName => $field) {
-		$this->originalFields[] = $fieldName;
-		$old_fields[] = $this->schema->getField($fieldName)->getDBName();
-	}
+	if ($this->fields) {
+	
+  	foreach($this->fields as $fieldName => $field) {
+  		$this->originalFields[] = $fieldName;
+  		$old_fields[] = $this->schema->getField($fieldName)->getDBName();
+  	}
   
     $this->originalRecord = $this->db->db_select($this->schema->getTable($this->table)->getDBName(), 'originalTable')
       ->fields('originalTable', $old_fields)
       ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
       ->execute()->fetch();
-	 
+  }
 	$this->originalRecordForValidation = $this->db->db_select($this->schema->getTable($this->table)->getDBName(), 'originalTable')
       ->fields('originalTable')
       ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)

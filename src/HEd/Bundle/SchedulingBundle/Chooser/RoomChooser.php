@@ -40,7 +40,7 @@ class RoomChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'sis_HEd_room_chooser';
+    return 'Core_HEd_Setup_Rooms_Chooser';
   }
   
 }

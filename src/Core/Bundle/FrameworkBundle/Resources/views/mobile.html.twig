@@ -1,0 +1,110 @@
+{% extends 'KulaCoreFrameworkBundle:Base:base.mobile.twig' %}
+
+{% block stylesheets %}
+  {% stylesheets
+    '@KulaCoreFrameworkBundle/Resources/public/css/lib/group.css'
+    '@KulaCoreFrameworkBundle/Resources/public/css/base.css'
+    '@KulaCoreFrameworkBundle/Resources/public/css/core.css'
+    '@KulaCoreFrameworkBundle/Resources/public/css/student_mobile.css'
+  %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+  {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+  {% javascripts %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+  {% endjavascripts %}
+{% endblock %}
+
+{% block body %}
+<div id="wrapper">
+<!-- Sidebar -->
+<div id="sidebar-wrapper">
+{% block nav %}
+<ul class="sidebar-nav">
+{% set topOfTree = kula_core_navigation.getNavigationTreeTopWithoutPortal() %}
+{% for top_name in topOfTree %}
+  {% if kula_core_navigation.getProperty(top_name, 'type') == 'form' or kula_core_navigation.getProperty(top_name, 'type') == 'report' %}
+    {% if kula_core_navigation.getProperty(top_name, 'original') != '' %}
+      {% set original_nav = kula_core_navigation.getProperty(top_name, 'original') %}
+    <li><a href="{% if kula_core_navigation.getRoute(original_nav) %}{{ path(kula_core_navigation.getRoute(original_nav)) }}{% endif %}">{% if kula_core_navigation.getProperty(top_name, 'display_name') %}{{ kula_core_navigation.getProperty(top_name, 'display_name') }}{% else %}{{ kula_core_navigation.getProperty(original_nav, 'display_name') }}{% endif %}</a></li>
+    {% else %}
+    <li><a href="{% if kula_core_navigation.getRoute(top_name) %}{{ path(kula_core_navigation.getRoute(top_name)) }}{% endif %}">{{ kula_core_navigation.getProperty(top_name, 'display_name') }}</a></li>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+<li><a href="{{ path('role_list') }}">Roles</a></li>
+</ul>
+{% endblock %}
+</div>
+<!-- /#sidebar-wrapper -->
+<div id="page-content-wrapper">
+<!-- Header -->
+<nav id="header" class="navbar navbar-default" role="navigation">
+  <a class="navbar-brand" href="#">{{ kula_instance_name }}</a>
+  <ul class="nav navbar-nav navbar-left pull-left">
+    <li style="border-right: 1px solid #DDDDDD;"><a class="glyphicon glyphicon-menu-hamburger" id="menu-toggle" href="#menu-toggle"></a></li>
+  </ul>
+  <ul class="nav navbar-nav navbar-right pull-right">
+    <li id="role_list" class="dropdown" style="border-left: 1px solid #DDDDDD;">      
+      {% for role_id, role in focus_usergroups %}
+      {% if role_id == session.get('role_id') %}
+      <a href="#" class="dropdown-toggle glyphicon glyphicon-user" data-toggle="dropdown" role="button"></a> 
+      {% endif %}
+      {% endfor %}
+      <ul class="dropdown-menu"> 
+        {% for role_id, role in focus_usergroups %}
+        {% if role_id != session.get('role_id') %}
+          <li>{{ linkTo(role, 'focus_usergroup_change', { id: role_id } ) }}</a></li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+</li>
+    <li style="border-left: 1px solid #DDDDDD;"><a class="glyphicon glyphicon-off" href="/logout"></a></li>
+  </ul>
+</nav>
+<!-- end header -->
+<!-- Focus Bar -->
+{% set _focus = block('focus') %}
+{% if _focus is not empty %}
+<div id="focusbar" class="navbar navbar-default navbar-static">
+  <form id="admin_focus_form" method="post" action="{{ request.getPathInfo() }}">
+    {{ _focus|raw }}
+  </form>
+</div>
+{% endif %}
+<!-- End Focus Bar -->
+<!-- Record Bar -->
+{% if record_type and record_bar_template_path %}
+<div class="record_bar group">
+<form id="record_form" method="post" action="{{ request.getPathInfo() }}">
+  {% include record_bar_template_path %}
+</form>
+</div>
+{% endif %}
+<!-- End Record Bar -->
+{% if selected_record_bar_template_path %}
+{% if kula_core_record.getSelectedRecord() %}
+<!-- window selected record bar -->
+<div id="window_window_num_selected_record_bar" class="window_selected_record_bar group{% if tabsToDisplay == false %} window_selected_record_bar_no_tabs{% endif %}">
+  {% include selected_record_bar_template_path %}
+</div>
+{% endif %}
+{% endif %}
+<div class="window_content">
+{% include 'KulaCoreFrameworkBundle:Base:flash.html.twig' %}
+{% block content %}
+{% endblock %}
+</div>
+<!-- /.window_content -->
+</div>
+<!-- /#page-content-wrapper -->
+</div>
+<!-- /#wrapper -->
+<script id="panel-init" type="text/javascript">$("#menu-toggle").click(function(e) {
+      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+  });
+</script>
+{% endblock %}

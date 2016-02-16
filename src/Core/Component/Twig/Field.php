@@ -39,9 +39,11 @@ class Field {
     $org_term_ids = self::$focus->getOrganizationTermIDs();
     
     if (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1)) {
-    
+      
     if ($param['delete']) {
+
       $field = self::getFieldInfo($param['field']);
+
       if (self::$permission->getPermissionForSchemaObject(self::$schema->getDBTable($field->getTable()), null, Permission::DELETE)) {
         if (isset($param['field_name_override'])) {
           $html = $param['field_name_override'];
@@ -481,11 +483,12 @@ class Field {
   
   private static function _lookup($param) {
     $schema = self::getFieldInfo($param['field']);
-    $lookup = array('' => '');
+    $lookup = array('' => '&nbsp;');
     
     if (self::_displayField($param)) {
       $field_name = self::getNameForField($param);
       $lookup += self::$lookup->getLookupMenu($schema->getLookup(), $param['lookup']);
+      $param['attributes_html']['id'] = preg_replace('/\[|\]|\./', '_', $field_name);
       return GenericField::select($lookup, $field_name, $param['value'], $param['attributes_html']);  
     } elseif (self::_displayValue($param) AND !$param['input']) {
       return self::$lookup->getLookupValue($schema->getLookup(), $param['value'], $param['lookup'], true);
@@ -512,13 +515,21 @@ class Field {
         $param['attributes_html']['class'] = 'chooser-search';  
       }
       $container = $GLOBALS['kernel']->getContainer();
-      $data = array('data-search-url' => $container->get('router')->generate($chooser_search_route));
+      //$data = array('data-search-url' => $container->get('router')->generate($chooser_search_route));
       $current_choice_menu = $chooser->choice($param['value']);
-
+      
+      $param['attributes_html']['data-ajax--url'] = $container->get('router')->generate($chooser_search_route);
+      $param['attributes_html']['data-minimumResultsForSearch'] = 0;
+      $param['attributes_html']['data-ajax--delay'] = 250;
+      $param['attributes_html']['style'] = 'width: 100%;';
+      $param['attributes_html']['id'] = preg_replace('/\[|\]|\./', '_', $field_name);
+      
+      
       $params_text_field = array_merge($param['attributes_html'], $data, array('style' => 'display:none;', 'size' => '10'));
-      $html = '';
-      $html .= GenericField::text($field_name . '[chooser]', null, $params_text_field);
-      $html .= GenericField::select($current_choice_menu, $field_name . '[value]', $param['value'], $param['attributes_html']);
+      //$html = '';
+      //$html .= GenericField::text($field_name . '[chooser]', null, $params_text_field);
+      //$html .= GenericField::select($current_choice_menu, $field_name . '[value]', $param['value'], $param['attributes_html']);
+      $html = GenericField::select($current_choice_menu, $field_name . '[value]', $param['value'], $param['attributes_html']);
       return $html;
     } elseif (self::_displayValue($param)) {
       $html = '';
@@ -536,30 +547,35 @@ class Field {
     if (self::_displayField($param)) {
       $schema = self::getFieldInfo($param['field']);
       $field_name = self::getNameForField($param);
-      $select_options = array('' => '');
+      $select_options = array('' => '&nbsp;');
       // check if field is calculated
       $class = $schema->getClass();
       if (class_exists($class) AND $class = new $class(self::$container)) {
         $select_options += $class->select($schema, $param);
       }
+      $param['attributes_html']['id'] = preg_replace('/\[|\]|\./', '_', $field_name);
       return GenericField::select($select_options, $field_name, $param['value'], $param['attributes_html']);
     } elseif (self::_displayValue($param) AND !$param['input']) {
       $schema = self::getFieldInfo($param['field']);
-      $select_options = array('' => '');
+      $field_name = self::getNameForField($param);
+      $select_options = array('' => '&nbsp;');
       // check if field is calculated
       $class = $schema->getClass();
       if (class_exists($class) AND $class = new $class(self::$container)) {
         $param['attributes_html']['disabled'] = 'disabled';
+        $param['attributes_html']['id'] = preg_replace('/\[|\]|\./', '_', $field_name);
         $select_options += $class->select($schema, $param);
       }
       return $select_options[$param['value']];
     } elseif (self::_displayValue($param)) {
       $schema = self::getFieldInfo($param['field']);
-      $select_options = array('' => '');
+      $field_name = self::getNameForField($param);
+      $select_options = array('' => '&nbsp;');
       // check if field is calculated
       $class = $schema->getClass();
       if (class_exists($class) AND $class = new $class(self::$container)) {
         $param['attributes_html']['disabled'] = 'disabled';
+        $param['attributes_html']['id'] = preg_replace('/\[|\]|\./', '_', $field_name);
         $select_options += $class->select($schema, $param);
       }
       return GenericField::select($select_options, null, $param['value'], $param['attributes_html']);

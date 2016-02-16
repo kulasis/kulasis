@@ -1,0 +1,155 @@
+Core_HEd_Grading_GradingSetup_MarkScale_Detail:
+  path: /grading/setup/mark_scales/{mark_scale_id}/detail
+  defaults: { _controller: KulaHEdGradingBundle:CoreGradingSetupMarkScale:detail }
+
+Core_HEd_Grading_GradingSetup_MarkScales:
+  path: /grading/setup/mark_scales
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreGradingSetupMarkScale:index
+    _navigation: Core.HEd.Grading.GradingSetup.MarkScales
+
+Core_HEd_Grading_GradingSetup_Standings:
+  path: /grading/setup/standings
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreStandingSetup:index
+    _navigation: Core.HEd.Grading.GradingSetup.Standings
+
+Core_HEd_Grading_StudentCourseHistory_CourseHistory:
+  path: /grading/student_course_history/course_history
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreCourseHistory:coursehistory
+    _navigation: Core.HEd.Grading.StudentCourseHistory.CourseHistory
+
+Core_HEd_Grading_StudentCourseHistory_CourseHistory_Detail:
+  path: /grading/student_course_history/{id}/course_history/detail/{sub_id}
+  defaults: { _controller: KulaHEdGradingBundle:CoreCourseHistory:detail }
+
+Core_HEd_Grading_StudentCourseHistory_Degrees:
+  path: /grading/student_course_history/degrees
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreStudentDegree:degrees
+    _navigation: Core.HEd.Grading.StudentCourseHistory.Degrees
+
+Core_HEd_Grading_StudentCourseHistory_Degrees_Detail:
+  path: /grading/student_course_history/{id}/degrees/detail/{sub_id}
+  defaults: { _controller: KulaHEdGradingBundle:CoreStudentDegree:detail }
+
+Core_HEd_Grading_StudentCourseHistory_Terms:
+  path: /grading/student_course_history/terms
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreSummary:terms
+    _navigation: Core.HEd.Grading.StudentCourseHistory.Terms
+  
+Core_HEd_Grading_StudentCourseHistory_CalculateTermTotals:
+  path: /grading/student_course_history/terms/calculate
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreSummary:calculateTermTotals
+    _navigation: Core.HEd.Grading.StudentCourseHistory.RecalculateTermTotals
+  methods: [GET]
+  
+Core_HEd_Grading_StudentCourseHistory_CalculateTermTotals_Calculate:
+  path: /grading/student_course_history/terms/calculate
+  defaults: { _controller: KulaHEdGradingBundle:CoreSummary:performCalculateTermTotals }
+  methods: [POST]
+
+Core_HEd_Grading_Reports_StudentTranscript_Generate:
+  path: /grading/reports/student_transcript
+  defaults: { _controller: KulaHEdGradingBundle:CoreStudentTranscriptReport:generate }
+  methods: [POST]
+
+Core_HEd_Grading_Reports_StudentTranscript:
+  path: /grading/reports/student_transcript
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreStudentTranscriptReport:index
+    _navigation: Core.HEd.Grading.Reports.StudentTranscript
+  methods: [GET]
+
+Core_HEd_Grading_Reports_DegreeAudit:
+  path: /grading/reports/degree_audit
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreDegreeAuditReport:index
+    _navigation: Core.HEd.Grading.Reports.DegreeAudit
+  methods: [GET]
+
+Core_HEd_Grading_Reports_DegreeAudit_Generate:
+  path: /grading/reports/degree_audit
+  defaults: { _controller: KulaHEdGradingBundle:CoreDegreeAuditReport:generate }
+  methods: [POST]
+
+Core_HEd_Grading_StudentCourseHistory_Standings:
+  path: /grading/student_course_history/standings
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreStandings:index
+    _navigation: Core.HEd.Grading.StudentCourseHistory.Standings
+
+Core_HEd_Grading_StudentCourseHistory_TranscriptComments:
+  path: /grading/student_course_history/transcript_comments
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreTranscriptComments:index
+    _navigation: Core.HEd.Grading.StudentCourseHistory.TranscriptComments
+
+Core_HEd_Grading_Reports_FinalGrades:
+  path: /grading/reports/final_grades
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreFinalGradesReport:index
+    _navigation: Core.HEd.Grading.Reports.StudentFinalGrades
+  methods: [GET]
+
+Core_HEd_Grading_Reports_FinalGrades_Generate:
+  path: /grading/reports/final_grades
+  defaults: { _controller: KulaHEdGradingBundle:CoreFinalGradesReport:generate }
+  methods: [POST]
+
+Core_HEd_Degrees_Degrees:
+  path: /grading/degrees/degrees
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreDegree:degrees
+    _navigation: Core.HEd.Degrees.Degrees
+
+Core_HEd_Degrees_Majors:
+  path: /grading/degrees/majors
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreDegree:majors
+    _navigation: Core.HEd.Degrees.Majors
+
+Core_HEd_Degrees_Minors:
+  path: /grading/degrees/minors
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreDegree:minors
+    _navigation: Core.HEd.Degrees.Minors
+
+Core_HEd_Degrees_Concentrations:
+  path: /grading/degrees/concentrations
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreDegree:concentrations
+    _navigation: Core.HEd.Degrees.Concentrations
+
+Core_HEd_Degrees_Requirements_Groups:
+  path: /grading/degrees/requirements/groups/{type}/{id}
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreRequirements:requirement_groups
+    _navigation: Core.HEd.Degrees
+
+Core_HEd_Degrees_Requirements_Groups_Courses:
+  path: /grading/degrees/requirements/courses/{id}
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreRequirements:requirement_group_courses
+    _navigation: Core.HEd.Degrees
+
+Core_HEd_Degrees_Requirements_Groups_Courses_Equiv:
+  path: /grading/degrees/requirements/courses/equivalent/{id}
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreRequirements:requirement_group_courses_equivalent
+    _navigation: Core.HEd.Degrees
+
+Core_HEd_Scheduling_StudentSchedule_Grades:
+  path: /scheduling/student_schedule/grades
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSchedule:grades
+    _navigation: Core.HEd.Scheduling.StudentSchedule.Grades
+  
+Core_HEd_Scheduling_Section_Grades:
+  path: /scheduling/section/grades
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSection:grades
+    _navigation: Core.HEd.Scheduling.Section.Grades

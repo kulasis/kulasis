@@ -1,0 +1,81 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Addresses
+</div>
+<table id="window_window_num_data_table_addresses" class="data-table">
+<thead>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'Core.Constituent.Address.EffectiveDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.Thoroughfare', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.Locality', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.AdministrativeArea', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.PostalCode', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.Country', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+  {% for address in addresses %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, field: 'Core.Constituent.Address.EffectiveDate', db_row_id: address.ADDRESS_ID, value: address.EFFECTIVE_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Address.Type', db_row_id: address.ADDRESS_ID, value: address.ADDRESS_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Address.Thoroughfare', db_row_id: address.ADDRESS_ID, value: address.THOROUGHFARE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Address.Locality', db_row_id: address.ADDRESS_ID, value: address.LOCALITY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Address.AdministrativeArea', db_row_id: address.ADDRESS_ID, value: address.ADMINISTRATIVE_AREA, lookup: 'C', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Address.PostalCode', db_row_id: address.ADDRESS_ID, value: address.POSTAL_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Address.Country', db_row_id: address.ADDRESS_ID, value: address.COUNTRY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'width:150px;' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+<div class="data-table-header-div">
+Phone Numbers
+</div>
+<table id="window_window_num_data_table_phones" class="data-table">
+<thead>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.EffectiveDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.Number', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.Extension', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'Core.Constituent.Phone.Country', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+  {% for phone in phones %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.EffectiveDate', db_row_id: phone.PHONE_NUMBER_ID, value: phone.EFFECTIVE_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.Type', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.Number', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.Extension', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_EXTENSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.Country', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_COUNTRY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'width:150px;' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+<div class="data-table-header-div">
+Email Addresses
+</div>
+<table id="window_window_num_data_table_email" class="data-table">
+<thead>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ input: false, field: 'Core.Constituent.EmailAddress.EffectiveDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'Core.Constituent.EmailAddress.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'Core.Constituent.EmailAddress.EmailAddress', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+  {% for email in emails %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, field: 'Core.Constituent.EmailAddress.EffectiveDate', db_row_id: email.EMAIL_ADDRESS_ID, value: email.EFFECTIVE_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.EmailAddress.Type', db_row_id: email.EMAIL_ADDRESS_ID, value: email.EMAIL_ADDRESS_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.EmailAddress.EmailAddress', db_row_id: email.EMAIL_ADDRESS_ID, value: email.EMAIL_ADDRESS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

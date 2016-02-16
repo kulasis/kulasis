@@ -19,6 +19,7 @@ class TwigExtension extends \Twig_Extension {
     $this->navigation = $container->get('kula.core.navigation');
     $this->router = $container->get('router');
     $this->lookup = $container->get('kula.core.lookup');
+    $this->cache = $container->get('kula.core.cache.kv');
     
     \Kula\Core\Component\Twig\Field::setDependencies($container, $container->get('kula.core.permission'), $container->get('kula.core.focus'), $container->get('kula.core.record'), $container->get('kula.core.poster'), $container->get('kula.core.schema'), $container->get('kula.core.db'), $container->get('kula.core.session'), $container->get('kula.core.chooser'), $container->get('kula.core.lookup'));
   }
@@ -58,6 +59,7 @@ class TwigExtension extends \Twig_Extension {
       'mode' => 'edit',
       'form_action' => $current_request->getBaseUrl().$current_request->getPathInfo(),
       'kula_core_permission' => $this->container->get('kula.core.permission'),
+      'kula_core_cache_kv' => $this->container->get('kula.core.cache.kv'),
     );
     
     if ($this->session->get('user_id')) {
@@ -65,30 +67,41 @@ class TwigExtension extends \Twig_Extension {
         'focus_usergroups' => Focus::usergroups($this->db, $this->session->get('user_id'))
       );
     }
-    if ($this->session->get('user_id') AND $this->session->get('portal') == 'sis') {
+    if ($this->session->get('user_id') AND $this->session->get('portal') == 'core') {
         $globals_array += array(
-        'focus_organization' => Focus::getOrganizationMenu($this->container->get('kula.core.organization'), $this->session->get('organization_id')),
+        'focus_organization' => Focus::getOrganizationMenu($this->container->get('kula.core.cache.kv'), $this->container->get('kula.core.organization'), $this->session->get('organization_id')),
         'focus_terms' => Focus::terms($this->container->get('kula.core.organization'), $this->container->get('kula.core.term'), $this->session->get('organization_id'), $this->session->get('portal'), $this->session->get('administrator'), $this->session->get('user_id'))
       );
       
     }
     
+    if ($this->session->get('administrator') == 1 AND ($this->session->get('portal') == 'teacher' OR $this->session->get('portal') == 'student')) {
+      $globals_array += array(
+        'admin_focus_schools' => Focus::getSchoolsMenu($this->container->get('kula.core.organization'), $this->container->get('kula.core.organization')->getSchools($this->session->get('organization_id'))),
+        'admin_focus_terms' => Focus::terms($this->container->get('kula.core.organization'), $this->container->get('kula.core.term'), $this->session->get('organization_id'), $this->session->get('portal'), $this->session->get('administrator'), $this->session->get('user_id'), $this->container->get('kula.core.db'), $this->container->get('kula.core.focus'))
+      );
+    }
+    
     if ($this->session->get('portal') == 'teacher' OR $this->session->get('portal') == 'student') {
       $globals_array += array(
-        'focus_schools' => Focus::getSchoolsMenu($this->container->get('kula.core.organization'), $this->container->get('kula.core.organization')->getSchools($this->session->get('organization_id'))),
-        'focus_terms' => Focus::terms($this->container->get('kula.core.organization'), $this->container->get('kula.core.term'), $this->session->get('organization_id'), $this->session->get('portal'), $this->session->get('administrator'), $this->session->get('user_id'), $this->container->get('kula.core.db'), $this->container->get('kula.core.focus'))
+        'focus_schools' => Focus::getSchoolsMenu($this->container->get('kula.core.organization'), $this->container->get('kula.core.organization')->getSchools($this->session->getFocus('organization_id'))),
+        'focus_terms' => Focus::terms($this->container->get('kula.core.organization'), $this->container->get('kula.core.term'), $this->session->getFocus('organization_id'), $this->session->get('portal'), $this->session->get('administrator'), $this->session->get('user_id'), $this->container->get('kula.core.db'), $this->container->get('kula.core.focus'))
       );
     }
     if ($this->session->get('portal') == 'teacher') {
       $globals_array += array(
-        'focus_teachers' => Focus::getTeachers($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getOrganizationTermIDs()),
         'focus_sections' => Focus::getSectionMenu($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getTeacherOrganizationTermID()),
         'focus_advisor_students' => Focus::getAdvisingStudentsMenu($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getTeacherOrganizationTermID(), $this->container->get('kula.core.focus')->getOrganizationTermIDs()),
       );
     }
-    if ($this->session->get('portal') == 'student') {
+    if ($this->session->get('administrator') == 1 AND $this->session->get('portal') == 'teacher') {
       $globals_array += array(
-        'focus_students' => Focus::getStudents($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getOrganizationTermIDs()),
+        'admin_focus_teachers' => Focus::getTeachers($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getOrganizationID(true), $this->container->get('kula.core.focus')->getTermID(true))
+      );
+    }
+    if ($this->session->get('administrator') == 1 AND $this->session->get('portal') == 'student') {
+      $globals_array += array(
+        'admin_focus_students' => Focus::getStudents($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getOrganizationID(true), $this->container->get('kula.core.focus')->getTermID(true)),
       );
     }
     

@@ -1,78 +1,62 @@
-SIS.HEd.Admin.FinancialAid:
+Core.HEd.FinancialAid:
+  parent: Core.HEd
+  type: dir
   description: "Financial Aid"
-  type: form
-  portal: sis
   display_name: "Financial Aid"
-  sort: 4
-  tabs:
-    Pending:
-      description: "Pending"
-      display_name: "Pending"
-      sort: 1
-      route: sis_HEd_home_financialaid_pending
-    Posted:
-      description: "Posted"
-      display_name: "Posted"
-      sort: 2
-      route: sis_HEd_home_financialaid_posted
-    PowerFAIDS:
-      description: "PowerFAIDS"
-      display_name: "PowerFAIDS"
-      sort: 3
-      route: sis_HEd_admin_faid_powerfaids
-
-SIS.HEd.Student.FinancialAid:
-  description: "Financial Aid"
-  type: form
-  portal: sis
-  display_name: "Financial Aid"
-  sort: 4
-  tabs:
-    Package:
-      description: "Package"
-      display_name: "Package"
-      sort: 1
-      route: sis_HEd_student_financialaid_package
-    Terms:
-      description: "Terms"
-      display_name: "Terms"
-      sort: 2
-      route: sis_HEd_student_financialaid_terms
-    Awards:
-      description: "Awards"
-      display_name: "Awards"
-      sort: 3
-      route: sis_HEd_student_financialaid_awards
-    AwardHistory:
-      description: "Award History"
-      display_name: "Award History"
-      sort: 4
-      route: sis_HEd_student_financialaid_awards_history
-    Billing:
-      description: "Billing"
-      display_name: "Billing"
-      sort: 5
-      route: sis_HEd_student_financialaid_billing
-    BillingHistory:
-      description: "Billing History"
-      display_name: "Billing History"
-      sort: 6
-      route: sis_HEd_student_financialaid_billing_history
-
-SIS.HEd.Setup.FinancialAid:
-  description: "Financial Aid"
-  type: form
-  portal: sis
-  display_name: "Financial Aid"
-  sort: 2
-  tabs:
-    AwardCodes:
-      description: "Award Codes"
-      display_name: "Award Codes"
-      sort: 1
-      route: sis_HEd_setup_financialaid_awardcodes
-    PowerFAIDS:
-      description: "PowerFAIDS"
-      display_name: "PowerFAIDS"
-      sort: 3
-      route: sis_HEd_setup_financialaid_powerfaids
+  forms:
+    FinancialAid:
+      description: "Financial Aid"
+      display_name: "Financial Aid"
+      tabs:
+        Pending:
+          description: "Pending"
+          display_name: "Pending"
+          route: Core_HEd_FinancialAid_FinancialAid_Pending
+        Posted:
+          description: "Posted"
+          display_name: "Posted"
+          route: Core_HEd_FinancialAid_FinancialAid_Posted
+        PowerFAIDS:
+          description: "PowerFAIDS"
+          display_name: "PowerFAIDS"
+          route: Core_HEd_FinancialAid_FinancialAid_PowerFAIDS
+    StudentFinancialAid:
+      description: "Student Financial Aid"
+      display_name: "Student Financial Aid"
+      tabs:
+        Package:
+          description: "Package"
+          display_name: "Package"
+          route: Core_HEd_FinancialAid_StudentFinancialAid_Package
+        Terms:
+          description: "Terms"
+          display_name: "Terms"
+          route: Core_HEd_FinancialAid_StudentFinancialAid_Terms
+        Awards:
+          description: "Awards"
+          display_name: "Awards"
+          route: Core_HEd_FinancialAid_StudentFinancialAid_Awards
+        AwardHistory:
+          description: "Award History"
+          display_name: "Award History"
+          route: Core_HEd_FinancialAid_StudentFinancialAid_Awards_History
+        Billing:
+          description: "Billing"
+          display_name: "Billing"
+          route: Core_HEd_FinancialAid_StudentFinancialAid_Billing
+        BillingHistory:
+          description: "Billing History"
+          display_name: "Billing History"
+          route: Core_HEd_FinancialAid_StudentFinancialAid_Billing_History
+    FinancialAidSetup:
+      description: "Financial Aid Setup"
+      display_name: "Financial Aid Setup"
+      tabs:
+        AwardCodes:
+          description: "Award Codes"
+          display_name: "Award Codes"
+          route: Core_HEd_FinancialAid_FinancialAidSetup_AwardCodes
+        PowerFAIDS:
+          description: "PowerFAIDS"
+          display_name: "PowerFAIDS"
+          route: Core_HEd_FinancialAid_FinancialAidSetup_PowerFAIDS

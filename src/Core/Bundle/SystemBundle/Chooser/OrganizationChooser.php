@@ -34,7 +34,7 @@ class OrganizationChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'core_system_organization_chooser';
+    return 'Core_System_Organization_Chooser';
   }
   
 }

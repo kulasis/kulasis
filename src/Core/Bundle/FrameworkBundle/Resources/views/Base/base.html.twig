@@ -3,18 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <title>{% block title %}Kula SIS{% endblock %}</title>        
-    {% stylesheets '@KulaCoreFrameworkBundle/Resources/public/css/lib/reset.css'
-      '@KulaCoreFrameworkBundle/Resources/public/css/lib/group.css'
-      '@KulaCoreFrameworkBundle/Resources/public/css/flash.css'
-      '@KulaCoreFrameworkBundle/Resources/public/css/base.css'  %}
+    {% stylesheets 
+      '@KulaCoreFrameworkBundle/Resources/public/css/lib/bootstrap.css'
+            '@KulaCoreFrameworkBundle/Resources/public/css/lib/group.css'
+            '@KulaCoreFrameworkBundle/Resources/public/css/lib/select2/select2.css'
+            '@KulaCoreFrameworkBundle/Resources/public/css/lib/select2-bootstrap/select2-bootstrap.css'
+            '@KulaCoreFrameworkBundle/Resources/public/css/flash.css'
+            '@KulaCoreFrameworkBundle/Resources/public/css/base.css'
+       %}
       <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
     {% block stylesheets %}{% endblock %}
-    {% javascripts  '@KulaCoreFrameworkBundle/Resources/public/js/lib/jquery-1.11.0.js'
+    {% javascripts  '@KulaCoreFrameworkBundle/Resources/public/js/lib/jquery-2.2.0.min.js'
                     '@KulaCoreFrameworkBundle/Resources/public/js/lib/bootstrap.min.js'
+                    '@KulaCoreFrameworkBundle/Resources/public/js/lib/select2/select2.min.js'
     %}
       <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+    <script>
+    // $.fn.select2.defaults.set('theme', 'bootstrap');
+    </script>
     {% block javascripts %}{% endblock %}
   </head>
   <body>

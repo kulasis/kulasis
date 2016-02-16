@@ -1,176 +1,148 @@
-SIS.HEd.Student.Schedule.Grades:
-  type: tab
-  portal: sis
-  description: "Grades"
-  display_name: "Grades"
-  sort: 3
-  route: sis_HEd_student_schedule_grades
-
-
-SIS.HEd.Student.Schedule.FinalGrades:
-  type: menu_reports
-  portal: sis
-  descriptions: "Final Grades"
-  display_name: "Final Grades"
-  route: sis_HEd_student_schedule_reports_finalgrades
-  sort: 2
-
-SIS.HEd.Reports.Student.FinalGrades:
-  type: report
-  portal: sis
-  description: "Final Grades"
-  display_name: "Final Grades"
-  route: sis_HEd_student_schedule_reports_finalgrades
-
-SIS.HEd.Student.CourseHistory:
-  description: "Course History"
-  type: form
-  portal: sis
-  display_name: "Course History"
-  sort: 4
+Core.HEd.Scheduling.StudentSchedule:
   tabs:
-    CourseHistory:
-      description: "Course History"
-      display_name: "Course History"
-      sort: 1
-      route: sis_HEd_student_coursehistory_coursehistory
+    Grades:
+      description: "Grades"
+      display_name: "Grades"
+      route: Core_HEd_Scheduling_StudentSchedule_Grades
+  menu_reports:
+    FinalGrades:
+      descriptions: "Final Grades"
+      display_name: "Final Grades"
+      route: Core_HEd_Grading_Reports_FinalGrades
+
+Core.HEd.Grading:
+  parent: Core.HEd
+  type: dir
+  description: "Grading"
+  display_name: "Grading"
+  forms:
+    StudentCourseHistory:
+      description: "Student Course History"
+      display_name: "Student Course History"
+      tabs:
+        CourseHistory:
+          description: "Course History"
+          display_name: "Course History"
+          route: Core_HEd_Grading_StudentCourseHistory_CourseHistory
+        Degrees:
+          description: "Degrees"
+          display_name: "Degrees"
+          route: Core_HEd_Grading_StudentCourseHistory_Degrees
+        Standings:
+          description: "Standings"
+          display_name: "Standings"
+          route: Core_HEd_Grading_StudentCourseHistory_Standings
+        TranscriptComments:
+          description: "Transcript Comments"
+          display_name: "Transcript Comments"
+          route: Core_HEd_Grading_StudentCourseHistory_TranscriptComments
+        Terms:
+          description: "Terms"
+          display_name: "Terms"
+          route: Core_HEd_Grading_StudentCourseHistory_Terms
+      menu_actions:
+        RecalculateTermTotals:
+          description: "Calculate Term Totals"
+          display_name: "Calculate Term Totals"
+          route: Core_HEd_Grading_StudentCourseHistory_CalculateTermTotals
+      menu_reports:
+        StudentTranscript:
+          description: "Student Transcript"
+          display_name: "Student Transcript"
+          route: Core_HEd_Grading_Reports_StudentTranscript
+        DegreeAudit:
+          description: "Degree Audit"
+          display_name: "Degree Audit"
+          route: Core_HEd_Grading_Reports_DegreeAudit
     Degrees:
       description: "Degrees"
       display_name: "Degrees"
-      sort: 2
-      route: sis_HEd_student_coursehistory_degrees
-    Standings:
-      description: "Standings"
-      display_name: "Standings"
-      sort: 3
-      route: sis_HEd_student_coursehistory_standings
-    TranscriptComments:
-      description: "Transcript Comments"
-      display_name: "Transcript Comments"
-      sort: 4
-      route: sis_HEd_student_coursehistory_transcriptcomments
-    Terms:
-      description: "Terms"
-      display_name: "Terms"
-      sort: 5
-      route: sis_HEd_student_coursehistory_terms
-  menu_actions:
-    RecalculateTermTotals:
-      description: "Calculate Term Totals"
-      display_name: "Calculate Term Totals"
-      sort: 1
-      route: sis_HEd_student_coursehistory_calculateTermTotals
-  menu_reports:
+      tabs:
+        Degrees:
+          description: "Degrees"
+          display_name: "Degrees"
+          route: Core_HEd_Degrees_Degrees
+        Majors:
+          description: "Majors"
+          display_name: "Majors"
+          route: Core_HEd_Degrees_Majors
+        Minors:
+          description: "Minors"
+          display_name: "Minors"
+          route: Core_HEd_Degrees_Minors
+        Concentrations:
+          description: "Concentrations"
+          display_name: "Concentrations"
+          route: Core_HEd_Degrees_Concentrations
+
+Core.HEd.Grading.Reports:
+  parent: Core.HEd.Grading
+  type: dir
+  description: "Reports"
+  display_name: "Reports"
+  reports:
+    StudentFinalGrades:
+      description: "Final Grades"
+      display_name: "Final Grades"
+      route: Core_HEd_Grading_Reports_FinalGrades
     StudentTranscript:
       description: "Student Transcript"
       display_name: "Student Transcript"
-      sort: 1
-      route: sis_HEd_student_coursehistory_reports_studenttranscript
+      route: Core_HEd_Grading_Reports_StudentTranscript
     DegreeAudit:
       description: "Degree Audit"
       display_name: "Degree Audit"
-      sort: 2
-      route: sis_HEd_student_coursehistory_reports_degreeaudit
+      route: Core_HEd_Grading_Reports_DegreeAudit
 
-SIS.HEd.Reports.Student.StudentTranscript:
-  description: "Student Transcript"
-  type: report
-  portal: sis
-  display_name: "Student Transcript"
-  sort: 1
-  route: sis_HEd_student_coursehistory_reports_studenttranscript
-SIS.HEd.Reports.Student.DegreeAudit:
-  description: "Degree Audit"
-  type: report
-  portal: sis
-  display_name: "Degree Audit"
-  sort: 2
-  route: sis_HEd_student_coursehistory_reports_degreeaudit
-
-SIS.HEd.Academic.Degrees:
-  description: "Degrees"
-  type: form
-  portal: sis
-  display_name: "Degrees"
-  sort: 2
-  tabs:
-    Degrees:
-      description: "Degrees"
-      display_name: "Degrees"
-      sort: 1
-      route: sis_HEd_degrees_degrees
-    Majors:
-      description: "Majors"
-      display_name: "Majors"
-      sort: 2
-      route: sis_HEd_degrees_majors
-    Minors:
-      description: "Minors"
-      display_name: "Minors"
-      sort: 3
-      route: sis_HEd_degrees_minors
-    Concentrations:
-      description: "Concentrations"
-      display_name: "Concentrations"
-      sort: 4
-      route: sis_HEd_degrees_concentrations
+Core.HEd.Scheduling.Section.Grades:
+  type: tab
+  parent: Core.HEd.Scheduling.Section
+  description: "Grades"
+  display_name: "Grades"
+  route: Core_HEd_Scheduling_Section_Grades
     
-SIS.HEd.Setup.Grading:
-  description: "Setup"
+Core.HEd.Grading.GradingSetup:
+  description: "Grading Setup"
+  display_name: "Grading Setup"
   type: form
-  portal: sis
-  sort: 3
-  display_name: "Grading"
+  parent: Core.HEd.Grading
   tabs:
     MarkScales:
       description: "Mark Scales"
       display_name: "Mark Scales"
-      route: sis_HEd_setup_grading_markscales
+      route: Core_HEd_Grading_GradingSetup_MarkScales
     Standings:
       description: "Standings"
       display_name: "Standings"
-      route: sis_HEd_setup_grading_standings
+      route: Core_HEd_Grading_GradingSetup_Standings
 
 Teacher.HEd.Class.Grades:
   description: "Grades"
   display_name: "Grades"
   type: form
-  portal: teacher
-  sort: 2
   tabs:
     Roster:
       description: "Current"
       display_name: "Current"
-      sort: 1
       route: teacher_HEd_section_grades_current
     Dropped:
       description: "Dropped Roster"
       display_name: "Dropped"
-      sort: 2
       route: teacher_HEd_section_grades_dropped
 
 Teacher.HEd.Advisor:
   description: "Advisor"
   display_name: "Advisor"
-  type: form_group
-  portal: teacher
-  sort: 2
+  type: dir
   forms:
     DegreeAudit:
       description: "Degree Audit"
       display_name: "Degree Audit"
-      sort: 3
       route: teacher_HEd_student_degreeaudit
 
-Student.HEd.Student:
-  description: "Student"
-  display_name: "Student"
-  type: form_group
-  portal: student
-  sort: 1
-  forms:
-    Grades:
-      description: "Grades"
-      display_name: "Grades"
-      sort: 2
-      route: student_HEd_student_grades
+Student.HEd.Grades:
+  description: "Grades"
+  display_name: "Grades"
+  type: form
+  parent: Student.HEd
+  route: student_HEd_student_grades

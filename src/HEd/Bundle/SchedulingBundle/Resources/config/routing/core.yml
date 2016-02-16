@@ -1,0 +1,229 @@
+Core_HEd_Staff_Staff_Schedule:
+  path: /staff/staff/schedule
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreStaff:staff_schedule
+    _navigation: Core.HEd.Staff.Staff.Schedule
+
+Core_HEd_Scheduling_StudentSchedule:
+  path: /scheduling/student_schedule
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSchedule:index
+    _navigation: Core.HEd.Scheduling.StudentSchedule.CurrentSchedule
+
+Core_HEd_Scheduling_StudentSchedule_Add:
+  path: /scheduling/student_schedule/add
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSchedule:add
+    _navigation: Core.HEd.Scheduling.StudentSchedule
+
+Core_HEd_Scheduling_StudentSchedule_CalculateTotals:
+  path: /scheduling/student_schedule/calculate_totals
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreSchedule:calculateTotals }
+
+Core_HEd_Scheduling_StudentSchedule_Detail:
+  path: /scheduling/student_schedule/detail/{sub_id}
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSchedule:detail
+    _navigation: Core.HEd.Scheduling.StudentSchedule
+
+Core_HEd_Scheduling_StudentSchedule_History:
+  path: /scheduling/student_schedule/history
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSchedule:history
+    _navigation: Core.HEd.Scheduling.StudentSchedule.History
+
+Core_HEd_Scheduling_Reports_StudentSchedule:
+  path: /scheduling/reports/student_schedule
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreStudentScheduleReport:index
+    _navigation: Core.HEd.Scheduling.Reports.StudentSchedule
+  methods: [GET]
+
+Core_HEd_Scheduling_Reports_StudentSchedule_Generate:
+  path: /scheduling/reports/student_schedule
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreStudentScheduleReport:generate }
+  methods: [POST]
+
+Core_HEd_Scheduling_Reports_StudentScheduleBill:
+  path: /scheduling/reports/student_schedule_bill
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreStudentScheduleBillReport:index
+    _navigation: Core.HEd.Scheduling.Reports.StudentScheduleBill
+  methods: [GET]
+  
+Core_HEd_Scheduling_Reports_StudentScheduleBill_Generate:
+  path: /scheduling/reports/student_schedule_bill
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreStudentScheduleBillReport:generate }
+  methods: [POST]
+
+Core_HEd_Scheduling_StudentSchedule_WaitList:
+  path: /scheduling/student_schedule/wait_list
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSchedule:waitlist
+    _navigation: Core.HEd.Scheduling.StudentSchedule.WaitList
+
+Core_HEd_Scheduling_Section:
+  path: /scheduling/section
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSection:index
+    _navigation: Core.HEd.Scheduling.Section.Basic
+
+Core_HEd_Scheduling_Section_Add:
+  path: /scheduling/section/add
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSection:add
+    _navigation: Core.HEd.Scheduling.Section
+  methods: [GET]
+
+Core_HEd_Scheduling_Section_Create:
+  path: /scheduling/section/add
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreSection:create }
+  methods: [POST]
+
+Core_HEd_Scheduling_Section_Delete:
+  path: /scheduling/section/delete
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreSection:delete }
+  methods: [POST]
+
+Core_HEd_Scheduling_Section_Inactivate:
+  path: /scheduling/section/inactivate
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSection:inactivate
+    _navigation: Core.HEd.Scheduling.Section.ActivateInactive
+  methods: [POST]
+
+Core_HEd_Scheduling_Reports_ClassRoster_Generate:
+  path: /scheduling/reports/class_roster/generate
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreClassRosterReport:generate }
+  methods: [POST]
+
+Core_HEd_Scheduling_Reports_ClassRoster:
+  path: /scheduling/reports/class_roster
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreClassRosterReport:index
+    _navigation: Core.HEd.Scheduling.Reports.ClassRoster
+  
+Core_HEd_Scheduling_Reports_ClassRosterDirectory:
+  path: /scheduling/reports/class_roster_directory
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreClassRosterDirectoryReport:index
+    _navigation: Core.HEd.Scheduling.Reports.ClassRosterDirectory
+
+Core_HEd_Scheduling_Reports_ClassRosterDirectory_Generate:
+  path: /scheduling/reports/class_roster_directory/generate
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreClassRosterDirectoryReport:generate }
+  methods: [POST]
+  
+Core_HEd_Scheduling_Reports_MasterSchedule:
+  path: /scheduling/reports/master_schedule
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreMasterScheduleReport:index
+    _navigation: Core.HEd.Scheduling.Reports.MasterSchedule
+  methods: [GET]
+
+Core_HEd_Scheduling_Reports_MasterSchedule_Generate:
+  path: /scheduling/reports/master_schedule
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreMasterScheduleReport:generate }
+  methods: [POST]
+
+Core_HEd_Scheduling_Section_Roster:
+  path: /scheduling/section/roster
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSection:roster
+    _navigation: Core.HEd.Scheduling.Section.Roster
+
+Core_HEd_Scheduling_Section_WaitList:
+  path: /scheduling/section/waitlist
+  defaults:
+    _controller: KulaHEdSchedulingBundle:CoreSection:waitlist
+    _navigation: Core.HEd.Scheduling.Section.WaitList
+
+Core_HEd_Scheduling_Reports_StaffSchedule:
+  path: /scheduling/reports/instructor_schedule
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreStaffScheduleReport:index
+    _navigation: Core.HEd.Scheduling.Reports.InstructorSchedule
+  methods: [GET]
+
+Core_HEd_Scheduling_Reports_StaffSchedule_Generate:
+  path: /scheduling/reports/instructor_schedule
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreStaffScheduleReport:generate }
+  methods: [POST]
+
+Core_HEd_Scheduling_Section_RecalculateTotals:
+  path: /scheduling/section/recalculate_totals
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreSection:recalculate_section_totals }
+
+Core_HEd_Scheduling_Section_Courses:
+  path: /scheduling/sections/courses
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSection:courses
+    _navigation: Core.HEd.Scheduling.Section.Course
+
+Core_HEd_Scheduling_Section_Staff:
+  path: /scheduling/section/staff
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSection:staff
+    _navigation: Core.HEd.Scheduling.Section.Staff
+
+Core_HEd_Course_Chooser:
+  path: /course/chooser
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreCourses:chooser }
+
+Core_HEd_Course_Course:
+  path: /course/course
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreCourses:index
+    _navigation: Core.HEd.Course.Course.Information
+
+Core_HEd_Course_Course_Add:
+  path: /course/course/add
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreCourses:add
+    _navigation: Core.HEd.Course.Course
+  methods: [GET]
+
+Core_Constituent_Combiner_Course_HEd: 
+    path:     /constituent/combiner/course
+    defaults: 
+      _controller: KulaHEdSchedulingBundle:CoreCourses:combine
+      _navigation: Core.Constituent.Combiner.Course
+
+Core_HEd_Course_Course_Books:
+  path: /course/course/books
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreBooks:books
+    _navigation: Core.HEd.Course.Course.Books
+
+Core_HEd_Course_Course_Corequisites:
+  path: /course/course/corequisites
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreCourses:corequisites
+    _navigation: Core.HEd.Course.Course.Corequisites
+
+Core_HEd_Course_Course_Create:
+  path: /course/course/add
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreCourses:create }
+  methods: [POST]
+
+Core_HEd_Course_Course_Delete:
+  path: /course/course/delete
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreCourses:delete }
+  methods: [POST]
+
+Core_HEd_Course_Course_Prerequisites:
+  path: /course/course/prerequisites
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreCourses:prerequisites
+    _navigation: Core.HEd.Course.Course.Prerequisites
+
+Core_HEd_Setup_Rooms_Chooser:
+  path: /setup/rooms/chooser
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreRooms:chooser }
+  methods: [GET]
+
+Core_HEd_Setup_Rooms:
+  path: /setup/rooms
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreRooms:index
+    _navigation: Core.HEd.Setup.Room

@@ -1,0 +1,44 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<p>
+  <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_HEd_Billing_BillingSetup_TuitionRates') }}">Back to Tuition Rates</a>
+</p>
+
+<div class="data-table-header-div">
+Refunds
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_chargecodes', 'BILL_TUITION_RATE_REFUND') }}
+</span>
+</div>
+<table id="window_window_num_data_table_chargecodes" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ delete: true, field: 'HEd.TuitionRate.Refund.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.TuitionRate.Refund.RefundType', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.TuitionRate.Refund.EndDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.TuitionRate.Refund.RefundPercentage', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  </tr>
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, field: 'HEd.TuitionRate.Refund.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+  {{ kula_field({ add: true, delete: true, field: 'HEd.TuitionRate.Refund.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_field({ add: true, field: 'HEd.TuitionRate.Refund.TuitionRateID', value: tuition_rate_id, hidden: true }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.TuitionRate.Refund.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_field({ add: true, field: 'HEd.TuitionRate.Refund.RefundType', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.TuitionRate.Refund.EndDate', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.TuitionRate.Refund.RefundPercentage', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.TuitionRate.Refund.ID', prepend_html: '</tr>' }) }}
+  {% for refund in refunds %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'HEd.TuitionRate.Refund.ID', db_row_id: refund.TUITION_RATE_REFUND_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Refund.RefundType', db_row_id: refund.TUITION_RATE_REFUND_ID, value: refund.REFUND_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Refund.EndDate', db_row_id: refund.TUITION_RATE_REFUND_ID, value: refund.END_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Refund.RefundPercentage', db_row_id: refund.TUITION_RATE_REFUND_ID, value: refund.REFUND_PERCENTAGE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

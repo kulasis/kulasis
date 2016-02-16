@@ -1,44 +1,66 @@
-sis_HEd_student_financialaid_awards:
-  path: /sis/student/financialaid/awards
-  defaults: { _controller: KulaHEdFinancialAidBundle:SISAwards:index }
+Core_HEd_FinancialAid_StudentFinancialAid_Awards:
+  path: /core/financial_aid/student/awards
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CoreAwards:index
+    _navigation: Core.HEd.FinancialAid.StudentFinancialAid.Awards
 
-sis_HEd_student_financialaid_awards_history:
-  path: /sis/student/financialaid/award_history
-  defaults: { _controller: KulaHEdFinancialAidBundle:SISAwards:awards_history }
+Core_HEd_FinancialAid_StudentFinancialAid_Awards_History:
+  path: /core/financial_aid/student/award_history
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CoreAwards:awards_history
+    _navigation: Core.HEd.FinancialAid.StudentFinancialAid.AwardHistory
 
-sis_HEd_student_financialaid_billing:
-  path: /sis/student/financialaid/billing
-  defaults: { _controller: KulaHEdFinancialAidBundle:SISAwards:billing }
+Core_HEd_FinancialAid_StudentFinancialAid_Billing:
+  path: /core/financial_aid/student/billing
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CoreAwards:billing
+    _navigation: Core.HEd.FinancialAid.StudentFinancialAid.Awards
   methods: [GET]
 
-sis_HEd_student_financialaid_billing_history:
-  path: /sis/student/financialaid/billing/history
-  defaults: { _controller: KulaHEdFinancialAidBundle:SISAwards:billing_history }
+Core_HEd_FinancialAid_StudentFinancialAid_Billing_History:
+  path: /core/financial_aid/student/billing_history
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CoreAwards:billing_history
+    _navigation: Core.HEd.FinancialAid.StudentFinancialAid.BillingHistory
 
-sis_HEd_student_financialaid_package:
-  path: /sis/student/financialaid/package
-  defaults: { _controller: KulaHEdFinancialAidBundle:SISPackage:index }
+Core_HEd_FinancialAid_StudentFinancialAid_Package:
+  path: /core/financial_aid/student/package
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CorePackage:index
+    _navigation: Core.HEd.FinancialAid.StudentFinancialAid.Package
 
-sis_HEd_student_financialaid_terms:
-  path: /sis/student/financialaid/terms
-  defaults: { _controller: KulaHEdFinancialAidBundle:SISTerms:index }
+Core_HEd_FinancialAid_StudentFinancialAid_Terms:
+  path: /core/financial_aid/student/terms
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CoreTerms:index
+    _navigation: Core.HEd.FinancialAid.StudentFinancialAid.Terms
 
-sis_HEd_home_financialaid_pending:
-  path: /sis/home/financialaid/pending
-  defaults: { _controller: KulaHEdFinancialAidBundle:SISHomeFinancialAid:pending }
+Core_HEd_FinancialAid_FinancialAid_Pending:
+  path: /core/financial_aid/financial_aid/pending
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CoreHomeFinancialAid:pending
+    _navigation: Core.HEd.FinancialAid.FinancialAid.Pending
 
-sis_HEd_home_financialaid_posted:
-  path: /sis/home/financialaid/posted
-  defaults: { _controller: KulaHEdFinancialAidBundle:SISHomeFinancialAid:posted }
+Core_HEd_FinancialAid_FinancialAid_Posted:
+  path: /core/financial_aid/financial_aid/posted
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CoreHomeFinancialAid:posted
+    _navigation: Core.HEd.FinancialAid.FinancialAid.Posted
 
-sis_HEd_setup_financialaid_awardcodes:
-  path: /sis/setup/financialaid/awardcodes
-  defaults: { _controller: KulaHEdFinancialAidBundle:SISCodes:award_codes }
+Core_HEd_FinancialAid_FinancialAidSetup_AwardCodes:
+  path: /core/financial_aid/setup/award_codes
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CoreCodes:award_codes
+    _navigation: Core.HEd.FinancialAid.FinancialAidSetup.AwardCodes
   
-sis_HEd_admin_faid_powerfaids:
-  path: /sis/admin/financialaid/powerfaids
-  defaults: { _controller: KulaHEdFinancialAidBundle:SISPFAIDS:admin }
+Core_HEd_FinancialAid_FinancialAid_PowerFAIDS:
+  path: /core/financial_aid/financial_aid/powerfaids
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CorePFAIDS:admin
+    _navigation: Core.HEd.FinancialAid.FinancialAid.PowerFAIDS
   
-sis_HEd_setup_financialaid_powerfaids:
-  path: /sis/setup/financialaid/powerfaids
-  defaults: { _controller: KulaHEdFinancialAidBundle:SISPFAIDS:config }
+Core_HEd_FinancialAid_FinancialAidSetup_PowerFAIDS:
+  path: /core/financial_aid/setup/powerfaids
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CorePFAIDS:config
+    _navigation: Core.HEd.FinancialAid.FinancialAidSetup.PowerFAIDS

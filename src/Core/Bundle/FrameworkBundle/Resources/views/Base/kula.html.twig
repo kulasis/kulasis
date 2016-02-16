@@ -14,30 +14,38 @@
         {% endjavascripts %}
 {% endblock %}
 {% block body %}
-  <div id="focus_bar" class="group">
-    <div id="focus_bar_institution_name">
-      {{ kula_instance_name }}
+  <nav id="header" class="navbar navbar-default navbar-static">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">{{ kula_instance_name }}</a>
     </div>
-    <div id="focus_bar_focus">
-      <form id="role_form" method="post" action="{{ path('focus_usergroup_change') }}">
-        {{ session.get('name') }}
-        <span>
-          <label for="role_select">Role:</label>
-          {{ form_select(focus_usergroups, 'focus_usergroup', session.get('role_id'), { id : 'focus_usergroup' }) }}
-        </span>
-        {{ linkTo('Logout', 'logout') }}
-      </form>
+    <div class="navbar-collapse"> 
+    
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#">{{ session.get('name') }}</a></li>
+      <li class="dropdown">
+      
+      {% for role_id, role in focus_usergroups %}
+      {% if role_id == session.get('role_id') %}
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"> {{ role }} <span class="caret"></span> </a> 
+      {% endif %}
+      {% endfor %}
+      <ul class="dropdown-menu"> 
+        {% for role_id, role in focus_usergroups %}
+        {% if role_id != session.get('role_id') %}
+          <li>{{ linkTo(role, 'focus_usergroup_change', { id: role_id } ) }}</a></li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      </li>
+      <li style="border-left: 1px solid #DDDDDD;"><a class="glyphicon glyphicon-off" href="/logout"></a></li>
+    </ul>
     </div>
-  </div>
-  <div id="nav_bar" class="group">
-    {% block navigation_bar %}
+  </nav>
+  <div id="focusbar" class="navbar navbar-default navbar-static">
+    <form id="focus_form" method="post" action="{{ path('Core_Focus') }}">
+    {% block focus %}
     {% endblock %}
-    <div id="nav_bar_user">
-      <form id="focus_form" method="post" action="{{ path('focus_usergroup_change') }}">
-        {% block focus %}
-        {% endblock %}
-      </form>
-    </div>
+    </form>
   </div>
   <div id="nav_pane">
     {% block navigation_pane %}
@@ -51,20 +59,25 @@
   </div><!-- main_container -->
   
   <!-- Modal -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:none;">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="myModalLabel">Debug Error</h4>
-        </div>
-        <div class="modal-body">
-          <iframe id="modal_iframe" width="100%" height="100%"></iframe>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
+  <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <iframe id="modal_iframe" width="100%" height="500"></iframe>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
+</div>
   
+  <ul id="contextMenu" class="dropdown-menu" role="menu" style="display:none">
+    <li><a tabindex="-1" data-action="newtab">Open in New Tab</a></li>
+    <!--<li><div role="menuitem" tabindex="-1" class="disabled">Open in New Window</div></li>-->
+  </ul>
 {% endblock %}

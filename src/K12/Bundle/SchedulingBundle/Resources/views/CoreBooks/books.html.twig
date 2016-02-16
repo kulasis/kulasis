@@ -1,0 +1,49 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Books
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_rooms', 'STUD_COURSE_BOOK', { school_term_only: true }) }}
+</span>
+</div>
+<table id="window_window_num_data_table_rooms" class="data-table">
+<thead>
+  {{ kula_field_name({ delete: true, school_term_only: true, field: 'K12.Course.Book.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ edit: true, field: 'K12.Course.Book.OrganizationTermID', field_name_override: 'Term / Organization', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'K12.Course.Book.ISBNNumber', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'K12.Course.Book.Publisher', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'K12.Course.Book.Title', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'K12.Course.Book.Author', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'K12.Course.Book.Cost', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+    {{ kula_display_html({ add: true, field: 'K12.Course.Book.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+    {{ kula_field({ add: true, field: 'K12.Course.Book.OrganizationTermID', value: organization_term_id, hidden: true }) }}
+    {{ kula_field({ add: true, field: 'K12.Course.Book.CourseID', value: kula_core_record.getSelectedRecord.COURSE_ID, hidden: true }) }}
+    {{ kula_field({ add: true, delete: true, field: 'K12.Course.Book.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    {{ kula_display_html({ add: true, field: 'K12.Course.Book.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+    {{ kula_field({ add: true, field: 'K12.Course.Book.OrganizationTermID', value: organization_term_id_display, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'K12.Course.Book.ISBNNumber', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'K12.Course.Book.Publisher', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'K12.Course.Book.Title', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'K12.Course.Book.Author', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'K12.Course.Book.Cost', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_display_html({ add: true, field: 'K12.Course.Book.ID', prepend_html: '</tr>' }) }}
+  {% for book in books %}
+  <tr>
+    {{ kula_field({ delete: true, school_term_only: true, field: 'K12.Course.Book.ID', db_row_id: book.COURSE_BOOK_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {% set orgterm = book.TERM_ABBREVIATION ~ ' / ' ~ book.ORGANIZATION_NAME %}
+    {{ kula_field({ field: 'K12.Course.Book.OrganizationTermID', school_term_only: true, db_row_id: book.COURSE_BOOK_ID, value: orgterm, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, school_term_only: true, field: 'K12.Course.Book.ISBNNumber', db_row_id: book.COURSE_BOOK_ID, value: book.ISBN_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, school_term_only: true, field: 'K12.Course.Book.Publisher', db_row_id: book.COURSE_BOOK_ID, value: book.PUBLISHER, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, school_term_only: true, field: 'K12.Course.Book.TItle', db_row_id: book.COURSE_BOOK_ID, value: book.TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, school_term_only: true, field: 'K12.Course.Book.Author', db_row_id: book.COURSE_BOOK_ID, value: book.AUTHOR, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, school_term_only: true, field: 'K12.Course.Book.Cost', db_row_id: book.COURSE_BOOK_ID, value: book.COST, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

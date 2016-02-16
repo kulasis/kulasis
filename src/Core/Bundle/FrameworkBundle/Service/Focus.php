@@ -36,6 +36,7 @@ class Focus {
       
       if ($organization_id AND $organization_id != 'undefined') { 
         $this->session->setFocus('organization_id', $organization_id);
+        $this->session->setFocus('target', $this->organization->getTarget($organization_id));
         $items_to_update['LAST_ORGANIZATION_ID'] = $organization_id;
       }
       if ($term_id AND $term_id != 'undefined') {
@@ -51,21 +52,23 @@ class Focus {
       }       
     } 
     
-    if (!$organization_id AND !$term_id AND $this->session->get('portal') != 'sis') {
-      $this->session->setFocus('organization_id', $this->getSchoolIDs());
+    if (!$organization_id AND !$term_id AND $this->session->get('portal') != 'core') {
+      $this->session->setFocus('organization_id', $this->getSchoolIDs()[0]);
+      //$this->session->setFocus('term_id', $this->getTermID());
     }
   }
 
   public function setSectionFocus($section_id = null, $role_token = null) {
-    
+
     if ($role_token === null) {
       $role_token = $this->session->get('initial_role');
     }
-    
+
     // Get focus session info for role
-    $staff_organization_term_id = $this->session->getFocus('staff_organization_term_id');
     
-    if (!$section_id) {
+    $staff_organization_term_id = $this->session->getFocus('Teacher.Staff.OrgTerm');
+
+    if (!$section_id AND $staff_organization_term_id != '') {
       $section = $this->db->db_select('STUD_SECTION', 'section')
         ->fields('section', array('SECTION_ID'))
         ->join('STUD_COURSE', 'course', 'section.COURSE_ID = course.COURSE_ID')
@@ -74,8 +77,9 @@ class Focus {
         ->orderBy('SECTION_NUMBER', 'ASC')
         ->range(0, 1)
         ->execute()->fetch();
-      
+
       $section_id = $section['SECTION_ID'];
+      
     } 
 
     $this->session->setFocus('Teacher.HEd.Section', $section_id);
@@ -115,83 +119,102 @@ class Focus {
     else
       return false;
   }
-  
-  public function setTeacherOrganizationTermFocus($teacher_id = null, $role_token = null) {
 
-    if ($teacher_id) {
-      $this->session->setFocus('staff_organization_term_id', $teacher_id, $role_token);
-    } elseif ($this->session->get('administrator') == '1') {
-      if ($teacher_id) {
-        $this->session->setFocus('staff_organization_term_id', $teacher_id, $role_token);
-      } elseif ($currentStaffOrgTerm = $this->session->getFocus('staff_organization_term_id', $role_token) !== null) {
-        
-        // get staff org term in new term
-        $newTeacher = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm')
-        ->fields('stafforgterm', array('STAFF_ORGANIZATION_TERM_ID'))
-        ->condition('stafforgterm.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
-        ->join('STUD_STAFF_ORGANIZATION_TERMS', 'oldstafforgterm', 'oldstafforgterm.STAFF_ID = stafforgterm.STAFF_ID')
-        ->condition('oldstafforgterm.STAFF_ORGANIZATION_TERM_ID', $currentStaffOrgTerm)
-        ->execute()->fetch();
-        
-        if ($newTeacher['STAFF_ORGANIZATION_TERM_ID']) {
-          $this->session->setFocus('staff_organization_term_id', $newTeacher['STAFF_ORGANIZATION_TERM_ID'], $role_token);
-        } else {
-          // Set to first teacher in list
-          $firstTeacher = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm')
-          ->fields('stafforgterm', array('STAFF_ORGANIZATION_TERM_ID'))
-          ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stafforgterm.STAFF_ID')
-          ->condition('stafforgterm.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
-          ->orderBy('cons.LAST_NAME')
-          ->orderBy('cons.FIRST_NAME')
-          ->range(0, 1)
-          ->execute()->fetch();
-          $this->session->setFocus('staff_organization_term_id', $firstTeacher['STAFF_ORGANIZATION_TERM_ID'], $role_token);
-        }
-        
-      } else {
-        // Set to first teacher in list
-        $firstTeacher = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm')
-        ->fields('stafforgterm', array('STAFF_ORGANIZATION_TERM_ID'))
-        ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stafforgterm.STAFF_ID')
-        ->condition('stafforgterm.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
-        ->orderBy('cons.LAST_NAME')
-        ->orderBy('cons.FIRST_NAME')
-        ->range(0, 1)
-        ->execute()->fetch();
-        $this->session->setFocus('staff_organization_term_id', $firstTeacher['STAFF_ORGANIZATION_TERM_ID'], $role_token);
-      }
-      
-    } else {
-      // get staff organization term id for currently set organization and term
-      $staff_organization_term_id = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm')
-        ->fields('stafforgterm', array('STAFF_ORGANIZATION_TERM_ID'))
-        ->condition('stafforgterm.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
-        ->condition('stafforgterm.STAFF_ID', $this->session->get('user_id'));
-      $staff_organization_term_id = $staff_organization_term_id->execute()->fetch();
-
-      if ($staff_organization_term_id['STAFF_ORGANIZATION_TERM_ID']) {
-        $this->session->setFocus('staff_organization_term_id', $staff_organization_term_id['STAFF_ORGANIZATION_TERM_ID'], $role_token);
-      }
-      
-    }
-    
-  }
-
-  public function getTeacherOrganizationTermID() {
+  public function getTeacherOrganizationTermID($admin = false) {
     $session_focus = $this->session->get('focus');
-    if (isset($session_focus['staff_organization_term_id']))
-      return $session_focus['staff_organization_term_id'];
+    if (isset($session_focus['Teacher.Staff.OrgTerm']))
+      return $session_focus['Teacher.Staff.OrgTerm'];
     else
       return false;
+  
   }
   
   public function getTeacherStaffOrganizationTermID() {
-    $session_focus = $this->session->get('focus');
-    if (isset($session_focus['staff_organization_term_id']))
-      return $session_focus['staff_organization_term_id'];
-    else
-      return false;
+    return $this->getTeacherStaffOrganizationTermID();
   } 
+  
+  public function setTeacherStaffFocusFromStaff($organization_id, $term_id, $staff_id = null, $role_token = null) {
+
+    if ($this->session->get('administrator') == '1') {
+      // check for student status given organization, term, and student
+      $student = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms')
+        ->fields('stafforgterms', array('STAFF_ORGANIZATION_TERM_ID', 'STAFF_ID'))
+        ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stafforgterms.ORGANIZATION_TERM_ID')
+        ->condition('orgterms.ORGANIZATION_ID', $organization_id)
+        ->condition('orgterms.TERM_ID', $term_id)
+        ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stafforgterms.STAFF_ID')
+        ->fields('cons', array('LAST_NAME', 'FIRST_NAME'));
+      if ($staff_id) {
+        $student = $student->condition('stafforgterms.STAFF_ID', $staff_id);
+      } 
+      $student = $student->orderBy('cons.LAST_NAME')->orderBy('cons.FIRST_NAME');
+      if (!$staff_id) {
+        $student = $student->range(0, 1);
+      }
+      $student = $student->execute()->fetch();
+      // Only if student status returns set new focused student
+      $this->setOrganizationTermFocus($organization_id, $term_id, $role_token);
+      $this->session->setFocus('Teacher.Staff', $student['STAFF_ID'], $role_token);
+      $this->setTeacherOrganizationTermFocus($student['STAFF_ORGANIZATION_TERM_ID'], $role_token);
+    } else {
+      $this->setOrganizationTermFocus($organization_id, $term_id, $role_token);
+      $this->setTeacherOrganizationTermFocus();
+    }
+    
+    return $student['STAFF_ID'];
+    
+  }
+  
+  public function setTeacherOrganizationTermFocus($staff_orgterm_id = null, $role_token = null) {
+    if ($staff_orgterm_id) {
+      $this->session->setFocus('Teacher.Staff.OrgTerm', $staff_orgterm_id, $role_token);
+    } elseif ($this->session->get('administrator') != 1) {
+      //echo $this->session->getFocus('organization_id').' '.$this->session->getFocus('term_id');
+      $staff_orgterm = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms')
+        ->fields('stafforgterms', array('STAFF_ORGANIZATION_TERM_ID', 'STAFF_ID'))
+        ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stafforgterms.ORGANIZATION_TERM_ID')
+        ->condition('orgterms.ORGANIZATION_ID', $this->session->getFocus('organization_id'))
+        ->condition('orgterms.TERM_ID', $this->session->getFocus('term_id'))
+        ->condition('stafforgterms.STAFF_ID', $this->session->get('user_id'))
+        ->execute()->fetch();
+      $this->session->setFocus('Teacher.Staff.OrgTerm', $staff_orgterm['STAFF_ORGANIZATION_TERM_ID'], $role_token);
+      $this->session->setFocus('Teacher.Staff', $staff_orgterm['STAFF_ID'], $role_token);
+    }
+    
+   // $this->setSectionFocus();
+  }
+  
+  public function setStudentStatusFocusFromStudent($organization_id, $term_id, $student_id = null, $role_token = null) {
+
+    if ($this->session->get('administrator') == '1') {
+      
+      // check for student status given organization, term, and student
+      $student = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('STUDENT_STATUS_ID'))
+        ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+        ->condition('orgterms.ORGANIZATION_ID', $organization_id)
+        ->condition('orgterms.TERM_ID', $term_id)
+        ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID');
+      if ($student_id) {
+        $student = $student->condition('stustatus.STUDENT_ID', $student_id);
+      } 
+      $student = $student->orderBy('cons.LAST_NAME')->orderBy('cons.FIRST_NAME');
+      if (!$student_id) {
+        $student = $student->range(0, 1);
+      }
+      $student = $student->execute()->fetch();
+      
+      // Only if student status returns set new focused student
+      //if ($student['STUDENT_STATUS_ID']) {
+      $this->setOrganizationTermFocus($organization_id, $term_id, $role_token);
+      $this->setStudentStatusFocus($student['STUDENT_STATUS_ID'], $role_token);
+      // }
+    } else {
+      $this->setOrganizationTermFocus($organization_id, $term_id, $role_token);
+      $this->setStudentStatusFocus();
+    }
+    
+  }
   
   public function setStudentStatusFocus($student_status_id = null, $role_token = null) {
     
@@ -262,8 +285,22 @@ class Focus {
       return false;
   }
   
+  public function getStudentID($admin = false) {
+    if ($admin AND $this->session->getFocus('admin_focus_student')) {
+      return $this->session->getFocus('admin_focus_student');
+    }
+  }
+  
+  public function getStaffID($admin = false) {
+    if ($admin AND $this->session->getFocus('admin_focus_teacher')) {
+      return $this->session->getFocus('admin_focus_teacher');
+    } else {
+      return $this->session->getFocus('Teacher.Staff');
+    }
+  }
+  
   public function getSchoolIDs() {
-    if ($this->session->get('portal') == 'sis') {
+    if ($this->session->get('portal') == 'core') {
       return $this->organization->getSchools($this->getOrganizationID());
     } else {
       return $this->organization->getSchools($this->getOrganizationID())[0];
@@ -279,20 +316,24 @@ class Focus {
   }
   
   public function getOrganizationTarget() {
-    return $this->organization->getOrganization($this->getOrganizationID())->getTarget();
+    return $this->organization->getTarget($this->getOrganizationID());
   }
   
-  public function getOrganizationID() {
-    if ($this->session->getFocus('organization_id'))
+  public function getOrganizationID($admin = false) {
+    if ($admin AND $this->session->getFocus('admin_focus_organization'))
+      return $this->session->getFocus('admin_focus_organization');
+    elseif ($this->session->getFocus('organization_id'))
       return $this->session->getFocus('organization_id');
     else
       return $this->session->get('organization_id');
   }
   
-  public function getTermID() {
+  public function getTermID($admin = false) {
     $session_focus = $this->session->get('focus');
     
-    if (isset($session_focus['term_id']) AND $session_focus['term_id'] != 'ALL') {
+    if ($admin AND isset($session_focus['admin_focus_term'])) {
+      return $session_focus['admin_focus_term'];  
+    } elseif (isset($session_focus['term_id']) AND $session_focus['term_id'] != 'ALL') {
       return $session_focus['term_id'];  
     } elseif (isset($session_focus['term_id']) AND $session_focus['term_id'] == 'ALL') {
       return $this->term->getAllTermIDs();

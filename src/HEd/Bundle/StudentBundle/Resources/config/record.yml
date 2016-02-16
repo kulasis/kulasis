@@ -1,9 +1,9 @@
-SIS.HEd.Hold:
-  class: Kula\HEd\Bundle\StudentBundle\Record\SISHoldCodeRecord
-SIS.HEd.Student:
-  class: Kula\HEd\Bundle\StudentBundle\Record\SISStudentRecord
-SIS.HEd.Student.Status:
-  class: Kula\HEd\Bundle\StudentBundle\Record\SISStudentStatusRecord
+Core.HEd.Hold:
+  class: Kula\HEd\Bundle\StudentBundle\Record\CoreHoldCodeRecord
+Core.HEd.Student:
+  class: Kula\HEd\Bundle\StudentBundle\Record\CoreStudentRecord
+Core.HEd.Student.Status:
+  class: Kula\HEd\Bundle\StudentBundle\Record\CoreStudentStatusRecord
 
 Teacher.HEd.Advisor.Student:
   class: Kula\HEd\Bundle\StudentBundle\Record\TeacherAdvisorStudentRecord

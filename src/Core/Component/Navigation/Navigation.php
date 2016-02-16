@@ -4,225 +4,197 @@ namespace Kula\Core\Component\Navigation;
 
 class Navigation {
   
-  private $navigation = array();
-  private $reportGroups = array();
-  private $formGroups = array();
-  private $pages = array();
-  private $navigationByRoutes = array();
-  
   private $db;
   
-  public function __construct($db) {
+  public function __construct($db, $session, $permission, $request, $cache) {
     $this->db = $db;
-  }
-  
-  public function loadNavigation() {
-    
-    $navReportGroupsResults = $this->db->db_select('CORE_NAVIGATION', 'navigation')
-      ->fields('navigation')
-      ->condition('navigation.NAVIGATION_TYPE', 'report_group')
-      ->orderBy('navigation.PORTAL')
-      ->orderBy('navigation.SORT')
-      ->execute();
-    while ($navReportGroupsRow = $navReportGroupsResults->fetch()) {
-        $navigationItem = new Group($navReportGroupsRow['NAVIGATION_NAME'], null, $navReportGroupsRow['NAVIGATION_ID'], $navReportGroupsRow['PORTAL'], $navReportGroupsRow['SORT'], $navReportGroupsRow['DISPLAY_NAME'], $navReportGroupsRow['ROUTE']);
-        
-        $this->reportGroups[$navReportGroupsRow['PORTAL']][$navReportGroupsRow['NAVIGATION_NAME']] = $navigationItem;
-        $this->navigation[$navReportGroupsRow['NAVIGATION_NAME']] = $navigationItem;
-        
-      unset($navigationItem);
-    }
-      
-    $navFormGroupsResults = $this->db->db_select('CORE_NAVIGATION', 'navigation')
-      ->fields('navigation')
-      ->condition('navigation.NAVIGATION_TYPE', 'form_group')
-      ->orderBy('navigation.PORTAL')
-      ->orderBy('navigation.SORT')
-      ->execute();
-    while ($navFormGroupsRow = $navFormGroupsResults->fetch()) {
-        $navigationItem = new Group($navFormGroupsRow['NAVIGATION_NAME'], null, $navFormGroupsRow['NAVIGATION_ID'], $navFormGroupsRow['PORTAL'], $navFormGroupsRow['SORT'], $navFormGroupsRow['DISPLAY_NAME'], $navFormGroupsRow['ROUTE']);
-        
-        $this->formGroups[$navFormGroupsRow['PORTAL']][$navFormGroupsRow['NAVIGATION_NAME']] = $navigationItem;
-        $this->navigation[$navFormGroupsRow['NAVIGATION_NAME']] = $navigationItem;
-        
-      unset($navigationItem);
-    }
-    
-    $navPagesResults = $this->db->db_select('CORE_NAVIGATION', 'navigation')
-      ->fields('navigation')
-      ->condition('navigation.NAVIGATION_TYPE', 'page')
-      ->orderBy('navigation.PORTAL')
-      ->orderBy('navigation.SORT')
-      ->execute();
-    while ($navPagesRow = $navPagesResults->fetch()) {
-        $navigationItem = new Page($navPagesRow['NAVIGATION_NAME'], null, $navPagesRow['NAVIGATION_ID'], $navPagesRow['PORTAL'], $navPagesRow['SORT'], $navPagesRow['DISPLAY_NAME'], $navPagesRow['ROUTE']);
-        
-        $this->pages[$navPagesRow['PORTAL']][$navPagesRow['NAVIGATION_NAME']] = $navigationItem;
-        $this->navigation[$navPagesRow['NAVIGATION_NAME']] = $navigationItem;
-        
-        if ($navPagesRow['ROUTE']) {
-          $this->navigationByRoutes[$navPagesRow['ROUTE']] = $navigationItem;
-        }
-        
-      unset($navigationItem);
-    }
-    
-    $navResults = $this->db->db_select('CORE_NAVIGATION', 'navigation')
-      ->fields('navigation')
-      ->leftJoin('CORE_NAVIGATION', 'parent_nav', 'parent_nav.NAVIGATION_ID = navigation.PARENT_NAVIGATION_ID')
-      ->fields('parent_nav', array('NAVIGATION_NAME' => 'parent_NAVIGATION_NAME'))
-      ->condition('navigation.NAVIGATION_TYPE', array('report_group', 'form_group', 'page'), 'NOT IN')
-      ->orderBy('navigation.PORTAL')
-      ->orderBy('navigation.NAVIGATION_TYPE')
-      ->orderBy('navigation.SORT')
-      ->execute();
-    while ($navRow = $navResults->fetch()) {
-      
-      if ($navRow['NAVIGATION_TYPE'] == 'form') {
-        $navigationItem = new Form($navRow['NAVIGATION_NAME'], $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE']);
-        
-        $this->navigation[$navRow['parent_NAVIGATION_NAME']]->addForm($navigationItem);
-      }
-      
-      if ($navRow['NAVIGATION_TYPE'] == 'menu_action') {
-        $navigationItem = new Menu($navRow['NAVIGATION_NAME'], 'menu_action', $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE'], $navRow['DIVIDER_BEFORE'], $navRow['RECORD_LOADED'], $navRow['CONFIRMATION_MESSAGE']);
-        
-        $this->navigation[$navRow['parent_NAVIGATION_NAME']]->addMenuAction($navigationItem);
-      }
-      
-      if ($navRow['NAVIGATION_TYPE'] == 'menu_report') {
-        $navigationItem = new Menu($navRow['NAVIGATION_NAME'], 'menu_report', $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE'], $navRow['DIVIDER_BEFORE'], $navRow['RECORD_LOADED'], $navRow['CONFIRMATION_MESSAGE']);
-        
-        $this->navigation[$navRow['parent_NAVIGATION_NAME']]->addMenuReport($navigationItem);
-      }
-      
-      if ($navRow['NAVIGATION_TYPE'] == 'tab') {
-        $navigationItem = new Tab($navRow['NAVIGATION_NAME'], $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE'], $navRow['DIVIDER_BEFORE'], $navRow['RECORD_LOADED'], $navRow['CONFIRMATION_MESSAGE']);
-        
-        $this->navigation[$navRow['parent_NAVIGATION_NAME']]->addTab($navigationItem);
-      }
-      
-      if ($navRow['NAVIGATION_TYPE'] == 'report') {
-        $navigationItem = new Report($navRow['NAVIGATION_NAME'], $navRow['parent_NAVIGATION_NAME'], $navRow['NAVIGATION_ID'], $navRow['PORTAL'], $navRow['SORT'], $navRow['DISPLAY_NAME'], $navRow['ROUTE']);
-        
-        $this->navigation[$navRow['parent_NAVIGATION_NAME']]->addReport($navigationItem);
-      }
-      
-      $this->navigation[$navRow['NAVIGATION_NAME']] = $navigationItem;
-      
-      if ($navRow['ROUTE']) {
-        $this->navigationByRoutes[$navRow['ROUTE']] = $navigationItem;
-      }
-      
-      unset($navigationItem);
-      
-    }
-  }
-  
-  public function awake($session, $permission, $request) {
     $this->session = $session;
     $this->permission = $permission;
     $this->request = $request;
+    $this->cache = $cache;
   }
   
   public function getFirstRoute() {
     
-    // check pages
-    $pages = $this->getPages();
+    $nav = $this->cache->get('navigation.first')[$this->session->get('portal')];
+    if ($this->permission->getPermissionForNavigationObject($nav))
+    	return $this->cache->get('navigation.'.$nav)['route'];
     
-    if (count($pages) > 0) {
-      return current($pages)->getRoute();
-    }
+  }
+  
+  public function getNavigationTreeTop() {
     
-    // check forms
-    if ($formGroups = $this->getFormGroups()) {
-    foreach($formGroups as $formGroup) {
-      foreach($formGroup->getForms($this->permission) as $form) {
-        if (count($form->getTabs($this->permission)) > 0) {
-          $tabs = $form->getTabs($this->permission);
-          return current($tabs)->getRoute();
-        } elseif ($form->getRoute()) {
-          return $form->getRoute();
-        }
-      }
-    } }
-  }
-  
-  public function getPages() {
-    if (isset($this->pages[$this->session->get('portal')])) {
-      $pages = array();
-      foreach($this->pages[$this->session->get('portal')] as $name => $page) {
-        if ($this->permission->getPermissionForNavigationObject($name)) {
-          $pages[] = $page;
-        }
-      }
-      return $pages;
-    }
-  }
-  
-  public function getFormGroups() {
+    $start_nav = array();
     
-    if (isset($this->formGroups[$this->session->get('portal')])) {
-      $groups = array();
-      foreach($this->formGroups[$this->session->get('portal')] as $name => $group) {
-        if ($this->permission->getPermissionForNavigationObject($name)) {
-          $groups[] = $group;
-        }
-      }
-      return $groups;
-    }
-  }
-  
-  public function getReportGroups() {
-    if (isset($this->reportGroups[$this->session->get('portal')])) {
-      $groups = array();
-      foreach($this->reportGroups[$this->session->get('portal')] as $name => $group) {
-        if ($this->permission->getPermissionForNavigationObject($name)) {
-          $groups[] = $group;
-        }
-      }
-      return $groups;
-    }
-  }
-  
-  public function getRequestedNavItem() {
-    $route = $this->request->getCurrentRequest()->attributes->get('_route');
+    // Get top for portal
+    $top = $this->cache->get('navigation.top');
 
-    if (isset($this->navigationByRoutes[$route])) {
-    
-      $routeNav = $this->navigationByRoutes[$route];
-      
-      if ($routeNav instanceof Page OR $routeNav instanceof Form OR $routeNav instanceof Report OR $routeNav instanceof Menu) {
-        return $routeNav;
-      }
-    
-      if ($routeNav instanceof Tab) {
+    if (count($top)) {
+
+      foreach($top as $nav_top) {
         
-        return $this->navigation[$routeNav->getParent()];
-      } 
-    
-    }
-  }
-  
-  public function getRequestedTab() {
-    $route = $this->request->getCurrentRequest()->attributes->get('_route');
-    
-    if (isset($this->navigationByRoutes[$route])) {
-    
-    $routeNav = $this->navigationByRoutes[$route];
+        // check if part of portal
+        if ($this->session->get('portal') == $this->getProperty($nav_top, 'portal')) {
+        if (!$this->session->getFocus('target') OR 
+            !$this->getProperty($nav_top, 'target') OR 
+            ($this->getProperty($nav_top, 'target') == $this->session->getFocus('target'))) {
+              if ($this->permission->getPermissionForNavigationObject($nav_top)) {
+                $start_nav[] = $nav_top;
+              }
+          }
+        }
 
-    if ($routeNav instanceof Tab) {
-      return $routeNav;
+      } // end foreach
+      
+    } // end if on count
+    
+    return $start_nav;
+  }
+  
+  public function getNavigationTreeTopWithoutPortal() {
+    
+    $start_nav = $this->getNavigationTreeTop();
+    
+    // Loop through each top and remove the top where portal == target
+    foreach($start_nav as $index => $nav_top) {
+      if ($this->getProperty($nav_top, 'target') == $this->session->getFocus('target')) {
+        foreach($this->getProperty($nav_top, 'children') as $nav_target) {
+          if ($this->permission->getPermissionForNavigationObject($nav_target)) {
+            $start_nav[] = $nav_target;
+          }
+        }
+        unset($start_nav[$index]);
+      }
     }
     
+    $start_nav = array_values($start_nav);
+    return $start_nav;
+  }
+  
+  public function getCurrentRequestNav() {
+    return $this->request->getCurrentRequest()->get('_navigation');
+  }
+  
+  public function getProperty($nav_key, $property) {
+    if ($this->permission->getPermissionForNavigationObject($nav_key) AND $this->cache->exists('navigation.'.$nav_key)) {
+      $nav = $this->cache->get('navigation.'.$nav_key);
+      if (isset($nav[$property]))
+        return $nav[$property];
+    }
+  }
+  
+  public function getRoute($nav_key) {
+    if ($this->permission->getPermissionForNavigationObject($nav_key) AND $this->cache->exists('navigation.'.$nav_key)) {
+      $nav = $this->cache->get('navigation.'.$nav_key);
+      if (isset($nav['route'])) {
+        return $nav['route'];
+      } else {
+        // find route of first available tab
+        if (isset($nav['tabs'])) {
+          $tab_key = current($nav['tabs']);
+          $tab = $this->cache->get('navigation.'.$tab_key);
+          if (isset($tab['route'])) {
+            return $tab['route'];
+          }
+        }
+      }
+    }
+  }
+  
+  public function getTabs($nav_key) {
+    if ($this->permission->getPermissionForNavigationObject($nav_key)) {
+      
+      $tabsToOutput = array();
+      
+      // Get parent
+      $tabs = $this->getProperty($this->getProperty($nav_key, 'parent'), 'tabs');
+
+      // Get tabs from parent
+      if ($tabs) {
+        
+        foreach($tabs as $tab) {
+          if (!$this->getProperty($tab, 'target') OR ($this->getProperty($tab, 'target') AND $this->getProperty($tab, 'target') == $this->session->getFocus('target')))
+            $tabsToOutput[] = $tab;
+        }
+        return $tabsToOutput;
+      }
+      
+    }
+  }
+  
+  public function getActionMenu($nav_key) {
+    
+    $nav_key = $this->determineParentKey($nav_key);
+    
+    if ($this->permission->getPermissionForNavigationObject($nav_key)) {
+      // Get parent
+      $tabs = $this->getProperty($nav_key, 'menu_actions');
+
+      // Get tabs from parent
+      if ($tabs) {
+        return $tabs;
+      }
+      
+    }
+  } 
+  
+  public function getReportsMenu($nav_key) {
+    
+    $nav_key = $this->determineParentKey($nav_key);
+    
+    if ($this->permission->getPermissionForNavigationObject($nav_key)) {
+      // Get parent
+      $tabs = $this->getProperty($nav_key, 'menu_reports');
+      
+      // Get tabs from parent
+      if ($tabs) {
+        return $tabs;
+      }
+      
+    }
+  }
+  
+  public function getAddButton($nav_key) {
+    
+    $nav_key = $this->determineParentKey($nav_key);
+    
+    if ($this->permission->getPermissionForNavigationObject($nav_key)) {
+      
+      // Get tabs from parent
+      if ($tabs = $this->getProperty($nav_key, 'button_add')) {
+        return $tabs;
+      }
+      
+    }
+  } 
+  
+  public function getDeleteButton($nav_key) {
+    
+    $nav_key = $this->determineParentKey($nav_key);
+    
+    if ($this->permission->getPermissionForNavigationObject($nav_key)) {
+    
+      // Get tabs from parent
+      if ($tabs = $this->getProperty($nav_key, 'button_delete')) {
+        return $tabs;
+      }
+      
+    }
+  } 
+  
+  private function determineParentKey($nav_key) {
+    
+    if ($this->getProperty($nav_key, 'type') == 'form') {
+      return $nav_key;
+    } else {
+      return $this->getProperty($nav_key, 'parent');
     }
     
   }
   
-  public function __sleep() {
-    $this->db = null;
+  public function shouldOpenNode($navigation_name, $node_name) {
+    if (strpos($navigation_name, $node_name) >= 0)
+      return true;
     
-    return array('navigation', 'reportGroups', 'formGroups', 'navigationByRoutes', 'pages');
   }
-  
 }

@@ -64,7 +64,7 @@ services:
   
   kula.core.session:
     class: Kula\Core\Bundle\FrameworkBundle\Service\Session
-    arguments: ["@session", "@kula.core.db", "@request_stack"]
+    arguments: ["@session", "@kula.core.db", "@request_stack", "@kula.core.organization"]
     
   kula.core.twig.extension:
     class: Kula\Core\Bundle\FrameworkBundle\Extension\TwigExtension

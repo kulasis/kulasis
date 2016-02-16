@@ -1,22 +1,32 @@
-core_export_query:
+Core_Export_Query:
   path: /core/export/query
-  defaults: { _controller: KulaCoreQueryBundle:CoreExport:query }
+  defaults: 
+    _controller: KulaCoreQueryBundle:CoreExport:query
+    _navigation: Core.Utility.Export
 
-core_export_savedqueries:
+Core_Export_SavedQueries:
   path: /core/export/query/saved
-  defaults: { _controller: KulaCoreQueryBundle:CoreExport:saved }
+  defaults: 
+    _controller: KulaCoreQueryBundle:CoreExport:saved
+    _navigation: Core.Utility.Export
 
-core_export_saved_detail:
+Core_Export_Saved_Detail:
   path: /core/export/saved/{id}
-  defaults: { _controller: KulaCoreQueryBundle:CoreExport:saved_detail }
+  defaults: 
+    _controller: KulaCoreQueryBundle:CoreExport:saved_detail
+    _navigation: Core.Utility.Export
   methods: [GET]
 
-core_export_reports_export_download:
+Core_Export_Reports_Export_Download:
   path: /core/export/query/download
-  defaults: { _controller: KulaCoreQueryBundle:CoreExport:query_download }
+  defaults: 
+    _controller: KulaCoreQueryBundle:CoreExport:query_download
+    _navigation: Core.Utility.Export
   methods: [GET]
 
-core_export_query_download_generate:
+Core_Export_Query_Download_Generate:
   path: /core/export/query/download
-  defaults: { _controller: KulaCoreQueryBundle:CoreExport:query_download_export }
+  defaults: 
+    _controller: KulaCoreQueryBundle:CoreExport:query_download_export
+    _navigation: Core.Utility.Export
   methods: [POST]

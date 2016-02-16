@@ -1,0 +1,53 @@
+Core.System:
+  description: "System"
+  display_name: "System"
+  type: dir
+  portal: core
+
+Core.Constituent:
+  description: "Constituent"
+  display_name: "Constituent"
+  type: dir
+  portal: core
+
+Core.HEd:
+  description: "Higher Education"
+  display_name: "Higher Ed"
+  type: dir
+  portal: core
+  target: HEd
+
+Core.K12:
+  description: "K12"
+  display_name: "K12"
+  type: dir
+  portal: core
+  target: K12
+
+Teacher.HEd:
+  description: "Higher Education"
+  display_name: "Higher Ed"
+  type: dir
+  portal: teacher
+  target: HEd
+
+Teacher.K12:
+  description: "K12"
+  display_name: "K12"
+  type: dir
+  portal: teacher
+  target: K12
+
+Student.HEd:
+  description: "Higher Education"
+  display_name: "Higher Ed"
+  type: dir
+  portal: student
+  target: HEd
+
+Student.K12:
+  description: "K12"
+  display_name: "K12"
+  type: dir
+  portal: student
+  target: K12

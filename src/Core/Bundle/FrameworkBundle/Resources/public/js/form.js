@@ -11,9 +11,9 @@ function form_formContentListeners(windowNum) {
 	// Added checkboxes
 	$(windowNum).find('.form-delete-checkbox-add').on('click', deleteAddedRow);
 	// Chooser listener
-	$(windowNum).find('select.chooser-search').on('focus', form_chooserSearch_focus);
-	$(windowNum).find('.chooser-search').on('keyup', form_chooserSearch_keyup);
-	$(windowNum).find('.chooser-search').on('keydown', form_chooserSearch_keydown);
+	//$(windowNum).find('select.chooser-search').on('focus', form_chooserSearch_focus);
+	//$(windowNum).find('.chooser-search').on('keyup', form_chooserSearch_keyup);
+	//$(windowNum).find('.chooser-search').on('keydown', form_chooserSearch_keydown);
 }
 
 function form_dismissAlerts() {
@@ -23,9 +23,9 @@ function form_dismissAlerts() {
 function form_submitButton() {
 
 	// Get current window number
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
 	// Get current active tab 
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 
 	if (activeTabID == undefined) {
 		// not in tab
@@ -130,9 +130,25 @@ function addRowToFormDataTable(event) {
 	$('#' + tableToAdd + ' > tbody > tr:last').find('select:visible:enabled:first,input:not(.form-delete-checkbox-add):visible:enabled:first').focus();
 	
 	// Chooser listener
-	$('#' + tableToAdd + ' > tbody > tr:last > td').find('.chooser-search').on('focus', form_chooserSearch_focus);
-	$('#' + tableToAdd + ' > tbody > tr:last > td').find('.chooser-search').on('keyup', form_chooserSearch_keyup);
-	$('#' + tableToAdd + ' > tbody > tr:last > td').find('.chooser-search').on('keydown', form_chooserSearch_keydown);
+	//$('#' + tableToAdd + ' > tbody > tr:last > td').find('.chooser-search').on('focus', form_chooserSearch_focus);
+	//$('#' + tableToAdd + ' > tbody > tr:last > td').find('.chooser-search').on('keyup', form_chooserSearch_keyup);
+	//$('#' + tableToAdd + ' > tbody > tr:last > td').find('.chooser-search').on('keydown', form_chooserSearch_keydown);
+  
+  $('#' + tableToAdd + ' > tbody > tr:last > td').find('select:not(.chooser-search)').select2();
+	$('#' + tableToAdd + ' > tbody > tr:last > td').find('.chooser-search').select2({
+  	
+  	ajax: {
+      processResults: function (data) {
+            return {
+                results: $.map(data, function(obj) {
+                    return { id: obj.id, text: obj.text };
+                })
+            };
+        }
+    }
+  	
+	});
+	
 }
 
 function deleteAddedRow(event) {
@@ -180,9 +196,9 @@ function processForm(form, url, partial, divToLoad, options, onsuccess, onerrorf
   }
 	
 	// Get current window number
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
 	// Get current active tab 
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 	
 	if (activeTabID == undefined) {
 		// not in tab

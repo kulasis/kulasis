@@ -34,7 +34,7 @@ class NonOrganizationChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'core_system_nonorganization_chooser';
+    return 'Core_System_NonOrganization_Chooser';
   }
   
 }

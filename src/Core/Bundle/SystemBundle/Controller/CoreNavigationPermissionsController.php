@@ -26,10 +26,10 @@ class CoreNavigationPermissionsController extends Controller {
     if ($this->record->getSelectedRecordID()) {
     // Get table permissions
     $nav_permissions = $this->db()->db_select('CORE_NAVIGATION', 'nav')
-      ->fields('nav', array('NAVIGATION_ID', 'NAVIGATION_NAME', 'NAVIGATION_TYPE', 'PORTAL'))
+      ->fields('nav', array('NAVIGATION_ID', 'NAVIGATION_NAME', 'NAVIGATION_TYPE'))
       ->leftJoin('CORE_PERMISSION_NAVIGATION', 'permnav', 'permnav.NAVIGATION_ID = nav.NAVIGATION_ID AND USERGROUP_ID = '.$this->record->getSelectedRecordID())
       ->fields('permnav', array('NAVIGATION_PERMISSION_ID', 'PERMISSION'))
-      ->condition('nav.PORTAL', $this->record->getSelectedRecord()['PORTAL'])
+      ->condition('nav.NAVIGATION_NAME', $this->record->getSelectedRecord()['PORTAL'].'.%', 'LIKE')
       ->orderBy('NAVIGATION_NAME', 'ASC')
       ->execute()->fetchAll();
     }
@@ -53,7 +53,7 @@ class CoreNavigationPermissionsController extends Controller {
     
     // Get table permissions
     $nav_permissions = $this->db()->db_select('CORE_NAVIGATION', 'nav')
-      ->fields('nav', array('NAVIGATION_ID', 'NAVIGATION_NAME', 'NAVIGATION_TYPE', 'PORTAL'))
+      ->fields('nav', array('NAVIGATION_ID', 'NAVIGATION_NAME', 'NAVIGATION_TYPE'))
       ->leftJoin('CORE_PERMISSION_NAVIGATION', 'permnav', 'permnav.NAVIGATION_ID = nav.NAVIGATION_ID AND USERGROUP_ID IS NULL AND ROLE_ID IS NULL')
       ->fields('permnav', array('NAVIGATION_PERMISSION_ID', 'PERMISSION'))
       ->orderBy('NAVIGATION_NAME', 'ASC')
@@ -82,8 +82,9 @@ class CoreNavigationPermissionsController extends Controller {
     if ($this->record->getSelectedRecordID()) {
     // Get table permissions
     $nav_permissions = $this->db()->db_select('CORE_NAVIGATION', 'nav')
-      ->fields('nav', array('NAVIGATION_ID', 'NAVIGATION_NAME', 'NAVIGATION_TYPE', 'PORTAL'))
+      ->fields('nav', array('NAVIGATION_ID', 'NAVIGATION_NAME', 'NAVIGATION_TYPE'))
       ->leftJoin('CORE_PERMISSION_NAVIGATION', 'permnav', 'permnav.NAVIGATION_ID = nav.NAVIGATION_ID AND ROLE_ID ='.$this->record->getSelectedRecordID())
+      ->condition('nav.NAVIGATION_NAME', $this->record->getSelectedRecord()['PORTAL'].'.%', 'LIKE')
       ->fields('permnav', array('NAVIGATION_PERMISSION_ID', 'PERMISSION'))
       ->orderBy('NAVIGATION_NAME', 'ASC')
       ->execute()->fetchAll();

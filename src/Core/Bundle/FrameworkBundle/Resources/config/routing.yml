@@ -1,0 +1,3 @@
+Core_Focus:
+    path:     /core/focus
+    defaults: { _controller: KulaCoreFrameworkBundle:Focus:focus }

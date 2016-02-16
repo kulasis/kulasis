@@ -1,0 +1,55 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="group-box">
+<div class="group-box-header">Teacher Grading Completed</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'HEd.Section.TeacherGradesCompleted', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section_info.TEACHER_GRADES_COMPLETED, field_name_override: 'Completed', label: true }) }}
+{{ kula_field({ field: 'HEd.Section.TeacherGradesCompletedUserstamp', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section_info.USERNAME, field_name_override: 'User', label: true }) }}
+{{ kula_field({ field: 'HEd.Section.TeacherGradesCompletedTimestamp', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section_info.TEACHER_GRADES_COMPLETED_TIMESTAMP, field_name_override: 'Timestamp', label: true }) }}
+</div>
+</div>
+
+<div class="data-table-header-div">
+Class Grades
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+  <tr>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'Core.Constituent.PermanentNumber', field_name_override: 'Student ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.LastName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.FirstName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Gender', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Mark', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.Dropped', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</tr>
+</thead>
+<tbody>
+  {% for student in students %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ field: 'Core.Constituent.PermanentNumber', db_row_id: student.STUDENT_CLASS_ID, value: student.PERMANENT_NUMBER, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Constituent.LastName', db_row_id: student.STUDENT_CLASS_ID, value: student.LAST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Constituent.FirstName', db_row_id: student.STUDENT_CLASS_ID, value: student.FIRST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Constituent.Gender', db_row_id: student.STUDENT_CLASS_ID, value: student.GENDER, lookup: 'C', input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% if student.COURSE_HISTORY_ID %}
+    {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Mark', db_row_id: student.COURSE_HISTORY_ID, value: student.MARK, MARK_SCALE_ID: student.MARK_SCALE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% else %}
+    {{ kula_field({ add: true, field: 'HEd.Student.CourseHistory.Mark', table_row: false, db_row_id: student.STUDENT_CLASS_ID, MARK_SCALE_ID: student.MARK_SCALE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% endif %}
+    {{ kula_field({ field: 'HEd.Student.Class.Dropped', db_row_id: student.STUDENT_CLASS_ID, value: student.DROPPED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% if student.ALLOW_COMMENTS == '1' or student.REQUIRE_COMMENTS == '1' %}
+    <tr>
+      <td class="data-table-cell-row-num">{{ loop.index }}</td>
+      {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Comments', db_row_id: student.COURSE_HISTORY_ID, value: student.COMMENTS, prepend_html: '<td colspan="6">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    </tr>
+  {% endif %}
+  {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

@@ -1,8 +1,23 @@
 // Executed by document.ready
 function navigation_documentReady() {
+	
+		
+    //$('.tree li:has(ul)').addClass('parent_li');
+    $('.tree li.parent_li > span').on('click', function (e) {
+        var children = $(this).parent('li.parent_li').find(' > ul > li');
+        if (children.is(":visible")) {
+            children.hide('fast');
+            $(this).attr('title', 'Expand this branch').removeClass('opened').addClass('closed');
+        } else {
+            children.show('fast');
+            $(this).attr('title', 'Collapse this branch').removeClass('closed').addClass('opened');
+        }
+        e.stopPropagation();
+    });
+		
 	// start navigation listeners
 	navigation_startNavigationListeners();
-
+  
 	// if no drawer set to show, show first drawer
 	var drawerOpen = false;
   $('#nav_forms').find('.drawer-contents').each(function (index) {
@@ -27,7 +42,7 @@ function navigation_documentReady() {
 	}
 	
 	navigation_windowListeners();
-  
+  setup_selects();
   $(".navigation-link").contextMenu({
       menuSelector: "#contextMenu",
       menuSelected: function (invokedOn, selectedMenu) {
@@ -47,6 +62,7 @@ function navigation_documentReady() {
   });
 }
 
+
 /* Navigation Listeners */
 function navigation_startNavigationListeners() {
 	// Make drawer headers clickable
@@ -56,7 +72,7 @@ function navigation_startNavigationListeners() {
 	// Make items in navigation drawer clickable
 	$("#nav_pane").on("click", ".navigation-link", navigation_drawerItemListenerExistingWindow);
   $("#nav_pane").on("click", ".navigation-link-page", navigation_drawerItemListenerExistingWindow);
-	//$("#nav_pane").on("click", ".navigation-link-new-window", navigation_drawerItemListenerNewWindow);
+  //$("#nav_pane").on("click", ".navigation-link-new-window", navigation_drawerItemListenerNewWindow);
 }
 
 // show or hide drawer listener
@@ -125,7 +141,7 @@ function navigation_drawerItemListenerExistingWindow(event) {
 	navigation_createFirstWindow();
 	
 	// Get current window number
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
   
   if (windowNumber == undefined) {
     navigation_drawerItemListenerNewWindow($(this));
@@ -133,7 +149,7 @@ function navigation_drawerItemListenerExistingWindow(event) {
   }
   
 	// Get current active tab 
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 	
 	if (activeTabID == undefined) {
 		// not in tab
@@ -149,7 +165,7 @@ function navigation_drawerItemListenerExistingWindow(event) {
   getLink(url, 'window', 'windows_container', options, function(msg, options) {
 		
 		// get currently selected panel
-		var currentWindow = $('.selected-window-element').data('window');
+		var currentWindow = $('.active').data('window');
 		// replace all window_num with new window number
 		msg = navigation_replaceAllWindowIDPlaceholders(msg, currentWindow);
 
@@ -168,10 +184,10 @@ function navigation_drawerItemListenerNewWindow(invokedOn) {
 	options['windowTitle'] = invokedOn.text();
   
 	// Get current window number
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
   
 	// Get current active tab 
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 	
 	if (activeTabID == undefined) {
 		// not in tab
@@ -196,12 +212,12 @@ function navigation_drawerItemListenerNewWindow(invokedOn) {
 }
 
 function navigation_updateWindow(num, html, title, url) {
-	
+
 	// Update html
   $('#window_' + num).html(html);
 	// Update window name
 	if (title != '')
-		$('#windowTitle_' + num).html('<div><span class="close-window">x</span> ' + title + '</div>');
+		$('#windowTitle_' + num).html('<a href="#"><span class="close-window">x</span> ' + title + '</a>');
 		
 	if (url) {
 	 if (url.indexOf('?') != -1) {
@@ -216,7 +232,7 @@ function navigation_updateWindow(num, html, title, url) {
 	
 	navigation_windowListeners(num);
 	navigation_windowBarListeners(num);
-	
+	setup_selects(num);
 }
 
 
@@ -225,15 +241,15 @@ function navigation_windowBarListeners(windowNum) {
 	// Make windowTitles clickable
 	$('#window_bar > ul > li').on('click', navigation_changeFocusedWindow);
 	// Make X clickable
-	$('#windowTitle_' + windowNum + ' > div > .close-window').on('click', navigation_closePanelWindow);
+	$('#windowTitle_' + windowNum + ' > a > .close-window').on('click', navigation_closePanelWindow);
 }
 
 function navigation_changeFocusedWindow(event) {
 	event.preventDefault();
 	windowNum = $(this).data('window');
 	
-	$('#window_bar > ul > li').removeClass('selected-window-element');
-	$(this).addClass('selected-window-element');
+	$('#window_bar > ul > li').removeClass('active');
+	$(this).addClass('active');
 	
 	$('#windows_container > div').hide();
 	$('#window_' + windowNum).show();
@@ -253,8 +269,8 @@ function navigation_closePanelWindow(event) {
 	$('#windows_container > div').hide();
 	$('#windows_container > div').last().show();
 	var panelToShow = $('#windows_container > div').last().data('window');
-	$('#window_bar > ul > li').removeClass('selected-window-element');
-	$('#windowTitle_' + panelToShow).addClass('selected-window-element');
+	$('#window_bar > ul > li').removeClass('active');
+	$('#windowTitle_' + panelToShow).addClass('active');
 	
 	window.history.pushState({"html":null,"pageTitle":null},"", $('#windowTitle_' + panelToShow).data('window-url'));	
 }
@@ -269,13 +285,16 @@ function navigation_windowListeners(windowNum) {
 	}
 	
 	// Set listeners on record movers
-	$(elementToFind + '_menu_bar').find('.window_menu_bar_record').children('span').on('click', navigation_menuBarRecord);
+	$(elementToFind + '_menu_bar').find('.window_menu_bar_record').children('button').on('click', navigation_menuBarRecord);
 	// set listeners on menus
-	$(elementToFind + '_menu_actions > ul > li').on('click', 'a', navigation_menuListener);
+	$(elementToFind + '_menu_actions_contents > li').on('click', 'a', navigation_menuListener);
 	// set listeners on menus
-	$(elementToFind + '_menu_reports > ul > li').on('click', 'a', navigation_menuListener);
+	$(elementToFind + '_menu_reports_contents > li').on('click', 'a', navigation_menuListener);
   // set tab listeners on any tabs
   $(elementToFind + '_tab_bar').on('click', '.window-tab-link', navigation_tabListener);   
+  // set button listeners
+  $(elementToFind + '_button_add').on('click', navigation_addDeleteButton);
+  $(elementToFind + '_button_delete').on('click', navigation_addDeleteButton);
 	// set listener on form submission
 	form_formListeners(elementToFind);
 	// reload button listener
@@ -293,18 +312,18 @@ function navigation_reloadListener(event) {
 	navigation_createFirstWindow();
 	
 	// modify URL to match current tab
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
 	var currentURL = $('#window_' + windowNumber).data('window-url');
 
 	// modify URL to match current tab
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
 	var currentURL = $('#window_' + windowNumber).data('window-url');
 	urlToUse = currentURL;
 	
 	// Get current window number
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
 	// Get current active tab 
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 
 	if (activeTabID == undefined) {
 		// not in tab
@@ -314,8 +333,8 @@ function navigation_reloadListener(event) {
 	var record_id = $('#' + activeTabID + '_content > .record_bar_tab_menu_data').data('record-id');
 	var record_type = $('#' + activeTabID + '_content > .record_bar_tab_menu_data').data('record-type');
 	
-	var urlToAdd = "focus_org=" + encodeURIComponent($('.selected-window-element').data('focus-org'));
-  urlToAdd += "&focus_term=" + encodeURIComponent($('.selected-window-element').data('focus-term'));
+	var urlToAdd = "focus_org=" + encodeURIComponent($('.active').data('focus-org'));
+  urlToAdd += "&focus_term=" + encodeURIComponent($('.active').data('focus-term'));
 	urlToAdd += "&record_type=" + encodeURIComponent(record_type);
 	urlToAdd += "&record_id=" + encodeURIComponent(record_id);
 	
@@ -329,7 +348,7 @@ function navigation_reloadListener(event) {
   
 	getLink(urlToUse, 'window', 'windows_container', options, function(msg, options) {
 		// get currently selected panel
-		var currentWindow = $('.selected-window-element').data('window');
+		var currentWindow = $('.active').data('window');
 		// replace all {panel_num} with new window number
 		msg = navigation_replaceAllWindowIDPlaceholders(msg, currentWindow);
 		navigation_updateWindow(currentWindow, msg, '', currentURL);
@@ -365,7 +384,7 @@ function navigation_link(event) {
 	var url = $(this).attr('href');
 	
 	// Get current window number
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
 
 	var urlToAdd = 'scrub=' + $(this).data('scrubber');
 	if ($(this).data('record-id')) urlToAdd += '&record_id=' + $(this).data('record-id');
@@ -394,10 +413,10 @@ function navigation_link_newWindow(event) {
 	options['windowTitle'] = $(this).text();
   
 	// Get current window number
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
   
 	// Get current active tab 
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 	
 	if (activeTabID == undefined) {
 		// not in tab
@@ -459,8 +478,8 @@ function navigation_createWindow(url) {
 	$('#window_' + newWindowNum).show();
 	
 	// create window elements
-	$('#window_bar > ul > li').removeClass('selected-window-element');
-	$('#window_bar > ul').append('<li id="windowTitle_' + newWindowNum + '" class="selected-window-element" data-window="' + newWindowNum + '" data-window-url="' + url + '" data-focus-org="' + $('#focus_organization').val() + '" data-focus-term="' + $('#focus_term').val() + '"><span class="close-window">x</span> Window ' + newWindowNum + '</li>');
+	$('#window_bar > ul > li').removeClass('active');
+	$('#window_bar > ul').append('<li id="windowTitle_' + newWindowNum + '" class="active" data-window="' + newWindowNum + '" data-window-url="' + url + '" data-focus-org="' + $('#focus_organization').val() + '" data-focus-term="' + $('#focus_term').val() + '"><span class="close-window">x</span> Window ' + newWindowNum + '</li>');
 	
 	return newWindowNum;
 }
@@ -474,7 +493,7 @@ function navigation_menuBarRecord(event) {
 	navigation_createFirstWindow();
 	
 	// modify URL to match current tab
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
 	var currentURL = $('#window_' + windowNumber).data('window-url');
 	urlToUse = currentURL;
 	
@@ -490,11 +509,55 @@ function navigation_menuBarRecord(event) {
 	
   getLink(urlToUse, 'window', 'windows_container', options, function(msg, options) {
 		// get currently selected panel
-		var currentWindow = $('.selected-window-element').data('window');
+		var currentWindow = $('.active').data('window');
 		// replace all {panel_num} with new window number
 		msg = navigation_replaceAllWindowIDPlaceholders(msg, currentWindow);
 		navigation_updateWindow(currentWindow, msg, '', urlToUse);
 	});
+}
+
+function navigation_addDeleteButton(event) {
+  event.preventDefault();
+  urlToUse = $(this).data('href');
+		
+	var options = new Array();
+	options['windowTitle'] = $(this).text();
+  options['updateurl'] = 'N';
+	
+	navigation_createFirstWindow();
+	
+	method = $(this).data('http-method');
+	confirmText = $(this).data('confirm');
+	
+	// Get current active tab 
+	var windowNumber = $('#window_bar > ul > .active').data('window');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
+
+	if (activeTabID == undefined) {
+		// not in tab
+		activeTabID = 'window_' + windowNumber + '_tab_';
+	}
+
+	var record_id = $('#' + activeTabID + '_content > .record_bar_tab_menu_data').data('record-id');
+	var record_type = $('#' + activeTabID + '_content > .record_bar_tab_menu_data').data('record-type');
+	
+	var urlToAdd = 'scrub=';
+	if (record_id) urlToAdd += '&record_id=' + record_id;
+	if (record_type) urlToAdd += '&record_type=' + record_type;
+	
+  if (urlToUse.indexOf('?') != -1) {
+    var urlToUse = urlToUse + '&' + urlToAdd;
+  } else {
+    var urlToUse = urlToUse + '?' + urlToAdd;
+  }
+	
+  getLink(urlToUse, 'window', 'windows_container', options, function(msg, options) {
+		// get currently selected panel
+		var currentWindow = $('.active').data('window');
+		// replace all {panel_num} with new window number
+		msg = navigation_replaceAllWindowIDPlaceholders(msg, currentWindow);
+		navigation_updateWindow(currentWindow, msg, '', urlToUse);
+	}, method, confirmText);
 }
 
 function navigation_menuListener(event) {
@@ -511,8 +574,8 @@ function navigation_menuListener(event) {
 	confirmText = $(this).data('confirm');
 	
 	// Get current active tab 
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 
 	if (activeTabID == undefined) {
 		// not in tab
@@ -534,7 +597,7 @@ function navigation_menuListener(event) {
 	
    getLink(urlToUse, 'window', 'windows_container', options, function(msg, options) {
 			// get currently selected panel
-			var currentWindow = $('.selected-window-element').data('window');
+			var currentWindow = $('.active').data('window');
 			// replace all {panel_num} with new window number
 			msg = navigation_replaceAllWindowIDPlaceholders(msg, currentWindow);
 			navigation_updateWindow(currentWindow, msg, options['windowTitle'], null);
@@ -573,9 +636,9 @@ function navigation_tabListener(event) {
 		//currentURL = currentURL.substring(0, strlen);
 		
 		// Get current window number
-		var windowNumber = $('#window_bar .selected-window-element').data('window');
+		var windowNumber = $('#window_bar > ul > .active').data('window');
 		// Get current active tab 
-		var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+		var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 
 		if (activeTabID == undefined) {
 			// not in tab
@@ -592,9 +655,9 @@ function navigation_tabListener(event) {
 		if (currentURL != thisurl || replaceArea == 'window') {
 				
 			// Get current window number
-			var windowNumber = $('#window_bar .selected-window-element').data('window');
+			var windowNumber = $('#window_bar > ul > .active').data('window');
 			// Get current active tab 
-			var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+			var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 	
 			if (activeTabID == undefined) {
 				// not in tab
@@ -605,8 +668,8 @@ function navigation_tabListener(event) {
 			var record_type = $('#' + activeTabID + '_content > .record_bar_tab_menu_data').data('record-type');
 			
 		  thisurl = thisurl.split("?");
-			var urltouse = thisurl[0] + "?focus_org=" + encodeURIComponent($('.selected-window-element').data('focus-org'));
-		  urltouse += "&focus_term=" + encodeURIComponent($('.selected-window-element').data('focus-term'));
+			var urltouse = thisurl[0] + "?focus_org=" + encodeURIComponent($('.active').data('focus-org'));
+		  urltouse += "&focus_term=" + encodeURIComponent($('.active').data('focus-term'));
 			urltouse += "&record_type=" + encodeURIComponent(record_type);
 			urltouse += "&record_id=" + encodeURIComponent(record_id);
 
@@ -620,7 +683,7 @@ function navigation_tabListener(event) {
 					navigation_tabListeners('#' + options['tabID'] + '_content');
 				} else {
 					// get currently selected panel
-					var currentWindow = $('.selected-window-element').data('window');
+					var currentWindow = $('.active').data('window');
 					// replace all {panel_num} with new window number
 					msg = navigation_replaceAllWindowIDPlaceholders(msg, currentWindow);
 					navigation_updateWindow(currentWindow, msg, '', null);
@@ -654,7 +717,7 @@ function navigation_tabListener(event) {
 		//$('#window_' + panelsContainerID + '_content').prop('action', thisurl);
 		window.history.pushState({"html":null,"pageTitle":null},"", thisurl);
 		
-		 navigation_displayRecordBar();
+		navigation_displayRecordBar();
 	 	form_submitButton();
 }
 
@@ -672,10 +735,10 @@ function navigation_createTabContent(tabID, url) {
 function navigation_displayRecordBar() {
 	
 	// Get current window number
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
 	// Get current active tab 
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
-	
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
+
 	if (activeTabID == undefined) {
 		// not in tab
 		activeTabID = 'window_' + windowNumber + '_tab_';
@@ -691,9 +754,9 @@ function navigation_displayRecordBar() {
 
 function navigation_syncWindowURL() {
 	// Get current window number
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
 	// Get current active tab 
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 	
 	var currentURL = $('#' + activeTabID + '_content').data('window-url');
 	// Get current URL
@@ -731,9 +794,8 @@ function getLink(url, divWindow, divToLoad, options, onsuccess, method, confirmT
 		method = 'GET';
 		
 		var form_data = urlToRequest;
-		form_data += "&focus_org=" + encodeURIComponent($('.selected-window-element').data('focus-org'));
-	  form_data += "&focus_term=" + encodeURIComponent($('.selected-window-element').data('focus-term'));
-		
+	  form_data += "&focus_term=" + encodeURIComponent($('#window_bar > ul > .active').data('focus-term'));
+
 		options['divWindow'] = divWindow;
 
   $.ajax({
@@ -769,9 +831,9 @@ function getLink(url, divWindow, divToLoad, options, onsuccess, method, confirmT
 			if (msg.type == 'form_error') {
 
 				// Get current window number
-				var windowNumber = $('#window_bar .selected-window-element').data('window');
+				var windowNumber = $('#window_bar > ul > .active').data('window');
 				// Get current active tab 
-				var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+				var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 	
 				if (activeTabID == undefined) {
 					// not in tab
@@ -787,6 +849,7 @@ function getLink(url, divWindow, divToLoad, options, onsuccess, method, confirmT
 				window.history.pushState({"html":msg,"pageTitle":null},"", options['url']);
 		  }
 			if (onsuccess) onsuccess(msg, options);
+			setup_selects(windowNumber);
 		  }
 		},
   });
@@ -807,11 +870,11 @@ function navigation_detailLinkListener(event) {
 	var selectedRow = $(this).parent().parent().prop('id');
 	
 	navigation_createFirstWindow();
-	
+
 	// Get current window number
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
 	// Get current active tab 
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 	
 	if (activeTabID == undefined) {
 		// not in tab
@@ -827,8 +890,8 @@ function navigation_detailLinkListener(event) {
 	var record_type = $('#' + activeTabID + '_content > .record_bar_tab_menu_data').data('record-type');
 	
 	url = url.split("?");
-	var urltouse = url[0] + "?focus_org=" + encodeURIComponent($('.selected-window-element').data('focus-org'));
-  urltouse += "&focus_term=" + encodeURIComponent($('.selected-window-element').data('focus-term'));
+	var urltouse = url[0] + "?focus_org=" + encodeURIComponent($('.active').data('focus-org'));
+  urltouse += "&focus_term=" + encodeURIComponent($('.active').data('focus-term'));
 	urltouse += "&record_type=" + encodeURIComponent(record_type);
 	urltouse += "&record_id=" + encodeURIComponent(record_id);
 	
@@ -842,12 +905,11 @@ function navigation_detailLinkListener(event) {
 	
 	if ($('#' + detailID).length == 0) {
 
-
-
 		windowDetailDiv.append('<div id="' + detailID + '" class="window-detail" data-window-url="' + url + '"><div class="window-detail-close">x Close Window</div><div id="' + detailID + '_content" class="window-detail-content"></div></div>');
 
 		options = new Array();
 		 options['updateurl'] = 'N';
+
 		getLink(urltouse, 'detail', detailID, options, function(msg, options) {
 			$('#' + detailID + '_content').html(msg);
 			form_formContentListeners('#' + detailID + '_content');
@@ -865,12 +927,51 @@ function navigation_detailLinkListener(event) {
 function navigation_detailCloseDiv(event) {
 	$(this).parent().hide();
 	
-	var windowNumber = $('#window_bar .selected-window-element').data('window');
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	var windowNumber = $('#window_bar > ul > .active').data('window');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 	if (activeTabID == undefined) {
 		// not in tab
 		activeTabID = 'window_' + windowNumber + '_tab_';
 	}
 	
 	$('#' + activeTabID + '_content').find('.data-table-highlighted-row').removeClass('data-table-highlighted-row');
+}
+
+function setup_selects(num) {
+  if (num) { 
+
+    $("#window_"+num).find(".chooser-search:not(.data-table-row-new > td > .chooser-search)").select2({
+    ajax: {
+      processResults: function (data) {
+            return {
+                results: $.map(data, function(obj) {
+                    return { id: obj.id, text: obj.text };
+                })
+            };
+        }
+    }
+    
+  });
+  
+  $("#window_"+num).find("select:not(.chooser-search):not(.data-table-row-new > td > select)").select2();
+
+  } else {
+    
+    $(".chooser-search").select2({
+    ajax: {
+      processResults: function (data) {
+            return {
+                results: $.map(data, function(obj) {
+                    return { id: obj.id, text: obj.text };
+                })
+            };
+        }
+    }
+
+    });
+    
+    $("select:not(.chooser-search):not(.data-table-row-new > td > select)").select2();
+    
+  }
+
 }

@@ -1,1 +1,16 @@
 {% extends partial == "detail" ? 'KulaCoreFrameworkBundle:Core:detail_partial.html.twig' : 'KulaCoreFrameworkBundle:Core:tab.html.twig' %}
+
+{% block focus %}
+<div style="display:inline-block;">
+{{ form_select(focus_organization, 'focus_organization', focus.getOrganizationID, { id : 'focus_organization', 'style' : 'width: 300px' }) }}
+</div>
+<div style="display:inline-block;">
+{{ form_select(focus_terms, 'focus_term', focus.getTermIDForMenu, { id : 'focus_term', 'style' : 'width: 100px' }) }}
+</div>
+<div id="nav_bar_status">
+  <span id="nav_bar_status_loading">Loading...<img src="{{ asset('images/loader.gif') }}" /></span>
+  <span id="nav_bar_status_success">Complete</span>
+  <span id="nav_bar_status_error">Error</span>
+  <span id="nav_bar_status_ready">Ready</span>
+</div>
+{% endblock %}

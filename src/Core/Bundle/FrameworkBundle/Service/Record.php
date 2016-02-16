@@ -301,4 +301,12 @@ class Record {
     
   }
   
+  /** Any methods not defined in this class should be passed to delegate. */
+  public function __call($name, $arguments) {
+    
+    if (method_exists($this->delegate, $name))
+      return call_user_func(array($this->delegate, $name), $arguments);
+    
+  }
+  
 }

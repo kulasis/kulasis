@@ -1,312 +1,220 @@
-SIS.HEd.Student.Schedule:
-  description: "Schedule"
-  type: form
-  portal: sis
-  display_name: "Schedule"
-  sort: 3
-  tabs:
-    CurrentSchedule:
-      description: "Current Schedule"
-      display_name: "Current Schedule"
-      sort: 1
-      route: sis_HEd_student_schedule
-    History:
-      description: "History"
-      display_name: "History"
-      sort: 2
-      route: sis_HEd_student_schedule_history
-    WaitList:
-      description: "Wait List"
-      display_name: "Wait List"
-      sort: 4
-      route: sis_HEd_student_schedule_waitlist
-  menu_actions:
-    AddClasses:
-      description: "Add Classes"
-      display_name: "Add Classes"
-      sort: 1
-      record_loaded: true
-      route: sis_HEd_student_schedule_add
-    CalculateFTEAndTuition:
-      description: "Calculate FTE and Tuition"
-      display_name: "Calculate FTE & Tuition"
-      sort: 2
-      divider_before: true
-      record_loaded: true
-      route: sis_HEd_student_schedule_calculateTotals
-  menu_reports:
+Core.HEd.Scheduling:
+  parent: Core.HEd
+  type: dir
+  display_name: "Scheduling"
+  forms:
     StudentSchedule:
       description: "Student Schedule"
       display_name: "Student Schedule"
-      sort: 1
-      route: sis_HEd_student_schedule_reports_studentschedule
-    StudentScheduleBill:
-      description: "Student Schedule & Bill"
-      display_name: "Student Schedule & BIll"
-      sort: 2
-      route: sis_HEd_student_schedule_reports_studentschedulebill
-
-SIS.HEd.Reports.Academic.InstructorSchedule:
-  type: report
-  portal: sis
-  description: "Instructor Schedule"
-  display_name: "Instructor Schedule"
-  sort: 2
-  route: sis_HEd_offering_staff_reports_schedule
-
-SIS.HEd.Reports.Student.StudentSchedule:
-  description: "Student Schedule"
-  type: report
-  portal: sis
-  display_name: "Student Schedule"
-  sort: 5
-  route: sis_HEd_student_schedule_reports_studentschedule
-
-SIS.HEd.Reports.Student.StudentScheduleBill:
-  description: "Student Schedule & Bill"
-  type: report
-  portal: sis
-  display_name: "Student Schedule & Bill"
-  sort: 5
-  route: sis_HEd_student_schedule_reports_studentschedulebill
-
-SIS.HEd.Academic:
-  description: "Academic"
-  display_name: "Academic (HEd)"
-  portal: sis
-  type: form_group
-  sort: 3
-  forms:
-    Sections:
-      description: "Sections"
-      display_name: "Sections"
-      sort: 1
+      tabs:
+        CurrentSchedule:
+          description: "Current Schedule"
+          display_name: "Current Schedule"
+          route: Core_HEd_Scheduling_StudentSchedule
+        History:
+          description: "History"
+          display_name: "History"
+          route: Core_HEd_Scheduling_StudentSchedule_History
+        WaitList:
+          description: "Wait List"
+          display_name: "Wait List"
+          route: Core_HEd_Scheduling_StudentSchedule_WaitList
+      menu_actions:
+        AddClasses:
+          description: "Add Classes"
+          display_name: "Add Classes"
+          record_loaded: true
+          route: Core_HEd_Scheduling_StudentSchedule_Add
+        CalculateFTEAndTuition:
+          description: "Calculate FTE and Tuition"
+          display_name: "Calculate FTE & Tuition"
+          divider_before: true
+          record_loaded: true
+          route: Core_HEd_Scheduling_StudentSchedule_CalculateTotals
+      menu_reports:
+        StudentSchedule:
+          description: "Student Schedule"
+          display_name: "Student Schedule"
+          route: Core_HEd_Scheduling_Reports_StudentSchedule
+        StudentScheduleBill:
+          description: "Student Schedule & Bill"
+          display_name: "Student Schedule & BIll"
+          route: Core_HEd_Scheduling_Reports_StudentScheduleBill
+    Section:
+      description: "Section"
+      display_name: "Section"
       tabs:
         Basic:
           description: "Basic"
           display_name: "Basic"
-          route: sis_HEd_offering_sections
-          sort: 1
+          route: Core_HEd_Scheduling_Section
         Course:
           description: "Course"
           display_name: "Courses"
-          route: sis_HEd_offering_sections_courses
-          sort: 2
+          route: Core_HEd_Scheduling_Section_Courses
         Staff:
           description: "Staff"
           display_name: "Staff"
-          route: sis_HEd_offering_sections_staff
-          sort: 3
+          route: Core_HEd_Scheduling_Section_Staff
         Roster:
           description: "Roster"
           display_name: "Roster"
-          route: sis_HEd_offering_sections_roster
-          sort: 4
+          route: Core_HEd_Scheduling_Section_Roster
         WaitList:
           description: "Wait List"
           display_name: "Wait List"
-          route: sis_HEd_offering_sections_waitlist
-          sort: 5
-        Grades:
-          description: "Grades"
-          display_name: "Grades"
-          route: sis_HEd_offering_sections_grades
-          sort: 6
+          route: Core_HEd_Scheduling_Section_WaitList
+      button_add:
+        route: Core_HEd_Scheduling_Section_Add
+      button_delete:
+        route: Core_HEd_Scheduling_Section_Delete
       menu_actions:
-        AddSection:
-          description: "Add Section"
-          display_name: "Add Section"
-          route: sis_HEd_offering_sections_add
-          sort: 1
         ActivateInactive:
           description: "Activate/Inactivate"
           display_name: "Activate/Inactivate"
-          route: sis_HEd_offering_sections_inactivate
-          divider_before: true
+          route: Core_HEd_Scheduling_Section_Inactivate
           record_loaded: true
-          sort: 2
-        DeleteSection:
-          description: "Delete Section"
-          display_name: "Delete Section"
-          route: sis_HEd_offering_sections_delete
-          record_loaded: true
-          sort: 3
         RecalculateTotals:
           description: "Recalculate Totals"
           display_name: "Recalculate Totals"
-          route: sis_HEd_offering_sections_recalculateSectionTotals
+          route: Core_HEd_Scheduling_Section_RecalculateTotals
           divider_before: true
-          sort: 4
       menu_reports:
         ClassRoster:
           description: "Class Roster"
           display_name: "Class Roster"
-          route: sis_HEd_offering_sections_reports_classroster
-          sort: 1
+          route: Core_HEd_Scheduling_Reports_ClassRoster
         ClassRosterDirectory:
           description: "Class Roster Directory"
           display_name: "Class Roster Directory"
-          route: sis_HEd_offering_sections_reports_classroster_directory
-          sort: 2
+          route: Core_HEd_Scheduling_Reports_ClassRosterDirectory
         MasterSchedule:
           description: "Master Schedule"
           display_name: "Master Schedule"
-          route: sis_HEd_offering_sections_reports_masterschedule
-          sort: 4
-    Courses:
-      description: "Courses"
-      display_name: "Courses"
-      sort: 2
+          route: Core_HEd_Scheduling_Reports_MasterSchedule
+
+Core.HEd.Scheduling.Reports:
+  type: dir
+  parent: Core.HEd.Scheduling
+  display_name: "Reports"
+  reports:
+    InstructorSchedule:
+      description: "Instructor Schedule"
+      display_name: "Instructor Schedule"
+      route: Core_HEd_Scheduling_Reports_StaffSchedule
+    StudentSchedule:
+      description: "Student Schedule"
+      display_name: "Student Schedule"
+      route: Core_HEd_Scheduling_Reports_StudentSchedule
+    StudentScheduleBill:
+      description: "Student Schedule & Bill"
+      display_name: "Student Schedule & Bill"
+      route: Core_HEd_Scheduling_Reports_StudentScheduleBill
+    ClassRoster:
+      description: "Class Roster"
+      display_name: "Class Roster"
+      route: Core_HEd_Scheduling_Reports_ClassRoster
+    ClassRosterDirectory:
+      description: "Class Roster Directory"
+      display_name: "Class Roster Directory"
+      route: Core_HEd_Scheduling_Reports_ClassRosterDirectory
+    MasterSchedule:
+      description: "Master Schedule"
+      display_name: "Master Schedule"
+      route: Core_HEd_Scheduling_Reports_MasterSchedule
+
+Core.HEd.Course:
+  parent: Core.HEd
+  description: "Course"
+  display_name: "Course"
+  type: dir
+  forms: 
+    Course:
+      description: "Course"
+      display_name: "Course"
       tabs:
         Information:
           description: "Information"
           display_name: "Information"
-          route: sis_HEd_courses
-          sort: 1
+          route: Core_HEd_Course_Course
         Prerequisites:
           description: "Prerequisites"
           display_name: "Prerequisites"
-          route: sis_HEd_courses_prerequisites
-          sort: 2
+          route: Core_HEd_Course_Course_Prerequisites
         Corequisites:
           description: "Corequisites"
           display_name: "Corequisites"
-          route: sis_HEd_courses_corequisites
-          sort: 3
+          route: Core_HEd_Course_Course_Corequisites
         Books:
           description: "Books"
           display_name: "Books"
-          route: sis_HEd_courses_books
-          sort: 5
-      menu_actions:
-        NewCourse:
-          description: "New Course"
-          display_name: "New Course"
-          route: sis_HEd_courses_add
-          sort: 1
-        DeleteCourse:
-          description: "Delete Course"
-          display_name: "Delete Course"
-          divider_before: true
-          record_loaded: true
-          route: sis_HEd_courses_delete
-          sort: 2
-    Rooms:
-      description: "Rooms"
-      display_name: "Rooms"
-      route: sis_HEd_rooms
-      sort: 3
-
-SIS.HEd.Reports.Academic:
-  description: "Academic"
-  display_name: "Academic (HEd)"
-  type: report_group
-  portal: sis
-  sort: 1
-  reports:
-    ClassRoster:
-      description: "Class Roster"
-      display_name: "Class Roster"
-      route: sis_HEd_offering_sections_reports_classroster
-      sort: 1
-    ClassRosterDirectory:
-      description: "Class Roster Directory"
-      display_name: "Class Roster Directory"
-      route: sis_HEd_offering_sections_reports_classroster_directory
-      sort: 2
-    MasterSchedule:
-      description: "Master Schedule"
-      display_name: "Master Schedule"
-      route: sis_HEd_offering_sections_reports_masterschedule
-      sort: 4
-      
-SIS.HEd.Academic.Staff:
-  description: "Staff"
-  display_name: "Staff"
+          route: Core_HEd_Course_Course_Books
+      button_add:
+        route: Core_HEd_Course_Course_Add
+      button_delete:
+        route: Core_HEd_Course_Course_Delete
+        
+Core.HEd.Setup.Rooms:
+  parent: Core.HEd.Setup
   type: form
-  portal: sis
+  description: "Rooms"
+  display_name: "Rooms"
+  route: Core_HEd_Setup_Rooms
+      
+Core.HEd.Staff.Staff:
   tabs:
     Schedule:
       description: "Schedule"
       display_name: "Schedule"
-      sort: 3
-      route: sis_HEd_offering_staff_schedule
+      route: Core_HEd_Staff_Staff_Schedule
   menu_reports:
     InstructorSchedule:
       description: "Instructor Schedule"
       display_name: "Instructor Schedule"
-      sort: 1
-      route: sis_HEd_offering_staff_reports_schedule
+      route: Core_HEd_Scheduling_Reports_StaffSchedule
 
-Teacher.HEd.Class:
-  description: "Class"
-  display_name: "Class"
-  type: form_group
-  portal: teacher
-  sort: 1
-  forms:
+Core.Constituent.Combiner.CourseHEd:
+  parent: Core.Constituent.Combiner
+  type: tab
+  target: HEd
+  description: "Course Combiner"
+  display_name: "Course"
+  route: Core_Constituent_Combiner_Course_HEd
+
+Teacher.HEd.Roster:
+  description: "Roster"
+  display_name: "Roster"
+  parent: Teacher.HEd
+  type: form
+  tabs:
     Roster:
-      description: "Roster"
-      display_name: "Roster"
-      sort: 1
-      tabs:
-        Roster:
-          description: "Current Roster"
-          display_name: "Current"
-          sort: 1
-          route: teacher_HEd_class_roster
-        Dropped:
-          description: "Dropped Roster"
-          display_name: "Dropped"
-          sort: 2
-          route: teacher_HEd_class_roster_dropped
-      menu_reports:
-        ClassRoster:
-          description: "Class Roster"
-          display_name: "Class Roster"
-          route: teacher_HEd_offering_sections_reports_classroster
-          
-          
-Teacher.HEd.Advisor:
-  description: "Advisor"
-  display_name: "Advisor"
-  type: form_group
-  portal: teacher
-  sort: 2
-  forms:
-    Schedule:
-      description: "Schedule"
-      display_name: "Schedule"
-      sort: 1
-      route: teacher_HEd_advisory_student_schedule
-
-Student.HEd.Student:
+      description: "Current Roster"
+      display_name: "Current"
+      route: Teacher_HEd_Roster
+    Dropped:
+      description: "Dropped Roster"
+      display_name: "Dropped"
+      route: Teacher_HEd_Roster_Dropped
+  menu_reports:
+    ClassRoster:
+      description: "Class Roster"
+      display_name: "Class Roster"
+      route: Teacher_HEd_Reports_ClassRoster
+      
+Teacher.HEd.Student:
   description: "Student"
   display_name: "Student"
-  type: form_group
-  portal: student
-  sort: 1
-  forms:
+  parent: Teacher.HEd
+  type: form
+  tabs:
     Schedule:
       description: "Schedule"
       display_name: "Schedule"
-      sort: 1
-      route: student_HEd_student_schedule
+      route: Teacher_HEd_Student_Schedule
 
-SIS.Utility:
-  description: "Utility"
-  display_name: Utility
-  type: form_group
-  portal: sis
-  sort: 5
-  forms:
-    Combiner:
-      description: "Combiner"
-      display_name: "Combiner"
-      sort: 1
-      tabs:
-        Course:
-          description: "Course Combiner"
-          display_name: "Course"
-          route: sis_HEd_courses_combiner
-          sort: 2
+Student.HEd.Schedule:
+  type: form
+  parent: Student.HEd
+  description: "Schedule"
+  display_name: "Schedule"
+  route: Student_HEd_Schedule

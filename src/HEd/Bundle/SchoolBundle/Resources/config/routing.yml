@@ -1,3 +1,3 @@
 _HEd_student:
-    resource: "@KulaHEdSchoolBundle/Resources/config/routing/sis.yml"
-    prefix: sis/HEd
+    resource: "@KulaHEdSchoolBundle/Resources/config/routing/core.yml"
+    prefix: core/HEd

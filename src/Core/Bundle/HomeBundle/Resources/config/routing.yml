@@ -1,11 +1,17 @@
-core_home:
+Core_Home:
     path:     /core/home
-    defaults: { _controller: KulaCoreHomeBundle:Home:home }
+    defaults: 
+      _controller: KulaCoreHomeBundle:CoreHome:home
+      _navigation: Core.Home
 
-sis_home:
-    path:     /sis/home
-    defaults: { _controller: KulaCoreHomeBundle:SISHome:home }
-
-teacher_home:
+Teacher_Home:
     path:     /teacher/home
-    defaults: { _controller: KulaCoreHomeBundle:TeacherHome:home }
+    defaults: 
+      _controller: KulaCoreHomeBundle:TeacherHome:home
+      _navigation: Teacher.Home
+
+Student_Home:
+    path:     /student/home
+    defaults: 
+      _controller: KulaCoreHomeBundle:Home:home
+      _navigation: Student.Home

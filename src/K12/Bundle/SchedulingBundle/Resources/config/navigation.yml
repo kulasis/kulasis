@@ -1,244 +1,194 @@
-SIS.K12.Student.Schedule:
-  description: "Schedule"
-  type: form
-  portal: sis
-  display_name: "Schedule"
-  sort: 3
-  tabs:
-    CurrentSchedule:
-      description: "Current Schedule"
-      display_name: "Current Schedule"
-      sort: 1
-      route: sis_K12_student_schedule
-    History:
-      description: "History"
-      display_name: "History"
-      sort: 2
-      route: sis_K12_student_schedule_history
-    WaitList:
-      description: "Wait List"
-      display_name: "Wait List"
-      sort: 4
-      route: sis_K12_student_schedule_waitlist
-  menu_actions:
-    AddClasses:
-      description: "Add Classes"
-      display_name: "Add Classes"
-      sort: 1
-      record_loaded: true
-      route: sis_K12_student_schedule_add
-    CalculateFTEAndTuition:
-      description: "Calculate FTE and Tuition"
-      display_name: "Calculate FTE & Tuition"
-      sort: 2
-      divider_before: true
-      record_loaded: true
-      route: sis_K12_student_schedule_calculateTotals
-  menu_reports:
+Core.K12.Scheduling:
+  parent: Core.K12
+  type: dir
+  display_name: "Scheduling"
+  forms:
     StudentSchedule:
       description: "Student Schedule"
       display_name: "Student Schedule"
-      sort: 1
-      route: sis_K12_student_schedule_reports_studentschedule
-    StudentScheduleBill:
-      description: "Student Schedule & Bill"
-      display_name: "Student Schedule & BIll"
-      sort: 2
-      route: sis_K12_student_schedule_reports_studentschedulebill
-
-SIS.K12.Reports.Academic.InstructorSchedule:
-  type: report
-  portal: sis
-  description: "Instructor Schedule"
-  display_name: "Instructor Schedule"
-  sort: 2
-  route: sis_K12_offering_staff_reports_schedule
-
-SIS.K12.Reports.Student.StudentSchedule:
-  description: "Student Schedule"
-  type: report
-  portal: sis
-  display_name: "Student Schedule"
-  sort: 5
-  route: sis_K12_student_schedule_reports_studentschedule
-
-SIS.K12.Reports.Student.StudentScheduleBill:
-  description: "Student Schedule & Bill"
-  type: report
-  portal: sis
-  display_name: "Student Schedule & Bill"
-  sort: 5
-  route: sis_K12_student_schedule_reports_studentschedulebill
-
-SIS.K12.Academic:
-  description: "Academic"
-  display_name: "Academic (K12)"
-  portal: sis
-  type: form_group
-  sort: 3
-  forms:
-    Sections:
-      description: "Sections"
-      display_name: "Sections"
-      sort: 1
+      tabs:
+        CurrentSchedule:
+          description: "Current Schedule"
+          display_name: "Current Schedule"
+          route: Core_K12_Scheduling_StudentSchedule
+        History:
+          description: "History"
+          display_name: "History"
+          route: Core_K12_Scheduling_StudentSchedule_History
+        WaitList:
+          description: "Wait List"
+          display_name: "Wait List"
+          route: Core_K12_Scheduling_StudentSchedule_WaitList
+      menu_actions:
+        AddClasses:
+          description: "Add Classes"
+          display_name: "Add Classes"
+          record_loaded: true
+          route: Core_K12_Scheduling_StudentSchedule_Add
+        CalculateFTEAndTuition:
+          description: "Calculate FTE and Tuition"
+          display_name: "Calculate FTE & Tuition"
+          divider_before: true
+          record_loaded: true
+          route: Core_K12_Scheduling_StudentSchedule_CalculateTotals
+      menu_reports:
+        StudentSchedule:
+          description: "Student Schedule"
+          display_name: "Student Schedule"
+          route: Core_K12_Scheduling_Reports_StudentSchedule
+        StudentScheduleBill:
+          description: "Student Schedule & Bill"
+          display_name: "Student Schedule & BIll"
+          route: Core_K12_Scheduling_Reports_StudentScheduleBill
+    Section:
+      description: "Section"
+      display_name: "Section"
       tabs:
         Basic:
           description: "Basic"
           display_name: "Basic"
-          route: sis_K12_offering_sections
-          sort: 1
+          route: Core_K12_Scheduling_Section
         Course:
           description: "Course"
           display_name: "Courses"
-          route: sis_K12_offering_sections_courses
-          sort: 2
+          route: Core_K12_Scheduling_Section_Courses
         Staff:
           description: "Staff"
           display_name: "Staff"
-          route: sis_K12_offering_sections_staff
-          sort: 3
+          route: Core_K12_Scheduling_Section_Staff
         Roster:
           description: "Roster"
           display_name: "Roster"
-          route: sis_K12_offering_sections_roster
-          sort: 4
+          route: Core_K12_Scheduling_Section_Roster
         WaitList:
           description: "Wait List"
           display_name: "Wait List"
-          route: sis_K12_offering_sections_waitlist
-          sort: 5
+          route: Core_K12_Scheduling_Section_WaitList
+      button_add:
+        route: Core_K12_Scheduling_Section_Add
+      button_delete:
+        route: Core_K12_Scheduling_Section_Delete
       menu_actions:
-        AddSection:
-          description: "Add Section"
-          display_name: "Add Section"
-          route: sis_K12_offering_sections_add
-          sort: 1
         ActivateInactive:
           description: "Activate/Inactivate"
           display_name: "Activate/Inactivate"
-          route: sis_K12_offering_sections_inactivate
-          divider_before: true
+          route: Core_K12_Scheduling_Section_Inactivate
           record_loaded: true
-          sort: 2
-        DeleteSection:
-          description: "Delete Section"
-          display_name: "Delete Section"
-          route: sis_K12_offering_sections_delete
-          record_loaded: true
-          sort: 3
         RecalculateTotals:
           description: "Recalculate Totals"
           display_name: "Recalculate Totals"
-          route: sis_K12_offering_sections_recalculateSectionTotals
+          route: Core_K12_Scheduling_Section_RecalculateTotals
           divider_before: true
-          sort: 4
       menu_reports:
         ClassRoster:
           description: "Class Roster"
           display_name: "Class Roster"
-          route: sis_K12_offering_sections_reports_classroster
-          sort: 1
-        ClassRosterSignInOut:
-          description: "Class Roster Sign In Out"
-          display_name: "Class Roster Sign In Out"
-          route: sis_K12_offering_sections_reports_classroster_signinout
-          sort: 2
-        AAClassRoster:
-          description: "AA Class Roster"
-          display_name: "AA Class Roster"
-          route: sis_K12_offering_sections_reports_classroster_aa
-          sort: 3
-        AAClassRosterLabels:
-          description: "AA Class Roster Labels"
-          display_name: "AA Class Roster Labels"
-          route: sis_K12_offering_sections_reports_classroster_labels_aa
-          sort: 4
+          route: Core_K12_Scheduling_Reports_ClassRoster
+        ClassRosterDirectory:
+          description: "Class Roster Directory"
+          display_name: "Class Roster Directory"
+          route: Core_K12_Scheduling_Reports_ClassRosterDirectory
         MasterSchedule:
           description: "Master Schedule"
           display_name: "Master Schedule"
-          route: sis_K12_offering_sections_reports_masterschedule
-          sort: 5
-    Courses:
-      description: "Courses"
-      display_name: "Courses"
-      sort: 2
+          route: Core_K12_Scheduling_Reports_MasterSchedule
+
+Core.K12.Scheduling.Reports:
+  type: dir
+  parent: Core.K12.Scheduling
+  display_name: "Reports"
+  reports:
+    InstructorSchedule:
+      description: "Instructor Schedule"
+      display_name: "Instructor Schedule"
+      route: Core_K12_Scheduling_Reports_StaffSchedule
+    StudentSchedule:
+      description: "Student Schedule"
+      display_name: "Student Schedule"
+      route: Core_K12_Scheduling_Reports_StudentSchedule
+    StudentScheduleBill:
+      description: "Student Schedule & Bill"
+      display_name: "Student Schedule & Bill"
+      route: Core_K12_Scheduling_Reports_StudentScheduleBill
+    ClassRoster:
+      description: "Class Roster"
+      display_name: "Class Roster"
+      route: Core_K12_Scheduling_Reports_ClassRoster
+    ClassRosterDirectory:
+      description: "Class Roster Directory"
+      display_name: "Class Roster Directory"
+      route: Core_K12_Scheduling_Reports_ClassRosterDirectory
+    MasterSchedule:
+      description: "Master Schedule"
+      display_name: "Master Schedule"
+      route: Core_K12_Scheduling_Reports_MasterSchedule
+    ClassRosterSignInOut:
+      description: "Class Roster Sign In Out"
+      display_name: "Class Roster Sign In Out"
+      route: Core_K12_Scheduling_Reports_ClassRosterSignInOut
+    AAClassRoster:
+      description: "AA Class Roster"
+      display_name: "AA Class Roster"
+      route: Core_K12_Scheduling_Reports_ClassRoster_AA
+    AAClassRosterLabels:
+      description: "AA Class Roster Labels"
+      display_name: "AA Class Roster Labels"
+      route: Core_K12_Scheduling_Reports_ClassRoster_Labels_AA
+
+Core.K12.Course:
+  parent: Core.K12
+  description: "Course"
+  display_name: "Course"
+  type: dir
+  forms: 
+    Course:
+      description: "Course"
+      display_name: "Course"
       tabs:
         Information:
           description: "Information"
           display_name: "Information"
-          route: sis_K12_courses
-          sort: 1
+          route: Core_K12_Course_Course
         Prerequisites:
           description: "Prerequisites"
           display_name: "Prerequisites"
-          route: sis_K12_courses_prerequisites
-          sort: 2
+          route: Core_K12_Course_Course_Prerequisites
         Corequisites:
           description: "Corequisites"
           display_name: "Corequisites"
-          route: sis_K12_courses_corequisites
-          sort: 3
+          route: Core_K12_Course_Course_Corequisites
         Books:
           description: "Books"
           display_name: "Books"
-          route: sis_K12_courses_books
-          sort: 5
-      menu_actions:
-        NewCourse:
-          description: "New Course"
-          display_name: "New Course"
-          route: sis_K12_courses_add
-          sort: 1
-        DeleteCourse:
-          description: "Delete Course"
-          display_name: "Delete Course"
-          divider_before: true
-          record_loaded: true
-          route: sis_K12_courses_delete
-          sort: 2
-    Rooms:
-      description: "Rooms"
-      display_name: "Rooms"
-      route: sis_K12_rooms
-      sort: 3
-
-SIS.K12.Reports.Academic:
-  description: "Academic"
-  display_name: "Academic (K12)"
-  type: report_group
-  portal: sis
-  sort: 1
-  reports:
-    ClassRoster:
-      description: "Class Roster"
-      display_name: "Class Roster"
-      route: sis_K12_offering_sections_reports_classroster
-      sort: 1
-    ClassRosterSignInOut:
-      description: "Class Roster Sign In Out"
-      display_name: "Class Roster Sign In Out"
-      route: sis_K12_offering_sections_reports_classroster_signinout
-      sort: 2
-    MasterSchedule:
-      description: "Master Schedule"
-      display_name: "Master Schedule"
-      route: sis_K12_offering_sections_reports_masterschedule
-      sort: 3
-      
-SIS.K12.Academic.Staff:
-  description: "Staff"
-  display_name: "Staff"
+          route: Core_K12_Course_Course_Books
+      button_add:
+        route: Core_K12_Course_Course_Add
+      button_delete:
+        route: Core_K12_Course_Course_Delete
+        
+Core.K12.Setup.Rooms:
+  parent: Core.K12.Setup
   type: form
-  portal: sis
+  description: "Rooms"
+  display_name: "Rooms"
+  route: Core_K12_Setup_Rooms
+      
+Core.K12.Staff.Staff:
   tabs:
     Schedule:
       description: "Schedule"
       display_name: "Schedule"
-      sort: 3
-      route: sis_K12_offering_staff_schedule
+      route: Core_K12_Staff_Staff_Schedule
   menu_reports:
     InstructorSchedule:
       description: "Instructor Schedule"
       display_name: "Instructor Schedule"
-      sort: 1
-      route: sis_K12_offering_staff_reports_schedule
+      route: Core_K12_Scheduling_Reports_StaffSchedule
+
+Core.Constituent.Combiner.CourseK12:
+  parent: Core.Constituent.Combiner
+  type: tab
+  target: K12
+  description: "Course Combiner"
+  display_name: "Course"
+  route: Core_Constituent_Combiner_Course_K12

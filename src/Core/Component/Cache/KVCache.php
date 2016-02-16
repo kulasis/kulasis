@@ -23,6 +23,14 @@ class KVCache {
     }
   }
   
+  public function exists($key, $options = null) {
+    if ($this->apc->checkForAPC()) {
+      return $this->apc->exists($key, $options);
+    } elseif (isset($this->cache_store[$key])) {
+      return array_key_exists($key, $this->cache_store);
+    }
+  }
+  
   public function get($key, $options = null) {
     if ($this->apc->checkForAPC()) {
       return $this->apc->get($key, $options);

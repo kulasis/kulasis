@@ -1,6 +1,6 @@
-_HEd_scheduling_sis:
-    resource: "@KulaHEdSchedulingBundle/Resources/config/routing/sis.yml"
-    prefix: sis/HEd
+_HEd_scheduling_core:
+    resource: "@KulaHEdSchedulingBundle/Resources/config/routing/core.yml"
+    prefix: core/HEd
 
 _HEd_scheduling_teacher:
     resource: "@KulaHEdSchedulingBundle/Resources/config/routing/teacher.yml"

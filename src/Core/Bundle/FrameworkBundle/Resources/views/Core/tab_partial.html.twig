@@ -10,7 +10,7 @@
 {% endblock %}
 </div>
 
-<div id="window_window_num_tab_{% if kula_core_navigation.getRequestedTab().getDBID() %}{{kula_core_navigation.getRequestedTab().getDBID()}}{% else %}{{ kula_core_navigation.getRequestedForm().getDBID() }}{% endif %}_detail">
+<div id="window_window_num_tab_{{ kula_core_navigation.getProperty(request.get('_navigation'), 'id') }}_detail">
 	{% block detail_content %}
 	{% endblock %}
 </div>

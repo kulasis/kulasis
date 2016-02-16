@@ -1,0 +1,61 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+
+{% if transactions %}
+<div class="group-box">
+<div class="group-box-header">Void Transaction</div>
+<div class="group-box-contents group">
+{{ kula_field({ non: true, field: 'HEd.Billing.Transaction.TransactionDate', value:"now"|date("m/d/Y"), label: true }) }}
+{{ kula_field({ non: true, field: 'HEd.Billing.Transaction.VoidedReason', label: true }) }}
+</div>
+</div>
+{% endif %}
+
+<div class="data-table-header-div">
+Pending Transactions
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ edit: true, field: 'HEd.Billing.Transaction.Posted', field_name_override: 'P', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ delete: true, field: 'HEd.Billing.Transaction.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'Core.Term.Abbreviation', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Organization.Abbreviation', field_name_override: 'Organization', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.LastName', field_name_override: 'Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Billing.Transaction.TransactionDate', field_name_override: 'Date', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Billing.Code.Type', field_name_override: 'Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Billing.Code.Code', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Billing.Transaction.Description', field_name_override: 'Description', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Billing.Transaction.Amount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Billing.Transaction.AppliedBalance', field_name_override: 'Balance', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.User.Username', field_name_override: 'User', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">...</th>
+</tr>
+</thead>
+<tbody>
+  {% for transaction in transactions %}
+  <tr>
+    {{ kula_field({ delete: true, post_type: 'post', field: 'HEd.Billing.Transaction.ID', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    {{ kula_field({ delete: true, post_type: 'void', field: 'HEd.Billing.Transaction.ID', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ field: 'Core.Term.Abbreviation', input: false, value: transaction.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Organization.Abbreviation', input: false, value: transaction.ORGANIZATION_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Constituent.LastName', input: false, value: transaction.PERMANENT_NUMBER~' '~transaction.LAST_NAME~', '~transaction.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.TransactionDate', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.TRANSACTION_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Billing.Code.Type', input: false, value: transaction.CODE_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Billing.Code.Code', input: false, value: transaction.CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Billing.Transaction.Description', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.TRANSACTION_DESCRIPTION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Billing.Transaction.Amount', input: false, value: transaction.AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Billing.Transaction.AppliedBalance', input: false, value: transaction.APPLIED_BALANCE, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.User.Username', input: false, value: transaction.USERNAME, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ transaction.CONSTITUENT_ID }}" data-record-type="SIS.HEd.Student" href="{{ path('Core_HEd_Billing_StudentBilling_TransactionDetail', { constituent_transaction_id: transaction.CONSTITUENT_TRANSACTION_ID }) }}">...</a></td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

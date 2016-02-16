@@ -36,7 +36,7 @@ class CourseChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'sis_K12_course_chooser';
+    return 'Core_K12_Course_Chooser';
   }
   
 }

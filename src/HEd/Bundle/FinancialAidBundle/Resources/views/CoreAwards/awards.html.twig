@@ -1,0 +1,41 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Awards
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ edit: true, field: 'HEd.Billing.Transaction.Posted', field_name_override: 'P', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.FAID.Student.AwardYear.AwardYear', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.FAID.Student.AwardYear.Term.OrganizationTermID', field_name_override: 'Org / Term / Sq', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.FAID.Student.Award.AwardCodeID', field_name_override: 'Award', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.FAID.Student.Award.DisbursementDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.FAID.Student.Award.AwardStatus', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.FAID.Student.Award.GrossAmount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.FAID.Student.Award.NetAmount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.FAID.Student.Award.ShowOnStatement', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  </tr>
+</thead>
+<tbody>
+  {% for award in awards %}
+  <tr>
+  {{ kula_field({ delete: true, post_type: 'post', field: 'HEd.Billing.Transaction.ID', db_row_id: award.AWARD_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, field: 'HEd.FAID.Student.AwardYear.AwardYear', value: award.AWARD_YEAR, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.FAID.Student.AwardYear.Term.OrganizationTermID', db_row_id: award.AWARD_ID, value: award.ORGANIZATION_TERM_ID, prepend_html: '<td>', append_html: ' / '~award.SEQUENCE~'</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.FAID.Student.Award.AwardCodeID', db_row_id: award.AWARD_ID, value: award.AWARD_CODE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.FAID.Student.Award.DisbursementDate', db_row_id: award.AWARD_ID, value: award.DISBURSEMENT_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.FAID.Student.Award.AwardStatus', db_row_id: award.AWARD_ID, value: award.AWARD_STATUS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.FAID.Student.Award.GrossAmount', db_row_id: award.AWARD_ID, value: award.GROSS_AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.FAID.Student.Award.NetAmount', db_row_id: award.AWARD_ID, value: award.NET_AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.FAID.Student.Award.ShowOnStatement', db_row_id: award.AWARD_ID, value: award.SHOW_ON_STATEMENT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

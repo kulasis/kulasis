@@ -1,0 +1,89 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+
+<div class="data-table-header-div">
+Current Schedule
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Section.SectionNumber', field_name_override: 'Section', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Course.CourseNumber', field_name_override: 'Course', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Course.Title', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Section.Credits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.StartDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.EndDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.Dropped', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.DropDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">Created Timestamp</th>
+  <th class="data-table-cell-row-header">...</th>
+</thead>
+<tbody>
+  {% for class in classes %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ field: 'HEd.Section.SectionNumber', input: false, value: class.SECTION_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Course.CourseNumber', input: false, value: class.COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Course.Title', input: false, value: class.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Section.Credits', input: false, value: class.CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Class.StartDate', db_row_id: class.STUDENT_CLASS_ID, value: class.START_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Class.EndDate', db_row_id: class.STUDENT_CLASS_ID, value: class.END_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Class.Dropped', db_row_id: class.STUDENT_CLASS_ID, value: class.DROPPED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Class.DropDate', db_row_id: class.STUDENT_CLASS_ID, value: class.DROP_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td>{{ class.CREATED_TIMESTAMP }}</td>
+    <td class="data-table-cell-row-detail"><a class="data-table-detail-link" data-row-id-prefix="class" data-row-id="{{ class.STUDENT_CLASS_ID }}" href="{{ path('Core_HEd_Scheduling_StudentSchedule_Detail', { id: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, sub_id: class.STUDENT_CLASS_ID }) }}">...</a></td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+<div class="data-table-header-div">
+Schedule History
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_2_num_data_table_terms" class="data-table">
+<thead>
+  <th class="data-table-cell-row-header">#</th>  
+  {{ kula_field_name({ field: 'Core.Organization.Abbreviation', field_name_override: 'Org', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Term.Abbreviation', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Section.SectionNumber', field_name_override: 'Section', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Course.CourseNumber', field_name_override: 'Course', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Course.Title', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Section.Credits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.StartDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.EndDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.Dropped', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.DropDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">Created Timestamp</th>
+</thead>
+<tbody>
+  {% for class_history in classes_history %}
+    {% if last_award_year != class_history.TERM_ABBREVIATION and loop.index > 1 %}
+    <tr>
+      <td class="data-table-cell-row-num">&nbsp;</td>
+      <td colspan="11">&nbsp;</td>
+    </tr>
+    {% endif %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ field: 'Core.Organization.Abbreviation', input: false, value: class_history.ORGANIZATION_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Term.Abbreviation', input: false, value: class_history.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Section.SectionNumber', input: false, value: class_history.SECTION_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Course.CourseNumber', input: false, value: class_history.COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Course.Title', input: false, value: class_history.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Section.Credits', input: false, value: class_history.CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.Class.StartDate', value: class_history.START_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.Class.EndDate', value: class_history.END_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.Class.Dropped', value: class_history.DROPPED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.Class.DropDate', value: class_history.DROP_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
+    <td>{{ class_history.CREATED_TIMESTAMP }}</td>
+  </tr>
+  {% set last_award_year = class_history.TERM_ABBREVIATION %}
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

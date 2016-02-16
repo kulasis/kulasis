@@ -1,29 +1,23 @@
 function focus_documentReady() {
-  $('#focus_usergroup').on('change', focus_usergroup_change);
-  $('#focus_organization').on('change', focus_organizationterm_change);
-  /* $("#focus_term").quickselect({
-autoSelectFirst: true,
-inputClass: 'focus-term-input'
-                });  */
-  $('#focus_term').on('change', focus_organizationterm_change);
-  
+  $('#focus_organization').on('change', focus_organization_change);
+  $('#focus_term').on('change', focus_term_change);
 }
 
-function focus_usergroup_change(event) {
-  $('#role_form').submit();
+function focus_organization_change(event) {
+  $('#focus_form').submit();
 }
 
-function focus_organizationterm_change(event) {
-  $('.selected-window-element').data('focus-org', $('#focus_organization').val());
-  $('.selected-window-element').data('focus-term', $('#focus_term').val());
+function focus_term_change(event) {
   
+  $('#window_bar > ul > .active').data('focus-term', $('#focus_term').val());
+
   var options = new Array();
   options['updateurl'] = 'N';
   
   navigation_createFirstWindow();
   
   // modify URL to match current tab
-  var windowNumber = $('#window_bar .selected-window-element').data('window');
+  var windowNumber = $('#window_bar > ul > .active').data('window');
   var currentURL = $('#window_' + windowNumber).data('window-url');
   urlToUse = currentURL;
 
@@ -46,17 +40,14 @@ function focus_organizationterm_change(event) {
   
 	urlToUse += "record_type=" + encodeURIComponent(record_type);
   urlToUse += "&record_id=" + encodeURIComponent(record_id);
-  
+
   getLink(urlToUse, 'window', 'windows_container', options, function(msg, options) {
+
     // get currently selected panel
-    var currentWindow = $('.selected-window-element').data('window');
+    var currentWindow = $('#window_bar > ul > .active').data('window');
+
     // replace all {panel_num} with new window number
     msg = navigation_replaceAllWindowIDPlaceholders(msg, currentWindow);
     navigation_updateWindow(currentWindow, msg, '', urlToUse);
   });
-}
-
-function focus_organizationterm_update(event) {
-  $('#focus_organization').val($('.selected-window-element').data('focus-org'));
-  $('#focus_term').val($('.selected-window-element').data('focus-term'));
 }

@@ -16,6 +16,10 @@ logout:
     path:     /logout
     defaults: { _controller: KulaCoreLoginBundle:Login:logout }
 
+role_list:
+    path:     /login/roles
+    defaults: { _controller: KulaCoreLoginBundle:Login:roleList }
+
 focus_usergroup_change:
-    path:     /login/focus
+    path:     /login/focus/{id}
     defaults: { _controller: KulaCoreLoginBundle:Login:change_usergroup }

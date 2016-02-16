@@ -1,4 +1,4 @@
-SIS.K12.Staff:
-  class: Kula\K12\Bundle\SchoolBundle\Record\SISStaffRecord
-SIS.K12.Staff.SchoolTerm:
-  class: Kula\K12\Bundle\SchoolBundle\Record\SISStaffSchoolTermRecord
+Core.K12.Staff:
+  class: Kula\K12\Bundle\SchoolBundle\Record\CoreStaffRecord
+Core.K12.Staff.SchoolTerm:
+  class: Kula\K12\Bundle\SchoolBundle\Record\CoreStaffSchoolTermRecord

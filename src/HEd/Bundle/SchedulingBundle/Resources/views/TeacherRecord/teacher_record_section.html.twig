@@ -1,1 +1,3 @@
-Section: {{ form_select(focus_sections, 'focus_section', kula_core_record.getSelectedRecordID(), { id : 'focus_section' }) }}
+{{ form_select(kula_core_record.getAllSchools(kula_core_record.getSelectedRecord.STAFF_ID), 'focus_school', focus.getOrganizationID(), { id : 'focus_school' }) }}
+{{ form_select(kula_core_record.getAllTermsForSchool(kula_core_record.getSelectedRecord.STAFF_ID), 'focus_term', focus.getTermID(), { id : 'focus_term' }) }}
+{{ form_select(focus_sections, 'focus_section', kula_core_record.getSelectedRecordID(), { id : 'focus_section' }) }}

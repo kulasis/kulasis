@@ -1,0 +1,68 @@
+Core_K12_Setup_SchoolSetup_General:
+  path: /setup/school/general
+  defaults: 
+    _controller: KulaK12SchoolBundle:CoreSchoolSetup:general
+    _navigation: Core.K12.Setup.SchoolSetup.General
+
+Core_K12_Setup_SchoolSetup_GradeLevels:
+  path: /setup/school/grade_levels
+  defaults: 
+    _controller: KulaK12SchoolBundle:CoreSchoolSetup:gradelevels
+    _navigation: Core.K12.Setup.SchoolSetup.GradeLevels
+
+Core_K12_Setup_SchoolSetup_Levels:
+  path: /setup/school/levels
+  defaults: 
+    _controller: KulaK12SchoolBundle:CoreSchoolSetup:levels
+    _navigation: Core.K12.Setup.SchoolSetup.Levels
+
+Core_K12_Setup_SchoolSetup_Levels_FTE:
+  path: /setup/school/levels/{level_id}/fte
+  defaults: 
+    _controller: KulaK12SchoolBundle:CoreSchoolSetup:fte
+    _navigation: Core.K12.Setup.SchoolSetup.Levels
+  
+Core_K12_Staff_Staff:
+  path: /staff
+  defaults: 
+    _controller: KulaK12SchoolBundle:CoreStaff:index
+    _navigation: Core.K12.Staff.Staff.Information
+
+Core_K12_Staff_Staff_Add:
+  path: /staff/add
+  defaults: 
+    _controller: KulaK12SchoolBundle:CoreStaff:add
+    _navigation: Core.K12.Staff.Staff
+
+Core_K12_Staff_Staff_Add_Constituent:
+  path: /staff/add/constituent
+  defaults: 
+    _controller: KulaK12SchoolBundle:CoreStaff:add_constituent
+    _navigation: Core.K12.Staff.Staff
+  methods: [GET]
+
+Core_K12_Staff_Staff_Chooser:
+  path: /staff/chooser
+  defaults: { _controller: KulaK12SchoolBundle:CoreStaff:staff_chooser }
+  methods: [GET]
+
+Core_K12_Staff_Staff_Create_Constituent:
+  path: /staff/add/constituent
+  defaults: { _controller: KulaK12SchoolBundle:CoreStaff:create_constituent }
+  methods: [POST]
+
+Core_K12_Staff_Staff_Delete:
+  path: /staff/delete
+  defaults: { _controller: KulaK12SchoolBundle:CoreStaff:delete }
+  methods: [POST]
+
+Core_K12_Staff_Staff_OrgTerm_Chooser:
+  path: /staff/organization_term/chooser
+  defaults: { _controller: KulaK12SchoolBundle:CoreStaff:staff_organizationterm_chooser }
+  methods: [GET]
+
+Core_K12_Staff_Staff_OrgTerms:
+  path: /staff/organization_terms
+  defaults: 
+    _controller: KulaK12SchoolBundle:CoreStaff:staff_orgterms
+    _navigation: Core.K12.Staff.Staff.OrganizationTerms

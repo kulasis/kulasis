@@ -1,6 +1,6 @@
-_K12_scheduling_sis:
-    resource: "@KulaK12SchedulingBundle/Resources/config/routing/sis.yml"
-    prefix: sis/K12
+_K12_scheduling_core:
+    resource: "@KulaK12SchedulingBundle/Resources/config/routing/core.yml"
+    prefix: core/K12
 
 _K12_scheduling_teacher:
     resource: "@KulaK12SchedulingBundle/Resources/config/routing/teacher.yml"

@@ -1,5 +1,32 @@
 body {
-	font-family: "Lucida Grande", Verdana, sans-serif;
-	font-size: 12px;
-	min-height: 200px;
+  font-size: 12px;
+}
+.navbar {
+  border-radius: 0;
+  margin-bottom: 0;
+  border: none;
+}
+.select2-container--bootstrap .select2-selection {
+  font-size: 12px;
+  height: inherit;
+}
+#header {
+  font-size: 14px;
+  min-height: 50px;
+}
+.navbar {
+  min-height: 0px;
+}
+#focusbar {
+  background-color: #EEEEEE;
+  border-top: 1px solid #CCCCCC;
+  border-bottom: 1px solid #CCCCCC;
+}
+
+#focus_form {
+  padding: 0.5em;
+}
+
+#window_bar {
+  margin-top: 0.5em;
 }

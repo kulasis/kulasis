@@ -1,0 +1,48 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Concentrations
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_majors', 'STUD_DEGREE_CONCENTRATION') }}
+</span>
+</div>
+<table id="window_window_num_data_table_majors" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ delete: true, field: 'HEd.Degree.Concentration.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Degree.Concentration.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Concentration.EffectiveTermID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Concentration.MinimumCredits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Concentration.MinimumGPA', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Concentration.PFCode', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">Requirements</th>
+  </tr>
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, field: 'HEd.Degree.Concentration.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+  {{ kula_field({ add: true, delete: true, field: 'HEd.Degree.Concentration.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Degree.Concentration.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Concentration.Name', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Concentration.EffectiveTermID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Concentration.MinimumCredits', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Concentration.MinimumGPA', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Concentration.PFCode', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Degree.Requirement.Group.ID', prepend_html: '<td class="data-table-cell-row-num">Requirements</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Degree.Concentration.ID', prepend_html: '</tr>' }) }}
+  {% for concentration in concentrations %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'HEd.Degree.Concentration.ID', db_row_id: concentration.CONCENTRATION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Concentration.Name', db_row_id: concentration.CONCENTRATION_ID, value: concentration.CONCENTRATION_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Concentration.EffectiveTermID', db_row_id: concentration.CONCENTRATION_ID, value: concentration.EFFECTIVE_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Concentration.MinimumCredits', db_row_id: concentration.CONCENTRATION_ID, value: concentration.MINIMUM_CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Concentration.MinimumGPA', db_row_id: concentration.CONCENTRATION_ID, value: concentration.MINIMUM_GPA, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Concentration.PFCode', db_row_id: concentration.CONCENTRATION_ID, value: concentration.PF_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td><a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_HEd_Degrees_Requirements_Groups', { type: 'concentration', id: concentration.CONCENTRATION_ID }) }}">Requirements</a></td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

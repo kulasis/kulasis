@@ -1,4 +1,4 @@
-SIS.HEd.Staff:
-  class: Kula\HEd\Bundle\SchoolBundle\Record\SISStaffRecord
-SIS.HEd.Staff.SchoolTerm:
-  class: Kula\HEd\Bundle\SchoolBundle\Record\SISStaffSchoolTermRecord
+Core.HEd.Staff:
+  class: Kula\HEd\Bundle\SchoolBundle\Record\CoreStaffRecord
+Core.HEd.Staff.SchoolTerm:
+  class: Kula\HEd\Bundle\SchoolBundle\Record\CoreStaffSchoolTermRecord

@@ -1,106 +1,67 @@
-SIS.HEd.Setup:
-  description: "Setup (HEd)"
-  display_name: "Setup (HEd)"
-  type: form_group
-  portal: sis
-  sort: 4
+Core.HEd.Setup:
+  description: "Setup"
+  display_name: "Setup"
+  type: dir
+  parent: Core.HEd
   forms:
     School:
       description: "School"
       display_name: "School"
-      sort: 4
       tabs:
         General:
           description: "General"
           display_name: "General"
-          sort: 1
-          route: sis_HEd_school_schoolsetup_general
+          route: core_HEd_school_schoolsetup_general
         Levels:
           description: "Levels"
           display_name: "Levels"
-          sort: 2
-          route: sis_HEd_school_schoolsetup_levels
+          route: core_HEd_school_schoolsetup_levels
         GradeLevels:
           description: "Grade Levels"
           display_name: "Grade Levels"
-          sort: 3
-          route: sis_HEd_school_schoolsetup_gradelevels
-    Student:
-      description: "Student"
-      display_name: "Student"
-      sort: 5
-      tabs:
-        Documents:
-          description: "Documents"
-          display_name: "Documents"
-          sort: 1
-          route: sis_HEd_setup_student_documents
-        Holds:
-          description: "Holds"
-          display_name: "Holds"
-          sort: 2
-          route: sis_HEd_setup_student_holds
+          route: core_HEd_school_schoolsetup_gradelevels
 
-
-
-SIS.HEd.Academic:
-  description: "Academic"
-  display_name: "Academic (HEd)"
-  portal: sis
-  type: form_group
-  sort: 3
+Core.HEd.Staff:
+  description: "Staff"
+  display_name: "Staff"
+  type: dir
+  parent: Core.HEd
   forms:
     Staff:
       description: "Staff"
       display_name: "Staff"
-      sort: 3
       tabs: 
         Information:
           description: "Information"
           display_name: "Information"
-          sort: 1
-          route: sis_HEd_school_staff
+          route: core_HEd_school_staff
         OrganizationTerms:
           description: "Organization Terms"
           display_name: "Organization Terms"
-          sort: 2
-          route: sis_HEd_school_staff_orgterms
+          route: core_HEd_school_staff_orgterms
         Addresses:
           description: "Addresses"
           display_name: "Addresses"
-          sort: 4
-          route: sis_HEd_school_staff_addresses
+          route: core_HEd_school_staff_addresses
         Phones:
           description: "Phones"
           display_name: "Phones"
-          sort: 5
-          route: sis_HEd_school_staff_phones
+          route: core_HEd_school_staff_phones
         EmailAddresses:
           description: "Email Addresses"
           display_name: "Email Addresses"
-          sort: 6
-          route: sis_HEd_school_staff_emailaddress
+          route: core_HEd_school_staff_emailaddress
         EmergencyContacts:
           description: "Emergency Contacts"
           display_name: "Emergency Contacts"
-          sort: 7
-          route: sis_HEd_school_staff_emergencycontacts
+          route: core_HEd_school_staff_emergencycontacts
       menu_actions:
-        AddStaff:
-          description: "Add Staff"
-          display_name: "Add Staff"
-          sort: 1
-          route: sis_HEd_school_staff_add
         NewAddress:
           description: "New Address"
           display_name: "New Address"
           record_loaded: true
-          route: sis_HEd_school_staff_addresses_add
-          sort: 2
-        DeleteStaff:
-          description: "Delete Staff"
-          display_name: "Delete Staff"
-          sort: 3
-          route: sis_HEd_school_staff_delete
-          divider_before: true
-          record_loaded: true
+          route: core_HEd_school_staff_addresses_add
+      button_add:
+        route: core_HEd_school_staff_add
+      button_delete:
+        route: core_HEd_school_staff_delete

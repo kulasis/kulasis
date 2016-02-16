@@ -8,6 +8,7 @@ class Select extends Field {
   
   public function __construct($name, $options = array(), $value = null, $attributes = array(), $required_attributes = array()) {
     parent::__construct($name, $value, $attributes, $required_attributes);
+
     if (is_array($options)) $this->options = $options;  
   }
   

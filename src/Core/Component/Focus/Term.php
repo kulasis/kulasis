@@ -4,43 +4,32 @@ namespace Kula\Core\Component\Focus;
 
 class Term {
   
-  private $terms;
-  
-  public function __construct($db) {
-    $this->db = $db;
-  }
-  
-  public function awake($db) {
-    $this->db = $db;
-  }
-  
-  public function loadTerms() {
-    
-    // Get all organizations in an array with [organization_id] = organization_array
-    $term_results = $this->db->db_select('CORE_TERM', 'term', array('target' => 'schema'))
-      ->fields('term', array('TERM_ID', 'TERM_NAME', 'TERM_ABBREVIATION', 'START_DATE'))
-      ->orderBy('START_DATE')
-      ->execute();
-    while ($term_row = $term_results->fetch()) {
-      $this->terms[$term_row['TERM_ID']] = $term_row;
-    }
-  
+  public function __construct($cache) {
+    $this->cache = $cache;
   }
   
   public function getAllTermIDs() {
-    return array_keys($this->terms);
+    if ($this->cache->exists('term.all')) {
+      return $this->cache->get('term.all');
+    }
   }
   
   public function getTermName($termID) {
-    return $this->terms[$termID]['TERM_NAME'];
+    if ($this->cache->exists('term.'.$termID)) {
+      return $this->cache->get('term.'.$termID)['TERM_NAME'];
+    }
   }
   
   public function getTermAbbreviation($termID) {
-    return $this->terms[$termID]['TERM_ABBREVIATION'];
+    if ($this->cache->exists('term.'.$termID)) {
+      return $this->cache->get('term.'.$termID)['TERM_ABBREVIATION'];
+    }
   }
   
   public function getStartDate($termID) {
-    return $this->terms[$termID]['START_DATE'];
+    if ($this->cache->exists('term.'.$termID)) {
+      return $this->cache->get('term.'.$termID)['START_DATE'];
+    }
   }
   
   public function getCurrentTermID() {
@@ -48,18 +37,13 @@ class Term {
     
     $last_start_date_id = null;
     
-    foreach ($this->terms as $key => $value) {
-      if ($value['START_DATE'] > $today) {
+    foreach ($this->cache->get('term.all') as $id) {
+      $term = $this->cache->get('term.'.$id);
+      if ($term['START_DATE'] > $today) {
         return $last_start_date_id;
       }
-      $last_start_date_id = $key;
+      $last_start_date_id = $id;
     }
   }
-  
-  public function __sleep() {
-    $this->db = null;
-    
-    return array('terms');
-  }
-  
+
 }

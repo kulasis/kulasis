@@ -1,4 +1,4 @@
-{% extends 'KulaCoreFrameworkBundle:Base:base.html.twig' %}
+{% extends 'KulaCoreFrameworkBundle:Base:base.mobile.twig' %}
 
 {% block stylesheets %}
     {% stylesheets 
@@ -7,34 +7,24 @@
     {% endstylesheets %}
 {% endblock %}
 
-{% block body %}
-<div id="login_form">
-<form action="{{ path( 'attempt_login') }}" method="post">
-  <div align="center" id="login_title">{{ instance_name }}</div>
-  {% include 'KulaCoreFrameworkBundle:Base:flash.html.twig' %}
-	<div class="group form-line">
-	<div class="form-field">
-	  <label>Username/Email</label>
-		<input type="text" name="username" />
-	</div>
-	</div>
-	<div class="group form-line">
-	<div class="form-field">
-		<label>Password</label>
-	  <input type="password" name="password" />
-	</div>
-	</div>
-	<div class="group form-line">
-	<div class="form-field">
-		<input type="submit" name="submit" value="Submit" />
-	</div>
-	</div>
-	<div class="group form-line">
-		<a href="{{ authurl }}" style="display:block;text-align:center;"><img src="{{ asset('images/google_login.png') }}" /></a>
-	</div>
-</form>
-</div>
-<br />
-<br />
+{% block head %}
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+{% endblock %}
 
+{% block body %}
+<div class="container" id="login_form">
+
+<form class="form-signin" action="{{ path( 'attempt_login') }}" method="post">
+  <h2 class="form-signin-heading">{{ instance_name }}</h2>
+  <a id="google_auth" href="{{ authurl }}"><button class="btn btn-lg btn-danger btn-block">Sign in with Google</button></a>
+  {% include 'KulaCoreFrameworkBundle:Base:flash.html.twig' %}
+  <label for="inputEmail" class="sr-only">Username/Email</label>
+  <input type="email" name="username" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+  <label for="inputPassword" class="sr-only">Password</label>
+  <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+</form>
+
+</div> <!-- /container -->
 {% endblock %}

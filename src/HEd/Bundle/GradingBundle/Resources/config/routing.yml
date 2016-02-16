@@ -1,11 +1,11 @@
-_sis_HEd_coursehistory:
-    resource: "@KulaHEdGradingBundle/Resources/config/routing/sis.yml"
-    prefix: sis/HEd
+_sis_HEd_grading:
+    resource: "@KulaHEdGradingBundle/Resources/config/routing/core.yml"
+    prefix: core/HEd
 
-_teacher_HEd_coursehistory:
+_teacher_HEd_grading:
     resource: "@KulaHEdGradingBundle/Resources/config/routing/teacher.yml"
     prefix: teacher/HEd
 
-_student_HEd_coursehistory:
+_student_HEd_grading:
     resource: "@KulaHEdGradingBundle/Resources/config/routing/student.yml"
     prefix: student/HEd

@@ -1,138 +1,17 @@
-{% extends 'KulaCoreFrameworkBundle:Base:kula.html.twig' %}
-
-{% block stylesheets %}
-  {% stylesheets 
-    '@KulaCoreFrameworkBundle/Resources/public/css/teacher.css' %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-  {% endstylesheets %}
-{% endblock %}
+{% extends 'KulaCoreFrameworkBundle::mobile.html.twig' %}
 
 {% block javascripts %}
   {% javascripts 
-        '@KulaCoreFrameworkBundle/Resources/public/js/student/focus.js'
-        '@KulaCoreFrameworkBundle/Resources/public/js/teacher/navigation.js'
-        '@KulaCoreFrameworkBundle/Resources/public/js/teacher/form.js'
-        '@KulaCoreFrameworkBundle/Resources/public/js/teacher/application.js' %}
+          '@KulaCoreFrameworkBundle/Resources/public/js/student/focus.js'
+  %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
   {% endjavascripts %}
 {% endblock %}
 
-{% block navigation_bar %}
-  {% if session.get('administrator') == '1' %}
-  <div id="nav_bar_navigation">
-    <label for="focus_student">Student:</label>
-    {{ form_select(focus_students, 'focus_student', focus.getStudentStatusID(), { id : 'focus_student' }) }}
-  </div>
-  {% endif %}
-  {% if record_bar_template_path %}
-    {% include record_bar_template_path %}
-  {% endif %}
-{% endblock %}
-
 {% block focus %}
-  <span>
-    <label for="focus_term">Term:</label>
-    {{ form_select(focus_terms, 'focus_term', focus.getTermID, { id : 'focus_term' }) }}
-  </span>
-  <span>
-    <label for="focus_term">School:</label>
-    {{ form_select(focus_schools, 'focus_school', focus.getOrganizationID, { id : 'focus_school' }) }}
-  </span>
-{% endblock %}
-
-{% block navigation_pane %}
-  <div id="nav_pages">
-    {% set navPages = kula_core_navigation.getPages() %}
-    <ul>
-    {% for page_id, page_row in navPages %}
-      <li><a href="{% if page_row.getRoute() %}{{ path(page_row.getRoute()) }}{% endif %}" class="navigation-link-page">{{ page_row.getDisplayName() }}</a></li>
-    {% endfor %}
-    </ul>
-  </div>
-  <div id="nav_forms">
-    {% set navFormGroups = kula_core_navigation.getFormGroups(kula_core_permission) %}
-    {% for group_id, group_row in navFormGroups %}
-      <div id="drawer-{{ group_id }}" class="navigation-drawer navigation-forms">
-        <div class="drawer-header navigation-forms" data-category="forms-{{ group_id }}">{{ group_row.getDisplayName() }}</div>
-        <div id="drawer-contents-forms-{{ group_id }}" class="drawer-contents navigation-forms" style="{% if kula_core_navigation.getRequestedNavItem().getParent() == group_row.getName() %}display:block;{% else %}display:none;{% endif %}">
-          <ul>
-          {% for form_id, form_row in group_row.getForms(kula_core_permission) %}
-            {% if form_row.getName() %}
-              <li><a href="{% if form_row.getRoute() %}{{ path(form_row.getRoute()) }}{% endif %}" class="navigation-link">{{ form_row.getDisplayName() }}</a></li>
-            {% else %}
-              <li class="none">None</li>
-            {% endif %}
-          {% endfor %}
-          </ul>
-        </div>
-      </div>  
-    {% endfor %}
-  </div>
-{% endblock %}
-
-{% block main %}
-  <div id="windows_container">
-    <!-- window menu bar -->
-{% set requestedNav = kula_core_navigation.getRequestedNavItem() %}
-{% set menuActions = requestedNav.getMenuActions(kula_core_permission) %}
-{% set menuReports = requestedNav.getMenuReports(kula_core_permission) %}
-<form id="window_window_num_form" method="post" action="{{ form_action }}" data-navigation-type="{{ requestedNav.getType() }}{% if request.get('_route') == 'core_export_reports_export_download' %}report{% endif %}"{% if requestedNav.getType() == 'report' or requestedNav.getType() == 'menu_report' or request.get('_route') == 'core_export_reports_export_download' %} target="_blank"{% endif %}>
-    <div id="window_window_num_menu_bar" class="window_menu_bar group">
-      <div id="window_window_num_menu_bar_left" class="window_menu_bar_left">
-        {% if menuActions %}
-        <div id="window_window_num_menu_actions" class="dropdown">
-            <a href="#" data-toggle="dropdown" class="menu-button"><img src="{{ asset('images/actions_menu.png') }}" /> <span class="caret"></span></a>
-          <ul id="window_window_num_menu_actions_contents" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            {% for menuAction in menuActions %}
-            {% if menuAction.getDividerBefore() %}
-            <li role="presentation" class="divider"></li>
-            {% endif %}
-            <li role="presentation">{% if menuAction.getRecordLoaded() == false or (menuAction.getRecordLoaded() == true and kula_core_record.getSelectedRecordID() != '') %}<a role="menuitem" tabindex="-1" href="{{ path(menuAction.getRoute(), { record_type: kula_core_record.getRecordType(), record_id: kula_core_record.getSelectedRecordID() } ) }}" 
-        data-http-method="{% if getMethodsForRoute(router, menuAction.getRoute()) %}{{ getMethodsForRoute(router, menuAction.getRoute()).0 }}{% else %}GET{% endif %}"
-        data-confirm="{{ menuAction.getConfirmationMessage() }}">{{ menuAction.getDisplayName() }}</a>{% else %}<div role="menuitem" tabindex="-1" class="disabled">{{ menuAction.getDisplayName() }}</div>{% endif %}</li>
-            {% endfor %}
-          </ul>
-        </div>
-        {% endif %}
-        {% if menuReports %}
-        <div id="window_window_num_menu_reports" class="dropdown">
-            <a href="#" data-toggle="dropdown" class="menu-button"><img src="{{ asset('images/reports_menu.png') }}" /> <span class="caret"></span></a>
-          <ul id="window_window_num_menu_reports_contents" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            {% for menuReport in menuReports %}
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path(menuReport.getRoute()) }}">{{ menuReport.getDisplayName() }}</a></li>
-            {% endfor %}
-          </ul>
-        </div>
-        {% endif %}
-         <div class="window_menu_bar_form_buttons" data-form-id="window_window_num_form">
-             <input id="window_window_num_form_submit" type="submit" name="submit" value="Submit" />
-         </div>
-          </div>
-        </div>
-{% if selected_record_bar_template_path %}
-{% if kula_core_record.getSelectedRecord() %}
-<!-- window selected record bar -->
-<div id="window_window_num_selected_record_bar" class="window_selected_record_bar group">
-  {% include selected_record_bar_template_path %}
-</div>
+{% if session.get('administrator') == '1' %}
+{{ form_select(admin_focus_schools, 'admin_focus_organization', focus.getOrganizationID(true), { id : 'admin_focus_school' }) }}
+{{ form_select(admin_focus_terms, 'admin_focus_term', focus.getTermID(true), { id : 'admin_focus_term' }) }}
+{{ form_select(admin_focus_students, 'admin_focus_student', focus.getStudentID(true), { id : 'admin_focus_student' }) }}
 {% endif %}
-{% endif %}
-{% set tabsToDisplay = kula_core_navigation.getRequestedNavItem().getTabs(kula_core_permission) %}
-{% if tabsToDisplay %}
-    <!-- window tab bar -->
-    <div id="window_tab_bar" class="window_tab_bar">
-      <ul class="tabs">
-        {% for tab in tabsToDisplay %}
-<li{% if tab.getRoute() == request.get('_route') %} class="active"{% endif %}><a id="window_window_num_tab_{{tab.getDBID()}}" href="{{ path(tab.getRoute()) }}" class="window-tab-link" data-window="window_num">{{ tab.getDisplayName() }}</a></li>
-        {% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-    <div class="window_content">
-{% include 'KulaCoreFrameworkBundle:Base:flash.html.twig' %}
-    {% block content %}
-    {% endblock %}
-    </div><!-- window_content -->
-  </form>
-  </div>
 {% endblock %}

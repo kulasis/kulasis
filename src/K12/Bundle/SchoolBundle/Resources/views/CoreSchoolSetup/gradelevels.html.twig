@@ -1,0 +1,43 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Grade Levels
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_levels', 'STUD_SCHOOL_TERM_GRADE_LEVEL') }}
+</span>
+</div>
+<table id="window_window_num_data_table_levels" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ delete: true, field: 'K12.School.Term.GradeLevel.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'K12.School.Term.GradeLevel.Level', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'K12.School.Term.GradeLevel.Grade', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'K12.School.Term.GradeLevel.MaxHours', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'K12.School.Term.GradeLevel.NextGrade', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  </tr>
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, field: 'K12.School.Term.GradeLevel.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+  {{ kula_field({ add: true, field: 'K12.School.Term.GradeLevel.OrganizationTermID', value: kula_core_record.getSelectedRecord.ORGANIZATION_TERM_ID, hidden: true }) }}
+  {{ kula_field({ add: true, delete: true, field: 'K12.School.Term.GradeLevel.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'K12.School.Term.GradeLevel.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_field({ add: true, field: 'K12.School.Term.GradeLevel.Level', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'K12.School.Term.GradeLevel.Grade', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'K12.School.Term.GradeLevel.MaxHours', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'K12.School.Term.GradeLevel.NextGrade', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'K12.School.Term.GradeLevel.ID', prepend_html: '</tr>' }) }}
+  {% for gradelevel in gradelevels %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'K12.School.Term.GradeLevel.ID', db_row_id: gradelevel.SCHOOL_TERM_GRADE_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'K12.School.Term.GradeLevel.Level', db_row_id: gradelevel.SCHOOL_TERM_GRADE_ID, value: gradelevel.LEVEL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'K12.School.Term.GradeLevel.Grade', db_row_id: gradelevel.SCHOOL_TERM_GRADE_ID, value: gradelevel.GRADE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'K12.School.Term.GradeLevel.MaxHours', db_row_id: gradelevel.SCHOOL_TERM_GRADE_ID, value: gradelevel.MAX_HOURS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'K12.School.Term.GradeLevel.NextGrade', db_row_id: gradelevel.SCHOOL_TERM_GRADE_ID, value: gradelevel.NEXT_GRADE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

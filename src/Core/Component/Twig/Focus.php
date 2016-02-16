@@ -33,7 +33,7 @@ class Focus {
   
   public static function terms($organization, $term, $organizationID, $portal, $administrator = 'N', $user_id = null, $db = null, $focus = null) {
     $terms = array();
-    if ($portal == 'sis') {
+    if ($portal == 'core') {
       $terms['ALL'] = array('id' => 'ALL', 'startdate' => '2100-01-01', 'abbreviation' => 'All');
       
       $termsFromOrganization = $organization->getTermsForOrganization($organizationID);
@@ -100,19 +100,21 @@ class Focus {
     
   }
   
-  public static function getTeachers($db, $organization_term_id) {
+  public static function getTeachers($db, $organization_id, $term_id) {
     $instructors = array();
-    
-    if ($organization_term_id) {
+    if ($organization_id OR $term_id) {
     $instructors_result = $db->db_select('STUD_STAFF', 'staff')
+      ->distinct()
       ->fields('staff', array('ABBREVIATED_NAME'))
       ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', 'stafforgterm.STAFF_ID = staff.STAFF_ID')
-      ->fields('stafforgterm', array('STAFF_ORGANIZATION_TERM_ID'))
-      ->condition('stafforgterm.ORGANIZATION_TERM_ID', $organization_term_id)
+      ->fields('stafforgterm', array('STAFF_ID'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stafforgterm.ORGANIZATION_TERM_ID')
+      ->condition('orgterms.ORGANIZATION_ID', $organization_id)
+      ->condition('orgterms.TERM_ID', $term_id)
       ->orderBy('ABBREVIATED_NAME')
       ->execute();
     while ($instructors_row = $instructors_result->fetch()) {
-      $instructors[$instructors_row['STAFF_ORGANIZATION_TERM_ID']] = $instructors_row['ABBREVIATED_NAME'];
+      $instructors[$instructors_row['STAFF_ID']] = $instructors_row['ABBREVIATED_NAME'];
     }
     }
     return $instructors;
@@ -121,7 +123,7 @@ class Focus {
   public static function getSchoolsMenu($organization, $school_organization_ids) {
     $schools_menu = array();
     foreach($school_organization_ids as $organization_id) {
-      $schools_menu[$organization_id] = $organization->getOrganization($organization_id)->getName();
+      $schools_menu[$organization_id] = $organization->getName($organization_id);
     }
     return $schools_menu;
   }
@@ -141,26 +143,28 @@ class Focus {
     return $section_menu;
   }
   
-  public static function getOrganizationMenu($organization, $topOrganizationID) {
-    self::createMenuForOrganization($organization->getOrganization($topOrganizationID));
+  public static function getOrganizationMenu($cache, $organization, $topOrganizationID) {
+    self::createMenuForOrganization($cache, $topOrganizationID);
     return self::$organization_menu;
   }
   
-  public static function getStudents($db, $organization_term_id) {
+  public static function getStudents($db, $organization_id, $term_id) {
     $students = array();
 
-    if ($organization_term_id) {
+    if ($organization_id AND $term_id) {
     $students_result = $db->db_select('STUD_STUDENT', 'stu')
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = stu.STUDENT_ID')
-      ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL'))
+      ->fields('stustatus', array('STUDENT_ID', 'LEVEL'))
       ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
       ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER', 'GENDER'))
-      ->condition('stustatus.ORGANIZATION_TERM_ID', $organization_term_id)
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+      ->condition('orgterms.ORGANIZATION_ID', $organization_id)
+      ->condition('orgterms.TERM_ID', $term_id)
       ->orderBy('LAST_NAME')
       ->orderBy('FIRST_NAME')
       ->execute();
     while ($students_row = $students_result->fetch()) {
-      $students[$students_row['STUDENT_STATUS_ID']] = $students_row['LAST_NAME'].', '.$students_row['FIRST_NAME'].' | '.$students_row['GENDER'].' | '.$students_row['LEVEL'] .' | '.$students_row['PERMANENT_NUMBER'].' ';
+      $students[$students_row['STUDENT_ID']] = $students_row['LAST_NAME'].', '.$students_row['FIRST_NAME'].' | '.$students_row['GENDER'].' | '.$students_row['LEVEL'] .' | '.$students_row['PERMANENT_NUMBER'].' ';
     }
     }
     return $students;
@@ -205,15 +209,17 @@ class Focus {
     return $students;
   }
   
-  private static function createMenuForOrganization($organization, $dashes = null) {
+  private static function createMenuForOrganization($cache, $organization, $dashes = null) {
+    
+    $org = $cache->get('organization.'.$organization);
     
     // top of menu
-    self::$organization_menu[$organization->getID()] = $dashes . $organization->getName();
+    self::$organization_menu[$org['ORGANIZATION_ID']] = $dashes . $org['ORGANIZATION_NAME'];
     
     // look for any children
-    if ($organization->getChildren()) {
-      foreach($organization->getChildren() as $child) {
-        self::createMenuForOrganization($child, $dashes.'-- ');
+    if (isset($org['children'])) {
+      foreach($org['children'] as $child) {
+        self::createMenuForOrganization($cache, $child, $dashes.'-- ');
       }
       
       

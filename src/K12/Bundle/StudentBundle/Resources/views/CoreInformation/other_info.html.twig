@@ -1,0 +1,29 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+
+{% block content %}
+<div class="group-box">
+<div class="group-box-header">Community Programs</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'K12.Student.School', db_row_id: student.STUDENT_ID, value: student.SCHOOL, label: true}) }}
+{% if student_status.STUDENT_STATUS_ID %}
+  {{ kula_field({ edit: true, field: 'K12.Student.Status.GroupWith', db_row_id: student_status.STUDENT_STATUS_ID, value: student_status.GROUP_WITH, label: true}) }}
+  {{ kula_field({ edit: true, field: 'K12.Student.Status.OffCampus', db_row_id: student_status.STUDENT_STATUS_ID, value: student_status.OFF_CAMPUS, label: true}) }}
+  {{ kula_field({ edit: true, field: 'K12.Student.Status.ShirtSize', db_row_id: student_status.STUDENT_STATUS_ID, value: student_status.SHIRT_SIZE, label: true}) }}
+  {{ kula_field({ edit: true, field: 'K12.Student.Status.Age', db_row_id: student_status.STUDENT_STATUS_ID, value: student_status.AGE, label: true}) }}
+{% endif %}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Medical/Allergy</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'K12.Student.MedicalNotes', db_row_id: student.STUDENT_ID, value: student.MEDICAL_NOTES, label: true}) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Notes</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'Core.Constituent.Notes', db_row_id: student.STUDENT_ID, value: student.NOTES, label: true, attributes_html: { rows: 20 }}) }}
+</div>
+</div>
+{% endblock %}

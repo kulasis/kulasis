@@ -1,122 +1,118 @@
-SIS.HEd.Student:
+Core.HEd.Student:
   description: "Student Higher Education"
-  display_name: "Student (HEd)"
-  type: form_group
-  portal: sis
-  sort: 1
+  display_name: "Student"
+  type: dir
+  parent: Core.HEd
   forms: 
     Information:
       description: "Information"
       display_name: "Information"
-      sort: 1
       tabs:
         Basic:
           description: "Basic"
           display_name: "Basic"
-          sort: 1
-          route: sis_HEd_student_information_basic
+          route: core_HEd_student_information_basic
         Demographic:
           description: "Demographic"
           display_name: "Demographic"
-          sort: 2
-          route: sis_HEd_student_information_demographic
+          route: core_HEd_student_information_demographic
         Addresses:
           description: "Addresses"
           display_name: "Addresses"
-          sort: 4
-          route: sis_HEd_student_information_addresses
+          route: core_HEd_student_information_addresses
         Phones:
           description: "Phones"
           display_name: "Phones"
-          sort: 5
-          route: sis_HEd_student_information_phones
+          route: core_HEd_student_information_phones
         EmailAddresses:
           description: "Email Addresses"
           display_name: "Email Addresses"
-          sort: 6
-          route: sis_HEd_student_information_emailaddres
+          route: core_HEd_student_information_emailaddres
         EmergencyContacts:
           description: "Emergency Contacts"
           display_name: "Emergency Contacts"
-          sort: 7
-          route: sis_HEd_student_information_emergencycontacts
+          route: core_HEd_student_information_emergencycontacts
         Other:
           description: "Other Information"
           display_name: "Other Info"
-          sort: 8
-          route: sis_HEd_student_information_otherinfo
+          route: core_HEd_student_information_otherinfo
+      button_add:
+        route: core_HEd_student_information_add
       menu_actions:
-        NewStudent:
-          description: "New Student"
-          display_name: "New Student"
-          route: sis_HEd_student_information_add
-          sort: 1
         NewAddress:
           description: "New Address"
           display_name: "New Address"
           divider_before: true
           record_loaded: true
-          route: sis_HEd_student_information_addresses_add
-          sort: 2
+          route: core_HEd_student_information_addresses_add
     Enrollment:
       description: "Enrollment"
       display_name: "Enrollment"
-      route: sis_HEd_student_enrollment_statuses
-      sort: 2
+      route: core_HEd_student_enrollment_statuses
       menu_actions:
         ActivateInactivate:
           description: "Activate/Inactivate"
           display_name: "Activate/Inactivate"
           record_loaded: true
-          route: sis_HEd_student_enrollment_activateinactivate
-          sort: 1
+          route: core_HEd_student_enrollment_activateinactivate
         Edit:
           description: "Edit Enrollment"
           display_name: "Edit Enrollment"
           record_loaded: true
-          sort: 2
-          route: sis_HEd_student_enrollment_edit
+          route: core_HEd_student_enrollment_edit
       menu_reports:
         EnrollmentVerification:
           description: "Enrollment Verification"
           display_name: "Enrollment Verification"
-          route: sis_HEd_student_enrollment_reports_enrollmentverification
-          sort: 1
+          route: core_HEd_student_enrollment_reports_enrollmentverification
     Documents:
-      description: "Documents"
+      original: Core.HEd.Documents.StudentDocuments
       display_name: "Documents"
-      route: sis_HEd_student_documents
-      sort: 7
+    Holds:
+      original: Core.HEd.Holds.StudentHolds
+      display_name: "Holds"
+
+Core.HEd.Documents:
+  type: dir
+  parent: Core.HEd
+  description: "Documents"
+  display_name: "Documents"
+  forms:
+    DocumentsSetup:
+      description: "Documents Setup"
+      display_name: "Documents Setup"
+      route: core_HEd_setup_student_documents
+    StudentDocuments:
+      description: "Student Documents"
+      display_name: "Student Documents"
+      route: core_HEd_student_documents
+
+Core.HEd.Holds:
+  type: dir
+  parent: Core.HEd
+  description: "Holds"
+  display_name: "Holds"
+  forms:
     Holds:
       description: "Holds"
       display_name: "Holds"
-      route: sis_HEd_student_holds
-      sort: 8
-      
-SIS.HEd.Reports.Student:
-  description: "Student (HEd)"
-  display_name: "Student (HEd)"
-  type: report_group
-  portal: sis
-  sort: 1
+      route: core_HEd_home_holds
+    StudentHolds:
+      description: "Student Holds"
+      display_name: "Student Holds"
+      route: core_HEd_student_holds
+    HoldsSetup:
+      description: "Holds Setup"
+      display_name: "Holds Setup"
+      route: core_HEd_setup_student_holds
+
+Core.HEd.Student.Reports:
+  type: dir
+  parent: Core.HEd.Student
+  description: "Reports"
+  display_name: "Reports"
   reports:
     EnrollmentVerification:
       description: "Enrollment Verification"
       display_name: "Enrollment Verification"
-      route: sis_HEd_student_enrollment_reports_enrollmentverification
-      sort: 1
-
-SIS.HEd.Admin.Holds:
-  type: form
-  portal: sis
-  description: "Holds"
-  display_name: "Holds"
-  route: sis_HEd_home_holds
-  sort: 3
-  
-Student.HEd.Student:
-  description: "Student"
-  display_name: "Student"
-  type: form_group
-  portal: student
-  sort: 1
+      route: core_HEd_student_enrollment_reports_enrollmentverification
