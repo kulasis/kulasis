@@ -17,12 +17,12 @@
 
 <form class="form-signin" action="{{ path( 'attempt_login') }}" method="post">
   <h2 class="form-signin-heading">{{ instance_name }}</h2>
-  <a id="google_auth" href="{{ authurl }}"><button class="btn btn-lg btn-danger btn-block">Sign in with Google</button></a>
+  <a id="google_auth" href="{{ authurl }}" class="btn btn-lg btn-danger btn-block" style="margin-bottom:5px;">Sign in with Google</a>
   {% include 'KulaCoreFrameworkBundle:Base:flash.html.twig' %}
   <label for="inputEmail" class="sr-only">Username/Email</label>
-  <input type="email" name="username" id="inputEmail" class="form-control" placeholder="Email address" autofocus>
+  <input type="text" name="username" id="inputEmail" class="form-control" placeholder="Email address" autofocus>
   <label for="inputPassword" class="sr-only">Password</label>
-  <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+  <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password">
   <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 </form>
 
