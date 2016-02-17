@@ -207,13 +207,12 @@ function processForm(form, url, partial, divToLoad, options, onsuccess, onerrorf
 	
 	// clear all field errors
 	$('#' + activeTabID + '_content').find('.field_error').removeClass('field_error');
-	
-	var record_id = $('#' + activeTabID + '_content > .record_bar_tab_menu_data').data('record-id');
-	var record_type = $('#' + activeTabID + '_content > .record_bar_tab_menu_data').data('record-type');
+	var record_id = $('.record_bar_tab_menu_data').data('record-id'); // #' + activeTabID + '_content > 
+	var record_type = $('.record_bar_tab_menu_data').data('record-type'); // #' + activeTabID + '_content > 
 	
 	var form_data = form.serialize();
-	form_data += "&focus_org=" + encodeURIComponent($('.selected-window-element').data('focus-org'));
-  form_data += "&focus_term=" + encodeURIComponent($('.selected-window-element').data('focus-term'));
+	form_data += "&focus_org=" + encodeURIComponent($('#window_bar > ul > .active').data('focus-org'));
+  form_data += "&focus_term=" + encodeURIComponent($('#window_bar > ul > .active').data('focus-term'));
 	form_data += "&record_type=" + encodeURIComponent(record_type);
 	form_data += "&record_id=" + encodeURIComponent(record_id);
 		   
