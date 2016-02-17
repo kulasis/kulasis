@@ -180,7 +180,7 @@ class CoreTransactionsController extends Controller {
         $add = $this->request->request->get('add');
         $constituent_billing_service->addTransaction($this->record->getSelectedRecord()['STUDENT_ID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.OrganizationTermID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.CodeID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.TransactionDate'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Description'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Amount']);
         
-        return $this->forward('sis_HEd_student_billing_transactions', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
+        return $this->forward('Core_HEd_Billing_StudentBilling_Transactions', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
       }
         
     }
