@@ -107,7 +107,7 @@ class CoreInformationController extends Controller {
     
     if ($this->form('add', 'HEd.Student.Status', 'new', 'HEd.Student.Status.StudentID')) {
       $student_id = $this->createStudent();
-      return $this->forward('sis_HEd_student_information_basic', array('record_type' => 'Core.HEd.Student', 'record_id' => $student_id), array('record_type' => 'Core.HEd.Student', 'record_id' => $student_id));
+      return $this->forward('core_HEd_student_information_basic', array('record_type' => 'Core.HEd.Student', 'record_id' => $student_id), array('record_type' => 'Core.HEd.Student', 'record_id' => $student_id));
     }
     
     

@@ -298,7 +298,7 @@ class CoreScheduleController extends Controller {
     
     $this->addFlash('success', 'Recalculated bill.');
     
-    return $this->forward('core_HEd_student_schedule', array('record_type' => 'Core.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
+    return $this->forward('Core_HEd_Scheduling_StudentSchedule', array('record_type' => 'Core.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
   }
   
   private function _currentSchedule() {

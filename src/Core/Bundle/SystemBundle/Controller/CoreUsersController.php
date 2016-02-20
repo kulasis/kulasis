@@ -45,7 +45,7 @@ class CoreUsersController extends Controller {
     if (isset($add['Core.User']['new']['Core.User.ID'])) {
       $this->processForm();
       $user_id = $this->poster->getPosterRecord('Core.User', 'new')->getField('Core.User.ID');
-      return $this->forward('core_system_users', array('record_type' => 'Core.User', 'record_id' => $user_id), array('record_type' => 'Core.User', 'record_id' => $user_id));
+      return $this->forward('Core_System_Users', array('record_type' => 'Core.User', 'record_id' => $user_id), array('record_type' => 'Core.User', 'record_id' => $user_id));
     }
     
     if ($this->request->request->get('search')) {
@@ -64,7 +64,7 @@ class CoreUsersController extends Controller {
   
   public function add_constituentAction() {
     $this->authorize();
-    $this->formAction('core_system_users_create_constituent');
+    $this->formAction('Core_System_Users_Create_Constituent');
     return $this->render('KulaCoreSystemBundle:Users:add_constituent.html.twig');
   }
   
@@ -94,7 +94,7 @@ class CoreUsersController extends Controller {
       $transaction->commit();
     } 
   
-    return $this->forward('core_system_users', array('record_type' => 'Core.User', 'record_id' => $user_id), array('record_type' => 'Core.User', 'record_id' => $user_id));
+    return $this->forward('Core_System_Users', array('record_type' => 'Core.User', 'record_id' => $user_id), array('record_type' => 'Core.User', 'record_id' => $user_id));
   }
   
   public function deleteAction() {
@@ -108,7 +108,7 @@ class CoreUsersController extends Controller {
       $this->flash->add('success', 'Deleted user.');
     }
     
-    return $this->forward('core_system_users');
+    return $this->forward('Core_System_Users');
   }
   
 }
