@@ -79,7 +79,7 @@ class CoreCoursesController extends Controller {
     $this->authorize();
     $this->processForm();
     $id = $this->poster()->getResult();
-    return $this->forward('core_HEd_courses', array('record_type' => 'Core.HEd.Course', 'record_id' => $id), array('record_type' => 'Core.HEd.Course', 'record_id' => $id));
+    return $this->forward('Core_HEd_Course_Course', array('record_type' => 'Core.HEd.Course', 'record_id' => $id), array('record_type' => 'Core.HEd.Course', 'record_id' => $id));
   }
   
   public function deleteAction() {

@@ -76,7 +76,7 @@ class CoreStaffController extends Controller {
       // Post data
       $staff_orgterm_poster = $this->newPoster()->add('HEd.Staff.OrganizationTerm', 'new', $staff_orgterm_addition)->process()->getResult();
       $this->addFlash('success', 'Added staff.');
-      return $this->forward('sis_HEd_school_staff', array('record_type' => 'Core.HEd.Staff', 'record_id' => $staff_orgterm_addition['HEd.Staff.OrganizationTerm.StaffID']), array('record_type' => 'Core.HEd.Staff', 'record_id' => $staff_orgterm_addition['HEd.Staff.OrganizationTerm.StaffID']));
+      return $this->forward('core_HEd_school_staff', array('record_type' => 'Core.HEd.Staff', 'record_id' => $staff_orgterm_addition['HEd.Staff.OrganizationTerm.StaffID']), array('record_type' => 'Core.HEd.Staff', 'record_id' => $staff_orgterm_addition['HEd.Staff.OrganizationTerm.StaffID']));
     }
     
     if ($this->request->request->get('search')) {
@@ -95,7 +95,7 @@ class CoreStaffController extends Controller {
   
   public function add_constituentAction() {
     $this->authorize();
-    $this->formAction('sis_HEd_school_staff_create_constituent');
+    $this->formAction('core_HEd_school_staff_create_constituent');
     return $this->render('KulaHEdSchoolBundle:CoreStaff:add_constituent.html.twig');
   }
   
@@ -122,7 +122,7 @@ class CoreStaffController extends Controller {
     
     if ($staff_orgterm_poster) {
       $transaction->commit();
-      return $this->forward('sis_HEd_school_staff', array('record_type' => 'Core.HEd.Staff', 'record_id' => $constituent_poster), array('record_type' => 'Core.HEd.Staff', 'record_id' => $constituent_poster));
+      return $this->forward('core_HEd_school_staff', array('record_type' => 'Core.HEd.Staff', 'record_id' => $constituent_poster), array('record_type' => 'Core.HEd.Staff', 'record_id' => $constituent_poster));
     } else {
       $transaction->rollback();
       throw new \Kula\Core\Component\DB\PosterException('Changes not saved.');  
@@ -139,7 +139,7 @@ class CoreStaffController extends Controller {
       $this->addFlash('success', 'Deleted staff from organization term.');
     }
     
-    return $this->forward('sis_HEd_school_staff');
+    return $this->forward('core_HEd_school_staff');
   }
   
   

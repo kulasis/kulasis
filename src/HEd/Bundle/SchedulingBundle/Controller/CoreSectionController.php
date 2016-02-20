@@ -221,7 +221,7 @@ class CoreSectionController extends Controller {
   public function addAction() {
     $this->authorize();
     $this->setRecordType('Core.HEd.Section', 'Y');
-    $this->formAction('core_HEd_offering_sections_create');
+    $this->formAction('Core_HEd_Scheduling_Section_Create');
     return $this->render('KulaHEdSchedulingBundle:CoreSection:add.html.twig');
   }
   
@@ -260,7 +260,7 @@ class CoreSectionController extends Controller {
       if ($sectionID) {
         $transaction->commit();
         $this->addFlash('success', 'Created section.');
-        return $this->forward('core_HEd_offering_sections', array('record_type' => 'Core.HEd.Section', 'record_id' => $sectionID), array('record_type' => 'Core.HEd.Section', 'record_id' => $sectionID));
+        return $this->forward('Core_HEd_Scheduling_Section', array('record_type' => 'Core.HEd.Section', 'record_id' => $sectionID), array('record_type' => 'Core.HEd.Section', 'record_id' => $sectionID));
       } else {
         $transaction->rollback();
       }
@@ -277,7 +277,7 @@ class CoreSectionController extends Controller {
       $this->addFlash('success', 'Deleted section.');
     }
     
-    return $this->forward('core_HEd_offering_sections');
+    return $this->forward('Core_HEd_Scheduling_Section');
   }
   
   public function inactivateAction() {
@@ -296,7 +296,7 @@ class CoreSectionController extends Controller {
     if ($rows_affected == 1) {
       $this->addFlash('success', $success_message);
       
-      return $this->forward('core_HEd_offering_sections', array('record_type' => 'Core.HEd.Section', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Section', 'record_id' => $this->record->getSelectedRecordID()));
+      return $this->forward('Core_HEd_Scheduling_Section', array('record_type' => 'Core.HEd.Section', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Section', 'record_id' => $this->record->getSelectedRecordID()));
     }
   }
   
@@ -351,7 +351,7 @@ class CoreSectionController extends Controller {
     }
     
     $this->addFlash('success', 'Recalculated section totals.');
-    return $this->forward('core_HEd_offering_sections');
+    return $this->forward('Core_HEd_Scheduling_Section');
     
   }
   
