@@ -40,11 +40,11 @@ Schema Table Permissions
     {% endif %}
     
     {% if kula_core_record.getRecordType() == 'Core.User.Role' %}
-    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_system_schemapermissions_field_role', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_System_SchemaPermissions_Field_Role', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
     {% elseif kula_core_record.getRecordType() == 'Core.Usergroup' %}
-    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_system_schemapermissions_field_usergroup', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_System_SchemaPermissions_Field_Usergroup', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
     {% else %}
-    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('core_system_schemapermissions_field_public', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_System_SchemaPermissions_Field_Public', { schema_table_id: table_perm.SCHEMA_TABLE_ID }) }}">...</a></td>
     {% endif %}
   </tr>
   {% endfor %}
