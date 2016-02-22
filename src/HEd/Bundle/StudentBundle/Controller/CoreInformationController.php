@@ -134,7 +134,7 @@ class CoreInformationController extends Controller {
   
   public function add_constituentAction() {
     $this->authorize();
-    $this->formAction('sis_HEd_student_information_create_constituent');
+    $this->formAction('core_HEd_student_information_create_constituent');
     
     $defaults = $this->db()->db_select('STUD_SCHOOL')
       ->fields('STUD_SCHOOL')
@@ -149,7 +149,7 @@ class CoreInformationController extends Controller {
     
     if ($student_id = $this->createStudent()) {
     
-    return $this->forward('sis_HEd_student_information_basic', array('record_type' => 'Core.HEd.Student', 'record_id' => $student_id), array('record_type' => 'Core.HEd.Student', 'record_id' => $student_id));
+    return $this->forward('core_HEd_student_information_basic', array('record_type' => 'Core.HEd.Student', 'record_id' => $student_id), array('record_type' => 'Core.HEd.Student', 'record_id' => $student_id));
     
     }
   }

@@ -8,5 +8,7 @@ Core.HEd.Student.Status:
 Teacher.HEd.Advisor.Student:
   class: Kula\HEd\Bundle\StudentBundle\Record\TeacherAdvisorStudentRecord
   
+Student.HEd.Student:
+  class: Kula\HEd\Bundle\StudentBundle\Record\StudentStudentRecord
 Student.HEd.Student.Status:
   class: Kula\HEd\Bundle\StudentBundle\Record\StudentStudentStatusRecord

@@ -54,15 +54,6 @@ HEd.School.Term.GradeLevel:
       parent: Core.Organization.Term.ID
       column_name: "Organization Term ID"
       label_name: "Organization Term ID"
-    Level:
-      description: "Level"
-      db_column_name: LEVEL
-      db_column_type: varchar
-      db_column_length: 5
-      field_type: lookup
-      lookup: HEd.Student.Enrollment.Level
-      column_name: "Level"
-      label_name: "Level"
     Grade:
       description: "Grade"
       db_column_name: GRADE
@@ -72,27 +63,6 @@ HEd.School.Term.GradeLevel:
       lookup: HEd.Student.Enrollment.Grade
       column_name: "Grade"
       label_name: "Grade"
-    NextGrade:
-      description: "Next Grade"
-      db_column_name: NEXT_GRADE
-      db_column_type: varchar
-      db_column_length: 5
-      db_column_null: true
-      field_type: lookup
-      lookup: HEd.Student.Enrollment.Grade
-      column_name: "Next Grade"
-      label_name: "Next Grade"
-    MaxHours:
-      description: "Max Hours"
-      db_column_name: MAX_HOURS
-      db_column_type: numeric
-      db_column_length: 7
-      db_column_precision: 3
-      db_column_default: 0.000
-      field_type: text
-      field_size: 8
-      column_name: "Max Hours"
-      label_name: "Max Hours"
 HEd.School.Term.Level:
   description: "School Term Level"
   db_table_name: STUD_SCHOOL_TERM_LEVEL

@@ -1,0 +1,61 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="group-box">
+<div class="group-box-header">Registration</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'HEd.School.Term.RegistrationAvailable', db_row_id: kula_core_record.getSelectedRecordID, value: reg.REGISTRATION_AVAILABLE, label: true }) }}
+</div>
+</div>
+<div class="data-table-header-div">
+Grade Levels
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_levels', 'STUD_SCHOOL_TERM_REG_GRADE_LEVEL') }}
+</span>
+</div>
+<table id="window_window_num_data_table_levels" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ delete: true, field: 'HEd.School.Term.Registration.GradeLevel.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.School.Term.Registration.GradeLevel.PreviousLevel', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.School.Term.Registration.GradeLevel.PreviousGrade', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.School.Term.Registration.GradeLevel.Level', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.School.Term.Registration.GradeLevel.Grade', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.School.Term.Registration.GradeLevel.EnterCode', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.School.Term.Registration.GradeLevel.MinHours', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.School.Term.Registration.GradeLevel.DefaultOpenRegistration', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.School.Term.Registration.GradeLevel.DefaultCloseRegistration', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  </tr>
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+  {{ kula_field({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.OrganizationTermID', value: kula_core_record.getSelectedRecord.ORGANIZATION_TERM_ID, hidden: true }) }}
+  {{ kula_field({ add: true, delete: true, field: 'HEd.School.Term.Registration.GradeLevel.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_field({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.PreviousLevel', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.PreviousGrade', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.Level', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.Grade', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.EnterCode', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.MinHours', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.DefaultOpenRegistration', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.DefaultCloseRegistration', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.School.Term.Registration.GradeLevel.ID', prepend_html: '</tr>' }) }}
+  {% for gradelevel in gradelevels %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'HEd.School.Term.Registration.GradeLevel.ID', db_row_id: gradelevel.SCHOOL_TERM_REG_GRADE_LEVEL_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: 'HEd.School.Term.Registration.GradeLevel.PreviousLevel', db_row_id: gradelevel.SCHOOL_TERM_REG_GRADE_LEVEL_ID, value: gradelevel.PREVIOUS_LEVEL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.School.Term.Registration.GradeLevel.PreviousGrade', db_row_id: gradelevel.SCHOOL_TERM_REG_GRADE_LEVEL_ID, value: gradelevel.PREVIOUS_GRADE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.School.Term.Registration.GradeLevel.Level', db_row_id: gradelevel.SCHOOL_TERM_REG_GRADE_LEVEL_ID, value: gradelevel.LEVEL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.School.Term.Registration.GradeLevel.Grade', db_row_id: gradelevel.SCHOOL_TERM_REG_GRADE_LEVEL_ID, value: gradelevel.GRADE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.School.Term.Registration.GradeLevel.EnterCode', db_row_id: gradelevel.SCHOOL_TERM_REG_GRADE_LEVEL_ID, value: gradelevel.ENTER_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.School.Term.Registration.GradeLevel.MinHours', db_row_id: gradelevel.SCHOOL_TERM_REG_GRADE_LEVEL_ID, value: gradelevel.MIN_HOURS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.School.Term.Registration.GradeLevel.DefaultOpenRegistration', db_row_id: gradelevel.SCHOOL_TERM_REG_GRADE_LEVEL_ID, value: gradelevel.DEFAULT_OPEN_REGISTRATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.School.Term.Registration.GradeLevel.DefaultCloseRegistration', db_row_id: gradelevel.SCHOOL_TERM_REG_GRADE_LEVEL_ID, value: gradelevel.DEFAULT_CLOSE_REGISTRATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

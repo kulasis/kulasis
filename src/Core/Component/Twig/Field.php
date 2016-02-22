@@ -521,7 +521,7 @@ class Field {
       $param['attributes_html']['data-ajax--url'] = $container->get('router')->generate($chooser_search_route);
       $param['attributes_html']['data-minimumResultsForSearch'] = 0;
       $param['attributes_html']['data-ajax--delay'] = 250;
-      $param['attributes_html']['style'] = 'width: 100%;';
+      $param['attributes_html']['style'] = 'width: 200px;';
       $param['attributes_html']['id'] = preg_replace('/\[|\]|\./', '_', $field_name);
       
       

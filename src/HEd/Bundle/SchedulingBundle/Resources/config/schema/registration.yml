@@ -1,0 +1,206 @@
+HEd.School.Term:
+  fields:
+    RegistrationAvailable:
+      description: "Registration Available"
+      db_column_name: REGISTRATION_AVAILABLE
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Registration Available"
+      label_name: "Registration Available"
+
+HEd.School.Term.Registration.GradeLevel:
+  description: "School Term Registration"
+  db_table_name: STUD_SCHOOL_TERM_REG_GRADE_LEVEL
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SCHOOL_TERM_REG_GRADE_LEVEL_ID
+      db_column_type: primary_serial
+      column_name: "School Term Grade Level ID"
+      label_name: "School Term Grade Level ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      parent: Core.Organization.Term.ID
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    PreviousLevel:
+      description: "Previous Level"
+      db_column_name: PREVIOUS_LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Previous Level"
+      label_name: "Previous Level"
+    PreviousGrade:
+      description: "Previous Grade"
+      db_column_name: PREVIOUS_GRADE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Grade
+      column_name: "Previous Grade"
+      label_name: "Previous Grade"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    Grade:
+      description: "Grade"
+      db_column_name: GRADE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Grade
+      column_name: "Grade"
+      label_name: "Grade"
+    EnterCode:
+      description: "Enter Code"
+      db_column_name: ENTER_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.EnterCode
+      column_name: "Enter Code"
+      label_name: "Enter Code"
+    MinHours:
+      description: "Min Hours"
+      db_column_name: MIN_HOURS
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 8
+      column_name: "Min Hours"
+      label_name: "Min Hours"
+    DefaultOpenRegistration:
+      description: "Default Open Registration"
+      db_column_name: DEFAULT_OPEN_REGISTRATION
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      columnn_name: "Open Registration"
+      label_name: "Open Registration"
+    DefaultCloseRegistration:
+      description: "Default Close Registration"
+      db_column_name: DEFAULT_CLOSE_REGISTRATION
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      column_name: "Close Registration"
+      label_name: "Close Registration"
+
+HEd.Student.Registration:
+  description: "Student Registration"
+  db_table_name: STUD_STUDENT_REGISTRATION
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: REGISTRATION_ID
+      db_column_type: primary_serial
+      column_name: "Registration ID"
+      label_name: "Registration ID"
+    StudentID:
+      description: "Student ID"
+      parent: HEd.Student.ID
+      db_column_name: STUDENT_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Student ID"
+      label_name: "Student ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: chooser
+      chooser: Core.Organization.Term
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    Grade:
+      description: "Grade"
+      db_column_name: GRADE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Grade
+      column_name: "Grade"
+      label_name: "Grade"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    EnterCode:
+      description: "Enter Code"
+      db_column_name: ENTER_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.EnterCode
+      column_name: "Enter Code"
+      label_name: "Enter Code"
+    OpenRegistration:
+      description: "Open Registration"
+      db_column_name: OPEN_REGISTRATION
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      columnn_name: "Open Registration"
+      label_name: "Open Registration"
+    CloseRegistration:
+      description: "Close Registration"
+      db_column_name: CLOSE_REGISTRATION
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      column_name: "Close Registration"
+      label_name: "Close Registration"
+  unique_keys:
+    StudentOrganizationTermID: [ "HEd.Student.Registration.StudentID", "HEd.Student.Registration.OrganizationTermID" ]
+
+HEd.Section:
+  fields:
+    OpenRegistration:
+      description: "Open Registration"
+      db_column_name: OPEN_REGISTRATION
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      columnn_name: "Open Registration"
+      label_name: "Open Registration"
+    CloseRegistration:
+      description: "Close Registration"
+      db_column_name: CLOSE_REGISTRATION
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      column_name: "Close Registration"
+      label_name: "Close Registration"

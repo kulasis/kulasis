@@ -90,9 +90,7 @@ class CoreSchoolSetupController extends Controller {
       $gradelevels = $this->db()->db_select('STUD_SCHOOL_TERM_GRADE_LEVEL', 'school_term_grade_level')
         ->fields('school_term_grade_level')
         ->condition('school_term_grade_level.ORGANIZATION_TERM_ID', $this->record->getSelectedRecordID())
-        ->orderBy('LEVEL')
         ->orderBy('GRADE')
-        ->orderBy('MAX_HOURS')
         ->execute()->fetchAll();
       
     }

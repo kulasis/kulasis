@@ -5,3 +5,4 @@ imports:
     - { resource: schema/class.yml }
     - { resource: schema/waitlist.yml }
     - { resource: schema/room.yml }
+    - { resource: schema/registration.yml }

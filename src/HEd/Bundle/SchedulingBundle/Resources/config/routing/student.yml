@@ -1,3 +1,20 @@
 Student_HEd_Schedule:
   path: /schedule
   defaults: { _controller: KulaHEdSchedulingBundle:StudentSchedule:index }
+
+Student_HEd_Registration:
+  path: /registration
+  defaults: { _controller: KulaHEdSchedulingBundle:StudentRegistration:index }
+
+Student_HEd_Registration_Start:
+  path: /registration/start/{organization_term_id}
+  defaults: { _controller: KulaHEdSchedulingBundle:StudentRegistration:start }
+
+
+Student_HEd_Registration_Catalog:
+  path: /registration/{student_status_id}/catalog
+  defaults: { _controller: KulaHEdSchedulingBundle:StudentRegistration:catalog }
+
+Student_HEd_Registration_ViewCatalog:
+  path: /registration/{organization_term_id}/view_catalog
+  defaults: { _controller: KulaHEdSchedulingBundle:StudentRegistration:viewCatalog }

@@ -12,7 +12,7 @@ class CoreSectionController extends Controller {
     $this->setRecordType('Core.HEd.Section');
     
     $section = $this->db()->db_select('STUD_SECTION', 'section')
-      ->fields('section', array('SECTION_ID','CREDITS', 'START_DATE', 'END_DATE', 'CAPACITY', 'MINIMUM', 'ENROLLED_TOTAL', 'WAIT_LISTED_TOTAL', 'MARK_SCALE_ID', 'NO_CLASS_DATES', 'SUPPLIES_REQUIRED', 'SUPPLIES_OPTIONAL', 'SUPPLIES_PRICE'))
+      ->fields('section', array('SECTION_ID','CREDITS', 'START_DATE', 'END_DATE', 'CAPACITY', 'MINIMUM', 'ENROLLED_TOTAL', 'WAIT_LISTED_TOTAL', 'MARK_SCALE_ID', 'NO_CLASS_DATES', 'SUPPLIES_REQUIRED', 'SUPPLIES_OPTIONAL', 'SUPPLIES_PRICE', 'OPEN_REGISTRATION', 'CLOSE_REGISTRATION'))
       ->condition('section.SECTION_ID', $this->record->getSelectedRecordID())
       ->execute()->fetch();
     

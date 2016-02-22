@@ -2,3 +2,7 @@ services:
   kula.HEd.scheduling.schedule:
     class: Kula\HEd\Bundle\SchedulingBundle\Service\ScheduleService
     arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session"]
+
+  kula.HEd.scheduling.registration:
+    class: Kula\HEd\Bundle\SchedulingBundle\Service\RegistrationService
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session", "@kula.HEd.student"]

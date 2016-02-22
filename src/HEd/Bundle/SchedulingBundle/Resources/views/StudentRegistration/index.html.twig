@@ -1,0 +1,35 @@
+{% extends 'KulaCoreFrameworkBundle::student.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Terms Available for Registration
+</div>
+<table id="window_window_num_data_table_rooms" class="data-table">
+<thead>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ input: false, field: 'Core.Organization.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'Core.Term.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'HEd.Student.Registration.OpenRegistration', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ input: false, field: 'HEd.Student.Registration.CloseRegistration', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th colspan="2">&nbsp;</th>
+</thead>
+<tbody>
+  {% for reg in registration %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, field: 'Core.Organization.Name', value: reg.ORGANIZATION_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Term.Name', value: reg.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.Registration.OpenRegistration', value: reg.OPEN_REGISTRATION, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.Registration.CloseRegistration', value: reg.CLOSE_REGISTRATION, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {% if reg.STUDENT_STATUS_ID %}
+    <td><a href="{{ path('Student_HEd_Registration_Catalog', { student_status_id: reg.STUDENT_STATUS_ID }) }}">Continue</a></td>
+    {% else %}
+    <td><a href="{{ path('Student_HEd_Registration_Start', { organization_term_id: reg.SCHOOL_TERM_ID }) }}">Start</a></td>
+    {% endif %}
+    <td><a href="{{ path('Student_HEd_Registration_ViewCatalog', { organization_term_id: reg.SCHOOL_TERM_ID }) }}">View</a></td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

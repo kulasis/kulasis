@@ -227,3 +227,15 @@ Core_HEd_Setup_Rooms:
   defaults: 
     _controller: KulaHEdSchedulingBundle:CoreRooms:index
     _navigation: Core.HEd.Setup.Room
+
+Core_HEd_Setup_School_Registration_GradeLevels:
+  path: /setup/registration/grade_levels
+  defaults:
+    _controller: KulaHEdSchedulingBundle:CoreSchoolSetup:registration
+    _navigation: Core.HEd.Setup.School.Registration
+
+Core_HEd_Student_Enrollment_Registration:
+  path: /student/enrollment/registration
+  defaults:
+    _controller: KulaHEdSchedulingBundle:CoreRegistration:studentRegistration
+    _navigation: Core.HEd.Student.Enrollment.Registration

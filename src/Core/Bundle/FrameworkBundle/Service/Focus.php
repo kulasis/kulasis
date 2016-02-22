@@ -190,7 +190,7 @@ class Focus {
       
       // check for student status given organization, term, and student
       $student = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
-        ->fields('stustatus', array('STUDENT_STATUS_ID'))
+        ->fields('stustatus', array('STUDENT_STATUS_ID', 'STUDENT_ID'))
         ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
         ->condition('orgterms.ORGANIZATION_ID', $organization_id)
         ->condition('orgterms.TERM_ID', $term_id)
@@ -207,7 +207,7 @@ class Focus {
       // Only if student status returns set new focused student
       //if ($student['STUDENT_STATUS_ID']) {
       $this->setOrganizationTermFocus($organization_id, $term_id, $role_token);
-      $this->setStudentStatusFocus($student['STUDENT_STATUS_ID'], $role_token);
+      $this->setStudentStatusFocus($student['STUDENT_STATUS_ID'], $student['STUDENT_ID'], $role_token);
       // }
     } else {
       $this->setOrganizationTermFocus($organization_id, $term_id, $role_token);
@@ -216,18 +216,20 @@ class Focus {
     
   }
   
-  public function setStudentStatusFocus($student_status_id = null, $role_token = null) {
+  public function setStudentStatusFocus($student_status_id = null, $student_id = null, $role_token = null) {
     
     if ($student_status_id) {
       $this->session->setFocus('Student.HEd.Student.Status', $student_status_id, $role_token);
+      if ($student_id) $this->session->setFocus('Student.HEd.Student', $student_id, $role_token);
     } elseif ($this->session->get('administrator') == '1') {
       if ($student_status_id) {
         $this->session->setFocus('Student.HEd.Student.Status', $student_status_id, $role_token);
+        if ($student_id) $this->session->setFocus('Student.HEd.Student', $student_id, $role_token);
       } elseif ($this->session->getFocus('Student.HEd.Student.Status', $role_token) !== null) {
 
         // get student in new term
         $newStudent = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
-        ->fields('stustatus', array('STUDENT_STATUS_ID'))
+        ->fields('stustatus', array('STUDENT_STATUS_ID', 'STUDENT_ID'))
         ->condition('stustatus.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
         ->join('STUD_STUDENT_STATUS', 'oldstudentstatus', 'oldstudentstatus.STUDENT_ID = stustatus.STUDENT_ID')
         ->condition('oldstudentstatus.STUDENT_STATUS_ID', $this->session->getFocus('Student.HEd.Student.Status', $role_token))
@@ -235,10 +237,11 @@ class Focus {
 
         if ($newStudent['STUDENT_STATUS_ID']) {
           $this->session->setFocus('Student.HEd.Student.Status', $newStudent['STUDENT_STATUS_ID'], $role_token);
+        if ($student_id) $this->session->setFocus('Student.HEd.Student', $newStudent['STUDENT_ID'], $role_token);
         } else {
           // Set to first student in list
           $firstStudent = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
-          ->fields('stustatus', array('STUDENT_STATUS_ID'))
+          ->fields('stustatus', array('STUDENT_STATUS_ID', 'STUDENT_ID'))
           ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID')
           ->condition('stustatus.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
           ->orderBy('cons.LAST_NAME')
@@ -246,12 +249,13 @@ class Focus {
           ->range(0, 1)
           ->execute()->fetch();
           $this->session->setFocus('Student.HEd.Student.Status', $firstStudent['STUDENT_STATUS_ID'], $role_token);
+          $this->session->setFocus('Student.HEd.Student', $firstStudent['STUDENT_ID'], $role_token);
         }
         
       } else {
         // Set to first teacher in list
         $firstStudent = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
-        ->fields('stustatus', array('STUDENT_STATUS_ID'))
+        ->fields('stustatus', array('STUDENT_STATUS_ID', 'STUDENT_ID'))
         ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID')
         ->condition('stustatus.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
         ->orderBy('cons.LAST_NAME')
@@ -259,18 +263,20 @@ class Focus {
         ->range(0, 1)
         ->execute()->fetch();
         $this->session->setFocus('Student.HEd.Student.Status', $firstStudent['STUDENT_STATUS_ID'], $role_token);
+        $this->session->setFocus('Student.HEd.Student', $firstStudent['STUDENT_ID'], $role_token);
       }
       
     } else {
       // get student status id for currently set organization and term
       $student_status_id = $this->db->db_select('STUD_STUDENT_STATUS', 'stustatus')
-        ->fields('stustatus', array('STUDENT_STATUS_ID'))
+        ->fields('stustatus', array('STUDENT_STATUS_ID', 'STUDENT_ID'))
         ->condition('stustatus.ORGANIZATION_TERM_ID', $this->getOrganizationTermIDs())
         ->condition('stustatus.STUDENT_ID', $this->session->get('user_id'));
       $student_status_id = $student_status_id->execute()->fetch();
 
       if ($student_status_id['STUDENT_STATUS_ID']) {
         $this->session->setFocus('Student.HEd.Student.Status', $student_status_id['STUDENT_STATUS_ID'], $role_token);
+        $this->session->setFocus('Student.HEd.Student', $student_status_id['STUDENT_ID'], $role_token);
       }
       
     }

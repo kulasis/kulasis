@@ -82,7 +82,7 @@ class CoreStaffController extends Controller {
     if ($this->request->request->get('search')) {
       $query = $this->searcher->prepareSearch($this->request->request->get('search'), 'CONS_CONSTITUENT', 'CONSTITUENT_ID');
       $query = $query->fields('CONS_CONSTITUENT', array('CONSTITUENT_ID', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'));
-      $query = $query->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', 'stafforgterm.STAFF_ID = CONS_CONSTITUENT.CONSTITUENT_ID');
+      $query = $query->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', "stafforgterm.STAFF_ID = CONS_CONSTITUENT.CONSTITUENT_ID AND stafforgterm.ORGANIZATION_TERM_ID = '".$this->focus->getOrganizationTermID()."'");
       $query = $query->condition('stafforgterm.STAFF_ORGANIZATION_TERM_ID', null);
       $query = $query->orderBy('LAST_NAME', 'ASC');
       $query = $query->orderBy('FIRST_NAME', 'ASC');

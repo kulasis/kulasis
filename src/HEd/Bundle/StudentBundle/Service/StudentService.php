@@ -128,7 +128,7 @@ class StudentService {
       'HEd.Student.Status.AdvisorID' => $statusInfo['AdvisorID'],
       'HEd.Student.Status.SeekingDegree1ID' => $statusInfo['SeekingDegree1ID']
     ))->process()->getID();
-    
+
     // Create Enrollment Record
     $enrollment_id = $this->poster->newPoster()->add('HEd.Student.Enrollment', 'new', array(
       'HEd.Student.Enrollment.StatusID' => $student_status_id,

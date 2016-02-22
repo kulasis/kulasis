@@ -83,12 +83,12 @@ class PosterRecord {
       if ($this->crud == self::EDIT) {
         $this->processSameValues();
       }
-      
+
       if (count($this->fields) > 0) {
         if (!isset($options['VERIFY_PERMISSIONS']) OR (isset($options['VERIFY_PERMISSIONS']) AND $options['VERIFY_PERMISSIONS'] === true))
           $this->verifyPermissions();
         $this->validate();
-    
+
         if (!$this->hasViolations) {
           $this->result = $this->execute();
           $this->posted = true;

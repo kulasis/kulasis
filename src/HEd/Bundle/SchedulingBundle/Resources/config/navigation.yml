@@ -160,6 +160,13 @@ Core.HEd.Setup.Rooms:
   description: "Rooms"
   display_name: "Rooms"
   route: Core_HEd_Setup_Rooms
+
+Core.HEd.Student.Enrollment.Registration:
+  parent: Core.HEd.Student.Enrollment
+  type: tab
+  description: "Registration"
+  display_name: "Registration"
+  route: Core_HEd_Student_Enrollment_Registration
       
 Core.HEd.Staff.Staff:
   tabs:
@@ -180,6 +187,13 @@ Core.Constituent.Combiner.CourseHEd:
   description: "Course Combiner"
   display_name: "Course"
   route: Core_Constituent_Combiner_Course_HEd
+
+Core.HEd.Setup.School.Registration:
+  parent: Core.HEd.Setup.School
+  type: tab
+  description: "Registration"
+  display_name: "Registration"
+  route: Core_HEd_Setup_School_Registration_GradeLevels
 
 Teacher.HEd.Roster:
   description: "Roster"
@@ -218,3 +232,10 @@ Student.HEd.Schedule:
   description: "Schedule"
   display_name: "Schedule"
   route: Student_HEd_Schedule
+
+Student.HEd.Registration:
+  type: form
+  parent: Student.HEd
+  description: "Registration"
+  display_name: "Registration"
+  route: Student_HEd_Registration

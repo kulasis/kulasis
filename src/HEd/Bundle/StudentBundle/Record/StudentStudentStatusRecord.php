@@ -25,7 +25,7 @@ class StudentStudentStatusRecord extends Record {
   public function getFromDifferentType($record_type, $record_id) {
     
     // Change to student status id
-    if ($record_type == 'Student.Student') {
+    if ($record_type == 'HEd.Student.Student') {
       // Get Student Status ID
       $statusStudentID = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
         ->fields('stustatus', array('STUDENT_STATUS_ID'))

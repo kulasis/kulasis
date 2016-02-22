@@ -48,7 +48,11 @@ Core.HEd.Student:
     Enrollment:
       description: "Enrollment"
       display_name: "Enrollment"
-      route: core_HEd_student_enrollment_statuses
+      tabs:
+        Statuses:
+          display_name: "Statuses"
+          description: "Statuses"
+          route: core_HEd_student_enrollment_statuses
       menu_actions:
         ActivateInactivate:
           description: "Activate/Inactivate"
