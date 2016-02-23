@@ -953,8 +953,10 @@ function setup_selects(num) {
     
   });
   
-  $("#window_"+num).find("select:not(.chooser-search):not(.data-table-row-new > td > select)").select2();
-
+  $("#window_"+num).find("select:not(.chooser-search)").select2();
+  
+  $(".data-table-row-new > td > select:not(.chooser-search)").select2('destroy');
+  
   } else {
     
     $(".chooser-search").select2({
@@ -970,7 +972,9 @@ function setup_selects(num) {
 
     });
     
-    $("select:not(.chooser-search):not(.data-table-row-new > td > select)").select2();
+    $("select:not(.chooser-search)").select2();
+    
+    $(".data-table-row-new > td > select").select2('destroy');
     
   }
 
