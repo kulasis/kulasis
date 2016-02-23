@@ -188,6 +188,15 @@ HEd.Student.Registration:
 
 HEd.Section:
   fields:
+    AllowRegistration:
+      description: "Allow Registration"
+      db_column_name: ALLOW_REGISTRATION
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      columnn_name: "Allow Registration"
+      label_name: "Allow Registration"
     OpenRegistration:
       description: "Open Registration"
       db_column_name: OPEN_REGISTRATION

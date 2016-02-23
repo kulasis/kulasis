@@ -26,6 +26,7 @@
 </div>
 <div class="group-box-header">Registration</div>
 <div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'HEd.Section.AllowRegistration', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section.ALLOW_REGISTRATION, label: true }) }}
 {{ kula_field({ edit: true, field: 'HEd.Section.OpenRegistration', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section.OPEN_REGISTRATION, label: true }) }}
 {{ kula_field({ edit: true, field: 'HEd.Section.CloseRegistration', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section.CLOSE_REGISTRATION, label: true }) }}
 </div>
