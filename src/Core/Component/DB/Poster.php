@@ -51,13 +51,12 @@ class Poster {
   }
   
   public function add($table, $id, $fields) {
-    $this->records[$table][$id] = new PosterRecord($this->container, PosterRecord::ADD, $table, $id, $fields);
-    $this->records[$table][$id]->setNoLog($this->noLog);
+    $this->records[$table][$id.'_add'] = new PosterRecord($this->container, PosterRecord::ADD, $table, $id, $fields);
+    $this->records[$table][$id.'_add']->setNoLog($this->noLog);
     return $this;
   }
   
   public function addMultiple(array $post) {
-    ksort($post);
     foreach($post as $table => $tableRow) {
       foreach($tableRow as $id => $row) {
         if ($id !== 'new_num') { 
