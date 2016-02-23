@@ -21,7 +21,7 @@ Core_HEd_Scheduling_StudentSchedule_CalculateTotals:
   defaults: { _controller: KulaHEdSchedulingBundle:CoreSchedule:calculateTotals }
 
 Core_HEd_Scheduling_StudentSchedule_Detail:
-  path: /scheduling/student_schedule/detail/{sub_id}
+  path: /scheduling/student_schedule/detail/{id}
   defaults: 
     _controller: KulaHEdSchedulingBundle:CoreSchedule:detail
     _navigation: Core.HEd.Scheduling.StudentSchedule

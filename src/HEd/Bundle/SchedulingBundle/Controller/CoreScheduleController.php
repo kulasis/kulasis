@@ -130,7 +130,7 @@ class CoreScheduleController extends Controller {
     return $this->render('KulaHEdSchedulingBundle:CoreSchedule:history.html.twig', array('classes' => $classes, 'classes_history' => $classes_history));
   }
   
-  public function detailAction($id, $sub_id) {
+  public function detailAction($id) {
     $this->authorize();
     $this->processForm();
     $this->setRecordType('Core.HEd.Student.Status');
@@ -140,7 +140,7 @@ class CoreScheduleController extends Controller {
     $class = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_CLASS_ID', 'CHANGE_REASON', 'CHANGE_NOTES', 'DEGREE_REQ_GRP_ID', 'COURSE_ID'))
       ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
-      ->condition('STUDENT_CLASS_ID', $sub_id)
+      ->condition('STUDENT_CLASS_ID', $id)
       ->execute()->fetch();
         
     return $this->render('KulaHEdSchedulingBundle:CoreSchedule:schedule_detail.html.twig', array('class' => $class));  
