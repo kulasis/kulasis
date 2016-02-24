@@ -113,4 +113,27 @@ class CoreTuitionRatesController extends Controller {
     return $this->render('KulaHEdBillingBundle:CoreTuitionRates:refunds.html.twig', array('refunds' => $refunds, 'tuition_rate_id' => $tuition_rate_id));
   }
   
+  public function transactionRefundsAction($tuition_rate_id, $transaction_id) {
+    $this->authorize();
+    $this->processForm();
+    $this->setRecordType('Core.Organization.School.Term', null, 
+    array('CORE_ORGANIZATION_TERMS' =>
+      array('ORGANIZATION_ID' => $this->session->get('organization_ids'),
+            'TERM_ID' => $this->session->get('term_id')
+           )
+         )
+    );
+    
+    $refunds = array();
+    if ($this->record->getSelectedRecordID()) {
+      $refunds = $this->db()->db_select('BILL_TUITION_RATE_TRANS_REFUND', 'tuitionraterefund')
+        ->fields('tuitionraterefund')
+        ->condition('tuitionraterefund.TUITION_RATE_TRANSACTION_ID', $transaction_id)
+        ->orderBy('END_DATE')
+        ->execute()->fetchAll();
+    }
+    
+    return $this->render('KulaHEdBillingBundle:CoreTuitionRates:trans_refunds.html.twig', array('refunds' => $refunds, 'transaction_id' => $transaction_id, 'tuition_rate_id' => $tuition_rate_id));
+  }
+  
 }

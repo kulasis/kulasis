@@ -103,19 +103,26 @@ Core_HEd_Billing_BillingSetup_TuitionRates_Transactions:
   path: /core/HEd/billing/setup/tuition_rates/{tuition_rate_id}/transactions
   defaults: 
     _controller: KulaHEdBillingBundle:CoreTuitionRates:transactions
-    _navigation: Core.HEd.Billing.BillingSetup.TuitionRates.Transactions
+    _navigation: Core.HEd.Billing.BillingSetup.TuitionRates
 
 Core_HEd_Billing_BillingSetup_TuitionRates_Students:
   path: /core/HEd/billing/setup/tuition_rates/{tuition_rate_id}/students
   defaults: 
     _controller: KulaHEdBillingBundle:CoreTuitionRates:students
-    _navigation: Core.HEd.Billing.BillingSetup.TuitionRates.Students
+    _navigation: Core.HEd.Billing.BillingSetup.TuitionRates
 
 Core_HEd_Billing_BillingSetup_TuitionRates_Refunds:
   path: /core/HEd/billing/setup/tuition_rates/{tuition_rate_id}/refunds
   defaults: 
     _controller: KulaHEdBillingBundle:CoreTuitionRates:refunds
-    _navigation: Core.HEd.Billing.BillingSetup.TuitionRates.Refunds
+    _navigation: Core.HEd.Billing.BillingSetup.TuitionRates
+
+Core_HEd_Billing_BillingSetup_TuitionRates_Transactions_Refunds:
+  path: /core/HEd/billing/setup/tuition_rates/{tuition_rate_id}/transactions/{transaction_id}/refunds
+  defaults: 
+    _controller: KulaHEdBillingBundle:CoreTuitionRates:transactionRefunds
+    _navigation: Core.HEd.Billing.BillingSetup.TuitionRates
+
 
 Core_HEd_Course_Course_Fees:
   path: /core/HEd/course/course/fees

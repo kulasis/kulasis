@@ -65,7 +65,7 @@ class StudentBillingService {
     $this->calculateAuditTuition($student_status_id);
     
     // Calculate Fees
-    $this->calculateCourseFees($student_status_id, $attempted_total_credits['TOTAL_CREDITS_ATTEMPTED']);
+    //$this->calculateCourseFees($student_status_id, $attempted_total_credits['TOTAL_CREDITS_ATTEMPTED']);
     
     $new_student_info = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
       ->fields('status', array('TOTAL_CREDITS_ATTEMPTED', 'FTE'))
@@ -147,7 +147,7 @@ class StudentBillingService {
         ->join('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = status.TUITION_RATE_ID AND tuitionrate.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
         ->join('BILL_TUITION_RATE_TRANSACTIONS', 'transactions', 'transactions.TUITION_RATE_ID = tuitionrate.TUITION_RATE_ID')
         ->condition('transactions.RULE', 'AUDIT')
-        ->fields('transactions', array('CREDIT_HOUR_RATE', 'TRANSACTION_CODE_ID'))
+        ->fields('transactions', array('TUITION_RATE_TRANSACTION_ID', 'CREDIT_HOUR_RATE', 'TRANSACTION_CODE_ID'))
         ->condition('status.STUDENT_STATUS_ID', $student_status_id)
         ->execute();
       while ($student_status = $student_status_result->fetch()) {
@@ -172,10 +172,9 @@ class StudentBillingService {
           $transaction_description = 'REFUND';
         
         // Apply refund policy
-        $refund_percentage = $this->database->db_select('BILL_TUITION_RATE_REFUND', 'tuition_rate_refund')
+        $refund_percentage = $this->database->db_select('BILL_TUITION_RATE_TRANS_REFUND', 'tuition_rate_refund')
           ->fields('tuition_rate_refund', array('REFUND_PERCENTAGE'))
-          ->condition('TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
-          ->condition('REFUND_TYPE', 'TUITION')
+          ->condition('TUITION_RATE_TRANSACTION_ID', $student_status['TUITION_RATE_TRANSACTION_ID'])
           ->condition('END_DATE', $drop_date, '>=')
           ->orderBy('END_DATE', 'ASC')
           ->execute()->fetch()['REFUND_PERCENTAGE'];
@@ -201,7 +200,7 @@ class StudentBillingService {
       ->join('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = status.TUITION_RATE_ID AND tuitionrate.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
       ->fields('tuitionrate', array('BILLING_MODE'))
       ->join('BILL_TUITION_RATE_TRANSACTIONS', 'tuition_rate_trans', 'tuition_rate_trans.TUITION_RATE_ID = tuitionrate.TUITION_RATE_ID')
-      ->fields('tuition_rate_trans', array('TRANSACTION_CODE_ID', 'FULL_TIME_CREDITS','MAX_FULL_TIME_CREDITS', 'FULL_TIME_FLAT_RATE', 'CREDIT_HOUR_RATE'))
+      ->fields('tuition_rate_trans', array('TUITION_RATE_TRANSACTION_ID', 'TRANSACTION_CODE_ID', 'FULL_TIME_CREDITS','MAX_FULL_TIME_CREDITS', 'FULL_TIME_FLAT_RATE', 'CREDIT_HOUR_RATE'))
       ->condition('tuition_rate_trans.RULE', 'TUITION')
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
       ->execute();
@@ -257,10 +256,9 @@ class StudentBillingService {
           $transaction_description = 'REFUND';
         
         // Apply refund policy
-        $refund_percentage = $this->database->db_select('BILL_TUITION_RATE_REFUND', 'tuition_rate_refund')
+        $refund_percentage = $this->database->db_select('BILL_TUITION_RATE_TRANS_REFUND', 'tuition_rate_refund')
           ->fields('tuition_rate_refund', array('REFUND_PERCENTAGE'))
-          ->condition('TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
-          ->condition('REFUND_TYPE', 'TUITION')
+          ->condition('TUITION_RATE_TRANSACTION_ID', $student_status['TUITION_RATE_TRANSACTION_ID'])
           ->condition('END_DATE', $drop_date, '>=')
           ->orderBy('END_DATE', 'ASC')
           ->execute()->fetch()['REFUND_PERCENTAGE'];
@@ -276,7 +274,7 @@ class StudentBillingService {
       } // end $tuition_code
     } // end $student_status_result 
   }
-  
+  /*
   public function calculateCourseFees($student_status_id, $previous_credit_total = null) {
     
     // get all classes
@@ -361,5 +359,5 @@ class StudentBillingService {
     } // end while for classes
 
   }
-  
+  */
 }

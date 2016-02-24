@@ -24,6 +24,7 @@ Transactions
   {{ kula_field_name({ field: 'HEd.TuitionRate.Transaction.Amount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.TuitionRate.Transaction.CreditHourRate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.TuitionRate.Transaction.FullTimeFlatRate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">Actions</th>
   </tr>
 </thead>
 <tbody>
@@ -52,6 +53,9 @@ Transactions
     {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Transaction.Amount', db_row_id: transaction.TUITION_RATE_TRANSACTION_ID, value: transaction.AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Transaction.CreditHourRate', db_row_id: transaction.TUITION_RATE_TRANSACTION_ID, value: transaction.CREDIT_HOUR_RATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.TuitionRate.Transaction.FullTimeFlatRate', db_row_id: transaction.TUITION_RATE_TRANSACTION_ID, value: transaction.FULL_TIME_FLAT_RATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+        <td>
+      <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_HEd_Billing_BillingSetup_TuitionRates_Transactions_Refunds', { tuition_rate_id: tuition_rate_id, transaction_id: transaction.TUITION_RATE_TRANSACTION_ID }) }}">Refunds</a>
+    </td>
   </tr>
   {% endfor %}
 </tbody>

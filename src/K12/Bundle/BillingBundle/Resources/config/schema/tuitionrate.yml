@@ -230,4 +230,42 @@ K12.TuitionRate.Transaction:
       field_size: 6
       column_name: "Minimum Credits"
       label_name: "Minimum Credits"
+
+K12.TuitionRate.Transaction.Refund:
+  description: "Tuition Rate Transaction Refunds"
+  db_table_name: BILL_TUITION_RATE_TRANS_REFUND
+  timestamps: true
+  fields: 
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: TRANSACTION_REFUND_ID
+      db_column_type: primary_serial
+      column_name: "Tuition Rate Transaction Refund ID"
+      label_name: "Tuition Rate Transaction Refund ID"
+    TuitionRateTransactionID:
+      description: "Tuition Rate Transaction ID"
+      parent: HEd.TuitionRate.Transaction.ID
+      db_column_name: TUITION_RATE_TRANSACTION_ID
+      db_column_type: serial
+      column_name: "Tuition Rate Transaction ID"
+      label_name: "Tuition Rate Transaction ID"
+    EndDate:
+      description: "End Date"
+      db_column_name: END_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "End Date"
+      label_name: "End Date"
+    RefundPercentage:
+      description: "Refund Percentage"
+      db_column_name: REFUND_PERCENTAGE
+      db_column_type: numeric
+      db_column_length: 6
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Refund Percentage"
+      label_name: "Refund Percentage"
       
