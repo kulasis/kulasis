@@ -8,7 +8,7 @@ class CoreMasterScheduleReportController extends ReportController {
   
   public function indexAction() {
     $this->authorize();
-    $this->formAction('core_K12_offering_sections_reports_masterschedule_generate');
+    $this->formAction('Core_K12_Scheduling_Reports_MasterSchedule_Generate');
     if ($this->request->query->get('record_type') == 'Core.K12.Section' AND $this->request->query->get('record_id') != '')
       $this->setRecordType('Core.K12.Section');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));

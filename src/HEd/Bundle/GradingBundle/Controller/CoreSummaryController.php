@@ -29,7 +29,7 @@ class CoreSummaryController extends Controller {
   public function calculateTermTotalsAction() {
     $this->authorize();
     $this->formNewWindow();
-    $this->formAction('sis_HEd_student_coursehistory_calculateTermTotals_calculate');
+    $this->formAction('Core_HEd_Grading_StudentCourseHistory_CalculateTermTotals_Calculate');
     
     if ($this->request->query->get('record_type') == 'Core.HEd.Student' AND $this->request->query->get('record_id') != '')
       $this->setRecordType('Core.HEd.Student');
