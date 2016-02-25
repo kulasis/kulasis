@@ -65,7 +65,7 @@ class StudentBillingService {
     $this->calculateAuditTuition($student_status_id);
     
     // Calculate Fees
-    //$this->calculateCourseFees($student_status_id, $attempted_total_credits['TOTAL_CREDITS_ATTEMPTED']);
+    $this->calculateCourseFees($student_status_id, $attempted_total_credits['TOTAL_CREDITS_ATTEMPTED']);
     
     $new_student_info = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
       ->fields('status', array('TOTAL_CREDITS_ATTEMPTED', 'FTE'))
@@ -274,7 +274,7 @@ class StudentBillingService {
       } // end $tuition_code
     } // end $student_status_result 
   }
-  /*
+  
   public function calculateCourseFees($student_status_id, $previous_credit_total = null) {
     
     // get all classes
@@ -313,7 +313,7 @@ class StudentBillingService {
 
       // if class dropped and existing fee total is equal to the fee amount, need to determine if to refund
       if ($classes_row['DROPPED'] == 1 AND ($existing_fees['total_amount'] == $classes_row['AMOUNT'] OR $existing_fees['total_amount'] == $classes_row['section_AMOUNT'])) {
-        
+        /*
         // get refund schedule for student status
         $refund = $this->database->db_select('BILL_TUITION_RATE_REFUND', 'tuitionraterefund')
           ->fields('tuitionraterefund', array('REFUND_PERCENTAGE'))
@@ -340,7 +340,7 @@ class StudentBillingService {
           // if 0% refund, no refund
           
         }
-        
+        */
       } elseif ($classes_row['DROPPED'] == 1) {
         // Look at classes dropped for any refund transactions
         $this->constituent_billing_service->refundCourseFees($classes_row);
@@ -359,5 +359,5 @@ class StudentBillingService {
     } // end while for classes
 
   }
-  */
+  
 }
