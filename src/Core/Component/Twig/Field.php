@@ -620,12 +620,10 @@ class Field {
       $db_action = 'search';
     }
     
-    
     if ($schema->getFieldType()  == 'CALCULATED') {
       $class = $schema['CALCULATED_FIELD_LOGIC_CLASS'];
       $name = self::$schema->getFieldNameForRowID($param['db_table'], $schema['CALCULATED_FIELD_UPDATE_FIELD_ID']); 
     }
-    
     
     if (isset($record_object) AND $record_object->getAddMode()) {
       $field_name = 'add';
