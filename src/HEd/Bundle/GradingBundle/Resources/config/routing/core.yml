@@ -30,6 +30,12 @@ Core_HEd_Grading_StudentCourseHistory_Degrees:
     _controller: KulaHEdGradingBundle:CoreStudentDegree:degrees
     _navigation: Core.HEd.Grading.StudentCourseHistory.Degrees
 
+Core_HEd_Grading_StudentCourseHistory_DegreeAudit:
+  path: /grading/student_course_history/degree_audit
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreStudentDegree:degreeAudit
+    _navigation: Core.HEd.Grading.StudentCourseHistory.DegreeAudit
+
 Core_HEd_Grading_StudentCourseHistory_Degrees_Detail:
   path: /grading/student_course_history/{id}/degrees/detail/{sub_id}
   defaults: { _controller: KulaHEdGradingBundle:CoreStudentDegree:detail }

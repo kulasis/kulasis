@@ -40,6 +40,10 @@ Core.HEd.Grading:
           description: "Terms"
           display_name: "Terms"
           route: Core_HEd_Grading_StudentCourseHistory_Terms
+        DegreeAudit:
+          description: "Degree Audit"
+          display_name: "Degree Audit"
+          route: Core_HEd_Grading_StudentCourseHistory_DegreeAudit
       menu_actions:
         RecalculateTermTotals:
           description: "Calculate Term Totals"
@@ -50,7 +54,7 @@ Core.HEd.Grading:
           description: "Student Transcript"
           display_name: "Student Transcript"
           route: Core_HEd_Grading_Reports_StudentTranscript
-        DegreeAudit:
+        DegreeAuditReport:
           description: "Degree Audit"
           display_name: "Degree Audit"
           route: Core_HEd_Grading_Reports_DegreeAudit

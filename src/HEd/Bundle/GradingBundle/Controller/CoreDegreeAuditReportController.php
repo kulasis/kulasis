@@ -241,6 +241,7 @@ class CoreDegreeAuditReportController extends ReportController {
       ->condition('status.STUDENT_ID', $student_id)
       ->condition('DROPPED', 0)
       ->condition('stucrshis.COURSE_HISTORY_ID', null)
+      ->condition('class.LEVEL', $level)
       ->execute();
     while ($current_schedule_row = $current_schedule_result->fetch()) {
       

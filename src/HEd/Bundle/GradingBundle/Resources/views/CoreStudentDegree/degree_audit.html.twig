@@ -1,0 +1,65 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+  <div class="data-table-header-div">
+  Degree Information
+  </div>
+  <table id="window_window_num_data_table_terms" class="data-table">
+  <thead>
+    <th>Degree</th>
+    <th>Majors</th>
+    <th>Minors</th>
+    <th>Concentrations</th>
+  </thead>
+  <tbody>
+    <tr>
+    <td>{{ degrees }}</td>
+    <td>{{ majors }}</td>
+    <td>{{ minors }}</td>
+    <td>{{ concentrations }}</td>
+  </tr>
+    <tr>
+    <td colspan="4">Minimum Credits Needed: {{ total_needed }} | Credits Completed: {{ total_completed }} | Credits Remaining: {{ total_remaining }}</td>
+  </tr>
+  </tbody>
+  </table>
+<div class="data-table-header-div">
+Degree Audit
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Requirement.Group.Course.Required', field_name_override: 'R', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.CourseNumber', field_name_override: 'Crs ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.CourseTitle', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.CreditsAttempted', field_name_override: 'Credit', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.CourseHistory.Mark', field_name_override: 'Mk', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Requirement.Group.Course.Required', field_name_override: 'Status', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+  {% for reqgrpid, reqgrp in degree_audit %}
+      <tr>
+        <th class="data-table-cell-row-header" colspan="4">{{ reqgrp.GROUP_NAME }}</th>
+        <th class="data-table-cell-row-header">{{ reqgrp.CREDITS_REQUIRED }}</th>
+        <th class="data-table-cell-row-header" colspan="2">&nbsp;</th>
+      </tr>
+      {% for reqgrpcrsid, reqgrpcrs in reqgrp.courses %}
+        {% if reqgrpcrs.SHOW_AS_OPTION or reqgrpcrs.display_credits != '' %}
+  <tr>
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term', value: reqgrpcrs.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Degree.Requirement.Group.Course.Required', value: reqgrpcrs.REQUIRED ? 'R' : '', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.CourseNumber', value: reqgrpcrs.COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.CourseTitle', value: reqgrpcrs.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.CreditsAttempted', value: reqgrpcrs.display_credits, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Mark', value: reqgrpcrs.MARK, MARK_SCALE_ID: reqgrpcrs.MARK_SCALE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'HEd.Degree.Requirement.Group.Course.Required', value: reqgrpcrs.status, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+      {% endif %}
+    {% endfor %}
+    <tr>
+      <td colspan="7">Credits Completed: {{ reqgrp.credits_earned }} | Credits Remaining: {{ reqgrp.credits_remain }}</td>
+    </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

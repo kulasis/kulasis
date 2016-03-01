@@ -35,7 +35,6 @@ class DegreeAuditService {
   }
   
   public function getDegreeAuditForStudentStatus($student_status_id) {
-    
     // Get student
     $student = $this->db->db_select('STUD_STUDENT_STATUS', 'status')
       ->fields('status', array('LEVEL', 'STUDENT_ID', 'STUDENT_STATUS_ID'))
@@ -181,11 +180,15 @@ class DegreeAuditService {
       }
     }
     
+    if (isset($this->req_grp_totals[$req_id])) {
+    
     $this->total_degree_needed += $this->output[$req_id]['CREDITS_REQUIRED'];
-    $this->total_degree_completed += $this->req_grp_totals[$req_id];
+    $this->total_degree_completed +=  $this->req_grp_totals[$req_id];
     
     $this->output[$req_id]['credits_earned'] = sprintf('%0.2f', round($this->req_grp_totals[$req_id], 2, PHP_ROUND_HALF_UP));
     $this->output[$req_id]['credits_remain'] = sprintf('%0.2f', round($this->output[$req_id]['CREDITS_REQUIRED'] - $this->req_grp_totals[$req_id], 2, PHP_ROUND_HALF_UP));
+    
+    }
     
   }
   
@@ -315,6 +318,7 @@ class DegreeAuditService {
       ->condition('status.STUDENT_ID', $student_id)
       ->condition('DROPPED', 0)
       ->condition('stucrshis.COURSE_HISTORY_ID', null)
+      ->condition('class.LEVEL', $level)
       ->execute();
     while ($current_schedule_row = $current_schedule_result->fetch()) {
       
