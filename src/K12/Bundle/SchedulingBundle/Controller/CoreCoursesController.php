@@ -71,7 +71,7 @@ class CoreCoursesController extends Controller {
   public function addAction() {
     $this->authorize();
     $this->setRecordType('Core.K12.Course', 'Y');
-    $this->formAction('core_K12_courses_create');
+    $this->formAction('Core_K12_Course_Course_Create');
     return $this->render('KulaK12SchedulingBundle:CoreCourses:add.html.twig');
   }
   
@@ -79,7 +79,7 @@ class CoreCoursesController extends Controller {
     $this->authorize();
     $this->processForm();
     $id = $this->poster()->getResult();
-    return $this->forward('core_K12_courses', array('record_type' => 'Core.K12.Course', 'record_id' => $id), array('record_type' => 'Core.K12.Course', 'record_id' => $id));
+    return $this->forward('Core_K12_Course_Course', array('record_type' => 'Core.K12.Course', 'record_id' => $id), array('record_type' => 'Core.K12.Course', 'record_id' => $id));
   }
   
   public function deleteAction() {
@@ -93,7 +93,7 @@ class CoreCoursesController extends Controller {
       $this->addFlash('success', 'Deleted course.');
     }
     
-    return $this->forward('core_K12_courses');
+    return $this->forward('Core_K12_Course_Course');
   }
   
   public function chooserAction() {

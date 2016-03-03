@@ -108,9 +108,10 @@ Core_HEd_Scheduling_Reports_ClassRosterDirectory:
   defaults: 
     _controller: KulaHEdSchedulingBundle:CoreClassRosterDirectoryReport:index
     _navigation: Core.HEd.Scheduling.Reports.ClassRosterDirectory
+  methods: [GET]
 
 Core_HEd_Scheduling_Reports_ClassRosterDirectory_Generate:
-  path: /scheduling/reports/class_roster_directory/generate
+  path: /scheduling/reports/class_roster_directory
   defaults: { _controller: KulaHEdSchedulingBundle:CoreClassRosterDirectoryReport:generate }
   methods: [POST]
   
