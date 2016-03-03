@@ -111,7 +111,9 @@ class CoreInformationController extends Controller {
   
   public function addAction() {
     $this->authorize();
-    $this->setSubmitMode('search');
+    if ($this->request->request->get('search') == '') {
+	  $this->setSubmitMode('search');
+	}
     
     $constituents = array();
     
