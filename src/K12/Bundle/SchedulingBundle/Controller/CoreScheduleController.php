@@ -179,11 +179,11 @@ class CoreScheduleController extends Controller {
     }
     
     if ($this->request->request->get('add')) {
-      return $this->forward('core_K12_student_schedule', array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
+      return $this->forward('Core_K12_Scheduling_StudentSchedule', array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
     }
     
     if ($this->request->request->get('wait_list')) {
-      return $this->forward('core_K12_student_schedule_waitlist', array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
+      return $this->forward('Core_K12_Scheduling_StudentSchedule_WaitList', array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
     }
     
     $search_classes = array();
@@ -309,7 +309,7 @@ class CoreScheduleController extends Controller {
     
     $this->addFlash('success', 'Recalculated bill.');
     
-    return $this->forward('core_K12_student_schedule', array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
+    return $this->forward('Core_K12_Scheduling_StudentSchedule', array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.K12.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
   }
   
   private function _currentSchedule() {

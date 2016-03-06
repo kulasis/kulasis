@@ -15,7 +15,7 @@ class CoreTermsController extends Controller {
     // Get terms
     $terms = $this->db()->db_select('CORE_TERM')
       ->fields('CORE_TERM')
-      ->condition('START_DATE', $term_service->getStartDate($this->focus->getTermID()), '>=')
+      ->condition('START_DATE', date('Y-m-d', strtotime($term_service->getStartDate($this->focus->getTermID()).'-6 years')), '>=')
       ->orderBy('START_DATE', 'ASC')
       ->orderBy('END_DATE', 'ASC')
       ->orderBy('TERM_ABBREVIATION', 'ASC')
