@@ -64,7 +64,7 @@ class CoreParentsController extends Controller {
   public function add_constituentAction() {
     $this->authorize();
     $this->setRecordType('Core.K12.Student');
-    $this->formAction('sis_K12_student_parents_create_constituent');
+    $this->formAction('Core_K12_Student_Parents_Create_Constituent');
     return $this->render('KulaK12StudentBundle:CoreParents:add_constituent.html.twig');
   }
   
