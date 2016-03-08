@@ -84,7 +84,7 @@ class StudentBillingService {
           'X-Mailer: PHP/' . phpversion();
       $subject = $email_subject.' for '.$attempted_total_credits['LAST_NAME'].', '.$attempted_total_credits['FIRST_NAME'].' ('.$attempted_total_credits['PERMANENT_NUMBER'].')';
       $to = 'Registrar <registrar@ocac.edu>, Linda Anderson <landerson@ocac.edu>, Bursar <bursar@ocac.edu>';
-      mail($to, $subject, $email_text, $headers);
+      //mail($to, $subject, $email_text, $headers);
     
       }
     
@@ -205,11 +205,11 @@ class StudentBillingService {
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
       ->execute();
     while ($student_status = $student_status_result->fetch()) {
-    
+
       // If Standard, 
       if ($student_status['BILLING_MODE'] == 'STAND') {
-        // determine if at flat rate first
-        if ($student_status['TOTAL_CREDITS_ATTEMPTED'] >= $student_status['FULL_TIME_CREDITS']) {
+        // determine if at flat rate first, total credits attempted can't be null
+        if ($student_status['TOTAL_CREDITS_ATTEMPTED'] AND $student_status['TOTAL_CREDITS_ATTEMPTED'] >= $student_status['FULL_TIME_CREDITS']) {
         
           $new_tuition_total = $student_status['FULL_TIME_FLAT_RATE'];
         
@@ -245,10 +245,10 @@ class StudentBillingService {
           ->condition('ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID'])
           ->condition('CODE_ID', $tuition_code)
           ->execute()->fetch()['billed_amount'];
-    
+
         // Determine difference to post
         $amount_to_post = $new_tuition_total - $billed_tuition;
-    
+
         if ($amount_to_post < 0) {
         
           // Get latest drop date
