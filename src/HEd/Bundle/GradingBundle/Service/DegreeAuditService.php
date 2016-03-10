@@ -198,7 +198,9 @@ class DegreeAuditService {
     
       // elective
       if ($elective) {
+        
         foreach($row as $ch_index => $ch) {
+          if (!isset($this->course_history[$ch['COURSE_ID']][$ch_index]['used'])) {
           if ($ch['COURSE_ID']) {
           if (isset($ch['STUDENT_CLASS_ID'])) {
             $ch['status'] = 'In Prog';
@@ -209,8 +211,9 @@ class DegreeAuditService {
           }
           $this->output[$req_id]['courses'][] = $ch;
         
-          $this->course_history[$ch['COURSE_ID']][0]['used'] = 'Y';
+          $this->course_history[$ch['COURSE_ID']][$ch_index]['used'] = 'Y';
           $this->req_grp_totals[$req_id] += isset($ch['CREDITS_EARNED']) ? $ch['CREDITS_EARNED'] : 0;
+          }
           }
         }
         
@@ -301,7 +304,7 @@ class DegreeAuditService {
       else
         $course_history['elective'][] = $course_history_row;
     }
-
+    
     $current_schedule = array();
     $current_schedule_result = $this->db->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_CLASS_ID', 'DEGREE_REQ_GRP_ID', 'COURSE_ID' => 'class_COURSE_ID'))
