@@ -246,7 +246,7 @@ Core_K12_Scheduling_Reports_ClassRoster_AA:
   path: /scheduling/reports/class_roster/aa
   defaults: 
     _controller: KulaK12SchedulingBundle:CoreAAClassRosterReport:index
-    _navgiation: Core.K12.Scheduling.Reports.AAClassRoster
+    _navigation: Core.K12.Scheduling.Reports.AAClassRoster
   methods: [GET]
 
 Core_K12_Scheduling_Reports_ClassRoster_AA_Generate:
