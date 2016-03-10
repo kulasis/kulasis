@@ -112,7 +112,7 @@ Core_K12_Scheduling_Reports_ClassRosterDirectory:
   methods: [GET]
 
 Core_K12_Scheduling_Reports_ClassRosterDirectory_Generate:
-  path: /scheduling/reports/class_roster_directory/generate
+  path: /scheduling/reports/class_roster_directory
   defaults: { _controller: KulaK12SchedulingBundle:CoreClassRosterDirectoryReport:generate }
   methods: [POST]
   
