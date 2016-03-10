@@ -66,6 +66,7 @@ class CoreAAClassRosterLabelsReportController extends ReportController {
       ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
       ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'NOTES'))
       ->condition('DROPPED', '0');
+    
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0)
       $result = $result->condition('section.ORGANIZATION_TERM_ID', $org_term_ids);
@@ -75,7 +76,7 @@ class CoreAAClassRosterLabelsReportController extends ReportController {
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('section.SECTION_ID', $record_id);
     
-	  if (isset($form['section_number'])) {
+	  if (isset($form['section_number']) AND $form['section_number'] != '') {
 		  $result = $result->condition('section.SECTION_NUMBER', $form['section_number'], 'LIKE');
 	  }
 	
