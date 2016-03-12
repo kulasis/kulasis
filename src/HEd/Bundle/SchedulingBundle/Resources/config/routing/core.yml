@@ -93,7 +93,7 @@ Core_HEd_Scheduling_Section_Inactivate:
   methods: [POST]
 
 Core_HEd_Scheduling_Reports_ClassRoster_Generate:
-  path: /scheduling/reports/class_roster/generate
+  path: /scheduling/reports/class_roster
   defaults: { _controller: KulaHEdSchedulingBundle:CoreClassRosterReport:generate }
   methods: [POST]
 
@@ -102,6 +102,7 @@ Core_HEd_Scheduling_Reports_ClassRoster:
   defaults: 
     _controller: KulaHEdSchedulingBundle:CoreClassRosterReport:index
     _navigation: Core.HEd.Scheduling.Reports.ClassRoster
+  methods: [GET]
   
 Core_HEd_Scheduling_Reports_ClassRosterDirectory:
   path: /scheduling/reports/class_roster_directory
