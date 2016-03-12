@@ -65,8 +65,8 @@ Meeting Days
   {{ kula_field({ add: true, field: 'K12.Section.Meeting.Saturday', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'K12.Section.Meeting.StartTime', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'K12.Section.Meeting.EndTime', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-  {{ kula_field({ add: true, field: 'K12.Section.Meeting.StartDate', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-  {{ kula_field({ add: true, field: 'K12.Section.Meeting.EndDate', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'K12.Section.Meeting.StartDate', value: section.START_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'K12.Section.Meeting.EndDate', value: section.END_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'K12.Section.Meeting.RoomID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_display_html({ add: true, field: 'K12.Section.Meeting.ID', prepend_html: '</tr>' }) }}
   {% for meeting_time in meeting_times %}
