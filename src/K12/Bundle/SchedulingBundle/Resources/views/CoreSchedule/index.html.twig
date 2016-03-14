@@ -45,6 +45,7 @@ Current Schedule
     {{ kula_field({ field: 'K12.Section.Meeting.StartTime', input: false, value: class.START_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'K12.Section.Meeting.EndTime', input: false, value: class.END_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'K12.Room.Number', input: false, value: class.ROOM_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td colspan="4">&nbsp;</td>
     {% else %}
     {{ kula_field({ delete: true, field: 'K12.Student.Class.ID', db_row_id: class.STUDENT_CLASS_ID, post_type: 'drop', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ index }}</td>
@@ -54,7 +55,7 @@ Current Schedule
     {{ kula_field({ field: 'K12.Course.Title', input: false, value: class.second_COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {% else %}
     {{ kula_field({ field: 'K12.Course.CourseNumber', input: false, value: class.COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ field: 'K12.Course.Title', input: false, value: class.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'K12.Course.Title', input: false, value: class.COURSE_TITLE~' / '~class.SECTION_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {% endif %}
     {{ kula_field({ field: 'K12.Section.Meets', input: false, value: class.SECTION_MEETING_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'K12.Section.Meeting.StartTime', input: false, value: class.START_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}

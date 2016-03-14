@@ -318,7 +318,7 @@ class CoreScheduleController extends Controller {
     $classes = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'LEVEL', 'MARK_SCALE_ID', 'CREDITS_ATTEMPTED', 'COURSE_ID'))
       ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
-      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER'))
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
       ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE'))
       ->leftJoin('STUD_COURSE', 'course2', 'course2.COURSE_ID = class.COURSE_ID')

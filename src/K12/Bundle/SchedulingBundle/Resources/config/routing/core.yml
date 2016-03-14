@@ -140,6 +140,12 @@ Core_K12_Scheduling_Section_WaitList:
     _controller: KulaK12SchedulingBundle:CoreSection:waitlist
     _navigation: Core.K12.Scheduling.Section.WaitList
 
+Core_K12_Scheduling_SectionQuickPlacement:
+  path: /scheduling/section/quick_placement
+  defaults:
+    _controller: KulaK12SchedulingBundle:CoreSectionQuickPlacement:index
+    _navigation: Core.K12.Scheduling.SectionQuickPlacement
+
 Core_K12_Scheduling_Reports_StaffSchedule:
   path: /scheduling/reports/instructor_schedule
   defaults: 

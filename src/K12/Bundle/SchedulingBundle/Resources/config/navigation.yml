@@ -116,6 +116,10 @@ Core.K12.Scheduling:
           description: "AA Class Roster Labels"
           display_name: "AA Class Roster Labels"
           route: Core_K12_Scheduling_Reports_ClassRoster_Labels_AA
+    SectionQuickPlacement:
+      description: "Section Quick Placement"
+      display_name: "Section Quick Placement"
+      route: Core_K12_Scheduling_SectionQuickPlacement
 
 Core.K12.Scheduling.Reports:
   type: dir
