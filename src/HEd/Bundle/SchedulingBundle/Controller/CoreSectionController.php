@@ -237,6 +237,15 @@ class CoreSectionController extends Controller {
         ->fields('course', array('MARK_SCALE_ID', 'COURSE_NUMBER'))
         ->condition('course.COURSE_ID', $sectionInfo['HEd.Section.CourseID'])
         ->execute()->fetch();
+		
+	  // Get term start and end date
+	  $term_dates = $this->db()->db_select('CORE_TERM', 'term')
+		->fields('term', array('START_DATE', 'END_DATE'))
+		->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.TERM_ID = term.TERM_ID')
+		->condition('orgterms.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
+		->execute()->fetch();
+	  $sectionInfo['HEd.Section.StartDate'] = $term_dates['START_DATE'];
+	  $sectionInfo['HEd.Section.EndDate'] = $term_dates['END_DATE'];
       
       // Get last section number
       $section_number = $this->db()->db_select('STUD_SECTION', 'section')
