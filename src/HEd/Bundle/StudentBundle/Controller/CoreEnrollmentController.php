@@ -181,7 +181,7 @@ class CoreEnrollmentController extends Controller {
           if ($enrollmentPoster AND $statusPoster) {
             $transaction->commit();
             $this->addFlash('success', 'Inactivated student.');
-            return $this->forward('sis_HEd_student_enrollment_statuses', array('record_type' => 'Core.HEd.Student', 'record_id' => $status['STUDENT_ID']), array('record_type' => 'Core.HEd.Student', 'record_id' => $status['STUDENT_ID']));
+            return $this->forward('core_HEd_student_enrollment_statuses', array('record_type' => 'Core.HEd.Student', 'record_id' => $status['STUDENT_ID']), array('record_type' => 'Core.HEd.Student', 'record_id' => $status['STUDENT_ID']));
           } else {
             $transaction->rollback();
             throw new \Kula\Core\Component\DB\PosterException('Inactivation failed.');
@@ -237,7 +237,7 @@ class CoreEnrollmentController extends Controller {
           if ($statusPoster AND $enrollmentPoster AND $activityPoster) {
             $transaction->commit();
             $this->addFlash('success', 'Activated student.');
-            return $this->forward('sis_HEd_student_enrollment_statuses', array('record_type' => 'Core.HEd.Student', 'record_id' => $status['STUDENT_ID']), array('record_type' => 'Core.HEd.Student', 'record_id' => $status['STUDENT_ID']));
+            return $this->forward('core_HEd_student_enrollment_statuses', array('record_type' => 'Core.HEd.Student', 'record_id' => $status['STUDENT_ID']), array('record_type' => 'Core.HEd.Student', 'record_id' => $status['STUDENT_ID']));
           } else {
             $transaction->rollback();
             throw new \Kula\Core\Component\DB\PosterException('Activation failed.');
@@ -344,7 +344,7 @@ class CoreEnrollmentController extends Controller {
         
         if ($activity_poster) {
           $transaction->commit();
-          return $this->forward('sis_HEd_student_enrollment_statuses', array('record_type' => 'Core.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
+          return $this->forward('core_HEd_student_enrollment_statuses', array('record_type' => 'Core.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
         } else {
           $transaction->rollback();
           throw new \Kula\Core\Component\DB\PosterException('Changes not saved.');
