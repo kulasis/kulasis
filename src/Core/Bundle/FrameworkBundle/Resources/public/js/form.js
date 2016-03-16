@@ -201,8 +201,20 @@ function processForm(form, url, partial, divToLoad, options, onsuccess, onerrorf
 	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 	
 	if (activeTabID == undefined) {
-		// not in tab
-		activeTabID = 'window_' + windowNumber + '_tab_';
+		// check to see if existing tab exists
+		var existing_tab = $('#window_' + windowNumber + '_content > div:first-child').prop('id');
+		
+		if (existing_tab) {
+			if (existing_tab.indexOf('content') != -1) {
+				activeTabID = existing_tab.substring(0, existing_tab.indexOf('content')-1);
+			} else {
+				activeTabID = existing_tab;
+			}
+			
+		} else {
+			// not in tab
+			activeTabID = 'window_' + windowNumber + '_tab_';
+		}
 	}
 	
 	// clear all field errors
@@ -238,10 +250,9 @@ function processForm(form, url, partial, divToLoad, options, onsuccess, onerrorf
 			
 			//var json_response = jQuery.parseJSON(msg);
 			if (msg.type == 'form_error') {
-				
 				// disable submit and loading buttons
 				if (onerrorfunc) onerrorfunc(msg, options);	
-
+				
 				// set error message
 				var alert_element = $('#' + activeTabID + '_content > div.window_content').prepend("<div class=\"alert alert-error\">" + msg.message +"</div>");
         
