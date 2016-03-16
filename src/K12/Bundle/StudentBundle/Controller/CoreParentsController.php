@@ -47,6 +47,7 @@ class CoreParentsController extends Controller {
     
     
     if ($this->request->request->get('search')) {
+	  $this->setSubmitMode('submit');
       $query = $this->searcher->prepareSearch($this->request->request->get('search'), 'CONS_CONSTITUENT', 'CONSTITUENT_ID');
       $query = $query->fields('CONS_CONSTITUENT', array('CONSTITUENT_ID', 'PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'BIRTH_DATE', 'GENDER'))->distinct();
       $query = $query->leftJoin('CONS_RELATIONSHIP', 'conrel', "conrel.RELATED_CONSTITUENT_ID = CONS_CONSTITUENT.CONSTITUENT_ID AND conrel.CONSTITUENT_ID = ".$this->record->getSelectedRecordID());
