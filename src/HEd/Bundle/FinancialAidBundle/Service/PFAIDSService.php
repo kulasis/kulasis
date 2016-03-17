@@ -381,14 +381,15 @@ class PFAIDSService {
           JOIN poe ON poe.poe_token = stu_award_transactions.poe_token
           WHERE stu_award_transactions.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."' AND scheduled_amount > 0");
         while ($pf_stu_award_year_term = mssql_fetch_array($pf_stu_award_year_terms)) {
-          
+
           // determine org term id
           $organization_term_id = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'orgterms', array('nolog' => true))
             ->fields('orgterms', array('ORGANIZATION_TERM_ID'))
             ->join('FAID_PFAID_POE', 'poe', 'poe.TERM_ID = orgterms.TERM_ID')
             ->condition('orgterms.ORGANIZATION_ID', $this->focus->getOrganizationID())
             ->condition('poe.poe_token', $pf_stu_award_year_term['poe_token'])
-            ->execute()->fetch();
+			->range(0, 1)
+			->execute()->fetch();
           
           // check if term exists
           $award_year_term = $this->db->db_select('FAID_STUDENT_AWARD_YEAR_TERMS', 'awardterms', array('nolog' => true))
