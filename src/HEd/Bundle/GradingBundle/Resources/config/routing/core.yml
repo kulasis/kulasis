@@ -110,25 +110,25 @@ Core_HEd_Degrees_Degrees:
   path: /grading/degrees/degrees
   defaults: 
     _controller: KulaHEdGradingBundle:CoreDegree:degrees
-    _navigation: Core.HEd.Degrees.Degrees
+    _navigation: Core.HEd.Grading.Degrees.Degrees
 
 Core_HEd_Degrees_Majors:
   path: /grading/degrees/majors
   defaults: 
     _controller: KulaHEdGradingBundle:CoreDegree:majors
-    _navigation: Core.HEd.Degrees.Majors
+    _navigation: Core.HEd.Grading.Degrees.Majors
 
 Core_HEd_Degrees_Minors:
   path: /grading/degrees/minors
   defaults: 
     _controller: KulaHEdGradingBundle:CoreDegree:minors
-    _navigation: Core.HEd.Degrees.Minors
+    _navigation: Core.HEd.Grading.Degrees.Minors
 
 Core_HEd_Degrees_Concentrations:
   path: /grading/degrees/concentrations
   defaults: 
     _controller: KulaHEdGradingBundle:CoreDegree:concentrations
-    _navigation: Core.HEd.Degrees.Concentrations
+    _navigation: Core.HEd.Grading.Degrees.Concentrations
 
 Core_HEd_Degrees_Requirements_Groups:
   path: /grading/degrees/requirements/groups/{type}/{id}
