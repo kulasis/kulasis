@@ -142,7 +142,7 @@ class ConstituentBillingService {
     
     // get course refund end date
     $course_fee_refund_end_date = $this->database->db_select('BILL_COURSE_FEE_REFUND', 'crsrefund')
-      ->expresion('MIN(END_DATE)', 'enddate')
+      ->expression('MIN(END_DATE)', 'enddate')
       ->condition('crsrefund.ORGANIZATION_TERM_ID', $class_info['ORGANIZATION_TERM_ID'])
       ->condition('crsrefund.COURSE_ID', $class_info['COURSE_ID'])
       ->condition('crsrefund.END_DATE', $class_info['DROP_DATE'], '>=')
@@ -153,7 +153,8 @@ class ConstituentBillingService {
       ->fields('crsrefund', array('CODE_ID', 'AMOUNT'))
       ->join('STUD_STUDENT_CLASSES', 'class')
       ->join('STUD_SECTION', 'sect', 'class.SECTION_ID = class.SECTION_ID')
-      ->condition('crsrefund.ORGANIZATION_TERM_ID = crsrefund.ORGANIZATION_TERM_ID AND sect.COURSE_ID = crsrefund.COURSE_ID')
+      ->condition('crsrefund.ORGANIZATION_TERM_ID', 'sect.ORGANIZATION_TERM_ID')
+	  ->condition('sect.COURSE_ID', 'crsrefund.COURSE_ID')
       ->condition('crsrefund.END_DATE', $course_fee_refund_end_date)
       ->execute();
     while ($course_fee_refund_row = $course_fee_refund->fetch()) {
@@ -175,9 +176,9 @@ class ConstituentBillingService {
     // repeat for section refunds
     // get section refund end date
     $section_fee_refund_end_date = $this->database->db_select('BILL_SECTION_FEE_REFUND', 'sectrefund')
-      ->expresion('MIN(END_DATE)', 'enddate')
+      ->expression('MIN(END_DATE)', 'enddate')
       ->condition('sectrefund.END_DATE', $class_info['DROP_DATE'], '>=')
-      ->condition('sectrefund.SECITON_ID', $class_info['SECTION_ID'])
+      ->condition('sectrefund.SECTION_ID', $class_info['SECTION_ID'])
       ->execute()->fetch()['enddate'];
     
     // loop through transactions to refund
