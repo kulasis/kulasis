@@ -58,10 +58,6 @@ class CoreClassRosterSignInOutReportController extends ReportController {
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('section.SECTION_ID', $record_id);
     
-	  if (isset($form['section_number']) AND $form['section_number'] != '') {
-		  $result = $result->condition('section.SECTION_NUMBER', $form['section_number'], 'LIKE');
-	  }
-    
     $result = $result
       ->orderBy('term.START_DATE', 'ASC')
       ->orderBy('SECTION_NUMBER', 'ASC')
@@ -85,6 +81,22 @@ class CoreClassRosterSignInOutReportController extends ReportController {
         $pdf->AddPage();
       }
       
+	  // Get group
+	  $row['group'] = '';
+	  if (isset($form['section_number']) AND $form['section_number'] != '') {
+		  $group = $this->db()->db_select('STUD_SECTION', 'section')
+			->fields('section', array('SECTION_NAME', 'SECTION_NUMBER'))
+			->join('STUD_STUDENT_CLASSES', 'cla', 'cla.SECTION_ID = section.section_ID')
+			->condition('cla.STUDENT_STATUS_ID', $row['STUDENT_STATUS_ID'])
+			->join('STUD_COURSE', 'crs', 'crs.COURSE_ID = section.COURSE_ID')
+			->fields('crs', array('COURSE_TITLE'))
+			->condition('section.SECTION_NUMBER', $form['section_number'], 'LIKE')
+			->condition('cla.DROPPED', 0)
+			->execute()->fetch();
+		  $row['group'] = ($group['SECTION_NAME'] != '') ? $group['SECTION_NAME'] : $group['COURSE_TITLE'];
+	  }
+	  
+	  
       // Get parents
       $parentsStr = array();
       $parents = $this->db()->db_select('CONS_CONSTITUENT', 'constituent')

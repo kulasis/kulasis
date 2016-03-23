@@ -49,7 +49,7 @@ class ClassRosterSignInOutReport extends BaseReport {
     $this->Cell(70, 8,$row['LAST_NAME'].', '.$row['FIRST_NAME'].' '.$middle_initial.' ('.$row['PERMANENT_NUMBER'].')','',0,'L',$this->fill);
     
     $this->Cell(10, 8, 'Group:', '', 0, 'L');
-    $this->Cell(10, 8,$this->data['SECTION_NUMBER'],'',0,'L',$this->fill);
+    $this->Cell(10, 8,$row['group'],'',0,'L',$this->fill);
     
     $this->Ln(5);
     
