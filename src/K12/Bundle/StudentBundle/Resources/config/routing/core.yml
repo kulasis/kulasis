@@ -82,7 +82,7 @@ Core_K12_Student_Student_OtherInfo:
   path: /student/information/other_info
   defaults: 
     _controller: KulaK12StudentBundle:CoreInformation:other_info
-    _navigation: Core.K12.Student.Student.OtherInfo
+    _navigation: Core.K12.Student.Student.Other
 
 Core_K12_Student_Student_Phones:
   path: /student/student/phones
