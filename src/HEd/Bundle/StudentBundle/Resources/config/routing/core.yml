@@ -94,19 +94,19 @@ core_HEd_student_enrollment_activateinactivate:
   path: /student/enrollment/activateinactivate
   defaults: 
     _controller: KulaHEdStudentBundle:CoreEnrollment:activateinactivate
-    _navigation: Core.HEd.Student.Enrollment
+    _navigation: Core.HEd.Student.Enrollment.ActivateInactivate
 
 core_HEd_student_enrollment_activitydetail:
   path: /student/enrollment/activity/{student_enrollment_id}
   defaults: 
     _controller: KulaHEdStudentBundle:CoreEnrollment:activity
-    _navigation: Core.HEd.Student.Enrollment
+    _navigation: Core.HEd.Student.Enrollment.Statuses
 
 core_HEd_student_enrollment_enrollmentdetail:
   path: /student/enrollment/enrollments/{student_status_id}
   defaults: 
     _controller: KulaHEdStudentBundle:CoreEnrollment:enrollments
-    _navigation: Core.HEd.Student.Enrollment
+    _navigation: Core.HEd.Student.Enrollment.Statuses
 
 core_HEd_student_enrollment_reports_enrollmentverification:
   path: /student/enrollment/reports/enrollmentverification
@@ -126,7 +126,7 @@ core_HEd_student_enrollment_statuses:
   path: /student/enrollment
   defaults: 
     _controller: KulaHEdStudentBundle:CoreEnrollment:index
-    _navigation: Core.HEd.Student.Enrollment
+    _navigation: Core.HEd.Student.Enrollment.Statuses
 
 core_HEd_setup_student_documents:
   path: /setup/student/documents
