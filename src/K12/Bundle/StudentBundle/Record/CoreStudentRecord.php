@@ -22,7 +22,7 @@ class CoreStudentRecord extends Record {
       $result = $result->execute()->fetch();
       return $result['STUDENT_ID'];
     }
-    if ($record_type == 'Core.HEd.Student') {
+    if ($record_type == 'Core.K12.Student') {
       return $record_id;
     }
   }
