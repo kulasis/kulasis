@@ -8,7 +8,7 @@ jQuery(document).ready(function($) {
 jQuery(document).ajaxComplete(function($) {
 	
 	if (jQuery('#login_form').length) {
-    window.top.location.href='/';
+  	window.top.location.href='/';
   }
 	
 	navigation_displayRecordBar();

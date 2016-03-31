@@ -1,6 +1,13 @@
+jQuery(document).ajaxComplete(function($) {
+	
+	if (jQuery('#login_form').length) {
+  	window.top.location.href='/';
+  }
+
+});
+
 $(function() {
 	$('#role_select').on('change', role_change);
-  
 });
 
 // show or hide drawer listener
@@ -27,3 +34,4 @@ function navigation_openDrawer(event) {
 function role_change(event) {
 	$('#role_form').submit();
 }
+
