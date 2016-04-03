@@ -227,7 +227,7 @@ class CoreDegreeAuditReportController extends ReportController {
 
     $current_schedule = array();
     $current_schedule_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'DEGREE_REQ_GRP_ID', 'COURSE_ID' => 'class_COURSE_ID'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'CREDITS_ATTEMPTED', 'DEGREE_REQ_GRP_ID', 'COURSE_ID' => 'class_COURSE_ID'))
       ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
       ->join('STUD_COURSE', 'course' , 'course.COURSE_ID = section.COURSE_ID')
@@ -245,11 +245,17 @@ class CoreDegreeAuditReportController extends ReportController {
       ->execute();
     while ($current_schedule_row = $current_schedule_result->fetch()) {
       
+      if ($current_schedule_row['CREDITS_ATTEMPTED'] != '') {
+        $current_schedule_row['CREDITS'] = $current_schedule_row['CREDITS_ATTEMPTED'];
+      } else {
+        $current_schedule_row['CREDITS'] = $current_schedule_row['CREDITS'];
+      }
+      
       if ($current_schedule_row['class_COURSE_ID']) {
         $current_schedule_row['COURSE_ID'] = $current_schedule_row['class_COURSE_ID'];
         $current_schedule_row['COURSE_NUMBER'] = $current_schedule_row['class_COURSE_NUMBER'];
         $current_schedule_row['COURSE_TITLE'] = $current_schedule_row['class_COURSE_TITLE'];
-        $current_schedule_row['CREDITS'] = $current_schedule_row['CREDITS'];
+        $current_schedule_row['CREDITS'] = $current_schedule_row['class_CREDITS'];
       }
       
       if (!isset($course_history[$current_schedule_row['COURSE_ID']]))
