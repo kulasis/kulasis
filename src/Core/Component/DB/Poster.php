@@ -121,7 +121,10 @@ class Poster {
   }
   
   public function getPosterRecord($table, $id) {
-    return $this->records[$table][$id];
+    if (isset($this->records[$table][$id]))
+      return $this->records[$table][$id];
+    elseif (isset($this->records[$table][$id.'_add']))
+      return $this->records[$table][$id.'_add'];
   }
   
   public function getID() {
