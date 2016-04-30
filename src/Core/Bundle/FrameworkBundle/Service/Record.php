@@ -42,7 +42,7 @@ class Record {
     
     $this->record_type = $recordType->getName();
     
-    if ($this->session->get('portal') == 'sis' OR $this->session->get('portal') == 'core') {
+    if ($this->session->get('portal') == 'core') {
 
       // set if in add mode
       $this->setAddMode($add_mode);
@@ -65,8 +65,7 @@ class Record {
     
         // set record from id
         // if searching, process search, load first record returned
-        if ($this->request->request->get('mode') == 'search' AND $this->selected_record_id == ''
-        ) {
+        if ($this->request->request->get('mode') == 'search') {
           $post_data = $this->searcher->startProcessing($this->db, $this->schema, $this->permission, $this->request);
           $this->selected_record_id = $this->_search($post_data);
         } else {
