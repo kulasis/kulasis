@@ -353,4 +353,52 @@ class CoreSectionController extends Controller {
     
   }
   
+  public function contactInfoAction() {
+    $this->authorize();
+    $this->setRecordType('Core.K12.Section');
+    
+    $students = array();
+    $email_addresses = array();
+    
+    $students = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
+      ->fields('class', array('STUDENT_CLASS_ID'))
+      ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
+      ->fields('status', array('STUDENT_STATUS_ID'))
+      ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
+      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+      ->fields('stucon', array('PERMANENT_NUMBER' => 'stucon_PERMAMENT_NUMBER', 'LAST_NAME' => 'stucon_LAST_NAME', 'FIRST_NAME' => 'stucon_FIRST_NAME', 'MIDDLE_NAME' => 'stucon_MIDDLE_NAME', 'GENDER' => 'stucon_GENDER'))
+      ->leftJoin('CONS_EMAIL_ADDRESS', 'stuemail', 'stuemail.CONSTITUENT_ID = stucon.CONSTITUENT_ID AND stuemail.UNDELIVERABLE = 0 AND stuemail.ACTIVE = 1')
+      ->fields('stuemail', array('EMAIL_ADDRESS' => 'stu_EMAIL_ADDRESS'))
+      ->leftJoin('CONS_PHONE', 'stuphone', 'stuphone.CONSTITUENT_ID = stucon.CONSTITUENT_ID AND stuphone.ACTIVE = 1')
+      ->fields('stuphone', array('PHONE_NUMBER' => 'stu_PHONE_NUMBER', 'PHONE_TYPE' => 'stu_PHONE_TYPE'))
+      ->leftJoin('CONS_RELATIONSHIP', 'relation', 'relation.CONSTITUENT_ID = stucon.CONSTITUENT_ID')
+      ->leftJoin('CONS_CONSTITUENT', 'parcon', 'parcon.CONSTITUENT_ID = relation.RELATED_CONSTITUENT_ID')
+      ->fields('parcon', array('LAST_NAME' => 'parcon_LAST_NAME', 'FIRST_NAME' => 'parcon_FIRST_NAME'))
+      ->leftJoin('CONS_PHONE', 'primary_phone', 'primary_phone.PHONE_NUMBER_ID = parcon.PRIMARY_PHONE_ID')
+      ->fields('primary_phone', array('PHONE_NUMBER', 'PHONE_TYPE'))
+      ->leftJoin('CONS_EMAIL_ADDRESS', 'primary_email', 'primary_email.EMAIL_ADDRESS_ID = parcon.PRIMARY_EMAIL_ID')
+      ->fields('primary_email', array('EMAIL_ADDRESS', 'EMAIL_ADDRESS_TYPE'))
+      ->condition('class.DROPPED', 0)
+      ->condition('class.SECTION_ID', $this->record->getSelectedRecordID())
+      ->orderBy('stucon.LAST_NAME', 'ASC')
+      ->orderBy('stucon.FIRST_NAME', 'ASC')
+      ->execute()->fetchAll();
+    
+    if ($students) {
+      foreach($students as $student) {
+        if (!array_search($student['stu_EMAIL_ADDRESS'], $email_addresses)) {
+          if ($student['stu_EMAIL_ADDRESS'] != '')
+            $email_addresses[] = $student['stu_EMAIL_ADDRESS'];
+        }
+        if (!array_search($student['EMAIL_ADDRESS'], $email_addresses)) {
+          if ($student['EMAIL_ADDRESS'] != '')
+            $email_addresses[] = $student['EMAIL_ADDRESS'];
+        }
+      }
+    }
+    
+    return $this->render('KulaK12SchedulingBundle:CoreSection:contact_info.html.twig', array('students' => $students, 'email_addresses' => $email_addresses));
+    
+  }
+  
 }

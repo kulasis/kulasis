@@ -174,6 +174,12 @@ Core_K12_Scheduling_Section_Staff:
     _controller: KulaK12SchedulingBundle:CoreSection:staff
     _navigation: Core.K12.Scheduling.Section.Staff
 
+Core_K12_Scheduling_Section_ContactInfo:
+  path: /scheduling/section/contact_information
+  defaults: 
+    _controller: KulaK12SchedulingBundle:CoreSection:contactInfo
+    _navigation: Core.K12.Scheduling.Section.ContactInfo
+
 Core_K12_Course_Chooser:
   path: /course/chooser
   defaults: { _controller: KulaK12SchedulingBundle:CoreCourses:chooser }
