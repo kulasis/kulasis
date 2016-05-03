@@ -386,11 +386,11 @@ class CoreSectionController extends Controller {
     
     if ($students) {
       foreach($students as $student) {
-        if (!array_search($student['stu_EMAIL_ADDRESS'], $email_addresses)) {
+        if (array_search($student['stu_EMAIL_ADDRESS'], $email_addresses) === false) {
           if ($student['stu_EMAIL_ADDRESS'] != '')
             $email_addresses[] = $student['stu_EMAIL_ADDRESS'];
         }
-        if (!array_search($student['EMAIL_ADDRESS'], $email_addresses)) {
+        if (array_search($student['EMAIL_ADDRESS'], $email_addresses) === false) {
           if ($student['EMAIL_ADDRESS'] != '')
             $email_addresses[] = $student['EMAIL_ADDRESS'];
         }
