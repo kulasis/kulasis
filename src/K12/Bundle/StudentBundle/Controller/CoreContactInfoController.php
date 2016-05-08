@@ -8,6 +8,22 @@ class CoreContactInfoController extends Controller {
   
   public function addressesAction() {
     $this->authorize();
+    
+    if ($this->request->request->get('delete')) {
+      $deleting_addresses = $this->request->request->get('delete');
+      foreach($deleting_addresses['Core.Constituent.Address'] as $address_id => $address_row) {
+        if ($address_row['delete_row'] == 'Y') {
+          $this->db()->db_update('CONS_CONSTITUENT')->fields(array('RESIDENCE_ADDRESS_ID' => null))->condition('RESIDENCE_ADDRESS_ID', $address_id)->execute();
+          $this->db()->db_update('CONS_CONSTITUENT')->fields(array('MAILING_ADDRESS_ID' => null))->condition('MAILING_ADDRESS_ID', $address_id)->execute();
+          $this->db()->db_update('CONS_CONSTITUENT')->fields(array('WORK_ADDRESS_ID' => null))->condition('WORK_ADDRESS_ID', $address_id)->execute();
+          
+          $this->db()->db_update('STUD_STUDENT')->fields(array('HOME_ADDRESS_ID' => null))->condition('HOME_ADDRESS_ID', $address_id)->execute();
+          $this->db()->db_update('STUD_STUDENT')->fields(array('BILLING_ADDRESS_ID' => null))->condition('BILLING_ADDRESS_ID', $address_id)->execute();
+          $this->db()->db_update('STUD_STUDENT')->fields(array('PARENT_ADDRESS_ID' => null))->condition('PARENT_ADDRESS_ID', $address_id)->execute();
+        }
+      }
+    }
+    
     $this->processForm();
     $this->setRecordType('Core.K12.Student');
     
