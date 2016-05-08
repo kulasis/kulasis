@@ -164,6 +164,24 @@ K12.Student:
       field_type: radio
       column_name: "Home Address ID"
       label_name: "Home Address ID"
+    ParentAddressID:
+      description: "Parent Address ID"
+      db_column_name: PARENT_ADDRESS_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Constituent.Address.ID
+      field_type: radio
+      column_name: "Parent Address ID"
+      label_name: "Parent Address ID"
+    BillingAddressID:
+      description: "Billing Address ID"
+      db_column_name: BILLING_ADDRESS_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Constituent.Address.ID
+      field_type: radio
+      column_name: "Billing Address ID"
+      label_name: "Billing Address ID"
     DirectoryPermission:
       description: "Directory Permission"
       db_column_name: DIRECTORY_PERMISSION

@@ -14,7 +14,7 @@
   <th class="data-table-cell-row-header" width="20">#</th>
   {% if address_type.ADDRESS_TYPE_DESCRIPTION == 'Residence' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Mailing' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Work' %}
    {% set addressfield = 'Core.Constituent.'~address_type.ADDRESS_TYPE_DESCRIPTION~'AddressID' %}
-  {% elseif address_type.ADDRESS_TYPE_DESCRIPTION == 'Home' %}
+  {% elseif address_type.ADDRESS_TYPE_DESCRIPTION == 'Home' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Billing' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Parent' %}
    {% set addressfield = 'K12.Student.'~address_type.ADDRESS_TYPE_DESCRIPTION~'AddressID' %}
   {% endif %}
   {{ kula_field_name({ field: addressfield, field_name_override: 'Primary', prepend_html: '<th class="data-table-cell-row-header" width="40">', append_html: '</th>' }) }}
