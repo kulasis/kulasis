@@ -14,44 +14,6 @@ class CoreContactInfoController extends Controller {
     $addresses = array();
     $primary_addresses = array();
     
-    if ($this->poster()) {
-    $address_result = $this->poster()->getAddedIDs('Core.Constituent.Address');
-      // New phone number
-      if ($address_result) {
-        // Get New Phones Number ID
-        $new_ids = array_values($address_result);
-        // Query to see which are primary
-        $new_addresses = $this->db()->db_select('CONS_ADDRESS', 'addr')
-          ->fields('addr', array('ADDRESS_ID', 'ADDRESS_TYPE'))
-          ->condition('ADDRESS_ID', $new_ids)
-          ->execute();
-        $constituent_addrs = array();
-        $student_addrs = array();
-        while ($new_address = $new_addresses->fetch()) {
-          if ($new_address['ADDRESS_TYPE'] == 'R') $constituent_addrs['RESIDENCE_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
-          if ($new_address['ADDRESS_TYPE'] == 'M') $constituent_addrs['MAILING_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
-          if ($new_address['ADDRESS_TYPE'] == 'W') $constituent_addrs['WORK_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
-          if ($new_address['ADDRESS_TYPE'] == 'H') $student_addrs['HOME_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
-          if ($new_address['ADDRESS_TYPE'] == 'P') $student_addrs['PARENT_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
-          if ($new_address['ADDRESS_TYPE'] == 'B') $student_addrs['BILLING_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
-        }
-        
-        if (count($constituent_addrs) > 0) {
-        $this->db()->db_update('CONS_CONSTITUENT')
-          ->fields($constituent_addrs)
-          ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
-          ->execute();
-        }
-        
-        if (count($student_addrs) > 0) {
-        $this->db()->db_update('STUD_STUDENT')
-          ->fields($student_addrs)
-          ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
-          ->execute();
-        }
-      }
-    }
-    
     $address_types = $this->db()->db_select('CORE_LOOKUP_VALUES', 'values')
       ->fields('values', array('DESCRIPTION' => 'ADDRESS_TYPE_DESCRIPTION', 'CODE' => 'ADDRESS_TYPE_CODE'))
       ->join('CORE_LOOKUP_TABLES', 'tables', 'tables.LOOKUP_TABLE_ID = values.LOOKUP_TABLE_ID')
@@ -129,6 +91,41 @@ class CoreContactInfoController extends Controller {
     
     if ($this->poster()) {
       $address_result = $this->poster()->getAddedIDs('Core.Constituent.Address');
+        // New phone number
+        if ($address_result) {
+          // Get New Phones Number ID
+          $new_ids = array_values($address_result);
+          // Query to see which are primary
+          $new_addresses = $this->db()->db_select('CONS_ADDRESS', 'addr')
+            ->fields('addr', array('ADDRESS_ID', 'ADDRESS_TYPE'))
+            ->condition('ADDRESS_ID', $new_ids)
+            ->execute();
+          $constituent_addrs = array();
+          $student_addrs = array();
+          while ($new_address = $new_addresses->fetch()) {
+            if ($new_address['ADDRESS_TYPE'] == 'R') $constituent_addrs['RESIDENCE_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
+            if ($new_address['ADDRESS_TYPE'] == 'M') $constituent_addrs['MAILING_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
+            if ($new_address['ADDRESS_TYPE'] == 'W') $constituent_addrs['WORK_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
+            if ($new_address['ADDRESS_TYPE'] == 'H') $student_addrs['HOME_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
+            if ($new_address['ADDRESS_TYPE'] == 'P') $student_addrs['PARENT_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
+            if ($new_address['ADDRESS_TYPE'] == 'B') $student_addrs['BILLING_ADDRESS_ID'] = $new_address['ADDRESS_ID'];
+          }
+        
+          if (count($constituent_addrs) > 0) {
+          $this->db()->db_update('CONS_CONSTITUENT')
+            ->fields($constituent_addrs)
+            ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
+            ->execute();
+          }
+        
+          if (count($student_addrs) > 0) {
+          $this->db()->db_update('STUD_STUDENT')
+            ->fields($student_addrs)
+            ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
+            ->execute();
+          }
+        }
+      
       if ($address_result) {  
         return $this->forward('core_HEd_student_information_addresses', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
       }
