@@ -258,10 +258,11 @@ class CoreDegreeAuditReportController extends ReportController {
         $current_schedule_row['CREDITS'] = $current_schedule_row['class_CREDITS'];
       }
       
-      if (!isset($course_history[$current_schedule_row['COURSE_ID']]))
+      //if (!isset($course_history[$current_schedule_row['COURSE_ID']]))
         $course_history[$current_schedule_row['COURSE_ID']][] = $current_schedule_row;
+      
     }
-
+    
     return $course_history;
   }
   

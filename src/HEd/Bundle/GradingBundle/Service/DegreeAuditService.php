@@ -140,7 +140,8 @@ class DegreeAuditService {
     echo "<pre>";
     print_r($this->course_history);
     echo "</pre>";
-    
+    */
+    /*
     echo "<pre>";
     print_r($this->output);
     echo "</pre>";
@@ -339,7 +340,7 @@ class DegreeAuditService {
         $current_schedule_row['TERM_ABBREVIATION'] = $current_schedule_row['TERM_ABBREVIATION'];
       }
       
-      if (!isset($course_history[$current_schedule_row['COURSE_ID']]))
+      //if (!isset($course_history[$current_schedule_row['COURSE_ID']]))
         $course_history[$current_schedule_row['COURSE_ID']][] = $current_schedule_row;
     }
     return $course_history;

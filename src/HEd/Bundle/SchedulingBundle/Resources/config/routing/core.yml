@@ -167,6 +167,12 @@ Core_HEd_Scheduling_Section_Staff:
   defaults: 
     _controller: KulaHEdSchedulingBundle:CoreSection:staff
     _navigation: Core.HEd.Scheduling.Section.Staff
+    
+Core_HEd_Scheduling_Section_ContactInfo:
+  path: /scheduling/section/contact_information
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSection:contactInfo
+    _navigation: Core.HEd.Scheduling.Section.ContactInfo
 
 Core_HEd_Course_Chooser:
   path: /course/chooser

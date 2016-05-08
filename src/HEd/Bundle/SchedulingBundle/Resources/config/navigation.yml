@@ -64,6 +64,10 @@ Core.HEd.Scheduling:
           description: "Wait List"
           display_name: "Wait List"
           route: Core_HEd_Scheduling_Section_WaitList
+        ContactInfo:
+          description: "Contact Information"
+          display_name: "Contact Info"
+          route: Core_HEd_Scheduling_Section_ContactInfo
       button_add:
         route: Core_HEd_Scheduling_Section_Add
       button_delete:

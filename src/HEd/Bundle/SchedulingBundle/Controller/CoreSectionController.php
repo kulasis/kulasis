@@ -364,4 +364,41 @@ class CoreSectionController extends Controller {
     
   }
   
+  public function contactInfoAction() {
+    $this->authorize();
+    $this->setRecordType('Core.HEd.Section');
+    
+    $students = array();
+    $email_addresses = array();
+    
+    $students = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
+      ->fields('class', array('STUDENT_CLASS_ID'))
+      ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
+      ->fields('status', array('STUDENT_STATUS_ID'))
+      ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
+      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+      ->fields('stucon', array('PERMANENT_NUMBER' => 'stucon_PERMAMENT_NUMBER', 'LAST_NAME' => 'stucon_LAST_NAME', 'FIRST_NAME' => 'stucon_FIRST_NAME', 'MIDDLE_NAME' => 'stucon_MIDDLE_NAME', 'GENDER' => 'stucon_GENDER'))
+      ->leftJoin('CONS_EMAIL_ADDRESS', 'stuemail', 'stuemail.CONSTITUENT_ID = stucon.CONSTITUENT_ID AND stuemail.UNDELIVERABLE = 0 AND stuemail.ACTIVE = 1')
+      ->fields('stuemail', array('EMAIL_ADDRESS' => 'stu_EMAIL_ADDRESS'))
+      ->leftJoin('CONS_PHONE', 'stuphone', 'stuphone.CONSTITUENT_ID = stucon.CONSTITUENT_ID AND stuphone.ACTIVE = 1')
+      ->fields('stuphone', array('PHONE_NUMBER' => 'stu_PHONE_NUMBER', 'PHONE_TYPE' => 'stu_PHONE_TYPE'))
+      ->condition('class.DROPPED', 0)
+      ->condition('class.SECTION_ID', $this->record->getSelectedRecordID())
+      ->orderBy('stucon.LAST_NAME', 'ASC')
+      ->orderBy('stucon.FIRST_NAME', 'ASC')
+      ->execute()->fetchAll();
+    
+    if ($students) {
+      foreach($students as $student) {
+        if (array_search($student['stu_EMAIL_ADDRESS'], $email_addresses) === false) {
+          if ($student['stu_EMAIL_ADDRESS'] != '')
+            $email_addresses[] = $student['stu_EMAIL_ADDRESS'];
+        }
+      }
+    }
+    
+    return $this->render('KulaHEdSchedulingBundle:CoreSection:contact_info.html.twig', array('students' => $students, 'email_addresses' => $email_addresses));
+    
+  }
+  
 }
