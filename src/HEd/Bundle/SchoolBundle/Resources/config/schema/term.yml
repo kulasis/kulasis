@@ -32,7 +32,7 @@ HEd.School.Term:
       db_column_name: STUDENT_GRADES_RELEASE
       db_column_type: datetime
       db_column_null: true
-      field_type: text
+      field_type: datetime
       column_name: "Grades Release"
       label_name: "Grades Release"
 HEd.School.Term.GradeLevel:
