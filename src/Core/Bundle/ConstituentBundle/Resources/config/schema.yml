@@ -169,6 +169,15 @@ Core.Constituent:
       field_type: radio
       column_name: "Primary Email ID"
       label_name: "Primary Email ID"
+    MarketingMailingList:
+      description: "Marketing Mailing List"
+      db_column_name: MKTG_MAILING_LIST
+      db_column_type: bool
+      db_column_null: false
+      db_column_default: 1
+      field_type: checkbox
+      column_name: "Marketing Mailing List"
+      label_name: "Marketing Mailing List"
   unique_keys:
     PermanentNumber: ['Core.Constituent.PermanentNumber']
 
