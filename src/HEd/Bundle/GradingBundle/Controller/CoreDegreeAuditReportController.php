@@ -187,7 +187,7 @@ class CoreDegreeAuditReportController extends ReportController {
       foreach($this->pdf->course_history_data as $course_id => $row) {
         foreach($row as $row_id => $row_data) {
         if (!isset($row_data['used']) AND $course_id != 'elective') {
-          $this->pdf->req_grp_row($req_id, $row, 'Y');
+		  $this->pdf->req_grp_row($req_id, array(0 => $row_data), 'Y');
         }
         }
       }
