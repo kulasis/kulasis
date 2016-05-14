@@ -233,14 +233,12 @@ class CoreStudentTranscriptReportController extends ReportController {
           ->leftJoin('STUD_DEGREE_CONCENTRATION', 'concentrations', 'stuconcentrations.CONCENTRATION_ID = concentrations.CONCENTRATION_ID')
           ->fields('concentrations', array('CONCENTRATION_NAME'))
           ->condition('status.STUDENT_ID', $row['STUDENT_ID']);
-        
-        if (isset($level['STUD_STUDENT_COURSE_HISTORY']['LEVEL']) AND $level['STUD_STUDENT_COURSE_HISTORY']['LEVEL'] != '') {
-         $status_info = $status_info->condition('status.LEVEL', $level['STUD_STUDENT_COURSE_HISTORY']['LEVEL']);  
+
+        if (isset($level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
+         $status_info = $status_info->condition('status.LEVEL', $level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);  
         }
         
-        $status_info = $status_info->orderBy('ENTER_DATE', 'DESC')
-          ->execute()->fetch();
-        
+        $status_info = $status_info->orderBy('ENTER_DATE', 'DESC')->execute()->fetch();
         // Standings info
         $standings_info = array();
         
