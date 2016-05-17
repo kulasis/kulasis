@@ -72,28 +72,28 @@ class DegreeAuditReport extends BaseReport {
     $this->Cell(60,5, 'Program ','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
-    $this->Cell(60,5, $this->data['DEGREE_NAME'],'LBR',0,'L');
+    $this->Cell(60,5, $this->data['degrees'],'LBR',0,'L');
     $this->SetFont('Arial', '', 8);
     $this->Ln(5);
     $this->SetFont('Arial', '', 8);
     $this->Cell(60,5, 'Major(s)','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
-    $this->Cell(60,5, (is_array($this->data['majors'])) ? implode(", ", $this->data['majors']) : '','LBR',0,'L');
+    $this->Cell(60,5, $this->data['majors'],'LBR',0,'L');
     $this->SetFont('Arial', '', 8);
     $this->Ln(5);
     $this->SetFont('Arial', '', 8);
     $this->Cell(60,5, 'Minor(s)','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
-    $this->Cell(60,5, (is_array($this->data['minors'])) ? implode(", ", $this->data['minors']) : '','LBR',0,'L');
+    $this->Cell(60,5, $this->data['minors'],'LBR',0,'L');
     $this->SetFont('Arial', '', 8);
     $this->Ln(5);
     $this->SetFont('Arial', '', 8);
     $this->Cell(60,5, 'Concentration(s)','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
-    $this->Cell(60,5, (is_array($this->data['concentrations'])) ? implode(", ", $this->data['concentrations']) : '','LBR',0,'L');
+    $this->Cell(60,5, $this->data['concentrations'],'LBR',0,'L');
     $this->SetFont('Arial', '', 8);
     
     $y_start_ch = $this->GetY() + 5;
@@ -157,187 +157,31 @@ class DegreeAuditReport extends BaseReport {
     $this->Cell(5,6,'','T',0,'L');
     $this->Cell(15,6,'','RT',0,'L');
     $this->Ln(3);
-    $this->total_degree_needed += $row['CREDITS_REQUIRED'];
   }
   
-  public function req_grp_row($req_id, $row, $elective = null) {
+  public function req_grp_row($req_id, $row) {
     
-    if (!isset($this->req_grp_totals[$req_id])) $this->req_grp_totals[$req_id] = 0;
-    $this->SetFont('Arial', '', 7);
-    //if ($elective) die();
-    //if ($this->req_grp_totals[$req_id] + $this->course_history_data[$row['COURSE_ID']]['CREDITS_EARNED'] <= $row['CREDITS_REQUIRED'] || $elective) {
+    if ((isset($row['SHOW_AS_OPTION']) AND $row['SHOW_AS_OPTION'] AND isset($row['display_credits'])) OR (isset($row['display_credits']) AND $row['display_credits'] != '')) {
     
-      // elective
-      if ($elective) {
-        foreach($row as $ch_index => $ch) {
-          if ($ch['COURSE_ID']) {
-        if (isset($ch['TERM_ABBREVIATION'])) 
-          $this->Cell(9,3,strtoupper($ch['TERM_ABBREVIATION']),'L',0,'L');
-        else
-          $this->Cell(9,3,'','L',0,'L');
-      
-        if (isset($ch['REQUIRED']) AND $ch['REQUIRED'] == 'Y')
-          $this->Cell(3,3,'R',0,0,'L');
-        else
-          $this->Cell(3,3,'',0,0,'L');
-  
-        $this->Cell(13,3,$ch['COURSE_NUMBER'],0,0,'L');
-        $this->Cell(40,3,substr($ch['COURSE_TITLE'], 0, 35),0,0,'L');
-        // Transfer credit
-        if (isset($ch['STUDENT_CLASS_ID'])) {
-          $this->Cell(13,3,isset($ch['CREDITS']) ? sprintf('%0.2f', round($ch['CREDITS'], 2, PHP_ROUND_HALF_UP)) : '',0,0,'R');
-        } else {
-          $this->Cell(13,3,isset($ch['CREDITS_EARNED']) ? sprintf('%0.2f', round($ch['CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP)) : '',0,0,'R');
-        }
-        
-        $this->Cell(5,3,isset($ch['MARK']) ? $ch['MARK'] : '',0,0,'L');
-        
-        if (isset($ch['STUDENT_CLASS_ID'])) {
-          $this->Cell(15,3,'In Prog','R',0,'L');
-        } else {
-          $this->Cell(15,3,'Comp','R',0,'L');
-        }
-        $this->Ln(3);
-        $this->course_history_data[$ch['COURSE_ID']][0]['used'] = 'Y';
-        $this->req_grp_totals[$req_id] += isset($ch['CREDITS_EARNED']) ? $ch['CREDITS_EARNED'] : 0;
-        }
-      }
-        
-      } elseif (isset($this->course_history_data[$row['COURSE_ID']]) AND count($this->course_history_data) > 0) {
-        
-        foreach($this->course_history_data[$row['COURSE_ID']] as $ch_index => $ch) {
-          
-          if ((!isset($this->course_history_data[$row['COURSE_ID']][$ch_index]['used']) OR 
-              $this->course_history_data[$row['COURSE_ID']][$ch_index]['used'] != 'Y') AND 
-              (!isset($ch['DEGREE_REQ_GRP_ID']) OR (isset($ch['DEGREE_REQ_GRP_ID']) AND ($ch['DEGREE_REQ_GRP_ID'] == '' OR $ch['DEGREE_REQ_GRP_ID'] == $req_id))))
-         {
-        
-        if (isset($ch['TERM_ABBREVIATION'])) 
-          $this->Cell(9,3,strtoupper($ch['TERM_ABBREVIATION']),'L',0,'L');
-        else
-          $this->Cell(9,3,'','L',0,'L');
-      
-        if (isset($row['REQUIRED']) AND $row['REQUIRED'] == '1')
-          $this->Cell(3,3,'R',0,0,'L');
-        else
-          $this->Cell(3,3,'',0,0,'L');
-  
-        $this->Cell(13,3,$ch['COURSE_NUMBER'],0,0,'L');
-        $this->Cell(40,3,substr($ch['COURSE_TITLE'], 0, 35),0,0,'L');
-        
-        if (isset($ch['STUDENT_CLASS_ID'])) {
-          $this->Cell(13,3,sprintf('%0.2f', round($ch['CREDITS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-          $this->Cell(5,3,'',0,0,'L');
-          $this->Cell(15,3,'In Prog','R',0,'L');
-        } elseif (isset($row['CREDITS']) AND $ch['CREDITS_ATTEMPTED'] > $ch['CREDITS_EARNED']) {
-          $this->Cell(13,3,sprintf('%0.2f', round($ch['CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-          $this->Cell(5,3,$ch['MARK'],0,0,'L');
-          $this->Cell(15,3,'Remain','R',0,'L');
-        } else {
-          $this->Cell(13,3,sprintf('%0.2f', round($ch['CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-          $this->Cell(5,3,$ch['MARK'],0,0,'L');
-          $this->Cell(15,3,'Comp','R',0,'L');
-          $this->req_grp_totals[$req_id] += $ch['CREDITS_EARNED'];
-        }
-        $this->Ln(3);
-        $this->course_history_data[$row['COURSE_ID']][$ch_index]['used'] = 'Y';
-        
-        }
-        
-        }
-        
-      } elseif (isset($row['equivs']) AND $equiv_course = array_map(array($this, 'check_if_equiv_exists'), $row['equivs']) AND $equiv_course[0] != '') {
-
-      
-        foreach($equiv_course[0] as $ch_index => $ch) {
-        
-        if (!isset($this->course_history_data[$row['COURSE_ID']][$ch_index]['used']) OR $this->course_history_data[$row['COURSE_ID']][$ch_index]['used'] != 'Y') {
-        
-        if (isset($ch['TERM_ABBREVIATION'])) 
-          $this->Cell(9,3,strtoupper($ch['TERM_ABBREVIATION']),'L',0,'L');
-        else
-          $this->Cell(9,3,'','L',0,'L');
-      
-        if ($row['REQUIRED'] == 'Y')
-          $this->Cell(3,3,'R',0,0,'L');
-        else
-          $this->Cell(3,3,'',0,0,'L');
-        
-        $this->Cell(13,3,$ch['COURSE_NUMBER'],0,0,'L');
-        $this->Cell(40,3,substr($ch['COURSE_TITLE'], 0, 35),0,0,'L');
-        $this->Cell(13,3,sprintf('%0.2f', round($ch['CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-        $this->Cell(5,3,$ch['MARK'],0,0,'L');
-        $this->Cell(15,3,'Comp','R',0,'L');
-        $this->req_grp_totals[$req_id] += $ch['CREDITS_EARNED'];
-        $this->course_history_data[$ch['COURSE_ID']][$ch_index]['used'] = 'Y';
-        $this->Ln(3);
-        }
-        }
-      } elseif (isset($row['CREDITS_EARNED']) AND $row['CREDITS_EARNED'] > 0) {
-        
-        foreach($this->course_history_data[$ch_course['COURSE_ID']] as $ch_index => $ch) {
-        
-        if (!isset($this->course_history_data[$row['COURSE_ID']][$ch_index]['used']) OR $this->course_history_data[$row['COURSE_ID']][$ch_index]['used'] != 'Y') {
-        
-        if (isset($ch['TERM_ABBREVIATION'])) 
-          $this->Cell(9,3,strtoupper($ch['TERM_ABBREVIATION']),'L',0,'L');
-        else
-          $this->Cell(9,3,'','L',0,'L');
-      
-        if (isset($row['REQUIRED']) AND $row['REQUIRED'] == '1')
-          $this->Cell(3,3,'R',0,0,'L');
-        else
-          $this->Cell(3,3,'',0,0,'L');
-  
-        $this->Cell(13,3,$ch['COURSE_NUMBER'],0,0,'L');
-        $this->Cell(40,3,substr($ch['COURSE_TITLE'], 0, 35),0,0,'L');
-        // Transfer credit
-        $this->Cell(13,3,sprintf('%0.2f', round($row['CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-        $this->Cell(5,3,isset($row['MARK']) ? $row['MARK'] : '',0,0,'L');
-        $this->Cell(15,3,'Comp','R',0,'L');
-        $this->Ln(3);
-        $this->course_history_data[$ch_course['COURSE_ID']][$ch_index]['used'] = 'Y';
-        $this->req_grp_totals[$req_id] += $row['CREDITS_EARNED'];
-        }
-        }
-      // if nothing
-      } else {
-        
-        if (isset($row['SHOW_AS_OPTION']) AND $row['SHOW_AS_OPTION'] == '1') {
-        $this->Cell(9,3,'','L',0,'L');
-      
-        if (isset($row['REQUIRED']) AND $row['REQUIRED'] == '1')
-          $this->Cell(3,3,'R',0,0,'L');
-        else
-          $this->Cell(3,3,'',0,0,'L');
-  
-        $this->Cell(13,3,$row['COURSE_NUMBER'],0,0,'L');
-        $this->Cell(40,3,substr($row['COURSE_TITLE'], 0, 35),0,0,'L');
-        // Not set
-        $this->Cell(13,3,sprintf('%0.2f', round($row['CREDITS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-        $this->Cell(5,3,isset($row['MARK']) ? $row['MARK'] : '',0,0,'L');
-        if (isset($row['REQUIRED']) AND $row['REQUIRED'] == 'Y')
-          $this->Cell(15,3,'Remain','R',0,'L');
-        else
-          $this->Cell(15,3,'','R',0,'L');
-        $this->Ln(3);
-      }
+      $this->SetFont('Arial', '', 7);
+    
+      $this->Cell(9,3,isset($row['TERM_ABBREVIATION']) ? strtoupper($row['TERM_ABBREVIATION']) : '','L',0,'L');
+      $this->Cell(3,3,(isset($row['REQUIRED']) AND $row['REQUIRED']) ? 'R' : '',0,0,'L');
+      $this->Cell(13,3,$row['COURSE_NUMBER'],0,0,'L');
+      $this->Cell(40,3,substr($row['COURSE_TITLE'], 0, 35),0,0,'L');
+      $this->Cell(13,3,isset($row['display_credits']) ? sprintf('%0.2f', round($row['display_credits'], 2, PHP_ROUND_HALF_UP)) : '',0,0,'R');
+      $this->Cell(5,3,isset($row['MARK']) ? $row['MARK'] : '',0,0,'L');
+      $this->Cell(15,3,isset($row['status']) ? $row['status'] : '','R',0,'L');
+      $this->Ln(3);
+    
     }
-  }
   
-  public function check_if_equiv_exists($equiv) {
-    if (isset($this->course_history_data[$equiv])) {
-      return $this->course_history_data[$equiv];
-    }
   }
   
   public function req_grp_footer_row($req_id, $row) {
     $this->SetFont('Arial', '', 7);
-    if (!isset($this->req_grp_totals[$req_id]))
-      $this->req_grp_totals[$req_id] = 0;
-    $this->total_degree_completed += $this->req_grp_totals[$req_id];
-    $this->Cell(30,3,'Credits Completed: '.sprintf('%0.2f', round($this->req_grp_totals[$req_id], 2, PHP_ROUND_HALF_UP)),'LB',0,'L');
-    $this->Cell(68,3,'Credits Remaining: '.sprintf('%0.2f', round($row['CREDITS_REQUIRED'] - $this->req_grp_totals[$req_id], 2, PHP_ROUND_HALF_UP)),'RB',0,'L');
+    $this->Cell(30,3, isset($row['credits_earned']) ? 'Credits Completed: ' . sprintf('%0.2f', round($row['credits_earned'], 2, PHP_ROUND_HALF_UP)) : '','LB',0,'L');
+    $this->Cell(68,3, isset($row['credits_remain']) ? 'Credits Remaining: '. sprintf('%0.2f', round($row['credits_remain'], 2, PHP_ROUND_HALF_UP)) : '','RB',0,'L');
     $this->Ln(7);
   }
   
@@ -347,7 +191,7 @@ class DegreeAuditReport extends BaseReport {
     $this->Ln(3);
     $this->Cell(30,3,'Total Credits Completed: '.sprintf('%0.2f', round($this->total_degree_completed, 2, PHP_ROUND_HALF_UP)),0,0,'L');
     $this->Ln(3);
-    $this->Cell(20,3,'Total Credits Remaining: '.sprintf('%0.2f', round($this->total_degree_needed - $this->total_degree_completed, 2, PHP_ROUND_HALF_UP)),0,0,'L');
+    $this->Cell(20,3,'Total Credits Remaining: '.sprintf('%0.2f', round($this->total_degree_remaining, 2, PHP_ROUND_HALF_UP)),0,0,'L');
     $this->Ln(7);
   }
   

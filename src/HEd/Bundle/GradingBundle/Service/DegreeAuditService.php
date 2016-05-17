@@ -17,12 +17,15 @@ class DegreeAuditService {
   protected $minors;
   protected $concentrations;
   
-
   protected $total_degree_needed;
   protected $total_degree_completed;
 
   public function __construct(\Kula\Core\Component\DB\DB $db) {
     $this->db = $db;
+    $this->resetTotals();
+  }
+  
+  public function resetTotals() {
     $this->output = array();
     $this->course_history = array();
     $this->req_grp_totals = array();
@@ -35,6 +38,7 @@ class DegreeAuditService {
   }
   
   public function getDegreeAuditForStudentStatus($student_status_id) {
+    $this->resetTotals();
     // Get student
     $student = $this->db->db_select('STUD_STUDENT_STATUS', 'status')
       ->fields('status', array('LEVEL', 'STUDENT_ID', 'STUDENT_STATUS_ID'))
@@ -140,12 +144,13 @@ class DegreeAuditService {
     echo "<pre>";
     print_r($this->course_history);
     echo "</pre>";
-    */
-    /*
+    
     echo "<pre>";
     print_r($this->output);
     echo "</pre>";
+    die();
     */
+    
     return $this->output;
   }
   
@@ -405,7 +410,7 @@ class DegreeAuditService {
       if ($requirements_row['DEGREE_REQ_GRP_CRS_ID'] AND !isset($requirements[$requirement_type][$type_id][$requirements_row['DEGREE_REQ_GRP_ID']]['courses'][$requirements_row['DEGREE_REQ_GRP_CRS_ID']])) {  
 
       $requirements[$requirement_type][$type_id][$requirements_row['DEGREE_REQ_GRP_ID']]['courses'][$requirements_row['DEGREE_REQ_GRP_CRS_ID']] = 
-        array('COURSE_TITLE' => $requirements_row['COURSE_TITLE'], 'COURSE_NUMBER' => $requirements_row['COURSE_NUMBER'], 'SHOW_AS_OPTION' => $requirements_row['SHOW_AS_OPTION'], 'REQUIRED' => $requirements_row['REQUIRED'], 'CREDITS' => $requirements_row['CREDITS'], 'COURSE_ID' => $requirements_row['COURSE_ID'], 'CREDITS_REQUIRED' => $requirements_row['CREDITS_REQUIRED']);
+        array('COURSE_TITLE' => $requirements_row['COURSE_TITLE'], 'COURSE_NUMBER' => $requirements_row['COURSE_NUMBER'], 'SHOW_AS_OPTION' => $requirements_row['SHOW_AS_OPTION'], 'REQUIRED' => $requirements_row['REQUIRED'], 'CREDITS' => $requirements_row['CREDITS'], 'COURSE_ID' => $requirements_row['COURSE_ID']);  // , 'CREDITS_REQUIRED' => $requirements_row['CREDITS_REQUIRED']
       }
       
       if ($requirements_row['crsequiv_COURSE_ID']) {
