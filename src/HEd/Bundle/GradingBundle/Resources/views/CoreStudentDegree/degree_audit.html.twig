@@ -44,7 +44,7 @@ Degree Audit
         <th class="data-table-cell-row-header" colspan="2">&nbsp;</th>
       </tr>
       {% for reqgrpcrsid, reqgrpcrs in reqgrp.courses %}
-        {% if reqgrpcrs.SHOW_AS_OPTION or reqgrpcrs.display_credits != '' %}
+        {% if (reqgrpcrs.SHOW_AS_OPTION and reqgrpcrs.display_credits != '') or reqgrpcrs.display_credits != '' %}
   <tr>
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Term', value: reqgrpcrs.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Degree.Requirement.Group.Course.Required', value: reqgrpcrs.REQUIRED ? 'R' : '', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
