@@ -79,16 +79,21 @@ class Session {
       'organization_id' => ($role_info['LAST_ORGANIZATION_ID'] != '') ? $role_info['LAST_ORGANIZATION_ID'] : $role_info['ORGANIZATION_ID'],
     );
     
+    $role['focus']['term_id'] = null;
+    
     if ($role_info['LAST_TERM_ID'] != '') {
       $role['focus']['term_id'] = $role_info['LAST_TERM_ID'];
     } else {
-      // Load latest term
-      $latest_term = $this->currentTermForOrganization($role['focus']['organization_id']);
-      $role['focus']['term_id'] = $latest_term['TERM_ID'];
-    }
-    
-    if ($role['focus']['term_id'] != '' AND $role_info['USERGROUP_NAME'] == 'Student') {
-      $role['focus']['term_id'] = $this->firstTermForStudentRole($role['role_id'], $role['focus']['organization_id']);
+      
+      if (!$role['focus']['term_id'] AND $role_info['USERGROUP_NAME'] == 'Instructor') {
+        $role['focus']['term_id'] = $this->firstTermForTeacherRole($role['role_id'], $role['focus']['organization_id']);
+      } elseif (!$role['focus']['term_id'] AND $role_info['USERGROUP_NAME'] == 'Student') {
+        $role['focus']['term_id'] = $this->firstTermForStudentRole($role['role_id'], $role['focus']['organization_id']);
+      } else {
+        // Load latest term
+        $latest_term = $this->currentTermForOrganization($role['focus']['organization_id']);
+        $role['focus']['term_id'] = $latest_term['TERM_ID'];
+      } 
     }
     
     // Get target
@@ -219,6 +224,20 @@ class Session {
       return true;
     else
       return false;
+  }
+  
+  private function firstTermForTeacherRole($role_id, $organization_id) {
+    $first_term_results = $this->db->db_select('CORE_USER_ROLES', 'role')
+      ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', 'stafforgterms.STAFF_ID = role.USER_ID')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stafforgterms.ORGANIZATION_TERM_ID')
+      ->fields('orgterms', array('TERM_ID'))
+      ->condition('role.ROLE_ID', $role_id)
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      //->condition('term.END_DATE', date('Y-m-d', strtotime('-7 days')), '>=')
+      ->condition('orgterms.ORGANIZATION_ID', $organization_id)
+      ->orderBy('START_DATE', 'DESC')
+      ->execute()->fetch();
+    return $first_term_results['TERM_ID'];
   }
   
   private function firstTermForStudentRole($role_id, $organization_id) {
