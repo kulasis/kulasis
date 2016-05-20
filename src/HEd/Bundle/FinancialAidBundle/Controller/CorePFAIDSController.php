@@ -4,6 +4,10 @@ namespace Kula\HEd\Bundle\FinancialAidBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
+use Kula\Core\Component\DB\PosterException;
+use Kula\Core\Component\Database\IntegrityConstraintViolationException;
+use Kula\Core\Component\Database\DatabaseExceptionWrapper;
+
 class CorePFAIDSController extends Controller {
   
   public function adminAction() {
@@ -83,5 +87,50 @@ class CorePFAIDSController extends Controller {
     }
 
     return $this->render('KulaHEdFinancialAidBundle:CorePFAIDS:config.html.twig', array('poes' => $data));
+  }
+  
+  public function syncFAAction() {
+    $this->authorize();
+    $this->formNewWindow();
+    $this->formAction('Core_HEd_FinancialAid_StudentFinancialAid_SyncFAPFAIDS_calculate');
+    
+    return $this->render('KulaHEdFinancialAidBundle:CorePFAIDS:action_syncFA.html.twig');
+  }
+  
+  public function performSyncFAAction() {
+    $this->authorize();
+    
+	$pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
+	
+	$response = '';
+	
+	$fin_aid_year = $this->db()->db_select('CORE_TERM', 'term')
+      ->fields('term', array('FINANCIAL_AID_YEAR'))
+      ->condition('TERM_ID', $this->focus->getTermID())
+      ->execute()->fetch();
+	
+	// Loop through students in term
+	$students = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+		->fields('stustatus', array('STUDENT_STATUS_ID'))
+		->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID')
+		->fields('cons', array('PERMANENT_NUMBER'))
+		->condition('stustatus.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
+		->execute();
+	while ($student = $students->fetch()) {
+		
+		try {
+			$pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $student['PERMANENT_NUMBER']);
+			$response .= $student['PERMANENT_NUMBER'].": Processed.\n";
+		} catch(\PDOException $exception) {
+			$response .= $student['PERMANENT_NUMBER'].': '.$exception->getMessage()."\n";
+		} catch(IntegrityConstraintViolationException $e) {
+			$response .= $student['PERMANENT_NUMBER'].': '.$exception->getMessage()."\n";
+		} catch(DatabaseExceptionWrapper $e) {
+			$response .= $student['PERMANENT_NUMBER'].': '.$exception->getMessage()."\n";
+		} 
+		
+	}
+	
+    return $this->textResponse($response);
   }
 }

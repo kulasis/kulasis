@@ -64,3 +64,16 @@ Core_HEd_FinancialAid_FinancialAidSetup_PowerFAIDS:
   defaults: 
     _controller: KulaHEdFinancialAidBundle:CorePFAIDS:config
     _navigation: Core.HEd.FinancialAid.FinancialAidSetup.PowerFAIDS
+
+Core_HEd_FinancialAid_StudentFinancialAid_SyncFAPFAIDS:
+  path: /core/financial_aid/sync/powerfaids
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CorePFAIDS:syncFA
+    _navigation: Core.HEd.FinancialAid.StudentFinancialAid.SyncFAPFAIDS
+  methods: [GET]
+  
+Core_HEd_FinancialAid_StudentFinancialAid_SyncFAPFAIDS_calculate:
+  path: /core/financial_aid/sync/powerfaids
+  defaults: 
+    _controller: KulaHEdFinancialAidBundle:CorePFAIDS:performSyncFA
+  methods: [POST]

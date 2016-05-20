@@ -48,6 +48,11 @@ Core.HEd.FinancialAid:
           description: "Billing History"
           display_name: "Billing History"
           route: Core_HEd_FinancialAid_StudentFinancialAid_Billing_History
+      menu_actions:
+        SyncFAPFAIDS:
+          description: "Sync FA"
+          display_name: "Sync FA/PFAIDS"
+          route: Core_HEd_FinancialAid_StudentFinancialAid_SyncFAPFAIDS
     FinancialAidSetup:
       description: "Financial Aid Setup"
       display_name: "Financial Aid Setup"
