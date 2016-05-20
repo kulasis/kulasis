@@ -111,12 +111,14 @@ class CorePFAIDSController extends Controller {
 	
 	// Loop through students in term
 	$students = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
-		->fields('stustatus', array('STUDENT_STATUS_ID'))
+		->fields('stustatus', array('STUDENT_STATUS_ID', 'PFAIDS_EXEMPT'))
 		->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID')
 		->fields('cons', array('PERMANENT_NUMBER'))
 		->condition('stustatus.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
 		->execute();
 	while ($student = $students->fetch()) {
+
+      if ($student['PFAIDS_EXEMPT'] == '0') {
 		
 		try {
 			$pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $student['PERMANENT_NUMBER']);
@@ -128,6 +130,8 @@ class CorePFAIDSController extends Controller {
 		} catch(DatabaseExceptionWrapper $e) {
 			$response .= $student['PERMANENT_NUMBER'].': '.$exception->getMessage()."\n";
 		} 
+	  
+	  }
 		
 	}
 	
