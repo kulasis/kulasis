@@ -247,7 +247,7 @@ class Session {
       ->fields('orgterms', array('TERM_ID'))
       ->condition('role.ROLE_ID', $role_id)
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
-      ->condition('term.END_DATE', date('Y-m-d', strtotime('-7 days')), '>=')
+      ->condition('term.END_DATE', date('Y-m-d', strtotime('-30 days')), '>=')
       ->condition('orgterms.ORGANIZATION_ID', $organization_id)
       ->execute()->fetch();
     return $first_term_results['TERM_ID'];
