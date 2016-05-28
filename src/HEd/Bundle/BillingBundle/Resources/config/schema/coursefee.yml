@@ -25,6 +25,16 @@ HEd.Billing.CourseFee:
       db_column_null: false
       column_name: "Organization Term ID"
       label_name: "Organization Term ID"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
     CodeID:
       description: "Transaction Code ID"
       parent: HEd.Billing.Code.ID
@@ -74,6 +84,16 @@ HEd.Billing.CourseFee.Refund:
       db_column_null: false
       column_name: "Organization Term ID"
       label_name: "Organization Term ID"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
     CodeID:
       description: "Transaction Code ID"
       parent: HEd.Billing.Code.ID
@@ -123,6 +143,16 @@ HEd.Billing.SectionFee:
       db_column_type: serial
       column_name: "Section ID"
       label_name: "Section ID"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
     CodeID:
       description: "Transaction Code ID"
       parent: HEd.Billing.Code.ID
@@ -164,6 +194,16 @@ HEd.Billing.SectionFee.Refund:
       db_column_type: serial
       column_name: "Section ID"
       label_name: "Section ID"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
     CodeID:
       description: "Transaction Code ID"
       parent: HEd.Billing.Code.ID

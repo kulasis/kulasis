@@ -210,7 +210,7 @@ class CorePackageController extends Controller {
       
       if ($pfaids_exempt['PFAIDS_EXEMPT'] == '0') {
         $pfaidsService = $this->get('kula.HEd.FAID.PFAIDS');
-        $pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $this->record->getSelectedRecord()['PERMANENT_NUMBER']);
+        //$pfaidsService->synchronizeStudentAwardInfo($fin_aid_year['FINANCIAL_AID_YEAR'], $this->record->getSelectedRecord()['PERMANENT_NUMBER']);
       }
       
       $award_year = $this->db()->db_select('FAID_STUDENT_AWARD_YEAR', 'faidstuawardyr')
