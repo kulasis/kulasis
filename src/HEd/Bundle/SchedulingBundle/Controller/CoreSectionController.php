@@ -82,7 +82,7 @@ class CoreSectionController extends Controller {
     }
     
     $students = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED', 'LEVEL'))
       ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
       ->fields('status', array('STUDENT_STATUS_ID'))
       ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
