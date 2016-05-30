@@ -61,7 +61,8 @@ class ConstituentBillingService {
       ->fields('status', array('STUDENT_ID'))
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
       ->fields('section', array('ORGANIZATION_TERM_ID'))
-      ->join('BILL_COURSE_FEE', 'crsfee', 'crsfee.COURSE_ID = section.COURSE_ID AND section.ORGANIZATION_TERM_ID = crsfee.ORGANIZATION_TERM_ID')
+      ->join('BILL_COURSE_FEE', 'crsfee', 'crsfee.COURSE_ID = section.COURSE_ID AND section.ORGANIZATION_TERM_ID = crsfee.ORGANIZATION_TERM_ID AND (
+    crsfee.LEVEL IS NULL OR crsfee.LEVEL = status.LEVEL)')
       ->fields('crsfee', array('CODE_ID', 'AMOUNT'))
       ->join('BILL_CODE', 'code', 'code.CODE_ID = crsfee.CODE_ID')
       ->fields('code', array('CODE_DESCRIPTION'))
@@ -91,7 +92,7 @@ class ConstituentBillingService {
       ->fields('status', array('STUDENT_ID'))
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
       ->fields('section', array('ORGANIZATION_TERM_ID'))
-      ->join('BILL_SECTION_FEE', 'crsfee', 'crsfee.SECTION_ID = section.SECTION_ID')
+      ->join('BILL_SECTION_FEE', 'crsfee', 'crsfee.SECTION_ID = section.SECTION_ID AND (crsfee.LEVEL IS NULL OR crsfee.LEVEL = status.LEVEL)')
       ->fields('crsfee', array('CODE_ID', 'AMOUNT'))
       ->join('BILL_CODE', 'code', 'code.CODE_ID = crsfee.CODE_ID')
       ->fields('code', array('CODE_DESCRIPTION'))
@@ -136,7 +137,7 @@ class ConstituentBillingService {
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
       ->join('STUD_SECTION', 'sect', 'sect.SECTION_ID = class.SECTION_ID')
       ->fields('sect', array('COURSE_ID'))
-      ->fields('stustatus', array('STUDENT_ID', 'ORGANIZATION_TERM_ID'))
+      ->fields('stustatus', array('STUDENT_ID', 'ORGANIZATION_TERM_ID', 'LEVEL'))
       ->condition('class.STUDENT_CLASS_ID', $student_class_id)
       ->execute()->fetch();
     
@@ -146,6 +147,7 @@ class ConstituentBillingService {
       ->condition('crsrefund.ORGANIZATION_TERM_ID', $class_info['ORGANIZATION_TERM_ID'])
       ->condition('crsrefund.COURSE_ID', $class_info['COURSE_ID'])
       ->condition('crsrefund.END_DATE', $class_info['DROP_DATE'], '>=')
+      ->condition($this->database->db_or()->condition('crsrefund.LEVEL', $class_info['LEVEL'])->isNull('crsrefund.LEVEL'))
       ->execute()->fetch()['enddate'];
     
     // loop through transactions to refund
@@ -154,8 +156,9 @@ class ConstituentBillingService {
       ->join('STUD_STUDENT_CLASSES', 'class')
       ->join('STUD_SECTION', 'sect', 'class.SECTION_ID = class.SECTION_ID')
       ->condition('crsrefund.ORGANIZATION_TERM_ID', 'sect.ORGANIZATION_TERM_ID')
-	  ->condition('sect.COURSE_ID', 'crsrefund.COURSE_ID')
+      ->condition('sect.COURSE_ID', 'crsrefund.COURSE_ID')
       ->condition('crsrefund.END_DATE', $course_fee_refund_end_date)
+      ->condition($this->database->db_or()->condition('crsrefund.LEVEL', $class_info['LEVEL'])->isNull('crsrefund.LEVEL'))
       ->execute();
     while ($course_fee_refund_row = $course_fee_refund->fetch()) {
       // if type same and amount same, then use removeTransaction method, else post as new transaction  
@@ -179,6 +182,7 @@ class ConstituentBillingService {
       ->expression('MIN(END_DATE)', 'enddate')
       ->condition('sectrefund.END_DATE', $class_info['DROP_DATE'], '>=')
       ->condition('sectrefund.SECTION_ID', $class_info['SECTION_ID'])
+      ->condition($this->database->db_or()->condition('sectrefund.LEVEL', $class_info['LEVEL'])->isNull('sectrefund.LEVEL'))
       ->execute()->fetch()['enddate'];
     
     // loop through transactions to refund
@@ -186,6 +190,7 @@ class ConstituentBillingService {
       ->fields('sectrefund', array('CODE_ID', 'AMOUNT'))
       ->condition('sectrefund.SECTION_ID', $class_info['SECTION_ID'])
       ->condition('sectrefund.END_DATE', $course_fee_refund_end_date)
+      ->condition($this->database->db_or()->condition('sectrefund.LEVEL', $class_info['LEVEL'])->isNull('sectrefund.LEVEL'))
       ->execute();
     while ($section_fee_refund_row = $section_fee_refund->fetch()) {
       // if type same and amount same, then use removeTransaction method, else post as new transaction  
