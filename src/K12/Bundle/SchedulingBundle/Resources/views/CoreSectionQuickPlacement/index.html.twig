@@ -30,13 +30,13 @@ Students
   <tr>
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
     {% set student_status_id = student.STUDENT_STATUS_ID %}
-    {{ kula_field({ field: 'Core.Constituent.PermanentNumber', db_row_id: student.STUDENT_CLASS_ID, value: student.PERMANENT_NUMBER, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td><a href="{{ path('Core_K12_Scheduling_StudentSchedule') }}" data-record-type="Core.K12.Student.Status" data-record-id="{{ student.STUDENT_STATUS_ID }}" class="normal-link-new-window">{{ kula_field({ field: 'Core.Constituent.PermanentNumber', db_row_id: student.STUDENT_CLASS_ID, value: student.PERMANENT_NUMBER, input: false }) }}</a></td>
     {{ kula_field({ field: 'Core.Constituent.LastName', db_row_id: student.STUDENT_CLASS_ID, value: student.LAST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Constituent.FirstName', db_row_id: student.STUDENT_CLASS_ID, value: student.FIRST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Constituent.Gender', db_row_id: student.STUDENT_CLASS_ID, value: student.GENDER, lookup: 'C', input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {% set varid = 'edit_k12_student_class_'~student.STUDENT_STATUS_ID %}
     {% if students_with_course[student_status_id] %}
-    <td>{{ form_select(sections, 'edit[K12.Student.Class]['~student.STUDENT_STATUS_ID~'][K12.Student.Class.SectionID]', students_with_course[student_status_id], { id: varid, style: 'min-width:200px;' }) }}</td>
+    <td>{{ form_select(sections, 'edit[K12.Student.Class]['~students_with_course[student_status_id].STUDENT_CLASS_ID~'][K12.Student.Class.SectionID]', students_with_course[student_status_id].SECTION_ID, { id: varid, style: 'min-width:200px;' }) }}</td>
     {% else %}
     <td>{{ form_select(sections, 'add[K12.Student.Class]['~student.STUDENT_STATUS_ID~']', null, { id: varid, style: 'min-width:200px;' }) }}</td>
     {% endif %}

@@ -74,7 +74,7 @@ class CoreSectionQuickPlacementController extends Controller {
         ->condition('cla.DROPPED', 0)
         ->execute();
       while ($students_with_course_row = $students_with_course_result->fetch()) {
-        $students_with_course[$students_with_course_row['STUDENT_STATUS_ID']] = $students_with_course_row['SECTION_ID'];
+        $students_with_course[$students_with_course_row['STUDENT_STATUS_ID']] = array('SECTION_ID' => $students_with_course_row['SECTION_ID'], 'STUDENT_CLASS_ID' => $students_with_course_row['STUDENT_CLASS_ID']);
       }
       
     }
