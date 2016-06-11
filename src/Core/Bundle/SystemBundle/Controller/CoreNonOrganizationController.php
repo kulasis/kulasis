@@ -31,7 +31,7 @@ class CoreNonOrganizationController extends Controller {
   
   public function addAction() {
     $this->authorize();
-    $this->formAction('core_system_nonorganization_create');
+    $this->formAction('Core_System_NonOrganization_Create');
     if ($this->session->get('portal') == 'sis') {
       $this->setRecordType('SIS.NonOrganization', 'Y');
     } else {
@@ -51,7 +51,7 @@ class CoreNonOrganizationController extends Controller {
       $redirect = array('record_type' => 'Core.NonOrganization', 'record_id' => $id);
     }
     
-    return $this->forward('core_system_nonorganization', $redirect, $redirect);
+    return $this->forward('Core_System_NonOrganization', $redirect, $redirect);
   }
   
   public function deleteAction() {
@@ -68,7 +68,7 @@ class CoreNonOrganizationController extends Controller {
       $this->flash->add('success', 'Deleted non organization.');
     }
     
-    return $this->forward('core_system_nonorganization');
+    return $this->forward('Core_System_NonOrganization');
   }
   
   public function chooserAction() {
