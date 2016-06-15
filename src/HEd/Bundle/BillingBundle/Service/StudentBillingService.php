@@ -84,7 +84,7 @@ class StudentBillingService {
           'X-Mailer: PHP/' . phpversion();
       $subject = $email_subject.' for '.$attempted_total_credits['LAST_NAME'].', '.$attempted_total_credits['FIRST_NAME'].' ('.$attempted_total_credits['PERMANENT_NUMBER'].')';
       $to = 'Registrar <registrar@ocac.edu>, Linda Anderson <landerson@ocac.edu>, Bursar <bursar@ocac.edu>';
-      mail($to, $subject, $email_text, $headers);
+      //mail($to, $subject, $email_text, $headers);
     
       }
     
@@ -119,7 +119,31 @@ class StudentBillingService {
       // Get transactions for new students, add if do not exist
     } elseif ($student_status['STATUS'] == 'I') {
       
-      
+      // Get transactions for all students, add if do not exist
+      $transactions_all_result = $this->database->db_select('BILL_TUITION_RATE_TRANSACTIONS', 'ratetrans')
+        ->fields('ratetrans', array('TRANSACTION_CODE_ID', 'TUITION_RATE_TRANSACTION_ID'))
+        ->join('BILL_CONSTITUENT_TRANSACTIONS', 'constrans', "constrans.CODE_ID = ratetrans.TRANSACTION_CODE_ID AND 
+          constrans.CONSTITUENT_ID = '".$student_status['STUDENT_ID']."' AND constrans.ORGANIZATION_TERM_ID = '".$student_status['ORGANIZATION_TERM_ID']."'")
+        ->expression('SUM(constrans.AMOUNT)', 'trans_total')
+		->condition('ratetrans.TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
+		->groupBy('TUITION_RATE_TRANSACTION_ID')
+        ->execute();
+        while ($transactions_all_row = $transactions_all_result->fetch()) {
+          if ($transactions_all_row['trans_total'] > 0) {
+			  
+			// Determine amount to refund
+			$amount = $this->database->db_select('BILL_TUITION_RATE_TRANS_REFUND', 'transrefunds')
+				->fields('transrefunds', array('REFUND_PERCENTAGE'))
+				->condition('transrefunds.TUITION_RATE_TRANSACTION_ID', $transactions_all_row['TUITION_RATE_TRANSACTION_ID'])
+				->condition('transrefunds.END_DATE', date('Y-m-d'), '>=')
+				->orderBy('transrefunds.END_DATE', 'ASC')
+				->execute()->fetch()['REFUND_PERCENTAGE'];
+				
+			// Refund amount
+			$new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $transactions_all_row['TRANSACTION_CODE_ID'], date('Y-m-d'), 'Refund', $transactions_all_row['trans_total'] * $amount['REFUND_PERCENTAGE'] * -1);
+            $this->constituent_billing_service->postTransaction($new_transaction_id);
+          }
+        }
       
     }
     
