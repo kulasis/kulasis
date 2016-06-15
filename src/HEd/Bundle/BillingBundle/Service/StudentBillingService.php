@@ -84,7 +84,7 @@ class StudentBillingService {
           'X-Mailer: PHP/' . phpversion();
       $subject = $email_subject.' for '.$attempted_total_credits['LAST_NAME'].', '.$attempted_total_credits['FIRST_NAME'].' ('.$attempted_total_credits['PERMANENT_NUMBER'].')';
       $to = 'Registrar <registrar@ocac.edu>, Linda Anderson <landerson@ocac.edu>, Bursar <bursar@ocac.edu>';
-      //mail($to, $subject, $email_text, $headers);
+      mail($to, $subject, $email_text, $headers);
     
       }
     
