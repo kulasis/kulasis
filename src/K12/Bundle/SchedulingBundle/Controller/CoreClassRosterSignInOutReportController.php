@@ -11,7 +11,7 @@ class CoreClassRosterSignInOutReportController extends ReportController {
     if ($this->request->query->get('record_type') == 'Core.K12.Section' AND $this->request->query->get('record_id') != '')
       $this->setRecordType('Core.K12.Section');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    return $this->render('KulaK12SchedulingBundle:CoreClassRosterReport:reports_classroster.html.twig');
+    return $this->render('KulaK12SchedulingBundle:CoreClassRosterReport:reports_signinout.html.twig');
   }
   
   public function generateAction()
