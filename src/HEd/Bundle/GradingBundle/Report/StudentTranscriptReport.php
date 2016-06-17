@@ -419,7 +419,7 @@ class StudentTranscriptReport extends BaseReport {
     $this->SetRightMargin(10);
     $this->SetX(10);
     
-    $this->MultiCell(0,3,'The Family Educational Rights and Privacy Act of 1974 (as amended) prohibts the release of this information without the student\'s written consent. An official transcript must include the signature of the registrar, printing on watermarked paper, and the embossed seal of the college or university. This document reports academic information only.');
+    $this->MultiCell(0,3,'The Family Educational Rights and Privacy Act of 1974 (as amended) prohibits the release of this information without the student\'s written consent. An official transcript must include the signature of the registrar, printing on watermarked paper, and the embossed seal of the college or university. This document reports academic information only.');
     $this->Ln(5);
     // Page number
     $this->Cell(90,4,'Page '.$this->GroupPageNo().' of '.$this->PageGroupAlias(),0,0,'L');
