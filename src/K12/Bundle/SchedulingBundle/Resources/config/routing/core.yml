@@ -277,3 +277,15 @@ Core_K12_Scheduling_Reports_ClassRoster_Labels_AA_Generate:
   path: /scheduling/reports/class_roster_labels/aa
   defaults: { _controller: KulaK12SchedulingBundle:CoreAAClassRosterLabelsReport:generate }
   methods: [POST]
+
+Core_K12_Scheduling_Reports_MasterRoster_AA:
+  path: /scheduling/reports/master_roster/aa
+  defaults: 
+    _controller: KulaK12SchedulingBundle:CoreAAMasterRosterReport:index
+    _navigation: Core.K12.Scheduling.Reports.AAMasterRoster
+  methods: [GET]
+
+Core_K12_Scheduling_Reports_MasterRoster_AA_Generate:
+  path: /scheduling/reports/master_roster/aa
+  defaults: { _controller: KulaK12SchedulingBundle:CoreAAMasterRosterReport:generate }
+  methods: [POST]
