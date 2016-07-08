@@ -41,7 +41,9 @@ class AAClassRosterReport extends BaseReport {
     $this->Cell(30,6,$row['AGE'],'',0,'L',false);
     $this->Cell(15,6,'Shirt Size:','',0,'L',false);
     $this->Cell(30,6,$row['SHIRT_SIZE'],'',0,'L',false);
-    $this->Cell(52, 6, '', 'R', 0, 'L', false);
+	$this->Cell(15,6,'Gender:','',0,'L',false);
+    $this->Cell(30,6,$row['GENDER'],'',0,'L',false);
+    $this->Cell(7, 6, '', 'R', 0, 'L', false);
     $this->Ln();
     $this->Cell(20,6,'Parents:','L',0,'L',false);
     $this->Cell(157,6,$row['parents'],'R',0,'L',false);
