@@ -4,22 +4,10 @@ Core.HEd.FinancialAid:
   description: "Financial Aid"
   display_name: "Financial Aid"
   forms:
-    FinancialAid:
-      description: "Financial Aid"
-      display_name: "Financial Aid"
-      tabs:
-        Pending:
-          description: "Pending"
-          display_name: "Pending"
-          route: Core_HEd_FinancialAid_FinancialAid_Pending
-        Posted:
-          description: "Posted"
-          display_name: "Posted"
-          route: Core_HEd_FinancialAid_FinancialAid_Posted
-        PowerFAIDS:
-          description: "PowerFAIDS"
-          display_name: "PowerFAIDS"
-          route: Core_HEd_FinancialAid_FinancialAid_PowerFAIDS
+    PowerFAIDS:
+      description: "PowerFAIDS"
+      display_name: "PowerFAIDS"
+      route: Core_HEd_FinancialAid_PowerFAIDS
     StudentFinancialAid:
       description: "Student Financial Aid"
       display_name: "Student Financial Aid"
@@ -65,3 +53,18 @@ Core.HEd.FinancialAid:
           description: "PowerFAIDS"
           display_name: "PowerFAIDS"
           route: Core_HEd_FinancialAid_FinancialAidSetup_PowerFAIDS
+
+Core.HEd.Billing.FinancialAid:
+  parent: Core.HEd.Billing
+  type: form
+  description: "Financial Aid"
+  display_name: "Financial Aid"
+  tabs:
+    Pending:
+      description: "Pending"
+      display_name: "Pending"
+      route: Core_HEd_Billing_FinancialAid_Pending
+    Posted:
+      description: "Posted"
+      display_name: "Posted"
+      route: Core_HEd_Billing_FinancialAid_Posted

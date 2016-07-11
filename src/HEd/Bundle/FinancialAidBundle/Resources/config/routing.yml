@@ -35,17 +35,17 @@ Core_HEd_FinancialAid_StudentFinancialAid_Terms:
     _controller: KulaHEdFinancialAidBundle:CoreTerms:index
     _navigation: Core.HEd.FinancialAid.StudentFinancialAid.Terms
 
-Core_HEd_FinancialAid_FinancialAid_Pending:
-  path: /core/financial_aid/financial_aid/pending
+Core_HEd_Billing_FinancialAid_Pending:
+  path: /core/billing/financial_aid/pending
   defaults: 
     _controller: KulaHEdFinancialAidBundle:CoreHomeFinancialAid:pending
-    _navigation: Core.HEd.FinancialAid.FinancialAid.Pending
+    _navigation: Core.HEd.Billing.FinancialAid.Pending
 
-Core_HEd_FinancialAid_FinancialAid_Posted:
-  path: /core/financial_aid/financial_aid/posted
+Core_HEd_Billing_FinancialAid_Posted:
+  path: /core/billing/financial_aid/posted
   defaults: 
     _controller: KulaHEdFinancialAidBundle:CoreHomeFinancialAid:posted
-    _navigation: Core.HEd.FinancialAid.FinancialAid.Posted
+    _navigation: Core.HEd.Billing.FinancialAid.Posted
 
 Core_HEd_FinancialAid_FinancialAidSetup_AwardCodes:
   path: /core/financial_aid/setup/award_codes
@@ -53,11 +53,11 @@ Core_HEd_FinancialAid_FinancialAidSetup_AwardCodes:
     _controller: KulaHEdFinancialAidBundle:CoreCodes:award_codes
     _navigation: Core.HEd.FinancialAid.FinancialAidSetup.AwardCodes
   
-Core_HEd_FinancialAid_FinancialAid_PowerFAIDS:
-  path: /core/financial_aid/financial_aid/powerfaids
+Core_HEd_FinancialAid_PowerFAIDS:
+  path: /core/financial_aid/powerfaids
   defaults: 
     _controller: KulaHEdFinancialAidBundle:CorePFAIDS:admin
-    _navigation: Core.HEd.FinancialAid.FinancialAid.PowerFAIDS
+    _navigation: Core.HEd.FinancialAid.PowerFAIDS
   
 Core_HEd_FinancialAid_FinancialAidSetup_PowerFAIDS:
   path: /core/financial_aid/setup/powerfaids
