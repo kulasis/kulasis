@@ -126,6 +126,15 @@ HEd.TuitionRate.Students:
       lookup: HEd.Student.Enrollment.EnterCode
       column_name: "Enter Code"
       label_name: "Enter Code"
+    NewStudent:
+      description: "New Student"
+      db_column_name: NEW_STUDENT
+      db_column_type: bool
+      db_column_null: false
+      db_column_default: 0
+      field_type: checkbox
+      column_name: "New Student"
+      label_name: "New Student"
     DegreeID:
       description: "Degree ID"
       db_column_name: DEGREE_ID

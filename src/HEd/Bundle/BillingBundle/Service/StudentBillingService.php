@@ -95,7 +95,7 @@ class StudentBillingService {
     
     // Get status
     $student_status = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
-      ->fields('status', array('STATUS', 'STUDENT_ID', 'ORGANIZATION_TERM_ID', 'TUITION_RATE_ID'))
+      ->fields('status', array('STATUS', 'STUDENT_ID', 'ORGANIZATION_TERM_ID', 'TUITION_RATE_ID', 'ENTER_CODE', 'LEVEL'))
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
       ->execute()->fetch();
     
@@ -116,7 +116,27 @@ class StudentBillingService {
             $this->constituent_billing_service->postTransaction($new_transaction_id);
           }
         }
+        
       // Get transactions for new students, add if do not exist
+      $transactions_all_result = $this->database->db_select('BILL_TUITION_RATE_TRANSACTIONS', 'ratetrans')
+        ->fields('ratetrans', array('TRANSACTION_CODE_ID', 'AMOUNT'))
+        ->join('BILL_TUITION_RATE_STUDENTS', 'ratestu', 'ratestu.TUITION_RATE_ID = ratetrans.TUITION_RATE_ID AND ratestu.NEW_STUDENT = 1')
+        ->leftJoin('BILL_CONSTITUENT_TRANSACTIONS', 'constrans', "constrans.CODE_ID = ratetrans.TRANSACTION_CODE_ID AND 
+          constrans.CONSTITUENT_ID = '".$student_status['STUDENT_ID']."' AND constrans.ORGANIZATION_TERM_ID = '".$student_status['ORGANIZATION_TERM_ID']."'")
+        ->condition('ratetrans.RULE', 'NEWSTU')
+        ->condition('constrans.CONSTITUENT_TRANSACTION_ID', null)
+        ->condition('ratestu.ENTER_CODE', $student_status['ENTER_CODE'])
+        ->condition('ratestu.LEVEL', $student_status['LEVEL'])
+        ->condition('ratetrans.TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
+        ->execute();
+        while ($transactions_all_row = $transactions_all_result->fetch()) {
+          if ($transactions_all_row['AMOUNT'] > 0) {
+            $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $transactions_all_row['TRANSACTION_CODE_ID'], date('Y-m-d'), '', $transactions_all_row['AMOUNT']);
+            $this->constituent_billing_service->postTransaction($new_transaction_id);
+          }
+        }
+      
+      
     } elseif ($student_status['STATUS'] == 'I') {
       
       // Get transactions for all students, add if do not exist
