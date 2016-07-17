@@ -26,7 +26,7 @@ class StudentBillingService {
     $this->schedule_service = $schedule_service;
   }
   
-  public function processBilling($student_status_id, $email_subject = 'Student Detail/Tuition Recalculated') {
+  public function processBilling($student_status_id, $email_subject = 'Student Detail/Tuition Recalculated', $send_email = true) {
     
     if ($student_status_id) {
       
@@ -73,7 +73,8 @@ class StudentBillingService {
       ->execute()->fetch();
     
       if ($attempted_total_credits['ORGANIZATION_NAME'] == 'OCAC Degree Programs') {
-    
+      
+        if ($send_email) {
       $email_text = 'Student: '.$attempted_total_credits['LAST_NAME'].', '.$attempted_total_credits['FIRST_NAME'].' ('.$attempted_total_credits['PERMANENT_NUMBER'].') | '.$attempted_total_credits['ORGANIZATION_NAME'].' | '.$attempted_total_credits['TERM_ABBREVIATION'].' | '.$attempted_total_credits['LEVEL'].' | '.$attempted_total_credits['grade'].' '.$attempted_total_credits['entercode']."\r\n";
       $email_text .= 'FTE: '.$attempted_total_credits['FTE'].' -> '.$new_student_info['FTE']."\r\n";
       $email_text .= 'Total Credits: '.$attempted_total_credits['TOTAL_CREDITS_ATTEMPTED'].' -> '.$new_student_info['TOTAL_CREDITS_ATTEMPTED']."\r\n\r\n\r\n";
@@ -86,9 +87,11 @@ class StudentBillingService {
       $to = 'Registrar <registrar@ocac.edu>, Linda Anderson <landerson@ocac.edu>, Bursar <bursar@ocac.edu>';
       mail($to, $subject, $email_text, $headers);
     
-      }
+        } // end if on send email
     
-    }
+      } // end if on attempted credits
+    
+    } // end if on student_status_id
   }
   
   public function checkMandatoryTransactions($student_status_id) {

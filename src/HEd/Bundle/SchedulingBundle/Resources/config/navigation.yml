@@ -29,7 +29,6 @@ Core.HEd.Scheduling:
           description: "Calculate FTE and Tuition"
           display_name: "Calculate FTE & Tuition"
           divider_before: true
-          record_loaded: true
           route: Core_HEd_Scheduling_StudentSchedule_CalculateTotals
       menu_reports:
         StudentSchedule:

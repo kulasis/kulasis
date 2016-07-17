@@ -294,9 +294,23 @@ class CoreScheduleController extends Controller {
     
     $student_billing_service = $this->get('kula.HEd.billing.student');
     
-    $student_billing_service->processBilling($this->record->getSelectedRecordID(), 'Schedule Changed');
-    
-    $this->addFlash('success', 'Recalculated bill.');
+    if ($this->record->getSelectedRecordID()) {
+      $student_billing_service->processBilling($this->record->getSelectedRecordID(), 'Schedule Changed');
+      $this->addFlash('success', 'Recalculated bill.');
+    } else {
+      // get all students for orgyr term
+      $stus_result = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('STUDENT_STATUS_ID'))
+        ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID')
+        ->fields('cons', array('PERMANENT_NUMBER'))
+        ->condition('stustatus.STATUS', null, 'IS NULL')
+        ->condition('stustatus.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
+        ->execute();
+      while ($stu = $stus_result->fetch()) {
+        $student_billing_service->processBilling($stu['STUDENT_STATUS_ID'], null, false);
+        $this->addFlash('success', 'Recalculated bill for ' . $stu['PERMANENT_NUMBER'] . '.');
+      }
+    }
     
     return $this->forward('Core_HEd_Scheduling_StudentSchedule', array('record_type' => 'Core.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student.Status', 'record_id' => $this->record->getSelectedRecordID()));
   }
