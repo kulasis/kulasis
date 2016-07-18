@@ -170,22 +170,49 @@ class CoreTransactionsController extends Controller {
   
   public function add($code_type) {
     $this->authorize();
-    $this->setRecordType('Core.HEd.Student');
     
-    if ($this->record->getSelectedRecordID()) {
-        
+    $request = $this->container->get('request');
+    $routeName = $request->get('_route');
+    
+    if ($routeName == 'Core_HEd_Billing_Billing_AddCharge' OR $routeName == 'Core_HEd_Billing_Billing_AddPayment') {
+      // For any student
       if ($this->request->request->get('add')) {
         
-        $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
         $add = $this->request->request->get('add');
-        $constituent_billing_service->addTransaction($this->record->getSelectedRecord()['STUDENT_ID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.OrganizationTermID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.CodeID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.TransactionDate'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Description'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Amount']);
         
-        return $this->forward('Core_HEd_Billing_StudentBilling_Transactions', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
+        // Get constituent id
+        $student_id = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+          ->fields('stustatus', array('STUDENT_ID'))
+          ->condition('stustatus.STUDENT_STATUS_ID', $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.ConstituentID'])
+          ->execute()->fetch()['STUDENT_ID'];
+          
+        $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
+        
+        $constituent_billing_service->addTransaction($student_id, $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.OrganizationTermID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.CodeID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.TransactionDate'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Description'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Amount']);
+      
+        return $this->forward($routeName);
       }
+      
+    } else {
+      // For specific student
+      $this->setRecordType('Core.HEd.Student');
+      
+      if ($this->record->getSelectedRecordID()) {
         
+        if ($this->request->request->get('add')) {
+        
+          $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
+          $add = $this->request->request->get('add');
+          $constituent_billing_service->addTransaction($this->record->getSelectedRecordID(), $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.OrganizationTermID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.CodeID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.TransactionDate'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Description'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Amount']);
+        
+          return $this->forward('Core_HEd_Billing_StudentBilling_Transactions', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
+        }
+      
+      }
+      
     }
     
-    return $this->render('KulaHEdBillingBundle:CoreTransactions:transactions_add.html.twig', array('code_type' => $code_type));
+    return $this->render('KulaHEdBillingBundle:CoreTransactions:transactions_add.html.twig', array('code_type' => $code_type, 'org_term' => $this->focus->getOrganizationTermID(), 'current_route' => $routeName));
   }
   
 }

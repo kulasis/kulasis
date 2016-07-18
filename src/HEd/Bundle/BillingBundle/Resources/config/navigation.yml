@@ -16,6 +16,16 @@ Core.HEd.Billing:
           description: "All Pending"
           display_name: "All Pending"
           route: Core_HEd_Billing_Billing_AllPending
+      menu_actions:
+        AddCharge:
+          description: "Add Charge"
+          display_name: "Add Charge"
+          route: Core_HEd_Billing_Billing_AddCharge
+        AddPayment:
+          description: "Add Payment"
+          display_name: "Add Payment"
+          divider_before: true
+          route: Core_HEd_Billing_Billing_AddPayment
     StudentBilling:
       description: "Student Billing"
       display_name: "Student Billing"

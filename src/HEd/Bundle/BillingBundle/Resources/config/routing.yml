@@ -135,3 +135,16 @@ Core_HEd_Scheduling_Section_Fees:
   defaults: 
     _controller: KulaHEdBillingBundle:CoreCourseFees:sectionFees
     _navigation: Core.HEd.Scheduling.Section.Fees
+
+
+Core_HEd_Billing_Billing_AddCharge:
+  path: /core/HEd/billing//charges/add
+  defaults: 
+    _controller: KulaHEdBillingBundle:CoreTransactions:add_charge
+    _navigation: Core.HEd.Billing.Billing
+
+Core_HEd_Billing_Billing_AddPayment:
+  path: /core/HEd/billing/payments/add
+  defaults: 
+    _controller: KulaHEdBillingBundle:CoreTransactions:add_payment
+    _navigation: Core.HEd.Billing.Billing

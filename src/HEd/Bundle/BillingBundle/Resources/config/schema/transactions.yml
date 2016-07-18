@@ -15,6 +15,8 @@ HEd.Billing.Transaction:
       parent: Core.Constituent.ID
       db_column_name: CONSTITUENT_ID
       db_column_type: serial
+      field_type: chooser
+      chooser: HEd.Student
       column_name: "Constituent ID"
       label_name: "Constituent ID"
     OrganizationTermID:
