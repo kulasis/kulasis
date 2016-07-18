@@ -7,7 +7,7 @@ use Kula\Core\Component\Chooser\Chooser;
 class StudentChooser extends Chooser {
   
   public function search($q) {
-    
+
     $query_conditions = $this->db()->db_or();
     $query_conditions = $query_conditions->condition('LAST_NAME', $q.'%', 'LIKE');
     $query_conditions = $query_conditions->condition('FIRST_NAME', $q.'%', 'LIKE');
@@ -51,7 +51,10 @@ class StudentChooser extends Chooser {
   }
   
   public function searchRoute() {
-    return 'teacher_HEd_student_student_chooser';
+    if ($this->session->get('portal') == 'core')
+      return 'core_HEd_student_chooser';
+    else
+      return 'teacher_HEd_student_student_chooser';
   }
   
 }

@@ -1,2 +1,5 @@
-HEd.Student:
+Core.HEd.Student:
+  class: Kula\HEd\Bundle\StudentBundle\Chooser\StudentChooser
+
+Teacher.HEd.Student:
   class: Kula\HEd\Bundle\StudentBundle\Chooser\StudentChooser

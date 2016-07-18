@@ -145,3 +145,7 @@ core_HEd_home_holds:
   defaults: 
     _controller: KulaHEdStudentBundle:CoreHomeHolds:index
     _navigation: Core.HEd.Holds.Holds
+
+core_HEd_student_chooser:
+  path: /student/chooser
+  defaults: { _controller: KulaHEdStudentBundle:CoreInformation:chooser }

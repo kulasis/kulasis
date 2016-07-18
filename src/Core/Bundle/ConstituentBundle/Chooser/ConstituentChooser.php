@@ -23,12 +23,20 @@ class ConstituentChooser extends Chooser {
       ->orderBy('FIRST_NAME', 'ASC')
       ->execute();
     while ($row = $search->fetch()) {
-      $this->addToChooserMenu($row['CONSTITUENT_ID'], $row['CONSTITUENT_ID'].' | '.$row['LAST_NAME'].', '.$row['FIRST_NAME'].' | '.$row['GENDER'].' | '.$row['PERMANENT_NUMBER']);
+      $this->addToChooserMenu($row['CONSTITUENT_ID'], $row['LAST_NAME'].', '.$row['FIRST_NAME'].' | '.$row['GENDER'].' | '.$row['PERMANENT_NUMBER'].' | '.$row['CONSTITUENT_ID']);
     }
     
   }
   
   public function choice($id) {
+    
+    $row = $this->db()->db_select('CONS_CONSTITUENT')
+      ->fields('CONS_CONSTITUENT')
+      ->condition('CONSTITUENT_ID', $id)
+      ->execute()
+      ->fetch();
+    return $this->currentValue($row['CONSTITUENT_ID'], $row['LAST_NAME'].', '.$row['FIRST_NAME'].' | '.$row['GENDER'].' | '.$row['PERMANENT_NUMBER'].' | '.$row['CONSTITUENT_ID']);
+    
   }
   
   public function searchRoute() {
