@@ -107,7 +107,7 @@ class CoreSectionController extends Controller {
       
       $schedule_service = $this->get('kula.HEd.scheduling.schedule');
       
-      $classes_to_delete = $this->request->request->get('delete')['STUD_STUDENT_WAIT_LIST'];
+      $classes_to_delete = $this->request->request->get('delete')['HEd.Student.WaitList'];
       
       foreach($classes_to_delete as $class_id => $class_row) {
         $schedule_service->dropWaitListClassForStudentStatus($class_id);
