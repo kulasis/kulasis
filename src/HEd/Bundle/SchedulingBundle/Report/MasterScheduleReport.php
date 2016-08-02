@@ -32,10 +32,14 @@ class MasterScheduleReport extends BaseReport {
   }
   
   public function table_row($row)
-  {  
+  { 
     $this->Cell($this->width[0],6,$row['SECTION_NUMBER'],'',0,'L',$this->fill);
-    $this->Cell($this->width[1],6,substr($row['COURSE_TITLE'], 0, 33),'',0,'L',$this->fill);
-    $this->Cell($this->width[2],6,$row['ABBREVIATED_NAME'],'',0,'L',$this->fill);
+	if (substr($row['SECTION_NAME'], 0, 33) != '') {
+		$this->Cell($this->width[1],6,substr($row['SECTION_NAME'], 0, 33),'',0,'L',$this->fill);
+	} else {
+		$this->Cell($this->width[1],6,substr($row['COURSE_TITLE'], 0, 33),'',0,'L',$this->fill);
+    }
+	$this->Cell($this->width[2],6,$row['ABBREVIATED_NAME'],'',0,'L',$this->fill);
     if (isset($row['meetings'])) {
       $this->Cell($this->width[3],6,$row['meetings'][0]['meets'],'',0,'L',$this->fill);
       $this->Cell($this->width[4],6,$row['meetings'][0]['START_TIME'].' - '.$row['meetings'][0]['END_TIME'],'',0,'L',$this->fill);

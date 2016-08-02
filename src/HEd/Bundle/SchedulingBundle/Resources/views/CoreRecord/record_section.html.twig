@@ -2,5 +2,6 @@
 {% if kula_core_record.getAddMode() != true %}
 {{ kula_field({ edit: true, field: 'HEd.Section.SectionNumber', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: kula_core_record.getSelectedRecord.SECTION_NUMBER, label: true }) }}
 {% endif %}
+{{ kula_field({ edit: true, school_term_only: true, field: 'HEd.Section.Name', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: kula_core_record.getSelectedRecord.SECTION_NAME, label: true }) }}
 {{ kula_field({ edit: true, school_term_only: true, field: 'HEd.Section.CourseID', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, field_name_override: 'Course', value: kula_core_record.getSelectedRecord.COURSE_ID, label: true }) }}
 {{ kula_field({ edit: true, school_term_only: true, field: 'HEd.Section.StaffOrganizationTermID', field_name_override: 'Instructor', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: kula_core_record.getSelectedRecord.STAFF_ORGANIZATION_TERM_ID, label: true }) }}

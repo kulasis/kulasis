@@ -32,7 +32,7 @@ class CoreSectionRecord extends Record {
   public function get($record_id) {
     
     $result = $this->db()->db_select('STUD_SECTION', 'section')
-    ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'STAFF_ORGANIZATION_TERM_ID', 'COURSE_ID', 'ORGANIZATION_TERM_ID', 'STATUS'))
+    ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME', 'STAFF_ORGANIZATION_TERM_ID', 'COURSE_ID', 'ORGANIZATION_TERM_ID', 'STATUS'))
     ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgtrm', 'stafforgtrm.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
     ->leftJoin('STUD_STAFF', 'staff', 'stafforgtrm.STAFF_ID = staff.STAFF_ID')
     ->fields('staff', array('ABBREVIATED_NAME'))

@@ -63,7 +63,7 @@ class CoreClassRosterReportController extends ReportController {
     
     // Get Data and Load
     $result = $this->db()->db_select('STUD_SECTION', 'section')
-      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER'))
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
       ->fields('course', array('COURSE_TITLE'))
       ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')

@@ -33,8 +33,12 @@ class ClassRosterReport extends BaseReport {
     $this->Ln(5);
     $this->Cell(35);
     $this->Cell(15,0, 'Course: ', 0, 0,'R');
-    $this->Cell(40,0, $this->data['COURSE_TITLE'], 0, 0,'L');
-    $this->Cell(45,0,'',0,0,'R');
+	if ($this->data['SECTION_NAME'] != '') {
+		$this->Cell(40,0, $this->data['SECTION_NAME'], 0, 0,'L');
+	} else {
+		$this->Cell(40,0, $this->data['COURSE_TITLE'], 0, 0,'L');
+    }
+	$this->Cell(45,0,'',0,0,'R');
     if (isset($this->data['meetings'][1])) {
       $meeting_line_1 = $this->data['meetings'][1]['meets'].' '.$this->data['meetings'][1]['START_TIME'].' - '.$this->data['meetings'][1]['END_TIME']. '  ' .$this->data['meetings'][1]['ROOM'];
       $this->Cell(20,0, $meeting_line_1,0,0,'L');
