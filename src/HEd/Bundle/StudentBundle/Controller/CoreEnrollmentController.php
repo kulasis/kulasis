@@ -264,29 +264,61 @@ class CoreEnrollmentController extends Controller {
       // Add enrollment activity
       if ($activity_post = $this->form('add', 'HEd.Student.Enrollment.Activity', 'new')) {
         
+        // Get current values
+        $current_status = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+          ->fields('stustatus', array('GRADE', 'RESIDENT', 'FTE', 'LEVEL', 'THESIS_STATUS', 'SEEKING_DEGREE_1_ID', 'SEEKING_DEGREE_2_ID'))
+          ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
+          ->execute()->fetch();
+        
         // posted data
         $transaction = $this->db()->db_transaction();
         
         if ($activity_post['HEd.Student.Enrollment.Activity.Grade']) {
           $activity_data['HEd.Student.Enrollment.Activity.Grade'] = $activity_post['HEd.Student.Enrollment.Activity.Grade'];
+        } else {
+          $activity_data['HEd.Student.Enrollment.Activity.Grade'] = $current_status['GRADE'];
         }
         if ($activity_post['HEd.Student.Enrollment.Activity.Resident']) {
-          $activity_data['HEd.Student.Enrollment.Activity.Resident'] = $activity_post['HEd.Student.Enrollment.Activity.Resident'];
+          if ($activity_post['HEd.Student.Enrollment.Activity.Resident'] == '(blank)') {
+            $activity_data['HEd.Student.Enrollment.Activity.Resident'] = null;
+          } else {
+            $activity_data['HEd.Student.Enrollment.Activity.Resident'] = $activity_post['HEd.Student.Enrollment.Activity.Resident'];
+          }
+        } else {
+          $activity_data['HEd.Student.Enrollment.Activity.Resident'] = $current_status['RESIDENT'];
         }
         if ($activity_post['HEd.Student.Enrollment.Activity.FTE']) {
-          $activity_data['HEd.Student.Enrollment.Activity.FTE'] = $activity_post['HEd.Student.Enrollment.Activity.FTE'];
+          if ($activity_post['HEd.Student.Enrollment.Activity.FTE'] == '(blank)') {
+            $activity_data['HEd.Student.Enrollment.Activity.FTE'] = null;
+          } else {
+            $activity_data['HEd.Student.Enrollment.Activity.FTE'] = $activity_post['HEd.Student.Enrollment.Activity.FTE'];
+          }
+        } else {
+           $activity_data['HEd.Student.Enrollment.Activity.FTE'] = $current_status['FTE'];
         }
         if ($activity_post['HEd.Student.Enrollment.Activity.Level']) {
           $activity_data['HEd.Student.Enrollment.Activity.Level'] = $activity_post['HEd.Student.Enrollment.Activity.Level'];
+        } else {
+          $activity_data['HEd.Student.Enrollment.Activity.Level'] = $current_status['LEVEL'];
         }
         if ($activity_post['HEd.Student.Enrollment.Activity.ThesisStatus']) {
-          $activity_data['HEd.Student.Enrollment.Activity.ThesisStatus'] = $activity_post['HEd.Student.Enrollment.Activity.ThesisStatus'];
+          if ($activity_post['HEd.Student.Enrollment.Activity.ThesisStatus'] == '(blank)') {
+            $activity_data['HEd.Student.Enrollment.Activity.ThesisStatus'] = null;
+          } else {
+            $activity_data['HEd.Student.Enrollment.Activity.ThesisStatus'] = $activity_post['HEd.Student.Enrollment.Activity.ThesisStatus'];
+          }
+        } else {
+          $activity_data['HEd.Student.Enrollment.Activity.ThesisStatus'] = $current_status['THESIS_STATUS'];
         }
         if ($activity_post['HEd.Student.Enrollment.Activity.SeekingDegree1ID']) {
           $activity_data['HEd.Student.Enrollment.Activity.SeekingDegree1ID'] = $activity_post['HEd.Student.Enrollment.Activity.SeekingDegree1ID'];
+        } else {
+          $activity_data['HEd.Student.Enrollment.Activity.SeekingDegree1ID'] = $current_status['SEEKING_DEGREE_1_ID'];
         }
         if ($activity_post['HEd.Student.Enrollment.Activity.SeekingDegree2ID']) {
           $activity_data['HEd.Student.Enrollment.Activity.SeekingDegree2ID'] = $activity_post['HEd.Student.Enrollment.Activity.SeekingDegree2ID'];
+        } else {
+          $activity_data['HEd.Student.Enrollment.Activity.SeekingDegree2ID'] = $current_status['SEEKING_DEGREE_2_ID'];
         }
         
         // Post data to status
@@ -294,16 +326,28 @@ class CoreEnrollmentController extends Controller {
           $status_data['HEd.Student.Status.Grade'] = $activity_post['HEd.Student.Enrollment.Activity.Grade'];
         }
         if ($activity_post['HEd.Student.Enrollment.Activity.Resident']) {
-          $status_data['HEd.Student.Status.Resident'] = $activity_post['HEd.Student.Enrollment.Activity.Resident'];
+          if ($activity_post['HEd.Student.Enrollment.Activity.Resident'] == '(blank)') {
+            $status_data['HEd.Student.Status.Resident'] = null;
+          } else {
+            $status_data['HEd.Student.Status.Resident'] = $activity_post['HEd.Student.Enrollment.Activity.Resident'];
+          }
         }
         if ($activity_post['HEd.Student.Enrollment.Activity.FTE']) {
-          $status_data['HEd.Student.Status.FTE'] = $activity_post['HEd.Student.Enrollment.Activity.FTE'];
+          if ($activity_post['HEd.Student.Status.FTE'] == '(blank)') {
+            $status_data['HEd.Student.Status.FTE'] = null;
+          } else {
+            $status_data['HEd.Student.Status.FTE'] = $activity_post['HEd.Student.Enrollment.Activity.FTE'];
+          }
         }
         if ($activity_post['HEd.Student.Enrollment.Activity.Level']) {
           $status_data['HEd.Student.Status.Level'] = $activity_post['HEd.Student.Enrollment.Activity.Level'];
         }
         if ($activity_post['HEd.Student.Enrollment.Activity.ThesisStatus']) {
-          $status_data['HEd.Student.Status.ThesisStatus'] = $activity_post['HEd.Student.Enrollment.Activity.ThesisStatus'];
+          if ($activity_post['HEd.Student.Enrollment.Activity.ThesisStatus'] == '(blank)') {
+            $status_data['HEd.Student.Status.ThesisStatus'] = null;
+          } else {
+            $status_data['HEd.Student.Status.ThesisStatus'] = $activity_post['HEd.Student.Enrollment.Activity.ThesisStatus'];
+          }
         }
         if ($activity_post['HEd.Student.Enrollment.Activity.SeekingDegree1ID']) {
           $status_data['HEd.Student.Status.SeekingDegree1ID'] = $activity_post['HEd.Student.Enrollment.Activity.SeekingDegree1ID'];

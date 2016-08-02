@@ -485,6 +485,10 @@ class Field {
     $schema = self::getFieldInfo($param['field']);
     $lookup = array('' => '&nbsp;');
     
+    if (isset($param['blank_option'])) {
+      $lookup['(blank)'] = '(blank)';
+    }
+    
     if (self::_displayField($param)) {
       $field_name = self::getNameForField($param);
       $lookup += self::$lookup->getLookupMenu($schema->getLookup(), $param['lookup']);
