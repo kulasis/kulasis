@@ -125,9 +125,9 @@ class CorePFAIDSController extends Controller {
 			$response .= $student['PERMANENT_NUMBER'].": Processed.\n";
 		} catch(\PDOException $exception) {
 			$response .= $student['PERMANENT_NUMBER'].': '.$exception->getMessage()."\n";
-		} catch(IntegrityConstraintViolationException $e) {
+		} catch(IntegrityConstraintViolationException $exception) {
 			$response .= $student['PERMANENT_NUMBER'].': '.$exception->getMessage()."\n";
-		} catch(DatabaseExceptionWrapper $e) {
+		} catch(DatabaseExceptionWrapper $exception) {
 			$response .= $student['PERMANENT_NUMBER'].': '.$exception->getMessage()."\n";
 		} 
 	  
