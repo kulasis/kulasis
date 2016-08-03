@@ -244,7 +244,7 @@ class DegreeAuditService {
              $ch['display_credits'] = $ch['CREDITS_EARNED'];
              $this->req_grp_totals[$req_id] += $ch['CREDITS_EARNED'];
            }
-           $this->output[$req_id]['courses'][$row_id] = $ch;
+           $this->output[$req_id]['courses'][] = $ch;
            
         $this->course_history[$row['COURSE_ID']][$ch_index]['used'] = 'Y';
         
