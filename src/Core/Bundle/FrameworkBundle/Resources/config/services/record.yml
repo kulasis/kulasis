@@ -16,6 +16,5 @@ services:
     
   kula.core.record_type:
     class: Kula\Core\Component\Record\RecordType
-    factory_service: kula.core.record_type_store
-    factory_method: getRecordTypes
+    factory: ["@kula.core.record_type_store", getRecordTypes]
     arguments: ["@kula.core.db"] 

@@ -155,13 +155,29 @@ class Log {
       }
       if (isset($stack[$i]) AND isset($stack[$i + 1]) AND strpos($stack[$i]['class'], __NAMESPACE__) === FALSE && strpos($stack[$i + 1]['function'], 'db_') === FALSE && !empty($stack[$i]['file'])) {
         $stack[$i] += array('file' => '?', 'line' => '?', 'args' => array());
+        
+        // MAKOA JACOBSEN
+        // Had to remove the actual variable arguments to prevent serializing of closures.
+        // loop through args
+        $args = $stack[$i + 1]['args'];
+        $arglist = array();
+        if (count($args) > 0) {
+          foreach($args as $arg) {
+            if (is_object($arg)) {
+              $arglist[] = get_class($arg).' '.key($arg);
+            } else {
+              $arglist[] = $arg;
+            }
+          }
+        }
+        
         return array(
           'file' => $stack[$i]['file'],
           'line' => $stack[$i]['line'],
           'function' => $stack[$i + 1]['function'],
           'class' => isset($stack[$i + 1]['class']) ? $stack[$i + 1]['class'] : NULL,
           'type' => isset($stack[$i + 1]['type']) ? $stack[$i + 1]['type'] : NULL,
-          'args' => $stack[$i + 1]['args'],
+          'args' => $arglist,
         );
       }
     }

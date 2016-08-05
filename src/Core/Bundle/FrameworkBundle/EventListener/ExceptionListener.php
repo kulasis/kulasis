@@ -21,6 +21,8 @@ use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+use Symfony\Component\HttpFoundation\Session\Session;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -47,6 +49,7 @@ class ExceptionListener implements EventSubscriberInterface
     {
       $exception = $event->getException();
       $request = $event->getRequest();
+      $session = $this->container->get('session')->all();
       
       if ($exception instanceof PosterException) { // $exception->getFields()
         $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage(), 'fields' => null), 200, array('X-Status-Code' => 200));
@@ -61,7 +64,7 @@ class ExceptionListener implements EventSubscriberInterface
                            "\nLOCATION: ".$exception->getFile().", line " .
                            $exception->getLine() .", at " . date('F j, Y, g:i a') .
                            "\nShowing backtrace:\n".$exception->getTraceAsString()."\n\n" .
-                           "\n" . print_r($_SESSION, true);
+                           "\n" . print_r($session, true);
         // Email the error details, in case SEND_ERROR_MAIL is true
         if ($this->container->getParameter('exception_send_email') == true)
           error_log($error_message, 1, $this->container->getParameter('exception_to_email'), "From: " . $this->container->getParameter('exception_from_email') . "\r\nTo: " . $this->container->getParameter('exception_to_email'));

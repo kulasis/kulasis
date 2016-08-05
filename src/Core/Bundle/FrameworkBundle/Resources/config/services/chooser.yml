@@ -16,6 +16,5 @@ services:
     
   kula.core.chooser:
     class: Kula\Core\Component\Chooser\Chooser
-    factory_service: kula.core.chooser_store
-    factory_method: getChoosers
+    factory: ["@kula.core.chooser_store", getChoosers]
     arguments: ["@kula.core.db", "@kula.core.session", "@kula.core.focus"] 

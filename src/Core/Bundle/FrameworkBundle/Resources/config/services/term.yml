@@ -16,6 +16,5 @@ services:
     
   kula.core.term:
     class: Kula\Core\Component\Focus\Term
-    factory_service: kula.core.term_store
-    factory_method: getTerm
+    factory: ["@kula.core.term_store", getTerm]
     arguments: ["@kula.core.cache.kv"]  

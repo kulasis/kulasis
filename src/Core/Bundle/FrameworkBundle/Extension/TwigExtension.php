@@ -4,7 +4,7 @@ namespace Kula\Core\Bundle\FrameworkBundle\Extension;
 
 use Kula\Core\Component\Twig\Focus;
 
-class TwigExtension extends \Twig_Extension {
+class TwigExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface {
   
   private $db;
   private $request;
@@ -49,6 +49,7 @@ class TwigExtension extends \Twig_Extension {
     
     $globals_array = array(
       'kula_instance_name' => $this->container->getParameter('instance_name'),
+      'instance_name' => $this->container->getParameter('instance_name'),
       'session' => $this->session,
       'focus' => $this->container->get('kula.core.focus'),
       'flash' => $this->flash,
@@ -60,6 +61,11 @@ class TwigExtension extends \Twig_Extension {
       'form_action' => $current_request->getBaseUrl().$current_request->getPathInfo(),
       'kula_core_permission' => $this->container->get('kula.core.permission'),
       'kula_core_cache_kv' => $this->container->get('kula.core.cache.kv'),
+      'form_newWindow' => false,
+      'record_type' => false,
+      'kula_core_record' => false,
+      'record_bar_template_path' => false,
+      'selected_record_bar_template_path' => false
     );
     
     if ($this->session->get('user_id')) {

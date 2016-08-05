@@ -16,6 +16,5 @@ services:
     
   kula.core.lookup:
     class: Kula\Core\Component\Lookup\Lookup
-    factory_service: kula.core.lookup_store
-    factory_method: getLookup
+    factory: ["@kula.core.lookup_store", getLookup]
     arguments: ["@kula.core.db"] 

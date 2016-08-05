@@ -16,6 +16,5 @@ services:
     
   kula.core.organization:
     class: Kula\Core\Component\Focus\Organization
-    factory_service: kula.core.organization_store
-    factory_method: getOrganization
+    factory: ["@kula.core.organization_store", getOrganization]
     arguments: ["@kula.core.cache.kv"]  

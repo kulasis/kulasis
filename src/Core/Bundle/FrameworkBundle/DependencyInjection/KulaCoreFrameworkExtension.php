@@ -37,7 +37,6 @@ class KulaCoreFrameworkExtension extends BaseFrameworkExtension {
       $loader->load('services/organization.yml');
       $loader->load('services/term.yml');
       
-      $loader->load('services/commands.yml');
   }
 
 }

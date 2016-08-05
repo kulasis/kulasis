@@ -16,6 +16,5 @@ services:
     
   kula.core.navigation:
     class: Kula\Core\Component\Navigation\Navigation
-    factory_service: kula.core.navigation_store
-    factory_method: getNavigation
+    factory: ["@kula.core.navigation_store", getNavigation]
     arguments: ["@kula.core.db", "@kula.core.cache.kv"] 

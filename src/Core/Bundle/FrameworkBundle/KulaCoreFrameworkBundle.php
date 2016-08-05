@@ -13,16 +13,22 @@
 
 namespace Kula\Core\Bundle\FrameworkBundle;
 
-use Symfony\Bundle\FrameworkBundle\FrameworkBundle as BaseFrameworkBundle;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent as GetResponseEvent;
 
 use Kula\Core\Component\Database\Database;
 
-class KulaCoreFrameworkBundle extends BaseFrameworkBundle {
+class KulaCoreFrameworkBundle extends Bundle {
   
-  public function onKernelRequest(GetResponseEvent $event) {
+  public function build(ContainerBuilder $container) {
+      parent::build($container);
+  }
+  
+  public function boot() {
+
+  }
+  
+  public function onKernelRequest(\Symfony\Component\HttpKernel\Event\GetResponseEvent $event) {
     $request = $event->getRequest();
 
     if (preg_match('/(android|blackberry|iphone|ipad|phone|playbook|mobile)/i', $request->headers->get('user-agent'))) {

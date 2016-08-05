@@ -55,6 +55,10 @@ class DBCacheConfig extends BaseConfigCache {
     return true;
   }
   
+  public function __toString() {
+    return $this->file;
+  }
+  
   private function getLastUpdatestamp() {
     
     $latestTimestamp = '';

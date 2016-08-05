@@ -13,7 +13,7 @@ class DefinitionLoader {
     foreach($bundles as $bundle) {
       $path = $bundle->getPath().'/Resources/config/'.$fileName.'.yml';
       if (file_exists($path)) {
-        $bundledSchema = Yaml::parse($path);
+        $bundledSchema = Yaml::parse(file_get_contents($path));
         
         if (isset($bundledSchema['imports'])) {
           
@@ -22,7 +22,7 @@ class DefinitionLoader {
             $importPath = $bundle->getPath().'/Resources/config/' . $import['resource'];
             
             if (file_exists($importPath)) {
-              $definition[$importPath] = Yaml::parse($importPath);
+              $definition[$importPath] = Yaml::parse(file_get_contents($importPath));
             }
           }
           

@@ -16,6 +16,5 @@ services:
     
   kula.core.schema:
     class: Kula\Core\Component\Schema\Schema
-    factory_service: kula.core.schema_store
-    factory_method: getSchema
+    factory: ["@kula.core.schema_store", getSchema]
     arguments: ["@kula.core.db", "@kula.core.cache.kv"] 

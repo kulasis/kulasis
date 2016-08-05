@@ -46,6 +46,10 @@ class Controller extends BaseController {
     return new \Kula\Core\Component\DB\PrePoster;
   }
   
+  protected function getRequest() {
+    return $this->request;
+  }
+  
   protected function poster() {
     return $this->poster;
   }

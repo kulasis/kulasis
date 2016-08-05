@@ -233,7 +233,7 @@ class DB {
    */
   public function __construct($root_dir, $environment) {
     // Load database configuration
-    $database_configuration = Yaml::parse($root_dir.'/config/databases.yml');
+    $database_configuration = Yaml::parse(file_get_contents($root_dir.'/config/databases.yml'));
     Database::setMultipleConnectionInfo($database_configuration);
     $this->environment = $environment;
   }
