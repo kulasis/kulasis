@@ -29,6 +29,7 @@
     "autoload": {
         "psr-4": { 
           "Kula\\": "src/"
+        }
     },
     "scripts": {
         "post-install-cmd": [
