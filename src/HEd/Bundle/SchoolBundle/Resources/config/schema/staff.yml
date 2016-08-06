@@ -30,6 +30,25 @@ HEd.Staff:
       field_size: 25
       column_name: "Abbreviated Name"
       label_name: "Abbreviated Name"
+    Department:
+      description: "Department"
+      db_column_name: DEPARTMENT
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Course.Department
+      column_name: "Department"
+      label_name: "Department"
+    DepartmentHead:
+      description: "Department Head"
+      db_column_name: DEPARTMENT_HEAD
+      db_column_type: bool
+      db_column_null: false
+      db_column_default: 0
+      field_type: checkbox
+      column_name: "Department Head"
+      label_name: "Department Head"
 HEd.Staff.OrganizationTerm:
   description: "Staff in Terms"
   db_table_name: STUD_STAFF_ORGANIZATION_TERMS
