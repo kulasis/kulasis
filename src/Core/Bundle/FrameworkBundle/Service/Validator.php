@@ -56,7 +56,7 @@ class Validator {
 		$data['object'] = (object)$data;
 		
 		// Perform validation
-		$this->violations = $this->validator->validateValue($data, $constraints);
+		$this->violations = $this->validator->validate($data, $constraints);
 	}
 	
 	public function getViolations() {
