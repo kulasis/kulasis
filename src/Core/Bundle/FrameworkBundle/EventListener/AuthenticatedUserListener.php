@@ -34,7 +34,7 @@ class AuthenticatedUserListener implements EventSubscriberInterface {
   public function onKernelRequest(GetResponseEvent $event) {
     
     if ($this->container->get('session')->get('user_id') > 0 AND $this->container->get('session')->get('portal') == 'core' ) {
-      $routeName = $this->container->get('request')->get('_route');
+      $routeName = $this->container->get('request_stack')->getCurrentRequest()->get('_route');
       if ($routeName != 'core_home' AND $routeName == 'top') {
         $event->setResponse(new RedirectResponse($this->router->generate('sis_home')));
       }
