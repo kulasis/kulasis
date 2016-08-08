@@ -96,7 +96,13 @@ class TwigExtension extends \Twig_Extension implements \Twig_Extension_GlobalsIn
     }
     if ($this->session->get('portal') == 'teacher') {
       $globals_array += array(
-        'focus_sections' => Focus::getSectionMenu($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getTeacherOrganizationTermID()),
+        'focus_sections' => Focus::getSectionMenu(
+            $this->container->get('kula.core.db'), 
+            $this->container->get('kula.core.focus')->getTeacherOrganizationTermID(),
+            $this->container->get('kula.core.focus')->getOrganizationTermID(),
+            $this->container->get('kula.core.focus')->getTeacherOrganizationDepartment(),
+            $this->container->get('kula.core.focus')->getTeacherOrganizationDepartmentHead()
+        ),
         'focus_advisor_students' => Focus::getAdvisingStudentsMenu($this->container->get('kula.core.db'), $this->container->get('kula.core.focus')->getTeacherOrganizationTermID(), $this->container->get('kula.core.focus')->getOrganizationTermIDs()),
       );
     }

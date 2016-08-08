@@ -131,7 +131,23 @@ class Focus {
   
   public function getTeacherStaffOrganizationTermID() {
     return $this->getTeacherStaffOrganizationTermID();
-  } 
+  }
+
+  public function getTeacherOrganizationDepartment() {
+    $session_focus = $this->session->get('focus');
+    if (isset($session_focus['Teacher.Staff.Department']))
+      return $session_focus['Teacher.Staff.Department'];
+    else
+      return false;
+  }
+
+  public function getTeacherOrganizationDepartmentHead() {
+    $session_focus = $this->session->get('focus');
+    if (isset($session_focus['Teacher.Staff.Department.Head']))
+      return $session_focus['Teacher.Staff.Department.Head'];
+    else
+      return false;
+  }
   
   public function setTeacherStaffFocusFromStaff($organization_id, $term_id, $staff_id = null, $role_token = null) {
 
@@ -139,6 +155,8 @@ class Focus {
       // check for student status given organization, term, and student
       $student = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms')
         ->fields('stafforgterms', array('STAFF_ORGANIZATION_TERM_ID', 'STAFF_ID'))
+        ->join('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterms.STAFF_ID')
+        ->fields('staff', array('DEPARTMENT', 'DEPARTMENT_HEAD'))
         ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stafforgterms.ORGANIZATION_TERM_ID')
         ->condition('orgterms.ORGANIZATION_ID', $organization_id)
         ->condition('orgterms.TERM_ID', $term_id)
@@ -156,6 +174,8 @@ class Focus {
       $this->setOrganizationTermFocus($organization_id, $term_id, $role_token);
       $this->session->setFocus('Teacher.Staff', $student['STAFF_ID'], $role_token);
       $this->setTeacherOrganizationTermFocus($student['STAFF_ORGANIZATION_TERM_ID'], $role_token);
+      $this->session->setFocus('Teacher.Staff.Department', $student['DEPARTMENT'], $role_token);
+      $this->session->setFocus('Teacher.Staff.Department.Head', $student['DEPARTMENT_HEAD'], $role_token);
     } else {
       $this->setOrganizationTermFocus($organization_id, $term_id, $role_token);
       $this->setTeacherOrganizationTermFocus();
@@ -172,6 +192,8 @@ class Focus {
       //echo $this->session->getFocus('organization_id').' '.$this->session->getFocus('term_id');
       $staff_orgterm = $this->db->db_select('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms')
         ->fields('stafforgterms', array('STAFF_ORGANIZATION_TERM_ID', 'STAFF_ID'))
+        ->join('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterms.STAFF_ID')
+        ->fields('staff', array('DEPARTMENT', 'DEPARTMENT_HEAD'))
         ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stafforgterms.ORGANIZATION_TERM_ID')
         ->condition('orgterms.ORGANIZATION_ID', $this->session->getFocus('organization_id'))
         ->condition('orgterms.TERM_ID', $this->session->getFocus('term_id'))
@@ -179,6 +201,8 @@ class Focus {
         ->execute()->fetch();
       $this->session->setFocus('Teacher.Staff.OrgTerm', $staff_orgterm['STAFF_ORGANIZATION_TERM_ID'], $role_token);
       $this->session->setFocus('Teacher.Staff', $staff_orgterm['STAFF_ID'], $role_token);
+      $this->session->setFocus('Teacher.Staff.Department', $staff_orgterm['DEPARTMENT'], $role_token);
+      $this->session->setFocus('Teacher.Staff.Department.Head', $staff_orgterm['DEPARTMENT_HEAD'], $role_token);
     }
     
    // $this->setSectionFocus();
