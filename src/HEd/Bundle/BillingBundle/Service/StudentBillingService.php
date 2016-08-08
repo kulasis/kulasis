@@ -154,20 +154,24 @@ class StudentBillingService {
         while ($transactions_all_row = $transactions_all_result->fetch()) {
           if ($transactions_all_row['trans_total'] > 0) {
 			  
-			// Determine amount to refund
-			$amount = $this->database->db_select('BILL_TUITION_RATE_TRANS_REFUND', 'transrefunds')
-				->fields('transrefunds', array('REFUND_PERCENTAGE'))
-				->condition('transrefunds.TUITION_RATE_TRANSACTION_ID', $transactions_all_row['TUITION_RATE_TRANSACTION_ID'])
-				->condition('transrefunds.END_DATE', date('Y-m-d'), '>=')
-				->orderBy('transrefunds.END_DATE', 'ASC')
-				->execute()->fetch()['REFUND_PERCENTAGE'];
-				
-			// Refund amount
-			$new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $transactions_all_row['TRANSACTION_CODE_ID'], date('Y-m-d'), 'Refund', $transactions_all_row['trans_total'] * $amount['REFUND_PERCENTAGE'] * -1);
-            $this->constituent_billing_service->postTransaction($new_transaction_id);
+      			// Determine amount to refund
+      			$amount = $this->database->db_select('BILL_TUITION_RATE_TRANS_REFUND', 'transrefunds')
+      				->fields('transrefunds', array('REFUND_PERCENTAGE'))
+      				->condition('transrefunds.TUITION_RATE_TRANSACTION_ID', $transactions_all_row['TUITION_RATE_TRANSACTION_ID'])
+      				->condition('transrefunds.END_DATE', date('Y-m-d'), '>=')
+      				->orderBy('transrefunds.END_DATE', 'ASC')
+      				->execute()->fetch();
+      				
+      			// Refund amount
+            $refund_amount = $transactions_all_row['trans_total'] * $amount['REFUND_PERCENTAGE'] * -1 * 0.01;
+
+            if ($refund_amount != 0.00) {
+      			 $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $transactions_all_row['TRANSACTION_CODE_ID'], date('Y-m-d'), 'Refund', $refund_amount);
+             $this->constituent_billing_service->postTransaction($new_transaction_id);
+                
+            }
           }
         }
-      
     }
     
   }
