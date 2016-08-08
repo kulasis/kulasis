@@ -171,7 +171,7 @@ class CoreTransactionsController extends Controller {
   public function add($code_type) {
     $this->authorize();
     
-    $request = $this->container->get('request');
+    $request = $this->container->get('request_stack')->getCurrentRequest();
     $routeName = $request->get('_route');
     
     if ($routeName == 'Core_HEd_Billing_Billing_AddCharge' OR $routeName == 'Core_HEd_Billing_Billing_AddPayment') {
