@@ -1,0 +1,2 @@
+Core.HEd.BillingCode:
+  class: Kula\HEd\Bundle\BillingBundle\Record\CoreBillingCodeRecord

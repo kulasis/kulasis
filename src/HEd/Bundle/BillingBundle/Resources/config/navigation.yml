@@ -79,6 +79,10 @@ Core.HEd.Billing:
           description: "Codes"
           display_name: "Codes"
           route: Core_HEd_Billing_BillingSetup_Codes
+      button_add:
+        route: Core_HEd_Billing_BillingSetup_Codes_Add
+      button_delete:
+        route: Core_HEd_Billing_BillingSetup_Codes_Delete
 
 Core.HEd.Billing.Reports:
   parent: Core.HEd.Billing
