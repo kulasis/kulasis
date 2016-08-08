@@ -132,28 +132,36 @@ class Focus {
 
     $section_menu = array();
     $sections = $db->db_select('STUD_SECTION', 'section')
+      ->distinct()
       ->fields('section', array('SECTION_NUMBER', 'SECTION_ID'))
       ->join('STUD_COURSE', 'course', 'section.COURSE_ID = course.COURSE_ID')
       ->fields('course', array('COURSE_TITLE', 'COURSE_NUMBER'))
-      ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', 'stafforgterms.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
+      ->leftJoin('STUD_SECTION_STAFF', 'secstaff', 'secstaff.SECTION_ID = section.SECTION_ID')
+      ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', 
+          'stafforgterms.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID OR 
+           stafforgterms.STAFF_ORGANIZATION_TERM_ID = secstaff.STAFF_ORGANIZATION_TERM_ID')
       ->join('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterms.STAFF_ID')
       ->fields('staff', array('ABBREVIATED_NAME'));
 
+      $conditions_or = $db->db_or();
+
       if ($organization_term_id AND $department AND $department_head) {
 
-        $conditions_and = $db->db_and()
+        $dept_conditions_and = $db->db_and()
           ->condition('course.DEPARTMENT', $department)
           ->condition('section.ORGANIZATION_TERM_ID', $organization_term_id);
 
-        $conditions_or = $db->db_or()
+        $conditions_or = $conditions_or
           ->condition('section.STAFF_ORGANIZATION_TERM_ID', $staff_organization_term_id)
-          ->condition($conditions_and);
+          ->condition('secstaff.STAFF_ORGANIZATION_TERM_ID', $staff_organization_term_id)
+          ->condition($dept_conditions_and);
 
-        $sections = $sections->condition($conditions_or);
       } else {
-        $sections = $sections->condition('section.STAFF_ORGANIZATION_TERM_ID', $staff_organization_term_id);
+        $conditions_or = $conditions_or->condition('section.STAFF_ORGANIZATION_TERM_ID', $staff_organization_term_id);
+        $conditions_or = $conditions_or->condition('secstaff.STAFF_ORGANIZATION_TERM_ID', $staff_organization_term_id);
       }
 
+    $sections = $sections->condition($conditions_or);
     $sections = $sections->orderBy('SECTION_NUMBER', 'ASC')
       ->execute();
     while ($sections_row = $sections->fetch()) {
