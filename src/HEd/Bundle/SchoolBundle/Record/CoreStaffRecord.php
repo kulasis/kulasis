@@ -42,7 +42,7 @@ class CoreStaffRecord extends Record {
   public function get($record_id) {
     
     $result = $this->db()->db_select('STUD_STAFF', 'staff')
-    ->fields('staff', array('STAFF_ID', 'ABBREVIATED_NAME', 'DEPARTMENT', 'DEPARTMENT_HEAD'))
+    ->fields('staff', array('STAFF_ID', 'ABBREVIATED_NAME', 'DEPARTMENT', 'DEPARTMENT_2', 'DEPARTMENT_3', 'DEPARTMENT_4', 'DEPARTMENT_HEAD'))
     ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = staff.STAFF_ID')
     ->fields('constituent', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME'))
     ->condition('staff.STAFF_ID', $record_id)

@@ -40,6 +40,36 @@ HEd.Staff:
       lookup: HEd.Course.Department
       column_name: "Department"
       label_name: "Department"
+    Department2:
+      description: "Department"
+      db_column_name: DEPARTMENT_2
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Course.Department
+      column_name: "Department 2"
+      label_name: "Department 2"
+    Department3:
+      description: "Department"
+      db_column_name: DEPARTMENT_3
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Course.Department
+      column_name: "Department 3"
+      label_name: "Department 3"
+    Department4:
+      description: "Department"
+      db_column_name: DEPARTMENT_4
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Course.Department
+      column_name: "Department 4"
+      label_name: "Department 4"
     DepartmentHead:
       description: "Department Head"
       db_column_name: DEPARTMENT_HEAD
