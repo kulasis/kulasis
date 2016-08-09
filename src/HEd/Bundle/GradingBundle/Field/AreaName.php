@@ -14,11 +14,11 @@ class AreaName extends Field {
       ->fields('area', array('AREA_ID', 'AREA_NAME'))
       ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = area.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
       ->fields('area_types', array('DESCRIPTION' => 'area_type'))
-      ->orderBy('DESCRIPTION', 'ASC')
-      ->orderBy('AREA_NAME', 'ASC')
+      ->orderBy('DESCRIPTION', 'ASC', 'area_types')
+      ->orderBy('AREA_NAME', 'ASC', 'area')
       ->execute();
     while ($row = $result->fetch()) {
-      $menu[$row['AREA_ID']] = $row['AREA_NAME'].' - '.$row['area_type'];
+      $menu[$row['AREA_ID']] = $row['area_type'].' - '.$row['AREA_NAME'];
     }
     
     return $menu;
