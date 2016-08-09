@@ -75,6 +75,9 @@ class CoreDegreeController extends Controller {
       // Get Concentrations
       $areas = $this->db()->db_select('STUD_DEGREE_AREA')
         ->fields('STUD_DEGREE_AREA')
+        ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = STUD_DEGREE_AREA.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
+        ->fields('area_types', array('DESCRIPTION' => 'area_type'))
+        ->orderBy('DESCRIPTION', 'ASC', 'area_types')
         ->orderBy('AREA_NAME', 'ASC')
         ->execute()->fetchAll();
     
