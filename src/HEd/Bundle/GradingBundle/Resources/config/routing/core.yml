@@ -112,6 +112,12 @@ Core_HEd_Degrees_Degrees:
     _controller: KulaHEdGradingBundle:CoreDegree:degrees
     _navigation: Core.HEd.Grading.Degrees.Degrees
 
+Core_HEd_Degrees_Areas:
+  path: /grading/degrees/areas
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreDegree:areas
+    _navigation: Core.HEd.Grading.Degrees.Areas
+
 Core_HEd_Degrees_Majors:
   path: /grading/degrees/majors
   defaults: 

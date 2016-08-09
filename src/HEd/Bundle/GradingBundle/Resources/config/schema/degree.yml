@@ -62,6 +62,71 @@ HEd.Degree:
       column_name: "Minimum Credits"
       label_name: "Minimum Credits"
 
+HEd.Degree.Area:
+  description: "Degree Areas"
+  db_table_name: STUD_DEGREE_AREA
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: AREA_ID
+      db_column_type: primary_serial
+      column_name: "Area ID"
+      label_name: "Area ID"
+    Type:
+      description: "Type"
+      db_column_name: AREA_TYPE
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: false
+      field_type: lookup
+      lookup: HEd.Grading.Degree.AreaTypes
+      column_name: "Area Type"
+      label_name: "Area Type"
+    Name:
+      description: "Name"
+      db_column_name: AREA_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Area Name"
+      label_name: "Area Name"
+    EffectiveTermID:
+      description: "Effective Term ID"
+      parent: Core.Term.ID
+      db_column_name: EFFECTIVE_TERM_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.Term
+      column_name: "Effective Term ID"
+      label_name: "Effective Term ID"
+    MinimumGPA:
+      description: "Minimum GPA"
+      db_column_name: MINIMUM_GPA
+      db_column_type: numeric
+      db_column_length: 4
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Minimum GPA"
+      label_name: "Minimum GPA"
+    MinimumCredits:
+      description: "Minimum Credits"
+      db_column_name: MINIMUM_CREDITS
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Minimum Credits"
+      label_name: "Minimum Credits"
+
 HEd.Degree.Concentration:
   description: "Concentrations"
   db_table_name: STUD_DEGREE_CONCENTRATION
@@ -317,6 +382,37 @@ HEd.Student.Degree:
       field_size: 20
       column_name: "Conversion Degree Number"
       label_name: "Conversion Degree Number"
+
+HEd.Student.Degree.Area:
+  description: "Student Degree Areas"
+  db_table_name: STUD_STUDENT_DEGREES_AREAS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_CONCENTRATION_ID
+      db_column_type: primary_serial
+      column_name: "Student Concentration ID"
+      label_name: "Student Concentration ID"
+    StudentDegreeID:
+      description: "Student Degree ID"
+      parent: HEd.Student.Degree.ID
+      db_column_name: STUDENT_DEGREE_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Student Degree ID"
+      label_name: "Student Degree ID"
+    AreaID:
+      description: "Area ID"
+      parent: HEd.Degree.Area.ID
+      db_column_name: AREA_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\AreaName
+      column_name: "Area ID"
+      label_name: "Area ID"
 
 HEd.Student.Degree.Concentration:
   description: "Student Degree Concentrations"

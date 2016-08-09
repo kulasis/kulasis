@@ -65,5 +65,20 @@ class CoreDegreeController extends Controller {
     
     return $this->render('KulaHEdGradingBundle:CoreDegree:concentrations.html.twig', array('concentrations' => $concentrations));
   }
+
+  public function areasAction() {
+    $this->authorize();
+    $this->processForm();
+    
+    $areas = array();
+    
+      // Get Concentrations
+      $areas = $this->db()->db_select('STUD_DEGREE_AREA')
+        ->fields('STUD_DEGREE_AREA')
+        ->orderBy('AREA_NAME', 'ASC')
+        ->execute()->fetchAll();
+    
+    return $this->render('KulaHEdGradingBundle:CoreDegree:areas.html.twig', array('areas' => $areas));
+  }
   
 }

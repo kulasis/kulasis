@@ -11,6 +11,8 @@
 <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_HEd_Degrees_Minors') }}">Back to Minors</a>
 {% elseif type == 'concentration' %}
 <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_HEd_Degrees_Concentrations') }}">Back to Concentrations</a>
+{% elseif type == 'area' %}
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_HEd_Degrees_Areas') }}">Back to Areas</a>
 {% endif %}
 </p>
 
@@ -43,6 +45,8 @@ Requirement Groups
   {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.MinorID', value: id, hidden: true }) }}
   {% elseif type == 'concentration' %}
   {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.ConcentrationID', value: id, hidden: true }) }}
+  {% elseif type == 'area' %}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Requirement.Group.AreaID', value: id, hidden: true }) }}
   {% endif %}
   {{ kula_field({ add: true, delete: true, field: 'HEd.Degree.Requirement.Group.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
   {{ kula_display_html({ add: true, field: 'HEd.Degree.Requirement.Group.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}

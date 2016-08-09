@@ -78,6 +78,10 @@ Core.HEd.Grading:
           description: "Concentrations"
           display_name: "Concentrations"
           route: Core_HEd_Degrees_Concentrations
+        Areas:
+          description: "Areas"
+          display_name: "Areas"
+          route: Core_HEd_Degrees_Areas
 
 Core.HEd.Grading.Reports:
   parent: Core.HEd.Grading

@@ -42,6 +42,14 @@ HEd.Degree.Requirement.Group:
       db_column_null: true
       column_name: "Concentration ID"
       label_name: "Concentration ID"
+    AreaID:
+      description: "Area ID"
+      parent: HEd.Degree.Area.ID
+      db_column_name: AREA_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Area ID"
+      label_name: "Area ID"
     Name:
       description: "Group Name"
       db_column_name: GROUP_NAME

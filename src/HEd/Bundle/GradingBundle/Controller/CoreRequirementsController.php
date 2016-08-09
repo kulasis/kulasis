@@ -14,7 +14,7 @@ class CoreRequirementsController extends Controller {
     
       // Get Requirements
       $requirement_groups = $this->db()->db_select('STUD_DEGREE_REQ_GRP')
-        ->fields('STUD_DEGREE_REQ_GRP', array('DEGREE_REQ_GRP_ID', 'GROUP_NAME', 'START_TERM_ID', 'END_TERM_ID', 'CREDITS_REQUIRED', 'ELECTIVE', 'CONCENTRATION_ID'))
+        ->fields('STUD_DEGREE_REQ_GRP')
         ->orderBy('GROUP_NAME', 'ASC');
       if ($type == 'degree')
         $requirement_groups = $requirement_groups->condition('DEGREE_ID', $id);
@@ -24,6 +24,8 @@ class CoreRequirementsController extends Controller {
         $requirement_groups = $requirement_groups->condition('MINOR_ID', $id);
       elseif ($type == 'concentration')
         $requirement_groups = $requirement_groups->condition('CONCENTRATION_ID', $id);
+      elseif ($type == 'area')
+        $requirement_groups = $requirement_groups->condition('AREA_ID', $id);
       
       $requirement_groups = $requirement_groups->execute()->fetchAll();
     
@@ -35,7 +37,7 @@ class CoreRequirementsController extends Controller {
     $this->processForm();
     
     $requirement_groups = $this->db()->db_select('STUD_DEGREE_REQ_GRP')
-      ->fields('STUD_DEGREE_REQ_GRP', array('MINOR_ID', 'MAJOR_ID', 'DEGREE_ID', 'CONCENTRATION_ID'))
+      ->fields('STUD_DEGREE_REQ_GRP', array('MINOR_ID', 'MAJOR_ID', 'DEGREE_ID', 'CONCENTRATION_ID', 'AREA_ID'))
       ->condition('DEGREE_REQ_GRP_ID', $id)
       ->orderBy('GROUP_NAME', 'ASC')
       ->execute()->fetch();
@@ -52,6 +54,9 @@ class CoreRequirementsController extends Controller {
     } elseif ($requirement_groups['CONCENTRATION_ID']) {
       $type = 'concentration';
       $degree_id = $requirement_groups['CONCENTRATION_ID'];
+    } elseif ($requirement_groups['AREA_ID']) {
+      $type = 'area';
+      $degree_id = $requirement_groups['AREA_ID'];
     }
     $requirement_grp_courses = array();
     

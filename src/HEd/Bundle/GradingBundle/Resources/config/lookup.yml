@@ -1,0 +1,8 @@
+HEd.Grading.Degree.AreaTypes:
+  description: "Degree Area Types"
+  allow_update: true
+  values:
+    - { code: "AREA", description: "Area" }
+    - { code: "MAJOR", description: "Major" }
+    - { code: "MINOR", description: "Minor" }
+    - { code: "CONCEN", description: "Concentration" }
