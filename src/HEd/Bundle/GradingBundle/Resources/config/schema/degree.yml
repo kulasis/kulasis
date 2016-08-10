@@ -391,10 +391,10 @@ HEd.Student.Degree.Area:
     ID:
       description: "ID"
       primary: true
-      db_column_name: STUDENT_CONCENTRATION_ID
+      db_column_name: STUDENT_AREA_ID
       db_column_type: primary_serial
-      column_name: "Student Concentration ID"
-      label_name: "Student Concentration ID"
+      column_name: "Student Area ID"
+      label_name: "Student Area ID"
     StudentDegreeID:
       description: "Student Degree ID"
       parent: HEd.Student.Degree.ID

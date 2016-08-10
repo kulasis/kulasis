@@ -51,7 +51,7 @@ class CoreStudentDegreeController extends Controller {
       ->execute()->fetchAll();
 
     $areas = $this->db()->db_select('STUD_STUDENT_DEGREES_AREAS')
-      ->fields('STUD_STUDENT_DEGREES_AREAS', array('STUDENT_CONCENTRATION_ID', 'STUDENT_DEGREE_ID', 'AREA_ID'))
+      ->fields('STUD_STUDENT_DEGREES_AREAS', array('STUDENT_AREA_ID', 'STUDENT_DEGREE_ID', 'AREA_ID'))
       ->condition('STUDENT_DEGREE_ID', $sub_id)
       ->execute()->fetchAll();
     
@@ -64,9 +64,7 @@ class CoreStudentDegreeController extends Controller {
     
     $degree_audit = array();
     $degrees = '';
-    $majors = '';
-    $minors =  '';
-    $concentrations = '';
+    $areas = '';
     
     $total_needed = 0;
     $total_completed = 0;
@@ -76,15 +74,13 @@ class CoreStudentDegreeController extends Controller {
       $degree_audit_service = $this->get('kula.HEd.grading.degreeaudit');
       $degree_audit = $degree_audit_service->getDegreeAuditForStudentStatus($this->record->getSelectedRecordID());
       $degrees = (count($degree_audit_service->getDegrees()) > 0) ? implode(', ', $degree_audit_service->getDegrees()) : '';
-      $majors = (count($degree_audit_service->getMajors()) > 0) ? implode(', ', $degree_audit_service->getMajors()) : '';
-      $minors = (count($degree_audit_service->getMinors()) > 0) ? implode(', ', $degree_audit_service->getMinors()) : '';
-      $concentrations = (count($degree_audit_service->getConcentrations()) > 0) ? implode(', ', $degree_audit_service->getConcentrations()) : '';
+      $areas = (count($degree_audit_service->getAreas()) > 0) ? implode(', ', $degree_audit_service->getAreas()) : '';
       $total_needed = $degree_audit_service->getTotalDegreeNeeded();
       $total_completed = $degree_audit_service->getTotalDegreeCompleted();
       $total_remaining = $degree_audit_service->getTotalDegreeRemaining();
     }
     
-    return $this->render('KulaHEdGradingBundle:CoreStudentDegree:degree_audit.html.twig', array('degree_audit' => $degree_audit, 'degrees' => $degrees, 'majors' => $majors, 'minors' => $minors, 'concentrations' => $concentrations, 'total_needed' => $total_needed, 'total_completed' => $total_completed, 'total_remaining' => $total_remaining));
+    return $this->render('KulaHEdGradingBundle:CoreStudentDegree:degree_audit.html.twig', array('degree_audit' => $degree_audit, 'degrees' => $degrees, 'areas' => $areas, 'total_needed' => $total_needed, 'total_completed' => $total_completed, 'total_remaining' => $total_remaining));
   }
   
 }
