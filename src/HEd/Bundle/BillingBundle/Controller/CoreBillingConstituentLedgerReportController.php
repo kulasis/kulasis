@@ -13,6 +13,8 @@ class CoreBillingConstituentLedgerReportController extends ReportController {
 
   private $student_balances_for_orgterm;
   private $student_balances;
+
+  private $org;
   
   public function indexAction() {
     $this->authorize();
@@ -46,8 +48,10 @@ class CoreBillingConstituentLedgerReportController extends ReportController {
     
     $this->fin_aid_year = $this->request->request->get('fa_year');
 
-    $this->org = $this->request->request->get('non')['Core.Organization.Term']['Core.Organization.Term.OrganizationID']['value'];
-    
+    if ($this->request->request->get('enforce_organization')) {
+      $this->org = $this->request->request->get('non')['Core.Organization.Term']['Core.Organization.Term.OrganizationID']['value'];
+    } 
+
     // Get Data and Load
     $result = $this->db()->db_select('STUD_STUDENT', 'student')
       ->fields('student', array('STUDENT_ID'))
