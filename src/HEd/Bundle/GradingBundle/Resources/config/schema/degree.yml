@@ -413,6 +413,8 @@ HEd.Student.Degree.Area:
       class: Kula\HEd\Bundle\GradingBundle\Field\AreaName
       column_name: "Area ID"
       label_name: "Area ID"
+  unique_keys:
+    StudentAreas: [ 'HEd.Student.Degree.Area.StudentDegreeID', 'HEd.Student.Degree.Area.AreaID' ]
 
 HEd.Student.Degree.Concentration:
   description: "Student Degree Concentrations"
