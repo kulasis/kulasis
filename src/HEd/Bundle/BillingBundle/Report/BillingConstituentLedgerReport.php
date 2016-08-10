@@ -6,7 +6,7 @@ use Kula\Core\Bundle\FrameworkBundle\Report\Report;
 
 class BillingConstituentLedgerReport extends Report {
   
-  private $width = array(16, 18, 12, 30, 69, 20, 20);
+  private $width = array(16, 20, 12, 30, 69, 20, 20);
   
   private $data;
   public $balance;
