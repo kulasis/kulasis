@@ -9,5 +9,9 @@
   Financial Aid Year:
   {{ form_select(fa_menu, 'fa_year') }}
 </div>
+<div class="group-box-contents group">
+  Organization:
+  {{ kula_field({ non: true, field: 'Core.Organization.Term.OrganizationID', label: false}) }}
+</div>
 </div>
 {% endblock %}

@@ -45,6 +45,8 @@ class CoreBillingConstituentLedgerReportController extends ReportController {
     $record_type = $this->request->request->get('record_type');
     
     $this->fin_aid_year = $this->request->request->get('fa_year');
+
+    $this->org = $this->request->request->get('non')['Core.Organization.Term']['Core.Organization.Term.OrganizationID']['value'];
     
     // Get Data and Load
     $result = $this->db()->db_select('STUD_STUDENT', 'student')
@@ -59,8 +61,9 @@ class CoreBillingConstituentLedgerReportController extends ReportController {
       ->fields('mailaddr', array('THOROUGHFARE' => 'mail_ADDRESS', 'LOCALITY' => 'mail_CITY', 'ADMINISTRATIVE_AREA' => 'mail_STATE', 'POSTAL_CODE' => 'mail_ZIPCODE', 'COUNTRY' => 'mail_COUNTRY'))
       ->leftJoin('CONS_ADDRESS', 'residenceaddr', 'residenceaddr.ADDRESS_ID = stucon.RESIDENCE_ADDRESS_ID')
       ->fields('residenceaddr', array('THOROUGHFARE' => 'residence_ADDRESS', 'LOCALITY' => 'residence_CITY', 'ADMINISTRATIVE_AREA' => 'residence_STATE', 'POSTAL_CODE' => 'residence_ZIPCODE', 'COUNTRY' => 'residence_COUNTRY'));
-    $org_term_ids = $this->focus->getOrganizationTermIDs();
+
     if ($this->session->get('term_id') != '' AND isset($org_term_ids) AND count($org_term_ids) > 0) {
+
       $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids)
         ->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID')
         ->leftJoin('CORE_LOOKUP_VALUES', 'entercode_values', "entercode_values.CODE = status.ENTER_CODE AND entercode_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.EnterCode')")
@@ -164,9 +167,12 @@ class CoreBillingConstituentLedgerReportController extends ReportController {
             ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
             ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
             ->condition($or_query_conditions)
-            ->condition('transactions.CONSTITUENT_ID', $student_id)
-            ->groupBy('CONSTITUENT_ID')
-            ->orderBy('CONSTITUENT_ID')->execute()->fetch();
+            ->condition('transactions.CONSTITUENT_ID', $student_id);
+            if ($this->org) {
+              $terms_with_balances_result = $terms_with_balances_result->condition('org.ORGANIZATION_ID', $this->org);
+            }
+            $terms_with_balances_result = $terms_with_balances_result->groupBy('CONSTITUENT_ID')->orderBy('CONSTITUENT_ID')
+            ->execute()->fetch();
 
           // Get previous balance and output
           $this->pdf->previous_balance($terms_with_balances_result['total_amount']);
@@ -206,6 +212,9 @@ class CoreBillingConstituentLedgerReportController extends ReportController {
       ->condition('transactions.CONSTITUENT_ID', $student_id);
     if ($this->fin_aid_year) {
       $result = $result->condition('term.FINANCIAL_AID_YEAR', $this->fin_aid_year);
+    }
+    if ($this->org) {
+      $result = $result->condition('org.ORGANIZATION_ID', $this->org);
     }
     $result = $result
       ->orderBy('term.START_DATE', 'ASC')
