@@ -75,7 +75,7 @@ class CoreDegreeAuditReportController extends ReportController {
     // Get degree audit
     $degree_audit = $this->service->getDegreeAuditForStudentStatus($row['STUDENT_STATUS_ID']);
     $row['degrees'] = (count($this->service->getDegrees()) > 0) ? implode(', ', $this->service->getDegrees()) : '';
-    $row['areas'] = (count($this->service->getAreas()) > 0) ? implode(', ', $this->service->getAreas()) : '';
+    $row['areas'] = $this->service->getAreas();
     $this->pdf->total_degree_needed = $this->service->getTotalDegreeNeeded();
     $this->pdf->total_degree_completed = $this->service->getTotalDegreeCompleted();
     $this->pdf->total_degree_remaining = $this->service->getTotalDegreeRemaining();

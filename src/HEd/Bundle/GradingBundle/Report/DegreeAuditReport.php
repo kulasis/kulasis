@@ -79,7 +79,13 @@ class DegreeAuditReport extends BaseReport {
     $this->Cell(60,5, 'Area(s)','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
-    $this->MultiCell(60,15, $this->data['areas'],'LBR','L');
+    if (count($this->data['areas']) > 0) {
+      foreach($this->data['areas'] as $area) {
+        $this->Cell(60,5, $area,'LR',0,'L');
+        $this->Ln(5);
+      }
+    }
+    $this->Cell(60,1, ' ','LBR',0,'L');
     $this->SetFont('Arial', '', 8);
     $this->Ln(5);
     $this->SetFont('Arial', '', 8);
@@ -108,7 +114,7 @@ class DegreeAuditReport extends BaseReport {
 
     $this->SetFont('Arial', '', 7);
     // Start columns for ch
-    $this->SetY($y_start_ch);
+    $this->SetY($y_start_ch + 3);
     $this->SetLeftMargin(10);
     $this->SetX(10);
     //$this->MultiCell(0, 3, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 1, 'L');
