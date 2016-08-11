@@ -76,27 +76,15 @@ class DegreeAuditReport extends BaseReport {
     $this->SetFont('Arial', '', 8);
     $this->Ln(5);
     $this->SetFont('Arial', '', 8);
-    $this->Cell(60,5, 'Major(s)','LTR',0,'L');
+    $this->Cell(60,5, 'Area(s)','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
-    $this->Cell(60,5, $this->data['majors'],'LBR',0,'L');
+    $this->MultiCell(60,15, $this->data['areas'],'LBR','L');
     $this->SetFont('Arial', '', 8);
     $this->Ln(5);
-    $this->SetFont('Arial', '', 8);
-    $this->Cell(60,5, 'Minor(s)','LTR',0,'L');
-    $this->Ln(4);
-    $this->SetFont('Arial', '', 10);
-    $this->Cell(60,5, $this->data['minors'],'LBR',0,'L');
-    $this->SetFont('Arial', '', 8);
-    $this->Ln(5);
-    $this->SetFont('Arial', '', 8);
-    $this->Cell(60,5, 'Concentration(s)','LTR',0,'L');
-    $this->Ln(4);
-    $this->SetFont('Arial', '', 10);
-    $this->Cell(60,5, $this->data['concentrations'],'LBR',0,'L');
     $this->SetFont('Arial', '', 8);
     
-    $y_start_ch = $this->GetY() + 5;
+    $y_start_ch = $this->GetY();
     
     $this->SetLeftMargin(10);
     $this->SetX(10);

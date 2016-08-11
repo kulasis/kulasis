@@ -13,9 +13,7 @@ class DegreeAuditService {
   protected $req_grp_totals;
   
   protected $degrees;
-  protected $majors;
-  protected $minors;
-  protected $concentrations;
+  protected $areas;
   
   protected $total_degree_needed;
   protected $total_degree_completed;
@@ -30,9 +28,7 @@ class DegreeAuditService {
     $this->course_history = array();
     $this->req_grp_totals = array();
     $this->degrees = array();
-    $this->majors = array();
-    $this->minors = array();
-    $this->concentrations = array();
+    $this->areas = array();
     $total_degree_needed = 0;
     $total_degree_completed = 0;
   }
@@ -46,9 +42,6 @@ class DegreeAuditService {
       ->fields('studeg', array('STUDENT_DEGREE_ID', 'EXPECTED_GRADUATION_DATE'))
       ->join('STUD_DEGREE', 'deg', 'deg.DEGREE_ID = studeg.DEGREE_ID')
       ->fields('deg', array('DEGREE_ID', 'DEGREE_NAME'))
-      ->leftJoin('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcentration', 'stuconcentration.STUDENT_DEGREE_ID = studeg.STUDENT_DEGREE_ID')
-      ->leftJoin('STUD_DEGREE_CONCENTRATION', 'degconcentration', 'stuconcentration.CONCENTRATION_ID = degconcentration.CONCENTRATION_ID')
-      ->fields('degconcentration', array('CONCENTRATION_NAME'))
       ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = studeg.EXPECTED_COMPLETION_TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION' => 'expected_completion_term'))
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
@@ -56,52 +49,26 @@ class DegreeAuditService {
     
     $this->degrees[] = $student['DEGREE_NAME'];
     
-    // Get Majors
-    $row['majors'] = array();
-    $majors_result = $this->db->db_select('STUD_STUDENT_DEGREES_MAJORS', 'studmajor')
-      ->fields('studmajor', array('MAJOR_ID'))
-      ->join('STUD_DEGREE_MAJOR', 'major', 'studmajor.MAJOR_ID = major.MAJOR_ID')
-      ->fields('major', array('MAJOR_NAME'))
-      ->condition('studmajor.STUDENT_DEGREE_ID', $student['STUDENT_DEGREE_ID'])
-      ->orderBy('major.MAJOR_NAME', 'ASC')
+    // Get areas
+    $row['areas'] = array();
+    $areas_result = $this->db->db_select('STUD_STUDENT_DEGREES_AREAS', 'studarea')
+      ->fields('studarea', array('AREA_ID'))
+      ->join('STUD_DEGREE_AREA', 'area', 'studarea.AREA_ID = area.AREA_ID')
+      ->fields('area', array('AREA_TYPE', 'AREA_NAME'))
+      ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = area.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
+      ->fields('area_types', array('DESCRIPTION' => 'area_type'))
+      ->condition('studarea.STUDENT_DEGREE_ID', $student['STUDENT_DEGREE_ID'])
+      ->orderBy('area.AREA_NAME', 'ASC')
       ->execute();
-    while ($majors_row = $majors_result->fetch()) {
-      $this->majors[] = $majors_row['MAJOR_NAME'];
-      $row['major_ids'][] = $majors_row['MAJOR_ID'];
-    }
-    
-    // Get Minors
-    $row['minors'] = array();
-    $minors_result = $this->db->db_select('STUD_STUDENT_DEGREES_MINORS', 'studminor')
-      ->fields('studminor', array('MINOR_ID'))
-      ->join('STUD_DEGREE_MINOR', 'minor', 'studminor.MINOR_ID = minor.MINOR_ID')
-      ->fields('minor', array('MINOR_NAME'))
-      ->condition('studminor.STUDENT_DEGREE_ID', $student['STUDENT_DEGREE_ID'])
-      ->orderBy('minor.MINOR_NAME', 'ASC')
-      ->execute();
-    while ($minors_row = $minors_result->fetch()) {
-      $this->minors[] = $minors_row['MINOR_NAME'];
-      $row['minor_ids'][] = $minors_row['MINOR_ID'];
-    }
-    
-    // Get Concentrations
-    $row['concentrations'] = array();
-    $concentrations_result = $this->db->db_select('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'studconcentration')
-      ->fields('studconcentration', array('CONCENTRATION_ID'))
-      ->join('STUD_DEGREE_CONCENTRATION', 'concentration', 'studconcentration.CONCENTRATION_ID = concentration.CONCENTRATION_ID')
-      ->fields('concentration', array('CONCENTRATION_NAME'))
-      ->condition('studconcentration.STUDENT_DEGREE_ID', $student['STUDENT_DEGREE_ID'])
-      ->orderBy('concentration.CONCENTRATION_NAME', 'ASC')
-      ->execute();
-    while ($concentrations_row = $concentrations_result->fetch()) {
-      $this->concentrations[] = $concentrations_row['CONCENTRATION_NAME'];
-      $row['concentration_ids'][] = $concentrations_row['CONCENTRATION_ID'];
+    while ($areas_row = $areas_result->fetch()) {
+      $this->areas[] = $areas_row['area_type'].' - '.$areas_row['AREA_NAME'];
+      $row['area_ids'][] = $areas_row['AREA_ID'];
     }
     
     $this->course_history = $this->getCourseHistoryForStudent($student['STUDENT_ID'], $student['LEVEL'], $student['STUDENT_STATUS_ID']);
     
     if ($student['DEGREE_ID']) {
-    $requirements = $this->requirements($student['DEGREE_ID'], (isset($row['major_ids'])) ? $row['major_ids'] : null, (isset($row['minor_ids'])) ? $row['minor_ids'] : null, (isset($row['concentration_ids'])) ? $row['concentration_ids'] : null);
+      $requirements = $this->requirements($student['DEGREE_ID'], (isset($row['area_ids'])) ? $row['area_ids'] : null);
     }
     
     // Get Degree Requirements but not requirement marked as elective
@@ -116,18 +83,9 @@ class DegreeAuditService {
     }
     }
     
-    // Get Minor Requirements
-    if (isset($row['minor_ids'])) {
-    foreach($row['minor_ids'] as $minor_id) {
-    foreach($requirements['minor'][$minor_id] as $req_id => $req_row) {
-      $this->outputRequirementSet($req_id, $req_row);
-    }
-    }
-    }
-    
-    // Get Concentration Requirements
-    if (isset($row['concentration_ids'])) {
-    foreach($row['concentration_ids'] as $concentration_id) {
+    // Get Area Requirements
+    if (isset($row['areas_ids'])) {
+    foreach($row['areas_ids'] as $concentration_id) {
     foreach($requirements['concentration'][$concentration_id] as $req_id => $req_row) {
       $this->outputRequirementSet($req_id, $req_row);
     }
@@ -357,7 +315,7 @@ class DegreeAuditService {
     }
   }
   
-  private function requirements($degree_id = null, $major_id = null, $minor_id = null, $concentration_id = null) {
+  private function requirements($degree_id = null, $area_id = null) {
     
     $requirements = array();
     
@@ -365,18 +323,12 @@ class DegreeAuditService {
     if ($degree_id) {
       $db_or = $db_or->condition('reqgrp.DEGREE_ID', $degree_id);
     }
-    if ($major_id) {
-      $db_or = $db_or->condition('reqgrp.MAJOR_ID', $major_id);
-    }
-    if ($minor_id) {
-      $db_or = $db_or->condition('reqgrp.MINOR_ID', $minor_id);
-    }
-    if ($concentration_id) {
-      $db_or = $db_or->condition('reqgrp.CONCENTRATION_ID', $concentration_id);
+    if ($area_id) {
+      $db_or = $db_or->condition('reqgrp.AREA_ID', $area_id);
     }
     
     $requirements_result = $this->db->db_select('STUD_DEGREE_REQ_GRP', 'reqgrp')
-      ->fields('reqgrp', array('DEGREE_ID', 'MAJOR_ID', 'MINOR_ID', 'CONCENTRATION_ID', 'DEGREE_REQ_GRP_ID', 'GROUP_NAME', 'ELECTIVE', 'CREDITS_REQUIRED'))
+      ->fields('reqgrp', array('DEGREE_ID', 'AREA_ID', 'DEGREE_REQ_GRP_ID', 'GROUP_NAME', 'ELECTIVE', 'CREDITS_REQUIRED'))
       ->leftJoin('STUD_DEGREE_REQ_GRP_CRS', 'reqgrpcrs', 'reqgrp.DEGREE_REQ_GRP_ID = reqgrpcrs.DEGREE_REQ_GRP_ID')
       ->fields('reqgrpcrs', array('REQUIRED', 'SHOW_AS_OPTION', 'DEGREE_REQ_GRP_CRS_ID'))
       ->leftJoin('STUD_COURSE', 'crs', 'crs.COURSE_ID = reqgrpcrs.COURSE_ID')
@@ -385,9 +337,7 @@ class DegreeAuditService {
       ->fields('reqgrpcrsequv', array('COURSE_ID' => 'crsequiv_COURSE_ID'))
       ->condition($db_or)
       ->orderBy('reqgrp.DEGREE_ID', 'ASC')
-      ->orderBy('reqgrp.MAJOR_ID', 'ASC')
-      ->orderBy('reqgrp.MINOR_ID', 'ASC')
-      ->orderBy('reqgrp.CONCENTRATION_ID', 'ASC')
+      ->orderBy('reqgrp.AREA_ID', 'ASC')
       ->orderBy('reqgrp.GROUP_NAME', 'ASC')
       ->orderBy('reqgrpcrs.REQUIRED', 'DESC')
       ->orderBy('crs.COURSE_NUMBER', 'ASC')
@@ -395,13 +345,9 @@ class DegreeAuditService {
     while ($requirements_row = $requirements_result->fetch()) {
       if ($requirements_row['DEGREE_ID'] != '') {
         $requirement_type = 'degree'; $type_id = $requirements_row['DEGREE_ID'];
-      } elseif ($requirements_row['MAJOR_ID'] != '') {
-        $requirement_type = 'major'; $type_id = $requirements_row['MAJOR_ID'];
-      } elseif ($requirements_row['MINOR_ID'] != '') {
-        $requirement_type = 'minor'; $type_id = $requirements_row['MINOR_ID'];  
-      } elseif ($requirements_row['CONCENTRATION_ID'] != '') {
-        $requirement_type = 'concentration'; $type_id = $requirements_row['CONCENTRATION_ID'];  
-      }
+      } elseif ($requirements_row['AREA_ID'] != '') {
+        $requirement_type = 'area'; $type_id = $requirements_row['AREA_ID'];
+      } 
       
       $requirements[$requirement_type][$type_id][$requirements_row['DEGREE_REQ_GRP_ID']]['GROUP_NAME'] = $requirements_row['GROUP_NAME'];
       $requirements[$requirement_type][$type_id][$requirements_row['DEGREE_REQ_GRP_ID']]['ELECTIVE'] = $requirements_row['ELECTIVE'];
@@ -428,16 +374,8 @@ class DegreeAuditService {
     return $this->degrees;
   }
   
-  public function getMajors() {
-    return $this->majors;
-  }
-  
-  public function getMinors() {
-    return $this->minors;
-  }
-  
-  public function getConcentrations() {
-    return $this->concentrations;
+  public function getAreas() {
+    return $this->areas;
   }
   
   public function getTotalDegreeNeeded() {
