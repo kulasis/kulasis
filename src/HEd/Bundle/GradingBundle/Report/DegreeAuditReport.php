@@ -114,7 +114,7 @@ class DegreeAuditReport extends BaseReport {
 
     $this->SetFont('Arial', '', 7);
     // Start columns for ch
-    $this->SetY($y_start_ch + 3);
+    $this->SetY($y_start_ch + 10);
     $this->SetLeftMargin(10);
     $this->SetX(10);
     //$this->MultiCell(0, 3, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 1, 'L');
