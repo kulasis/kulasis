@@ -50,7 +50,7 @@ class DegreeAuditService {
     $this->degrees[] = $student['DEGREE_NAME'];
     
     // Get areas
-    $row['areas'] = array();
+    $row['areas_ids'] = array();
     $areas_result = $this->db->db_select('STUD_STUDENT_DEGREES_AREAS', 'studarea')
       ->fields('studarea', array('AREA_ID'))
       ->join('STUD_DEGREE_AREA', 'area', 'studarea.AREA_ID = area.AREA_ID')
@@ -62,13 +62,13 @@ class DegreeAuditService {
       ->execute();
     while ($areas_row = $areas_result->fetch()) {
       $this->areas[] = $areas_row['area_type'].' - '.$areas_row['AREA_NAME'];
-      $row['area_ids'][] = $areas_row['AREA_ID'];
+      $row['areas_ids'][] = $areas_row['AREA_ID'];
     }
     
     $this->course_history = $this->getCourseHistoryForStudent($student['STUDENT_ID'], $student['LEVEL'], $student['STUDENT_STATUS_ID']);
     
     if ($student['DEGREE_ID']) {
-      $requirements = $this->requirements($student['DEGREE_ID'], (isset($row['area_ids'])) ? $row['area_ids'] : null);
+      $requirements = $this->requirements($student['DEGREE_ID'], (isset($row['areas_ids'])) ? $row['areas_ids'] : null);
     }
     
     // Get Degree Requirements but not requirement marked as elective
@@ -85,8 +85,8 @@ class DegreeAuditService {
     
     // Get Area Requirements
     if (isset($row['areas_ids'])) {
-    foreach($row['areas_ids'] as $concentration_id) {
-    foreach($requirements['concentration'][$concentration_id] as $req_id => $req_row) {
+    foreach($row['areas_ids'] as $area_id) {
+    foreach($requirements['area'][$area_id] as $req_id => $req_row) {
       $this->outputRequirementSet($req_id, $req_row);
     }
     }
