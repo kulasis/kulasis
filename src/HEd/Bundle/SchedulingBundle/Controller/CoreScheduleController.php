@@ -71,7 +71,7 @@ class CoreScheduleController extends Controller {
     $classes = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'MARK_SCALE_ID', 'CREDITS_ATTEMPTED', 'DROPPED', 'DROP_DATE'))
       ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
-      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER'))
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
       ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE'))
       ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgtrm', 'section.STAFF_ORGANIZATION_TERM_ID = stafforgtrm.STAFF_ORGANIZATION_TERM_ID')
@@ -112,7 +112,7 @@ class CoreScheduleController extends Controller {
     $classes_history = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED', 'DROP_DATE', 'CREATED_TIMESTAMP'))
       ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
-      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'CREDITS'))
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME', 'CREDITS'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
       ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE'))
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
@@ -202,7 +202,7 @@ class CoreScheduleController extends Controller {
       }
       
       $query = $this->searcher->prepareSearch($this->request->request->get('search'), 'STUD_SECTION', 'SECTION_ID');
-      $query = $query->fields('STUD_SECTION', array('SECTION_ID', 'SECTION_NUMBER', 'CAPACITY', 'ENROLLED_TOTAL', 'CREDITS', 'WAIT_LISTED_TOTAL'));
+      $query = $query->fields('STUD_SECTION', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME', 'CAPACITY', 'ENROLLED_TOTAL', 'CREDITS', 'WAIT_LISTED_TOTAL'));
       $query = $query->join('STUD_COURSE', 'course', 'STUD_SECTION.COURSE_ID = course.COURSE_ID');
       $query = $query->fields('course', array('COURSE_NUMBER','COURSE_TITLE'));
       $query = $query->leftJoin('STUD_SECTION_MEETINGS', 'meetings', 'meetings.SECTION_ID = STUD_SECTION.SECTION_ID');
@@ -260,7 +260,7 @@ class CoreScheduleController extends Controller {
     $classes = $this->db()->db_select('STUD_STUDENT_WAIT_LIST', 'waitlist')
       ->fields('waitlist', array('STUDENT_WAIT_LIST_ID', 'ADDED_TIMESTAMP'))
       ->join('STUD_SECTION', 'section', 'waitlist.SECTION_ID = section.SECTION_ID')
-      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER'))
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
       ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE'))
       ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgtrm', 'section.STAFF_ORGANIZATION_TERM_ID = stafforgtrm.STAFF_ORGANIZATION_TERM_ID')
@@ -321,7 +321,7 @@ class CoreScheduleController extends Controller {
     $classes = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'LEVEL', 'MARK_SCALE_ID', 'CREDITS_ATTEMPTED', 'COURSE_ID'))
       ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
-      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER'))
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
       ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE'))
       ->leftJoin('STUD_COURSE', 'course2', 'course2.COURSE_ID = class.COURSE_ID')

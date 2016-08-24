@@ -105,7 +105,11 @@ class StudentScheduleBillReport extends BaseReport {
   {
     $this->Cell($this->width[0],6,$this->row_count,'',0,'C',$this->fill);
     $this->Cell($this->width[1],6,$row['SECTION_NUMBER'],'',0,'L',$this->fill);
-    $this->Cell($this->width[2],6,substr($row['COURSE_TITLE'], 0, 50),'',0,'L',$this->fill);
+    if ($row['SECTION_NAME'] != '') {
+      $this->Cell($this->width[2],6,substr($row['SECTION_NAME'], 0, 50),'',0,'L',$this->fill);
+    } else {
+      $this->Cell($this->width[2],6,substr($row['COURSE_TITLE'], 0, 50),'',0,'L',$this->fill);
+    }
     if ($row['ABBREVIATED_NAME'])
       $this->Cell($this->width[3],6,$row['ABBREVIATED_NAME'],'',0,'L',$this->fill);
     else

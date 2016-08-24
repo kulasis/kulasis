@@ -121,7 +121,7 @@ class CoreStudentScheduleBillReportController extends ReportController {
       ->leftJoin('CONS_PHONE', 'phone', 'phone.PHONE_NUMBER_ID = stucon.PRIMARY_PHONE_ID')
       ->fields('phone', array('PHONE_NUMBER'))
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
-      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'START_DATE', 'END_DATE', 'NO_CLASS_DATES', 'SUPPLIES_REQUIRED', 'SUPPLIES_OPTIONAL', 'SUPPLIES_PRICE'))
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME', 'START_DATE', 'END_DATE', 'NO_CLASS_DATES', 'SUPPLIES_REQUIRED', 'SUPPLIES_OPTIONAL', 'SUPPLIES_PRICE'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
       ->fields('course', array('COURSE_TITLE'))
       ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
