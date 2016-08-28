@@ -397,9 +397,8 @@ class StudentBillingService {
         $this->constituent_billing_service->refundCourseFees($classes_row);
       } elseif ($classes_row['DROPPED'] == 0) {
         // class not dropped
-
         // need to check if total amount of fees is 0, need to bill
-        if ($existing_fees['total_amount'] == 0 AND $classes_row['AMOUNT'] != 0 AND $classes_row['section_AMOUNT'] != 0) {
+        if ($existing_fees['total_amount'] == 0 AND ($classes_row['AMOUNT'] != 0 OR $classes_row['section_AMOUNT'] != 0)) {
           $this->constituent_billing_service->addCourseFees($classes_row['STUDENT_CLASS_ID']);
           
         } // if not 0, already billed
