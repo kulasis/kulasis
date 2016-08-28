@@ -40,6 +40,10 @@ Core.HEd.Grading:
           description: "Terms"
           display_name: "Terms"
           route: Core_HEd_Grading_StudentCourseHistory_Terms
+        Transcript:
+          description: "Transcript"
+          display_name: "Transcript"
+          route: Core_HEd_Grading_StudentCourseHistory_Transcript
         DegreeAudit:
           description: "Degree Audit"
           display_name: "Degree Audit"

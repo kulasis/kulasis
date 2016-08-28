@@ -81,5 +81,23 @@ class CoreCourseHistoryController extends Controller {
 
     return $this->render('KulaHEdGradingBundle:CoreCourseHistory:coursehistory_detail.html.twig', array('course_history' => $course_history));  
   }
+
+  public function transcriptAction() {
+    $this->authorize();
+    $this->setRecordType('Core.HEd.Student');
+    
+    $transcript_data = array();
+    $transcript_schedule = array();
+    $transcript_degree = array();
+    
+    if ($this->record->getSelectedRecordID()) {
+      $transcript_service = $this->get('kula.HEd.grading.transcript');
+      $transcript_service->loadTranscriptForStudent($this->record->getSelectedRecordID());
+      $transcript_data = $transcript_service->getTranscriptData();
+      $transcript_schedule = $transcript_service->getCurrentScheduleData();
+      $transcript_degree = $transcript_service->getDegreeData();
+    }
+    return $this->render('KulaHEdGradingBundle:CoreCourseHistory:transcript.html.twig', array('data' => $transcript_data, 'schedule' => $transcript_schedule, 'degrees' => $transcript_degree));
+  }
   
 }

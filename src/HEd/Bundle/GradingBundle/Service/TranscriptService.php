@@ -10,11 +10,12 @@ class TranscriptService {
     $this->db = $db;
     $this->course_history_data = array();
     $this->current_schedule_data = array();
+    $this->degrees_awarded_data = array();
   }
   
   public function loadTranscriptForStudent($student_id, $level = null) {
     
-    $this->loadDegreesAwarded($student_id);
+    $this->loadDegreesAwarded($student_id, $level);
     $this->loadTranscriptData($student_id, $level);
     $this->loadCurrentSchedule($student_id, $level);
     
@@ -27,11 +28,15 @@ class TranscriptService {
   public function getCurrentScheduleData() {
     return $this->current_schedule_data;
   }
+
+  public function getDegreeData() {
+    return $this->degrees_awarded_data;
+  }
   
   private function loadStudentData($student_id) {
     
     // Grade status info
-    $status_info = $this->db()->db_select('STUD_STUDENT_STATUS', 'status')
+    $status_info = $this->db->db_select('STUD_STUDENT_STATUS', 'status')
       ->join('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
       ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
       ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
@@ -53,51 +58,43 @@ class TranscriptService {
     $this->course_history_data['HIGH_SCHOOL'] = $row['HIGH_SCHOOL_GRADUATION_DATE'];
   }
   
-  public function loadDegreesAwarded($student_id) {
-    
+  public function loadDegreesAwarded($student_id, $level = null) {
+
     // Get Degrees
     $degrees_res = $this->db->db_select('STUD_STUDENT_DEGREES', 'studdegrees')
       ->fields('studdegrees', array('STUDENT_DEGREE_ID', 'DEGREE_AWARDED', 'GRADUATION_DATE', 'CONFERRED_DATE'))
       ->join('STUD_DEGREE', 'degree', 'studdegrees.DEGREE_ID = degree.DEGREE_ID')
-      ->fields('degree', array('DEGREE_NAME'))
-      ->condition('studdegrees.STUDENT_ID', $row['STUDENT_ID'])
-      ->condition('studdegrees.DEGREE_AWARDED', 1)
-      ->condition('degree.LEVEL', $row['LEVEL'])
-      ->execute();
+      ->fields('degree', array('DEGREE_NAME', 'LEVEL'))
+      ->condition('studdegrees.STUDENT_ID', $student_id)
+      ->condition('studdegrees.DEGREE_AWARDED', 1);
+    if ($level) {
+      $degrees_res = $degrees_res->condition('degree.LEVEL', $level);
+    }
+      $degrees_res = $degrees_res->execute();
     while ($degree_row = $degrees_res->fetch()) {
       
-      $this->degrees_awarded[] = $degree_row;
-      
-      // Get majors
-      $degree_majors_res = $this->db()->db_select('STUD_STUDENT_DEGREES_MAJORS', 'studmajors')
-        ->fields('studmajors', array())
-        ->join('STUD_DEGREE_MAJOR', 'degmajor', 'degmajor.MAJOR_ID = studmajors.MAJOR_ID')
-        ->fields('degmajor', array('MAJOR_NAME'))
-        ->condition('studmajors.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
+      if (isset($this->degrees_awarded_data[$degree_row['LEVEL']]))
+        $i = count($this->degrees_awarded_data[$degree_row['LEVEL']]);
+      else
+        $i = 0;
+
+      $this->degrees_awarded_data[$degree_row['LEVEL']][$i] = $degree_row;
+
+      // Get areas
+      $areas_result = $this->db->db_select('STUD_STUDENT_DEGREES_AREAS', 'studarea')
+        ->fields('studarea', array('AREA_ID'))
+        ->join('STUD_DEGREE_AREA', 'area', 'studarea.AREA_ID = area.AREA_ID')
+        ->fields('area', array('AREA_TYPE', 'AREA_NAME'))
+        ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = area.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
+        ->fields('area_types', array('DESCRIPTION' => 'area_type'))
+        ->condition('studarea.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
+        ->orderBy('area_types.DESCRIPTION', 'ASC')
+        ->orderBy('area.AREA_NAME', 'ASC')
         ->execute();
-      while ($degree_major_row = $degree_majors_res->fetch()) {
-        $pdf->degree_major_row($degree_major_row);  
+      while ($areas_row = $areas_result->fetch()) {
+        $this->degrees_awarded_data[$degree_row['LEVEL']][$i]['areas'][] = $areas_row;
       }
-      // Get minors
-      $degree_minors_res = $this->db()->db_select('STUD_STUDENT_DEGREES_MINORS', 'studminors')
-        ->fields('studminors', array())
-        ->join('STUD_DEGREE_MINOR', 'degminor', 'degminor.MINOR_ID = studminors.MINOR_ID')
-        ->fields('degminor', array('MINOR_NAME'))
-        ->condition('studminors.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
-        ->execute();
-      while ($degree_minor_row = $degree_minors_res->fetch()) {
-        $pdf->degree_minor_row($degree_minor_row);  
-      }
-      // Get concentrations
-      $degree_concentrations_res = $this->db()->db_select('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'studconcentrations')
-        ->fields('studconcentrations')
-        ->join('STUD_DEGREE_CONCENTRATION', 'degconcentration', 'degconcentration.CONCENTRATION_ID = studconcentrations.CONCENTRATION_ID')
-        ->fields('degconcentration', array('CONCENTRATION_NAME'))
-        ->condition('studconcentrations.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
-        ->execute();
-      while ($degree_concentration_row = $degree_concentrations_res->fetch()) {
-        $pdf->degree_concentration_row($degree_concentration_row);  
-      }
+
     }
     
   }
@@ -117,14 +114,17 @@ class TranscriptService {
       ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
       ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'BIRTH_DATE'))
       ->leftJoin('STUD_STUDENT_COURSE_HISTORY', 'coursehistory', 'coursehistory.STUDENT_ID = student.STUDENT_ID '.$level_condition)
-      ->fields('coursehistory', array('COURSE_HISTORY_ID', 'ORGANIZATION_ID', 'LEVEL', 'COURSE_NUMBER', 'COURSE_TITLE', 'MARK', 'CREDITS_ATTEMPTED', 'CREDITS_EARNED', 'QUALITY_POINTS', 'CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'NON_ORGANIZATION_ID', 'TRANSFER_CREDITS', 'GPA_VALUE'))
+      ->fields('coursehistory', array('COURSE_HISTORY_ID', 'ORGANIZATION_ID', 'LEVEL', 'COURSE_NUMBER', 'COURSE_TITLE', 'MARK', 'CREDITS_ATTEMPTED', 'CREDITS_EARNED', 'QUALITY_POINTS', 'CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'NON_ORGANIZATION_ID', 'TRANSFER_CREDITS', 'GPA_VALUE', 'MARK_SCALE_ID'))
       ->leftJoin('CORE_LOOKUP_VALUES', 'level_values', "level_values.CODE = coursehistory.LEVEL AND level_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Level')")
       ->fields('level_values', array('DESCRIPTION' => 'LEVEL_DESCRIPTION'))
       ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = coursehistory.ORGANIZATION_ID')
       ->fields('org', array('ORGANIZATION_NAME'))
       ->leftJoin('CORE_NON_ORGANIZATION', 'nonorg', 'nonorg.NON_ORGANIZATION_ID = coursehistory.NON_ORGANIZATION_ID')
       ->fields('nonorg', array('NON_ORGANIZATION_NAME'))
-      ->leftJoin('STUD_STUDENT_COURSE_HISTORY_TERMS', 'crshisterms', 'crshisterms.STUDENT_ID = coursehistory.STUDENT_ID AND crshisterms.CALENDAR_YEAR = coursehistory.CALENDAR_YEAR AND crshisterms.CALENDAR_MONTH = coursehistory.CALENDAR_MONTH AND crshisterms.TERM = coursehistory.TERM AND crshisterms.LEVEL = coursehistory.LEVEL')
+      ->leftJoin('STUD_STUDENT_COURSE_HISTORY_TERMS', 'crshisterms', 'crshisterms.STUDENT_ID = coursehistory.STUDENT_ID AND (crshisterms.CALENDAR_YEAR = coursehistory.CALENDAR_YEAR OR (crshisterms.CALENDAR_YEAR IS NULL AND coursehistory.CALENDAR_YEAR IS NULL))
+        AND (crshisterms.CALENDAR_MONTH = coursehistory.CALENDAR_MONTH OR (crshisterms.CALENDAR_MONTH IS NULL AND coursehistory.CALENDAR_YEAR IS NULL))
+        AND (crshisterms.TERM = coursehistory.TERM OR (crshisterms.TERM IS NULL AND coursehistory.TERM IS NULL))
+        AND (crshisterms.LEVEL = coursehistory.LEVEL OR (crshisterms.LEVEL IS NULL AND coursehistory.LEVEL IS NULL))')
       ->fields('crshisterms', array('COMMENTS', 'TERM_CREDITS_ATTEMPTED', 'TERM_CREDITS_EARNED', 'TERM_HOURS', 'TERM_POINTS', 'TERM_GPA', 'CUM_CREDITS_ATTEMPTED', 'CUM_CREDITS_EARNED', 'CUM_HOURS', 'CUM_POINTS', 'CUM_GPA', 'INST_CREDITS_ATTEMPTED', 'INST_CREDITS_EARNED', 'INST_HOURS' ,'INST_POINTS', 'INST_GPA', 'TRNS_CREDITS_ATTEMPTED', 'TRNS_CREDITS_EARNED', 'TRNS_HOURS', 'TRNS_POINTS', 'TRNS_GPA', 'TOTAL_CREDITS_ATTEMPTED', 'TOTAL_CREDITS_EARNED', 'TOTAL_HOURS', 'TOTAL_POINTS', 'TOTAL_GPA'));
     $result = $result->condition('student.STUDENT_ID', $student_id);
 
@@ -151,29 +151,6 @@ class TranscriptService {
     $course_counter = 0;
     while ($row = $result->fetch()) {
       
-      if ($last_level_code !== $row['LEVEL']) {
-        $this->course_history_data['levels'][$row['LEVEL']]['CUM_CREDITS_ATTEMPTED'] = $row['CUM_CREDITS_ATTEMPTED'];
-        $this->course_history_data['levels'][$row['LEVEL']]['CUM_CREDITS_EARNED'] = $row['CUM_CREDITS_EARNED'];
-        $this->course_history_data['levels'][$row['LEVEL']]['CUM_HOURS'] = $row['CUM_HOURS'];
-        $this->course_history_data['levels'][$row['LEVEL']]['CUM_GPA'] = $row['CUM_GPA'];
-        $this->course_history_data['levels'][$row['LEVEL']]['INST_CREDITS_ATTEMPTED'] = $row['INST_CREDITS_ATTEMPTED'];
-        $this->course_history_data['levels'][$row['LEVEL']]['INST_CREDITS_EARNED'] = $row['INST_CREDITS_EARNED'];
-        $this->course_history_data['levels'][$row['LEVEL']]['INST_HOURS'] = $row['INST_HOURS'];
-        $this->course_history_data['levels'][$row['LEVEL']]['INST_POINTS'] = $row['INST_POINTS'];
-        $this->course_history_data['levels'][$row['LEVEL']]['INST_GPA'] = $row['INST_GPA'];
-        $this->course_history_data['levels'][$row['LEVEL']]['TRNS_CREDITS_ATTEMPTED'] = $row['TRNS_CREDITS_ATTEMPTED'];
-        $this->course_history_data['levels'][$row['LEVEL']]['TRNS_CREDITS_EARNED'] = $row['TRNS_CREDITS_EARNED'];
-        $this->course_history_data['levels'][$row['LEVEL']]['TRNS_HOURS'] = $row['TRNS_HOURS'];
-        $this->course_history_data['levels'][$row['LEVEL']]['TRNS_POINTS'] = $row['TRNS_POINTS'];
-        $this->course_history_data['levels'][$row['LEVEL']]['TRNS_GPA'] = $row['TRNS_GPA'];
-        $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_CREDITS_ATTEMPTED'] = $row['TOTAL_CREDITS_ATTEMPTED'];
-        $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_CREDITS_EARNED'] = $row['TOTAL_CREDITS_EARNED'];
-        $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_HOURS'] = $row['TOTAL_HOURS'];
-        $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_POINTS'] = $row['TOTAL_POINTS'];
-        $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_GPA'] = $row['TOTAL_GPA'];
-        $this->course_history_data['levels'][$row['LEVEL']]['COMMENTS'] = $row['COMMENTS'];
-      }
-      
       if ($last_calendar_month !== $row['CALENDAR_MONTH'] || $last_calendar_year !== $row['CALENDAR_YEAR'] || $last_term !== $row['TERM']) {
         $term_counter++;
         $course_counter = 0;
@@ -190,7 +167,7 @@ class TranscriptService {
         $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['LEVEL_DESCRIPTION'] = $row['LEVEL_DESCRIPTION'];
         
         // Load Standings
-        $standings_info_result = $this->db()->db_select('STUD_STUDENT_COURSE_HISTORY_STANDING', 'chstanding')
+        $standings_info_result = $this->db->db_select('STUD_STUDENT_COURSE_HISTORY_STANDING', 'chstanding')
           ->join('STUD_STANDING', 'standing', 'chstanding.STANDING_ID = standing.STANDING_ID')
           ->fields('standing', array('STANDING_DESCRIPTION'))
           ->condition('chstanding.STUDENT_ID', $row['STUDENT_ID'])
@@ -204,9 +181,11 @@ class TranscriptService {
       }
       
       // Course history info
+      $this->course_history_data['levels'][$row['LEVEL']]['level_description'] = $row['LEVEL_DESCRIPTION'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['COURSE_NUMBER'] = $row['COURSE_NUMBER'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['COURSE_TITLE'] = $row['COURSE_TITLE'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['MARK'] = $row['MARK'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['MARK_SCALE_ID'] = $row['MARK_SCALE_ID'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['CREDITS_ATTEMPTED'] = $row['CREDITS_ATTEMPTED'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['CREDITS_EARNED'] = $row['CREDITS_EARNED'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['QUALITY_POINTS'] = $row['QUALITY_POINTS'];
@@ -218,7 +197,34 @@ class TranscriptService {
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['TERM_HOURS'] = $row['TERM_HOURS'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['TERM_POINTS'] = $row['TERM_POINTS'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['TERM_GPA'] = $row['TERM_GPA'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CUM_CREDITS_ATTEMPTED'] = $row['CUM_CREDITS_ATTEMPTED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CUM_CREDITS_EARNED'] = $row['CUM_CREDITS_EARNED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CUM_HOURS'] = $row['CUM_HOURS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CUM_POINTS'] = $row['CUM_POINTS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CUM_GPA'] = $row['CUM_GPA'];
       
+      $this->course_history_data['levels'][$row['LEVEL']]['CUM_CREDITS_ATTEMPTED'] = $row['CUM_CREDITS_ATTEMPTED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['CUM_CREDITS_EARNED'] = $row['CUM_CREDITS_EARNED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['CUM_HOURS'] = $row['CUM_HOURS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['CUM_POINTS'] = $row['CUM_POINTS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['CUM_GPA'] = $row['CUM_GPA'];
+      $this->course_history_data['levels'][$row['LEVEL']]['INST_CREDITS_ATTEMPTED'] = $row['INST_CREDITS_ATTEMPTED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['INST_CREDITS_EARNED'] = $row['INST_CREDITS_EARNED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['INST_HOURS'] = $row['INST_HOURS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['INST_POINTS'] = $row['INST_POINTS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['INST_GPA'] = $row['INST_GPA'];
+      $this->course_history_data['levels'][$row['LEVEL']]['TRNS_CREDITS_ATTEMPTED'] = $row['TRNS_CREDITS_ATTEMPTED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['TRNS_CREDITS_EARNED'] = $row['TRNS_CREDITS_EARNED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['TRNS_HOURS'] = $row['TRNS_HOURS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['TRNS_POINTS'] = $row['TRNS_POINTS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['TRNS_GPA'] = $row['TRNS_GPA'];
+      $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_CREDITS_ATTEMPTED'] = $row['TOTAL_CREDITS_ATTEMPTED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_CREDITS_EARNED'] = $row['TOTAL_CREDITS_EARNED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_HOURS'] = $row['TOTAL_HOURS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_POINTS'] = $row['TOTAL_POINTS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_GPA'] = $row['TOTAL_GPA'];
+      $this->course_history_data['levels'][$row['LEVEL']]['COMMENTS'] = $row['COMMENTS'];
+
       $course_counter++;
       
       $last_calendar_month = $row['CALENDAR_MONTH'];
@@ -266,7 +272,7 @@ class TranscriptService {
       
     $schedule_result = $schedule_result->execute();
     while ($schedule_row = $schedule_result->fetch()) {
-      $this->current_schedule_data['levels'][$schedule_row['LEVEL_DESCRIPTION']][$schedule_row['ORGANIZATION_NAME']][$schedule_row['TERM_NAME']][] = $schedule_row; 
+      $this->current_schedule_data[$schedule_row['LEVEL_DESCRIPTION']][$schedule_row['ORGANIZATION_NAME']][$schedule_row['TERM_NAME']][] = $schedule_row; 
     }
   }
   

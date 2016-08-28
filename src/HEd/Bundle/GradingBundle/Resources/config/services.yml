@@ -10,3 +10,7 @@ services:
   kula.HEd.grading.degreeaudit:
     class: Kula\HEd\Bundle\GradingBundle\Service\DegreeAuditService
     arguments: ["@kula.core.db"]
+
+  kula.HEd.grading.transcript:
+    class: Kula\HEd\Bundle\GradingBundle\Service\TranscriptService
+    arguments: ["@kula.core.db"]

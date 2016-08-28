@@ -165,3 +165,9 @@ Core_HEd_Scheduling_Section_Grades:
   defaults: 
     _controller: KulaHEdSchedulingBundle:CoreSection:grades
     _navigation: Core.HEd.Scheduling.Section.Grades
+
+Core_HEd_Grading_StudentCourseHistory_Transcript:
+  path: /grading/student_course_history/transcript
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreCourseHistory:transcript
+    _navigation: Core.HEd.Grading.StudentCourseHistory.Transcript
