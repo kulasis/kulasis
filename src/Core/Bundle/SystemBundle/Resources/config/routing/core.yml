@@ -243,3 +243,9 @@ Core_System_Integration_Databases:
   defaults: 
     _controller: KulaCoreSystemBundle:CoreIntegration:databases
     _navigation: Core.System.Setup.IntegrationDatabases
+
+Core_System_Integration_API_Apps:
+  path: /setup/system/integration/api_apps
+  defaults: 
+    _controller: KulaCoreSystemBundle:CoreIntegration:apiApps
+    _navigation: Core.System.Setup.IntegrationAPIApps

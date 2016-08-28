@@ -29,6 +29,10 @@ Core.System.Setup:
       description: "Integration Databases"
       display_name: "Integration DBs"
       route: Core_System_Integration_Databases
+    IntegrationAPIApps:
+      description: "Integration API Applications"
+      display_name: "API Applications"
+      route: Core_System_Integration_API_Apps
     
 Core.System.Lookup:
   type: form

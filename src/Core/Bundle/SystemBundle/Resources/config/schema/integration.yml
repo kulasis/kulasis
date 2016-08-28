@@ -68,3 +68,56 @@ Core.Integration.Database:
       label_name: "Database"
   unique_keys:
     IntegrationDatabases: ['Core.Integration.Database.Application', 'Core.Integration.Database.Host', 'Core.Integration.Database.Database']
+
+Core.Integration.APIApplications:
+  description: "Integration Applications Table"
+  db_table_name: CORE_INTG_API_APPS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: INTG_API_APP_ID
+      db_column_type: primary_serial
+      column_name: "ID"
+      label_name: "ID"
+    Application:
+      description: "Application"
+      db_column_name: APPLICATION
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Application"
+      label_name: "Application"
+    Host:
+      description: "Server Host"
+      db_column_name: HOST
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Host"
+      label_name: "Host"
+    IPAddress:
+      description: "IP Address"
+      db_column_name: IP_ADDRESS
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "IP Address"
+      label_name: "IP Address"
+    APIKey:
+      description: "API Key"
+      db_column_name: API_KEY
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "API Key"
+      label_name: "API Key"

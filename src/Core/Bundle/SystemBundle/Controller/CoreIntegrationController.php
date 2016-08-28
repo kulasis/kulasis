@@ -17,4 +17,16 @@ class CoreIntegrationController extends Controller {
     
     return $this->render('KulaCoreSystemBundle:Integration:databases.html.twig', array('databases' => $databases));
   }
+
+  public function apiAppsAction() {
+  	$this->authorize();
+    $this->processForm();
+    
+    $databases = $this->db()->db_select('CORE_INTG_API_APPS', 'dbs')
+      ->fields('dbs')
+      ->orderBy('APPLICATION')
+      ->execute()->fetchAll();
+    
+    return $this->render('KulaCoreSystemBundle:Integration:api_apps.html.twig', array('databases' => $databases));
+  }
 }
