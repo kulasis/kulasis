@@ -23,3 +23,7 @@ role_list:
 focus_usergroup_change:
     path:     /login/focus/{id}
     defaults: { _controller: KulaCoreLoginBundle:Login:change_usergroup }
+
+_api_v1_login:
+    resource: "@KulaCoreLoginBundle/Resources/config/routing_api.yml"
+    prefix: /api/v1
