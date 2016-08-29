@@ -17,7 +17,7 @@ namespace Kula\Core\Bundle\FrameworkBundle\Controller;
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\HttpFoundation\Response;
 
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Kula\Core\Bundle\FrameworkBundle\Exception\NotAuthorizedException;
 
 class APIController extends BaseController {
 
@@ -37,7 +37,7 @@ class APIController extends BaseController {
     ) {
       return true;
     } else {
-      throw new UnauthorizedHttpException('Invalid API Key, Host, and IP combination.');
+      throw new NotAuthorizedException('Invalid API Key, Host, and IP combination.');
     }
       
   }
