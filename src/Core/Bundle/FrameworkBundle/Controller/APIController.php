@@ -28,7 +28,7 @@ class APIController extends BaseController {
     $request = $this->getRequest();
 
     $auth_api_service = $this->get('kula.login.auth.api');
-
+    
     if ($auth_api_service->authenticate(
         $this->getRequest()->query->get('apikey'), 
         gethostbyaddr($this->getRequest()->getClientIp()), 
@@ -37,7 +37,7 @@ class APIController extends BaseController {
     ) {
       return true;
     } else {
-      throw new UnauthorizedHttpException('Invalid API Key, Host, and IP combination.');
+      throw new UnauthorizedHttpException('Invalid API Key, Host, and IP combination. IP: '.$this->getRequest()->getClientIp().' Host: '.gethostbyaddr($this->getRequest()->getClientIp()));
     }
       
   }

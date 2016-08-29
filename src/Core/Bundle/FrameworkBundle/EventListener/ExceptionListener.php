@@ -59,10 +59,14 @@ class ExceptionListener implements EventSubscriberInterface
         $response = new RedirectResponse('/login');
       } else {
         if (!$exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException AND
-          !$exception instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException) {
+          !$exception instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException AND 
+          !$exception instanceof \Symfony\Component\Routing\Exception\ResourceNotFoundException AND 
+          !$exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
         // Error message to be displayed, logged, or mailed
-        $error_message = "\nUNCAUGHT EXCEPTION:\nTEXT: ". $exception->getMessage() .
-                           "\nLOCATION: ".$exception->getFile().", line " .
+        $error_message = "\nUNCAUGHT EXCEPTION: ".$exception->getMessage()."
+                          \nEXCEPTION CLASS: ". get_class($exception) . "
+                          \nTEXT: ". $exception->getMessage() .
+                         "\nLOCATION: ".$exception->getFile().", line " .
                            $exception->getLine() .", at " . date('F j, Y, g:i a') .
                            "\nShowing backtrace:\n".$exception->getTraceAsString()."\n\n" .
                            "\n" . print_r($session, true);
