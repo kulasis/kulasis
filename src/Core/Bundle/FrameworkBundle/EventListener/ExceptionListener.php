@@ -58,7 +58,8 @@ class ExceptionListener implements EventSubscriberInterface
       } elseif ($exception instanceof NotAuthorizedException) {
         $response = new RedirectResponse('/login');
       } else {
-        if (!$exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+        if (!$exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException AND
+          !$exception instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException) {
         // Error message to be displayed, logged, or mailed
         $error_message = "\nUNCAUGHT EXCEPTION:\nTEXT: ". $exception->getMessage() .
                            "\nLOCATION: ".$exception->getFile().", line " .
