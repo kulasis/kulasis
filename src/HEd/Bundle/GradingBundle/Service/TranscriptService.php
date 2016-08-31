@@ -106,7 +106,7 @@ class TranscriptService {
       $areas_result = $this->db->db_select('STUD_STUDENT_DEGREES_AREAS', 'studarea')
         ->fields('studarea', array('AREA_ID'))
         ->join('STUD_DEGREE_AREA', 'area', 'studarea.AREA_ID = area.AREA_ID')
-        ->fields('area', array('AREA_TYPE', 'AREA_NAME'))
+        ->fields('area', array('AREA_NAME'))
         ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = area.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
         ->fields('area_types', array('DESCRIPTION' => 'area_type'))
         ->condition('studarea.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])

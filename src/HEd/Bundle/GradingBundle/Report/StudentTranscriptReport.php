@@ -138,7 +138,7 @@ class StudentTranscriptReport extends BaseReport {
   public function degree_area_row($row) {
     $this->SetFont('Arial', '', 7);
     if (!$this->minorLabelCalled)
-      $this->Cell(25,3, $row['AREA_TYPE'].': ',0,0,'L');
+      $this->Cell(25,3, $row['area_type'].': ',0,0,'L');
     else {
       $this->minorLabelCalled = true;
       $this->Cell(25,3,'',0,0,'L');
