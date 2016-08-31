@@ -60,6 +60,8 @@ class TranscriptService {
   
   public function loadDegreesAwarded($student_id, $level = null) {
 
+    $this->degrees_awarded_data = array();
+
     // Get Degrees
     $degrees_res = $this->db->db_select('STUD_STUDENT_DEGREES', 'studdegrees')
       ->fields('studdegrees', array('STUDENT_DEGREE_ID', 'DEGREE_AWARDED', 'GRADUATION_DATE', 'CONFERRED_DATE'))
@@ -101,6 +103,8 @@ class TranscriptService {
   
   public function loadTranscriptData($student_id, $level = null) {
     
+    $this->course_history_data = array();
+
     // Add on level
     $level_condition = '';
     if ($level) {
@@ -160,6 +164,7 @@ class TranscriptService {
         else
           $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['ORGANIZATION_NAME'] = $row['ORGANIZATION_NAME'];
         
+        $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['NON_ORGANIZATION_NAME'] = $row['NON_ORGANIZATION_NAME'];
         $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CALENDAR_MONTH'] = $row['CALENDAR_MONTH'];
         $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CALENDAR_YEAR'] = $row['CALENDAR_YEAR'];
         $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['TERM'] = $row['TERM'];
@@ -238,8 +243,10 @@ class TranscriptService {
     
   }
   
-  public function loadCurrentSchedule($student_id, $level = null) {
+  private function loadCurrentSchedule($student_id, $level = null) {
     
+    $this->current_schedule_data = array();  
+
     // Add on level
     $level_condition = '';
     if ($level) {
@@ -275,5 +282,5 @@ class TranscriptService {
       $this->current_schedule_data[$schedule_row['LEVEL_DESCRIPTION']][$schedule_row['ORGANIZATION_NAME']][$schedule_row['TERM_NAME']][] = $schedule_row; 
     }
   }
-  
+
 }

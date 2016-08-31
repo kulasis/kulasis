@@ -58,14 +58,13 @@ class StudentTranscriptReport extends BaseReport {
     $this->Cell(30,5, date('m/d', strtotime($this->data['BIRTH_DATE'])),'LBR',0,'L');
     $this->Ln(5);
     $this->SetFont('Arial', '', 8);
-    $this->Cell(60,5,'Program / Concentration','LTR',0,'L');
+    $this->Cell(196,5,'Program','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
-    
     $program = $this->data['DEGREE_NAME'];
-    $program .= $this->data['CONCENTRATION_NAME'] != '' ? ' / '.substr($this->data['CONCENTRATION_NAME'], 0, 12) : '';
-    
-    $this->Cell(60,5, $program,'LBR',0,'L');
+    if ($this->data['areas'] != '') $program .= ' / '.$this->data['areas'];
+    $this->Cell(196,5, $program, 'LBR', 0,'L');
+    $program = '';
     $this->SetFont('Arial', '', 8);
     $this->Ln(10);
 
@@ -136,39 +135,15 @@ class StudentTranscriptReport extends BaseReport {
     $this->Ln(3);
   }
   
-  public function degree_major_row($row) {
+  public function degree_area_row($row) {
     $this->SetFont('Arial', '', 7);
     if (!$this->minorLabelCalled)
-      $this->Cell(25,3,'Majors: ',0,0,'L');
+      $this->Cell(25,3, $row['AREA_TYPE'].': ',0,0,'L');
     else {
       $this->minorLabelCalled = true;
       $this->Cell(25,3,'',0,0,'L');
     }
-    $this->Cell(55,3,$row['MAJOR_NAME'],0,0,'L');
-    $this->Ln(3);
-  }
-  
-  public function degree_minor_row($row) {
-    $this->SetFont('Arial', '', 7);
-    if (!$this->minorLabelCalled)
-      $this->Cell(25,3,'Minors: ',0,0,'L');
-    else {
-      $this->minorLabelCalled = true;
-      $this->Cell(25,3,'',0,0,'L');
-    }
-    $this->Cell(55,3,$row['MINOR_NAME'],0,0,'L');
-    $this->Ln(3);
-  }
-  
-  public function degree_concentration_row($row) {
-    $this->SetFont('Arial', '', 7);
-    if (!$this->minorLabelCalled)
-      $this->Cell(25,3,'Concentrations: ',0,0,'L');
-    else {
-      $this->minorLabelCalled = true;
-      $this->Cell(25,3,'',0,0,'L');
-    }
-    $this->Cell(55,3,$row['CONCENTRATION_NAME'],0,0,'L');
+    $this->Cell(55,3,$row['AREA_NAME'],0,0,'L');
     $this->Ln(3);
   }
 
@@ -192,11 +167,11 @@ class StudentTranscriptReport extends BaseReport {
     $this->Ln(3);
     if ($comments === null) {
       // Comments
-      if (isset($this->data['comments'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]))
-        $this->MultiCell(98, 3, $this->data['comments'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]);
+      if (isset($row['comments']))
+        $this->MultiCell(98, 3, $row['comments']);
       // Standings
-      if (isset($this->data['standings'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]))
-        $this->MultiCell(98, 3, $this->data['standings'][$row['CALENDAR_YEAR']][$row['CALENDAR_MONTH']][$row['TERM']]);
+      if (isset($row['standings']))
+        $this->MultiCell(98, 3, implode(", ", $row['standings']));
     }
   }
   
@@ -225,36 +200,30 @@ class StudentTranscriptReport extends BaseReport {
     $this->Ln(3);
     // Term
     $this->Cell(15,3,'TERM:',0,0,'L');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['TERM']['ATT'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['TERM']['ERN'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['TERM']['HRS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['TERM']['PTS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    if ($totals['TERM']['HRS'] > 0)
-      $this->Cell(15,3,sprintf('%0.2f', round($totals['TERM']['PTS'] / $totals['TERM']['HRS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');  
-    else
-      $this->Cell(15,3,'0.00',0,0,'R');    
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['TERM_CREDITS_ATTEMPTED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['TERM_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['TERM_HOURS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['TERM_POINTS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['TERM_GPA'], 2, PHP_ROUND_HALF_UP)),0,0,'R');  
     $this->Ln(3);
     // Cum
     $this->Cell(15,3,'CUM:',0,0,'L');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM']['ATT'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM']['ERN'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM']['HRS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM']['PTS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    if ($totals['CUM']['HRS'] > 0)
-      $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM']['PTS'] / $totals['CUM']['HRS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');  
-    else
-      $this->Cell(15,3,'0.00',0,0,'R');    
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM_CREDITS_ATTEMPTED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM_HOURS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM_POINTS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM_GPA'], 2, PHP_ROUND_HALF_UP)),0,0,'R');     
     $this->Ln(3);
     $this->Ln(5); 
     }
   }
   
-  public function level_total_gpa_table_row($totals, $level) {
+  public function level_total_gpa_table_row($totals) {
     if ($totals) {
 
     $this->Ln(2);
     // Header
-    $this->add_header(strtoupper($level).' TOTALS');
+    $this->add_header(strtoupper($totals['level_description']).' TOTALS');
     $this->Cell(15,3,'' ,0,0,'L');
     $this->Cell(15,3,'ATT',0,0,'R');
     $this->Cell(15,3,'ERN',0,0,'R');
@@ -264,88 +233,29 @@ class StudentTranscriptReport extends BaseReport {
     $this->Ln(3);
     // institution
     $this->Cell(15,3,'INSTITUTION:',0,0,'L');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['institution']['ATT'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['institution']['ERN'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['institution']['HRS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['institution']['PTS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    if ($totals['institution']['HRS'] > 0)
-      $this->Cell(15,3,sprintf('%0.2f', round($totals['institution']['PTS'] / $totals['institution']['HRS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');  
-    else
-      $this->Cell(15,3,'0.00',0,0,'R');    
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['INST_CREDITS_ATTEMPTED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['INST_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['INST_HOURS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['INST_POINTS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['INST_GPA'], 2, PHP_ROUND_HALF_UP)),0,0,'R');     
     $this->Ln(3);
     // transfer
     $this->Cell(15,3,'TRANSFER:',0,0,'L');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['transfer']['ATT'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['transfer']['ERN'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['transfer']['HRS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['transfer']['PTS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    if ($totals['transfer']['HRS'] > 0)
-      $this->Cell(15,3,sprintf('%0.2f', round($totals['transfer']['PTS'] / $totals['transfer']['HRS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');  
-    else
-      $this->Cell(15,3,'0.00',0,0,'R');    
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['TRNS_CREDITS_ATTEMPTED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['TRNS_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['TRNS_HOURS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['TRNS_POINTS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['TRNS_GPA'], 2, PHP_ROUND_HALF_UP)),0,0,'R');  
     $this->Ln(3);
     // total
     $this->Cell(15,3,'TOTAL:',0,0,'L');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['institution']['ATT'] + $totals['transfer']['ATT'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['institution']['ERN'] + $totals['transfer']['ERN'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['institution']['HRS'] + $totals['transfer']['HRS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    $this->Cell(15,3,sprintf('%0.2f', round($totals['institution']['PTS'] + $totals['transfer']['PTS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
-    if ($totals['institution']['HRS'] > 0 OR $totals['transfer']['HRS'] > 0)
-      $this->Cell(15,3,sprintf('%0.2f', round(($totals['institution']['PTS'] + $totals['transfer']['PTS']) / ($totals['institution']['HRS'] + $totals['transfer']['HRS']), 2, PHP_ROUND_HALF_UP)),0,0,'R');  
-    else
-      $this->Cell(15,3,'0.00',0,0,'R');    
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM_CREDITS_ATTEMPTED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM_CREDITS_EARNED'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM_HOURS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM_POINTS'], 2, PHP_ROUND_HALF_UP)),0,0,'R');
+    $this->Cell(15,3,sprintf('%0.2f', round($totals['CUM_GPA'], 2, PHP_ROUND_HALF_UP)),0,0,'R');    
     $this->Ln(3);
     $this->Ln(5);
-    }
-  }
-  
-  public function currentschedule($data, $student_id, $last_level, $student_rows) {
-    if (isset($data[$student_id])) {
-    foreach($data[$student_id] as $level => $level_row) {
-      if ($last_level != '' AND $level == $last_level) {
-        
-        $this->add_header(strtoupper($level).' COURSES IN PROGRESS');
-        foreach($level_row as $org_name => $org_row) {
-          foreach($org_row as $term_name => $term_row) {
-            
-            // Check how far from bottom
-            $amount_to_check = $student_rows[$student_id][$level][$org_name][$term_name] * 3 + 3 + 3 + 5 + 2;
-            $current_y = $this->GetY();
-            if (260 - $current_y < $amount_to_check) {
-              $this->Ln(260 - $current_y);
-            }
-            
-            $this->currentschedule_term_table_row(array('TERM_NAME' => $term_name, 'ORGANIZATION_NAME' => $org_name));
-            foreach($term_row as $schedule_row) {
-              $this->currentschedule_table_row($schedule_row);
-            }
-            $this->Ln(3);
-          }
-        }
-      } elseif ($last_level == '') {
-        
-        
-        
-        $this->add_header(strtoupper($level).' COURSES IN PROGRESS');
-        foreach($level_row as $org_name => $org_row) {
-          foreach($org_row as $term_name => $term_row) {
-            
-            // Check how far from bottom
-            $amount_to_check = $student_rows[$student_id][$level][$org_name][$term_name] * 3 + 3 + 3 + 3 + 5 + 2;
-            $current_y = $this->GetY();
-            if (260 - $current_y < $amount_to_check) {
-              $this->Ln(260 - $current_y);
-            }
-            
-            $this->currentschedule_term_table_row(array('TERM_NAME' => $term_name, 'ORGANIZATION_NAME' => $org_name));
-            foreach($term_row as $schedule_row) {
-              $this->currentschedule_table_row($schedule_row);
-            }
-            $this->Ln(3);
-          }
-        }
-      }
-    }
     }
   }
   
