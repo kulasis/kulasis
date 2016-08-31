@@ -11,10 +11,12 @@ class TranscriptService {
     $this->course_history_data = array();
     $this->current_schedule_data = array();
     $this->degrees_awarded_data = array();
+    $this->student_data = array();
   }
   
   public function loadTranscriptForStudent($student_id, $level = null) {
     
+    $this->loadStudentData($student_id, $level);
     $this->loadDegreesAwarded($student_id, $level);
     $this->loadTranscriptData($student_id, $level);
     $this->loadCurrentSchedule($student_id, $level);
@@ -33,29 +35,47 @@ class TranscriptService {
     return $this->degrees_awarded_data;
   }
   
-  private function loadStudentData($student_id) {
+  public function getStudentData() {
+    return $this->student_data;
+  }
+
+  private function loadStudentData($student_id, $level = null) {
     
-    // Grade status info
-    $status_info = $this->db->db_select('STUD_STUDENT_STATUS', 'status')
+    $status_info = $this->db->db_select('STUD_STUDENT', 'student')
+      ->fields('student', array('STUDENT_ID', 'ORIGINAL_ENTER_DATE', 'HIGH_SCHOOL_GRADUATION_DATE'))
+      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'BIRTH_DATE'))
+      ->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID')
       ->join('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
       ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
       ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
+      ->fields('studdegrees', array('STUDENT_DEGREE_ID'))
       ->leftJoin('STUD_DEGREE', 'degree', 'degree.DEGREE_ID = studdegrees.DEGREE_ID')
       ->fields('degree', array('DEGREE_NAME'))
-      ->leftJoin('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcentrations', 'studdegrees.STUDENT_DEGREE_ID = stuconcentrations.STUDENT_DEGREE_ID')
-      ->leftJoin('STUD_DEGREE_CONCENTRATION', 'concentrations', 'stuconcentrations.CONCENTRATION_ID = concentrations.CONCENTRATION_ID')
-      ->fields('concentrations', array('CONCENTRATION_NAME'))
-      ->condition('status.STUDENT_ID', $row['STUDENT_ID']);
+      ->condition('status.STUDENT_ID', $student_id);
 
-    if (isset($level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
-     $status_info = $status_info->condition('status.LEVEL', $level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);  
+    if ($level) {
+     $status_info = $status_info->condition('status.LEVEL', $level);  
     }
     
-    $status_info = $status_info->orderBy('ENTER_DATE', 'DESC')->execute()->fetch();
-    
-    // Student data, same across all records
-    $this->course_history_data['ORIGINAL_ENTER_DATE'] = $row['ORIGINAL_ENTER_DATE'];
-    $this->course_history_data['HIGH_SCHOOL'] = $row['HIGH_SCHOOL_GRADUATION_DATE'];
+    $this->student_data = $status_info->orderBy('ENTER_DATE', 'DESC')->execute()->fetch();
+
+    $this->student_data['areas'] = '';
+
+    $areas = array();
+
+    // get areas
+    $areas_info = $this->db->db_select('STUD_STUDENT_DEGREES_AREAS', 'stuareas')
+      ->join('STUD_DEGREE_AREA', 'area', 'stuareas.AREA_ID = area.AREA_ID')
+      ->fields('area', array('AREA_NAME'))
+      ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = area.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
+      ->fields('area_types', array('DESCRIPTION' => 'area_type'))
+      ->condition('stuareas.STUDENT_DEGREE_ID', $this->student_data['STUDENT_DEGREE_ID'])
+      ->execute();
+    while ($areas_row = $areas_info->fetch()) {
+      $areas[] = $areas_row['area_type'].': '.$areas_row['AREA_NAME'];
+    }
+    $this->student_data['areas'] = implode(', ', $areas);
   }
   
   public function loadDegreesAwarded($student_id, $level = null) {

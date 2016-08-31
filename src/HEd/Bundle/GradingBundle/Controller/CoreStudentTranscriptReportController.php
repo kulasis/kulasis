@@ -26,9 +26,8 @@ class CoreStudentTranscriptReportController extends ReportController {
     
     // Get Data and Load
     $result = $this->db()->db_select('STUD_STUDENT', 'student')
-      ->fields('student', array('STUDENT_ID', 'ORIGINAL_ENTER_DATE', 'HIGH_SCHOOL_GRADUATION_DATE'))
-      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
-      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'BIRTH_DATE'));
+      ->fields('student', array('STUDENT_ID'))
+      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID');
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0) {
       $result = $result->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID');
@@ -52,42 +51,9 @@ class CoreStudentTranscriptReportController extends ReportController {
       $data = $this->service->getTranscriptData();
       $current_schedule = $this->service->getCurrentScheduleData();
       $degree_data = $this->service->getDegreeData();
+      $student_data = $this->service->getStudentData();
 
-       // Grade status info
-        $status_info = $this->db()->db_select('STUD_STUDENT_STATUS', 'status')
-          ->join('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
-          ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
-          ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
-          ->fields('studdegrees', array('STUDENT_DEGREE_ID'))
-          ->leftJoin('STUD_DEGREE', 'degree', 'degree.DEGREE_ID = studdegrees.DEGREE_ID')
-          ->fields('degree', array('DEGREE_NAME'))
-          ->condition('status.STUDENT_ID', $row['STUDENT_ID']);
-
-        if (isset($level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
-         $status_info = $status_info->condition('status.LEVEL', $level['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);  
-        }
-        
-        $status_info = $status_info->orderBy('ENTER_DATE', 'DESC')->execute()->fetch();
-
-        $status_info['areas'] = '';
-
-        $areas = array();
-
-        // get areas
-        $areas_info = $this->db()->db_select('STUD_STUDENT_DEGREES_AREAS', 'stuareas')
-          ->join('STUD_DEGREE_AREA', 'area', 'stuareas.AREA_ID = area.AREA_ID')
-          ->fields('area', array('AREA_NAME'))
-          ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = area.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
-          ->fields('area_types', array('DESCRIPTION' => 'area_type'))
-          ->condition('stuareas.STUDENT_DEGREE_ID', $status_info['STUDENT_DEGREE_ID'])
-          ->execute();
-        while ($areas_row = $areas_info->fetch()) {
-          $areas[] = $areas_row['area_type'].': '.$areas_row['AREA_NAME'];
-        }
-        $status_info['areas'] = implode(', ', $areas);
-        $areas = array();
-      if (is_array($status_info)) $row = array_merge($row, $status_info);
-      $pdf->setData($row);
+      $pdf->setData($student_data);
       $pdf->row_count = 1;
       $pdf->pageNum = 1;
       $pdf->pageTotal = 1;
