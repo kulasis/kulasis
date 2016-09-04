@@ -23,17 +23,26 @@
 
 {% block body %}
 <div class="container" id="login_form">
-
-<form class="form-signin" action="{{ path( 'attempt_login') }}" method="post">
-  <h2 class="form-signin-heading">{{ instance_name }}</h2>
+<h2 class="form-signin-heading" align="center" style="border-bottom:1px solid black;padding-bottom:6px;">{{ instance_name }}</h2>
+<div class="row">
+    <div class="col-xs-6">
+      <div style="padding-bottom:1em;text-align:center;">Students &amp; Faculty, click the button below to login.</div>
   <a id="google_auth" href="{{ authurl }}" class="btn btn-lg btn-danger btn-block" style="margin-bottom:5px;">Sign in with Google</a>
   {% include 'KulaCoreFrameworkBundle:Base:flash.html.twig' %}
-  <label for="inputEmail" class="sr-only">Username/Email</label>
-  <input type="text" name="username" id="inputEmail" class="form-control" placeholder="Email address" autofocus>
+    </div>
+    <div class="col-xs-6">
+      <div align="center">Administrator login</div>
+<form class="form-signin" action="{{ path( 'attempt_login') }}" method="post">
+  <label for="inputEmail" class="sr-only">Username</label>
+  <input type="text" name="username" id="inputEmail" class="form-control" placeholder="Username" autofocus>
   <label for="inputPassword" class="sr-only">Password</label>
   <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password">
   <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 </form>
+    </div>
+</div>
+
+
 
 </div> <!-- /container -->
 {% endblock %}
