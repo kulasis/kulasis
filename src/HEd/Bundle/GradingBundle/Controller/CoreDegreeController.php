@@ -20,51 +20,6 @@ class CoreDegreeController extends Controller {
     
     return $this->render('KulaHEdGradingBundle:CoreDegree:degrees.html.twig', array('degrees' => $degrees));
   }
-  
-  public function majorsAction() {
-    $this->authorize();
-    $this->processForm();
-    
-    $majors = array();
-    
-      // Get Majors
-      $majors = $this->db()->db_select('STUD_DEGREE_MAJOR')
-        ->fields('STUD_DEGREE_MAJOR')
-        ->orderBy('MAJOR_NAME', 'ASC')
-        ->execute()->fetchAll();
-    
-    return $this->render('KulaHEdGradingBundle:CoreDegree:majors.html.twig', array('majors' => $majors));
-  }
-  
-  public function minorsAction() {
-    $this->authorize();
-    $this->processForm();
-    
-    $minors = array();
-    
-      // Get Minors
-      $minors = $this->db()->db_select('STUD_DEGREE_MINOR')
-        ->fields('STUD_DEGREE_MINOR')
-        ->orderBy('MINOR_NAME', 'ASC')
-        ->execute()->fetchAll();
-    
-    return $this->render('KulaHEdGradingBundle:CoreDegree:minors.html.twig', array('minors' => $minors));
-  }
-  
-  public function concentrationsAction() {
-    $this->authorize();
-    $this->processForm();
-    
-    $concentrations = array();
-    
-      // Get Concentrations
-      $concentrations = $this->db()->db_select('STUD_DEGREE_CONCENTRATION')
-        ->fields('STUD_DEGREE_CONCENTRATION')
-        ->orderBy('CONCENTRATION_NAME', 'ASC')
-        ->execute()->fetchAll();
-    
-    return $this->render('KulaHEdGradingBundle:CoreDegree:concentrations.html.twig', array('concentrations' => $concentrations));
-  }
 
   public function areasAction() {
     $this->authorize();

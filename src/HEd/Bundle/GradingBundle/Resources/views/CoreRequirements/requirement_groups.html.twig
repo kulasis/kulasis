@@ -5,12 +5,6 @@
 <p>
 {% if type == 'degree' %}
 <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_HEd_Degrees_Degrees') }}">Back to Degrees</a>
-{% elseif type == 'major' %}
-<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_HEd_Degrees_Majors') }}">Back to Majors</a>
-{% elseif type == 'minor' %}
-<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_HEd_Degrees_Minors') }}">Back to Minors</a>
-{% elseif type == 'concentration' %}
-<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_HEd_Degrees_Concentrations') }}">Back to Concentrations</a>
 {% elseif type == 'area' %}
 <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_HEd_Degrees_Areas') }}">Back to Areas</a>
 {% endif %}

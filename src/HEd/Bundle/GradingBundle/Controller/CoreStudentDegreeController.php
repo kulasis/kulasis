@@ -34,28 +34,13 @@ class CoreStudentDegreeController extends Controller {
       ->fields('degree', array('DEGREE_NAME'))
       ->condition('STUDENT_DEGREE_ID', $sub_id)
       ->execute()->fetch();
-    
-    $majors = $this->db()->db_select('STUD_STUDENT_DEGREES_MAJORS')
-      ->fields('STUD_STUDENT_DEGREES_MAJORS', array('STUDENT_MAJOR_ID', 'STUDENT_DEGREE_ID', 'MAJOR_ID'))
-      ->condition('STUDENT_DEGREE_ID', $sub_id)
-      ->execute()->fetchAll();
-    
-    $minors = $this->db()->db_select('STUD_STUDENT_DEGREES_MINORS')
-      ->fields('STUD_STUDENT_DEGREES_MINORS', array('STUDENT_MINOR_ID', 'STUDENT_DEGREE_ID', 'MINOR_ID'))
-      ->condition('STUDENT_DEGREE_ID', $sub_id)
-      ->execute()->fetchAll();
-    
-    $concentrations = $this->db()->db_select('STUD_STUDENT_DEGREES_CONCENTRATIONS')
-      ->fields('STUD_STUDENT_DEGREES_CONCENTRATIONS', array('STUDENT_CONCENTRATION_ID', 'STUDENT_DEGREE_ID', 'CONCENTRATION_ID'))
-      ->condition('STUDENT_DEGREE_ID', $sub_id)
-      ->execute()->fetchAll();
 
     $areas = $this->db()->db_select('STUD_STUDENT_DEGREES_AREAS')
       ->fields('STUD_STUDENT_DEGREES_AREAS', array('STUDENT_AREA_ID', 'STUDENT_DEGREE_ID', 'AREA_ID'))
       ->condition('STUDENT_DEGREE_ID', $sub_id)
       ->execute()->fetchAll();
     
-    return $this->render('KulaHEdGradingBundle:CoreStudentDegree:degrees_detail.html.twig', array('student_degree_id' => $sub_id, 'degree' => $degree, 'majors' => $majors, 'minors' => $minors, 'concentrations' => $concentrations, 'areas' => $areas));    
+    return $this->render('KulaHEdGradingBundle:CoreStudentDegree:degrees_detail.html.twig', array('student_degree_id' => $sub_id, 'degree' => $degree, 'areas' => $areas));    
   }
   
   public function degreeAuditAction() {
