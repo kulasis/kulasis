@@ -41,45 +41,6 @@ HEd.Degree.Area:
       column_name: "PF Code"
       label_name: "PF Code"
 
-HEd.Degree.Concentration:
-  fields:
-    PFCode:
-      description: "PowerFAIDS Code"
-      db_column_name: PF_CODE
-      db_column_type: varchar
-      db_column_length: 255
-      db_column_null: true
-      field_type: text
-      field_size: 10
-      column_name: "PF Code"
-      label_name: "PF Code"
-
-HEd.Degree.Major:
-  fields:
-    PFCode:
-      description: "PowerFAIDS Code"
-      db_column_name: PF_CODE
-      db_column_type: varchar
-      db_column_length: 255
-      db_column_null: true
-      field_type: text
-      field_size: 10
-      column_name: "PF Code"
-      label_name: "PF Code"
-
-HEd.Degree.Minor:
-  fields:
-    PFCode:
-      description: "PowerFAIDS Code"
-      db_column_name: PF_CODE
-      db_column_type: varchar
-      db_column_length: 255
-      db_column_null: true
-      field_type: text
-      field_size: 10
-      column_name: "PF Code"
-      label_name: "PF Code"
-
 HEd.Student.Status:
   fields:
     PFaidsExempt:

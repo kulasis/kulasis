@@ -18,30 +18,6 @@ HEd.Degree.Requirement.Group:
       db_column_null: true
       column_name: "Degree ID"
       label_name: "Degree ID"
-    MajorID:
-      description: "Major ID"
-      parent: HEd.Degree.Major.ID
-      db_column_name: MAJOR_ID
-      db_column_type: serial
-      db_column_null: true
-      column_name: "Major ID"
-      label_name: "Major ID"
-    MinorID:
-      description: "Minor ID"
-      parent: HEd.Degree.Minor.ID
-      db_column_name: MINOR_ID
-      db_column_type: serial
-      db_column_null: true
-      column_name: "Minor ID"
-      label_name: "Minor ID"
-    ConcentrationID:
-      description: "Concentration ID"
-      parent: HEd.Degree.Concentration.ID
-      db_column_name: CONCENTRATION_ID
-      db_column_type: serial
-      db_column_null: true
-      column_name: "Concentration ID"
-      label_name: "Concentration ID"
     AreaID:
       description: "Area ID"
       parent: HEd.Degree.Area.ID
