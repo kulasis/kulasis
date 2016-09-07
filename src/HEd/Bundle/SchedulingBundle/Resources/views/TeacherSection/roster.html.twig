@@ -20,9 +20,24 @@ Roster
   {{ kula_field_name({ field: 'HEd.Student.Class.EndDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </thead>
 <tbody>
+  {% set count = 1 %}
   {% for student in students %}
+  {% if laststudent == student.STUDENT_CLASS_ID %}
   <tr>
-    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    <td class="data-table-cell-row-num">&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    {{ kula_field({ field: 'HEd.Student.Degree.Area.AreaID', value: student.AREA_ID, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  {% else %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ count }}</td>
     {{ kula_field({ field: 'Core.Constituent.PermanentNumber', db_row_id: student.STUDENT_CLASS_ID, value: student.PERMANENT_NUMBER, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Constituent.LastName', db_row_id: student.STUDENT_CLASS_ID, value: student.LAST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Constituent.FirstName', db_row_id: student.STUDENT_CLASS_ID, value: student.FIRST_NAME, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
@@ -33,6 +48,9 @@ Roster
     {{ kula_field({ field: 'HEd.Student.Class.StartDate', value: student.START_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Student.Class.EndDate', value: student.END_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
+  {% set count = count + 1 %}
+  {% endif %}
+  {% set laststudent = student.STUDENT_CLASS_ID %}
   {% endfor %}
 </tbody>
 </table>
