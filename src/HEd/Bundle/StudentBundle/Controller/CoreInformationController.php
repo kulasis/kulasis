@@ -25,12 +25,6 @@ class CoreInformationController extends Controller {
         ->fields('stustatus', array('STUDENT_STATUS_ID', 'ADVISOR_ID', 'COHORT', 'ADMISSIONS_COUNSELOR_ID'))
         ->leftJoin('STUD_STUDENT_DEGREES', 'studegree', 'stustatus.SEEKING_DEGREE_1_ID = studegree.STUDENT_DEGREE_ID')
         ->fields('studegree', array('STUDENT_DEGREE_ID', 'DEGREE_ID', 'EXPECTED_COMPLETION_TERM_ID', 'GRADUATION_DATE'))
-        ->leftJoin('STUD_STUDENT_DEGREES_MAJORS', 'stumajor', 'stumajor.STUDENT_DEGREE_ID = studegree.STUDENT_DEGREE_ID')
-        ->fields('stumajor', array('MAJOR_ID'))
-        ->leftJoin('STUD_STUDENT_DEGREES_MINORS', 'stuminor', 'stuminor.STUDENT_DEGREE_ID = studegree.STUDENT_DEGREE_ID')
-        ->fields('stuminor', array('MINOR_ID'))
-        ->leftJoin('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcentration', 'stuconcentration.STUDENT_DEGREE_ID = studegree.STUDENT_DEGREE_ID')
-        ->fields('stuconcentration', array('CONCENTRATION_ID'))
         ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecord()['STUDENT_STATUS_ID'])
         ->execute()->fetch();
 

@@ -15,7 +15,7 @@ Roster
   {{ kula_field_name({ field: 'HEd.Student.Status.Level', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Status.Grade', field_name_override: 'Grade Level', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Status.EnterCode', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'HEd.Student.Degree.Concentration.ConcentrationID', field_name_override: 'Concentration', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Degree.Area.AreaID', field_name_override: 'Area', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.StartDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.EndDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </thead>
@@ -29,7 +29,7 @@ Roster
     {{ kula_field({ field: 'HEd.Student.Status.Level', db_row_id: student.STUDENT_CLASS_ID, value: student.LEVEL, lookup: 'C', input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Student.Status.Grade', db_row_id: student.STUDENT_CLASS_ID, value: student.GRADE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Student.Status.EnterCode', db_row_id: student.STUDENT_CLASS_ID, value: student.ENTER_CODE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ field: 'HEd.Student.Degree.Concentration.ConcentrationID', value: student.CONCENTRATION_ID, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Student.Degree.Area.AreaID', value: student.AREA_ID, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Student.Class.StartDate', value: student.START_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Student.Class.EndDate', value: student.END_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
