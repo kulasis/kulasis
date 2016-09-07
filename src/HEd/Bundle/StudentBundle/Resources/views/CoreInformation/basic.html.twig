@@ -19,6 +19,26 @@
 {{ kula_field({ edit: true, field: 'HEd.Student.Degree.ExpectedCompletionTermID', db_row_id: status.STUDENT_DEGREE_ID, value: status.EXPECTED_COMPLETION_TERM_ID, field_name_override: 'Expected Term Completed', label: true}) }}
 </div>
 </div>
+
+<div class="data-table-header-div">
+Degree Areas
+</div>
+<table id="window_window_num_data_table_areas" class="data-table">
+<thead>
+  <tr>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Student.Degree.Area.AreaID', field_name_override: 'Area Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  </tr>
+</thead>
+<tbody>
+  {% for area in areas %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, field: 'HEd.Student.Degree.Area.AreaID', db_row_id: area.STUDENT_AREA_ID, value: area.AREA_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
 {% endif %}
 {% endif %}
 

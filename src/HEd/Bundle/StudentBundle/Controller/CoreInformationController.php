@@ -15,6 +15,7 @@ class CoreInformationController extends Controller {
     $addresses = array();
     $phones = array();
     $emails = array();
+    $areas = array();
     
     if ($this->record->getSelectedRecordID()) {
       
@@ -27,6 +28,11 @@ class CoreInformationController extends Controller {
         ->fields('studegree', array('STUDENT_DEGREE_ID', 'DEGREE_ID', 'EXPECTED_COMPLETION_TERM_ID', 'GRADUATION_DATE'))
         ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecord()['STUDENT_STATUS_ID'])
         ->execute()->fetch();
+
+      $areas = $this->db()->db_select('STUD_STUDENT_DEGREES_AREAS')
+        ->fields('STUD_STUDENT_DEGREES_AREAS', array('STUDENT_AREA_ID', 'STUDENT_DEGREE_ID', 'AREA_ID'))
+        ->condition('STUDENT_DEGREE_ID', $status['STUDENT_DEGREE_ID'])
+        ->execute()->fetchAll();
 
       }
       
@@ -56,7 +62,7 @@ class CoreInformationController extends Controller {
       
     } // end if selected record
     
-    return $this->render('KulaHEdStudentBundle:CoreInformation:basic.html.twig', array('status' => $status, 'addresses' => $addresses, 'phones' => $phones, 'emails' => $emails));
+    return $this->render('KulaHEdStudentBundle:CoreInformation:basic.html.twig', array('status' => $status, 'addresses' => $addresses, 'phones' => $phones, 'emails' => $emails, 'areas' => $areas));
   }
   
   public function demographicAction() {
