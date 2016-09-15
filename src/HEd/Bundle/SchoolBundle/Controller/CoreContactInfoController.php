@@ -130,7 +130,7 @@ class CoreContactInfoController extends Controller {
     if ($this->poster()) {
       $address_result = $this->poster()->getAddedIDs('Core.Constituent.Address');
       if ($address_result) {  
-        return $this->forward('sis_HEd_staff_addresses', array('record_type' => 'Core.HEd.Staff', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Staff', 'record_id' => $this->record->getSelectedRecordID()));
+        return $this->forward('core_HEd_school_staff_addresses', array('record_type' => 'Core.HEd.Staff', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Staff', 'record_id' => $this->record->getSelectedRecordID()));
       }
     }
     
