@@ -39,6 +39,11 @@ class CoreStudentTranscriptReportController extends ReportController {
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('student.STUDENT_ID', $record_id);
 
+    $non = $this->request->request->get('non');
+    if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
+      $result = $result->condition('status.LEVEL', $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);
+    }
+
     $result = $result
       ->orderBy('stucon.LAST_NAME', 'ASC')
       ->orderBy('stucon.FIRST_NAME', 'ASC')
