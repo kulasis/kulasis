@@ -24,6 +24,7 @@ Registration
   {{ kula_display_html({ add: true, field: 'HEd.Student.Registration.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
   {{ kula_field({ add: true, delete: true, field: 'HEd.Student.Registration.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
   {{ kula_display_html({ add: true, field: 'HEd.Student.Registration.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+   {{ kula_field({ add: true, hidden: true, field: 'HEd.Student.Registration.StudentID', value: kula_core_record.getSelectedRecord.STUDENT_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.Student.Registration.OrganizationTermID', value: kula_core_record.getSelectedRecord.ORGANIZATION_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.Student.Registration.Level', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.Student.Registration.Grade', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
@@ -35,9 +36,10 @@ Registration
   <tr>
     {{ kula_field({ delete: true, field: 'HEd.Student.Registration.ID', db_row_id: regrow.REGISTRATION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
-    {{ kula_field({ edit: true, field: 'HEd.Student.Registration.OrganizationTermID', db_row_id: regrow.REGISTRATION_ID, value: orgterm.ORGANIZATION_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Registration.OrganizationTermID', db_row_id: regrow.REGISTRATION_ID, value: regrow.ORGANIZATION_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Registration.Level', db_row_id: regrow.REGISTRATION_ID, value: regrow.LEVEL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Registration.Grade', db_row_id: regrow.REGISTRATION_ID, value: regrow.GRADE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Registration.EnterCode', db_row_id: regrow.REGISTRATION_ID, value: regrow.ENTER_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Registration.OpenRegistration', db_row_id: regrow.REGISTRATION_ID, value: regrow.OPEN_REGISTRATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Registration.CloseRegistration', db_row_id: regrow.REGISTRATION_ID, value: regrow.CLOSE_REGISTRATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
