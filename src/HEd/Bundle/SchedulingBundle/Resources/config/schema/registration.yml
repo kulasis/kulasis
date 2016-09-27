@@ -9,6 +9,15 @@ HEd.School.Term:
       field_type: checkbox
       column_name: "Registration Available"
       label_name: "Registration Available"
+    CatalogAvailable:
+      description: "Catalog Available"
+      db_column_name: CATALOG_AVAILABLE
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Catalog Available"
+      label_name: "Catalog Available"
 
 HEd.School.Term.Registration.GradeLevel:
   description: "School Term Registration"
