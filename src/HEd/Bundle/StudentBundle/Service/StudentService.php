@@ -89,7 +89,7 @@ class StudentService {
     
   }
   
-  public function enrollStudent($statusInfo) {
+  public function enrollStudent($statusInfo, $options = array()) {
     
     // Get original enter term
     $enter_term = $this->db->db_select('STUD_STUDENT_STATUS', 'status')
@@ -127,14 +127,14 @@ class StudentService {
       'HEd.Student.Status.Cohort' => $statusInfo['Cohort'],
       'HEd.Student.Status.AdvisorID' => $statusInfo['AdvisorID'],
       'HEd.Student.Status.SeekingDegree1ID' => $statusInfo['SeekingDegree1ID']
-    ))->process()->getID();
-
+    ))->process($options)->getID();
+echo $student_status_id;
     // Create Enrollment Record
     $enrollment_id = $this->poster->newPoster()->add('HEd.Student.Enrollment', 'new', array(
       'HEd.Student.Enrollment.StatusID' => $student_status_id,
       'HEd.Student.Enrollment.EnterDate' => $statusInfo['HEd.Student.Status.EnterDate'],
       'HEd.Student.Enrollment.EnterCode' => $statusInfo['HEd.Student.Status.EnterCode']
-    ))->process()->getID();
+    ))->process($options)->getID();
     
     // Create Enrollment Activity Record
     $enrollment_activity_id = $this->poster->newPoster()->add('HEd.Student.Enrollment.Activity', 'new', array(
@@ -143,7 +143,7 @@ class StudentService {
       'HEd.Student.Enrollment.Activity.Grade' => $statusInfo['HEd.Student.Status.Grade'],
       'HEd.Student.Enrollment.Activity.Level' => $statusInfo['HEd.Student.Status.Level'],
       'HEd.Student.Enrollment.Activity.Resident' => $statusInfo['HEd.Student.Status.Resident']
-    ))->process()->getID();
+    ))->process($options)->getID();
     
     return array('student_status' => $student_status_id, 'enrollment_id' => $enrollment_id, 'enrollment_activity_id' => $enrollment_activity_id);
   }

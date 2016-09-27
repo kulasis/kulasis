@@ -24,9 +24,9 @@ Terms Available for Registration
     {% if reg.STUDENT_STATUS_ID %}
     <td><a href="{{ path('Student_HEd_Registration_Catalog', { student_status_id: reg.STUDENT_STATUS_ID }) }}">Continue</a></td>
     {% else %}
-    <td><a href="{{ path('Student_HEd_Registration_Start', { organization_term_id: reg.SCHOOL_TERM_ID }) }}">Start</a></td>
+    <td><a href="{{ path('Student_HEd_Registration_Start', { registration_id: reg.REGISTRATION_ID }) }}">Start</a></td>
     {% endif %}
-    <td><a href="{{ path('Student_HEd_Registration_ViewCatalog', { organization_term_id: reg.SCHOOL_TERM_ID }) }}">View</a></td>
+    <td><a href="{{ path('Student_HEd_Registration_ViewCatalog', { organization_term_id: reg.ORGANIZATION_TERM_ID }) }}">View</a></td>
   </tr>
   {% endfor %}
 </tbody>

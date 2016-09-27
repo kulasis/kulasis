@@ -7,7 +7,7 @@ Student_HEd_Registration:
   defaults: { _controller: KulaHEdSchedulingBundle:StudentRegistration:index }
 
 Student_HEd_Registration_Start:
-  path: /registration/start/{organization_term_id}
+  path: /registration/start/{registration_id}
   defaults: { _controller: KulaHEdSchedulingBundle:StudentRegistration:start }
 
 

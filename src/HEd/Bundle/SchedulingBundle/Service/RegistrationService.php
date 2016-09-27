@@ -17,7 +17,6 @@ class RegistrationService {
   }
   
   public function getAvailableRegistration($student_id) {
-    
     $registrations = array();
     $student_regs = array();
     
@@ -46,6 +45,8 @@ class RegistrationService {
       ->fields('org', array('ORGANIZATION_NAME', 'ORGANIZATION_ID'))
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
+      ->leftJoin('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID AND stustatus.STUDENT_ID = '.$student_id)
+      ->fields('stustatus', array('STUDENT_STATUS_ID'))
       ->condition('stureg.STUDENT_ID', $student_id)
       ->condition('term.START_DATE', date('Y-m-d'), '>=')
       ->execute();
@@ -53,43 +54,23 @@ class RegistrationService {
       $student_regs[$stu_reg_row['ORGANIZATION_ID']] = $stu_reg_row;
     }
     
-    // Get available registrations based on current information
-    // db_select('STUD_SCHOOL_TERM_REG_GRADE_LEVEL', 'termgrlvl')->fields('termgrlvl')
-    $registration_info = $this->db->db_select('STUD_SCHOOL_TERM', 'schlterm')
-      ->fields('schlterm', array('REGISTRATION_AVAILABLE', 'SCHOOL_TERM_ID'))
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = schlterm.SCHOOL_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
-      ->fields('org', array('ORGANIZATION_NAME', 'ORGANIZATION_ID'))
-      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
-      ->fields('term', array('TERM_ABBREVIATION'))
-      ->leftJoin('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID AND stustatus.STUDENT_ID = '.$student_id)
-      ->fields('stustatus', array('STUDENT_STATUS_ID'))
-      ->condition('term.START_DATE', date('Y-m-d'), '>=')
-      ->condition('schlterm.REGISTRATION_AVAILABLE', 1)
-      ->execute();
-    while ($registration_row = $registration_info->fetch()) {
-      //if ($registration_row['LEVEL'] == $current_student_status[$regsitration_row['ORGANIZATION_ID']]['LEVEL'] AND 
-      //$registration_row['GRADE'] == $current_student_status[$regsitration_row['ORGANIZATION_ID']]['GRADE']) {
-        $registrations[] = $registration_row;
-      //}
-    
-    }
-    
-    return $registrations;
+    return $student_regs;
     
   }
   
-  public function enroll($student_id, $organization_term_id) {
-    
+  public function enroll($registration_id) {
+
     $transaction = $this->db->db_transaction();
     
-    // Get organization
-    $organization_id = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'orgterms')
+    // Get student registration info
+    $stu_reg_info = $this->db->db_select('STUD_STUDENT_REGISTRATION', 'stureg')
+      ->fields('stureg')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stureg.ORGANIZATION_TERM_ID')
       ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_NAME', 'ORGANIZATION_ID'))
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
-      ->fields('term', array('START_DATE'))
-      ->fields('org', array('ORGANIZATION_ID'))
-      ->condition('orgterms.ORGANIZATION_TERM_ID', $organization_term_id)
+      ->fields('term', array('TERM_ABBREVIATION', 'START_DATE'))
+      ->condition('stureg.REGISTRATION_ID', $registration_id)
       ->execute()->fetch();
     
     // Get current student status
@@ -101,30 +82,20 @@ class RegistrationService {
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->leftJoin('STUD_STUDENT_COURSE_HISTORY_TERMS', 'crshisterms', 'crshisterms.STUDENT_STATUS_ID = stustatus.STUDENT_STATUS_ID')
       ->fields('crshisterms', array('CUM_HOURS'))
-      ->condition('stustatus.STUDENT_ID', $student_id)
+      ->condition('stustatus.STUDENT_ID', $stu_reg_info['STUDENT_ID'])
       ->condition('term.START_DATE', date('Y-m-d'), '<=')
-      ->condition('org.ORGANIZATION_ID', $organization_id['ORGANIZATION_ID'])
+      ->condition('org.ORGANIZATION_ID', $stu_reg_info['ORGANIZATION_ID'])
       ->orderBy('START_DATE', 'desc', 'term')
       ->execute()->fetch();
-      
-    // Get next level info
-    $next_level = $this->db->db_select('STUD_SCHOOL_TERM_REG_GRADE_LEVEL', 'schltrmreg')
-      ->fields('schltrmreg', array('LEVEL', 'GRADE', 'MIN_HOURS', 'ENTER_CODE'))
-      ->condition('schltrmreg.ORGANIZATION_TERM_ID', $organization_term_id)
-      //->condition('schltrmreg.PREVIOUS_LEVEL', $current_student_status['LEVEL'])
-      //->condition('schltrmreg.PREVIOUS_GRADE', $current_student_status['GRADE'])
-      ->condition('schltrmreg.MIN_HOURS', $current_student_status['CUM_HOURS'], '<=')
-      ->orderBy('MIN_HOURS', 'DESC')
-      ->execute()
-      ->fetch();
+  
     
-    $enrollmentInfo = array('StudentID' => $student_id, 
-                            'OrganizationTermID' => $organization_term_id,
-                            'HEd.Student.Status.Grade' => $next_level['GRADE'],
-                            'HEd.Student.Status.Level' => $next_level['LEVEL'],
-                            'HEd.Student.Status.Resident' => $next_level['RESIDENT'],
-                            'HEd.Student.Status.EnterDate' => $organization_id['START_DATE'],
-                            'HEd.Student.Status.EnterCode' => $next_level['ENTER_CODE'],
+    $enrollmentInfo = array('StudentID' => $stu_reg_info['STUDENT_ID'], 
+                            'OrganizationTermID' => $stu_reg_info['ORGANIZATION_TERM_ID'],
+                            'HEd.Student.Status.Grade' => $stu_reg_info['GRADE'],
+                            'HEd.Student.Status.Level' => $stu_reg_info['LEVEL'],
+                            'HEd.Student.Status.Resident' => $current_student_status['RESIDENT'],
+                            'HEd.Student.Status.EnterDate' => $stu_reg_info['START_DATE'],
+                            'HEd.Student.Status.EnterCode' => $stu_reg_info['ENTER_CODE'],
                             'SeekingDegree1ID' => $current_student_status['SEEKING_DEGREE_1_ID'],
                             'EnterTermID' => $current_student_status['ENTER_TERM_ID'],
                             'AdmissionsCounselorID' => $current_student_status['ADMISSIONS_COUNSELOR_ID'],
@@ -132,8 +103,9 @@ class RegistrationService {
                             'AdvisorID' => $current_student_status['ADVISOR_ID'],
                             'SeekingDegree1ID' => $current_student_status['SEEKING_DEGREE_1_ID'],
     );
-    $enrollment = $this->student_service->enrollStudent($enrollmentInfo);
-    
+
+    $enrollment = $this->student_service->enrollStudent($enrollmentInfo, array('VERIFY_PERMISSIONS' => false));
+
     if ($enrollment) {
       $transaction->commit();
       return $enrollment;
