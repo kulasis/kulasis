@@ -32,12 +32,19 @@ class StudentRegistrationController extends Controller {
   
   public function catalogAction($student_status_id) {
     $this->authorize();
-    $this->setRecordType('Student.HEd.Student.Status');
-
+    
     $student_status = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
         ->fields('stustatus', array('ORGANIZATION_TERM_ID'))
+        ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+        ->fields('orgterms', array('TERM_ID', 'ORGANIZATION_ID'))
         ->condition('STUDENT_STATUS_ID', $student_status_id)
         ->execute()->fetch();
+
+    // Update focus to the currently selected student status id
+    $this->session->setFocus('focus_term', $student_status['TERM_ID']);
+    $this->focus->setStudentStatusFocusFromStudent($student_status['ORGANIZATION_ID'], $student_status['TERM_ID']);
+    $this->setRecordType('Student.HEd.Student.Status');
+    
 
     $query = $this->db()->db_select('STUD_SECTION', 'STUD_SECTION');
     $query = $query->fields('STUD_SECTION', array('SECTION_ID', 'SECTION_NUMBER', 'CAPACITY', 'ENROLLED_TOTAL', 'CREDITS', 'WAIT_LISTED_TOTAL'));
