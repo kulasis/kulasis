@@ -176,7 +176,8 @@ class TranscriptService {
     $course_counter = 0;
     while ($row = $result->fetch()) {
       
-      if ($last_calendar_month !== $row['CALENDAR_MONTH'] || $last_calendar_year !== $row['CALENDAR_YEAR'] || $last_term !== $row['TERM']) {
+      if ($last_calendar_month !== $row['CALENDAR_MONTH'] || $last_calendar_year !== $row['CALENDAR_YEAR'] || $last_term !== $row['TERM']
+        || $last_organization_name !== $row['ORGANIZATION_NAME'] || $last_non_organization_name !== $row['NON_ORGANIZATION_NAME']) {
         $term_counter++;
         $course_counter = 0;
         
