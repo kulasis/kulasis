@@ -147,9 +147,10 @@ class StudentBillingService {
         ->fields('ratetrans', array('TRANSACTION_CODE_ID', 'TUITION_RATE_TRANSACTION_ID'))
         ->join('BILL_CONSTITUENT_TRANSACTIONS', 'constrans', "constrans.CODE_ID = ratetrans.TRANSACTION_CODE_ID AND 
           constrans.CONSTITUENT_ID = '".$student_status['STUDENT_ID']."' AND constrans.ORGANIZATION_TERM_ID = '".$student_status['ORGANIZATION_TERM_ID']."'")
+        ->condition('ratetrans.RULE', array('NEWSTU', 'ALLSTU'))
         ->expression('SUM(constrans.AMOUNT)', 'trans_total')
-		->condition('ratetrans.TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
-		->groupBy('TUITION_RATE_TRANSACTION_ID')
+		    ->condition('ratetrans.TUITION_RATE_ID', $student_status['TUITION_RATE_ID'])
+		    ->groupBy('TUITION_RATE_TRANSACTION_ID')
         ->execute();
         while ($transactions_all_row = $transactions_all_result->fetch()) {
           if ($transactions_all_row['trans_total'] > 0) {
