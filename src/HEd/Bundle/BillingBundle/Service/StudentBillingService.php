@@ -296,10 +296,19 @@ class StudentBillingService {
           ->condition('CONSTITUENT_ID', $student_status['STUDENT_ID'])
           ->condition('ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID'])
           ->condition('CODE_ID', $tuition_code)
+          ->condition('TRANSACTION_DESCRIPTION', '%REFUND%', 'NOT LIKE')
           ->execute()->fetch()['billed_amount'];
 
         // Determine difference to post
         $amount_to_post = $new_tuition_total - $billed_tuition;
+
+        $current_refund_tuition = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+          ->expression('SUM(AMOUNT)', 'billed_amount')
+          ->condition('CONSTITUENT_ID', $student_status['STUDENT_ID'])
+          ->condition('ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID'])
+          ->condition('CODE_ID', $tuition_code)
+          ->condition('TRANSACTION_DESCRIPTION', '%REFUND%', 'LIKE')
+          ->execute()->fetch()['billed_amount'];
 
         if ($amount_to_post < 0) {
         
@@ -319,7 +328,7 @@ class StudentBillingService {
       
         }
         // Post transaction
-        if ($amount_to_post != 0) {
+        if ($amount_to_post != 0 AND $current_refund_tuition != $amount_to_post) {
           $new_transaction_id = $this->constituent_billing_service->addTransaction($student_status['STUDENT_ID'], $student_status['ORGANIZATION_TERM_ID'], $tuition_code, date('Y-m-d'), isset($transaction_description) ? $transaction_description : '', $amount_to_post);
           $this->constituent_billing_service->postTransaction($new_transaction_id);
         }
