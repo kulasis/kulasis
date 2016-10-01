@@ -176,22 +176,18 @@ class TranscriptService {
     $course_counter = 0;
     while ($row = $result->fetch()) {
       
-      if ($last_calendar_month !== $row['CALENDAR_MONTH'] || $last_calendar_year !== $row['CALENDAR_YEAR'] || $last_term !== $row['TERM']
-        || $last_organization_name !== $row['ORGANIZATION_NAME'] || $last_non_organization_name !== $row['NON_ORGANIZATION_NAME']) {
+      if ($last_calendar_month !== $row['CALENDAR_MONTH'] || $last_calendar_year !== $row['CALENDAR_YEAR'] || $last_term !== $row['TERM']) {
         $term_counter++;
-        $course_counter = 0;
+        $organization_counter = 0;
+        $last_non_organization_name = null;
+        $last_organization_name = null;
         
-        if ($row['NON_ORGANIZATION_NAME'] != '')
-          $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['ORGANIZATION_NAME'] = $row['NON_ORGANIZATION_NAME'];
-        else
-          $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['ORGANIZATION_NAME'] = $row['ORGANIZATION_NAME'];
-        
-        $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['NON_ORGANIZATION_NAME'] = $row['NON_ORGANIZATION_NAME'];
         $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CALENDAR_MONTH'] = $row['CALENDAR_MONTH'];
         $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CALENDAR_YEAR'] = $row['CALENDAR_YEAR'];
         $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['TERM'] = $row['TERM'];
         $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['LEVEL'] = $row['LEVEL'];
         $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['LEVEL_DESCRIPTION'] = $row['LEVEL_DESCRIPTION'];
+        $this->course_history_data['levels'][$row['LEVEL']]['level_description'] = $row['LEVEL_DESCRIPTION'];
         
         // Load Standings
         $standings_info_result = $this->db->db_select('STUD_STUDENT_COURSE_HISTORY_STANDING', 'chstanding')
@@ -207,17 +203,30 @@ class TranscriptService {
         }
       }
       
+      if ($last_organization_name !== $row['ORGANIZATION_NAME'] || $last_non_organization_name !== $row['NON_ORGANIZATION_NAME']) {
+      	$organization_counter++;
+      	$course_counter = 0;
+
       // Course history info
-      $this->course_history_data['levels'][$row['LEVEL']]['level_description'] = $row['LEVEL_DESCRIPTION'];
-      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['COURSE_NUMBER'] = $row['COURSE_NUMBER'];
-      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['COURSE_TITLE'] = $row['COURSE_TITLE'];
-      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['MARK'] = $row['MARK'];
-      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['MARK_SCALE_ID'] = $row['MARK_SCALE_ID'];
-      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['CREDITS_ATTEMPTED'] = $row['CREDITS_ATTEMPTED'];
-      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['CREDITS_EARNED'] = $row['CREDITS_EARNED'];
-      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['QUALITY_POINTS'] = $row['QUALITY_POINTS'];
-      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['TRANSFER_CREDITS'] = $row['TRANSFER_CREDITS'];
-      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['courses'][$course_counter]['GPA_VALUE'] = $row['GPA_VALUE'];
+      if ($row['NON_ORGANIZATION_NAME'] != '')
+          $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['ORGANIZATION_NAME'] = $row['NON_ORGANIZATION_NAME'];
+        else
+          $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['ORGANIZATION_NAME'] = $row['ORGANIZATION_NAME'];
+        
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['NON_ORGANIZATION_NAME'] = $row['NON_ORGANIZATION_NAME'];
+
+  	  }
+
+      
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['COURSE_NUMBER'] = $row['COURSE_NUMBER'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['COURSE_TITLE'] = $row['COURSE_TITLE'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['MARK'] = $row['MARK'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['MARK_SCALE_ID'] = $row['MARK_SCALE_ID'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['CREDITS_ATTEMPTED'] = $row['CREDITS_ATTEMPTED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['CREDITS_EARNED'] = $row['CREDITS_EARNED'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['QUALITY_POINTS'] = $row['QUALITY_POINTS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['TRANSFER_CREDITS'] = $row['TRANSFER_CREDITS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['GPA_VALUE'] = $row['GPA_VALUE'];
       
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['TERM_CREDITS_ATTEMPTED'] = $row['TERM_CREDITS_ATTEMPTED'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['TERM_CREDITS_EARNED'] = $row['TERM_CREDITS_EARNED'];

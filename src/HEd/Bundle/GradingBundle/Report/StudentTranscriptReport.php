@@ -147,31 +147,31 @@ class StudentTranscriptReport extends BaseReport {
     $this->Ln(3);
   }
 
-  public function term_table_row($row, $comments = null) {
+  public function term_table_row($term, $org, $comments = null) {
     $this->SetFont('Arial', '', 7);
-    if ($row['NON_ORGANIZATION_NAME']) {
-      $this->Cell(63,3,$row['NON_ORGANIZATION_NAME'],0,0,'L');
-      if ($row['CALENDAR_MONTH'] || $row['CALENDAR_YEAR']) 
-        $this->Cell(15,3,$row['CALENDAR_MONTH'].'/'.$row['CALENDAR_YEAR'],0,0,'R');
+    if ($org['NON_ORGANIZATION_NAME']) {
+      $this->Cell(63,3,$org['NON_ORGANIZATION_NAME'],0,0,'L');
+      if ($term['CALENDAR_MONTH'] || $term['CALENDAR_YEAR']) 
+        $this->Cell(15,3,$term['CALENDAR_MONTH'].'/'.$term['CALENDAR_YEAR'],0,0,'R');
       else
         $this->Cell(15,3,'',0,0,'R');  
-      $this->Cell(20,3,$row['TERM'],0,0,'R');
+      $this->Cell(20,3,$term['TERM'],0,0,'R');
     } else {
-      $this->Cell(20,3,$row['TERM'],0,0,'L');
-      if ($row['CALENDAR_MONTH'] || $row['CALENDAR_YEAR']) 
-        $this->Cell(15,3,$row['CALENDAR_MONTH'].'/'.$row['CALENDAR_YEAR'],0,0,'L');
+      $this->Cell(20,3,$term['TERM'],0,0,'L');
+      if ($term['CALENDAR_MONTH'] || $term['CALENDAR_YEAR']) 
+        $this->Cell(15,3,$term['CALENDAR_MONTH'].'/'.$term['CALENDAR_YEAR'],0,0,'L');
       else
         $this->Cell(15,3,'',0,0,'L');  
-      $this->Cell(63,3,$row['ORGANIZATION_NAME'],0,0,'R');
+      $this->Cell(63,3,$org['ORGANIZATION_NAME'],0,0,'R');
     }
     $this->Ln(3);
     if ($comments === null) {
       // Comments
-      if (isset($row['comments']))
-        $this->MultiCell(98, 3, $row['comments']);
+      if (isset($term['comments']))
+        $this->MultiCell(98, 3, $term['comments']);
       // Standings
-      if (isset($row['standings']))
-        $this->MultiCell(98, 3, implode(", ", $row['standings']));
+      if (isset($term['standings']))
+        $this->MultiCell(98, 3, implode(", ", $term['standings']));
     }
   }
   

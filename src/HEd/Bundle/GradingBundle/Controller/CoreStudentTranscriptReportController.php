@@ -107,13 +107,21 @@ class CoreStudentTranscriptReportController extends ReportController {
             $pdf->Ln(260 - $current_y);
           }
 
-          $pdf->term_table_row($term);
+          
+          foreach($term['orgs'] as $org) {
 
-          foreach($term['courses'] as $course) {
+            $pdf->term_table_row($term, $org);
 
-            $pdf->ch_table_row($course);
+            foreach($org['courses'] as $course) {
 
-          } // end foreach on courses
+              $pdf->ch_table_row($course);
+
+            } // end foreach on courses
+
+
+          }
+
+          
 
           // Add on GPA totals for term
           $pdf->gpa_table_row($term);
