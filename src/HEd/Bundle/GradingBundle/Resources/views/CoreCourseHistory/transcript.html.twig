@@ -23,8 +23,9 @@
 {% endif %}
 
   {% for term in level.terms %}
+      {% for org in term.orgs %}
   <div class="data-table-header-div">
- {{ level.level_description }} | {{ term.ORGANIZATION_NAME }}
+ {{ level.level_description }} | {{ org.ORGANIZATION_NAME }}
  {% if term.CALENDAR_MONTH %} | {{ term.CALENDAR_MONTH }}/{{ term.CALENDAR_YEAR }}{% endif %}
  {% if term.TERM %} | {{ term.TERM }}{% endif %}
 </div> 
@@ -36,16 +37,17 @@
   {{ kula_field_name({ field: 'HEd.Student.CourseHistory.CreditsEarned', field_name_override: 'Credits Earned', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </thead>
 <tbody>
-  {% for course in term.courses %}
+  {% for course in org.courses %}
     <tr>
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.CourseNumber', value: course.COURSE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.CourseTitle', value: course.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.Mark', value: course.MARK, MARK_SCALE_ID: course.MARK_SCALE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Student.CourseHistory.CreditsEarned', value: course.CREDITS_EARNED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     </tr>
-  {% endfor %}
+  {% endfor %}{# end on course #}
 </tbody>
 </table>
+{% endfor %}{# end on org #}
 <table id="window_window_num_data_table_terms" class="data-table">
 <thead>
   <th class="data-table-cell-row-header">&nbsp;</th>

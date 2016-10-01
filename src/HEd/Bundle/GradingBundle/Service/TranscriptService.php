@@ -108,7 +108,7 @@ class TranscriptService {
         ->join('STUD_DEGREE_AREA', 'area', 'studarea.AREA_ID = area.AREA_ID')
         ->fields('area', array('AREA_NAME'))
         ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = area.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
-        ->fields('area_types', array('DESCRIPTION' => 'area_type'))
+        ->fields('area_types', array('DESCRIPTION' => 'AREA_TYPE'))
         ->condition('studarea.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
         ->orderBy('area_types.SORT', 'ASC')
         ->orderBy('area_types.DESCRIPTION', 'ASC')
