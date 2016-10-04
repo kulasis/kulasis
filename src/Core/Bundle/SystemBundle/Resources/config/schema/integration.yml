@@ -111,13 +111,23 @@ Core.Integration.APIApplications:
       field_size: 20
       column_name: "IP Address"
       label_name: "IP Address"
-    APIKey:
-      description: "API Key"
-      db_column_name: API_KEY
+    ApplicationID:
+      description: "Application ID"
+      db_column_name: APP_ID
       db_column_type: varchar
       db_column_length: 255
       db_column_null: false
       field_type: text
       field_size: 20
-      column_name: "API Key"
-      label_name: "API Key"
+      column_name: "Application Key"
+      label_name: "Application Key"
+    ApplicationSecret:
+      description: "API Secret"
+      db_column_name: APP_SECRET
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: false
+      field_type: text
+      field_size: 30
+      column_name: "Application Secret"
+      label_name: "Application Secret"

@@ -5,9 +5,27 @@ namespace Kula\Core\Bundle\LoginBundle\Controller;
 use Kula\Core\Bundle\FrameworkBundle\Controller\APIController;
 use Symfony\Component\HttpFoundation\Response;
 
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+
 class LoginAPIv1Controller extends APIController {
 
-  public function userAuthenticateAction() {
+  public function authenticateApplicationAction() {
+    $app_id = $this->getRequest()->request->get('app_id');
+    $app_secret = $this->getRequest()->request->get('app_secret');
+    $host = gethostbyaddr($this->getRequest()->getClientIp());
+    $ip = $this->getRequest()->getClientIp();
+
+    $login_info = $this->get('kula.login.auth.api')->authenticateApplication($app_id, $app_secret, $host, $ip);
+
+    if ($login_info) {
+      return $this->JSONResponse(array('token' => $login_info['token']));
+    } else {
+      throw new UnauthorizedHttpException('Invalid API Key, Host, and IP combination. IP: '.$this->getRequest()->getClientIp().' Host: '.gethostbyaddr($this->getRequest()->getClientIp()));
+    }
+    
+  }
+
+  public function authenticateUserAction() {
     $this->authorize();
 
     // Get post info
@@ -17,39 +35,23 @@ class LoginAPIv1Controller extends APIController {
     
       returns User ID
     */
-
     $username = $this->getRequest()->request->get('username');
     $password = $this->getRequest()->request->get('password');
 
-    $or_predicate = $this->db()->db_or();
-    $or_predicate = $or_predicate->condition('USERNAME', $username);
-    $or_predicate = $or_predicate->condition('USERNAME', $username.'@ocac.edu');
+    $login_info = $this->get('kula.login.auth.api')->authenticateUser($username, $password);
 
-    $user = $this->db()->db_select('CORE_USER', 'user')
-      ->fields('user', array('USER_ID', 'USERNAME', 'PASSWORD'))
-      ->condition($or_predicate)
-      ->execute()->fetch();
-
-    if ($user['USER_ID'] > 0) {
-      // check for password, if one
-      if ($password != '') {
-
-        if ($this->get('kula.login.auth.local')->verifyPassword($password, $user['PASSWORD'])) {
-          return $this->JSONResponse(array('id' => $user['USER_ID']));
-        } else {
-          return $this->JSONResponse(array());
-        }
-
-      } else {
-        return $this->JSONResponse(array('id' => $user['USER_ID']));
-      }
-
+    if ($login_info) {
+      return $this->JSONResponse(array('user_id' => $login_info['user_id'], 'token' => $login_info['token']));
     } else {
-      return $this->JSONResponse(array());
+      throw new UnauthorizedHttpException('Invalid Username/Password.');
     }
-
     
   }
-  
+
+  public function testAuthenticatedUserAction() {
+    $this->authorizeUser();
+
+    return $this->JSONResponse(array('status' => 'yay!'));
+  }
 
 }

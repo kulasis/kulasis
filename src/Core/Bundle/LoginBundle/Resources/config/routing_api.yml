@@ -1,5 +1,14 @@
-api_v1_userAuthenticate:
-    path:     /user/authenticate
-    defaults: { _controller: KulaCoreLoginBundle:LoginAPIv1:userAuthenticate }
+api_v1_applicationAuthentication:
+    path:     /application/authenticate
+    defaults: { _controller: KulaCoreLoginBundle:LoginAPIv1:authenticateApplication }
     methods: [POST]
 
+api_v1_userAuthentication:
+    path:     /user/authenticate
+    defaults: { _controller: KulaCoreLoginBundle:LoginAPIv1:authenticateUser }
+    methods: [POST]
+
+api_v1_userAuthenticatedTest:
+    path:     /user/authenticate/test
+    defaults: { _controller: KulaCoreLoginBundle:LoginAPIv1:testAuthenticatedUser }
+    methods: [GET]

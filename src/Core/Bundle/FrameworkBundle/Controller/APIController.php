@@ -29,8 +29,11 @@ class APIController extends BaseController {
 
     $auth_api_service = $this->get('kula.login.auth.api');
     
-    if ($auth_api_service->authenticate(
-        $this->getRequest()->query->get('apikey'), 
+    $auth_header = $this->getRequest()->headers->get('Authorization');
+    $token = substr($auth_header, strpos($auth_header, 'Bearer ') + 7, strlen($auth_header));
+
+    if ($auth_api_service->verifyApplicationToken(
+        $token, 
         gethostbyaddr($this->getRequest()->getClientIp()), 
         $this->getRequest()->getClientIp()
         )
@@ -40,6 +43,24 @@ class APIController extends BaseController {
       throw new UnauthorizedHttpException('Invalid API Key, Host, and IP combination. IP: '.$this->getRequest()->getClientIp().' Host: '.gethostbyaddr($this->getRequest()->getClientIp()));
     }
       
+  }
+
+  public function authorizeUser($tables = null) {
+
+    // Get current request
+    $request = $this->getRequest();
+
+    $auth_api_service = $this->get('kula.login.auth.api');
+    
+    $auth_header = $this->getRequest()->headers->get('Authorization');
+    $token = substr($auth_header, strpos($auth_header, 'Bearer ') + 7, strlen($auth_header));
+
+    if ($auth_api_service->verifyLoggedInUser($token)) {
+      return true;
+    } else {
+      throw new UnauthorizedHttpException('Invalid User.');
+    }
+
   }
 
 }

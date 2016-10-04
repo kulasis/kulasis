@@ -13,7 +13,8 @@ Integration API Applications
   {{ kula_field_name({ edit: true, field: 'Core.Integration.APIApplications.Application', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ edit: true, field: 'Core.Integration.APIApplications.Host', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ edit: true, field: 'Core.Integration.APIApplications.IPAddress', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ edit: true, field: 'Core.Integration.APIApplications.APIKey', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Integration.APIApplications.ApplicationID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Integration.APIApplications.ApplicationSecret', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </thead>
 <tbody>
     {{ kula_display_html({ add: true, field: 'Core.Integration.APIApplications.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
@@ -22,7 +23,8 @@ Integration API Applications
     {{ kula_field({ add: true, field: 'Core.Integration.APIApplications.Application', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ add: true, field: 'Core.Integration.APIApplications.Host', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ add: true, field: 'Core.Integration.APIApplications.IPAddress', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ add: true, field: 'Core.Integration.APIApplications.APIKey', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.Integration.APIApplications.ApplicationID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.Integration.APIApplications.ApplicationSecret', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
     {{ kula_display_html({ add: true, field: 'Core.Integration.APIApplications.ID', prepend_html: '</tr>' }) }}
   {% for db in databases %}
   <tr>
@@ -31,7 +33,8 @@ Integration API Applications
     {{ kula_field({ edit: true, field: 'Core.Integration.APIApplications.Application', db_row_id: db.INTG_API_APP_ID, value: db.APPLICATION, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Integration.APIApplications.Host', db_row_id: db.INTG_API_APP_ID, value: db.HOST, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Integration.APIApplications.IPAddress', db_row_id: db.INTG_API_APP_ID, value: db.IP_ADDRESS, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'Core.Integration.APIApplications.APIKey', db_row_id: db.INTG_API_APP_ID, value: db.API_KEY, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Integration.APIApplications.ApplicationID', db_row_id: db.INTG_API_APP_ID, value: db.APP_ID, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Integration.APIApplications.ApplicationSecret', db_row_id: db.INTG_API_APP_ID, value: db.APP_SECRET, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   </tr>
   {% endfor %}
 </tbody>
