@@ -1,3 +1,7 @@
 _system:
     resource: "@KulaCoreSystemBundle/Resources/config/routing/core.yml"
     prefix: core
+
+_api_v1_system:
+    resource: "@KulaCoreSystemBundle/Resources/config/routing/api.yml"
+    prefix: /api/v1

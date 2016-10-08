@@ -1,0 +1,4 @@
+api_v1_schools:
+    path:     /schools
+    defaults: { _controller: KulaCoreSystemBundle:APIv1Organization:schools }
+    methods: [GET]
