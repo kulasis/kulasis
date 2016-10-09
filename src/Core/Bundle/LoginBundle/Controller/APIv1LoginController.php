@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class LoginAPIv1Controller extends APIController {
+class APIv1LoginController extends APIController {
 
   public function authenticateApplicationAction() {
     $app_id = $this->getRequest()->request->get('app_id');

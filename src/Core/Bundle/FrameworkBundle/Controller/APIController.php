@@ -55,8 +55,8 @@ class APIController extends BaseController {
     $auth_header = $this->getRequest()->headers->get('Authorization');
     $token = substr($auth_header, strpos($auth_header, 'Bearer ') + 7, strlen($auth_header));
 
-    if ($auth_api_service->verifyLoggedInUser($token)) {
-      return true;
+    if ($user = $auth_api_service->verifyLoggedInUser($token)) {
+      return $user;
     } else {
       throw new UnauthorizedHttpException('Invalid User.');
     }

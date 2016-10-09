@@ -7,3 +7,15 @@ api_v1_school_terms:
     path:     /school/{school_abbreviation}/terms
     defaults: { _controller: KulaCoreSystemBundle:APIv1OrganizationTerms:schoolTerms }
     methods: [GET]
+
+api_v1_user:
+    path:    /user/{user_id}
+    defaults: { _controller: KulaCoreSystemBundle:APIv1User:user }
+    methods: [GET]
+    requirements: 
+        user_id: '\d+'
+
+api_v1_user_current:
+    path:    /user/current
+    defaults: { _controller: KulaCoreSystemBundle:APIv1User:currentUser }
+    methods: [GET]
