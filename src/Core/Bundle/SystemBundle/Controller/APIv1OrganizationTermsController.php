@@ -39,7 +39,7 @@ class APIv1OrganizationTermsController extends APIController {
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_NAME', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'))
       ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
-      ->condition('orgterms.ORGANIZATION_ABBREVIATION', $school_abbreviation)
+      ->condition('org.ORGANIZATION_ABBREVIATION', $school_abbreviation)
       ->orderBy('START_DATE', 'ASC', 'term')
       ->execute();
     while ($termsRow = $termsResult->fetch()) {
