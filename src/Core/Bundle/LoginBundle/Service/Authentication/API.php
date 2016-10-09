@@ -61,7 +61,7 @@ class API {
     return false;
   }
 
-  public function authenticateUser($username, $password) {
+  public function authenticateUser($username, $password = null) {
 
   	// Get post info
     /*
@@ -116,6 +116,37 @@ class API {
       }
 
     } 
+
+  }
+
+  public function verifyEmail($email_address) {
+
+    if (!$this->authenticateUser($email_address)) {
+
+      // see if email address exists
+      $email_address = $this->db->db_select('CONS_EMAIL_ADDRESS', 'email')
+        ->fields('email', array('EMAIL_ADDRESS', 'CONSTITUENT_ID'))
+        ->condition('email.ACTIVE', 1)
+        ->condition('email.UNDELIVERABLE', 0)
+        ->condition('email.EMAIL_ADDRESS', $email_address)
+        ->orderBy('EFFECTIVE_DATE', 'DESC', 'email')
+        ->execute()->fetch();
+      if ($email_address['CONSTITUENT_ID'] != '') {
+
+        // create user
+        $user = $this->db->db_insert('CORE_USER')
+          ->fields(array(
+            'USER_ID' => $email_address['CONSTITUENT_ID'],
+            'USERNAME' => $email_address['EMAIL_ADDRESS'],
+            'CREATED_TIMESTAMP' => date('Y-m-d H:i:s')
+          ))->execute();
+
+        return $user;
+
+
+      } // end if on email address existing
+
+    } // end if on account not existing
 
   }
 

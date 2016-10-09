@@ -6,6 +6,7 @@ use Kula\Core\Bundle\FrameworkBundle\Controller\APIController;
 use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class LoginAPIv1Controller extends APIController {
 
@@ -43,6 +44,17 @@ class LoginAPIv1Controller extends APIController {
     if ($login_info) {
       return $this->JSONResponse(array('user_id' => $login_info['user_id'], 'token' => $login_info['token']));
     } else {
+
+      // create email if it exists
+      $user = $this->get('kula.login.auth.api')->verifyEmail($username);
+
+      // try again
+      if ($login_info = $this->get('kula.login.auth.api')->authenticateUser($username)) {
+        return $this->JSONResponse(array('user_id' => $login_info['user_id'], 'token' => $login_info['token']));
+      } else {
+        throw new NotFoundHttpException('No email address found.');
+      }
+
       throw new UnauthorizedHttpException('Invalid Username/Password.');
     }
     
