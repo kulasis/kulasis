@@ -33,7 +33,15 @@ class API {
         'host' => $host,
         'last_used' => time()
       );
-      $this->cache->add('api.'.$token, $login);
+
+      // Update last token
+      $this->db->db_update('CORE_INTG_API_APPS')->fields(array(
+        'LAST_TOKEN' => $token,
+        'LAST_TOKEN_TIMESTAMP' => time()
+      ))->condition('INTG_API_APP_ID', $app['INTG_API_APP_ID'])
+      ->execute();
+
+      //$this->cache->add('api.'.$token, $login);
       return $login;
     } else {
       // Unsuccessful
@@ -44,18 +52,21 @@ class API {
 
   public function verifyApplicationToken($token, $host, $ip) {
 
-    if ($this->cache->exists('api.'.$token)) {
-      $login = $this->cache->get('api.'.$token);
+    $app = $this->db->db_select('CORE_INTG_API_APPS', 'apps')
+      ->fields('apps', array('INTG_API_APP_ID', 'LAST_TOKEN_TIMESTAMP'))
+      ->condition('HOST', $host)
+      ->condition('IP_ADDRESS', $ip)
+      ->condition('LAST_TOKEN', $token)
+      ->execute()->fetch();
 
-      if (time() - $login['last_used'] <= 1200) {
+    if ($app['INTG_API_APP_ID'] != '' AND time() - $app['LAST_TOKEN_TIMESTAMP'] <= 1200) {
 
-        // Update last used
-        $login['last_used'] = time();
-        $this->cache->add('api.'.$token, $login);
+      $this->db->db_update('CORE_INTG_API_APPS')->fields(array(
+        'LAST_TOKEN_TIMESTAMP' => time()
+      ))->condition('LAST_TOKEN', $token)
+      ->execute();
 
-        return true;
-      }
-
+      return true;
     }
 
     return false;
@@ -94,7 +105,13 @@ class API {
             'last_used' => time(),
             'token' => $token
           );
-          $this->cache->add('api_user.'.$token, $login);
+
+          // Update last token
+          $this->db->db_update('CORE_USER')->fields(array(
+            'LAST_TOKEN' => $token,
+            'LAST_TOKEN_TIMESTAMP' => time()
+          ))->condition('USER_ID', $user['USER_ID'])
+          ->execute();
 
           return $login;
         } 
@@ -110,7 +127,13 @@ class API {
           'last_used' => time(),
           'token' => $token
         );
-        $this->cache->add('api_user.'.$token, $login);
+
+        // Update last token
+        $this->db->db_update('CORE_USER')->fields(array(
+          'LAST_TOKEN' => $token,
+          'LAST_TOKEN_TIMESTAMP' => time()
+        ))->condition('USER_ID', $user['USER_ID'])
+        ->execute();
 
         return $login;
       }
@@ -152,19 +175,19 @@ class API {
 
   public function verifyLoggedInUser($token) {
 
-    if ($this->cache->exists('api_user.'.$token)) {
+    $app = $this->db->db_select('CORE_USER', 'user')
+      ->fields('user', array('USER_ID', 'LAST_TOKEN_TIMESTAMP'))
+      ->condition('LAST_TOKEN', $token)
+      ->execute()->fetch();
 
-      $login = $this->cache->get('api_user.'.$token);
+    if ($app['USER_ID'] != '' AND time() - $app['LAST_TOKEN_TIMESTAMP'] <= 1200) {
+      // Update last used
+      $this->db->db_update('CORE_USER')->fields(array(
+        'LAST_TOKEN_TIMESTAMP' => time()
+      ))->condition('LAST_TOKEN', $token)
+      ->execute();
 
-      if (time() - $login['last_used'] <= 1200) {
-
-        // Update last used
-        $login['last_used'] = time();
-        $this->cache->add('api_user.'.$token, $login);
-
-        return true;
-      }
-
+      return true;
     }
 
     return false;

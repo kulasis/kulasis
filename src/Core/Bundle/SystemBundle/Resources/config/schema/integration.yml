@@ -131,3 +131,22 @@ Core.Integration.APIApplications:
       field_size: 30
       column_name: "Application Secret"
       label_name: "Application Secret"
+    LastToken:
+      description: "Last Token"
+      db_column_name: LAST_TOKEN
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Last Token"
+      label_name: "Last Token"
+    LastTimestampToken:
+      description: "Last Timestamp Token"
+      db_column_name: LAST_TOKEN_TIMESTAMP
+      db_column_type: int
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Last Timestamp Token"
+      label_name: "Last Timestamp Token"

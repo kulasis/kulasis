@@ -76,6 +76,25 @@ Core.User:
       field_type: checkbox
       column_name: "Allow Google Auth"
       label_name: "Google"
+    LastToken:
+      description: "Last Token"
+      db_column_name: LAST_TOKEN
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Last Token"
+      label_name: "Last Token"
+    LastTimestampToken:
+      description: "Last Timestamp Token"
+      db_column_name: LAST_TOKEN_TIMESTAMP
+      db_column_type: int
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Last Timestamp Token"
+      label_name: "Last Timestamp Token"
   unique_keys:
     Username: [ 'Core.User.Username' ]
 Core.Usergroup:
