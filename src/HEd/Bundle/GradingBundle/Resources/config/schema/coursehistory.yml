@@ -122,7 +122,7 @@ HEd.Student.CourseHistory:
       db_column_type: serial
       db_column_null: true
       field_type: select
-      class: Kula\HEd\Bundle\CourseHistoryBundle\Field\Classes 
+      class: Kula\HEd\Bundle\GradingBundle\Field\Classes 
       column_name: "Student Class ID"
       label_name: "Student Class ID"
     Level:

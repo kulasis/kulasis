@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\CourseHistoryBundle\Field;
+namespace Kula\HEd\Bundle\GradingBundle\Field;
 
 use Kula\Core\Component\Field\Field;
 
