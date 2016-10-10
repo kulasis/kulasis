@@ -324,7 +324,7 @@ class Field {
       $schema = self::getFieldInfo($param['field']);
       $field_name = self::getNameForField($param);
       $param['attributes_html']['cols'] = $schema->getFieldCols() ? $schema->getFieldCols() : 50;
-      $param['attributes_html']['rows'] = $schema->getFieldRows() ? $schema->getFieldRows() : 15;
+      $param['attributes_html']['rows'] = $schema->getFieldRows() ? $schema->getFieldRows() : 10;
       return GenericField::textArea($field_name, $param['value'], $param['attributes_html']);
     } elseif (self::_displayValue($param) AND !$param['input']) {
       return $param['value'];
@@ -332,7 +332,7 @@ class Field {
       $schema = self::getFieldInfo($param['field']);
       $param['attributes_html']['disabled'] = 'disabled';
       $param['attributes_html']['cols'] = $schema->getFieldCols() ? $schema->getFieldCols() : 50;
-      $param['attributes_html']['rows'] = $schema->getFieldRows() ? $schema->getFieldRows() : 15;
+      $param['attributes_html']['rows'] = $schema->getFieldRows() ? $schema->getFieldRows() : 10;
       return GenericField::textArea(null, $param['value'], $param['attributes_html']);
     }
   }
