@@ -38,7 +38,7 @@ class CoreTransactionsController extends Controller {
     if ($this->record->getSelectedRecordID()) {
       
       $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
-        ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE', ))
+        ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE'))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
         ->fields('code', array('CODE_TYPE', 'CODE'))
         ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
@@ -46,6 +46,9 @@ class CoreTransactionsController extends Controller {
         ->fields('org', array('ORGANIZATION_ABBREVIATION'))
         ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
         ->fields('term', array('TERM_ABBREVIATION'))
+        ->leftJoin('STUD_STUDENT_CLASSES', 'class', 'class.STUDENT_CLASS_ID = transactions.STUDENT_CLASS_ID')
+        ->leftJoin('STUD_SECTION', 'sec', 'sec.SECTION_ID = class.SECTION_ID')
+        ->fields('sec', array('SECTION_NUMBER', 'SECTION_ID'))
         ->condition('transactions.CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->condition('transactions.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
         ->orderBy('TRANSACTION_DATE', 'DESC', 'transactions')
@@ -130,7 +133,7 @@ class CoreTransactionsController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       $transaction = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
-        ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP', 'SHOW_ON_STATEMENT', 'ORGANIZATION_TERM_ID'))
+        ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP', 'SHOW_ON_STATEMENT', 'ORGANIZATION_TERM_ID', 'STUDENT_CLASS_ID'))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
         ->fields('code', array('CODE_TYPE'))
         ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'transactions.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')

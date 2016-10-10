@@ -21,20 +21,18 @@ class Classes extends Field {
       ->fields('org', array('ORGANIZATION_ABBREVIATION'))
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
-      ->join('STUD_STUDENT_COURSE_HISTORY', 'crshis', 'crshis.STUDENT_CLASS_ID = classes.STUDENT_CLASS_ID')
-      ->fields('crshis', array('COURSE_HISTORY_ID'))
-      ->condition('status.STUDENT_ID', $param['STUDENT_ID'])
-      ->orderBy('TERM_ABBREVIATION', 'ASC')
+      ->condition('status.STUDENT_ID', $param['STUDENT_ID']);
+    if (isset($param['ORGANIZATION_TERM_ID'])) {
+      $classes_result = $classes_result->condition('status.ORGANIZATION_TERM_ID', $param['ORGANIZATION_TERM_ID']);
+    }
+    $classes_result = $classes_result->orderBy('TERM_ABBREVIATION', 'ASC')
       ->orderBy('ORGANIZATION_ABBREVIATION', 'ASC')
       ->orderBy('COURSE_TITLE', 'ASC');
     $classes_result = $classes_result->execute();
     $i = 0;
     while ($classes_row = $classes_result->fetch()) {
-      if ($classes_row['COURSE_HISTORY_ID'])
-        $msg = 'Selected';
-      else
-        $msg = 'Not Selected';
-      $classes[$msg][$classes_row['STUDENT_CLASS_ID']] = $classes_row['TERM_ABBREVIATION'] . ' / ' . $classes_row['ORGANIZATION_ABBREVIATION'] . ' / ' . $classes_row['SECTION_NUMBER'] . ' / ' . $classes_row['COURSE_TITLE'];
+
+      $classes[$classes_row['STUDENT_CLASS_ID']] = $classes_row['TERM_ABBREVIATION'] . ' / ' . $classes_row['ORGANIZATION_ABBREVIATION'] . ' / ' . $classes_row['SECTION_NUMBER'] . ' / ' . $classes_row['COURSE_TITLE'];
       
     $i++;
     }
