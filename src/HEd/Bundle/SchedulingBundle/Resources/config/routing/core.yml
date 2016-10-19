@@ -195,7 +195,7 @@ Core_Constituent_Combiner_Course_HEd:
     path:     /constituent/combiner/course
     defaults: 
       _controller: KulaHEdSchedulingBundle:CoreCourses:combine
-      _navigation: Core.Constituent.Combiner.Course
+      _navigation: Core.Constituent.Combiner.CourseHEd
 
 Core_HEd_Course_Course_Books:
   path: /course/course/books
