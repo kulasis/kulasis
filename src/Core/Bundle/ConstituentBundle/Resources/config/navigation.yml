@@ -1,9 +1,35 @@
 Core.Constituent.Constituent:
-  type: form
-  parent: Core.Constituent
   description: "Constituent"
   display_name: "Constituent"
-  route: Core_Constituent_Constituent
+  type: form
+  parent: Core.Constituent
+  tabs: 
+    Information:
+      description: "Information"
+      display_name: "Information"
+      route: Core_Constituent_Constituent
+    Addresses:
+      description: "Addresses"
+      display_name: "Addresses"
+      route: Core_Constituent_addresses
+    Phones:
+      description: "Phones"
+      display_name: "Phones"
+      route: Core_Constituent_phones
+    EmailAddresses:
+      description: "Email Addresses"
+      display_name: "Email Addresses"
+      route: Core_Constituent_emailaddress
+  menu_actions:
+    NewAddress:
+      description: "New Address"
+      display_name: "New Address"
+      record_loaded: true
+      route: Core_Constituent_addresses_add
+  button_add:
+    route: Core_Constituent_add_constituent
+  button_delete:
+    route: Core_Constituent_delete_constituent
 
 Core.Constituent.Combiner:
   type: form

@@ -1,5 +1,19 @@
 {% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
-Constituent
+{% if mode == 'edit' %}
+<div class="group-box">
+<div class="group-box-header">Name</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'Core.Constituent.LastName', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.LAST_NAME, label: true }) }}
+{{ kula_field({ edit: true, field: 'Core.Constituent.FirstName', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.FIRST_NAME, label: true  }) }}
+{{ kula_field({ edit: true, field: 'Core.Constituent.MiddleName', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.MIDDLE_NAME, label: true  }) }}
+{% if mode == 'edit' %}
+{{ kula_field({ edit: true, field: 'Core.Constituent.Gender', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.GENDER, label: true, lookup: 'C'  }) }}
+{% endif %}
+{{ kula_field({ edit: true, field: 'Core.Constituent.MaidenName', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.MAIDEN_NAME, label: true  }) }}
+{{ kula_field({ edit: true, field: 'Core.Constituent.PreferredName', db_row_id: kula_core_record.getSelectedRecord.STUDENT_ID, value: kula_core_record.getSelectedRecord.PREFERRED_NAME, label: true  }) }}
+</div>
+</div>
+{% endif %}
 {% endblock %}

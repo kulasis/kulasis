@@ -2,7 +2,7 @@ Core_Constituent_Constituent:
     path:     /core/constituent/constituent
     defaults: 
       _controller: KulaCoreConstituentBundle:Constituent:index
-      _navigation: Core.Constituent.Constituent
+      _navigation: Core.Constituent.Constituent.Information
     
 Core_Constituent_Chooser:
     path: /core/constituent/chooser
@@ -13,3 +13,54 @@ Core_Constituent_Combiner:
     defaults: 
       _controller: KulaCoreConstituentBundle:Constituent:combine
       _navigation: Core.Constituent.Combiner.Constituent
+
+Core_Constituent_addresses:
+  path: /core/constituent/addresses
+  defaults: 
+    _controller: KulaCoreConstituentBundle:CoreContactInfo:addresses
+    _navigation: Core.Constituent.Constituent.Addresses
+
+Core_Constituent_addresses_detail:
+  path: /core/constituent/addresses/detail/{sub_id}
+  defaults: 
+    _controller: KulaCoreConstituentBundle:CoreContactInfo:detail
+    _navigation: Core.Constituent.Constituent.Addresses
+
+Core_Constituent_emailaddress:
+  path: /core/constituent/emailaddresses
+  defaults: 
+    _controller: KulaCoreConstituentBundle:CoreContactInfo:emailAddresses
+    _navigation: Core.Constituent.Constituent.EmailAddresses
+
+Core_Constituent_phones:
+  path: /core/constituent/phones
+  defaults: 
+    _controller: KulaCoreConstituentBundle:CoreContactInfo:phones
+    _navigation: Core.Constituent.Constituent.Phones
+
+Core_Constituent_addresses_add:
+  path: /core/constituent/addresses/add
+  defaults: 
+    _controller: KulaCoreConstituentBundle:CoreContactInfo:add_address
+    _navigation: Core.Constituent.Constituent.Addresses
+
+Core_Constituent_add_constituent:
+  path: /core/constituent/add/constituent
+  defaults: 
+    _controller: KulaCoreConstituentBundle:Constituent:add_constituent
+    _navigation: Core.Constituent.Constituent
+  methods: [GET]
+
+Core_Constituent_create_constituent:
+  path: /core/constituent/add/constituent
+  defaults: 
+    _controller: KulaCoreConstituentBundle:Constituent:create_constituent
+    _navigation: Core.Constituent.Constituent
+  methods: [POST]
+
+Core_Constituent_delete_constituent:
+  path: /staff/delete
+  defaults: 
+    _controller: KulaHEdSchoolBundle:Constituent:delete
+    _navigation: Core.Constituent.Constituent
+  methods: [POST]

@@ -1,0 +1,58 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+
+{% block content %}
+
+{% for address_type in address_types %}
+<div class="data-table-header-div">
+{{ address_type.ADDRESS_TYPE_DESCRIPTION }}
+</div>
+<table id="window_window_num_data_table_addresses_{{ address_type.ADDRESS_TYPE_CODE }}" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ delete: true, field: 'Core.Constituent.Address.ID', prepend_html: '<th class="data-table-cell-row-header" width="20">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header" width="20">#</th>
+  {% if address_type.ADDRESS_TYPE_DESCRIPTION == 'Residence' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Mailing' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Work' %}
+   {% set addressfield = 'Core.Constituent.'~address_type.ADDRESS_TYPE_DESCRIPTION~'AddressID' %}
+  {% elseif address_type.ADDRESS_TYPE_DESCRIPTION == 'Home' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Billing' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Parent' %}
+   {% set addressfield = 'HEd.Student.'~address_type.ADDRESS_TYPE_DESCRIPTION~'AddressID' %}
+  {% endif %}
+  {{ kula_field_name({ field: addressfield, field_name_override: 'Primary', prepend_html: '<th class="data-table-cell-row-header" width="40">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.Active', prepend_html: '<th class="data-table-cell-row-header" width="40">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.Undeliverable', prepend_html: '<th class="data-table-cell-row-header" width="40">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.EffectiveDate', prepend_html: '<th class="data-table-cell-row-header" width="100">', append_html: '</th>' }) }}
+  {% if address_type.ADDRESS_TYPE_DESCRIPTION == 'Billing' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Parent' %}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.Recipient', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {% endif %}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.Thoroughfare', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.Locality', field_name_override: 'City, St Zip', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.SendBill', prepend_html: '<th class="data-table-cell-row-header" width="70">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Address.SendGrades', prepend_html: '<th class="data-table-cell-row-header" width="80">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">...</th>
+</tr>
+</thead>
+<tbody>
+  {% for address in addresses[address_type.ADDRESS_TYPE_CODE] %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'Core.Constituent.Address.ID', db_row_id: address.ADDRESS_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, field: addressfield, db_row_id: kula_core_record.getSelectedRecord.STAFF_ID, value: address.ADDRESS_ID, value_to_compare: primary_addresses[addressfield], prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Address.Active', db_row_id: address.ADDRESS_ID, value: address.ACTIVE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Address.Undeliverable', db_row_id: address.ADDRESS_ID, value: address.UNDELIVERABLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Address.EffectiveDate', db_row_id: address.ADDRESS_ID, value: address.EFFECTIVE_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% if address_type.ADDRESS_TYPE_DESCRIPTION == 'Billing' or address_type.ADDRESS_TYPE_DESCRIPTION == 'Parent' %}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Address.Recipient', db_row_id: address.ADDRESS_ID, value: address.RECIPIENT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% endif %}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Address.Thoroughfare', db_row_id: address.ADDRESS_ID, value: address.THOROUGHFARE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Address.Locality', db_row_id: address.ADDRESS_ID, value: address.LOCALITY, prepend_html: '<td>', append_html: ', ', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Address.AdministrativeArea', db_row_id: address.ADDRESS_ID, value: address.ADMINISTRATIVE_AREA, lookup: 'C', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Address.PostalCode', db_row_id: address.ADDRESS_ID, value: address.POSTAL_CODE, append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Address.SendBill', db_row_id: address.ADDRESS_ID, value: address.SEND_BILL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Address.SendGrades', db_row_id: address.ADDRESS_ID, value: address.SEND_GRADES, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td class="data-table-cell-row-detail"><a class="data-table-detail-link" data-row-id-prefix="address" data-row-id="{{ address.ADDRESS_ID }}" href="{{ path('Core_Constituent_addresses_detail', { id : kula_core_record.getSelectedRecord.STAFF_ID, sub_id : address.ADDRESS_ID }) }}">...</a></td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endfor %}
+{% endblock %}
