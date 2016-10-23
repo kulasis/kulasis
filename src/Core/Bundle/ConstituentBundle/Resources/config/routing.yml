@@ -61,6 +61,6 @@ Core_Constituent_create_constituent:
 Core_Constituent_delete_constituent:
   path: /staff/delete
   defaults: 
-    _controller: KulaHEdSchoolBundle:Constituent:delete
+    _controller: KulaCoreConstituentBundle:Constituent:delete
     _navigation: Core.Constituent.Constituent
   methods: [POST]

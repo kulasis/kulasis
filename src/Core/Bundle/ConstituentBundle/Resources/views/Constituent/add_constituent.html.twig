@@ -1,0 +1,23 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+
+<div class="group-box">
+<div class="group-box-header">Add Constituent</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, field: 'Core.Constituent.LastName', table_row: false, label: true }) }}
+{{ kula_field({ add: true, field: 'Core.Constituent.FirstName', table_row: false, label: true }) }}
+{{ kula_field({ add: true, field: 'Core.Constituent.MiddleName', table_row: false, label: true }) }}
+{{ kula_field({ add: true, field: 'Core.Constituent.SocialSecurityNumber', table_row: false, label: true }) }}
+</div>
+</div>
+
+<div class="group-box">
+<div class="group-box-header">Birth Info</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, field: 'Core.Constituent.Gender', table_row: false, label: true }) }}
+{{ kula_field({ add: true, field: 'Core.Constituent.BirthDate', table_row: false, label: true }) }}
+</div>
+</div>
+
+{% endblock %}

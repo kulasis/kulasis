@@ -1,7 +1,7 @@
 {% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
-{{ kula_field({ add: true, hidden: true, field: 'Core.Constituent.Address.ConstituentID', table_row: false, value: kula_core_record.getSelectedRecord.STAFF_ID, label: true }) }}
+{{ kula_field({ add: true, hidden: true, field: 'Core.Constituent.Address.ConstituentID', table_row: false, value: kula_core_record.getSelectedRecord.CONSTITUENT_ID, label: true }) }}
 <div class="group-box">
 <div class="group-box-header">Add Address</div>
 <div class="group-box-contents group">

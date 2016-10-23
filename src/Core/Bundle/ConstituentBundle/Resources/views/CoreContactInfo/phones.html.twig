@@ -20,7 +20,7 @@ Phone Numbers
 </thead>
 <tbody>
   {{ kula_display_html({ add: true, field: 'Core.Constituent.Phone.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
-  {{ kula_field({ add: true, field: 'Core.Constituent.Phone.ConstituentID', value: kula_core_record.getSelectedRecord.STAFF_ID, hidden: true }) }}
+  {{ kula_field({ add: true, field: 'Core.Constituent.Phone.ConstituentID', value: kula_core_record.getSelectedRecord.CONSTITUENT_ID, hidden: true }) }}
   {{ kula_field({ add: true, delete: true, field: 'Core.Constituent.Phone.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
   {{ kula_display_html({ add: true, field: 'Core.Constituent.Phone.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
   {{ kula_display_html({ add: true, field: 'Core.Constituent.Phone.ID', prepend_html: '<td class="data-table-cell">&nbsp;</td>' }) }}
@@ -34,7 +34,7 @@ Phone Numbers
   <tr>
     {{ kula_field({ delete: true, field: 'Core.Constituent.Phone.ID', db_row_id: phone.PHONE_NUMBER_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
-    {{ kula_field({ edit: true, field: 'Core.Constituent.PrimaryPhoneID', db_row_id: kula_core_record.getSelectedRecord.STAFF_ID, value: phone.PHONE_NUMBER_ID, value_to_compare: primary_phones.PRIMARY_PHONE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.PrimaryPhoneID', db_row_id: kula_core_record.getSelectedRecord.CONSTITUENT_ID, value: phone.PHONE_NUMBER_ID, value_to_compare: primary_phones.PRIMARY_PHONE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.EffectiveDate', db_row_id: phone.PHONE_NUMBER_ID, value: phone.EFFECTIVE_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.Type', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.Number', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}

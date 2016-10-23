@@ -10,8 +10,15 @@ class ConstituentController extends Controller {
     $this->authorize();
     $this->processForm();
     $this->setRecordType('Core.Constituent');
+
+    $constituent = array();
     
-    return $this->render('KulaCoreConstituentBundle:Constituent:index.html.twig');
+    $constituent = $this->db()->db_select('CONS_CONSTITUENT', 'constituent')
+      ->fields('constituent')
+      ->condition('CONSTITUENT_ID', $this->record->getSelectedRecord()['CONSTITUENT_ID'])
+      ->execute()->fetch();
+    
+    return $this->render('KulaCoreConstituentBundle:Constituent:index.html.twig', array('constituent' => $constituent));
   }
   
   public function combineAction() {
@@ -39,7 +46,7 @@ class ConstituentController extends Controller {
   
   public function add_constituentAction() {
     $this->authorize();
-    $this->formAction('core_HEd_school_staff_create_constituent');
+    $this->formAction('Core_Constituent_create_constituent');
     return $this->render('KulaCoreConstituentBundle:Constituent:add_constituent.html.twig');
   }
   
@@ -50,23 +57,15 @@ class ConstituentController extends Controller {
     
     // get constituent data
     $constituent_addition = $this->form('add', 'Core.Constituent', 'new');
-    $staff_addition = $this->form('add', 'HEd.Staff', 'new');
-    
+      
+    // get next Student Number
+    $constituent_addition['Core.Constituent.PermanentNumber'] = $this->get('kula.core.sequence')->getNextSequenceForKey('PERMANENT_NUMBER');
+
     $constituent_poster = $this->newPoster()->add('Core.Constituent', 'new', $constituent_addition)->process()->getResult();
     
-    $staff_addition['HEd.Staff.ID'] = $constituent_poster;
-    // Post data
-    $staff_poster = $this->newPoster()->add('HEd.Staff', 'new', $staff_addition)->process()->getResult();
-    
-    // Add organization term staff
-    $staff_orgterm_poster = $this->newPoster()->add('HEd.Staff.OrganizationTerm', 'new', array(
-      'HEd.Staff.OrganizationTerm.StaffID' => $constituent_poster,
-      'HEd.Staff.OrganizationTerm.OrganizationTermID' => $this->focus->getOrganizationTermID()
-    ))->process()->getResult();
-    
-    if ($staff_orgterm_poster) {
+    if ($constituent_poster) {
       $transaction->commit();
-      return $this->forward('core_HEd_school_staff', array('record_type' => 'Core.HEd.Staff', 'record_id' => $constituent_poster), array('record_type' => 'Core.HEd.Staff', 'record_id' => $constituent_poster));
+      return $this->forward('Core_Constituent_Constituent', array('record_type' => 'Core.Constituent', 'record_id' => $constituent_poster), array('record_type' => 'Core.Constituent', 'record_id' => $constituent_poster));
     } else {
       $transaction->rollback();
       throw new \Kula\Core\Component\DB\PosterException('Changes not saved.');  
@@ -83,7 +82,7 @@ class ConstituentController extends Controller {
       $this->addFlash('success', 'Deleted constituent.');
     }
     
-    return $this->forward('core_Constituent_Constituent');
+    return $this->forward('Core_Constituent_Constituent');
   }
   
 }
