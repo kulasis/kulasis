@@ -75,7 +75,13 @@ class CoreUsersController extends Controller {
     
     // get constituent data
     $constituentPoster = $this->newPoster();
-    $constituentPoster->add('Core.Constituent', 'new', $this->form('add', 'Core.Constituent', 'new'));
+
+    $constituent_addition = $this->form('add', 'Core.Constituent', 'new');
+    // get next Student Number
+    $constituent_addition['Core.Constituent.PermanentNumber'] = $this->get('kula.core.sequence')->getNextSequenceForKey('PERMANENT_NUMBER');
+
+    $constituentPoster->add('Core.Constituent', 'new', $constituent_addition);
+
     $constituentPoster->process();
     $constituent_id = $constituentPoster->getPosterRecord('Core.Constituent', 'new')->getID();
 

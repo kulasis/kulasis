@@ -108,6 +108,9 @@ class CoreStaffController extends Controller {
     $constituent_addition = $this->form('add', 'Core.Constituent', 'new');
     $staff_addition = $this->form('add', 'HEd.Staff', 'new');
     
+    // get next Student Number
+    $constituent_addition['Core.Constituent.PermanentNumber'] = $this->get('kula.core.sequence')->getNextSequenceForKey('PERMANENT_NUMBER');
+    
     $constituent_poster = $this->newPoster()->add('Core.Constituent', 'new', $constituent_addition)->process()->getResult();
     
     $staff_addition['HEd.Staff.ID'] = $constituent_poster;

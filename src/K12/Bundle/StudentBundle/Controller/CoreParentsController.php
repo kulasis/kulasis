@@ -87,7 +87,12 @@ class CoreParentsController extends Controller {
     
     // Create CONS_CONSTITUENT record
     if ($parentID === null) {
-      $parentID = $this->newPoster()->add('Core.Constituent', 0, $this->form('add', 'Core.Constituent', 'new'))->process()->getID();
+      $parentInfo = $this->form('add', 'Core.Constituent', 'new');
+      // get next Student Number
+      $parentInfo['Core.Constituent.PermanentNumber'] = $this->get('kula.core.sequence')->getNextSequenceForKey('PERMANENT_NUMBER');
+      $parentID = $this->newPoster()->add('Core.Constituent', 0, $parentInfo);
+
+      $parentID = $parentID->process()->getID();
     }
     
     // Create STUD_PARENT record
