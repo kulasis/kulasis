@@ -83,7 +83,7 @@ class CoreContactInfoController extends Controller {
       
       // Get primary values
       $constituent_primary_addresses = $this->db()->db_select('CONS_CONSTITUENT', 'cons')
-        ->fields('cons', array('RESIDENCE_ADDRESS_ID', 'MAILING_ADDRESS_ID', 'WORK_ADDRESS_ID'))
+        ->fields('cons', array('RESIDENCE_ADDRESS_ID', 'MAILING_ADDRESS_ID', 'WORK_ADDRESS_ID', 'MKTG_MAILING_LIST'))
         ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->execute()->fetch();
       $primary_addresses['Core.Constituent.ResidenceAddressID'] = $constituent_primary_addresses['RESIDENCE_ADDRESS_ID'];
@@ -98,7 +98,7 @@ class CoreContactInfoController extends Controller {
       $primary_addresses['HEd.Student.BillingAddressID'] = $student_primary_addresses['BILLING_ADDRESS_ID'];
       
     }
-    return $this->render('KulaCoreConstituentBundle:CoreContactInfo:addresses.html.twig', array('address_types' => $address_types, 'addresses' => $addresses, 'primary_addresses' => $primary_addresses));
+    return $this->render('KulaCoreConstituentBundle:CoreContactInfo:addresses.html.twig', array('address_types' => $address_types, 'addresses' => $addresses, 'primary_addresses' => $primary_addresses, 'constituent' => $constituent_primary_addresses));
   }
   
   public function detailAction($sub_id) {
