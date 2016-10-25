@@ -35,6 +35,8 @@ class PosterRecord {
   private $result;
   private $posted;
   private $noLog;
+
+  private $noAudit;
   
   const ADD = 'C';
   const EDIT = 'U';
@@ -50,16 +52,21 @@ class PosterRecord {
     $this->table = $table;
     $this->id = $id;
     $this->fields = $fields;
-	$this->originalFields = array();
+	  $this->originalFields = array();
     $this->hasViolations = false;
     $this->posted = false;
     $this->noLog = false;
+    $this->audit = true;
     $this->originalRecordWithFieldNames = array();
     $this->violations = new ConstraintViolationList();
   }
   
   public function process($options = array()) {
     $this->getOriginalRecord();
+
+    if (isset($options['AUDIT_LOG']) AND $options['AUDIT_LOG'] === false) {
+      $this->audit = false;
+    }
 
     if ($this->crud == self::DELETE) {
       if ($this->fields['delete_row'] == 'Y') {
@@ -393,7 +400,9 @@ class PosterRecord {
       if ($this->crud == self::ADD OR $this->crud == self::EDIT) {
         $fields = array();
         foreach($this->fields as $fieldName => $field) {
-          $fields[$this->schema->getField($fieldName)->getDBName()] = $field;
+          $dbname = $this->schema->getField($fieldName);
+          if ($dbname)
+            $fields[$dbname->getDBName()] = $field;
         }
         $fields += $this->appendStamps();
       }
@@ -403,7 +412,8 @@ class PosterRecord {
         $this->id = $this->db->db_insert($this->schema->getTable($this->table)->getDBName(), array('nolog' => $this->noLog))
           ->fields($fields)
           ->execute();
-        $this->auditLog($fields);
+        if ($this->audit)
+          $this->auditLog($fields);
         $transaction->commit();
         return $this->id;
       }
@@ -415,7 +425,8 @@ class PosterRecord {
           ->fields($fields)
           ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
           ->execute();
-        $this->auditLog($fields);
+        if ($this->audit)
+          $this->auditLog($fields);
 
         $transaction->commit();
         return $affectedRows;
@@ -427,7 +438,8 @@ class PosterRecord {
 
         $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName(), array('nolog' => $this->noLog))
           ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)->execute();
-        $this->auditLog();
+        if ($this->audit)
+          $this->auditLog();
 
         $transaction->commit();
         return $affectedRows;

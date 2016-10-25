@@ -85,17 +85,20 @@ class Schema {
   }
   
   public function getFieldType($fieldName) {
-    return $this->cache->get('schema.fields.'.$fieldName)->getFieldType();
+    if ($this->cache->exists('schema.fields.'.$fieldName))
+      return $this->cache->get('schema.fields.'.$fieldName)->getFieldType();
     //return $this->fields[$fieldName]->getFieldType();
   }
   
   public function getDBTable($tableName) {
+    if ($this->cache->exists('schema.tables.'.$tableName))
     return $this->cache->get('schema.tables.'.$tableName)->getDBName();
     //return $this->tables[$tableName]->getDBName();
   }
   
   public function getDBField($fieldName) {
-    return $this->cache->get('schema.fields.'.$fieldName)->getDBName();
+    if ($this->cache->exists('schema.fields.'.$fieldName))
+      return $this->cache->get('schema.fields.'.$fieldName)->getDBName();
     //return $this->fields[$fieldName]->getDBName();
   }
   
