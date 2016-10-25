@@ -104,9 +104,25 @@ class APIv1UserController extends APIController {
   public function createUserAction() {
     $this->authorize();
 
-    $constituent_service = $this->get('Kula.Core.Constituent');
+    $transaction = $this->db()->db_transaction('create_user');
 
-    return $this->JSONResponse($constituent_service->createConstituent($this->request->request->get('data')));
+    // create constituent
+    $constituent_service = $this->get('Kula.Core.Constituent');
+    $constituent_data = $this->form('add', 'Core.Constituent', 'new');
+    $constituent_id = $constituent_service->createConstituent($constituent_data);
+
+    // create user
+    $user_service = $this->get('Kula.Core.User');
+    $user_data = $this->form('add', 'Core.User', 'new');
+    $user_data['Core.User.ID'] = $constituent_id;
+    $user_id = $user_service->createUser($user_data);
+
+    if ($user_id) {
+      $transaction->commit();
+      return $this->JSONResponse($constituent_id);
+    } else {
+      $transaction->rollback();
+    }
 
   }
 
