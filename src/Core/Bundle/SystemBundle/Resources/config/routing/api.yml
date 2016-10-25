@@ -19,3 +19,8 @@ api_v1_user_current:
     path:    /user/current
     defaults: { _controller: KulaCoreSystemBundle:APIv1User:currentUser }
     methods: [GET]
+
+api_v1_user_create:
+    path:    /user
+    defaults: { _controller: KulaCoreSystemBundle:APIv1User:createUser }
+    methods: [POST]

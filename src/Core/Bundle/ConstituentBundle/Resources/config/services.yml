@@ -2,3 +2,7 @@ services:
   kula.Core.Combine:
     class: Kula\Core\Bundle\ConstituentBundle\Service\CombineService
     arguments: ["@kula.core.db"]
+
+  kula.Core.Constituent:
+    class: Kula\Core\Bundle\ConstituentBundle\Service\ConstituentService
+    arguments: ["@kula.core.db", "@kula.core.sequence", "@kula.core.poster_factory"]

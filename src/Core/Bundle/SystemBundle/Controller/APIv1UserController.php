@@ -101,8 +101,12 @@ class APIv1UserController extends APIController {
     return $this->JSONResponse($user);
   }
 
-  public function createUser() {
+  public function createUserAction() {
+    $this->authorize();
 
+    $constituent_service = $this->get('Kula.Core.Constituent');
+
+    return $this->JSONResponse($constituent_service->createConstituent($this->request->request->get('data')));
 
   }
 
