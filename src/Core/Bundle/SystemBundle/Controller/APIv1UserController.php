@@ -122,9 +122,11 @@ class APIv1UserController extends APIController {
     $address_data = $this->form('add', 'Core.Constituent.Address');
     if (count($address_data) > 0) {
       foreach($address_data as $id => $fields) {
-        $fields['Core.Constituent.Address.ConstituentID'] = $constituent_id;
-        $fields['Core.Constituent.Address.EffectiveDate'] = date('m/d/Y');
-        $addressID = $contactInfo_service->addAddress($id, $fields);
+        if ($fields['Core.Constituent.Address.Thoroughfare'] != '') {
+          $fields['Core.Constituent.Address.ConstituentID'] = $constituent_id;
+          $fields['Core.Constituent.Address.EffectiveDate'] = date('m/d/Y');
+          $addressID = $contactInfo_service->addAddress($id, $fields);
+        }
       }
     }
 
@@ -132,9 +134,11 @@ class APIv1UserController extends APIController {
     $phone_data = $this->form('add', 'Core.Constituent.Phone');
     if (count($phone_data) > 0) {
       foreach($phone_data as $id => $fields) {
-        $fields['Core.Constituent.Phone.ConstituentID'] = $constituent_id;
-        $fields['Core.Constituent.Phone.EffectiveDate'] = date('m/d/Y');
-        $phoneID = $contactInfo_service->addPhone($id, $fields);
+        if ($fields['Core.Constituent.Phone.Number'] != '') {
+          $fields['Core.Constituent.Phone.ConstituentID'] = $constituent_id;
+          $fields['Core.Constituent.Phone.EffectiveDate'] = date('m/d/Y');
+          $phoneID = $contactInfo_service->addPhone($id, $fields);
+        }
       }
     }
 
@@ -142,9 +146,11 @@ class APIv1UserController extends APIController {
     $email_data = $this->form('add', 'Core.Constituent.EmailAddress');
     if (count($email_data) > 0) {
       foreach($email_data as $id => $fields) {
-        $fields['Core.Constituent.EmailAddress.ConstituentID'] = $constituent_id;
-        $fields['Core.Constituent.EmailAddress.EffectiveDate'] = date('m/d/Y');
-        $phoneID = $contactInfo_service->addEmail($id, $fields);
+        if ($fields['Core.Constituent.EmailAddress.EmailAddress']) {
+          $fields['Core.Constituent.EmailAddress.ConstituentID'] = $constituent_id;
+          $fields['Core.Constituent.EmailAddress.EffectiveDate'] = date('m/d/Y');
+          $emailID = $contactInfo_service->addEmail($id, $fields);
+        }
       }
     }
 
@@ -153,6 +159,77 @@ class APIv1UserController extends APIController {
       return $this->JSONResponse($constituent_id);
     } else {
       $transaction->rollback();
+    }
+
+  }
+
+  public function updateCurrentUserAction() {
+    $currentUser = $this->authorizeUser();
+
+    $constituent_update = null;
+    $user_update = null;
+    $address_id = null;
+    $phone_id = null;
+    $email_id = null;
+
+    $transaction = $this->db()->db_transaction('update_user');
+
+    // update constituent info
+    $constituent_service = $this->get('Kula.Core.Constituent');
+    $constituent_data = $this->form('edit', 'Core.Constituent', 0);
+    if (count($constituent_data) > 0) {
+      $constituent_update = $constituent_service->updateConstituent($currentUser, $constituent_data);
+    }
+
+    // update user info
+    $user_service = $this->get('Kula.Core.User');
+    $user_data = $this->form('edit', 'Core.User', 0);
+    if (count($user_data) > 0) {
+      $user_update = $user_service->updateUser($currentUser, $user_data);
+    }
+    $contactInfo_service = $this->get('Kula.Core.ContactInfo');
+    // add address
+    $address_data = $this->form('add', 'Core.Constituent.Address');
+    if (count($address_data) > 0) {
+      foreach($address_data as $id => $fields) {
+        if ($fields['Core.Constituent.Address.Thoroughfare'] != '') {
+          $fields['Core.Constituent.Address.ConstituentID'] = $currentUser;
+          $fields['Core.Constituent.Address.EffectiveDate'] = date('m/d/Y');
+          $address_id = $contactInfo_service->addAddress($id, $fields);
+        }
+      }
+    }
+
+    // add phone
+    $phone_data = $this->form('add', 'Core.Constituent.Phone');
+    if (count($phone_data) > 0) {
+      foreach($phone_data as $id => $fields) {
+        if ($fields['Core.Constituent.Phone.Number'] != '') {
+          $fields['Core.Constituent.Phone.ConstituentID'] = $currentUser;
+          $fields['Core.Constituent.Phone.EffectiveDate'] = date('m/d/Y');
+          $phone_id = $contactInfo_service->addPhone($id, $fields);
+        }
+      }
+    }
+
+    // add email
+    $email_data = $this->form('add', 'Core.Constituent.EmailAddress');
+    if (count($email_data) > 0) {
+      foreach($email_data as $id => $fields) {
+        if ($fields['Core.Constituent.EmailAddress.EmailAddress']) {
+          $fields['Core.Constituent.EmailAddress.ConstituentID'] = $currentUser;
+          $fields['Core.Constituent.EmailAddress.EffectiveDate'] = date('m/d/Y');
+          $email_id = $contactInfo_service->addEmail($id, $fields);
+        }
+      }
+    }
+
+    if ($constituent_update OR $user_update OR $address_id OR $phone_id OR $email_id) {
+      $transaction->commit();
+      return $this->JSONResponse('Updated.');
+    } else {
+      $transaction->rollback();
+      return $this->JSONResponse('Nothing updated.');
     }
 
   }

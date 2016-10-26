@@ -26,9 +26,12 @@ class ConstituentService {
 
   }
 
-  public function updateConstituent($constituentInfo) {
+  public function updateConstituent($constituentID, $constituentInfo) {
 
+    // Post data
+    $constituent = $this->poster->newPoster()->edit('Core.Constituent', $constituentID, $constituentInfo)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getResult();
 
+    return $constituent;
 
   }
   

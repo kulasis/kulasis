@@ -20,9 +20,14 @@ class UserService {
 
   }
 
-  public function updateUser($userInfo) {
+  public function updateUser($userID, $userInfo) {
 
-
+    // Post data
+    $userPoster = $this->poster->newPoster();
+    $userPoster->edit('Core.User', $userID, $userInfo);
+    $userPoster->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+    // Get user ID
+    return $userPoster->getResult();
 
   }
   

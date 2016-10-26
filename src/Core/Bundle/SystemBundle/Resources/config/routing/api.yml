@@ -24,3 +24,8 @@ api_v1_user_create:
     path:    /user
     defaults: { _controller: KulaCoreSystemBundle:APIv1User:createUser }
     methods: [POST]
+
+api_v1_user_current_update:
+    path:    /user/current
+    defaults: { _controller: KulaCoreSystemBundle:APIv1User:updateCurrentUser }
+    methods: [PATCH, PUT]
