@@ -108,14 +108,45 @@ class APIv1UserController extends APIController {
 
     // create constituent
     $constituent_service = $this->get('Kula.Core.Constituent');
-    $constituent_data = $this->form('add', 'Core.Constituent', 'new');
+    $constituent_data = $this->form('add', 'Core.Constituent', 0);
     $constituent_id = $constituent_service->createConstituent($constituent_data);
 
     // create user
     $user_service = $this->get('Kula.Core.User');
-    $user_data = $this->form('add', 'Core.User', 'new');
+    $user_data = $this->form('add', 'Core.User', 0);
     $user_data['Core.User.ID'] = $constituent_id;
     $user_id = $user_service->createUser($user_data);
+    
+    $contactInfo_service = $this->get('Kula.Core.ContactInfo');
+    // add address
+    $address_data = $this->form('add', 'Core.Constituent.Address');
+    if (count($address_data) > 0) {
+      foreach($address_data as $id => $fields) {
+        $fields['Core.Constituent.Address.ConstituentID'] = $constituent_id;
+        $fields['Core.Constituent.Address.EffectiveDate'] = date('m/d/Y');
+        $addressID = $contactInfo_service->addAddress($id, $fields);
+      }
+    }
+
+    // add phone
+    $phone_data = $this->form('add', 'Core.Constituent.Phone');
+    if (count($phone_data) > 0) {
+      foreach($phone_data as $id => $fields) {
+        $fields['Core.Constituent.Phone.ConstituentID'] = $constituent_id;
+        $fields['Core.Constituent.Phone.EffectiveDate'] = date('m/d/Y');
+        $phoneID = $contactInfo_service->addPhone($id, $fields);
+      }
+    }
+
+    // add email
+    $email_data = $this->form('add', 'Core.Constituent.EmailAddress');
+    if (count($email_data) > 0) {
+      foreach($email_data as $id => $fields) {
+        $fields['Core.Constituent.EmailAddress.ConstituentID'] = $constituent_id;
+        $fields['Core.Constituent.EmailAddress.EffectiveDate'] = date('m/d/Y');
+        $phoneID = $contactInfo_service->addEmail($id, $fields);
+      }
+    }
 
     if ($user_id) {
       $transaction->commit();

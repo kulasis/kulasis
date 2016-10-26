@@ -6,3 +6,7 @@ services:
   kula.Core.Constituent:
     class: Kula\Core\Bundle\ConstituentBundle\Service\ConstituentService
     arguments: ["@kula.core.db", "@kula.core.sequence", "@kula.core.poster_factory"]
+
+  kula.Core.ContactInfo:
+    class: Kula\Core\Bundle\ConstituentBundle\Service\ContactInfoService
+    arguments: ["@kula.core.db", "@kula.core.poster_factory"]
