@@ -9,3 +9,7 @@ _HEd_scheduling_teacher:
 _HEd_scheduling_student:
     resource: "@KulaHEdSchedulingBundle/Resources/config/routing/student.yml"
     prefix: student/HEd
+
+_HEd_scheduling_api:
+    resource: "@KulaHEdSchedulingBundle/Resources/config/routing/api.yml"
+    prefix: api/HEd

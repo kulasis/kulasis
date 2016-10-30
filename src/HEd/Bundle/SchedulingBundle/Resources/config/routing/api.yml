@@ -1,0 +1,4 @@
+api_v1_courses:
+    path:     /courses
+    defaults: { _controller: KulaHEdSchedulingBundle:APIv1Course:courses }
+    methods: [GET]

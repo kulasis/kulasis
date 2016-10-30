@@ -220,6 +220,10 @@ class Controller extends BaseController {
       
       return $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
   }
+
+  public function symfonyForward($controller, array $path = array(), array $query = array()) {
+    return parent::forward($controller, $path, $query);
+  }
   
   public function JSONResponse($data) {
     $response = new JsonResponse();
