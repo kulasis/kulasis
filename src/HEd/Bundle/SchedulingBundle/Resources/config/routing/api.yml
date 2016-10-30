@@ -1,4 +1,9 @@
 api_v1_courses:
-    path:     /courses
+    path:     /{org}/{term}/course
     defaults: { _controller: KulaHEdSchedulingBundle:APIv1Course:courses }
+    methods: [GET]
+
+api_v1_course:
+    path:     /{org}/{term}/course/{section_id}
+    defaults: { _controller: KulaHEdSchedulingBundle:APIv1Course:course }
     methods: [GET]

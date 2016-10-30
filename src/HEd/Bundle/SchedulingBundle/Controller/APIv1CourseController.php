@@ -87,6 +87,36 @@ class APIv1CourseController extends APIController {
     return $this->JSONResponse($data);
   }  
 
+  public function courseAction($org, $term, $section_id) {
 
+    $row = array();
+
+    $condition_or = $this->db()->db_or()
+      ->condition('sec.SECTION_ID', $section_id)
+      ->condition('sec.SECTION_NUMBER', $section_id);
+
+    $result = $this->db()->db_select('STUD_SECTION', 'sec')
+      ->fields('sec', array('SECTION_ID', 'SECTION_NUMBER', 'START_DATE', 'END_DATE', 'SECTION_NAME', 'CAPACITY', 'ENROLLED_TOTAL', 'NO_CLASS_DATES'))
+      ->join('STUD_COURSE', 'crs', 'crs.COURSE_ID = sec.COURSE_ID')
+      ->fields('crs', array('COURSE_TITLE', 'COURSE_NUMBER', 'COURSE_DESCRIPTION', 'PREREQUISITE_DESCRIPTION'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = sec.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_ABBREVIATION'))
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->fields('term', array('TERM_ABBREVIATION'))
+      ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', 'stafforgterms.STAFF_ORGANIZATION_TERM_ID = sec.STAFF_ORGANIZATION_TERM_ID')
+      ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterms.STAFF_ID')
+      ->fields('staff', array('ABBREVIATED_NAME' => 'INSTRUCTOR_ABBREVIATED_NAME'))
+      ->leftJoin('STUD_SECTION_MEETINGS', 'mtg', 'mtg.SECTION_ID = sec.SECTION_ID')
+      ->fields('mtg', array('SECTION_MEETING_ID', 'START_DATE' => 'mtg_START_DATE', 'END_DATE' => 'mtg_END_DATE', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
+      ->condition('org.ORGANIZATION_ABBREVIATION', $org)
+      ->condition('term.TERM_ABBREVIATION', $term)
+      ->condition($condition_or)
+      ->condition('sec.STATUS', null);
+    $row = $result->execute()->fetch();
+    
+    return $this->JSONResponse($row);
+
+  }
 
 }
