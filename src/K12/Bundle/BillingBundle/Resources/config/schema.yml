@@ -25,3 +25,14 @@ K12.Student.Status:
       class: Kula\K12\Bundle\BillingBundle\Field\TuitionRate
       column_name: "Tuition Rate ID"
       label_name: "Tuition Rate"
+
+K12.Section:
+  fields:
+    ParentEnroll:
+      description: "Parent Must Enroll"
+      db_column_name: PARENT_ENROLL
+      db_column_type: bool
+      db_column_default: 0
+      field_type: checkbox
+      column_name: "Parent Must Enroll"
+      label_name: "Parent Must Enroll"

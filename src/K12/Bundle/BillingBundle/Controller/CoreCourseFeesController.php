@@ -67,12 +67,18 @@ class CoreCourseFeesController extends Controller {
     $this->processForm();
     $this->setRecordType('Core.K12.Section');
     
+    $section = array();
     $fees = array();
     $refund_fees = array();
     $course_fees = array();
     $course_refund_fees = array();
     
     if ($this->record->getSelectedRecordID()) {
+
+      $section = $this->db()->db_select('STUD_SECTION', 'sec')
+        ->fields('sec', array('PARENT_ENROLL'))
+        ->condition('SECTION_ID', $this->record->getSelectedRecordID())
+        ->execute()->fetch();
       
       $fees = $this->db()->db_select('BILL_SECTION_FEE', 'BILL_SECTION_FEE')
         ->fields('BILL_SECTION_FEE', array('AMOUNT', 'CODE_ID', 'SECTION_FEE_ID'))
@@ -126,7 +132,7 @@ class CoreCourseFeesController extends Controller {
       
     }
     
-    return $this->render('KulaK12BillingBundle:CoreCourseFees:section.html.twig', array('fees' => $fees, 'course_fees' => $course_fees, 'course_refund_fees' => $course_refund_fees, 'refund_fees' => $refund_fees));
+    return $this->render('KulaK12BillingBundle:CoreCourseFees:section.html.twig', array('fees' => $fees, 'course_fees' => $course_fees, 'course_refund_fees' => $course_refund_fees, 'refund_fees' => $refund_fees, 'section' => $section));
     
   }
 
