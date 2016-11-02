@@ -63,4 +63,24 @@ class APIController extends BaseController {
 
   }
 
+  public function authorizeConstituent($user_id) {
+
+    $user = $this->authorizeUser();
+
+    $authorizedConstituents = array($user);
+
+    // get all related constituents
+    $related_constituent = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
+      ->fields('rel', array('CONSTITUENT_ID'))
+      ->condition('rel.RELATED_CONSTITUENT_ID', $user)
+      ->condition('rel.CONSTITUENT_ID', $user_id)
+      ->execute()->fetch();
+    if ($related_constituent['CONSTITUENT_ID'] != '') {
+      return true;
+    } else {
+      throw new UnauthorizedHttpException('Invalid related user.');
+    }
+
+  }
+
 }
