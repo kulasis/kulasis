@@ -95,7 +95,7 @@ class APIv1ScheduleController extends APIController {
     $transaction = $this->database->db_transaction();
 
     $class_count = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->expression('COUNT(*)' => 'class_total')
+      ->expression('COUNT(*)', 'class_total')
       ->condition('class.SECTION_ID', $section_id)
       ->condition('class.DROPPED', 0)
       ->execute()
