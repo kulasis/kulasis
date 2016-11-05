@@ -12,3 +12,18 @@ api_v1_add_class:
     path:     /student/{student_id}/classes/add/{section_id}
     defaults: { _controller: KulaHEdSchedulingBundle:APIv1Schedule:addClass }
     methods: [POST]
+
+api_v1_delete_class:
+    path:     /student/{student_id}/classes/{class_id}
+    defaults: { _controller: KulaHEdSchedulingBundle:APIv1Schedule:removeClass }
+    methods: [DELETE]
+
+api_v1_classes:
+    path:     /student/{student_id}/classes
+    defaults: { _controller: KulaHEdSchedulingBundle:APIv1Schedule:getClasses }
+    methods: [GET]
+
+api_v1_classes_org_term:
+    path:     /student/{student_id}/classes/{org}/{term}
+    defaults: { _controller: KulaHEdSchedulingBundle:APIv1Schedule:getClasses }
+    methods: [GET]
