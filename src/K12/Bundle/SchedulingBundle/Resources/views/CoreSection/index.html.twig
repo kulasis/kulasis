@@ -23,6 +23,13 @@
 {{ kula_field({ field: 'K12.Section.EnrolledTotal', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section.ENROLLED_TOTAL, label: true }) }}
 {{ kula_field({ field: 'K12.Section.WaitListedTotal', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section.WAIT_LISTED_TOTAL, label: true }) }}
 </div>
+<div class="group-box-header">Registration</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'K12.Section.AllowRegistration', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section.ALLOW_REGISTRATION, label: true }) }}
+{{ kula_field({ edit: true, field: 'K12.Section.OpenRegistration', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section.OPEN_REGISTRATION, label: true }) }}
+{{ kula_field({ edit: true, field: 'K12.Section.CloseRegistration', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section.CLOSE_REGISTRATION, label: true }) }}
+{{ kula_field({ edit: true, field: 'K12.Section.ParentEnroll', db_row_id: kula_core_record.getSelectedRecord.SECTION_ID, value: section.PARENT_ENROLL, label: true }) }}
+</div>
 </div>
 </div>
 

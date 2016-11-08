@@ -75,11 +75,6 @@ class CoreCourseFeesController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
 
-      $section = $this->db()->db_select('STUD_SECTION', 'sec')
-        ->fields('sec', array('PARENT_ENROLL'))
-        ->condition('SECTION_ID', $this->record->getSelectedRecordID())
-        ->execute()->fetch();
-      
       $fees = $this->db()->db_select('BILL_SECTION_FEE', 'BILL_SECTION_FEE')
         ->fields('BILL_SECTION_FEE', array('AMOUNT', 'CODE_ID', 'SECTION_FEE_ID'))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = BILL_SECTION_FEE.CODE_ID')
