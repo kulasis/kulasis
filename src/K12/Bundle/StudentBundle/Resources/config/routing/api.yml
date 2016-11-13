@@ -1,0 +1,4 @@
+api_v1_children:
+    path:     /user/current/children
+    defaults: { _controller: KulaK12StudentBundle:APIv1Student:relatedChildren }
+    methods: [GET]
