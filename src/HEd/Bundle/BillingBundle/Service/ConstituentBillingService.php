@@ -215,7 +215,7 @@ class ConstituentBillingService {
     // TODO: What about refunding discounts...
   }
   
-  public function determineTuitionRate($student_status_id) {
+  public function determineTuitionRate($student_status_id, $options = array()) {
 
     // Get Student Status Info
     $student_status = $this->database->db_select('STUD_STUDENT_STATUS', 'status')
@@ -259,7 +259,7 @@ class ConstituentBillingService {
       // post tuition rate
       return $this->posterFactory->newPoster()->edit('HEd.Student.Status', $student_status_id, array(
         'HEd.Student.Status.TuitionRateID' => $tuition_rate['TUITION_RATE_ID']
-      ))->process()->getResult();
+      ))->process($options)->getResult();
     }
     
   }

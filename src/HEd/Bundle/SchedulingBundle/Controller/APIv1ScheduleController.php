@@ -60,11 +60,11 @@ class APIv1ScheduleController extends APIController {
          'HEd.Student.Status.Resident' => 'C'
       ), array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false)
       );
+       
     } else {
       $student_id = $student['STUDENT_ID'];
     }
     
-
     // Get student status record; if doesn't exist, create it.  Determine Organization Term based on section.
     $student_status = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
       ->fields('stustatus', array('STUDENT_STATUS_ID'))
@@ -94,6 +94,9 @@ class APIv1ScheduleController extends APIController {
     } else {
       $student_status_id = $student_status['STUDENT_STATUS_ID'];
     }
+
+    // Calculate tuition rate
+    $this->get('kula.HEd.billing.constituent')->determineTuitionRate($student_status_id);
 
     // Make sure class not full
     $transaction = $this->db()->db_transaction();
@@ -129,7 +132,7 @@ class APIv1ScheduleController extends APIController {
     $this->authorizeConstituent($student_id);
 
     // Remove class record
-    return $this->jsonResponse($this->get('kula.HEd.scheduling.schedule')->dropClassForStudentStatus($class_id, date('Y-m-d'), array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false)));
+    return $this->jsonResponse($this->get('kula.HEd.scheduling.schedule')->dropClassForStudentStatus($class_id, date('Y-m-d')), array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
 
   }
 

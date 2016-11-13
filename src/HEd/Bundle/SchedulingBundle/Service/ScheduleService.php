@@ -29,6 +29,7 @@ class ScheduleService {
       ->fields('STUD_SECTION', array('START_DATE', 'CREDITS', 'MARK_SCALE_ID'))
       ->condition('SECTION_ID', $section_id)
       ->execute()->fetch();
+      
     // Get Student Status
     $student_status_info = $this->database->db_select('STUD_STUDENT_STATUS')
       ->fields('STUD_STUDENT_STATUS', array('LEVEL'))
