@@ -96,7 +96,7 @@ class APIv1ScheduleController extends APIController {
     }
 
     // Calculate tuition rate
-    $this->get('kula.HEd.billing.constituent')->determineTuitionRate($student_status_id);
+    $this->get('kula.HEd.billing.constituent')->determineTuitionRate($student_status_id, array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
 
     // Make sure class not full
     $transaction = $this->db()->db_transaction();

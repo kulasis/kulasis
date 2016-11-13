@@ -77,7 +77,7 @@ class ScheduleService {
     
     // process course fees
     if ($student_status_info['BILLING_MODE'] == 'FEES') {
-      $this->billing->addCourseFees($student_class_id, $posted);
+      $this->billing->addCourseFees($student_class_id, $posted, $options);
     }
     
     if ($student_class_id) {

@@ -52,7 +52,7 @@ class ConstituentBillingService {
     ))->process()->getResult();
   }
   
-  public function addCourseFees($student_class_id, $posted = 1) {
+  public function addCourseFees($student_class_id, $posted = 1, $options = array()) {
     
     if ($posted == 0 OR $posted === false) {
       $posted = 0;
@@ -86,7 +86,7 @@ class ConstituentBillingService {
         'HEd.Billing.Transaction.Posted' => $posted,
         'HEd.Billing.Transaction.ShowOnStatement' => 1,
         'HEd.Billing.Transaction.StudentClassID' => $student_class_id
-      ))->process();
+      ))->process($options);
     }
     // Add section fees
     // Get Class Info
@@ -117,7 +117,7 @@ class ConstituentBillingService {
         'HEd.Billing.Transaction.Posted' => $posted,
         'HEd.Billing.Transaction.ShowOnStatement' => 1,
         'HEd.Billing.Transaction.StudentClassID' => $student_class_id
-      ))->process();
+      ))->process($options);
     }
     
   }
