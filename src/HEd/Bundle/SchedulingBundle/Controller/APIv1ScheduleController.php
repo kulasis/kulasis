@@ -55,9 +55,10 @@ class APIv1ScheduleController extends APIController {
        $student_id = $this->get('kula.HEd.student')->addStudent($student_id, null,
       array(
          'HEd.Student.Status.EnterDate' => date('Y-m-d'),
-         'HEd.Student.OriginalEnterCode' => $defaults['DEFAULT_ENTER_CODE'],
-         'HEd.Student.OriginalEnterTerm' => $section['TERM_ID'],
-      )
+         'HEd.Student.Status.EnterCode' => $defaults['DEFAULT_ENTER_CODE'],
+         'HEd.Student.Status.EnterTerm' => $section['TERM_ID'],
+         'HEd.Student.Status.Resident' => 'C'
+      ), array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false)
       );
     } else {
       $student_id = $student['STUDENT_ID'];
@@ -85,14 +86,17 @@ class APIv1ScheduleController extends APIController {
         'HEd.Student.Status.Grade' => $defaults['DEFAULT_GRADE'],
         'HEd.Student.Status.Level' => $defaults['DEFAULT_LEVEL'],
         'HEd.Student.Status.EnterDate' => date('Y-m-d'),
-        'HEd.Student.Status.EnterCode' => $defaults['ENTER_CODE'],
-      ));
+        'HEd.Student.Status.EnterCode' => $defaults['DEFAULT_ENTER_CODE'],
+        'HEd.Student.Status.Resident' => 'C'
+      ), array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
 
       $student_status_id = $student_enrollment['student_status'];
+    } else {
+      $student_status_id = $student_status['STUDENT_STATUS_ID'];
     }
 
     // Make sure class not full
-    $transaction = $this->database->db_transaction();
+    $transaction = $this->db()->db_transaction();
 
     $class_count = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->expression('COUNT(*)', 'class_total')
@@ -101,7 +105,7 @@ class APIv1ScheduleController extends APIController {
       ->execute()
       ->fetch();
     if ($class_count['class_total'] <= $section['CAPACITY']) {
-      $schedule = $this->get('kula.HEd.scheduling.schedule')->addClassForStudentStatus($student_status_id, $section_id, date('Y-m-d'));
+      $schedule = $this->get('kula.HEd.scheduling.schedule')->addClassForStudentStatus($student_status_id, $section_id, date('Y-m-d'), 0, array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
 
       $transaction->commit();
     }
@@ -125,7 +129,7 @@ class APIv1ScheduleController extends APIController {
     $this->authorizeConstituent($student_id);
 
     // Remove class record
-    return $this->jsonResponse($this->get('kula.HEd.scheduling.schedule')->dropClassForStudentStatus($class_id, date('Y-m-d')));
+    return $this->jsonResponse($this->get('kula.HEd.scheduling.schedule')->dropClassForStudentStatus($class_id, date('Y-m-d'), array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false)));
 
   }
 

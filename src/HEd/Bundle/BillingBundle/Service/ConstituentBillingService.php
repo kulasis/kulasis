@@ -52,8 +52,12 @@ class ConstituentBillingService {
     ))->process()->getResult();
   }
   
-  public function addCourseFees($student_class_id) {
+  public function addCourseFees($student_class_id, $posted = 1) {
     
+    if ($posted == 0 OR $posted === false) {
+      $posted = 0;
+    }
+
     // Get Class Info
     $class_fees = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_STATUS_ID'))
@@ -79,7 +83,7 @@ class ConstituentBillingService {
         'HEd.Billing.Transaction.Amount' => $class_fee_row['AMOUNT'], 
         'HEd.Billing.Transaction.OriginalAmount' => $class_fee_row['AMOUNT'],
         'HEd.Billing.Transaction.AppliedBalance' => $class_fee_row['AMOUNT'],
-        'HEd.Billing.Transaction.Posted' => 1,
+        'HEd.Billing.Transaction.Posted' => $posted,
         'HEd.Billing.Transaction.ShowOnStatement' => 1,
         'HEd.Billing.Transaction.StudentClassID' => $student_class_id
       ))->process();
@@ -110,7 +114,7 @@ class ConstituentBillingService {
         'HEd.Billing.Transaction.Amount' => $class_fee_row['AMOUNT'], 
         'HEd.Billing.Transaction.OriginalAmount' => $class_fee_row['AMOUNT'],
         'HEd.Billing.Transaction.AppliedBalance' => $class_fee_row['AMOUNT'],
-        'HEd.Billing.Transaction.Posted' => 1,
+        'HEd.Billing.Transaction.Posted' => $posted,
         'HEd.Billing.Transaction.ShowOnStatement' => 1,
         'HEd.Billing.Transaction.StudentClassID' => $student_class_id
       ))->process();

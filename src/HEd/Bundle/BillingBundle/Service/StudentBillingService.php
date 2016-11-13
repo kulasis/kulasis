@@ -336,7 +336,7 @@ class StudentBillingService {
     } // end $student_status_result 
   }
   
-  public function calculateCourseFees($student_status_id, $previous_credit_total = null) {
+  public function calculateCourseFees($student_status_id, $previous_credit_total = null, $posted = 1) {
     
     // get all classes
     $classes_result = $this->database->db_select('STUD_STUDENT_CLASSES', 'classes')
@@ -409,7 +409,7 @@ class StudentBillingService {
         // class not dropped
         // need to check if total amount of fees is 0, need to bill
         if ($existing_fees['total_amount'] == 0 AND ($classes_row['AMOUNT'] != 0 OR $classes_row['section_AMOUNT'] != 0)) {
-          $this->constituent_billing_service->addCourseFees($classes_row['STUDENT_CLASS_ID']);
+          $this->constituent_billing_service->addCourseFees($classes_row['STUDENT_CLASS_ID'], $posted);
           
         } // if not 0, already billed
         

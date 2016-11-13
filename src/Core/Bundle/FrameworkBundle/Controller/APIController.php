@@ -75,7 +75,7 @@ class APIController extends BaseController {
       ->condition('rel.RELATED_CONSTITUENT_ID', $user)
       ->condition('rel.CONSTITUENT_ID', $user_id)
       ->execute()->fetch();
-    if ($related_constituent['CONSTITUENT_ID'] != '') {
+    if ($related_constituent['CONSTITUENT_ID'] != '' OR $user == $user_id) {
       return true;
     } else {
       throw new UnauthorizedHttpException('Invalid related user.');

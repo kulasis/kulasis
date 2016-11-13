@@ -12,7 +12,7 @@ class StudentService {
     $this->poster = $poster;
   }
   
-  public function addStudent($studentID = null, $constituentInfo = null, $studentInfo = null) {
+  public function addStudent($studentID = null, $constituentInfo = null, $studentInfo = null, $options = array()) {
 
     if (!$studentID) {
       // get next Student Number
@@ -22,7 +22,7 @@ class StudentService {
       
       // if ssn, update ssn
       if (isset($constituentInfo['Core.Constituent.SocialSecurityNumber']) AND $constituentInfo['Core.Constituent.SocialSecurityNumber'] != '') {
-        $this->poster->newPoster()->edit('Core.Constituent', $constituentID, array('Core.Constituent.SocialSecurityNumber' => $constituentInfo['Core.Constituent.SocialSecurityNumber']))->process();
+        $this->poster->newPoster()->edit('Core.Constituent', $constituentID, array('Core.Constituent.SocialSecurityNumber' => $constituentInfo['Core.Constituent.SocialSecurityNumber']))->process($options);
       }
       
       // Get 
@@ -31,7 +31,7 @@ class StudentService {
         'HEd.Student.OriginalEnterDate' => $studentInfo['HEd.Student.Status.EnterDate'],
         'HEd.Student.OriginalEnterCode' => $studentInfo['HEd.Student.Status.EnterCode'],
         'HEd.Student.OriginalEnterTerm' => isset($studentInfo['HEd.Student.Status.EnterTerm']) ? $studentInfo['HEd.Student.Status.EnterTerm'] : $studentInfo['EnterTerm']
-      ))->process();
+      ))->process($options);
       
       return $constituentID;
     
@@ -47,7 +47,8 @@ class StudentService {
           'HEd.Student.OriginalEnterDate' => $studentInfo['HEd.Student.Status.EnterDate'],
           'HEd.Student.OriginalEnterCode' => $studentInfo['HEd.Student.Status.EnterCode'],
           'HEd.Student.OriginalEnterTerm' => isset($studentInfo['HEd.Student.Status.EnterTerm']) ? $studentInfo['HEd.Student.Status.EnterTerm'] : $studentInfo['EnterTerm']
-        ))->process();
+        ))->process($options);
+
         return $studentID;
       }
     }
@@ -118,15 +119,15 @@ class StudentService {
       'HEd.Student.Status.OrganizationTermID' => $statusInfo['OrganizationTermID'],
       'HEd.Student.Status.Grade' => $statusInfo['HEd.Student.Status.Grade'],
       'HEd.Student.Status.Level' => $statusInfo['HEd.Student.Status.Level'],
-      'HEd.Student.Status.Resident' => $statusInfo['HEd.Student.Status.Resident'],
+      'HEd.Student.Status.Resident' => (isset($statusInfo['HEd.Student.Status.Resident'])) ? $statusInfo['HEd.Student.Status.Resident'] : null,
       'HEd.Student.Status.EnterDate' => $statusInfo['HEd.Student.Status.EnterDate'],
       'HEd.Student.Status.EnterCode' => $statusInfo['HEd.Student.Status.EnterCode'],
-      'HEd.Student.Status.SeekingDegree1ID' => $statusInfo['SeekingDegree1ID'],
-      'HEd.Student.Status.EnterTermID' => $statusInfo['EnterTermID'],
-      'HEd.Student.Status.AdmissionsCounselorID' => $statusInfo['AdmissionsCounselorID'],
-      'HEd.Student.Status.Cohort' => $statusInfo['Cohort'],
-      'HEd.Student.Status.AdvisorID' => $statusInfo['AdvisorID'],
-      'HEd.Student.Status.SeekingDegree1ID' => $statusInfo['SeekingDegree1ID']
+      'HEd.Student.Status.SeekingDegree1ID' => (isset($statusInfo['SeekingDegree1ID'])) ? $statusInfo['SeekingDegree1ID'] : null,
+      'HEd.Student.Status.EnterTermID' => (isset($statusInfo['EnterTermID'])) ? $statusInfo['EnterTermID'] : null,
+      'HEd.Student.Status.AdmissionsCounselorID' => (isset($statusInfo['AdmissionsCounselorID'])) ? $statusInfo['AdmissionsCounselorID'] : null,
+      'HEd.Student.Status.Cohort' => (isset($statusInfo['Cohort'])) ? $statusInfo['Cohort'] : null,
+      'HEd.Student.Status.AdvisorID' => (isset($statusInfo['AdvisorID'])) ? $statusInfo['AdvisorID'] : null,
+      'HEd.Student.Status.SeekingDegree1ID' => (isset($statusInfo['SeekingDegree1ID'])) ? $statusInfo['SeekingDegree1ID'] : null
     ))->process($options)->getID();
 
     // Create Enrollment Record
@@ -142,7 +143,7 @@ class StudentService {
       'HEd.Student.Enrollment.Activity.EffectiveDate' => date('m/d/Y'),
       'HEd.Student.Enrollment.Activity.Grade' => $statusInfo['HEd.Student.Status.Grade'],
       'HEd.Student.Enrollment.Activity.Level' => $statusInfo['HEd.Student.Status.Level'],
-      'HEd.Student.Enrollment.Activity.Resident' => $statusInfo['HEd.Student.Status.Resident']
+      'HEd.Student.Enrollment.Activity.Resident' => (isset($statusInfo['HEd.Student.Status.Resident'])) ? $statusInfo['HEd.Student.Status.Resident'] : null
     ))->process($options)->getID();
     
     return array('student_status' => $student_status_id, 'enrollment_id' => $enrollment_id, 'enrollment_activity_id' => $enrollment_activity_id);

@@ -22,9 +22,9 @@ class ScheduleService {
     $this->billing = $billing;
   }
   
-  public function addClassForStudentStatus($student_status_id, $section_id, $start_date) {
+  public function addClassForStudentStatus($student_status_id, $section_id, $start_date, $posted = 1, $options = array()) {
     
-    // Get Seciton Info
+    // Get Section Info
     $section_info = $this->database->db_select('STUD_SECTION')
       ->fields('STUD_SECTION', array('START_DATE', 'CREDITS', 'MARK_SCALE_ID'))
       ->condition('SECTION_ID', $section_id)
@@ -37,6 +37,18 @@ class ScheduleService {
       ->condition('STUDENT_STATUS_ID', $student_status_id)
       ->execute()->fetch();
       
+    // Check if student already enrolled
+    $student_enrolled = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
+      ->fields('class', array('STUDENT_CLASS_ID'))
+      ->condition('class.STUDENT_STATUS_ID', $student_status_id)
+      ->condition('class.SECTION_ID', $section_id)
+      ->condition('class.DROPPED', 0)
+      ->execute()->fetch();
+
+    if ($student_enrolled['STUDENT_CLASS_ID'] != '') {
+      return false;
+    }
+
     $class_info['HEd.Student.Class.StudentStatusID'] = $student_status_id;  
     $class_info['HEd.Student.Class.SectionID'] = $section_id;
     $class_info['HEd.Student.Class.CreditsAttempted'] = $section_info['CREDITS'];
@@ -50,7 +62,7 @@ class ScheduleService {
     
     $transaction = $this->database->db_transaction();
     
-    $student_class_id = $this->posterFactory->newPoster()->add('HEd.Student.Class', 'new', $class_info)->process()->getResult();
+    $student_class_id = $this->posterFactory->newPoster()->add('HEd.Student.Class', 'new', $class_info)->process($options)->getResult();
     
     // check if exists in wait list
     $waitlist_info = $this->database->db_select('STUD_STUDENT_WAIT_LIST')
@@ -59,12 +71,12 @@ class ScheduleService {
       ->condition('SECTION_ID', $section_id)
       ->execute()->fetch();
     if ($waitlist_info['STUDENT_WAIT_LIST_ID']) {
-      $waitlist_poster = $this->posterFactory->newPoster()->delete('HEd.Student.WaitList', $waitlist_info['STUDENT_WAIT_LIST_ID'])->process();
+      $waitlist_poster = $this->posterFactory->newPoster()->delete('HEd.Student.WaitList', $waitlist_info['STUDENT_WAIT_LIST_ID'])->process($options);
     }
     
     // process course fees
     if ($student_status_info['BILLING_MODE'] == 'FEES') {
-      $this->billing->addCourseFees($student_class_id);
+      $this->billing->addCourseFees($student_class_id, $posted);
     }
     
     if ($student_class_id) {
@@ -77,7 +89,7 @@ class ScheduleService {
       
       $section_poster = $this->posterFactory->newPoster()->edit('HEd.Section', $section_id, array(
         'HEd.Section.EnrolledTotal' => $section_row['ENROLLED_TOTAL'] + 1
-      ))->process()->getResult();
+      ))->process($options)->getResult();
 
       if ($section_poster) {
         $transaction->commit();
