@@ -163,6 +163,27 @@ class APIv1ScheduleController extends APIController {
 
   public function getClassesForCheckout() {
     // get logged in user
+    $this->authorize();
+
+    // return class list
+    $class_list = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
+      ->fields('classes', array())
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = classes.STUDENT_STATUS_ID')
+      ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = classes.SECTION_ID')
+      ->fields('sec', array('SECTION_NUMBER', 'SECTION_NAME'))
+      ->join('STUD_COURSE', 'course', 'course.COURSE_ID = sec.COURSE_ID')
+      ->fields('course', array('COURSE_TITLE"'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = sec.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterm.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_ABBREVIATION'))
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterm.TERM_ID')
+      ->fields('term', array('TERM_ABBREVIATION'))
+      ->condition('stustatus.STUDENT_ID', $student_id)
+      ->condition('classes.DROPPED', 0)
+      ->condition('classes.START_DATE', date('Y-m-d'), '>=')
+      ->execute()->fetchAll();
+
+    // get bill for classes
 
 
     // return class list
