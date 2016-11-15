@@ -20,7 +20,7 @@ class TranscriptService {
     $this->loadDegreesAwarded($student_id, $level);
     $this->loadTranscriptData($student_id, $level);
     $this->loadCurrentSchedule($student_id, $level);
-    
+
   }
   
   public function getTranscriptData() {
@@ -238,6 +238,7 @@ class TranscriptService {
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CUM_HOURS'] = $row['CUM_HOURS'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CUM_POINTS'] = $row['CUM_POINTS'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['CUM_GPA'] = $row['CUM_GPA'];
+      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['COMMENTS'] = $row['COMMENTS'];
       
       $this->course_history_data['levels'][$row['LEVEL']]['CUM_CREDITS_ATTEMPTED'] = $row['CUM_CREDITS_ATTEMPTED'];
       $this->course_history_data['levels'][$row['LEVEL']]['CUM_CREDITS_EARNED'] = $row['CUM_CREDITS_EARNED'];
@@ -259,7 +260,7 @@ class TranscriptService {
       $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_HOURS'] = $row['TOTAL_HOURS'];
       $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_POINTS'] = $row['TOTAL_POINTS'];
       $this->course_history_data['levels'][$row['LEVEL']]['TOTAL_GPA'] = $row['TOTAL_GPA'];
-      $this->course_history_data['levels'][$row['LEVEL']]['COMMENTS'] = $row['COMMENTS'];
+      $this->course_history_data['levels'][$row['LEVEL']]['COMMENTS'] = null;
 
       $course_counter++;
       
