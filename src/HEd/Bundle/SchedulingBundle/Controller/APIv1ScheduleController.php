@@ -161,13 +161,17 @@ class APIv1ScheduleController extends APIController {
     return $this->jsonResponse($class_list);
   }
 
-  public function getClassesForCheckout() {
+  public function getPendingClassesAction() {
+
     // get logged in user
-    $this->authorize();
+    $currentUser = $this->authorizeUser();
+
+    $data = array();
+    $i = 0;
 
     // return class list
-    $class_list = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
-      ->fields('classes', array())
+    $class_list_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
+      ->fields('classes', array('STUDENT_CLASS_ID'))
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = classes.STUDENT_STATUS_ID')
       ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = classes.SECTION_ID')
       ->fields('sec', array('SECTION_NUMBER', 'SECTION_NAME'))
@@ -178,15 +182,32 @@ class APIv1ScheduleController extends APIController {
       ->fields('org', array('ORGANIZATION_ABBREVIATION'))
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterm.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
-      ->condition('stustatus.STUDENT_ID', $student_id)
+      ->condition('stustatus.STUDENT_ID', $currentUser)
       ->condition('classes.DROPPED', 0)
       ->condition('classes.START_DATE', date('Y-m-d'), '>=')
-      ->execute()->fetchAll();
+      ->execute();
+    while ($class_list_row = $class_list_result->fetch()) {
 
-    // get bill for classes
+      $data[$i] = $class_list_row;
 
+      // Get charges and payments for class not posted
+      $trans_result = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+        ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DESCRIPTION', 'AMOUNT'))
+        ->condition('trans.POSTED', 0)
+        ->condition('trans.CONSTITUENT_ID', $currentUser)
+        ->condition('trans.STUDENT_CLASS_ID', $class_list_row['STUDENT_CLASS_ID'])
+        ->execute();
+      while ($trans_row = $trans_result->fetch()) {
+
+        $data[$i]['billing'][] = $trans_row;
+
+      } // end while on loop through transactions
+
+      $i++;
+    } // end while on loop through classes
 
     // return class list
+    return $this->jsonResponse($data);
   }
 
 }

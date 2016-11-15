@@ -27,3 +27,7 @@ api_v1_classes_org_term:
     path:     /student/{student_id}/classes/{org}/{term}
     defaults: { _controller: KulaHEdSchedulingBundle:APIv1Schedule:getClasses }
     methods: [GET]
+
+api_v1_classes_pending:
+    path:    /student/current/classes/pending
+    defaults: { _controller: KulaHEdSchedulingBundle:APIv1Schedule:getPendingClasses }
