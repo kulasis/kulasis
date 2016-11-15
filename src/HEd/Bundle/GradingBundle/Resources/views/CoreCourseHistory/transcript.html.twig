@@ -30,6 +30,11 @@
  {% if term.TERM %} | {{ term.TERM }}{% endif %}
 </div> 
 <table id="window_window_num_data_table_terms" class="data-table">
+{% if term.COMMENTS != '' %}
+<thead>
+  <td colspan="4">{{ term.COMMENTS }}</td>
+</thead>
+{% endif %}
 <thead>
   {{ kula_field_name({ field: 'HEd.Student.CourseHistory.CourseNumber', field_name_override: 'Course ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.CourseHistory.CourseTitle', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
