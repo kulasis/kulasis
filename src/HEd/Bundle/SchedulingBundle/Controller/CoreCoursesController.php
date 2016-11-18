@@ -93,7 +93,7 @@ class CoreCoursesController extends Controller {
       $this->addFlash('success', 'Deleted course.');
     }
     
-    return $this->forward('core_HEd_courses');
+    return $this->forward('Core_HEd_Course_Course');
   }
   
   public function chooserAction() {
