@@ -48,6 +48,14 @@ Core.Billing.Payment:
       field_type: date
       column_name: "Payment Date"
       label_name: "Payment Date"
+    PaymentTimestamp:
+      description: "Payment Timestamp"
+      db_column_name: PAYMENT_TIMESTAMP
+      db_column_type: datetime
+      db_column_null: false
+      field_type: date
+      column_name: "Payment Timestamp"
+      label_name: "Payment Timestamp"
     PaymentNumber:
       description: "Payment Number"
       db_column_name: PAYMENT_NUMBER
@@ -131,6 +139,14 @@ Core.Billing.Payment:
       field_type: textarea
       column_name: "Merchant Response"
       label_name: "Merchant Response"
+    Note:
+      description: "Note"
+      db_column_name: NOTE
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Note"
+      label_name: "Note"
 
 Core.Billing.Payment.Applied:
   description: "Applied Payments"

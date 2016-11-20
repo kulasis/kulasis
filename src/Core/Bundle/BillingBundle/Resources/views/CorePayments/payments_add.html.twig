@@ -1,0 +1,27 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="group-box">
+<div class="group-box-header">Payee</div>
+<div class="group-box-contents group">
+{% if kula_core_record.getSelectedRecord.CONSTITUENT_ID  %}
+{{ kula_field({ field: 'Core.Billing.Payment.ConstituentID', field_name_override: 'Constituent', value: kula_core_record.getSelectedRecord.CONSTITUENT_ID, label: true }) }}
+{% else %}
+{{ kula_field({add: true, field: 'Core.Billing.Payment.ConstituentID', field_name_override: 'Constituent', label: true }) }}
+{% endif %}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Payment</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, field: 'Core.Billing.Payment.PaymentType', value: 'P', hidden: true}) }}
+{{ kula_field({ add: true, field: 'Core.Billing.Payment.PaymentMethod', label: true }) }}
+{{ kula_field({ add: true, field: 'Core.Billing.Payment.PaymentNumber', label: true }) }}
+{{ kula_field({ add: true, field: 'Core.Billing.Payment.PaymentDate', value:"now"|date("m/d/Y"), label: true }) }}
+{{ kula_field({ add: true, field: 'Core.Billing.Payment.Amount', label: true }) }}
+</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, field: 'Core.Billing.Payment.Note', label: true }) }}
+</div>
+</div>
+{% endblock %}

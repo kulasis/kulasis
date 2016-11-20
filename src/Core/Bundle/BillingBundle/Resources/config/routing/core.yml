@@ -19,8 +19,8 @@ Core_Billing_ConstituentBilling_History:
 Core_Billing_ConstituentBilling_AddPayment:
   path: /constituent/payments/add
   defaults: 
-    _controller: KulaCoreBillingBundle:CoreTransactions:add_payment
-    _navigation: Core.Billing.ConstituentBilling
+    _controller: KulaCoreBillingBundle:CorePayments:addPayment
+    _navigation: Core.Billing.ConstituentBilling.Payments
 
 Core_Billing_ConstituentBilling_TransactionDetail:
   path: /constituent/transactions/{constituent_transaction_id}/detail

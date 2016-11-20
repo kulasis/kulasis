@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\BillingBundle\Record;
+namespace Kula\Core\Bundle\BillingBundle\Record;
 
 use Kula\Core\Component\Record\Record;
 
@@ -11,7 +11,7 @@ class CoreBillingCodeRecord extends Record {
   }
   
   public function getRecordBarTemplate() {
-    return 'KulaHEdBillingBundle::CoreRecord/record_bill_code.html.twig';
+    return 'KulaCoreBillingBundle::CoreRecord/record_bill_code.html.twig';
   }
   
   public function getRecordIDStack() {
@@ -35,11 +35,11 @@ class CoreBillingCodeRecord extends Record {
   }
   
   public function getBaseTable() {
-    return 'HEd.Billing.Code';
+    return 'Core.Billing.Code';
   }
   
   public function getBaseKeyFieldName() {
-    return 'HEd.Billing.Code.ID';
+    return 'Core.Billing.Code.ID';
   }
   
   public function modifySearchDBOBject($db_obj) {
