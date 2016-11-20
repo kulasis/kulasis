@@ -4,3 +4,19 @@ HEd.Billing.Code.Type:
   values:
     - { code: C, description: "Charge" }
     - { code: P, description: "Payment" }
+
+HEd.Billing.Payment.Type:
+  description: "Billing Payment Types"
+  allow_update: false
+  values:
+    - { code: P, description: "Payment" }
+    - { code: R, description: "Refund" }
+
+HEd.Billing.Payment.Method:
+  description: "Billing Payment Methods"
+  allow_update: true
+  values:
+    - { code: CHK, description: "Check" }
+    - { code: CREDIT, description: "Credit Card" }
+    - { code: DEBIT, description: "Debit Card" }
+    - { code: ACH, description: "ACH" }

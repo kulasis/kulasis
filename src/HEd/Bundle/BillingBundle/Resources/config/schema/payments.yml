@@ -1,0 +1,182 @@
+HEd.Billing.Payment:
+  description: "Payments"
+  db_table_name: BILL_CONSTITUENT_PAYMENTS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: CONSTITUENT_PAYMENT_ID
+      db_column_type: primary_serial
+      column_name: "Payment ID"
+      label_name: "Payment ID"
+    ConstituentID:
+      description: "Constituent ID"
+      parent: Core.Constituent.ID
+      db_column_name: CONSTITUENT_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: HEd.Student
+      column_name: "Constituent ID"
+      label_name: "Constituent ID"
+    PaymentType:
+      description: "Payment Type"
+      db_column_name: PAYMENT_TYPE
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: false
+      field_type: lookup
+      lookup: HEd.Billing.Payment.Type
+      column_name: "Payment Type"
+      label_name: "Payment Type"
+    PaymentMethod:
+      description: "Payment Method"
+      db_column_name: PAYMENT_METHOD
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Billing.Payment.Method
+      column_name: "Payment Method"
+      label_name: "Payment Method"
+    PaymentDate:
+      description: "Payment Date"
+      db_column_name: PAYMENT_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "Payment Date"
+      label_name: "Payment Date"
+    PaymentNumber:
+      description: "Payment Number"
+      db_column_name: PAYMENT_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 15
+      column_name: "Payment Number"
+      label_name: "Payment Number"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      field_type: text
+      field_size: 7
+      column_name: "Amount"
+      label_name: "Amount"
+    OriginalAmount:
+      description: "Original Amount"
+      db_column_name: ORIGINAL_AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      field_type: text
+      field_size: 7
+      column_name: "Original Amount"
+      label_name: "Original Amount"
+    AppliedBalance:
+      description: "Applied Balance"
+      db_column_name: APPLIED_BALANCE
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      field_type: text
+      field_size: 7
+      column_name: "Applied Balance"
+      label_name: "Applied Balance"
+    Voided: 
+      description: "Voided"
+      db_column_name: VOIDED
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Voided"
+      label_name: "Voided"
+    VoidedReason:
+      description: "Voided Reason"
+      db_column_name: VOIDED_REASON
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Voided Reason"
+      label_name: "Voided Reason"
+    VoidedUserstamp:
+      description: "Voided Userstamp"
+      parent: Core.User.ID
+      db_column_name: VOIDED_USERSTAMP
+      db_column_type: serial
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Voided Userstamp"
+      label_name: "Voided Userstamp"
+    VoidedTimestamp:
+      description: "Voided Timestamp"
+      db_column_name: VOIDED_TIMESTAMP
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      column_name: "Voided Timestamp"
+      label_name: "Voided Timestamp"
+    MerchantResponse:
+      description: "Merchant Response"
+      db_column_name: MERCHANT_RESPONSE
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Merchant Response"
+      label_name: "Merchant Response"
+
+HEd.Billing.Payment.Applied:
+  description: "Applied Payments"
+  db_table_name: BILL_CONSTITUENT_PAYMENTS_APPLIED
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: CONSTITUENT_APPLIED_PAYMENT_ID
+      db_column_type: primary_serial
+      column_name: "Applied Payment ID"
+      label_name: "Applied Payment ID"
+    PaymentID:
+      description: "Payment ID"
+      parent: HEd.Billing.Payment.ID
+      db_column_name: CONSTITUENT_PAYMENT_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Payment ID"
+      label_name: "Payment ID"
+    TransactionID:
+      description: "Transaction ID"
+      parent: HEd.Billing.Transaction.ID
+      db_column_name: CONSTITUENT_TRANSACTION_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Transaction ID"
+      label_name: "Transaction ID"    
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      field_type: text
+      field_size: 7
+      column_name: "Amount"
+      label_name: "Amount"
+    Note:
+      description: "Note"
+      db_column_name: NOTE
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Note"
+      label_name: "Note"
+  unique_keys:
+    PaymentTransactionID: [ "HEd.Billing.Payment.Applied.PaymentID", "HEd.Billing.Payment.Applied.TransactionID" ]

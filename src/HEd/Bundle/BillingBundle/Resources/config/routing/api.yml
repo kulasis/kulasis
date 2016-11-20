@@ -1,0 +1,4 @@
+api_v1_payment_process:
+    path:    /user/current/payment/process
+    defaults: { _controller: KulaHEdBillingBundle:APIv1Payment:processPayment }
+    methods: [POST]

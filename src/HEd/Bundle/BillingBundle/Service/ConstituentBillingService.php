@@ -435,5 +435,21 @@ class ConstituentBillingService {
     }
     
   }
+
+  public function addPayment($constituent_id, $payment_type, $payment_method, $payment_date, $payment_number, $amount) {
+    // create payment data
+    $payment_id = $this->posterFactory->newPoster()->add('HEd.Billing.Payment', 0, array(
+      'HEd.Billing.Payment.ConstituentID' => $constituent_id,
+      'HEd.Billing.Payment.PaymentType' => $payment_type,
+      'HEd.Billing.Payment.PaymentMethod' => $payment_method,
+      'HEd.Billing.Payment.PaymentDate' => $payment_date,
+      'HEd.Billing.Payment.PaymentNumber' => $payment_number,
+      'HEd.Billing.Payment.Amount' => $amount, 
+      'HEd.Billing.Payment.OriginalAmount' => $amount,
+      'HEd.Billing.Payment.AppliedBalance' => $amount,
+    ))->process()->getResult();
+
+    return $payment_id;
+  }
   
 }
