@@ -1,4 +1,4 @@
-HEd.Billing.Transaction:
+Core.Billing.Transaction:
   description: "Transactions"
   db_table_name: BILL_CONSTITUENT_TRANSACTIONS
   timestamps: true
@@ -16,7 +16,7 @@ HEd.Billing.Transaction:
       db_column_name: CONSTITUENT_ID
       db_column_type: serial
       field_type: chooser
-      chooser: HEd.Student
+      chooser: Core.Constituent
       column_name: "Constituent ID"
       label_name: "Constituent ID"
     OrganizationTermID:
@@ -31,12 +31,12 @@ HEd.Billing.Transaction:
       label_name: "Organization Term ID"
     CodeID:
       description: "Transaction Code ID"
-      parent: HEd.Billing.Code.ID
+      parent: Core.Billing.Code.ID
       db_column_name: CODE_ID
       db_column_type: serial
       db_column_null: false
       field_type: select
-      class: Kula\HEd\Bundle\BillingBundle\Field\TransactionCode
+      class: Kula\Core\Bundle\BillingBundle\Field\TransactionCode
       column_name: "Code ID"
       label_name: "Code"
     TransactionDate:
@@ -156,13 +156,11 @@ HEd.Billing.Transaction:
       db_column_null: true
       column_name: "Refund Transaction ID"
       label_name: "Refund Transaction ID"
-    StudentClassID:
-      description: "Student Class ID"
-      parent: HEd.Student.Class.ID
-      db_column_name: STUDENT_CLASS_ID
+    PaymentID:
+      description: "Payment ID"
+      parent: Core.Billing.Payment.ID
+      db_column_name: PAYMENT_ID
       db_column_type: serial
       db_column_null: true
-      field_type: select
-      class: Kula\HEd\Bundle\SchedulingBundle\Field\Classes
-      column_name: "Student Class ID"
-      label_name: "Student Class ID"
+      column_name: "Payment ID"
+      label_name: "Payment ID"

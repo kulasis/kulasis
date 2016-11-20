@@ -21,7 +21,7 @@ class ConstituentRecord extends Record {
       $result = $result->execute()->fetch();
       return $result['STUDENT_ID'];
     }
-    if ($record_type == 'SIS.HEd.STudent') {
+    if ($record_type == 'SIS.HEd.Student') {
       return $record_id;
     }
   }

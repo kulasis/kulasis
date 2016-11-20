@@ -1,0 +1,4 @@
+imports:
+    - { resource: schema/code.yml }
+    - { resource: schema/transactions.yml }
+    - { resource: schema/payments.yml }

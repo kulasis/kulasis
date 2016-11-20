@@ -1,0 +1,67 @@
+Core_Billing_ConstituentBilling_Balances:
+  path: /constituent/balances
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreBilling:balances
+    _navigation: Core.Billing.ConstituentBilling.Balances
+
+Core_Billing_ConstituentBilling_AddCharge:
+  path: /constituent/charges/add
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTransactions:add_charge
+    _navigation: Core.Billing.ConstituentBilling
+
+Core_Billing_ConstituentBilling_History:
+  path: /constituent/history
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTransactions:history
+    _navigation: Core.Billing.ConstituentBilling.History
+
+Core_Billing_ConstituentBilling_AddPayment:
+  path: /constituent/payments/add
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTransactions:add_payment
+    _navigation: Core.Billing.ConstituentBilling
+
+Core_Billing_ConstituentBilling_TransactionDetail:
+  path: /constituent/transactions/{constituent_transaction_id}/detail
+  defaults: { _controller: KulaCoreBillingBundle:CoreTransactions:transaction_detail }
+
+Core_Billing_ConstituentBilling_Transactions:
+  path: /constituent/transactions
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTransactions:transactions
+    _navigation: Core.Billing.ConstituentBilling.Transactions
+
+Core_Billing_ConstituentBilling_PaymentDetail:
+  path: /constituent/payments/{constituent_payment_id}/detail
+  defaults: { _controller: KulaCoreBillingBundle:CorePayments:payment_detail }
+
+Core_Billing_ConstituentBilling_Payments:
+  path: /constituent/payments
+  defaults: 
+    _controller: KulaCoreBillingBundle:CorePayments:payments
+    _navigation: Core.Billing.ConstituentBilling.Payments
+
+Core_Billing_BillingSetup_Codes:
+  path: /setup/codes
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreCodes:codes
+    _navigation: Core.Billing.BillingSetup.Codes
+
+Core_Billing_BillingSetup_Codes_Add:
+  path: /setup/codes/add
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreCodes:add
+    _navigation: Core.Billing.BillingSetup.Codes
+  methods: [GET]
+
+Core_Billing_BillingSetup_Codes_Create:
+  path: /setup/codes/add
+  defaults: { _controller: KulaCoreBillingBundle:CoreCodes:create }
+  methods: [POST]
+
+Core_Billing_BillingSetup_Codes_Delete:
+  path: /setup/codes/delete
+  defaults: { _controller: KulaCoreBillingBundle:CoreCodes:delete }
+  methods: [POST]
+  

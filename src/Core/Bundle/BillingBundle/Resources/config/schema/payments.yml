@@ -1,4 +1,4 @@
-HEd.Billing.Payment:
+Core.Billing.Payment:
   description: "Payments"
   db_table_name: BILL_CONSTITUENT_PAYMENTS
   timestamps: true
@@ -17,7 +17,7 @@ HEd.Billing.Payment:
       db_column_type: serial
       db_column_null: true
       field_type: chooser
-      chooser: HEd.Student
+      chooser: Core.Constituent
       column_name: "Constituent ID"
       label_name: "Constituent ID"
     PaymentType:
@@ -27,7 +27,7 @@ HEd.Billing.Payment:
       db_column_length: 1
       db_column_null: false
       field_type: lookup
-      lookup: HEd.Billing.Payment.Type
+      lookup: Core.Billing.Payment.Type
       column_name: "Payment Type"
       label_name: "Payment Type"
     PaymentMethod:
@@ -37,7 +37,7 @@ HEd.Billing.Payment:
       db_column_length: 10
       db_column_null: true
       field_type: lookup
-      lookup: HEd.Billing.Payment.Method
+      lookup: Core.Billing.Payment.Method
       column_name: "Payment Method"
       label_name: "Payment Method"
     PaymentDate:
@@ -132,7 +132,7 @@ HEd.Billing.Payment:
       column_name: "Merchant Response"
       label_name: "Merchant Response"
 
-HEd.Billing.Payment.Applied:
+Core.Billing.Payment.Applied:
   description: "Applied Payments"
   db_table_name: BILL_CONSTITUENT_PAYMENTS_APPLIED
   timestamps: true
@@ -146,7 +146,7 @@ HEd.Billing.Payment.Applied:
       label_name: "Applied Payment ID"
     PaymentID:
       description: "Payment ID"
-      parent: HEd.Billing.Payment.ID
+      parent: Core.Billing.Payment.ID
       db_column_name: CONSTITUENT_PAYMENT_ID
       db_column_type: serial
       db_column_null: true
@@ -154,7 +154,7 @@ HEd.Billing.Payment.Applied:
       label_name: "Payment ID"
     TransactionID:
       description: "Transaction ID"
-      parent: HEd.Billing.Transaction.ID
+      parent: Core.Billing.Transaction.ID
       db_column_name: CONSTITUENT_TRANSACTION_ID
       db_column_type: serial
       db_column_null: true
@@ -170,6 +170,16 @@ HEd.Billing.Payment.Applied:
       field_size: 7
       column_name: "Amount"
       label_name: "Amount"
+    OriginalAmount:
+      description: "Original Amount"
+      db_column_name: ORIGINAL_AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      field_type: text
+      field_size: 7
+      column_name: "Original Amount"
+      label_name: "Original Amount"
     Note:
       description: "Note"
       db_column_name: NOTE
@@ -179,4 +189,4 @@ HEd.Billing.Payment.Applied:
       column_name: "Note"
       label_name: "Note"
   unique_keys:
-    PaymentTransactionID: [ "HEd.Billing.Payment.Applied.PaymentID", "HEd.Billing.Payment.Applied.TransactionID" ]
+    PaymentTransactionID: [ "Core.Billing.Payment.Applied.PaymentID", "Core.Billing.Payment.Applied.TransactionID" ]

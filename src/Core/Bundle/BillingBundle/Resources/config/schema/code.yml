@@ -1,0 +1,78 @@
+Core.Billing.Code:
+  description: "Billing Codes"
+  db_table_name: BILL_CODE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: CODE_ID
+      db_column_type: primary_serial
+      column_name: "Code ID"
+      label_name: "Code ID"
+    Type:
+      description: "Type"
+      db_column_name: CODE_TYPE
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: false
+      field_type: lookup
+      lookup: HEd.Billing.Code.Type
+      column_name: "Code Type"
+      label_name: "Type"
+    Code:
+      description: "Code"
+      db_column_name: "CODE"
+      db_column_type: varchar
+      db_column_length: 20
+      db_column_null: false
+      field_type: text
+      field_length: 10
+      column_name: "Code"
+      label_name: "Code"
+    Description:
+      description: "Code Description"
+      db_column_name: CODE_DESCRIPTION
+      db_column_type: varchar
+      db_column_length: 200
+      db_column_null: true
+      field_type: text
+      field_length: 30
+      column_name: "Code Description"
+      label_name: "Code Description"
+    InactiveAfter:
+      description: "Inactive After"
+      db_column_name: INACTIVE_AFTER
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Inactive After"
+      label_name: "Inactive After"
+    ConversionCodeNumber:
+      description: "Conversion Code Number"
+      db_column_name: CONV_CODE_NUMBER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Conversion Code Number"
+      label_name: "Conversion Code Number"
+    Form1098TBox2:
+      description: "Form 1098-T Box 2"
+      db_column_name: FORM1098T_BOX2
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Form 1098-T Box 2"
+      label_name: "Form 1098-T Box 2"
+    Form1098TBox5:
+      description: "Form 1098-T Box 5"
+      db_column_name: FORM1098T_BOX5
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Form 1098-T Box 5"
+      label_name: "Form 1098-T Box 5"

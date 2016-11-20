@@ -3,7 +3,6 @@ imports:
     - { resource: schema/tuitionrate.yml }
     - { resource: schema/coursefee.yml }
     - { resource: schema/transactions.yml }
-    - { resource: schema/payments.yml }
 
 HEd.Student.Status:
   fields:

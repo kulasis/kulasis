@@ -1,0 +1,50 @@
+Core.Billing:
+  description: "Billing"
+  display_name: "Billing"
+  type: dir
+  portal: core
+  forms:
+    ConstituentBilling:
+      description: "Constituent Billing"
+      display_name: "Constituent Billing"
+      tabs:
+        Balances:
+          description: "Balances"
+          display_name: "Balances"
+          route: Core_Billing_ConstituentBilling_Balances
+        Transactions:
+          description: "Transactions"
+          display_name: "Transactions"
+          route: Core_Billing_ConstituentBilling_Transactions
+        Payments:
+          description: "Payments"
+          display_name: "Payments"
+          route: Core_Billing_ConstituentBilling_Payments
+        History:
+          description: "History"
+          display_name: "History"
+          route: Core_Billing_ConstituentBilling_History
+      menu_actions:
+        AddCharge:
+          description: "Add Charge"
+          display_name: "Add Charge"
+          record_loaded: true
+          route: Core_Billing_ConstituentBilling_AddCharge
+        AddPayment:
+          description: "Add Payment"
+          display_name: "Add Payment"
+          record_loaded: true
+          divider_before: true
+          route: Core_Billing_ConstituentBilling_AddPayment
+    BillingSetup:
+      description: "Billing Setup"
+      display_name: "Billing Setup"
+      tabs:
+        Codes:
+          description: "Codes"
+          display_name: "Codes"
+          route: Core_Billing_BillingSetup_Codes
+      button_add:
+        route: Core_Billing_BillingSetup_Codes_Add
+      button_delete:
+        route: Core_Billing_BillingSetup_Codes_Delete

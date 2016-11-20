@@ -68,16 +68,6 @@ Core_HEd_Billing_StudentBilling_Transactions:
     _controller: KulaHEdBillingBundle:CoreTransactions:transactions
     _navigation: Core.HEd.Billing.StudentBilling.Transactions
 
-Core_HEd_Billing_StudentBilling_PaymentDetail:
-  path: /billing/student/payments/{constituent_payment_id}/detail
-  defaults: { _controller: KulaHEdBillingBundle:CorePayments:payment_detail }
-
-Core_HEd_Billing_StudentBilling_Payments:
-  path: /billing/student/payments
-  defaults: 
-    _controller: KulaHEdBillingBundle:CorePayments:payments
-    _navigation: Core.HEd.Billing.StudentBilling.Payments
-
 Core_HEd_Billing_Billing_Pending:
     path:     /billing/billing/pending
     defaults: 

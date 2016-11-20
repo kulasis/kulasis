@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\BillingBundle\Controller;
+namespace Kula\Core\Bundle\BillingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\APIController;
 use Symfony\Component\HttpFoundation\Response;

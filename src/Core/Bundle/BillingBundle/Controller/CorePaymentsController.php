@@ -1,6 +1,6 @@
 <?php
 
-namespace Kula\HEd\Bundle\BillingBundle\Controller;
+namespace Kula\Core\Bundle\BillingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -8,7 +8,7 @@ class CorePaymentsController extends Controller {
   
   public function paymentsAction() {
     $this->authorize();
-    $this->setRecordType('Core.HEd.Student');
+    $this->setRecordType('Core.Constituent');
     
     /*
     if ($this->request->request->get('void')) {
@@ -54,12 +54,12 @@ class CorePaymentsController extends Controller {
       
     }
     
-    return $this->render('KulaHEdBillingBundle:CorePayments:payments.html.twig', array('payments' => $payments));
+    return $this->render('KulaCoreBillingBundle:CorePayments:payments.html.twig', array('payments' => $payments));
   }
 
   public function payment_detailAction($payment_id) {
     $this->authorize();
-    $this->setRecordType('Core.HEd.Student');
+    $this->setRecordType('Core.Constituent');
     $this->processForm();
 /*
     $edit_post = $this->request->get('edit');
@@ -85,7 +85,7 @@ class CorePaymentsController extends Controller {
       
     }
     
-    return $this->render('KulaHEdBillingBundle:CoreTransactions:transactions_detail.html.twig', array('payment' => $payment));
+    return $this->render('KulaCoreBillingBundle:CoreTransactions:transactions_detail.html.twig', array('payment' => $payment));
   }
   
 }

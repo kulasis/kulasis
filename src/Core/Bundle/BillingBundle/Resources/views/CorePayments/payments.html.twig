@@ -1,0 +1,51 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+
+{% if transactions %}
+<div class="group-box">
+<div class="group-box-header">Void Transaction</div>
+<div class="group-box-contents group">
+{{ kula_field({ non: true, field: 'Core.Billing.Payment.TransactionDate', value:"now"|date("m/d/Y"), label: true }) }}
+{{ kula_field({ non: true, field: 'Core.Billing.Payment.VoidedReason', db_field: 'VOIDED_REASON', label: true }) }}
+</div>
+</div>
+{% endif %}
+
+<div class="data-table-header-div">
+Payments
+<span class="data-table-header-buttons">
+</span>
+</div>
+<table id="window_window_num_data_table_terms" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ delete: true, field: 'Core.Billing.Payment.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'Core.Billing.Payment.PaymentDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Billing.Payment.PaymentType', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Billing.Payment.PaymentMethod', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Billing.Payment.PaymentNumber', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Billing.Payment.Amount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Billing.Payment.AppliedBalance', field_name_override: 'Balance', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">...</th>
+</tr>
+</thead>
+<tbody>
+  {% for payment in payments %}
+  <tr>
+    {{ kula_field({ delete: true, post_type: 'void', field: 'Core.Billing.Payment.ID', db_row_id: transaction.CONSTITUENT_PAYMENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ field: 'Core.Billing.Payment.PaymentDate', input: false, value: payment.PAYMENT_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Billing.Payment.PaymentType', input: false, value: payment.PAYMENT_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Billing.Payment.PaymentMethod', input: false, value: payment.PAYMENT_METHOD, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Billing.Payment.PaymentNumber', input: false, value: payment.PAYMENT_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Billing.Payment.Amount', input: false, value: payment.AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Billing.Payment.AppliedBalance', input: false, value: payment.APPLIED_BALANCE, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_PaymentDetail', { payment_id: payment.CONSTITUENT_PAYMENT_ID }) }}">...</a></td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

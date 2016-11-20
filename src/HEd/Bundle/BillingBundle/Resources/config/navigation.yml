@@ -38,10 +38,6 @@ Core.HEd.Billing:
           description: "Transactions"
           display_name: "Transactions"
           route: Core_HEd_Billing_StudentBilling_Transactions
-        Payments:
-          description: "Payments"
-          display_name: "Payments"
-          route: Core_HEd_Billing_StudentBilling_Payments
         History:
           description: "History"
           display_name: "History"
