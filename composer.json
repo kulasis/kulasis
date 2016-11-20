@@ -25,7 +25,8 @@
       "sensio/generator-bundle": "^3.0.7",
       "incenteev/composer-parameter-handler": "^2.0",
       "itbz/fpdf": "1.*",
-      "google/apiclient": "1.*"
+      "google/apiclient": "1.*",
+      "guzzlehttp/guzzle": "6.*"
     },
     "autoload": {
         "psr-4": { 
