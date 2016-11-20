@@ -4,4 +4,4 @@ _Core_Billing_core:
 
 _Core_Billing_api:
     resource: "@KulaCoreBillingBundle/Resources/config/routing/api.yml"
-    prefix: api/billing
+    prefix: /api/v1
