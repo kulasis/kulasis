@@ -81,16 +81,41 @@ class CorePaymentsController extends Controller {
     }
   
     $payment = array();
+    $transactions = array();
+    $applied_payments = array();
     
     if ($this->record->getSelectedRecordID()) {
       $payment = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
         ->fields('payments', array('CONSTITUENT_PAYMENT_ID', 'CONSTITUENT_ID', 'PAYEE_CONSTITUENT_ID', 'PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_METHOD', 'PAYMENT_NUMBER', 'AMOUNT', 'APPLIED_BALANCE', 'VOIDED'))
         ->condition('payments.CONSTITUENT_PAYMENT_ID', $payment_id)
         ->execute()->fetch();
+
+      $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+        ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE', ))
+        ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
+        ->fields('code', array('CODE_TYPE', 'CODE'))
+        ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
+        ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+        ->fields('org', array('ORGANIZATION_ABBREVIATION'))
+        ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+        ->fields('term', array('TERM_ABBREVIATION'))
+        ->leftJoin('STUD_STUDENT_CLASSES', 'stuclass', 'stuclass.STUDENT_CLASS_ID = transactions.STUDENT_CLASS_ID')
+        ->leftJoin('STUD_SECTION', 'sec', 'sec.SECTION_ID = stuclass.SECTION_ID')
+        ->fields('sec', array('SECTION_NUMBER', 'SECTION_ID'))
+        ->leftJoin('STUD_COURSE', 'crs', 'crs.COURSE_ID = sec.COURSE_ID')
+        ->fields('crs', array('COURSE_TITLE'))
+        ->condition('transactions.CONSTITUENT_ID', $this->record->getSelectedRecordID())
+        ->condition('transactions.PAYMENT_ID', $payment_id)
+        ->orderBy('TRANSACTION_DATE', 'DESC', 'transactions')
+        ->execute()->fetchAll();
+
+      $applied_payments = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+        ->fields('applied', array('CONSTITUENT_APPLIED_PAYMENT_ID', 'CONSTITUENT_PAYMENT_ID', 'CONSTITUENT_TRANSACTION_ID', 'AMOUNT'))
+        ->execute()->fetchAll();
       
     }
     
-    return $this->render('KulaCoreBillingBundle:CorePayments:payments_detail.html.twig', array('payment' => $payment));
+    return $this->render('KulaCoreBillingBundle:CorePayments:payments_detail.html.twig', array('payment' => $payment, 'transactions' => $transactions, 'applied_payments' => $applied_payments));
   }
 
   public function addPaymentAction() {

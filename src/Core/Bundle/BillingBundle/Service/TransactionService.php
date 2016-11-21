@@ -18,6 +18,10 @@ class TransactionService {
     $this->posterFactory = $poster_factory;
   }
 
+  public function setDBOptions($options = array()) {
+    $this->db_options = $options;
+  }
+
   public function addTransaction($constituent_id, $organization_term_id, $transaction_code_id, $transaction_date, $transaction_description, $amount, $payment_id = null) {
     
     // Get transaction code
@@ -46,14 +50,14 @@ class TransactionService {
       'Core.Billing.Transaction.AppliedBalance' => $amount,
       'Core.Billing.Transaction.Posted' => 0,
       'Core.Billing.Transaction.PaymentID' => $payment_id
-    ))->process()->getResult();
+    ))->process($this->db_options)->getResult();
   }
 
   public function postTransaction($constituent_transaction_id) {
     return $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $constituent_transaction_id, array(
       'Core.Billing.Transaction.Posted' => 1,
       'Core.Billing.Transaction.ShowOnStatement' => 1
-    ))->process()->getResult();
+    ))->process($this->db_options)->getResult();
   }
   
   public function removeTransaction($constituent_transaction_id, $voided_reason, $transaction_date) {
@@ -100,13 +104,13 @@ class TransactionService {
         'Core.Billing.Transaction.RefundTransactionID' => $return_payment_affected,
         'Core.Billing.Transaction.AppliedBalance' => 0,
         'Core.Billing.Transaction.ShowOnStatement' => 0
-      ))->process()->getResult();
+      ))->process($this->db_options)->getResult();
         
         // Has an FA award.  Need to set back to pending
         if ($transaction_row['AWARD_ID']) {
           $fa_poster = $this->posterFactory->newPoster()->edit('HEd.FAID.Student.Award', $transaction_row['AWARD_ID'], array(
             'HEd.FAID.Student.Award.AwardStatus' => 'PEND'
-          ))->process()->getResult();
+          ))->process($this->db_options)->getResult();
         }
         
       $transaction->commit();
@@ -127,13 +131,34 @@ class TransactionService {
         'Core.Billing.Transaction.VoidedReason' => $voided_reason, 
         'Core.Billing.Transaction.VoidedUserstamp' => $this->session->get('user_id'), 
         'Core.Billing.Transaction.VoidedTimestamp' => date('Y-m-d H:i:s')
-      ))->process()->getResult();
+      ))->process($this->db_options)->getResult();
 
       $transaction->commit();
       
       return $voided_transaction_result;
     }
     
+  }
+
+  public function calculateBalance($transaction_id) {
+
+    // get applied transactions
+    $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+      ->expression('SUM(AMOUNT)', 'total_applied_balance')
+      ->condition('applied.CONSTITUENT_TRANSACTION_ID', $transaction_id)
+      ->execute()->fetch();
+
+    // get payment amount
+    $transaction = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transaction')
+      ->fields('transaction', array('AMOUNT'))
+      ->condition('transaction.CONSTITUENT_TRANSACTION_ID', $transaction_id)
+      ->execute()->fetch();
+
+    return $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $transaction_id, array(
+      'Core.Billing.Transaction.AppliedBalance' => 
+        $applied_trans['total_applied_balance'] * -1 + $transaction['AMOUNT']
+    ))->process($this->db_options)->getResult();
+
   }
   
 }

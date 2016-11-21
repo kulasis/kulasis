@@ -7,6 +7,10 @@ services:
     class: Kula\Core\Bundle\BillingBundle\Service\PaymentService
     arguments: ["@kula.core.db", "@kula.core.poster_factory"]
 
+  kula.Core.billing.pending:
+    class: Kula\Core\Bundle\BillingBundle\Service\PendingService
+    arguments: ["@kula.core.db", "@kula.core.poster_factory"]
+
   kula.Core.billing.payment.merchant.VirtualMerchant:
     class: Kula\Core\Bundle\BillingBundle\Service\Merchant\VirtualMerchantService
     arguments: ["%virtualmerchant_url%", "%virtualmerchant_merchant_id%", "%virtualmerchant_user_id%", "%virtualmerchant_pin%"]

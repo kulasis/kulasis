@@ -24,9 +24,10 @@ class VirtualMerchantService {
     $this->pin = $pin;
 
     $this->raw_result = array();
+    $this->error = false;
   }
 
-  public function process($amount, $first_name, $last_name, $email, $card_number, $exp_date, $avs_zip, $avs_address, $cvv) {
+  public function process($amount, $first_name, $last_name, $email, $card_number, $exp_date, $cvv, $avs_address, $avs_city, $avs_state, $avs_zip, $invoice) {
 
     $merchant_params = array(
       'ssl_transaction_type' => 'ccsale',
@@ -36,11 +37,14 @@ class VirtualMerchantService {
       'ssl_show_form' => 'false',
       'ssl_result_format' => 'ASCII',
       'ssl_card_present' => 'N',
+      'ssl_invoice_number' => $invoice,
       'ssl_email' => $email,
       'ssl_first_name' => $first_name,
       'ssl_last_name' => $last_name,
       'ssl_card_number' => $card_number,
       'ssl_exp_date' => $exp_date,
+      'ssl_avs_city' => $avs_city,
+      'ssl_avs_state' => $avs_state,
       'ssl_avs_zip' => $avs_zip,
       'ssl_avs_address' => $avs_address,
       'ssl_cvv2cvc2' => $cvv,
@@ -57,17 +61,33 @@ class VirtualMerchantService {
   }
 
   public function getResult() {
-    if ($this->raw_result['ssl_result'] == '0') {
+    if (isset($this->raw_result['ssl_result']) AND $this->raw_result['ssl_result'] == '0') {
       return $this->raw_result['ssl_result_message'];
+    } else {
+      $this->error = true;
+      return $this->raw_result['errorMessage'];
     }
   }
 
+  public function getError() {
+    return $this->error;
+  }
+
   public function getTransactionID() {
-    return $this->raw_result['ssl_txn_id'];
+    if (isset($this->raw_result['ssl_txn_id']))
+      return $this->raw_result['ssl_txn_id'];
   }
 
   public function getRawResult() {
     return $this->raw_result;
+  }
+
+  public function getResultAmount() {
+    if (isset($this->raw_result['ssl_result']) AND $this->raw_result['ssl_result'] == '0') {
+      return $this->raw_result['ssl_amount'];
+    } else {
+      return 0.00;
+    }
   }
 
   private function processASCIIResult($result) {
