@@ -115,6 +115,8 @@ class APIv1CourseController extends APIController {
       ->condition('sec.STATUS', null);
     $row = $result->execute()->fetch();
     
+    if ($row['SECTION_NAME'] == '') $row['SECTION_NAME'] = $row['COURSE_TITLE'];
+
     return $this->JSONResponse($row);
 
   }
