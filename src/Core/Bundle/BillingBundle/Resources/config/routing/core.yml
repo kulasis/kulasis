@@ -33,7 +33,7 @@ Core_Billing_ConstituentBilling_Transactions:
     _navigation: Core.Billing.ConstituentBilling.Transactions
 
 Core_Billing_ConstituentBilling_PaymentDetail:
-  path: /constituent/payments/{constituent_payment_id}/detail
+  path: /constituent/payments/{payment_id}/detail
   defaults: { _controller: KulaCoreBillingBundle:CorePayments:payment_detail }
 
 Core_Billing_ConstituentBilling_Payments:

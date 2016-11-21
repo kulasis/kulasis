@@ -1,4 +1,8 @@
 services:
+  kula.Core.billing.transaction:
+    class: Kula\Core\Bundle\BillingBundle\Service\TransactionService
+    arguments: ["@kula.core.db", "@kula.core.poster_factory"]
+
   kula.Core.billing.payment:
     class: Kula\Core\Bundle\BillingBundle\Service\PaymentService
     arguments: ["@kula.core.db", "@kula.core.poster_factory"]

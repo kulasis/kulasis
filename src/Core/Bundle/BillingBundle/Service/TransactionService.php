@@ -1,0 +1,139 @@
+<?php
+
+namespace Kula\Core\Bundle\BillingBundle\Service;
+
+class TransactionService {
+  
+  protected $database;
+  
+  protected $poster_factory;
+  
+  protected $record;
+  
+  protected $session;
+  
+  public function __construct(\Kula\Core\Component\DB\DB $db, 
+                              \Kula\Core\Component\DB\PosterFactory $poster_factory) {
+    $this->database = $db;
+    $this->posterFactory = $poster_factory;
+  }
+
+  public function addTransaction($constituent_id, $organization_term_id, $transaction_code_id, $transaction_date, $transaction_description, $amount, $payment_id = null) {
+    
+    // Get transaction code
+    $transaction_code = $this->database->db_select('BILL_CODE', 'code')
+      ->fields('code', array('CODE_TYPE', 'CODE_DESCRIPTION'))
+      ->condition('code.CODE_ID', $transaction_code_id)
+      ->execute()->fetch();
+    if ($transaction_description) {
+      $formatted_transaction_description = $transaction_code['CODE_DESCRIPTION'].' - '.$transaction_description;
+    } else {
+      $formatted_transaction_description = $transaction_code['CODE_DESCRIPTION'];
+    }
+    
+    if ($transaction_code['CODE_TYPE'] == 'P')
+      $amount = $amount * -1;
+    
+    // Prepare & post payment data    
+    return $this->posterFactory->newPoster()->add('Core.Billing.Transaction', 'new', array(
+      'Core.Billing.Transaction.ConstituentID' => $constituent_id,
+      'Core.Billing.Transaction.OrganizationTermID' => $organization_term_id,
+      'Core.Billing.Transaction.CodeID' => $transaction_code_id,
+      'Core.Billing.Transaction.TransactionDate' => $transaction_date,
+      'Core.Billing.Transaction.Description' => $formatted_transaction_description,
+      'Core.Billing.Transaction.Amount' => $amount, 
+      'Core.Billing.Transaction.OriginalAmount' => $amount,
+      'Core.Billing.Transaction.AppliedBalance' => $amount,
+      'Core.Billing.Transaction.Posted' => 0,
+      'Core.Billing.Transaction.PaymentID' => $payment_id
+    ))->process()->getResult();
+  }
+
+  public function postTransaction($constituent_transaction_id) {
+    return $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $constituent_transaction_id, array(
+      'Core.Billing.Transaction.Posted' => 1,
+      'Core.Billing.Transaction.ShowOnStatement' => 1
+    ))->process()->getResult();
+  }
+  
+  public function removeTransaction($constituent_transaction_id, $voided_reason, $transaction_date) {
+    
+    $transaction = $this->database->db_transaction();
+
+    // Get transaction info
+    $transaction_row = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+      ->fields('transactions', array('POSTED', 'CODE_ID', 'CONSTITUENT_ID', 'ORGANIZATION_TERM_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'VOIDED_REASON', 'STUDENT_CLASS_ID', 'AWARD_ID'))
+      ->condition('CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
+      ->execute()->fetch();
+    
+    if ($transaction_row['POSTED'] == '1') {
+      $new_amount = $transaction_row['AMOUNT'] * -1;
+      
+      if ($new_amount < 0)
+        $transaction_description = 'REFUND '.$transaction_row['TRANSACTION_DESCRIPTION'];
+      else
+        $transaction_description = 'PAYBACK '.$transaction_row['TRANSACTION_DESCRIPTION'];
+      
+      // create return payment
+      $return_payment_data = array(
+        'Core.Billing.Transaction.ConstituentID' => $transaction_row['CONSTITUENT_ID'],
+        'Core.Billing.Transaction.OrganizationTermID' => $transaction_row['ORGANIZATION_TERM_ID'],
+        'Core.Billing.Transaction.CodeID' => $transaction_row['CODE_ID'],
+        'Core.Billing.Transaction.TransactionDate' => $transaction_date,
+        'Core.Billing.Transaction.Description' => $transaction_description,
+        'Core.Billing.Transaction.Amount' => $new_amount, 
+        'Core.Billing.Transaction.OriginalAmount' => $new_amount,
+        'Core.Billing.Transaction.AppliedBalance' => 0,
+        'Core.Billing.Transaction.RefundTransactionID' => $constituent_transaction_id,
+        'Core.Billing.Transaction.VoidedReason' => $voided_reason,
+        'Core.Billing.Transaction.Posted' => 1,
+        'Core.Billing.Transaction.ShowOnStatement' => 0
+      );
+      
+      if ($transaction_row['STUDENT_CLASS_ID']) $return_payment_data['HEd.Billing.Transaction.StudentClassID'] = $transaction_row['STUDENT_CLASS_ID'];
+      if ($transaction_row['AWARD_ID']) $return_payment_data['HEd.Billing.Transaction.AwardID'] = $transaction_row['AWARD_ID'];
+      
+      $return_payment_affected = $this->posterFactory->newPoster()->add('Core.Billing.Transaction', 'new', $return_payment_data)->process()->getResult();
+
+      // set as returned for existing transaction
+      $original_transaction_poster = $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $constituent_transaction_id, array(
+        'Core.Billing.Transaction.RefundTransactionID' => $return_payment_affected,
+        'Core.Billing.Transaction.AppliedBalance' => 0,
+        'Core.Billing.Transaction.ShowOnStatement' => 0
+      ))->process()->getResult();
+        
+        // Has an FA award.  Need to set back to pending
+        if ($transaction_row['AWARD_ID']) {
+          $fa_poster = $this->posterFactory->newPoster()->edit('HEd.FAID.Student.Award', $transaction_row['AWARD_ID'], array(
+            'HEd.FAID.Student.Award.AwardStatus' => 'PEND'
+          ))->process()->getResult();
+        }
+        
+      $transaction->commit();
+      
+      return $return_payment_affected;
+      
+    } else {
+      // Void payment
+      if ($transaction_row['VOIDED_REASON'] != '')
+        $voided_reason = $transaction_row['VOIDED_REASON']. ' | '.$voided_reason;
+      
+      $voided_transaction_result = $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $constituent_transaction_id, array(
+        'Core.Billing.Transaction.Amount' => 0.00, 
+        'Core.Billing.Transaction.AppliedBalance' => 0.00, 
+        'Core.Billing.Transaction.Posted' => 1, 
+        'Core.Billing.Transaction.ShowOnStatement' => 0, 
+        'Core.Billing.Transaction.Voided' => 1, 
+        'Core.Billing.Transaction.VoidedReason' => $voided_reason, 
+        'Core.Billing.Transaction.VoidedUserstamp' => $this->session->get('user_id'), 
+        'Core.Billing.Transaction.VoidedTimestamp' => date('Y-m-d H:i:s')
+      ))->process()->getResult();
+
+      $transaction->commit();
+      
+      return $voided_transaction_result;
+    }
+    
+  }
+  
+}

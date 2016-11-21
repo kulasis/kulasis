@@ -22,38 +22,49 @@ class PaymentService {
     $this->session = $session;
   }
 
-  public function addPayment($constituent_id, $payment_type, $payment_method, $payment_date, $payment_number, $amount) {
-    
-    $merchant_params = array(
-      'ssl_transaction_type' => 'ccsale',
-      'ssl_merchant_id' => $this->getParameter('virtualmerchant_merchant_id'),
-      'ssl_user_id' => $this->getParameter('virtualmerchant_user_id'),
-      'ssl_pin' => $this->getParameter('virtualmerchant_pin'),
-      'ssl_amount' => $total_amount,
-      'ssl_show_form' => 'false',
-      'ssl_card_present' => 'N',
-      'ssl_email' => 'mjacobse@ocac.edu',
-      'ssl_first_name' => 'Makoa',
-      'ssl_last_name' => 'Jacobsen',
-      'ssl_card_number' => $this->request->request->get('cc_number'),
-      'ssl_exp_date' => $this->request->request->get('cc_exp_date'),
-      'ssl_avs_zip' => $this->request->request->get('cc_zip_code'),
-      'ssl_avs_address' => $this->request->request->get('cc_address'),
-      'ssl_cvv2cvc2' => $this->request->request->get('cc_cvv'),
-      'ssl_result_format' => 'ASCII'
-    );
+  public function addPayment($constituent_id, $payee_constituent_id, $payment_method, $payment_date, $payment_number, $amount, $note) {
 
-    // Send to payment processor
-    
-    $virtual_merchant = new Client();
-    $result = $virtual_merchant->post($this->getParameter('virtualmerchant_url'), array(
-      'form_params' => $merchant_params))->getBody();
-
-    
-
+    // Prepare & post payment data    
+    return $this->posterFactory->newPoster()->add('Core.Billing.Payment', 'new', array(
+      'Core.Billing.Payment.ConstituentID' => $constituent_id,
+      'Core.Billing.Payment.PayeeConstituentID' => $payee_constituent_id,
+      'Core.Billing.Payment.PaymentType' => 'P',
+      'Core.Billing.Payment.PaymentMethod' => $payment_method,
+      'Core.Billing.Payment.PaymentDate' => $payment_date,
+      'Core.Billing.Payment.PaymentTimestamp' => $payment_date,
+      'Core.Billing.Payment.PaymentNumber' => $payment_number,
+      'Core.Billing.Payment.Amount' => $amount, 
+      'Core.Billing.Payment.OriginalAmount' => $amount,
+      'Core.Billing.Payment.AppliedBalance' => $amount * -1,
+      'Core.Billing.Payment.Note' => $note,
+      'Core.Billing.Payment.Posted' => 0
+    ))->process()->getResult();
 
   }
 
+  public function addAppliedPayment($payment_id, $transaction_id, $amount, $note, $locked = 'N') {
 
+    // Prepare & post payment data    
+    return $this->posterFactory->newPoster()->add('Core.Billing.Payment.Applied', 'new', array(
+      'Core.Billing.Payment.PaymentID' => $payment_id,
+      'Core.Billing.Payment.TransactionID' => $transaction_id,
+      'Core.Billing.Payment.Amount' => $amount,
+      'Core.Billing.Payment.OriginalAmount' => $amount,
+      'Core.Billing.Payment.Locked' => $locked,
+      'Core.Billing.Payment.Note' => $note
+    ))->process()->getResult();
+
+  }
+
+  public function applyMerchantResponse($payment_id, $payment_number, $amount, $payment_timestamp, $merchant_response) {
+
+    return $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
+      'Core.Billing.Payment.Amount' => $amount, 
+      'Core.Billing.Payment.MerchantResponse' => $merchant_response,
+      'Core.Billing.Payment.PaymentNumber' => $payment_number,
+      'Core.Billing.Payment.PaymentTimestamp' => $payment_timestamp
+    ))->process()->getResult();
+
+  }
   
 }

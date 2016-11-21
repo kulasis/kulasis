@@ -1,0 +1,50 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<p>
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_Payments') }}">Back to Payments</a>
+</p>
+
+
+<div class="group-box">
+<div class="group-box-header">Payee</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'Core.Billing.Payment.PayeeConstituentID', field_name_override: 'Payee Constituent', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.PAYEE_CONSTITUENT_ID, label: true }) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Payment For Constituent</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'Core.Billing.Payment.ConstituentID', field_name_override: 'Payment For Constituent', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.CONSTITUENT_ID, label: true }) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Payment</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'Core.Billing.Payment.PaymentMethod', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.PAYMENT_METHOD, label: true }) }}
+{{ kula_field({ edit: true, field: 'Core.Billing.Payment.PaymentNumber', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.PAYMENT_NUMBER, label: true }) }}
+{{ kula_field({ edit: true, field: 'Core.Billing.Payment.PaymentDate', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.PAYMENT_DATE|date("m/d/Y"), label: true }) }}
+{% if payment.POSTED != '1' and payment.VOIDED != '1' %}
+{{ kula_field({ edit: true, field: 'Core.Billing.Payment.Amount', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.AMOUNT, label: true }) }}
+{% else %}
+{{ kula_field({ field: 'Core.Billing.Payment.Amount', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.AMOUNT, label: true }) }}
+{% endif %}
+{{ kula_field({ field: 'Core.Billing.Payment.AppliedBalance', value: payment.APPLIED_BALANCE, label: true }) }}
+</div>
+<div class="group-box-contents group">
+{{ kula_field({ edit: true, field: 'Core.Billing.Payment.Note', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.NOTE,  label: true }) }}
+</div>
+</div>
+{% if payment.VOIDED == 1 %}
+<div class="group-box">
+<div class="group-box-header">Voided</div>
+<div class="group-box-contents group">
+{{ kula_field({ field: 'Core.Billing.Payment.Voided', value: payment.VOIDED, label: true }) }}
+{{ kula_field({ field: 'Core.Billing.Payment.OriginalAmount', value: payment.ORIGINAL_AMOUNT, label: true }) }}
+{{ kula_field({ edit: true, field: 'Core.Billing.Payment.VoidedReason', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.VOIDED_REASON, label: true }) }}
+{{ kula_field({ field: 'Core.Billing.Transaction.VoidedUserstamp', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.USERNAME, label: true }) }}
+{{ kula_field({ field: 'Core.Billing.Transaction.VoidedTimestamp', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.VOIDED_TIMESTAMP, label: true }) }}
+</div>
+</div>
+{% endif %}
+{% endblock %}

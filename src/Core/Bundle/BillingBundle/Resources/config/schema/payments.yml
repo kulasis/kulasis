@@ -10,6 +10,16 @@ Core.Billing.Payment:
       db_column_type: primary_serial
       column_name: "Payment ID"
       label_name: "Payment ID"
+    PayeeConstituentID:
+      description: "Constituent ID"
+      parent: Core.Constituent.ID
+      db_column_name: PAYEE_CONSTITUENT_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: chooser
+      chooser: Core.Constituent
+      column_name: "Constituent ID"
+      label_name: "Constituent ID"
     ConstituentID:
       description: "Constituent ID"
       parent: Core.Constituent.ID
@@ -96,6 +106,15 @@ Core.Billing.Payment:
       field_size: 7
       column_name: "Applied Balance"
       label_name: "Applied Balance"
+    Posted:
+      description: "Posted"
+      db_column_name: POSTED
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Posted"
+      label_name: "Posted"
     Voided: 
       description: "Voided"
       db_column_name: VOIDED
@@ -196,6 +215,15 @@ Core.Billing.Payment.Applied:
       field_size: 7
       column_name: "Original Amount"
       label_name: "Original Amount"
+    Locked:
+      description: "Locked"
+      db_column_name: LOCKED
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Locked"
+      label_name: "Locked"
     Note:
       description: "Note"
       db_column_name: NOTE

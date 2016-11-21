@@ -18,6 +18,24 @@ class APIv1PaymentController extends APIController {
     // get logged in user
     $currentUser = $this->authorizeUser();
 
+    // create payment
+
+
+    // loop through pending charges
+
+      // apply charge to payment
+
+      // post pending charge
+
+    // Send payment to processor
+
+    // Post result from processor
+
+    // lock all transactions
+
+    // calculate balances
+
+
     $data = array();
     $i = 0;
     $total_amount = 0;
