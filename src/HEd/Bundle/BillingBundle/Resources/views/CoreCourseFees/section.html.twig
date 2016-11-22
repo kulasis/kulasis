@@ -46,6 +46,44 @@ Section Fee Charges
 </table>
 
 <div class="data-table-header-div">
+Section Fee Discounts
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_discounts', 'BILL_SECTION_FEE_DISCOUNT', { school_term_only: true }) }}
+</span>
+</div>
+<table id="window_window_num_data_table_discounts" class="data-table">
+<thead>
+  {{ kula_field_name({ delete: true, school_term_only: true, field: 'HEd.Billing.SectionFee.Discount.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Billing.SectionFee.Discount.Discount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'HEd.Billing.SectionFee.Discount.CodeID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'HEd.Billing.SectionFee.Discount.EndDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'HEd.Billing.SectionFee.Discount.Amount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+    {{ kula_display_html({ add: true, field: 'HEd.Billing.SectionFee.Discount.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+    {{ kula_field({ add: true, field: 'HEd.Billing.SectionFee.Discount.SectionID', value: kula_core_record.getSelectedRecord.SECTION_ID, hidden: true }) }}
+    {{ kula_field({ add: true, delete: true, field: 'HEd.Billing.SectionFee.Discount.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    {{ kula_display_html({ add: true, field: 'HEd.Billing.SectionFee.Discount.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+    {{ kula_field({ add: true, field: 'HEd.Billing.SectionFee.Discount.Discount', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'HEd.Billing.SectionFee.Discount.CodeID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'HEd.Billing.SectionFee.Discount.EndDate', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'HEd.Billing.SectionFee.Discount.Amount', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_display_html({ add: true, field: 'HEd.Billing.SectionFee.Discount.ID', prepend_html: '</tr>' }) }}
+  {% for discount_fee in discount_fees %}
+  <tr>
+    {{ kula_field({ delete: true, school_term_only: true, field: 'HEd.Billing.SectionFee.Discount.ID', db_row_id: discount_fee.SECTION_FEE_DISCOUNT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ edit: true, school_term_only: true, field: 'HEd.Billing.SectionFee.Discount.Discount', db_row_id: discount_fee.SECTION_FEE_DISCOUNT_ID, value: discount_fee.DISCOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, school_term_only: true, field: 'HEd.Billing.SectionFee.Discount.CodeID', db_row_id: discount_fee.SECTION_FEE_DISCOUNT_ID, value: discount_fee.CODE_ID, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, school_term_only: true, field: 'HEd.Billing.SectionFee.Discount.EndDate', db_row_id: discount_fee.SECTION_FEE_DISCOUNT_ID, value: discount_fee.END_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, school_term_only: true, field: 'HEd.Billing.SectionFee.Discount.Amount', db_row_id: discount_fee.SECTION_FEE_DISCOUNT_ID, value: discount_fee.AMOUNT, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+<div class="data-table-header-div">
 Section Fee Refunds
 <span class="data-table-header-buttons">
   {{ kula_table_add('window_window_num_data_table_refunds', 'BILL_SECTION_FEE_REFUND', { school_term_only: true }) }}

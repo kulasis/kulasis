@@ -71,6 +71,7 @@ class CoreCourseFeesController extends Controller {
     $refund_fees = array();
     $course_fees = array();
     $course_refund_fees = array();
+    $discount_fees = array();
     
     if ($this->record->getSelectedRecordID()) {
       
@@ -123,10 +124,20 @@ class CoreCourseFeesController extends Controller {
         ->orderBy('BILL_SECTION_FEE.END_DATE', 'ASC')
         ->orderBy('CODE', 'ASC')
       ->execute()->fetchAll();
+
+      $discount_fees = $this->db()->db_select('BILL_SECTION_FEE_DISCOUNT', 'discount')
+        ->fields('discount', array('SECTION_FEE_DISCOUNT_ID', 'AMOUNT', 'END_DATE', 'DISCOUNT', 'CODE_ID'))
+        ->join('BILL_CODE', 'code', 'code.CODE_ID = discount.CODE_ID')
+        ->fields('code', array('CODE_DESCRIPTION'))
+        ->condition('SECTION_ID', $this->record->getSelectedRecordID())
+        ->orderBy('END_DATE', 'ASC')
+        ->orderBy('DISCOUNT', 'ASC')
+        ->orderBy('CODE', 'ASC')
+        ->execute()->fetchAll();
       
     }
     
-    return $this->render('KulaHEdBillingBundle:CoreCourseFees:section.html.twig', array('fees' => $fees, 'course_fees' => $course_fees, 'course_refund_fees' => $course_refund_fees, 'refund_fees' => $refund_fees));
+    return $this->render('KulaHEdBillingBundle:CoreCourseFees:section.html.twig', array('fees' => $fees, 'course_fees' => $course_fees, 'course_refund_fees' => $course_refund_fees, 'refund_fees' => $refund_fees, 'discount_fees' => $discount_fees));
     
   }
 
