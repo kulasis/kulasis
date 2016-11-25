@@ -17,7 +17,7 @@ class APIv1CourseController extends APIController {
     $data = array(); $i = 0; $j = 0; $last_section_id = null;
     
     $result = $this->db()->db_select('STUD_SECTION', 'sec')
-      ->fields('sec', array('SECTION_ID', 'SECTION_NUMBER', 'START_DATE', 'END_DATE', 'SECTION_NAME', 'CAPACITY', 'ENROLLED_TOTAL', 'NO_CLASS_DATES'))
+      ->fields('sec', array('SECTION_ID', 'SECTION_NUMBER', 'START_DATE', 'END_DATE', 'SECTION_NAME', 'CAPACITY', 'ENROLLED_TOTAL', 'NO_CLASS_DATES', 'OPEN_REGISTRATION', 'CLOSE_REGISTRATION'))
       ->join('STUD_COURSE', 'crs', 'crs.COURSE_ID = sec.COURSE_ID')
       ->fields('crs', array('COURSE_TITLE', 'COURSE_NUMBER', 'COURSE_DESCRIPTION', 'PREREQUISITE_DESCRIPTION'))
       ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = sec.ORGANIZATION_TERM_ID')
@@ -30,6 +30,8 @@ class APIv1CourseController extends APIController {
       ->fields('staff', array('ABBREVIATED_NAME' => 'INSTRUCTOR_ABBREVIATED_NAME'))
       ->leftJoin('STUD_SECTION_MEETINGS', 'mtg', 'mtg.SECTION_ID = sec.SECTION_ID')
       ->fields('mtg', array('SECTION_MEETING_ID', 'START_DATE' => 'mtg_START_DATE', 'END_DATE' => 'mtg_END_DATE', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
+      ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = mtg.ROOM_ID')
+      ->fields('rooms', array('ROOM_NUMBER'))
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
       ->condition('term.TERM_ABBREVIATION', $term)
       ->condition('sec.STATUS', null);
@@ -53,10 +55,15 @@ class APIv1CourseController extends APIController {
       $data[$i]['CAPACITY'] = $row['CAPACITY'];
       $data[$i]['ENROLLED'] = $row['ENROLLED_TOTAL'];
       $data[$i]['OPEN'] = $row['CAPACITY'] - $row['ENROLLED_TOTAL'];
+      $data[$i]['START_DATE'] = $row['START_DATE'];
+      $data[$i]['END_DATE'] = $row['END_DATE'];
+      $data[$i]['OPEN_REGISTRATION'] = $row['OPEN_REGISTRATION'];
+      $data[$i]['CLOSE_REGISTRATION'] = $row['CLOSE_REGISTRATION'];
       
       if ($row['SECTION_MEETING_ID']) {
         $data[$i]['meetings'][$j]['START_TIME'] = $row['START_TIME'];
         $data[$i]['meetings'][$j]['END_TIME'] = $row['END_TIME'];
+        $data[$i]['meetings'][$j]['ROOM_NUMBER'] = $row['ROOM_NUMBER'];
         
         $data[$i]['meetings'][$j]['DAYS'] = array();
         if ($row['MON']) $data[$i]['meetings'][$j]['DAYS'][] = 'Mon';
@@ -80,7 +87,23 @@ class APIv1CourseController extends APIController {
         else 
           $data[$i]['meetings'][$j]['END_DATE'] = $row['END_DATE'];
       }
-      
+     
+    // Get fees
+    $f = 0;
+    $data[$i]['fees_total'] = 0;
+    $fees_result = $this->db()->db_select('BILL_SECTION_FEE', 'secfee')
+      ->fields('secfee', array('AMOUNT'))
+      ->join('BILL_CODE', 'code', 'code.CODE_ID = secfee.CODE_ID')
+      ->fields('code', array('CODE', 'CODE_DESCRIPTION'))
+      ->condition('secfee.SECTION_ID', $row['SECTION_ID'])
+      ->execute();
+    while ($fees_row = $fees_result->fetch()) {
+      $data[$i]['fees'][$f]['CODE'] = $fees_row['CODE'];
+      $data[$i]['fees'][$f]['AMOUNT'] = $fees_row['AMOUNT'];
+      $data[$i]['fees_total'] += $fees_row['AMOUNT'];
+    $f++;
+    } // end loop on fees
+
     if ($row['SECTION_ID'] != $last_section_id) { $i++; $j = 0; $last_section_id = $row['SECTION_ID']; } else { $j++; }
     }
     
@@ -109,6 +132,8 @@ class APIv1CourseController extends APIController {
       ->fields('staff', array('ABBREVIATED_NAME' => 'INSTRUCTOR_ABBREVIATED_NAME'))
       ->leftJoin('STUD_SECTION_MEETINGS', 'mtg', 'mtg.SECTION_ID = sec.SECTION_ID')
       ->fields('mtg', array('SECTION_MEETING_ID', 'START_DATE' => 'mtg_START_DATE', 'END_DATE' => 'mtg_END_DATE', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
+      ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = mtg.ROOM_ID')
+      ->fields('rooms', array('ROOM_NUMBER'))
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
       ->condition('term.TERM_ABBREVIATION', $term)
       ->condition($condition_or)
@@ -116,6 +141,22 @@ class APIv1CourseController extends APIController {
     $row = $result->execute()->fetch();
     
     if ($row['SECTION_NAME'] == '') $row['SECTION_NAME'] = $row['COURSE_TITLE'];
+
+        // Get fees
+    $f = 0;
+    $row['fees_total'] = 0;
+    $fees_result = $this->db()->db_select('BILL_SECTION_FEE', 'secfee')
+      ->fields('secfee', array('AMOUNT'))
+      ->join('BILL_CODE', 'code', 'code.CODE_ID = secfee.CODE_ID')
+      ->fields('code', array('CODE', 'CODE_DESCRIPTION'))
+      ->condition('secfee.SECTION_ID', $row['SECTION_ID'])
+      ->execute();
+    while ($fees_row = $fees_result->fetch()) {
+      $row['fees'][$f]['CODE'] = $fees_row['CODE'];
+      $row['fees'][$f]['AMOUNT'] = $fees_row['AMOUNT'];
+      $row['fees_total'] += $fees_row['AMOUNT'];
+    $f++;
+    } // end loop on fees
 
     return $this->JSONResponse($row);
 
