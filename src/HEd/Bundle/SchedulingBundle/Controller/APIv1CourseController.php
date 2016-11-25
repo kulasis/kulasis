@@ -17,7 +17,7 @@ class APIv1CourseController extends APIController {
     $data = array(); $i = 0; $j = 0; $last_section_id = null;
     
     $result = $this->db()->db_select('STUD_SECTION', 'sec')
-      ->fields('sec', array('SECTION_ID', 'SECTION_NUMBER', 'START_DATE', 'END_DATE', 'SECTION_NAME', 'CAPACITY', 'ENROLLED_TOTAL', 'NO_CLASS_DATES', 'OPEN_REGISTRATION', 'CLOSE_REGISTRATION'))
+      ->fields('sec', array('SECTION_ID', 'SECTION_NUMBER', 'START_DATE', 'END_DATE', 'SECTION_NAME', 'CAPACITY', 'ENROLLED_TOTAL', 'NO_CLASS_DATES', 'OPEN_REGISTRATION', 'CLOSE_REGISTRATION', 'SUPPLIES_REQUIRED', 'SUPPLIES_OPTIONAL', 'SUPPLIES_PRICE', 'NO_CLASS_DATES', 'PARENT_ENROLL'))
       ->join('STUD_COURSE', 'crs', 'crs.COURSE_ID = sec.COURSE_ID')
       ->fields('crs', array('COURSE_TITLE', 'COURSE_NUMBER', 'COURSE_DESCRIPTION', 'PREREQUISITE_DESCRIPTION'))
       ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = sec.ORGANIZATION_TERM_ID')
@@ -59,6 +59,11 @@ class APIv1CourseController extends APIController {
       $data[$i]['END_DATE'] = $row['END_DATE'];
       $data[$i]['OPEN_REGISTRATION'] = $row['OPEN_REGISTRATION'];
       $data[$i]['CLOSE_REGISTRATION'] = $row['CLOSE_REGISTRATION'];
+      $data[$i]['PARENT_ENROLL'] = $row['PARENT_ENROLL'];
+      $data[$i]['SUPPLIES_REQUIRED'] = $row['SUPPLIES_REQUIRED'];
+      $data[$i]['SUPPLIES_OPTIONAL'] = $row['SUPPLIES_OPTIONAL'];
+      $data[$i]['SUPPLIES_PRICE'] = $row['SUPPLIES_PRICE'];
+      $data[$i]['NO_CLASS_DATES'] = $row['NO_CLASS_DATES'];
       
       if ($row['SECTION_MEETING_ID']) {
         $data[$i]['meetings'][$j]['START_TIME'] = $row['START_TIME'];
@@ -119,7 +124,7 @@ class APIv1CourseController extends APIController {
       ->condition('sec.SECTION_NUMBER', $section_id);
 
     $result = $this->db()->db_select('STUD_SECTION', 'sec')
-      ->fields('sec', array('SECTION_ID', 'SECTION_NUMBER', 'START_DATE', 'END_DATE', 'SECTION_NAME', 'CAPACITY', 'ENROLLED_TOTAL', 'NO_CLASS_DATES'))
+      ->fields('sec', array('SECTION_ID', 'SECTION_NUMBER', 'START_DATE', 'END_DATE', 'SECTION_NAME', 'CAPACITY', 'ENROLLED_TOTAL', 'NO_CLASS_DATES', 'SUPPLIES_REQUIRED', 'SUPPLIES_OPTIONAL', 'SUPPLIES_PRICE', 'NO_CLASS_DATES', 'PARENT_ENROLL'))
       ->join('STUD_COURSE', 'crs', 'crs.COURSE_ID = sec.COURSE_ID')
       ->fields('crs', array('COURSE_TITLE', 'COURSE_NUMBER', 'COURSE_DESCRIPTION', 'PREREQUISITE_DESCRIPTION'))
       ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = sec.ORGANIZATION_TERM_ID')
