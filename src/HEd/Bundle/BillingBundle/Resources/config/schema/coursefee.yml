@@ -277,7 +277,7 @@ HEd.Billing.SectionFee.Discount:
       description: "End Date"
       db_column_name: END_DATE
       db_column_type: date
-      db_column_null: false
+      db_column_null: true
       field_type: date
       column_name: "End Date"
       label_name: "End Date"
