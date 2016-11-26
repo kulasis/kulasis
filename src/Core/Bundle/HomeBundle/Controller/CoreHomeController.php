@@ -124,7 +124,9 @@ class CoreHomeController extends Controller {
       ->fields('entercode_value', array('DESCRIPTION' => 'ENTER_CODE'))
       ->leftJoin('CORE_LOOKUP_VALUES', 'leavecode_value', "leavecode_value.CODE = status.LEAVE_CODE AND leavecode_value.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = '".$this->focus->getOrganizationTarget().".Student.Enrollment.LeaveCode')")
       ->fields('leavecode_value', array('DESCRIPTION' => 'LEAVE_CODE'))
-      ->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
+      ->leftJoin('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = status.TUITION_RATE_ID')
+      ->fields('tuitionrate', array('TUITION_RATE_NAME'))
+      ->condition('status.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
       ->orderBy('LEVEL')->orderBy('GRADE')->orderBy('LAST_NAME')->orderBy('FIRST_NAME');
     $enrolled_list = $enrolled_list->execute()->fetchAll();
     
