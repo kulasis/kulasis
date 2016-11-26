@@ -20,6 +20,7 @@ class PaymentService {
     $this->record = $record;
     $this->posterFactory = $poster_factory;
     $this->session = $session;
+    $this->db_options = array();
   }
 
   public function setDBOptions($options = array()) {

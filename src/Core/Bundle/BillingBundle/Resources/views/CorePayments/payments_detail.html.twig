@@ -47,6 +47,7 @@
 <div class="data-table-header-div">
 Attached Transactions
 <span class="data-table-header-buttons">
+  <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_Payments_AddTransaction', { payment_id: payment.CONSTITUENT_PAYMENT_ID }) }}">Add</a>
 </span>
 </div>
 <table id="window_window_num_data_table_terms" class="data-table">
@@ -87,7 +88,7 @@ Attached Transactions
 <div class="data-table-header-div">
 Applied Payments
 <span class="data-table-header-buttons">
-  {{ kula_table_add('window_window_num_data_table_payments_applied', 'CORE_BILLING_PAYMENTS_APPLIED') }}
+  <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_Payments_AddAppliedTransaction', { payment_id: payment.CONSTITUENT_PAYMENT_ID }) }}">Add</a>
 </span>
 </div>
 <table id="window_window_num_data_table_payments_applied" class="data-table">
@@ -97,25 +98,15 @@ Applied Payments
   <th class="data-table-cell-row-header">#</th>
   {{ kula_field_name({ field: 'Core.Billing.Payment.Applied.TransactionID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Payment.Applied.Amount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  <th class="data-table-cell-row-header">...</th>
 </tr>
 </thead>
 <tbody>
-    {{ kula_display_html({ add: true, field: 'Core.Billing.Payment.Applied.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
-    {{ kula_field({ add: true, field: 'Core.Billing.Payment.Applied.PaymentID', value: payment.CONSTITUENT_PAYMENT_ID, hidden: true }) }}
-    {{ kula_field({ add: true, delete: true, field: 'Core.Billing.Payment.Applied.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-    {{ kula_display_html({ add: true, field: 'Core.Billing.Payment.Applied.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
-    {{ kula_field({ add: true, field: 'Core.Billing.Payment.Applied.TransactionID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ add: true, field: 'Core.Billing.Payment.Applied.Amount', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-    {{ kula_display_html({ add: true, field: 'Core.Billing.Payment.Applied.ID', prepend_html: '<td>', append_html: '&nbsp;</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-    {{ kula_display_html({ add: true, field: 'Core.Billing.Payment.Applied.ID', prepend_html: '</tr>' }) }}
   {% for applied_payment in applied_payments %}
   <tr>
     {{ kula_field({ delete: true, field: 'Core.Billing.Payment.Applied.ID', db_row_id: applied_payment.CONSTITUENT_APPLIED_PAYMENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
-    {{ kula_field({ field: 'Core.Billing.Payment.Applied.TransactionID', input: false, value: applied_payment.CONSTITUENT_TRANSACTION_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Billing.Payment.Applied.TransactionID', input: false, value: applied_payment.CONSTITUENT_TRANSACTION_ID, CONSTITUENT_ID: kula_core_record.getSelectedRecord.CONSTITUENT_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Payment.Applied.Amount', input: false, value: applied_payment.AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    <td class="data-table-cell-row-detail">&nbsp;</td>
   </tr>
   {% endfor %}
 </tbody>

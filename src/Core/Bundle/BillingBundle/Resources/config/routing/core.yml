@@ -36,6 +36,14 @@ Core_Billing_ConstituentBilling_PaymentDetail:
   path: /constituent/payments/{payment_id}/detail
   defaults: { _controller: KulaCoreBillingBundle:CorePayments:payment_detail }
 
+Core_Billing_ConstituentBilling_Payments_AddTransaction:
+  path: /constituent/payments/{payment_id}/transactions/add
+  defaults: { _controller: KulaCoreBillingBundle:CoreTransactions:add_payment }
+
+Core_Billing_ConstituentBilling_Payments_AddAppliedTransaction:
+  path: /constituent/payments/{payment_id}/transactions/applied/add
+  defaults: { _controller: KulaCoreBillingBundle:CorePayments:addAppliedPayment }
+
 Core_Billing_ConstituentBilling_Payments:
   path: /constituent/payments
   defaults: 

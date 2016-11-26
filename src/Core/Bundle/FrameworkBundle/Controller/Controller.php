@@ -207,7 +207,7 @@ class Controller extends BaseController {
    *
    * @return Response A Response instance
    */
-  public function forward($routeName, array $query = array(), array $request = array())
+  public function forward($routeName, array $query = array(), array $request = array(), array $routeParameters = array())
   {
     if ($this->request->isXmlHttpRequest()) {
       $query['partial'] = 'window';
@@ -215,7 +215,7 @@ class Controller extends BaseController {
     }
     
       $path['_route'] = $this->request->attributes->get('_route');
-      $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate($query, $request, $path, null, null, array('REQUEST_URI' => $this->container->get('router')->generate($routeName, array())));
+      $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate($query, $request, $path, null, null, array('REQUEST_URI' => $this->container->get('router')->generate($routeName, $routeParameters)));
       $subRequest->setMethod('GET');
       
       return $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

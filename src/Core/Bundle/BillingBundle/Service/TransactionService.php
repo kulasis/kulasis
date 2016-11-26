@@ -16,6 +16,7 @@ class TransactionService {
                               \Kula\Core\Component\DB\PosterFactory $poster_factory) {
     $this->database = $db;
     $this->posterFactory = $poster_factory;
+    $this->db_options = array();
   }
 
   public function setDBOptions($options = array()) {

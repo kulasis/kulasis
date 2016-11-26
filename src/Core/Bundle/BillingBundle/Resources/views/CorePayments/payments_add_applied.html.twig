@@ -1,0 +1,17 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<p>
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_PaymentDetail', { payment_id: payment_id }) }}">Back to Payment Detail</a>
+</p>
+
+<div class="group-box">
+<div class="group-box-header">Charge</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, field: 'Core.Billing.Payment.Applied.TransactionID', CONSTITUENT_ID: kula_core_record.getSelectedRecord.CONSTITUENT_IDj, field_name_override: 'Charge', label: true }) }}
+</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, field: 'Core.Billing.Payment.Applied.Amount', label: true }) }}
+</div>
+</div>
+{% endblock %}

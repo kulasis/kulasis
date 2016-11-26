@@ -11,18 +11,18 @@ class CoreTransactionsController extends Controller {
     $this->setRecordType('Core.Constituent');
     /*
     if ($this->request->request->get('void')) {
-      $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
+      $constituent_billing_service = $this->get('kula.Core.Billing.constituent');
       
       $void = $this->request->request->get('void');
       $non = $this->request->request->get('non');
         
-      if (isset($non['HEd.Billing.Transaction']['HEd.Billing.Transaction.TransactionDate']))
-        $transaction_date = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.TransactionDate'];
+      if (isset($non['Core.Billing.Transaction']['Core.Billing.Transaction.TransactionDate']))
+        $transaction_date = $non['Core.Billing.Transaction']['Core.Billing.Transaction.TransactionDate'];
       else 
         $transaction_date = null;
       
-      if (isset($non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason']))
-        $reason = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason'];
+      if (isset($non['Core.Billing.Transaction']['Core.Billing.Transaction.VoidedReason']))
+        $reason = $non['Core.Billing.Transaction']['Core.Billing.Transaction.VoidedReason'];
       else 
         $reason = null;
       
@@ -66,18 +66,18 @@ class CoreTransactionsController extends Controller {
     $this->setRecordType('Core.Constituent');
     /*
     if ($this->request->request->get('void')) {
-      $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
+      $constituent_billing_service = $this->get('kula.Core.Billing.constituent');
       
       $void = $this->request->request->get('void');
       $non = $this->request->request->get('non');
         
-      if (isset($non['HEd.Billing.Transaction']['TransactionDate']))
-        $transaction_date = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.TransactionDate'];
+      if (isset($non['Core.Billing.Transaction']['TransactionDate']))
+        $transaction_date = $non['Core.Billing.Transaction']['Core.Billing.Transaction.TransactionDate'];
       else 
         $transaction_date = null;
       
-      if (isset($non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason']))
-        $reason = $non['HEd.Billing.Transaction']['HEd.Billing.Transaction.VoidedReason'];
+      if (isset($non['Core.Billing.Transaction']['Core.Billing.Transaction.VoidedReason']))
+        $reason = $non['Core.Billing.Transaction']['Core.Billing.Transaction.VoidedReason'];
       else 
         $reason = null;
       
@@ -119,12 +119,12 @@ class CoreTransactionsController extends Controller {
 /*
     $edit_post = $this->request->get('edit');
     
-    if (isset($edit_post['HEd.Billing.Transaction'])) {
+    if (isset($edit_post['Core.Billing.Transaction'])) {
       // set balance amount
-      foreach($edit_post['HEd.Billing.Transaction'] as $row_id => $row) {
-        if (isset($row['HEd.Billing.Transaction.Amount'])) {
-          $charge_detail_poster = $this->newPoster()->edit('HEd.Billing.Transaction', $row_id, array(
-            'HEd.Billing.Transaction.AppliedBalance' => $row['HEd.Billing.Transaction.Amount']
+      foreach($edit_post['Core.Billing.Transaction'] as $row_id => $row) {
+        if (isset($row['Core.Billing.Transaction.Amount'])) {
+          $charge_detail_poster = $this->newPoster()->edit('Core.Billing.Transaction', $row_id, array(
+            'Core.Billing.Transaction.AppliedBalance' => $row['Core.Billing.Transaction.Amount']
           ))->process();
         }
       }
@@ -152,14 +152,6 @@ class CoreTransactionsController extends Controller {
   }
   
   public function add_chargeAction() {
-    return $this->add('C');
-  }
-  
-  public function add_paymentAction() {
-    return $this->add('P');
-  }
-  
-  public function add($code_type) {
     $this->authorize();
     
     $request = $this->container->get('request_stack')->getCurrentRequest();
@@ -173,16 +165,49 @@ class CoreTransactionsController extends Controller {
         
         if ($this->request->request->get('add')) {
         
-          $constituent_billing_service = $this->get('kula.HEd.billing.constituent');
+          $constituent_billing_service = $this->get('kula.Core.Billing.constituent');
           $add = $this->request->request->get('add');
-          $constituent_billing_service->addTransaction($this->record->getSelectedRecordID(), $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.OrganizationTermID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.CodeID'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.TransactionDate'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Description'], $add['HEd.Billing.Transaction']['new_num']['HEd.Billing.Transaction.Amount']);
+          $constituent_billing_service->addTransaction($this->record->getSelectedRecordID(), $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.OrganizationTermID'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.TransactionDate'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Description'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Amount']);
         
           return $this->forward('Core_Billing_ConstituentBilling_Transactions', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()));
         }
       
       }
     
-    return $this->render('KulaHEdBillingBundle:CoreTransactions:transactions_add.html.twig', array('code_type' => $code_type, 'org_term' => $this->focus->getOrganizationTermID(), 'current_route' => $routeName));
+    return $this->render('KulaCoreBillingBundle:CoreTransactions:transactions_add.html.twig', array('code_type' => 'C', 'org_term' => $this->focus->getOrganizationTermID(), 'current_route' => $routeName));
+  }
+  
+  public function add_paymentAction($payment_id) {
+    $this->authorize();
+    
+    $request = $this->container->get('request_stack')->getCurrentRequest();
+    $routeName = $request->get('_route');
+    
+      // For specific student
+      $this->setRecordType('Core.Constituent');
+      
+      if ($this->record->getSelectedRecordID()) {
+        
+        if ($this->request->request->get('add')) {
+        
+          $constituent_billing_service = $this->get('kula.Core.billing.transaction');
+          $add = $this->request->request->get('add');
+          $constituent_billing_service->addTransaction(
+            $this->record->getSelectedRecordID(), 
+            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.OrganizationTermID'], 
+            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'], 
+            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.TransactionDate'], 
+            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Description'], 
+            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Amount'], 
+            $payment_id
+          );
+
+          return $this->forward('Core_Billing_ConstituentBilling_PaymentDetail', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('payment_id' => $payment_id));
+        }
+      
+      }
+    
+    return $this->render('KulaCoreBillingBundle:CoreTransactions:transactions_add_payment.html.twig', array('code_type' => 'P', 'org_term' => $this->focus->getOrganizationTermID(), 'current_route' => $routeName, 'payment_id' => $payment_id));
   }
   
 }

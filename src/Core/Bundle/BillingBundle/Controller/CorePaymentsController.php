@@ -130,6 +130,7 @@ class CorePaymentsController extends Controller {
         $add = $this->request->request->get('add');
         $payment_service->addPayment(
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.ConstituentID'], 
+          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PayeeConstituentID'], 
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentMethod'], 
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentDate'], 
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentNumber'], 
@@ -143,6 +144,30 @@ class CorePaymentsController extends Controller {
     }
     
     return $this->render('KulaCoreBillingBundle:CorePayments:payments_add.html.twig');
+  }
+
+  public function addAppliedPaymentAction($payment_id) {
+    $this->authorize();
+    $this->setRecordType('Core.Constituent');
+      
+    if ($this->record->getSelectedRecordID()) {
+      
+      if ($this->request->request->get('add')) {
+      
+        $payment_service = $this->get('kula.Core.billing.payment');
+        $add = $this->request->request->get('add');
+        $payment_service->addAppliedPayment(
+          $payment_id,
+          $add['Core.Billing.Payment.Applied']['new_num']['Core.Billing.Payment.Applied.TransactionID'],
+          $add['Core.Billing.Payment.Applied']['new_num']['Core.Billing.Payment.Applied.Amount']
+        );
+      
+        return $this->forward('Core_Billing_ConstituentBilling_Payments', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID(), array('payment_jd' => $payment_id)));
+      }
+    
+    }
+    
+    return $this->render('KulaCoreBillingBundle:CorePayments:payments_add_applied.html.twig', array('payment_id' => $payment_id));
   }
   
 }
