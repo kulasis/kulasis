@@ -73,6 +73,8 @@ class ExceptionListener implements EventSubscriberInterface
         // Email the error details, in case SEND_ERROR_MAIL is true
         if ($this->container->getParameter('exception_send_email') == true)
           error_log($error_message, 1, $this->container->getParameter('exception_to_email'), "From: " . $this->container->getParameter('exception_from_email') . "\r\nTo: " . $this->container->getParameter('exception_to_email'));
+        } else {
+          echo $exception->getMessage();
         }
       }
         

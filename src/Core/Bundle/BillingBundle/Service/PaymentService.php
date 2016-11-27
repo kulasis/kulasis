@@ -50,7 +50,7 @@ class PaymentService {
   public function addAppliedPayment($payment_id, $transaction_id, $amount, $note, $locked = 0) {
 
     // Prepare & post payment data    
-    return $this->posterFactory->newPoster()->add('Core.Billing.Payment.Applied', 'new', array(
+    $this->posterFactory->newPoster()->add('Core.Billing.Payment.Applied', 'new', array(
       'Core.Billing.Payment.Applied.PaymentID' => $payment_id,
       'Core.Billing.Payment.Applied.TransactionID' => $transaction_id,
       'Core.Billing.Payment.Applied.Amount' => $amount,
@@ -59,6 +59,9 @@ class PaymentService {
       'Core.Billing.Payment.Applied.Note' => $note
     ))->process($this->db_options)->getResult();
 
+    $this->calculateBalanceForPayment($payment_id);
+
+    return true;
   }
 
   public function lockAppliedPayments($payment_id) {
@@ -86,13 +89,19 @@ class PaymentService {
 
   }
 
-  public function calculateBalance($payment_id) {
+  public function calculateBalanceForPayment($payment_id) {
+
+    $applied_trans_total = 0;
 
     // get applied transactions
-    $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
-      ->expression('SUM(AMOUNT)', 'total_applied_balance')
+    $applied_trans_result = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+      ->fields('applied', array('AMOUNT', 'CONSTITUENT_TRANSACTION_ID'))
       ->condition('applied.CONSTITUENT_PAYMENT_ID', $payment_id)
-      ->execute()->fetch();
+      ->execute();
+    while ($applied_trans_row = $applied_trans_result->fetch()) {
+      $applied_trans_total += $applied_trans_row['AMOUNT'];
+      $this->calculateBalanceForCharge($applied_trans_row['CONSTITUENT_TRANSACTION_ID']);
+    }
 
     // get payment amount
     $payment = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payment')
@@ -100,11 +109,48 @@ class PaymentService {
       ->condition('payment.CONSTITUENT_PAYMENT_ID', $payment_id)
       ->execute()->fetch();
 
+    // Get payment transactions
+    $payment_trans_result = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'paytrans')
+      ->fields('paytrans', array('CONSTITUENT_TRANSACTION_ID', 'AMOUNT'))
+      ->condition('paytrans.PAYMENT_ID', $payment_id)
+      ->execute();
+    while ($payment_trans_row = $payment_trans_result->fetch()) {
+      if ($applied_trans_total == $payment['AMOUNT']) {
+        $this->updateAppliedBalanceForTransaction($payment_trans_row['CONSTITUENT_TRANSACTION_ID'], 0);
+      } else {
+        $this->updateAppliedBalanceForTransaction($payment_trans_row['CONSTITUENT_TRANSACTION_ID'], $payment['AMOUNT']);
+      }
+    }
+    
     return $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
-      'Core.Billing.Payment.AppliedBalance' => 
-        $applied_trans['total_applied_balance'] * -1 + $payment['AMOUNT']
+      'Core.Billing.Payment.AppliedBalance' => $applied_trans_total * -1 + $payment['AMOUNT']
     ))->process($this->db_options)->getResult();
 
+  }
+
+  public function calculateBalanceForCharge($charge_id) {
+
+    // get applied transactions
+    $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+      ->expression('SUM(AMOUNT)', 'total_applied_balance')
+      ->condition('applied.CONSTITUENT_TRANSACTION_ID', $charge_id)
+      ->execute()->fetch();
+
+    // get payment amount
+    $charge = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'charge')
+      ->fields('charge', array('AMOUNT'))
+      ->condition('charge.CONSTITUENT_TRANSACTION_ID', $charge_id)
+      ->execute()->fetch();
+
+    return $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] - $applied_trans['total_applied_balance']);
+
+  }
+
+  public function updateAppliedBalanceForTransaction($transaction_id, $applied_balance) {
+    return $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $transaction_id, array(
+      'Core.Billing.Transaction.AppliedBalance' => 
+        $applied_balance
+    ))->process($this->db_options)->getResult();
   }
   
 }

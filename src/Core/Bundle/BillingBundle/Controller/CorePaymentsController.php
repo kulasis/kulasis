@@ -68,6 +68,7 @@ class CorePaymentsController extends Controller {
     $this->processForm();
 
     $edit_post = $this->request->get('edit');
+    $edit_post = $this->request->get('delete');
     
     if (isset($edit_post['Core.Billing.Payment'])) {
       // set balance amount
@@ -78,6 +79,11 @@ class CorePaymentsController extends Controller {
           ))->process();
         }
       }
+    }
+
+    if (isset($edit_post['Core.Billing.Payment.Applied']) OR isset($delete_post['Core.Billing.Payment.Applied'])) {
+      $payment_service = $this->get('kula.Core.billing.payment');
+      $payment_service->calculateBalanceForPayment($payment_id);
     }
   
     $payment = array();
@@ -111,6 +117,7 @@ class CorePaymentsController extends Controller {
 
       $applied_payments = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
         ->fields('applied', array('CONSTITUENT_APPLIED_PAYMENT_ID', 'CONSTITUENT_PAYMENT_ID', 'CONSTITUENT_TRANSACTION_ID', 'AMOUNT'))
+        ->condition('applied.CONSTITUENT_PAYMENT_ID', $payment_id)
         ->execute()->fetchAll();
       
     }
@@ -163,7 +170,7 @@ class CorePaymentsController extends Controller {
           $add['Core.Billing.Payment.Applied']['new_num']['Core.Billing.Payment.Applied.Note']
         );
       
-        return $this->forward('Core_Billing_ConstituentBilling_PaymentDetail', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID(), array('payment_jd' => $payment_id)));
+        return $this->forward('Core_Billing_ConstituentBilling_PaymentDetail', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('payment_jd' => $payment_id));
       }
     
     }

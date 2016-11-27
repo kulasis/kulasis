@@ -23,7 +23,6 @@ class RelatedConstituentChargeTransaction extends Field {
       ->fields('term', array('TERM_ABBREVIATION'))
       ->condition('transactions.CONSTITUENT_ID', $param['CONSTITUENT_ID'])
       ->condition('codes.CODE_TYPE', 'C')
-      ->condition('transactions.APPLIED_BALANCE', '0', '!=')
       ->orderBy('LAST_NAME', 'ASC', 'cons')
       ->orderBy('FIRST_NAME', 'ASC', 'cons')
       ->orderBy('PERMANENT_NUMBER', 'ASC', 'cons')
