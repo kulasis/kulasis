@@ -9,7 +9,7 @@ class RelatedConstituentChargeTransaction extends Field {
   public function select($schema, $param) {
 
     $menu = array();
-    
+
     $result = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
       ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'APPLIED_BALANCE'))
       ->join('BILL_CODE', 'codes', 'transactions.CODE_ID = codes.CODE_ID')

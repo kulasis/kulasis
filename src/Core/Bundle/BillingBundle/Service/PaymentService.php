@@ -47,7 +47,7 @@ class PaymentService {
 
   }
 
-  public function addAppliedPayment($payment_id, $transaction_id, $amount, $note, $locked = 'N') {
+  public function addAppliedPayment($payment_id, $transaction_id, $amount, $note, $locked = 0) {
 
     // Prepare & post payment data    
     return $this->posterFactory->newPoster()->add('Core.Billing.Payment.Applied', 'new', array(

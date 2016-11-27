@@ -165,7 +165,7 @@ class CoreTransactionsController extends Controller {
         
         if ($this->request->request->get('add')) {
         
-          $constituent_billing_service = $this->get('kula.Core.Billing.constituent');
+          $constituent_billing_service = $this->get('kula.Core.billing.transaction');
           $add = $this->request->request->get('add');
           $constituent_billing_service->addTransaction($this->record->getSelectedRecordID(), $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.OrganizationTermID'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.TransactionDate'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Description'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Amount']);
         
