@@ -162,8 +162,11 @@ class APIv1ScheduleController extends APIController {
     // check for authorized access to constituent
     $this->authorizeConstituent($student_id);
 
+    $data = array();
+    $i = 0;
+
     // return class list
-    $class_list = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
+    $class_list_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
       ->fields('classes', array())
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = classes.STUDENT_STATUS_ID')
       ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = classes.SECTION_ID')
@@ -178,7 +181,19 @@ class APIv1ScheduleController extends APIController {
       ->condition('stustatus.STUDENT_ID', $student_id)
       ->condition('classes.DROPPED', 0)
       ->condition('classes.START_DATE', date('Y-m-d'), '>=')
-      ->execute()->fetchAll();
+      ->execute();
+    while ($class_list_row = $class_list_result->fetch()) {
+
+      $data[$i] = $class_list_row;
+
+      if ($class_list_row['SECTION_NAME']) 
+        $data[$i]['SECTION_NAME'] = $class_list_row['SECTION_NAME']; 
+      else 
+        $data[$i]['SECTION_NAME'] = $class_list_row['COURSE_TITLE'];
+
+    $i++;
+    }
+
 
     return $this->jsonResponse($class_list);
   }
@@ -211,6 +226,11 @@ class APIv1ScheduleController extends APIController {
     while ($class_list_row = $class_list_result->fetch()) {
 
       $data[$i] = $class_list_row;
+
+      if ($class_list_row['SECTION_NAME']) 
+        $data[$i]['SECTION_NAME'] = $class_list_row['SECTION_NAME']; 
+      else 
+        $data[$i]['SECTION_NAME'] = $class_list_row['COURSE_TITLE'];
 
       // Get charges and payments for class not posted
       $trans_result = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
