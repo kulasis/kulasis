@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class APIv1CourseController extends APIController {
 
-	public function coursesAction($org, $term) {
+  public function coursesAction($org, $term) {
     $this->authorize();
 
     $last = $this->request->get('last');
@@ -109,6 +109,25 @@ class APIv1CourseController extends APIController {
     $f++;
     } // end loop on fees
 
+    // Get discounts
+    $discount_or = $this->db()->db_or();
+    $discount_or = $discount_or->condition('secdis.END_DATE', date('Y-m-d'), '>=');
+    $discount_or = $discount_or->isNull('secdis.END_DATE');
+
+    $d = 0;
+    $discounts_result = $this->db()->db_select('BILL_SECTION_FEE_DISCOUNT', 'secdis')
+      ->fields('secdis', array('AMOUNT'))
+      ->leftJoin('CORE_LOOKUP_VALUES', 'value', "value.CODE = secdis.DISCOUNT AND value.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Billing.Fee.Discount')")
+      ->fields('value', array('DESCRIPTION' => 'discount'))
+      ->condition($discount_or)
+      ->orderBy('DESCRIPTION', 'ASC', 'value')
+      ->execute();
+    while ($discounts_row = $discounts_result->fetch()) {
+      $data[$i]['discounts'][$d]['DISCOUNT'] = $discounts_row['discount'];
+      $data[$i]['discounts'][$d]['AMOUNT'] = $discounts_row['AMOUNT'];
+    $d++;
+    } // end loop on fees
+
     if ($row['SECTION_ID'] != $last_section_id) { $i++; $j = 0; $last_section_id = $row['SECTION_ID']; } else { $j++; }
     }
     
@@ -161,6 +180,26 @@ class APIv1CourseController extends APIController {
       $row['fees'][$f]['AMOUNT'] = $fees_row['AMOUNT'];
       $row['fees_total'] += $fees_row['AMOUNT'];
     $f++;
+    } // end loop on fees
+
+        // Get discounts
+    $discount_or = $this->db()->db_or();
+    $discount_or = $discount_or->condition('secdis.END_DATE', date('Y-m-d'), '>=');
+    $discount_or = $discount_or->isNull('secdis.END_DATE');
+
+    $d = 0;
+    $discounts_result = $this->db()->db_select('BILL_SECTION_FEE_DISCOUNT', 'secdis')
+      ->fields('secdis', array('AMOUNT', 'SECTION_FEE_DISCOUNT_ID'))
+      ->leftJoin('CORE_LOOKUP_VALUES', 'value', "value.CODE = secdis.DISCOUNT AND value.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Billing.Fee.Discount')")
+      ->fields('value', array('DESCRIPTION' => 'discount'))
+      ->condition($discount_or)
+      ->orderBy('DESCRIPTION', 'ASC', 'value')
+      ->execute();
+    while ($discounts_row = $discounts_result->fetch()) {
+      $row['discounts'][$d]['ID'] = $discounts_row['SECTION_FEE_DISCOUNT_ID'];
+      $row['discounts'][$d]['DISCOUNT'] = $discounts_row['discount'];
+      $row['discounts'][$d]['AMOUNT'] = $discounts_row['AMOUNT'];
+    $d++;
     } // end loop on fees
 
     return $this->JSONResponse($row);
