@@ -42,10 +42,11 @@ class APIv1PaymentController extends APIController {
       null, 
       $pending_service->totalAmount()
     );
-
+    $organization_term_id = null;
     // loop through pending charges
     $pending_charges = $pending_service->getPendingCharges();
     foreach($pending_charges as $charge) {
+      $organization_term_id = $charge['ORGANIZATION_TERM_ID'];
       // apply charge to payment
       $payment_service->addAppliedPayment(
         $payment_id, 
@@ -88,6 +89,17 @@ class APIv1PaymentController extends APIController {
       if ($merchant_service->getError()) {
         throw new \Exception(print_r($merchant_service->getRawResult(), true));
       }
+
+      // Add payment transaction 
+      $transaction_service->addTransaction(
+        $currentUser, 
+        $organization_term_id, 
+        122, 
+        date('Y-m-d'), 
+        null, 
+        $merchant_service->getResultAmount(), 
+        $payment_id
+      );
 
       // Only if amounts are the same
       if ($merchant_service->getResultAmount() == $pending_service->totalAmount()) {
