@@ -2,3 +2,8 @@ api_v1_payment_process:
     path:    /user/current/payment/process
     defaults: { _controller: KulaCoreBillingBundle:APIv1Payment:processPayment }
     methods: [POST]
+
+api_v1_billing_statement:
+    path:    /user/current/billing/statement/{org}
+    defaults: { _controller: KulaCoreBillingBundle:APIv1Payment:getStatement }
+    methods: [GET]
