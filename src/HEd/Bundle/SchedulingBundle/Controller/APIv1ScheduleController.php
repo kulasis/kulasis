@@ -153,9 +153,11 @@ class APIv1ScheduleController extends APIController {
     // check for authorized access to constituent
     $this->authorizeConstituent($student_id);
 
-    // Remove class record
-    return $this->jsonResponse($this->get('kula.HEd.scheduling.schedule')->dropClassForStudentStatus($class_id, date('Y-m-d')), array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+    $schedule_service = $this->get('kula.HEd.scheduling.schedule');
+    $schedule_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
 
+    // Remove class record
+    return $this->jsonResponse($schedule_service->dropClassForStudentStatus($class_id, date('Y-m-d')));
   }
 
   public function getClassesAction($student_id, $org = null, $term = null) {

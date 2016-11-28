@@ -20,6 +20,11 @@ class ScheduleService {
     $this->posterFactory = $poster_factory;
     $this->session = $session;
     $this->billing = $billing;
+    $this->db_options = array();
+  }
+
+  public function setDBOptions($options = array()) {
+    $this->db_options = $options;
   }
   
   public function addClassForStudentStatus($student_status_id, $section_id, $start_date, $posted = 1, $options = array()) {
@@ -190,7 +195,7 @@ class ScheduleService {
     
     if ($drop_date < $class_row['START_DATE']) $class_data['HEd.Student.Class.StartDate'] = null;
     
-    $class_poster = $this->posterFactory->newPoster()->edit('HEd.Student.Class', $class_id, $class_data)->process()->getResult();
+    $class_poster = $this->posterFactory->newPoster()->edit('HEd.Student.Class', $class_id, $class_data)->process($this->db_options)->getResult();
         
     if ($class_poster) {
       
@@ -207,7 +212,7 @@ class ScheduleService {
       
       $section_poster = $this->posterFactory->newPoster()->edit('HEd.Section', $class_row['SECTION_ID'], array(
         'HEd.Section.EnrolledTotal' => $section_row['ENROLLED_TOTAL'] + 1
-      ))->process()->getResult();
+      ))->process($this->db_options)->getResult();
       
       if ($section_poster) {
         $transaction->commit();
