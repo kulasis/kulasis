@@ -208,6 +208,8 @@ class APIv1ScheduleController extends APIController {
     $data = array();
     $i = 0;
 
+    $data['billing_total'] = 0;
+
     // return class list
     $class_list_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
       ->fields('classes', array('STUDENT_CLASS_ID'))
@@ -227,13 +229,14 @@ class APIv1ScheduleController extends APIController {
       ->execute();
     while ($class_list_row = $class_list_result->fetch()) {
 
-      $data[$i] = $class_list_row;
+      $data['classes'][$i] = $class_list_row;
 
       if ($class_list_row['SECTION_NAME']) 
-        $data[$i]['SECTION_NAME'] = $class_list_row['SECTION_NAME']; 
+        $data['classes'][$i]['SECTION_NAME'] = $class_list_row['SECTION_NAME']; 
       else 
-        $data[$i]['SECTION_NAME'] = $class_list_row['COURSE_TITLE'];
+        $data['classes'][$i]['SECTION_NAME'] = $class_list_row['COURSE_TITLE'];
 
+      $data['classes'][$i]['billing_total']  = 0;
       // Get charges and payments for class not posted
       $trans_result = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
         ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DESCRIPTION', 'AMOUNT'))
@@ -243,8 +246,10 @@ class APIv1ScheduleController extends APIController {
         ->execute();
       while ($trans_row = $trans_result->fetch()) {
 
-        $data[$i]['billing'][] = $trans_row;
+        $data['classes'][$i]['billing'][] = $trans_row;
 
+        $data['classes'][$i]['billing_total'] += $trans_row['AMOUNT'];
+        $data['billing_total'] += $trans_row['AMOUNT'];
       } // end while on loop through transactions
 
       $i++;

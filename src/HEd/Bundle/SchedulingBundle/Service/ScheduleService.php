@@ -25,6 +25,8 @@ class ScheduleService {
 
   public function setDBOptions($options = array()) {
     $this->db_options = $options;
+
+    $this->billing->setDBOptions($options);
   }
   
   public function addClassForStudentStatus($student_status_id, $section_id, $start_date, $posted = 1, $options = array()) {

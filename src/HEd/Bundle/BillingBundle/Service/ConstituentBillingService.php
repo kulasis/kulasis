@@ -20,6 +20,11 @@ class ConstituentBillingService {
     $this->record = $record;
     $this->posterFactory = $poster_factory;
     $this->session = $session;
+    $this->db_options = array();
+  }
+
+  public function setDBOptions($options = array()) {
+    $this->db_options = $options;
   }
   
   public function addTransaction($constituent_id, $organization_term_id, $transaction_code_id, $transaction_date, $transaction_description, $amount) {
@@ -49,7 +54,7 @@ class ConstituentBillingService {
       'HEd.Billing.Transaction.OriginalAmount' => $amount,
       'HEd.Billing.Transaction.AppliedBalance' => $amount,
       'HEd.Billing.Transaction.Posted' => 0
-    ))->process()->getResult();
+    ))->process($this->db_options)->getResult();
   }
   
   public function addCourseFees($student_class_id, $posted = 1, $options = array()) {
@@ -293,11 +298,11 @@ class ConstituentBillingService {
       'HEd.Billing.Transaction.Posted' => 1,
       'HEd.Billing.Transaction.ShowOnStatement' => 1,
       'HEd.Billing.Transaction.AwardID' => $award_id,
-    ))->process()->getResult();
+    ))->process($this->db_options)->getResult();
     
     $award_poster = $this->posterFactory->newPoster()->edit('HEd.FAID.Student.Award', $award_id, array(
       'HEd.FAID.Student.Award.AwardStatus' => 'AWAR'
-    ))->process()->getResult();
+    ))->process($this->db_options)->getResult();
     
     $transaction->commit();
     
@@ -343,7 +348,7 @@ class ConstituentBillingService {
           'HEd.Billing.Transaction.Posted' => 0,
           'HEd.Billing.Transaction.ShowOnStatement' => 1,
           'HEd.Billing.Transaction.AwardID' => $award_id_total['AWARD_ID'],
-        ))->process()->getResult();
+        ))->process($this->db_options)->getResult();
       }
     }
     
@@ -353,7 +358,7 @@ class ConstituentBillingService {
     return $this->posterFactory->newPoster()->edit('HEd.Billing.Transaction', $constituent_transaction_id, array(
       'HEd.Billing.Transaction.Posted' => 1,
       'HEd.Billing.Transaction.ShowOnStatement' => 1
-    ))->process()->getResult();
+    ))->process($this->db_options)->getResult();
   }
   
   public function removeTransaction($constituent_transaction_id, $voided_reason, $transaction_date) {
@@ -393,20 +398,20 @@ class ConstituentBillingService {
       if ($transaction_row['STUDENT_CLASS_ID']) $return_payment_data['HEd.Billing.Transaction.StudentClassID'] = $transaction_row['STUDENT_CLASS_ID'];
       if ($transaction_row['AWARD_ID']) $return_payment_data['HEd.Billing.Transaction.AwardID'] = $transaction_row['AWARD_ID'];
       
-      $return_payment_affected = $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', $return_payment_data)->process()->getResult();
+      $return_payment_affected = $this->posterFactory->newPoster()->add('HEd.Billing.Transaction', 'new', $return_payment_data)->process($this->db_options)->getResult();
 
       // set as returned for existing transaction
       $original_transaction_poster = $this->posterFactory->newPoster()->edit('HEd.Billing.Transaction', $constituent_transaction_id, array(
         'HEd.Billing.Transaction.RefundTransactionID' => $return_payment_affected,
         'HEd.Billing.Transaction.AppliedBalance' => 0,
         'HEd.Billing.Transaction.ShowOnStatement' => 0
-      ))->process()->getResult();
+      ))->process($this->db_options)->getResult();
         
         // Has an FA award.  Need to set back to pending
         if ($transaction_row['AWARD_ID']) {
           $fa_poster = $this->posterFactory->newPoster()->edit('HEd.FAID.Student.Award', $transaction_row['AWARD_ID'], array(
             'HEd.FAID.Student.Award.AwardStatus' => 'PEND'
-          ))->process()->getResult();
+          ))->process($this->db_options)->getResult();
         }
         
       $transaction->commit();
@@ -427,7 +432,7 @@ class ConstituentBillingService {
         'HEd.Billing.Transaction.VoidedReason' => $voided_reason, 
         'HEd.Billing.Transaction.VoidedUserstamp' => $this->session->get('user_id'), 
         'HEd.Billing.Transaction.VoidedTimestamp' => date('Y-m-d H:i:s')
-      ))->process()->getResult();
+      ))->process($this->db_options)->getResult();
 
       $transaction->commit();
       
@@ -447,7 +452,7 @@ class ConstituentBillingService {
       'HEd.Billing.Payment.Amount' => $amount, 
       'HEd.Billing.Payment.OriginalAmount' => $amount,
       'HEd.Billing.Payment.AppliedBalance' => $amount,
-    ))->process()->getResult();
+    ))->process($this->db_options)->getResult();
 
     return $payment_id;
   }
