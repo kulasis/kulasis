@@ -113,10 +113,15 @@ class APIv1ScheduleController extends APIController {
       // Add discount
       $discount_id = $this->request->request->get('discount_id');
       if ($discount_id != '') {
+        $discount_or = $this->db()->db_or();
+        $discount_or = $discount_or->condition('disc.END_DATE', date('Y-m-d'), '>=');
+        $discount_or = $discount_or->isNull('disc.END_DATE');
+        
         // Get discount code
         $discount_info = $this->db()->db_select('BILL_SECTION_FEE_DISCOUNT', 'disc')
           ->fields('disc', array('SECTION_ID', 'CODE_ID', 'AMOUNT'))
           ->condition('disc.SECTION_FEE_DISCOUNT_ID', $discount_id)
+          ->condition($discount_or)
           ->execute()->fetch();
 
         $payment_service = $this->get('kula.Core.billing.payment');
