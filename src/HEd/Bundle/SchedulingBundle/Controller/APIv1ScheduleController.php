@@ -110,6 +110,23 @@ class APIv1ScheduleController extends APIController {
     if ($class_count['class_total'] <= $section['CAPACITY']) {
       $schedule = $this->get('kula.HEd.scheduling.schedule')->addClassForStudentStatus($student_status_id, $section_id, date('Y-m-d'), 0, array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
 
+      // Add discount
+      $discount_id = $this->request->request->get('discount_id');
+      if ($discount_id != '') {
+        // Get discount code
+        $discount_info = $this->db()->db_select('BILL_SECTION_FEE_DISCOUNT', 'disc')
+          ->fields('disc', array('SECTION_ID', 'CODE_ID', 'AMOUNT'))
+          ->condition('disc.SECTION_FEE_DISCOUNT_ID', $discount_id)
+          ->execute()->fetch();
+
+        $payment_service = $this->get('kula.Core.billing.payment');
+        $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+        $payment_id = $payment_service->addPayment($student_id, $student_id, null, date('Y-m-d'), null, $discount_info['AMOUNT']);
+
+        $transaction_service = $this->get('kula.Core.billing.transaction');
+        $transaction_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+        $transaction_service->addDiscount($discount_id, $student_id, $section['ORGANIZATION_TERM_ID'], $schedule, $payment_id);
+      }
       $transaction->commit();
     }
 

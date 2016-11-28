@@ -164,3 +164,13 @@ Core.Billing.Transaction:
       db_column_null: true
       column_name: "Payment ID"
       label_name: "Payment ID"
+    StudentClassID:
+      description: "Student Class ID"
+      parent: HEd.Student.Class.ID
+      db_column_name: STUDENT_CLASS_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: select
+      class: Kula\HEd\Bundle\SchedulingBundle\Field\Classes
+      column_name: "Student Class ID"
+      label_name: "Student Class ID"

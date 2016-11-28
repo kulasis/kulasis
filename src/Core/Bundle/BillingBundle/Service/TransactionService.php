@@ -23,7 +23,20 @@ class TransactionService {
     $this->db_options = $options;
   }
 
-  public function addTransaction($constituent_id, $organization_term_id, $transaction_code_id, $transaction_date, $transaction_description, $amount, $payment_id = null) {
+  public function addDiscount($discount_id, $constituent_id, $organization_term_id, $class_id, $payment_id) {
+
+    // Get discount code
+    $discount_info = $this->database->db_select('BILL_SECTION_FEE_DISCOUNT', 'disc')
+      ->fields('disc', array('SECTION_ID', 'CODE_ID', 'AMOUNT'))
+      ->condition('disc.SECTION_FEE_DISCOUNT_ID', $discount_id)
+      ->execute()->fetch();
+
+    // Add transaction
+    $this->addTransaction($constituent_id, $organization_term_id, $discount_info['CODE_ID'], date('Y-m-d'), null, $discount_info['AMOUNT'] * -1, $payment_id, $class_id);
+
+  }
+
+  public function addTransaction($constituent_id, $organization_term_id, $transaction_code_id, $transaction_date, $transaction_description, $amount, $payment_id = null, $class_id = null) {
     
     // Get transaction code
     $transaction_code = $this->database->db_select('BILL_CODE', 'code')
@@ -50,7 +63,8 @@ class TransactionService {
       'Core.Billing.Transaction.OriginalAmount' => $amount,
       'Core.Billing.Transaction.AppliedBalance' => $amount,
       'Core.Billing.Transaction.Posted' => 0,
-      'Core.Billing.Transaction.PaymentID' => $payment_id
+      'Core.Billing.Transaction.PaymentID' => $payment_id,
+      'Core.Billing.Transaction.StudentClassID' => $class_id
     ))->process($this->db_options)->getResult();
   }
 
