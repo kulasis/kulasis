@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\DisplayException;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -127,7 +128,7 @@ class APIv1PaymentController extends APIController {
       );
 
       if ($merchant_service->getError()) {
-        throw new \Exception(print_r($merchant_service->getRawResult(), true));
+        throw new DisplayException(print_r($merchant_service->getRawResult(), true));
       }
 
       // Add payment transaction 
@@ -147,19 +148,19 @@ class APIv1PaymentController extends APIController {
         $payment_service->lockAppliedPayments($payment_id);
 
         // calculate balances
-        $payment_service->calculateBalance($payment_id);
+        $payment_service->calculateBalanceForPayment($payment_id);
 
         foreach($pending_charges as $charge) {
           // post pending charge
           $transaction_service->postTransaction($charge['CONSTITUENT_TRANSACTION_ID']);
-          $transaction_service->calculateBalance($charge['CONSTITUENT_TRANSACTION_ID']);
+          $payment_service->calculateBalanceForCharge($charge['CONSTITUENT_TRANSACTION_ID']);
         }
       }
 
       // return class list
       return $this->jsonResponse($merchant_service->getRawResult());
     } else {// end if on greater than zero total
-      throw new \Exception('0.00 Amount');
+      throw new DisplayException('0.00 Amount');
     }
   }
 
