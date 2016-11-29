@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+use Kula\Core\Bundle\FrameworkBundle\Exception\DisplayException;
 use Kula\Core\Bundle\FrameworkBundle\Exception\NotAuthorizedException;
 use Kula\Core\Component\DB\PosterException;
 use Kula\Core\Component\Database\IntegrityConstraintViolationException;
@@ -57,6 +58,8 @@ class ExceptionListener implements EventSubscriberInterface
         $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage()), 200, array('X-Status-Code' => 200));
       } elseif ($exception instanceof NotAuthorizedException) {
         $response = new RedirectResponse('/login');
+      } elseif ($exception instanceof DisplayException) {
+        echo $exception->getMessage();
       } else {
         if (!$exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException AND
           !$exception instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException AND 
