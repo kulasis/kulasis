@@ -51,7 +51,7 @@ class APIv1PaymentController extends APIController {
     $i++;
     }
 
-    return $this->jsonResponse($transactions);
+    return $this->jsonResponse($data);
   }
 
   public function processPaymentAction() {
