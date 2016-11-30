@@ -65,6 +65,10 @@ class PendingService {
     } // end while on loop through classes
   }
 
+  public function getPendingClasses() {
+    return $this->data;
+  }
+
   public function getPendingCharges() {
     return $this->charges;
   }

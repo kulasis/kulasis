@@ -83,11 +83,10 @@ class APIv1PaymentController extends APIController {
       null, 
       $pending_service->totalAmount()
     );
-    $organization_term_id = null;
+    $organization_term_id = count($pending_service->getPendingClasses() > 0) ? $pending_service->getPendingClasses()[0]['ORGANIZATION_TERM_ID'] : null;
     // loop through pending charges
     $pending_charges = $pending_service->getPendingCharges();
     foreach($pending_charges as $charge) {
-      $organization_term_id = $charge['ORGANIZATION_TERM_ID'];
       // apply charge to payment
       $payment_service->addAppliedPayment(
         $payment_id, 
@@ -99,7 +98,15 @@ class APIv1PaymentController extends APIController {
 
     } // end loop on pending charges
 
-    if ($pending_service->totalAmount() > 0) {
+    // Get payment type
+    $payment_method = 
+      isset($this->request->request('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']) ? 
+        $this->request->request('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']
+      :
+        null;
+
+
+    if (($payment_method == 'CREDIT' OR $payment_method == 'DEBIT') AND $pending_service->totalAmount() > 0 AND $pending_service->totalAmount() <= 2000) {
       // Send payment to processor
       $merchant_service = $this->get('kula.Core.billing.payment.merchant.VirtualMerchant');
 
@@ -160,7 +167,7 @@ class APIv1PaymentController extends APIController {
       // return class list
       return $this->jsonResponse($merchant_service->getRawResult());
     } else {// end if on greater than zero total
-      throw new DisplayException('0.00 Amount');
+      throw new DisplayException('0.00 or greater than 2000.00 amount.');
     }
   }
 

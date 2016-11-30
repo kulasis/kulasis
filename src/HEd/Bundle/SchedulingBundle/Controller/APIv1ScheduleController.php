@@ -119,11 +119,12 @@ class APIv1ScheduleController extends APIController {
         
         // Get discount code
         $discount_info = $this->db()->db_select('BILL_SECTION_FEE_DISCOUNT', 'disc')
-          ->fields('disc', array('SECTION_ID', 'CODE_ID', 'AMOUNT'))
+          ->fields('disc', array('SECTION_FEE_DISCOUNT_ID', 'SECTION_ID', 'CODE_ID', 'AMOUNT'))
+          ->condition('disc.SECTION_ID', $section_id)
           ->condition('disc.SECTION_FEE_DISCOUNT_ID', $discount_id)
           ->condition($discount_or)
           ->execute()->fetch();
-
+        if ($discount_info['SECTION_FEE_DISCOUNT_ID'] != '') {
         $payment_service = $this->get('kula.Core.billing.payment');
         $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
         $payment_id = $payment_service->addPayment($student_id, $student_id, null, date('Y-m-d'), null, $discount_info['AMOUNT']);
@@ -131,6 +132,9 @@ class APIv1ScheduleController extends APIController {
         $transaction_service = $this->get('kula.Core.billing.transaction');
         $transaction_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
         $transaction_service->addDiscount($discount_id, $student_id, $section['ORGANIZATION_TERM_ID'], $schedule, $payment_id);
+        } else {
+          throw new NotFoundHttpException('Invalid discount.');
+        }
       }
       $transaction->commit();
     }
