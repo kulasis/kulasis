@@ -120,6 +120,7 @@ class APIv1CourseController extends APIController {
       ->fields('secdis', array('AMOUNT'))
       ->leftJoin('CORE_LOOKUP_VALUES', 'value', "value.CODE = secdis.DISCOUNT AND value.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Billing.Fee.Discount')")
       ->fields('value', array('DESCRIPTION' => 'discount'))
+      ->condition('secdis.SECTION_ID', $row['SECTION_ID'])
       ->condition($discount_or)
       ->orderBy('DESCRIPTION', 'ASC', 'value')
       ->execute();
@@ -193,6 +194,7 @@ class APIv1CourseController extends APIController {
       ->fields('secdis', array('AMOUNT', 'SECTION_FEE_DISCOUNT_ID'))
       ->leftJoin('CORE_LOOKUP_VALUES', 'value', "value.CODE = secdis.DISCOUNT AND value.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Billing.Fee.Discount')")
       ->fields('value', array('DESCRIPTION' => 'discount'))
+      ->condition('secdis.SECTION_ID', $row['SECTION_ID'])
       ->condition($discount_or)
       ->orderBy('DESCRIPTION', 'ASC', 'value')
       ->execute();
