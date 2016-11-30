@@ -44,24 +44,30 @@ class PendingService {
       ->execute();
     while ($class_list_row = $class_list_result->fetch()) {
 
-      $this->data[$i] = $class_list_row;
-
       // Get charges and payments for class not posted
-      $trans_result = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+      $trans = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
         ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DESCRIPTION', 'AMOUNT'))
         ->condition('trans.POSTED', 0)
         ->condition('trans.CONSTITUENT_ID', $class_list_row['STUDENT_ID'])
         ->condition('trans.STUDENT_CLASS_ID', $class_list_row['STUDENT_CLASS_ID'])
-        ->execute();
-      while ($trans_row = $trans_result->fetch()) {
+        ->execute()->fetchAll();
 
-        $this->data[$i]['billing'][] = $trans_row;
-        $this->charges[] = $trans_row;
-        $this->total_amount += $trans_row['AMOUNT'];
+      if (count($trans) > 0) {
+        $this->data[$i] = $class_list_row;
 
-      } // end while on loop through transactions
+        if ($class_list_row['SECTION_NAME']) 
+          $this->data[$i]['SECTION_NAME'] = $class_list_row['SECTION_NAME']; 
+        else 
+          $this->data[$i]['SECTION_NAME'] = $class_list_row['COURSE_TITLE'];
 
-      $i++;
+        foreach($trans as $trans_row) {
+          $this->data[$i]['billing'][] = $trans_row;
+          $this->charges[] = $trans_row;
+          $this->total_amount += $trans_row['AMOUNT'];
+        } // end foreach on loop through transactions
+       $i++;
+      }
+     
     } // end while on loop through classes
   }
 
