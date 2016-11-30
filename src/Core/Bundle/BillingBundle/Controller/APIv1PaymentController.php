@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\DisplayException;
+use Kula\Core\Bundle\FrameworkBundle\Exception\DisplayException;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -100,8 +100,8 @@ class APIv1PaymentController extends APIController {
 
     // Get payment type
     $payment_method = 
-      isset($this->request->request('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']) ? 
-        $this->request->request('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']
+      isset($this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']) ? 
+        $this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']
       :
         null;
 
@@ -167,7 +167,7 @@ class APIv1PaymentController extends APIController {
       // return class list
       return $this->jsonResponse($merchant_service->getRawResult());
     } else {// end if on greater than zero total
-      throw new DisplayException('0.00 or greater than 2000.00 amount.');
+      throw new DisplayException('0.00 or greater than 2000.00 amount or invalid payment type.  Amount is '.$pending_service->totalAmount());
     }
   }
 
