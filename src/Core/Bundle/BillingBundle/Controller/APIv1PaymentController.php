@@ -71,6 +71,13 @@ class APIv1PaymentController extends APIController {
     // calculate pennding charges
     $pending_service = $this->get('kula.Core.billing.pending');
     $pending_service->calculatePendingCharges($currentUser);
+    
+    // Get payment type
+    $payment_method = 
+      isset($this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']) ? 
+        $this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']
+      :
+        null;
 
     // create payment
     $payment_service = $this->get('kula.Core.billing.payment');
@@ -78,7 +85,7 @@ class APIv1PaymentController extends APIController {
     $payment_id = $payment_service->addPayment(
       $currentUser, 
       $currentUser, 
-      'CREDIT', 
+      $payment_method, 
       date('Y-m-d'), 
       null, 
       $pending_service->totalAmount()
@@ -97,13 +104,6 @@ class APIv1PaymentController extends APIController {
       );
 
     } // end loop on pending charges
-
-    // Get payment type
-    $payment_method = 
-      isset($this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']) ? 
-        $this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']
-      :
-        null;
 
 
     if (($payment_method == 'CREDIT' OR $payment_method == 'DEBIT') AND $pending_service->totalAmount() > 0 AND $pending_service->totalAmount() <= 2000) {
@@ -166,6 +166,21 @@ class APIv1PaymentController extends APIController {
 
       // return class list
       return $this->jsonResponse($merchant_service->getRawResult());
+    } elseif ($payment_method == 'CHK' AND $pending_service->totalAmount() > 0) {
+
+      // Add payment transaction 
+      $transaction_service->addTransaction(
+        $currentUser, 
+        $organization_term_id, 
+        122, 
+        date('Y-m-d'), 
+        null, 
+        $pending_service->totalAmount(), 
+        $payment_id
+      );
+
+      return $this->jsonResponse($payment_id);
+
     } else {// end if on greater than zero total
       throw new DisplayException('0.00 or greater than 2000.00 amount or invalid payment type.  Amount is '.$pending_service->totalAmount());
     }
