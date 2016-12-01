@@ -59,7 +59,7 @@ class ExceptionListener implements EventSubscriberInterface
       } elseif ($exception instanceof NotAuthorizedException) {
         $response = new RedirectResponse('/login');
       } elseif ($exception instanceof DisplayException) {
-        echo $exception->getMessage();
+        $response = new Response($exception->getMessage(), Response::HTTP_BAD_REQUEST);
       } else {
         if (!$exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException AND
           !$exception instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException AND 
@@ -77,7 +77,7 @@ class ExceptionListener implements EventSubscriberInterface
         if ($this->container->getParameter('exception_send_email') == true)
           error_log($error_message, 1, $this->container->getParameter('exception_to_email'), "From: " . $this->container->getParameter('exception_from_email') . "\r\nTo: " . $this->container->getParameter('exception_to_email'));
         } else {
-          echo $exception->getMessage();
+          $response = new Response($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         }
       }
         
