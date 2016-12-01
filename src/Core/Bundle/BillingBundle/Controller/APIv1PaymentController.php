@@ -74,8 +74,8 @@ class APIv1PaymentController extends APIController {
     
     // Get payment type
     $payment_method = 
-      isset($this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']) ? 
-        $this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.PaymentMethod']
+      isset($this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.Payment.PaymentMethod']) ? 
+        $this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.Payment.PaymentMethod']
       :
         null;
 
@@ -182,7 +182,7 @@ class APIv1PaymentController extends APIController {
       return $this->jsonResponse($payment_id);
 
     } else {// end if on greater than zero total
-      throw new DisplayException('0.00 or greater than 2000.00 amount or invalid payment type.  Amount is '.$pending_service->totalAmount());
+      throw new DisplayException('0.00 or greater than 2000.00 amount or invalid payment type.  Amount is '.$pending_service->totalAmount().'.  Payment method is '. $payment_method);
     }
   }
 
