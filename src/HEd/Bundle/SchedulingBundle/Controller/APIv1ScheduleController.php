@@ -33,7 +33,7 @@ class APIv1ScheduleController extends APIController {
     if ($section['ALLOW_REGISTRATION'] == 0) {
       throw new NotFoundHttpException('Section does not allow registration.');
     }
-    if (date('Y-m-d') < $section['OPEN_REGISTRATION'] OR date('Y-m-d') > $section['CLOSE_REGISTRATION']) {
+    if (time() < strtotime($section['OPEN_REGISTRATION']) OR time() > strtotime($section['CLOSE_REGISTRATION'])) {
       throw new NotFoundHttpException('Section closed from registration.');
     }
 
