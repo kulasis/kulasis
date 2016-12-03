@@ -90,7 +90,7 @@ class APIv1PaymentController extends APIController {
       null, 
       $pending_service->totalAmount()
     );
-    $organization_term_id = count($pending_service->getPendingClasses() > 0) ? $pending_service->getPendingClasses()[0]['ORGANIZATION_TERM_ID'] : null;
+    $organization_term_id = (count($pending_service->getPendingClasses()) > 0) ? $pending_service->getPendingClasses()[0]['ORGANIZATION_TERM_ID'] : null;
     // loop through pending charges
     $pending_charges = $pending_service->getPendingCharges();
     foreach($pending_charges as $charge) {
@@ -135,7 +135,7 @@ class APIv1PaymentController extends APIController {
       );
 
       if ($merchant_service->getError()) {
-        throw new DisplayException(print_r($merchant_service->getRawResult(), true));
+        throw new DisplayException($merchant_service->getRawResult());
       }
 
       // Add payment transaction 
