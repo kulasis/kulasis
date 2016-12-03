@@ -59,7 +59,7 @@ class ExceptionListener implements EventSubscriberInterface
       } elseif ($exception instanceof NotAuthorizedException) {
         $response = new RedirectResponse('/login');
       } elseif ($exception instanceof DisplayException) {
-        $response = new Response($exception->getMessage());
+        $response = new JsonResponse($exception->getMessage(), 500, array('X-Status-Code' => 500));
         // Error message to be displayed, logged, or mailed
         $error_message = "\nUNCAUGHT EXCEPTION: ".$exception->getMessage()."
                           \nEXCEPTION CLASS: ". get_class($exception) . "
@@ -67,7 +67,7 @@ class ExceptionListener implements EventSubscriberInterface
                          "\nLOCATION: ".$exception->getFile().", line " .
                            $exception->getLine() .", at " . date('F j, Y, g:i a') .
                            "\nShowing backtrace:\n".$exception->getTraceAsString()."\n\n" .
-                           "\n" . print_r($session, true);
+                           "\nAuth Header: " . $request->headers->get('Authorization');
         error_log($error_message, 1, $this->container->getParameter('exception_to_email'), "From: " . $this->container->getParameter('exception_from_email') . "\r\nTo: " . $this->container->getParameter('exception_to_email'));
       } else {
         if (!$exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException AND
@@ -81,7 +81,8 @@ class ExceptionListener implements EventSubscriberInterface
                          "\nLOCATION: ".$exception->getFile().", line " .
                            $exception->getLine() .", at " . date('F j, Y, g:i a') .
                            "\nShowing backtrace:\n".$exception->getTraceAsString()."\n\n" .
-                           "\n" . print_r($session, true);
+                           "\n" . print_r($session, true)  .
+                           "\nAuth Header: " . $request->headers->get('Authorization');
         // Email the error details, in case SEND_ERROR_MAIL is true
         if ($this->container->getParameter('exception_send_email') == true)
           error_log($error_message, 1, $this->container->getParameter('exception_to_email'), "From: " . $this->container->getParameter('exception_from_email') . "\r\nTo: " . $this->container->getParameter('exception_to_email'));
