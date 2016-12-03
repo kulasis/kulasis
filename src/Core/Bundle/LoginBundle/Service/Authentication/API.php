@@ -133,13 +133,13 @@ class API {
           'last_used' => time(),
           'token' => $token
         );
-
+/*
           $this->db->db_insert('LOG_SESSION')->fields(array(
             'USER_ID' => $user['USER_ID'],
             'IN_TIME' => date('Y-m-d H:i:s'),
             'AUTH_METHOD' => 'API'
           ))->execute();
-
+*/
         // Update last token
         $this->db->db_update('CORE_USER')->fields(array(
           'LAST_TOKEN' => $token,
