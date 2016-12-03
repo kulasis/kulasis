@@ -51,6 +51,7 @@ class ExceptionListener implements EventSubscriberInterface
       $exception = $event->getException();
       $request = $event->getRequest();
       $session = $this->container->get('session')->all();
+      $templating = $this->container->get('templating');
       
       if ($exception instanceof PosterException) { // $exception->getFields()
         $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage(), 'fields' => null), 200, array('X-Status-Code' => 200));
@@ -59,7 +60,10 @@ class ExceptionListener implements EventSubscriberInterface
       } elseif ($exception instanceof NotAuthorizedException) {
         $response = new RedirectResponse('/login');
       } elseif ($exception instanceof DisplayException) {
-        $response = new JsonResponse($exception->getMessage(), 500, array('X-Status-Code' => 500));
+        $response = $templating->renderResponse(
+        'TwigBundle:Exception:error.json.twig',
+          ['status_code' => 500, 'status_text' => $exception->getMessage()]
+        );
         // Error message to be displayed, logged, or mailed
         $error_message = "\nUNCAUGHT EXCEPTION: ".$exception->getMessage()."
                           \nEXCEPTION CLASS: ". get_class($exception) . "
@@ -90,7 +94,6 @@ class ExceptionListener implements EventSubscriberInterface
           $response = new Response($exception->getMessage());
         }
       }
-        
       
       if (isset($response))
         $event->setResponse($response);
