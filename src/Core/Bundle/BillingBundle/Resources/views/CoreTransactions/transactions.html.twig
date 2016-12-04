@@ -29,6 +29,7 @@ Charges
   {{ kula_field_name({ field: 'Core.Billing.Code.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Code.Code', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Transaction.Description', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Section.SectionNumber', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Transaction.Amount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Transaction.AppliedBalance', field_name_override: 'Balance', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   <th class="data-table-cell-row-header">...</th>
@@ -53,6 +54,7 @@ Charges
     {{ kula_field({ field: 'Core.Billing.Code.Type', input: false, value: transaction.CODE_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Code.Code', input: false, value: transaction.CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Transaction.Description', input: false, value: transaction.TRANSACTION_DESCRIPTION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Section.SectionNumber', input: false, value: transaction.SECTION_NUMBER, prepend_html: '<td><a href="'~path('Core_HEd_Scheduling_Section_Fees')~'" data-record-type="Core.HEd.Section" data-record-id="'~transaction.SECTION_ID~'" class="normal-link-new-window">', append_html: '</a></td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Transaction.Amount', input: false, value: transaction.AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Transaction.AppliedBalance', input: false, value: transaction.APPLIED_BALANCE, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_TransactionDetail', { constituent_transaction_id: transaction.CONSTITUENT_TRANSACTION_ID }) }}">...</a></td>
