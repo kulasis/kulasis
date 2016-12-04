@@ -125,6 +125,9 @@ class APIv1ScheduleController extends APIController {
           ->condition($discount_or)
           ->execute()->fetch();
         if ($discount_info['SECTION_FEE_DISCOUNT_ID'] != '') {
+        if ($discount_info['AMOUNT'] < 0) {
+          $discount_info['AMOUNT'] = $discount_info['AMOUNT'] * -1;
+        }
         $payment_service = $this->get('kula.Core.billing.payment');
         $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
         $payment_id = $payment_service->addPayment($student_id, $student_id, 'D', null, date('Y-m-d'), null, $discount_info['AMOUNT']);

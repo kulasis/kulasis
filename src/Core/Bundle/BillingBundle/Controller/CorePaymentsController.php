@@ -36,27 +36,20 @@ class CorePaymentsController extends Controller {
     $payments = array();
     
     if ($this->record->getSelectedRecordID()) {
-      /*
-      $payments = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
-        ->join('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'payments_applied', 'payments_applied.CONSTITUENT_TRANSACTION_ID = transactions.CONSTITUENT_TRANSACTION_ID')
-        ->join('BILL_CONSTITUENT_PAYMENTS', 'payments', 'payments.CONSTITUENT_PAYMENT_ID = payments_applied.CONSTITUENT_PAYMENT_ID')
+
+      $payments = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
         ->fields('payments', array('CONSTITUENT_PAYMENT_ID', 'PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_METHOD', 'PAYMENT_NUMBER', 'AMOUNT', 'APPLIED_BALANCE', 'VOIDED'))
-        ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
-        ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
-        ->fields('org', array('ORGANIZATION_ABBREVIATION'))
-        ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
-        ->fields('term', array('TERM_ABBREVIATION'))
-        ->condition('transactions.CONSTITUENT_ID', $this->record->getSelectedRecordID())
-        ->condition('transactions.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
-        ->orderBy('PAYMENT_DATE', 'DESC', 'payments')
-        ->execute()->fetchAll();
-  */
-      $payments += $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
-        ->fields('payments', array('CONSTITUENT_PAYMENT_ID', 'PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_METHOD', 'PAYMENT_NUMBER', 'AMOUNT', 'APPLIED_BALANCE', 'VOIDED'))
+        ->leftJoin('BILL_CONSTITUENT_TRANSACTIONS', 'trans', "trans.PAYMENT_ID = payments.CONSTITUENT_PAYMENT_ID AND payments.PAYMENT_TYPE = 'D'")
+        ->fields('trans', array('TRANSACTION_DESCRIPTION', 'STUDENT_CLASS_ID'))
+        ->leftJoin('BILL_CODE', 'code', 'code.CODE_ID = trans.CODE_ID')
+        ->fields('code', array('CODE'))
+        ->leftJoin('STUD_STUDENT_CLASSES', 'stuclass', 'stuclass.STUDENT_CLASS_ID = trans.STUDENT_CLASS_ID')
+        ->leftJoin('STUD_SECTION', 'sec', 'sec.SECTION_ID = stuclass.SECTION_ID')
+        ->fields('sec', array('SECTION_NUMBER', 'SECTION_ID'))
         ->condition('payments.CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->orderBy('PAYMENT_DATE', 'DESC', 'payments')
         ->execute()->fetchAll();
-      
+        
     }
     
     return $this->render('KulaCoreBillingBundle:CorePayments:payments.html.twig', array('payments' => $payments));
