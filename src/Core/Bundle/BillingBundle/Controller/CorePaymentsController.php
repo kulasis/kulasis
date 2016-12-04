@@ -61,7 +61,7 @@ class CorePaymentsController extends Controller {
     $this->processForm();
 
     $edit_post = $this->request->get('edit');
-    $edit_post = $this->request->get('delete');
+    $delete_post = $this->request->get('delete');
     
     if (isset($edit_post['Core.Billing.Payment'])) {
       // set balance amount
