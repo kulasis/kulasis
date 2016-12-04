@@ -137,7 +137,9 @@ class APIv1PaymentController extends APIController {
       );
 
       if ($merchant_service->getError()) {
-        throw new DisplayException($merchant_service->getRawResult());
+        $exception = new DisplayException('Error');
+        $exception->setData($merchant_service->getRawResult());
+        throw $exception;
       }
 
       // Add payment transaction 

@@ -60,9 +60,14 @@ class ExceptionListener implements EventSubscriberInterface
       } elseif ($exception instanceof NotAuthorizedException) {
         $response = new RedirectResponse('/login');
       } elseif ($exception instanceof DisplayException) {
+        if ($data = $exception->getData()) {
+          $message = $data;
+        } else {
+          $message = $exception->getMessage();
+        }
         $response = $templating->renderResponse(
         'TwigBundle:Exception:error.json.twig',
-          ['status_code' => 500, 'status_text' => $exception->getMessage()]
+          ['status_code' => 500, 'status_text' => $message]
         );
         // Error message to be displayed, logged, or mailed
         $error_message = "\nUNCAUGHT EXCEPTION: ".$exception->getMessage()."
