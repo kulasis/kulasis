@@ -72,121 +72,126 @@ class APIv1PaymentController extends APIController {
     $pending_service = $this->get('kula.Core.billing.pending');
     $pending_service->calculatePendingCharges($currentUser);
     
-    // Get payment type
-    $payment_method = 
-      isset($this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.Payment.PaymentMethod']) ? 
-        $this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.Payment.PaymentMethod']
-      :
-        null;
+    if ($pending_service->totalAmount() > 0 AND $pending_service->totalAmount() <= 2000) {
 
-    // create payment
-    $payment_service = $this->get('kula.Core.billing.payment');
-    $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
-    $payment_id = $payment_service->addPayment(
-      $currentUser, 
-      $currentUser, 
-      'P',
-      $payment_method, 
-      date('Y-m-d'), 
-      null, 
-      $pending_service->totalAmount()
-    );
-    $organization_term_id = (count($pending_service->getPendingClasses()) > 0) ? $pending_service->getPendingClasses()[0]['ORGANIZATION_TERM_ID'] : null;
-    // loop through pending charges
-    $pending_charges = $pending_service->getPendingCharges();
-    foreach($pending_charges as $charge) {
-      if ($charge['CODE_TYPE'] == 'C') {
-        // apply charge to payment
-        $payment_service->addAppliedPayment(
-          $payment_id, 
-          $charge['CONSTITUENT_TRANSACTION_ID'], 
-          $charge['AMOUNT'],
-          null,
-          1
+      // Get payment type
+      $payment_method = 
+        isset($this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.Payment.PaymentMethod']) ? 
+          $this->request->request->get('add')['Core.Billing.Payment'][0]['Core.Billing.Payment.PaymentMethod']
+        :
+          null;
+
+      // create payment
+      $payment_service = $this->get('kula.Core.billing.payment');
+      $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+      $payment_id = $payment_service->addPayment(
+        $currentUser, 
+        $currentUser, 
+        'P',
+        $payment_method, 
+        date('Y-m-d'), 
+        null, 
+        $pending_service->totalAmount()
+      );
+      $organization_term_id = (count($pending_service->getPendingClasses()) > 0) ? $pending_service->getPendingClasses()[0]['ORGANIZATION_TERM_ID'] : null;
+      // loop through pending charges
+      $pending_charges = $pending_service->getPendingCharges();
+      foreach($pending_charges as $charge) {
+        if ($charge['CODE_TYPE'] == 'C') {
+          // apply charge to payment
+          $payment_service->addAppliedPayment(
+            $payment_id, 
+            $charge['CONSTITUENT_TRANSACTION_ID'], 
+            $charge['AMOUNT'],
+            null,
+            1
+          );
+        } // if on code type of charge 
+      } // end loop on pending charges
+
+
+      if (($payment_method == 'CREDIT' OR $payment_method == 'DEBIT')) {
+        // Send payment to processor
+        $merchant_service = $this->get('kula.Core.billing.payment.merchant.VirtualMerchant');
+
+        $result = $merchant_service->process(
+          $pending_service->totalAmount(), 
+          $this->request->request->get('cc_first_name'), 
+          $this->request->request->get('cc_last_name'), 
+          $user['USERNAME'], 
+          $this->request->request->get('cc_number'), 
+          $this->request->request->get('cc_exp_date'), 
+          $this->request->request->get('cc_cvv'),
+          $this->request->request->get('cc_address'), 
+          $this->request->request->get('cc_city'), 
+          $this->request->request->get('cc_state'), 
+          $this->request->request->get('cc_zip_code'),
+          $payment_id
         );
-      } // if on code type of charge 
-    } // end loop on pending charges
 
+        // Post result from processor
+        $apply_result = $payment_service->applyMerchantResponse(
+          $payment_id, 
+          $merchant_service->getTransactionID(), 
+          $merchant_service->getResultAmount(), 
+          date('Y-m-d H:i:s'), 
+          serialize($merchant_service->getRawResult())
+        );
 
-    if (($payment_method == 'CREDIT' OR $payment_method == 'DEBIT') AND $pending_service->totalAmount() > 0 AND $pending_service->totalAmount() <= 2000) {
-      // Send payment to processor
-      $merchant_service = $this->get('kula.Core.billing.payment.merchant.VirtualMerchant');
-
-      $result = $merchant_service->process(
-        $pending_service->totalAmount(), 
-        $this->request->request->get('cc_first_name'), 
-        $this->request->request->get('cc_last_name'), 
-        $user['USERNAME'], 
-        $this->request->request->get('cc_number'), 
-        $this->request->request->get('cc_exp_date'), 
-        $this->request->request->get('cc_cvv'),
-        $this->request->request->get('cc_address'), 
-        $this->request->request->get('cc_city'), 
-        $this->request->request->get('cc_state'), 
-        $this->request->request->get('cc_zip_code'),
-        $payment_id
-      );
-
-      // Post result from processor
-      $apply_result = $payment_service->applyMerchantResponse(
-        $payment_id, 
-        $merchant_service->getTransactionID(), 
-        $merchant_service->getResultAmount(), 
-        date('Y-m-d H:i:s'), 
-        serialize($merchant_service->getRawResult())
-      );
-
-      if ($merchant_service->getError()) {
-        $exception = new DisplayException('Error');
-        $exception->setData($merchant_service->getRawResult());
-        throw $exception;
-      }
-
-      // Add payment transaction 
-      $transaction_service->addTransaction(
-        $currentUser, 
-        $organization_term_id, 
-        122, 
-        date('Y-m-d'), 
-        null, 
-        $merchant_service->getResultAmount(), 
-        $payment_id
-      );
-
-      // Only if amounts are the same
-      if ($merchant_service->getResultAmount() == $pending_service->totalAmount()) {
-        // lock all transactions
-        $payment_service->lockAppliedPayments($payment_id);
-
-        // calculate balances
-        $payment_service->calculateBalanceForPayment($payment_id);
-
-        foreach($pending_charges as $charge) {
-          // post pending charge
-          $transaction_service->postTransaction($charge['CONSTITUENT_TRANSACTION_ID']);
-          $payment_service->calculateBalanceForCharge($charge['CONSTITUENT_TRANSACTION_ID']);
+        if ($merchant_service->getError()) {
+          $exception = new DisplayException('Error');
+          $exception->setData($merchant_service->getRawResult());
+          throw $exception;
         }
+
+        // Add payment transaction 
+        $transaction_service->addTransaction(
+          $currentUser, 
+          $organization_term_id, 
+          122, 
+          date('Y-m-d'), 
+          null, 
+          $merchant_service->getResultAmount(), 
+          $payment_id
+        );
+
+        // Only if amounts are the same
+        if ($merchant_service->getResultAmount() == $pending_service->totalAmount()) {
+          // lock all transactions
+          $payment_service->lockAppliedPayments($payment_id);
+
+          // calculate balances
+          $payment_service->calculateBalanceForPayment($payment_id);
+
+          foreach($pending_charges as $charge) {
+            // post pending charge
+            $transaction_service->postTransaction($charge['CONSTITUENT_TRANSACTION_ID']);
+            $payment_service->calculateBalanceForCharge($charge['CONSTITUENT_TRANSACTION_ID']);
+          }
+        }
+
+        // return class list
+        return $this->jsonResponse($merchant_service->getRawResult());
+      } elseif ($payment_method == 'CHK' AND $pending_service->totalAmount() > 0) {
+
+        // Add payment transaction 
+        $transaction_service->addTransaction(
+          $currentUser, 
+          $organization_term_id, 
+          122, 
+          date('Y-m-d'), 
+          null, 
+          $pending_service->totalAmount(), 
+          $payment_id
+        );
+
+        return $this->jsonResponse($payment_id);
+
+      } else {
+        throw new DisplayException('Invalid payment method.  Payment method is '. $payment_method);
       }
-
-      // return class list
-      return $this->jsonResponse($merchant_service->getRawResult());
-    } elseif ($payment_method == 'CHK' AND $pending_service->totalAmount() > 0) {
-
-      // Add payment transaction 
-      $transaction_service->addTransaction(
-        $currentUser, 
-        $organization_term_id, 
-        122, 
-        date('Y-m-d'), 
-        null, 
-        $pending_service->totalAmount(), 
-        $payment_id
-      );
-
-      return $this->jsonResponse($payment_id);
-
-    } else {// end if on greater than zero total
-      throw new DisplayException('0.00 or greater than 2000.00 amount or invalid payment type.  Amount is '.$pending_service->totalAmount().'.  Payment method is '. $payment_method);
+    } else { // end if on greater than zero total
+        throw new DisplayException('0.00 or greater than 2000.00 amount or invalid payment type.  Amount is '.$pending_service->totalAmount().'.  Payment method is '. $payment_method);
     }
   }
 
