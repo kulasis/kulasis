@@ -112,7 +112,7 @@ class CorePaymentsController extends Controller {
         ->execute()->fetchAll();
 
       $applied_payments = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
-        ->fields('applied', array('CONSTITUENT_APPLIED_PAYMENT_ID', 'CONSTITUENT_PAYMENT_ID', 'CONSTITUENT_TRANSACTION_ID', 'AMOUNT'))
+        ->fields('applied', array('CONSTITUENT_APPLIED_PAYMENT_ID', 'CONSTITUENT_PAYMENT_ID', 'CONSTITUENT_TRANSACTION_ID', 'AMOUNT', 'ORIGINAL_AMOUNT'))
         ->condition('applied.CONSTITUENT_PAYMENT_ID', $payment_id)
         ->execute()->fetchAll();
       

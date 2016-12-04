@@ -145,7 +145,7 @@ class APIv1PaymentController extends APIController {
         }
 
         // Add payment transaction 
-        $transaction_service->addTransaction(
+        $transaction_payment_id = $transaction_service->addTransaction(
           $currentUser, 
           $organization_term_id, 
           122, 
@@ -164,10 +164,16 @@ class APIv1PaymentController extends APIController {
           $payment_service->calculateBalanceForPayment($payment_id);
 
           foreach($pending_charges as $charge) {
-            // post pending charge
+            // post pending charges
             $transaction_service->postTransaction($charge['CONSTITUENT_TRANSACTION_ID']);
             $payment_service->calculateBalanceForCharge($charge['CONSTITUENT_TRANSACTION_ID']);
           }
+
+          // post payment
+          $transaction_service->postTransaction($transaction_payment_id);
+        } else {
+          // void all payment items
+          $payment_service->voidPayment($payment_id);
         }
 
         // return class list

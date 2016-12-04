@@ -27,12 +27,8 @@
 {{ kula_field({ field: 'Core.Billing.Payment.AppliedBalance', value: payment.APPLIED_BALANCE, label: true }) }}
 </div>
 <div class="group-box-contents group">
-  <div style="float:left;width:40%;">
 {{ kula_field({ edit: true, field: 'Core.Billing.Payment.Note', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.NOTE,  label: true }) }}
-  </div>
-  <div style="float:right;width:60%;">
-<pre>{{ merchant_response }}</pre>
-  </div>
+{{ kula_field({ field: 'Core.Billing.Payment.MerchantResponse', value: merchant_response, label: true }) }}
 </div>
 </div>
 {% if payment.VOIDED == 1 %}
@@ -103,6 +99,8 @@ Applied Payments
   <th class="data-table-cell-row-header">#</th>
   {{ kula_field_name({ field: 'Core.Billing.Payment.Applied.TransactionID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Payment.Applied.Amount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Billing.Payment.Applied.OriginalAmount', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</tr>
 </tr>
 </thead>
 <tbody>
@@ -112,6 +110,7 @@ Applied Payments
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
     {{ kula_field({ field: 'Core.Billing.Payment.Applied.TransactionID', input: false, value: applied_payment.CONSTITUENT_TRANSACTION_ID, CONSTITUENT_ID: kula_core_record.getSelectedRecord.CONSTITUENT_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Billing.Payment.Applied.Amount', db_row_id: applied_payment.CONSTITUENT_APPLIED_PAYMENT_ID, value: applied_payment.AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Billing.Payment.Applied.OriginalAmount', value: applied_payment.ORIGINAL_AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
   {% endfor %}
 </tbody>
