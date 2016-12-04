@@ -47,6 +47,8 @@ class PendingService {
       // Get charges and payments for class not posted
       $trans = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
         ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DESCRIPTION', 'AMOUNT'))
+        ->join('BILL_CODE', 'code', 'code.CODE_ID = trans.CODE_ID')
+        ->fields('code', array('CODE_TYPE'))
         ->leftJoin('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'paytrans', 'paytrans.CONSTITUENT_TRANSACTION_ID = trans.CONSTITUENT_TRANSACTION_ID')
         ->leftJoin('BILL_CONSTITUENT_PAYMENTS', 'payments', 'payments.CONSTITUENT_PAYMENT_ID = paytrans.CONSTITUENT_PAYMENT_ID')
         ->isNull('payments.CONSTITUENT_PAYMENT_ID')

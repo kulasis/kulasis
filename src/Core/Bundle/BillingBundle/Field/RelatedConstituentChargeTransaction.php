@@ -22,7 +22,6 @@ class RelatedConstituentChargeTransaction extends Field {
       ->leftJoin('CORE_TERM', 'term', 'orgterms.TERM_ID = term.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
       ->condition('transactions.CONSTITUENT_ID', $param['CONSTITUENT_ID'])
-      ->condition('codes.CODE_TYPE', 'C')
       ->orderBy('LAST_NAME', 'ASC', 'cons')
       ->orderBy('FIRST_NAME', 'ASC', 'cons')
       ->orderBy('PERMANENT_NUMBER', 'ASC', 'cons')

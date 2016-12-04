@@ -36,7 +36,7 @@ class CorePaymentsController extends Controller {
     $payments = array();
     
     if ($this->record->getSelectedRecordID()) {
-      
+      /*
       $payments = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
         ->join('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'payments_applied', 'payments_applied.CONSTITUENT_TRANSACTION_ID = transactions.CONSTITUENT_TRANSACTION_ID')
         ->join('BILL_CONSTITUENT_PAYMENTS', 'payments', 'payments.CONSTITUENT_PAYMENT_ID = payments_applied.CONSTITUENT_PAYMENT_ID')
@@ -50,7 +50,7 @@ class CorePaymentsController extends Controller {
         ->condition('transactions.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
         ->orderBy('PAYMENT_DATE', 'DESC', 'payments')
         ->execute()->fetchAll();
-
+  */
       $payments += $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
         ->fields('payments', array('CONSTITUENT_PAYMENT_ID', 'PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_METHOD', 'PAYMENT_NUMBER', 'AMOUNT', 'APPLIED_BALANCE', 'VOIDED'))
         ->condition('payments.CONSTITUENT_ID', $this->record->getSelectedRecordID())
@@ -138,6 +138,7 @@ class CorePaymentsController extends Controller {
         $payment_service->addPayment(
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.ConstituentID'], 
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PayeeConstituentID'], 
+          'P',
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentMethod'], 
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentDate'], 
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentNumber'], 

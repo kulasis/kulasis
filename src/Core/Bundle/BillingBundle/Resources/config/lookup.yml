@@ -9,6 +9,7 @@ Core.Billing.Payment.Type:
   description: "Billing Payment Types"
   allow_update: false
   values:
+    - { code: D, description: "Discount" }
     - { code: P, description: "Payment" }
     - { code: R, description: "Refund" }
 

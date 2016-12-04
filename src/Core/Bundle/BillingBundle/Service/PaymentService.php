@@ -27,13 +27,13 @@ class PaymentService {
     $this->db_options = $options;
   }
 
-  public function addPayment($constituent_id, $payee_constituent_id, $payment_method, $payment_date, $payment_number, $amount, $note = null) {
+  public function addPayment($constituent_id, $payee_constituent_id, $payment_type, $payment_method, $payment_date, $payment_number, $amount, $note = null) {
 
     // Prepare & post payment data    
     return $this->posterFactory->newPoster()->add('Core.Billing.Payment', 'new', array(
       'Core.Billing.Payment.ConstituentID' => $constituent_id,
       'Core.Billing.Payment.PayeeConstituentID' => $payee_constituent_id,
-      'Core.Billing.Payment.PaymentType' => 'P',
+      'Core.Billing.Payment.PaymentType' => $payment_type,
       'Core.Billing.Payment.PaymentMethod' => $payment_method,
       'Core.Billing.Payment.PaymentDate' => $payment_date,
       'Core.Billing.Payment.PaymentTimestamp' => $payment_date,

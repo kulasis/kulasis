@@ -85,6 +85,7 @@ class APIv1PaymentController extends APIController {
     $payment_id = $payment_service->addPayment(
       $currentUser, 
       $currentUser, 
+      'P',
       $payment_method, 
       date('Y-m-d'), 
       null, 
@@ -94,15 +95,16 @@ class APIv1PaymentController extends APIController {
     // loop through pending charges
     $pending_charges = $pending_service->getPendingCharges();
     foreach($pending_charges as $charge) {
-      // apply charge to payment
-      $payment_service->addAppliedPayment(
-        $payment_id, 
-        $charge['CONSTITUENT_TRANSACTION_ID'], 
-        $charge['AMOUNT'],
-        null,
-        1
-      );
-
+      if ($charge['CODE_TYPE'] == 'C') {
+        // apply charge to payment
+        $payment_service->addAppliedPayment(
+          $payment_id, 
+          $charge['CONSTITUENT_TRANSACTION_ID'], 
+          $charge['AMOUNT'],
+          null,
+          1
+        );
+      } // if on code type of charge 
     } // end loop on pending charges
 
 
