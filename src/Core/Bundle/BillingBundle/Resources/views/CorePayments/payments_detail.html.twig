@@ -27,7 +27,12 @@
 {{ kula_field({ field: 'Core.Billing.Payment.AppliedBalance', value: payment.APPLIED_BALANCE, label: true }) }}
 </div>
 <div class="group-box-contents group">
+  <div style="float:left;width:40%;">
 {{ kula_field({ edit: true, field: 'Core.Billing.Payment.Note', db_row_id: payment.CONSTITUENT_PAYMENT_ID, value: payment.NOTE,  label: true }) }}
+  </div>
+  <div style="float:right;width:60%;">
+<pre>{{ merchant_response }}</pre>
+  </div>
 </div>
 </div>
 {% if payment.VOIDED == 1 %}

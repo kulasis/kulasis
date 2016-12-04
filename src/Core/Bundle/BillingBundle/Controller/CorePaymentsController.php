@@ -89,12 +89,15 @@ class CorePaymentsController extends Controller {
     $payment = array();
     $transactions = array();
     $applied_payments = array();
+    $merchant_response = null;
     
     if ($this->record->getSelectedRecordID()) {
       $payment = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
-        ->fields('payments', array('CONSTITUENT_PAYMENT_ID', 'CONSTITUENT_ID', 'PAYEE_CONSTITUENT_ID', 'PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_METHOD', 'PAYMENT_NUMBER', 'AMOUNT', 'APPLIED_BALANCE', 'VOIDED'))
+        ->fields('payments', array('CONSTITUENT_PAYMENT_ID', 'CONSTITUENT_ID', 'PAYEE_CONSTITUENT_ID', 'PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_METHOD', 'PAYMENT_NUMBER', 'AMOUNT', 'APPLIED_BALANCE', 'VOIDED', 'MERCHANT_RESPONSE'))
         ->condition('payments.CONSTITUENT_PAYMENT_ID', $payment_id)
         ->execute()->fetch();
+
+      $merchant_response = print_r(unserialize($payment['MERCHANT_RESPONSE']), true);
 
       $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
         ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE', ))
@@ -122,7 +125,7 @@ class CorePaymentsController extends Controller {
       
     }
     
-    return $this->render('KulaCoreBillingBundle:CorePayments:payments_detail.html.twig', array('payment' => $payment, 'transactions' => $transactions, 'applied_payments' => $applied_payments));
+    return $this->render('KulaCoreBillingBundle:CorePayments:payments_detail.html.twig', array('payment' => $payment, 'transactions' => $transactions, 'applied_payments' => $applied_payments, 'merchant_response' => $merchant_response));
   }
 
   public function addPaymentAction() {
