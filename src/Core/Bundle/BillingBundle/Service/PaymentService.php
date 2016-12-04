@@ -29,6 +29,10 @@ class PaymentService {
 
   public function addPayment($constituent_id, $payee_constituent_id, $payment_type, $payment_method, $payment_date, $payment_number, $amount, $note = null) {
 
+    if ($amount < 0) {
+      $amount = $amount * -1;
+    }
+
     // Prepare & post payment data    
     return $this->posterFactory->newPoster()->add('Core.Billing.Payment', 'new', array(
       'Core.Billing.Payment.ConstituentID' => $constituent_id,
@@ -48,6 +52,10 @@ class PaymentService {
   }
 
   public function addAppliedPayment($payment_id, $transaction_id, $amount, $note, $locked = 0) {
+
+    if ($amount < 0) {
+      $amount = $amount * -1;
+    }
 
     // Prepare & post payment data    
     $this->posterFactory->newPoster()->add('Core.Billing.Payment.Applied', 'new', array(
