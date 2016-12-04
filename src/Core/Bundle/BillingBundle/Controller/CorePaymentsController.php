@@ -167,7 +167,7 @@ class CorePaymentsController extends Controller {
           $add['Core.Billing.Payment.Applied']['new_num']['Core.Billing.Payment.Applied.Note']
         );
       
-        return $this->forward('Core_Billing_ConstituentBilling_PaymentDetail', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('payment_jd' => $payment_id));
+        return $this->forward('Core_Billing_ConstituentBilling_PaymentDetail', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('payment_id' => $payment_id));
       }
     
     }
