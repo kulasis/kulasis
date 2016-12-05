@@ -128,13 +128,30 @@ class APIv1ScheduleController extends APIController {
         if ($discount_info['AMOUNT'] < 0) {
           $discount_info['AMOUNT'] = $discount_info['AMOUNT'] * -1;
         }
+        // Add Discount payment
         $payment_service = $this->get('kula.Core.billing.payment');
         $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
         $payment_id = $payment_service->addPayment($student_id, $student_id, 'D', null, date('Y-m-d'), null, $discount_info['AMOUNT']);
 
+        // Add discount transaction
         $transaction_service = $this->get('kula.Core.billing.transaction');
         $transaction_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
         $transaction_service->addDiscount($discount_id, $student_id, $section['ORGANIZATION_TERM_ID'], $schedule, $payment_id);
+
+        // Get largest charge
+        $charge_id = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+          ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'APPLIED_PAYMENT'))
+          ->condition('trans.CONSTITUENT_ID', $student_id)
+          ->condition('trans.STUDENT_CLASS_ID', $schedule)
+          ->orderBy('APPLIED_PAYMENT', 'DESC', 'trans')
+          ->execute()->fetch();
+
+        if ($charge_id['CONSTITUENT_TRANSACTION_ID']) {
+          // Calculate applied payment
+          $payment_service->addAppliedPayment($payment_id, $charge_id['CONSTITUENT_TRANSACTION_ID'], $discount_info['AMOUNT']);
+          $payment_service->calculateBalanceForPayment($payment_id);
+          $payment_service->calculateBalanceForCharge($charge_id['CONSTITUENT_TRANSACTION_ID']);
+        }
         } else {
           throw new NotFoundHttpException('Invalid discount.');
         }
