@@ -197,7 +197,7 @@ class APIv1PaymentController extends APIController {
         throw new DisplayException('Invalid payment method.  Payment method is '. $payment_method);
       }
     } else { // end if on greater than zero total
-        throw new DisplayException('0.00 or greater than 2000.00 amount or invalid payment type.  Amount is '.$pending_service->totalAmount().'.  Payment method is '. $payment_method);
+        throw new DisplayException('0.00 or greater than 2000.00 amount.  Amount is '.$pending_service->totalAmount().'.');
     }
   }
 
