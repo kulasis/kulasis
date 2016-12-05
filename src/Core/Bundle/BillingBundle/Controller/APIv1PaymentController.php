@@ -102,7 +102,7 @@ class APIv1PaymentController extends APIController {
           $payment_service->addAppliedPayment(
             $payment_id, 
             $charge['CONSTITUENT_TRANSACTION_ID'], 
-            $charge['AMOUNT'],
+            $charge['APPLIED_BALANCE'],
             null,
             1
           );
