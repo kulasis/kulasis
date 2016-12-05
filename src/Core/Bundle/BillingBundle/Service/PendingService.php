@@ -49,7 +49,6 @@ class PendingService {
         ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DESCRIPTION', 'AMOUNT'))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = trans.CODE_ID')
         ->fields('code', array('CODE_TYPE'))
-        ->condition('trans.APPLIED_BALANCE', 0, '!=')
         ->condition('trans.CONSTITUENT_ID', $class_list_row['STUDENT_ID'])
         ->condition('trans.STUDENT_CLASS_ID', $class_list_row['STUDENT_CLASS_ID'])
        // echo $trans;
