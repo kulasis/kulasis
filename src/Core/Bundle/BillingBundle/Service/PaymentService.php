@@ -98,9 +98,10 @@ class PaymentService {
       ))->process($this->db_options);
     }    
 
-    return $this->posterFactory->newPoster()->edit('Core.Billing.Payment.Applied', $payment_id, array(
-      'Core.Billing.Payment.Void' => 1,
-      'Core.Billing.Payment.Amount' => 0
+    return $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
+      'Core.Billing.Payment.Voided' => 1,
+      'Core.Billing.Payment.Amount' => 0,
+      'Core.Billing.Payment.AppliedBalance' => 0
       ))->process($this->db_options);
   }
 

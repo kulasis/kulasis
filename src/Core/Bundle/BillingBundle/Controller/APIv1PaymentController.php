@@ -71,6 +71,7 @@ class APIv1PaymentController extends APIController {
     // calculate pennding charges
     $pending_service = $this->get('kula.Core.billing.pending');
     $pending_service->calculatePendingCharges($currentUser);
+    $pending_classes = $pending_service->getPendingClasses();
     
     if ($pending_service->totalAmount() > 0 AND $pending_service->totalAmount() <= 2000) {
 
@@ -138,25 +139,19 @@ class APIv1PaymentController extends APIController {
           serialize($merchant_service->getRawResult())
         );
 
-        if ($merchant_service->getError()) {
-          $exception = new DisplayException('Error');
-          $exception->setData($merchant_service->getRawResult());
-          throw $exception;
-        }
-
-        // Add payment transaction 
-        $transaction_payment_id = $transaction_service->addTransaction(
-          $currentUser, 
-          $organization_term_id, 
-          122, 
-          date('Y-m-d'), 
-          null, 
-          $merchant_service->getResultAmount(), 
-          $payment_id
-        );
-
         // Only if amounts are the same
-        if ($merchant_service->getResultAmount() == $pending_service->totalAmount()) {
+        if ($merchant_service->getResultAmount() == $pending_service->totalAmount() AND !$merchant_service->getError()) {
+          // Add payment transaction 
+          $transaction_payment_id = $transaction_service->addTransaction(
+            $currentUser, 
+            $organization_term_id, 
+            122, 
+            date('Y-m-d'), 
+            null, 
+            $merchant_service->getResultAmount(), 
+            $payment_id
+          );
+
           // lock all transactions
           $payment_service->lockAppliedPayments($payment_id);
 
@@ -171,9 +166,29 @@ class APIv1PaymentController extends APIController {
 
           // post payment
           $transaction_service->postTransaction($transaction_payment_id);
+
+          // send email
+          $message = \Swift_Message::newInstance()
+            ->setSubject('OCAC Web Order Number '.$payment_id)
+            ->setFrom(['kulasis@ocac.edu' => 'Oregon College of Art and Craft'])
+            ->setReplyTo('cmalone@ocac.edu')
+            ->setTo($user['USERNAME'])
+            ->setBcc(array('cmalone@ocac.edu', 'mjacobsen@ocac.edu'))
+            ->setBody(
+                $this->renderView(
+                    'KulaCoreBillingBundle:CoreEmail:purchase.text.twig',
+                    array('merchant' => $merchant_service->getRawResult(), 'payment_id' => $payment_id, 'pending' => $pending_classes)
+                ),
+                'text/plain');
+          $this->get('mailer')->send($message);
+
         } else {
           // void all payment items
           $payment_service->voidPayment($payment_id);
+
+          $exception = new DisplayException('Processing Payment Error');
+          $exception->setData($merchant_service->getRawResult());
+          throw $exception;
         }
 
         // return class list
