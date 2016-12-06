@@ -195,8 +195,6 @@ class APIv1ScheduleController extends APIController {
     $data = array();
     $i = 0;
 
-    $data['billing_total'] = 0;
-
     // return class list
     $class_list_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
       ->fields('classes', array())
@@ -204,7 +202,7 @@ class APIv1ScheduleController extends APIController {
       ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = classes.SECTION_ID')
       ->fields('sec', array('SECTION_NUMBER', 'SECTION_NAME'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = sec.COURSE_ID')
-      ->fields('course', array('COURSE_TITLE"'))
+      ->fields('course', array('COURSE_TITLE'))
       ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = sec.ORGANIZATION_TERM_ID')
       ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterm.ORGANIZATION_ID')
       ->fields('org', array('ORGANIZATION_ABBREVIATION'))
@@ -216,34 +214,17 @@ class APIv1ScheduleController extends APIController {
       ->execute();
     while ($class_list_row = $class_list_result->fetch()) {
 
-      $data['classes'][$i] = $class_list_row;
+      $data[$i] = $class_list_row;
 
       if ($class_list_row['SECTION_NAME']) 
-        $data['classes'][$i]['SECTION_NAME'] = $class_list_row['SECTION_NAME']; 
+        $data[$i]['SECTION_NAME'] = $class_list_row['SECTION_NAME']; 
       else 
-        $data['classes'][$i]['SECTION_NAME'] = $class_list_row['COURSE_TITLE'];
-
-      $data['classes'][$i]['billing_total']  = 0;
-
-      // Get charges and payments for class not posted
-      $trans_result = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
-        ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DESCRIPTION', 'AMOUNT'))
-        ->condition('trans.POSTED', 1)
-        ->condition('trans.CONSTITUENT_ID', $currentUser)
-        ->condition($trans_db_or)
-        ->execute();
-      while ($trans_row = $trans_result->fetch()) {
-
-        $data['classes'][$i]['billing'][] = $trans_row;
-
-        $data['classes'][$i]['billing_total'] += $trans_row['AMOUNT'];
-        $data['billing_total'] += $trans_row['AMOUNT'];
-      } // end while on loop through transactions
+        $data[$i]['SECTION_NAME'] = $class_list_row['COURSE_TITLE'];
 
     $i++;
     }
 
-    return $this->jsonResponse($class_list);
+    return $this->jsonResponse($data);
   }
 
   public function getPendingClassesAction() {
