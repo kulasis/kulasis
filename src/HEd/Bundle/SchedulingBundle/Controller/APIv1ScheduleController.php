@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Kula\Core\Bundle\FrameworkBundle\Exception\DisplayException;
 
 class APIv1ScheduleController extends APIController {
 
@@ -140,10 +141,10 @@ class APIv1ScheduleController extends APIController {
 
         // Get largest charge
         $charge_id = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
-          ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'APPLIED_PAYMENT'))
+          ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'APPLIED_BALANCE'))
           ->condition('trans.CONSTITUENT_ID', $student_id)
           ->condition('trans.STUDENT_CLASS_ID', $schedule)
-          ->orderBy('APPLIED_PAYMENT', 'DESC', 'trans')
+          ->orderBy('APPLIED_BALANCE', 'DESC', 'trans')
           ->execute()->fetch();
 
         if ($charge_id['CONSTITUENT_TRANSACTION_ID']) {
@@ -152,11 +153,14 @@ class APIv1ScheduleController extends APIController {
           $payment_service->calculateBalanceForPayment($payment_id);
           $payment_service->calculateBalanceForCharge($charge_id['CONSTITUENT_TRANSACTION_ID']);
         }
-        } else {
-          throw new NotFoundHttpException('Invalid discount.');
         }
+      } else {
+        throw new NotFoundHttpException('Invalid discount.');
       }
       $transaction->commit();
+    } else {
+      $transaction->rollback();
+      throw new DisplayException('Class is full.');
     }
 
 
