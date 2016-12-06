@@ -7,11 +7,11 @@ Order #: {{ payment_id }}
 {{ class.ORGANIZATION_ABBREVIATION }} / {{ class.TERM_ABBREVIATION }}
 {{ class.SECTION_NUMBER }} {{ class.SECTION_NAME }}
 {% for charge in class.billing %}
-{{ charge.TRANSACTION_DESCRIPTION }} {{ charge.AMOUNT }}
+{{ charge.TRANSACTION_DESCRIPTION }} ${{ charge.AMOUNT }}
 {% endfor %}
 {% endfor %}
 
-Paid Amount: {{ merchant.ssl_amount }}
+Paid Amount: ${{ merchant.ssl_amount }}
 Date: {{ merchant.ssl_txn_time|date("m/d/Y") }}
 Card: {{ merchant.ssl_card_number }}
 Transaction ID: {{ merchant.ssl_txn_id }}
