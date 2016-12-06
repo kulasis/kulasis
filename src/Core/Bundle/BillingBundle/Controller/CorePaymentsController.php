@@ -8,7 +8,7 @@ class CorePaymentsController extends Controller {
   
   public function paymentsAction() {
     $this->authorize();
-    $this->setRecordType('Core.Constituent');
+    $this->setRecordType('Core.HEd.Student');
     
     if ($this->request->request->get('void')) {
       $payment_service = $this->get('kula.Core.billing.payment');
@@ -57,7 +57,7 @@ class CorePaymentsController extends Controller {
 
   public function payment_detailAction($payment_id) {
     $this->authorize();
-    $this->setRecordType('Core.Constituent');
+    $this->setRecordType('Core.HEd.Student');
     $this->processForm();
 
     $edit_post = $this->request->get('edit');
@@ -123,7 +123,7 @@ class CorePaymentsController extends Controller {
 
   public function addPaymentAction() {
     $this->authorize();
-    $this->setRecordType('Core.Constituent');
+    $this->setRecordType('Core.HEd.Student');
       
     if ($this->record->getSelectedRecordID()) {
       
@@ -152,7 +152,7 @@ class CorePaymentsController extends Controller {
 
   public function addAppliedPaymentAction($payment_id) {
     $this->authorize();
-    $this->setRecordType('Core.Constituent');
+    $this->setRecordType('Core.HEd.Student');
       
     if ($this->record->getSelectedRecordID()) {
       

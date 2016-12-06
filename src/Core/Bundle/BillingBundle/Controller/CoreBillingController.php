@@ -9,7 +9,7 @@ class CoreBillingController extends Controller {
   public function balancesAction() {
     $this->authorize();
     $this->processForm();
-    $this->setRecordType('Core.Constituent');
+    $this->setRecordType('Core.HEd.Student');
     
     $transactions = array();
     $terms_with_balances = array();

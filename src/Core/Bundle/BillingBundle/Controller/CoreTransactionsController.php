@@ -8,7 +8,7 @@ class CoreTransactionsController extends Controller {
   
   public function transactionsAction() {
     $this->authorize();
-    $this->setRecordType('Core.Constituent');
+    $this->setRecordType('Core.HEd.Student');
     /*
     if ($this->request->request->get('void')) {
       $constituent_billing_service = $this->get('kula.Core.Billing.constituent');
@@ -63,7 +63,7 @@ class CoreTransactionsController extends Controller {
   
   public function historyAction() {
     $this->authorize();
-    $this->setRecordType('Core.Constituent');
+    $this->setRecordType('Core.HEd.Student');
     /*
     if ($this->request->request->get('void')) {
       $constituent_billing_service = $this->get('kula.Core.Billing.constituent');
@@ -114,7 +114,7 @@ class CoreTransactionsController extends Controller {
 
   public function transaction_detailAction($constituent_transaction_id) {
     $this->authorize();
-    $this->setRecordType('Core.Constituent');
+    $this->setRecordType('Core.HEd.Student');
     $this->processForm();
 /*
     $edit_post = $this->request->get('edit');
@@ -159,7 +159,7 @@ class CoreTransactionsController extends Controller {
     
 
       // For specific student
-      $this->setRecordType('Core.Constituent');
+    $this->setRecordType('Core.HEd.Student');
       
       if ($this->record->getSelectedRecordID()) {
         
@@ -184,7 +184,7 @@ class CoreTransactionsController extends Controller {
     $routeName = $request->get('_route');
     
       // For specific student
-      $this->setRecordType('Core.Constituent');
+    $this->setRecordType('Core.HEd.Student');
       
       if ($this->record->getSelectedRecordID()) {
         
