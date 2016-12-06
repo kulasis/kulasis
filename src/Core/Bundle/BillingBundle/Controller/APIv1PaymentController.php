@@ -62,6 +62,8 @@ class APIv1PaymentController extends APIController {
     // user info
     $user = $this->db()->db_select('CORE_USER', 'user')
       ->fields('user', array('USERNAME'))
+      ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = user.USER_ID')
+      ->fields('cons', array('FIRST_NAME', 'LAST_NAME', 'PERMANENT_NUMBER'))
       ->condition('user.USER_ID', $currentUser)
       ->execute()->fetch();
 
@@ -177,7 +179,7 @@ class APIv1PaymentController extends APIController {
             ->setBody(
                 $this->renderView(
                     'KulaCoreBillingBundle:CoreEmail:purchase.text.twig',
-                    array('merchant' => $merchant_service->getRawResult(), 'payment_id' => $payment_id, 'pending' => $pending_classes)
+                    array('merchant' => $merchant_service->getRawResult(), 'payment_id' => $payment_id, 'pending' => $pending_classes, 'user' => $user)
                 ),
                 'text/plain');
           $this->get('mailer')->send($message);

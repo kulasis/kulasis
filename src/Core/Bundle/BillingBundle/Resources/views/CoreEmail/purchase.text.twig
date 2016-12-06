@@ -1,4 +1,6 @@
 {{ instance_name }}
+Name: {{ user.FIRST_NAME }} {{ user.LAST_NAME }}
+Permanent Number: {{ user.PERMANENT_NUMBER }}
 Order #: {{ payment_id }}
 
 {% for class in pending %}
