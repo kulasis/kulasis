@@ -38,6 +38,7 @@ class VirtualMerchantService {
       'ssl_result_format' => 'ASCII',
       'ssl_card_present' => 'N',
       'ssl_invoice_number' => $invoice,
+      'ssl_customer_code' => $invoice,
       'ssl_email' => $email,
       'ssl_first_name' => $first_name,
       'ssl_last_name' => $last_name,
