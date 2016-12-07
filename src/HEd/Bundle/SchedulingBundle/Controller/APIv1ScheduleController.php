@@ -210,7 +210,7 @@ class APIv1ScheduleController extends APIController {
 
     // return class list
     $class_list_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
-      ->fields('classes', array())
+      ->fields('classes', array('STUDENT_CLASS_ID'))
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = classes.STUDENT_STATUS_ID')
       ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = classes.SECTION_ID')
       ->fields('sec', array('SECTION_NUMBER', 'SECTION_NAME'))
@@ -227,14 +227,26 @@ class APIv1ScheduleController extends APIController {
       ->execute();
     while ($class_list_row = $class_list_result->fetch()) {
 
-      $data[$i] = $class_list_row;
+      // check if paid
+      $paid = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+        ->fields('trans', array('CONSTITUENT_TRANSACTION_ID'))
+        ->condition('trans.CONSTITUIENT_ID', $student_id)
+        ->condition('trans.STUDENT_CLASS_ID', $class_list_row['STUDENT_CLASS_ID'])
+        ->condition('trans.POSTED', 1)
+        ->condition('trans.VOIDED', 0)
+        ->execute()->fetch();
 
-      if ($class_list_row['SECTION_NAME']) 
-        $data[$i]['SECTION_NAME'] = $class_list_row['SECTION_NAME']; 
-      else 
-        $data[$i]['SECTION_NAME'] = $class_list_row['COURSE_TITLE'];
+      if ($paid['CONSTITUENT_TRANSACTION_ID'] != '') {
+              $data[$i] = $class_list_row;
 
-    $i++;
+        if ($class_list_row['SECTION_NAME']) 
+          $data[$i]['SECTION_NAME'] = $class_list_row['SECTION_NAME']; 
+        else 
+          $data[$i]['SECTION_NAME'] = $class_list_row['COURSE_TITLE'];
+
+      $i++;
+      }
+
     }
 
     return $this->jsonResponse($data);
