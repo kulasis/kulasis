@@ -126,37 +126,37 @@ class APIv1ScheduleController extends APIController {
           ->condition($discount_or)
           ->execute()->fetch();
         if ($discount_info['SECTION_FEE_DISCOUNT_ID'] != '') {
-        if ($discount_info['AMOUNT'] < 0) {
-          $discount_info['AMOUNT'] = $discount_info['AMOUNT'] * -1;
-        }
-        // Add Discount payment
-        $payment_service = $this->get('kula.Core.billing.payment');
-        $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
-        $payment_id = $payment_service->addPayment($student_id, $student_id, 'D', null, date('Y-m-d'), null, $discount_info['AMOUNT']);
+          if ($discount_info['AMOUNT'] < 0) {
+            $discount_info['AMOUNT'] = $discount_info['AMOUNT'] * -1;
+          }
+          // Add Discount payment
+          $payment_service = $this->get('kula.Core.billing.payment');
+          $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+          $payment_id = $payment_service->addPayment($student_id, $student_id, 'D', null, date('Y-m-d'), null, $discount_info['AMOUNT']);
 
-        // Add discount transaction
-        $transaction_service = $this->get('kula.Core.billing.transaction');
-        $transaction_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
-        $transaction_service->addDiscount($discount_id, $student_id, $section['ORGANIZATION_TERM_ID'], $schedule, $payment_id);
+          // Add discount transaction
+          $transaction_service = $this->get('kula.Core.billing.transaction');
+          $transaction_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+          $transaction_service->addDiscount($discount_id, $student_id, $section['ORGANIZATION_TERM_ID'], $schedule, $payment_id);
 
-        // Get largest charge
-        $charge_id = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
-          ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'APPLIED_BALANCE'))
-          ->condition('trans.CONSTITUENT_ID', $student_id)
-          ->condition('trans.STUDENT_CLASS_ID', $schedule)
-          ->orderBy('APPLIED_BALANCE', 'DESC', 'trans')
-          ->execute()->fetch();
+          // Get largest charge
+          $charge_id = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+            ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'APPLIED_BALANCE'))
+            ->condition('trans.CONSTITUENT_ID', $student_id)
+            ->condition('trans.STUDENT_CLASS_ID', $schedule)
+            ->orderBy('APPLIED_BALANCE', 'DESC', 'trans')
+            ->execute()->fetch();
 
-        if ($charge_id['CONSTITUENT_TRANSACTION_ID']) {
-          // Calculate applied payment
-          $payment_service->addAppliedPayment($payment_id, $charge_id['CONSTITUENT_TRANSACTION_ID'], $discount_info['AMOUNT']);
-          $payment_service->calculateBalanceForPayment($payment_id);
-          $payment_service->calculateBalanceForCharge($charge_id['CONSTITUENT_TRANSACTION_ID']);
+          if ($charge_id['CONSTITUENT_TRANSACTION_ID']) {
+            // Calculate applied payment
+            $payment_service->addAppliedPayment($payment_id, $charge_id['CONSTITUENT_TRANSACTION_ID'], $discount_info['AMOUNT']);
+            $payment_service->calculateBalanceForPayment($payment_id);
+            $payment_service->calculateBalanceForCharge($charge_id['CONSTITUENT_TRANSACTION_ID']);
+          }
+        } else {
+         throw new NotFoundHttpException('Invalid discount.');
         }
-        }
-      } else {
-        throw new NotFoundHttpException('Invalid discount.');
-      }
+      } // close if on discount
       $transaction->commit();
     } else {
       $transaction->rollback();
@@ -183,6 +183,19 @@ class APIv1ScheduleController extends APIController {
 
     $schedule_service = $this->get('kula.HEd.scheduling.schedule');
     $schedule_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+
+    // check if paid
+    $paid = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+    	->fields('trans', array('CONSTITUENT_TRANSACTION_ID'))
+      ->condition('trans.CONSTITUIENT_ID', $student_id)
+      ->condition('trans.STUDENT_CLASS_ID', $class_id)
+      ->condition('trans.POSTED', 1)
+      ->condition('trans.VOIDED', 0)
+      ->execute()->fetch();
+
+    if ($paid['CONSTITUENT_TRANSACTION_ID'] != '') {
+      throw new DisplayException('Cannot drop class that has already been paid.');
+    }
 
     // Remove class record
     return $this->jsonResponse($schedule_service->dropClassForStudentStatus($class_id, date('Y-m-d')));
