@@ -213,7 +213,7 @@ class ScheduleService {
         ->execute()->fetch();
       
       $section_poster = $this->posterFactory->newPoster()->edit('HEd.Section', $class_row['SECTION_ID'], array(
-        'HEd.Section.EnrolledTotal' => $section_row['ENROLLED_TOTAL'] + 1
+        'HEd.Section.EnrolledTotal' => $section_row['ENROLLED_TOTAL'] - 1
       ))->process($this->db_options)->getResult();
       
       if ($section_poster) {
