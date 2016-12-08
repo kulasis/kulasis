@@ -86,7 +86,7 @@ class CorePaymentsController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       $payment = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
-        ->fields('payments', array('CONSTITUENT_PAYMENT_ID', 'CONSTITUENT_ID', 'PAYEE_CONSTITUENT_ID', 'PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_METHOD', 'PAYMENT_NUMBER', 'AMOUNT', 'APPLIED_BALANCE', 'VOIDED', 'MERCHANT_RESPONSE'))
+        ->fields('payments', array('CONSTITUENT_PAYMENT_ID', 'CONSTITUENT_ID', 'PAYEE_CONSTITUENT_ID', 'PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_METHOD', 'PAYMENT_NUMBER', 'AMOUNT', 'APPLIED_BALANCE', 'VOIDED', 'MERCHANT_RESPONSE', 'NOTE'))
         ->condition('payments.CONSTITUENT_PAYMENT_ID', $payment_id)
         ->execute()->fetch();
 
