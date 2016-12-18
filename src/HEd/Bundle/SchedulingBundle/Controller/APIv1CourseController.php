@@ -12,8 +12,11 @@ class APIv1CourseController extends APIController {
   public function coursesAction($org, $term) {
     $this->authorize();
 
-    $last = $this->request->get('last');
-    
+    $last = $this->request->query->get('last');
+
+    $limit = $this->request->query->get('limit');
+    $offset = ($this->request->query->get('offset') != '') ? $this->request->query->get('offset') : 0;
+
     $data = array(); $i = 0; $j = 0; $last_section_id = null;
     
     $result = $this->db()->db_select('STUD_SECTION', 'sec')
@@ -38,6 +41,7 @@ class APIv1CourseController extends APIController {
     if ($last) $result = $result->condition($this->db()->db_or()
       ->condition('sec.CREATED_TIMESTAMP', date('Y-m-d', $last), '>=')
       ->condition('sec.UPDATED_TIMESTAMP', date('Y-m-d', $last), '>=')); 
+    if ($limit) { $result = $result->range($offset, $limit); }
     $result = $result->execute();
     while ($row = $result->fetch()) {
       
