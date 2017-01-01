@@ -109,8 +109,8 @@ class TransactionService {
         'Core.Billing.Transaction.ShowOnStatement' => 0
       );
       
-      if ($transaction_row['STUDENT_CLASS_ID']) $return_payment_data['HEd.Billing.Transaction.StudentClassID'] = $transaction_row['STUDENT_CLASS_ID'];
-      if ($transaction_row['AWARD_ID']) $return_payment_data['HEd.Billing.Transaction.AwardID'] = $transaction_row['AWARD_ID'];
+      if ($transaction_row['STUDENT_CLASS_ID']) $return_payment_data['Core.Billing.Transaction.StudentClassID'] = $transaction_row['STUDENT_CLASS_ID'];
+      if ($transaction_row['AWARD_ID']) $return_payment_data['Core.Billing.Transaction.AwardID'] = $transaction_row['AWARD_ID'];
       
       $return_payment_affected = $this->posterFactory->newPoster()->add('Core.Billing.Transaction', 'new', $return_payment_data)->process()->getResult();
 

@@ -1,0 +1,288 @@
+Core.TuitionRate:
+  description: "Tuition Rate"
+  db_table_name: BILL_TUITION_RATE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: TUITION_RATE_ID
+      db_column_type: primary_serial
+      column_name: "Tuition Rate ID"
+      label_name: "Tuition Rate ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    Name:
+      description: "Name"
+      db_column_name: TUITION_RATE_NAME
+      db_column_type: varchar
+      db_column_length: 30
+      db_column_null: false
+      field_type: text
+      field_size: 15
+      column_name: "Tuition Rate Name"
+      label_name: "Tuition Rate Name"
+    BillingMode:
+      description: "Billing Mode"
+      db_column_name: BILLING_MODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: select
+      class: Kula\Core\Bundle\BillingBundle\Field\BillingMode
+      column_name: "Billing Mode"
+      label_name: "Billing Mode"
+
+Core.TuitionRate.Refund:
+  description: "Tuition Rate Refunds"
+  db_table_name: BILL_TUITION_RATE_REFUND
+  timestamps: true
+  fields: 
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: TUITION_RATE_REFUND_ID
+      db_column_type: primary_serial
+      column_name: "Tuition Rate Refund ID"
+      label_name: "Tuition Rate Refund ID"
+    TuitionRateID:
+      description: "Tuition Rate ID"
+      parent: Core.TuitionRate.ID
+      db_column_name: TUITION_RATE_ID
+      db_column_type: serial
+      column_name: "Tuition Rate ID"
+      label_name: "Tuition Rate ID"
+    RefundType:
+      description: "Refund Type"
+      db_column_name: REFUND_TYPE
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: false
+      field_type: select
+      class: Kula\Core\Bundle\BillingBundle\Field\RefundType
+      column_name: "Refund Type"
+      label_name: "Refund Type"
+    EndDate:
+      description: "End Date"
+      db_column_name: END_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "End Date"
+      label_name: "End Date"
+    RefundPercentage:
+      description: "Refund Percentage"
+      db_column_name: REFUND_PERCENTAGE
+      db_column_type: numeric
+      db_column_length: 6
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Refund Percentage"
+      label_name: "Refund Percentage"
+
+Core.TuitionRate.Students:
+  description: "Tuition Rate Students"
+  db_table_name: BILL_TUITION_RATE_STUDENTS
+  timestamps: true
+  fields: 
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: TUITION_RATE_STUDENT_ID
+      db_column_type: primary_serial
+      column_name: "Tuition Rate Student ID"
+      label_name: "Tuition Rate Student ID"
+    TuitionRateID:
+      description: "Tuition Rate ID"
+      parent: Core.TuitionRate.ID
+      db_column_name: TUITION_RATE_ID
+      db_column_type: serial
+      column_name: "Tuition Rate ID"
+      label_name: "Tuition Rate ID"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    EnterCode:
+      description: "Enter Code"
+      db_column_name: ENTER_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.EnterCode
+      column_name: "Enter Code"
+      label_name: "Enter Code"
+    NewStudent:
+      description: "New Student"
+      db_column_name: NEW_STUDENT
+      db_column_type: bool
+      db_column_null: false
+      db_column_default: 0
+      field_type: checkbox
+      column_name: "New Student"
+      label_name: "New Student"
+    DegreeID:
+      description: "Degree ID"
+      db_column_name: DEGREE_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: select
+      class: Kula\Core\Bundle\GradingBundle\Field\DegreeName
+      column_name: "Degree ID"
+      label_name: "Degree ID"
+
+Core.TuitionRate.Transaction:
+  description: "Tuition Rate Transactions"
+  db_table_name: BILL_TUITION_RATE_TRANSACTIONS
+  timestamps: true
+  fields: 
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: TUITION_RATE_TRANSACTION_ID
+      db_column_type: primary_serial
+      column_name: "Tuition Rate Transaction ID"
+      label_name: "Tuition Rate Transaction ID"
+    TuitionRateID:
+      description: "Tuition Rate ID"
+      parent: Core.TuitionRate.ID
+      db_column_name: TUITION_RATE_ID
+      db_column_type: serial
+      column_name: "Tuition Rate ID"
+      label_name: "Tuition Rate ID"
+    TransactionCodeID:
+      description: "Transaction Code ID"
+      parent: Core.Billing.Code.ID
+      db_column_name: TRANSACTION_CODE_ID
+      db_column_type: serial
+      field_type: select
+      class: Kula\Core\Bundle\BillingBundle\Field\TransactionCode
+      column_name: "Transaction Code ID"
+      label_name: "Transaction Code ID"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 9
+      column_name: "Amount"
+      label_name: "Amount"
+    CreditHourRate:
+      description: "Credit Hour Rate"
+      db_column_name: CREDIT_HOUR_RATE
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 9
+      column_name: "Credit Hour Rate"
+      label_name: "Credit Hour Rate"
+    FullTimeFlatRate:
+      description: "Full Time Flat Rate"
+      db_column_name: FULL_TIME_FLAT_RATE
+      db_column_type: numeric
+      db_column_lenght: 10
+      db_column_precision: 2
+      db_column_null: true
+      field_type: text
+      field_size: 9
+      column_name: "Full Time Flat Rate"
+      label_name: "Full Time Flat Rate"
+    Rule:
+      description: "Rule"
+      db_column_name: RULE
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: false
+      field_type: select
+      class: Kula\Core\Bundle\BillingBundle\Field\TransactionRule
+      column_name: "Rule"
+      label_name: "Rule"
+    MinimumCredits:
+      description: "Minimum Credits"
+      db_column_name: MIN_CREDITS
+      db_column_type: numeric
+      db_column_length: 6
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Minimum Credits"
+      label_name: "Minimum Credits"
+    FullTimeCredits:
+      description: "Full Time Credits"
+      db_column_name: FULL_TIME_CREDITS
+      db_column_type: numeric
+      db_column_lenght: 6
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Full Time Credits"
+      label_name: "Full Time Credits"
+    MaxFullTimeCredits:
+      description: "Full Time Credits"
+      db_column_name: MAX_FULL_TIME_CREDITS
+      db_column_type: numeric
+      db_column_lenght: 5
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Max Full Time Credits"
+      label_name: "Max Full Time Credits"
+
+Core.TuitionRate.Transaction.Refund:
+  description: "Tuition Rate Transaction Refunds"
+  db_table_name: BILL_TUITION_RATE_TRANS_REFUND
+  timestamps: true
+  fields: 
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: TRANSACTION_REFUND_ID
+      db_column_type: primary_serial
+      column_name: "Tuition Rate Transaction Refund ID"
+      label_name: "Tuition Rate Transaction Refund ID"
+    TuitionRateTransactionID:
+      description: "Tuition Rate Transaction ID"
+      parent: Core.TuitionRate.Transaction.ID
+      db_column_name: TUITION_RATE_TRANSACTION_ID
+      db_column_type: serial
+      column_name: "Tuition Rate Transaction ID"
+      label_name: "Tuition Rate Transaction ID"
+    EndDate:
+      description: "End Date"
+      db_column_name: END_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "End Date"
+      label_name: "End Date"
+    RefundPercentage:
+      description: "Refund Percentage"
+      db_column_name: REFUND_PERCENTAGE
+      db_column_type: numeric
+      db_column_length: 6
+      db_column_precision: 3
+      field_type: text
+      field_size: 6
+      column_name: "Refund Percentage"
+      label_name: "Refund Percentage"

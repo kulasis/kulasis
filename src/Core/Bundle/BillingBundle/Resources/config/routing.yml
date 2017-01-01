@@ -2,6 +2,10 @@ _Core_Billing_core:
     resource: "@KulaCoreBillingBundle/Resources/config/routing/core.yml"
     prefix: core/billing
 
+_Core_HEd_Billing_core:
+    resource: "@KulaCoreBillingBundle/Resources/config/routing/HEd.yml"
+    prefix: core/HEd/billing
+
 _Core_Billing_api:
     resource: "@KulaCoreBillingBundle/Resources/config/routing/api.yml"
     prefix: /api/v1

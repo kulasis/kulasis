@@ -2,13 +2,9 @@
 
 {% block content %}
 <div class="group-box">
-<div class="group-box-header">Student</div>
+<div class="group-box-header">Constituent</div>
 <div class="group-box-contents group">
-{% if kula_core_record.getSelectedRecord.STUDENT_ID  %}
-{{ kula_field({ field: 'Core.Billing.Transaction.ConstituentID', field_name_override: 'Student', value: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, label: true }) }}
-{% else %}
-{{ kula_field({add: true, field: 'Core.Billing.Transaction.ConstituentID', field_name_override: 'Student', label: true }) }}
-{% endif %}
+{{ kula_field({add: true, field: 'Core.Billing.Transaction.ConstituentID', field_name_override: 'Constituent', value: kula_core_record.getSelectedRecord.CONSTITUENT_ID, label: true }) }}
 </div>
 </div>
 <div class="group-box">
@@ -32,6 +28,12 @@
 </div>
 <div class="group-box-contents group">
 {{ kula_field({ add: true, field: 'Core.Billing.Transaction.Amount', label: true }) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Class</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, field: 'Core.Billing.Transaction.StudentClassID', field_name_override: 'Section', STUDENT_ID: kula_core_record.getSelectedRecordID(), ORGANIZATION_TERM_ID: kula_core_record.getSelectedRecord.ORGANIZATION_TERM_ID, label: true }) }}
 </div>
 </div>
 {% endblock %}

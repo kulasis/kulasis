@@ -1,8 +1,13 @@
 {% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
+{% if request.get('_route') == 'Core_Billing_ConstituentBilling_Payments_AddAppliedTransaction' %}
+  {% set parent_route = 'Core_Billing_ConstituentBilling_PaymentDetail' %}
+{% else %}
+  {% set parent_route = 'Core_Billing_StudentBilling_PaymentDetail' %}
+{% endif %}
 <p>
-<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_PaymentDetail', { payment_id: payment_id }) }}">Back to Payment Detail</a>
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path(parent_route, { payment_id: payment_id }) }}">Back to Payment Detail</a>
 </p>
 
 <div class="group-box">

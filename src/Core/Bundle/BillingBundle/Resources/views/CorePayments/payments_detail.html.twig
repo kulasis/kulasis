@@ -2,7 +2,12 @@
 
 {% block content %}
 <p>
-<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_Payments') }}">Back to Payments</a>
+{% if request.get('_route') == 'Core_Billing_ConstituentBilling_Payments_AddTransaction' %}
+  {% set parent_route = 'Core_Billing_ConstituentBilling_Payments' %}
+{% else %}
+  {% set parent_route = 'Core_Billing_StudentBilling_Payments' %}
+{% endif %}
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path(parent_route) }}">Back to Payments</a>
 </p>
 
 
@@ -48,7 +53,12 @@
 <div class="data-table-header-div">
 Attached Transactions
 <span class="data-table-header-buttons">
-  <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_Payments_AddTransaction', { payment_id: payment.CONSTITUENT_PAYMENT_ID }) }}">Add</a>
+{% if request.get('_route') == 'Core_Billing_ConstituentBilling_PaymentDetail' %}
+  {% set add_trans_route = 'Core_Billing_ConstituentBilling_Payments_AddTransaction' %}
+{% else %}
+  {% set add_trans_route = 'Core_Billing_StudentBilling_Payments_AddTransaction' %}
+{% endif %}
+  <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path(add_trans_route, { payment_id: payment.CONSTITUENT_PAYMENT_ID }) }}">Add</a>
 </span>
 </div>
 <table id="window_window_num_data_table_terms" class="data-table">
@@ -68,6 +78,11 @@ Attached Transactions
 </tr>
 </thead>
 <tbody>
+{% if request.get('_route') == 'Core_Billing_ConstituentBilling_PaymentDetail' %}
+  {% set trans_route = 'Core_Billing_ConstituentBilling_TransactionDetail' %}
+{% else %}
+  {% set trans_route = 'Core_Billing_StudentBilling_TransactionDetail' %}
+{% endif %}
   {% for transaction in transactions %}
   <tr>
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
@@ -80,7 +95,7 @@ Attached Transactions
     {{ kula_field({ field: 'Core.Billing.Transaction.Description', input: false, value: transaction.TRANSACTION_DESCRIPTION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Transaction.Amount', input: false, value: transaction.AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Transaction.AppliedBalance', input: false, value: transaction.APPLIED_BALANCE, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_TransactionDetail', { constituent_transaction_id: transaction.CONSTITUENT_TRANSACTION_ID }) }}">...</a></td>
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path(trans_route, { constituent_transaction_id: transaction.CONSTITUENT_TRANSACTION_ID }) }}">...</a></td>
   </tr>
   {% endfor %}
 </tbody>
@@ -89,7 +104,12 @@ Attached Transactions
 <div class="data-table-header-div">
 Applied Payments
 <span class="data-table-header-buttons">
-  <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_Payments_AddAppliedTransaction', { payment_id: payment.CONSTITUENT_PAYMENT_ID }) }}">Add</a>
+{% if request.get('_route') == 'Core_Billing_ConstituentBilling_PaymentDetail' %}
+  {% set add_applied_route = 'Core_Billing_ConstituentBilling_Payments_AddAppliedTransaction' %}
+{% else %}
+  {% set add_applied_route = 'Core_Billing_StudentBilling_Payments_AddAppliedTransaction' %}
+{% endif %}
+  <a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path(add_applied_route, { payment_id: payment.CONSTITUENT_PAYMENT_ID }) }}">Add</a>
 </span>
 </div>
 <table id="window_window_num_data_table_payments_applied" class="data-table">

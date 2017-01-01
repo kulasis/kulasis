@@ -20,7 +20,7 @@ class CoreCodesController extends Controller {
 	      ->execute()->fetchAll();
     }
     
-    return $this->render('KulaHEdBillingBundle:CoreCodes:codes.html.twig', array('code' => $code));
+    return $this->render('KulaCoreBillingBundle:CoreCodes:codes.html.twig', array('code' => $code));
   }
 
   public function addAction() {

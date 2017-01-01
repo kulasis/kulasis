@@ -54,8 +54,8 @@ Core.HEd.FinancialAid:
           display_name: "PowerFAIDS"
           route: Core_HEd_FinancialAid_FinancialAidSetup_PowerFAIDS
 
-Core.HEd.Billing.FinancialAid:
-  parent: Core.HEd.Billing
+Core.Billing.FinancialAid:
+  parent: Core.Billing
   type: form
   description: "Financial Aid"
   display_name: "Financial Aid"

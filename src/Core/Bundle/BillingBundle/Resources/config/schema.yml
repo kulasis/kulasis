@@ -1,4 +1,6 @@
 imports:
     - { resource: schema/code.yml }
-    - { resource: schema/transactions.yml }
+    - { resource: schema/coursefee.yml }
     - { resource: schema/payments.yml }
+    - { resource: schema/transactions.yml }
+    - { resource: schema/tuitionrate.yml }

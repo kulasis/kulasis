@@ -1,0 +1,294 @@
+HEd.Billing.CourseFee:
+  description: "Billing Course Fees"
+  db_table_name: BILL_COURSE_FEE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: COURSE_FEE_ID
+      db_column_type: primary_serial
+      column_name: "Course Fee ID"
+      label_name: "Course Fee ID"
+    CourseID:
+      description: "Course ID"
+      parent: HEd.Course.ID
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      column_name: "Course ID"
+      label_name: "Course ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    CodeID:
+      description: "Transaction Code ID"
+      parent: Core.Billing.Code.ID
+      db_column_name: CODE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\Core\Bundle\BillingBundle\Field\TransactionCode
+      column_name: "Code ID"
+      label_name: "Code"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: false
+      field_type: text
+      field_size: 8
+      column_name: "Amount"
+      label_name: "Amount"
+
+HEd.Billing.CourseFee.Refund:
+  description: "Billing Course Fees Refund"
+  db_table_name: BILL_COURSE_FEE_REFUND
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: COURSE_FEE_REFUND_ID
+      db_column_type: primary_serial
+      column_name: "Course Fee ID"
+      label_name: "Course Fee ID"
+    CourseID:
+      description: "Course ID"
+      parent: HEd.Course.ID
+      db_column_name: COURSE_ID
+      db_column_type: serial
+      column_name: "Course ID"
+      label_name: "Course ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    CodeID:
+      description: "Transaction Code ID"
+      parent: Core.Billing.Code.ID
+      db_column_name: CODE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\Core\Bundle\BillingBundle\Field\TransactionCode
+      column_name: "Code ID"
+      label_name: "Code"
+    EndDate:
+      description: "End Date"
+      db_column_name: END_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "End Date"
+      label_name: "End Date"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: false
+      field_type: text
+      field_size: 8
+      column_name: "Amount"
+      label_name: "Amount"
+
+HEd.Billing.SectionFee:
+  description: "Billing Section Fees"
+  db_table_name: BILL_SECTION_FEE
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SECTION_FEE_ID
+      db_column_type: primary_serial
+      column_name: "Section Fee ID"
+      label_name: "Section Fee ID"
+    SectionID:
+      description: "Section ID"
+      parent: HEd.Section.ID
+      db_column_name: SECTION_ID
+      db_column_type: serial
+      column_name: "Section ID"
+      label_name: "Section ID"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    CodeID:
+      description: "Transaction Code ID"
+      parent: Core.Billing.Code.ID
+      db_column_name: CODE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\Core\Bundle\BillingBundle\Field\TransactionCode
+      column_name: "Code ID"
+      label_name: "Code"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: false
+      field_type: text
+      field_size: 8
+      column_name: "Amount"
+      label_name: "Amount"
+
+HEd.Billing.SectionFee.Refund:
+  description: "Billing Section Fees Refunds"
+  db_table_name: BILL_SECTION_FEE_REFUND
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SECTION_FEE_REFUND_ID
+      db_column_type: primary_serial
+      column_name: "Section Fee ID"
+      label_name: "Section Fee ID"
+    SectionID:
+      description: "Section ID"
+      parent: HEd.Section.ID
+      db_column_name: SECTION_ID
+      db_column_type: serial
+      column_name: "Section ID"
+      label_name: "Section ID"
+    Level:
+      description: "Level"
+      db_column_name: LEVEL
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Level
+      column_name: "Level"
+      label_name: "Level"
+    CodeID:
+      description: "Transaction Code ID"
+      parent: Core.Billing.Code.ID
+      db_column_name: CODE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\Core\Bundle\BillingBundle\Field\TransactionCode
+      column_name: "Code ID"
+      label_name: "Code"
+    EndDate:
+      description: "End Date"
+      db_column_name: END_DATE
+      db_column_type: date
+      db_column_null: false
+      field_type: date
+      column_name: "End Date"
+      label_name: "End Date"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: false
+      field_type: text
+      field_size: 8
+      column_name: "Amount"
+      label_name: "Amount"
+
+HEd.Billing.SectionFee.Discount:
+  description: "Billing Section Discount"
+  db_table_name: BILL_SECTION_FEE_DISCOUNT
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SECTION_FEE_DISCOUNT_ID
+      db_column_type: primary_serial
+      column_name: "Section Fee ID"
+      label_name: "Section Fee ID"
+    SectionID:
+      description: "Section ID"
+      parent: HEd.Section.ID
+      db_column_name: SECTION_ID
+      db_column_type: serial
+      column_name: "Section ID"
+      label_name: "Section ID"
+    Discount:
+      description: "Discount"
+      db_column_name: DISCOUNT
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Core.Billing.Fee.Discount
+      column_name: "Discount"
+      label_name: "Discount"
+    CodeID:
+      description: "Transaction Code ID"
+      parent: Core.Billing.Code.ID
+      db_column_name: CODE_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: select
+      class: Kula\Core\Bundle\BillingBundle\Field\TransactionCode
+      column_name: "Code ID"
+      label_name: "Code"
+    EndDate:
+      description: "End Date"
+      db_column_name: END_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "End Date"
+      label_name: "End Date"
+    Amount:
+      description: "Amount"
+      db_column_name: AMOUNT
+      db_column_type: numeric
+      db_column_length: 7
+      db_column_precision: 2
+      db_column_null: false
+      field_type: text
+      field_size: 8
+      column_name: "Amount"
+      label_name: "Amount"

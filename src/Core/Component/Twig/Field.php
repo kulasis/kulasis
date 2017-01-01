@@ -44,6 +44,10 @@ class Field {
 
       $field = self::getFieldInfo($param['field']);
 
+      if ($field === false) {
+        throw new \Exception('Unable to find table: '.$param['field']);
+      }
+
       if (self::$permission->getPermissionForSchemaObject(self::$schema->getDBTable($field->getTable()), null, Permission::DELETE)) {
         if (isset($param['field_name_override'])) {
           $html = $param['field_name_override'];
@@ -604,6 +608,11 @@ class Field {
   private static function getNameForField($param) {
     
     $schema = self::getFieldInfo($param['field']);
+
+    if ($schema === false) {
+      throw new \Exception('Unable to find field: '.$param['field']);
+    }
+
     $db_action = '';
     if ($param['add'])
       $db_action = 'add';
@@ -656,6 +665,10 @@ class Field {
   private static function getFieldInfo($field) {
     $schema = self::$schema->getField($field);
     
+    if ($schema === false) {
+      throw new \Exception('Unable to find field info: '.$param['field']);
+    }
+
     //if (!isset($schema[$db_table][$db_field]))
     //  throw new \Exception('Field ' . $db_field . ' does not exist in table ' . $db_table . ' in Kula SIS Schema.');
     
@@ -691,6 +704,7 @@ class Field {
   
   private static function _displayValue($param) {
     $schema = self::getFieldInfo($param['field']);
+
     if (self::$permission->getPermissionForSchemaObject($schema->getTable(), $schema->getName(), Permission::READ)
         ) {
           return true;

@@ -60,12 +60,12 @@ HEd.FAID.Code:
       label_name: "Show On Statement"
     TransactionCodeID:
       description: "Transaction Code ID"
-      parent: HEd.Billing.Code.ID
+      parent: Core.Billing.Code.ID
       db_column_name: TRANSACTION_CODE_ID
       db_column_type: serial
       db_column_null: true
       field_type: select
-      class: Kula\HEd\Bundle\BillingBundle\Field\TransactionCode
+      class: Kula\Core\Bundle\BillingBundle\Field\TransactionCode
       column_name: "Transaction Code ID"
       label_name: "Transaction Code ID"
     OriginationFeePercentage:

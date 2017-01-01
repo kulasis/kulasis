@@ -286,7 +286,7 @@ HEd.FAID.Student.Award:
       column_name: "Conversion Award Number"
       label_name: "Conversion Award Number"
       
-HEd.Billing.Transaction:
+Core.Billing.Transaction:
   fields:
     AwardID:
       description: "FA Award ID"

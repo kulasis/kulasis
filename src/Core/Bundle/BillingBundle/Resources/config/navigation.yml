@@ -4,6 +4,73 @@ Core.Billing:
   type: dir
   portal: core
   forms:
+    Billing:
+      description: "Billing"
+      display_name: "Billing"
+      tabs:
+        Pending:
+          description: "Pending"
+          display_name: "Pending"
+          route: Core_Billing_Billing_Pending
+        AllPending:
+          description: "All Pending"
+          display_name: "All Pending"
+          route: Core_Billing_Billing_AllPending
+      menu_actions:
+        AddCharge:
+          description: "Add Charge"
+          display_name: "Add Charge"
+          route: Core_Billing_Billing_AddCharge
+        AddPayment:
+          description: "Add Payment"
+          display_name: "Add Payment"
+          divider_before: true
+          route: Core_Billing_Billing_AddPayment
+    StudentBilling:
+      description: "Student Billing"
+      display_name: "Student Billing"
+      tabs:
+        Balances:
+          description: "Balances"
+          display_name: "Balances"
+          route: Core_Billing_StudentBilling_Balances
+        Transactions:
+          description: "Transactions"
+          display_name: "Transactions"
+          route: Core_Billing_StudentBilling_Transactions
+        Payments:
+          description: "Payments"
+          display_name: "Payments"
+          route: Core_Billing_StudentBilling_Payments
+        History:
+          description: "History"
+          display_name: "History"
+          route: Core_Billing_StudentBilling_History
+      menu_actions:
+        AddCharge:
+          description: "Add Charge"
+          display_name: "Add Charge"
+          record_loaded: true
+          route: Core_Billing_StudentBilling_AddCharge
+        AddPayment:
+          description: "Add Payment"
+          display_name: "Add Payment"
+          record_loaded: true
+          divider_before: true
+          route: Core_Billing_StudentBilling_AddPayment
+      menu_reports:
+        BillingStatement:
+          description: "Billing Statement"
+          display_name: "Billing Statement"
+          route: Core_Billing_Reports_BillingStatement
+        BillingReceipt:
+          description: "Billing Receipt"
+          display_name: "Billing Receipt"
+          route: Core_Billing_Reports_BillingReceipt
+        BillingLedger:
+          description: "Billing Ledger"
+          display_name: "Billing Ledger"
+          route: Core_Billing_Reports_BillingLedger
     ConstituentBilling:
       description: "Constituent Billing"
       display_name: "Constituent Billing"
@@ -36,10 +103,27 @@ Core.Billing:
           record_loaded: true
           divider_before: true
           route: Core_Billing_ConstituentBilling_AddPayment
+      menu_reports:
+        BillingStatement:
+          description: "Billing Statement"
+          display_name: "Billing Statement"
+          route: Core_Billing_Reports_BillingStatement
+        BillingReceipt:
+          description: "Billing Receipt"
+          display_name: "Billing Receipt"
+          route: Core_Billing_Reports_BillingReceipt
+        BillingLedger:
+          description: "Billing Ledger"
+          display_name: "Billing Ledger"
+          route: Core_Billing_Reports_BillingLedger
     BillingSetup:
       description: "Billing Setup"
       display_name: "Billing Setup"
       tabs:
+        TuitionRates:
+          description: "Tuition Rates"
+          display_name: "Tuition Rates"
+          route: Core_Billing_BillingSetup_TuitionRates
         Codes:
           description: "Codes"
           display_name: "Codes"
@@ -48,3 +132,36 @@ Core.Billing:
         route: Core_Billing_BillingSetup_Codes_Add
       button_delete:
         route: Core_Billing_BillingSetup_Codes_Delete
+
+Core.Billing.Reports:
+  parent: Core.Billing
+  description: "Reports"
+  display_name: "Reports"
+  type: dir
+  reports:
+    BillingStatement:
+      description: "Billing Statement"
+      display_name: "Billing Statement"
+      route: Core_Billing_Reports_BillingStatement
+    BillingReceipt:
+      description: "Billing Receipt"
+      display_name: "Billing Receipt"
+      route: Core_Billing_Reports_BillingReceipt
+    BillingLedger:
+      description: "Billing Ledger"
+      display_name: "Billing Ledger"
+      route: Core_Billing_Reports_BillingLedger
+
+Core.HEd.Course.Course.Fees:
+  description: "Fees"
+  display_name: "Fees"
+  type: tab
+  parent: Core.HEd.Course.Course
+  route: Core_HEd_Course_Course_Fees
+
+Core.HEd.Scheduling.Section.Fees:
+  description: "Fees"
+  display_name: "Fees"
+  type: tab
+  parent: Core.HEd.Scheduling.Section
+  route: Core_HEd_Scheduling_Section_Fees

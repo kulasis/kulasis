@@ -1,3 +1,0 @@
-_HEd_billing_core:
-    resource: "@KulaHEdBillingBundle/Resources/config/routing/core.yml"
-    prefix: core/HEd

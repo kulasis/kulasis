@@ -17,7 +17,7 @@ Core.Billing.Code:
       db_column_length: 1
       db_column_null: false
       field_type: lookup
-      lookup: HEd.Billing.Code.Type
+      lookup: Core.Billing.Code.Type
       column_name: "Code Type"
       label_name: "Type"
     Code:

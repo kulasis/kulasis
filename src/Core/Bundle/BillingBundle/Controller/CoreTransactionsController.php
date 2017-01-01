@@ -8,8 +8,13 @@ class CoreTransactionsController extends Controller {
   
   public function transactionsAction() {
     $this->authorize();
-    $this->setRecordType('Core.HEd.Student');
-    /*
+
+    if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_Transactions') {
+      $this->setRecordType('Core.Constituent');
+    } else {
+      $this->setRecordType('Core.HEd.Student');
+    }
+
     if ($this->request->request->get('void')) {
       $constituent_billing_service = $this->get('kula.Core.Billing.constituent');
       
@@ -32,13 +37,13 @@ class CoreTransactionsController extends Controller {
         }
       }
     }
-    */
+
     $transactions = array();
     
     if ($this->record->getSelectedRecordID()) {
       
       $transactions = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
-        ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE', ))
+        ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE', 'PAYMENT_ID'))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
         ->fields('code', array('CODE_TYPE', 'CODE'))
         ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
@@ -63,8 +68,13 @@ class CoreTransactionsController extends Controller {
   
   public function historyAction() {
     $this->authorize();
-    $this->setRecordType('Core.HEd.Student');
-    /*
+
+    if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_History') {
+      $this->setRecordType('Core.Constituent');
+    } else {
+      $this->setRecordType('Core.HEd.Student');
+    }
+    
     if ($this->request->request->get('void')) {
       $constituent_billing_service = $this->get('kula.Core.Billing.constituent');
       
@@ -87,7 +97,6 @@ class CoreTransactionsController extends Controller {
         }
       }
     }
-    */
     
     $transactions = array();
     
@@ -114,9 +123,15 @@ class CoreTransactionsController extends Controller {
 
   public function transaction_detailAction($constituent_transaction_id) {
     $this->authorize();
-    $this->setRecordType('Core.HEd.Student');
+
+    if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_TransactionDetail') {
+      $this->setRecordType('Core.Constituent');
+    } else {
+      $this->setRecordType('Core.HEd.Student');
+    }
+
     $this->processForm();
-/*
+
     $edit_post = $this->request->get('edit');
     
     if (isset($edit_post['Core.Billing.Transaction'])) {
@@ -129,7 +144,7 @@ class CoreTransactionsController extends Controller {
         }
       }
     }
- */   
+ 
     $transaction = array();
     
     if ($this->record->getSelectedRecordID()) {
@@ -156,10 +171,13 @@ class CoreTransactionsController extends Controller {
     
     $request = $this->container->get('request_stack')->getCurrentRequest();
     $routeName = $request->get('_route');
-    
 
-      // For specific student
-    $this->setRecordType('Core.HEd.Student');
+    // For specific student
+    if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddCharge') {
+      $this->setRecordType('Core.Constituent');
+    } else {
+      $this->setRecordType('Core.HEd.Student');
+    }
       
       if ($this->record->getSelectedRecordID()) {
         
@@ -169,7 +187,11 @@ class CoreTransactionsController extends Controller {
           $add = $this->request->request->get('add');
           $constituent_billing_service->addTransaction($this->record->getSelectedRecordID(), $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.OrganizationTermID'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.TransactionDate'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Description'], $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Amount']);
         
+          if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddCharge') {
           return $this->forward('Core_Billing_ConstituentBilling_Transactions', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()));
+          } else {
+          return $this->forward('Core_Billing_StudentBilling_Transactions', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
+          }
         }
       
       }
@@ -183,8 +205,12 @@ class CoreTransactionsController extends Controller {
     $request = $this->container->get('request_stack')->getCurrentRequest();
     $routeName = $request->get('_route');
     
-      // For specific student
-    $this->setRecordType('Core.HEd.Student');
+    // For specific student
+    if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPayment') {
+      $this->setRecordType('Core.Constituent');
+    } else {
+      $this->setRecordType('Core.HEd.Student');
+    }
       
       if ($this->record->getSelectedRecordID()) {
         

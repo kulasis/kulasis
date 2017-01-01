@@ -13,7 +13,7 @@
 {% endif %}
 
 <div class="data-table-header-div">
-Charges
+Transactions
 <span class="data-table-header-buttons">
 </span>
 </div>
@@ -36,6 +36,13 @@ Charges
 </tr>
 </thead>
 <tbody>
+{% if request.get('_route') == 'Core_Billing_ConstituentBilling_Transactions' %}
+  {% set trans_charge_route = 'Core_Billing_ConstituentBilling_TransactionDetail' %}
+  {% set trans_payment_route = 'Core_Billing_ConstituentBilling_PaymentDetail' %}
+{% else %}
+  {% set trans_charge_route = 'Core_Billing_StudentBilling_TransactionDetail' %}
+  {% set trans_payment_route = 'Core_Billing_StudentBilling_PaymentDetail' %}
+{% endif %}
   {% for transaction in transactions %}
   {% if lastterm != transaction.TERM_ABBREVIATION and loop.index > 1 %}
     <tr>
@@ -57,7 +64,11 @@ Charges
     {{ kula_field({ field: 'HEd.Section.SectionNumber', input: false, value: transaction.SECTION_NUMBER, prepend_html: '<td><a href="'~path('Core_HEd_Scheduling_Section_Fees')~'" data-record-type="Core.HEd.Section" data-record-id="'~transaction.SECTION_ID~'" class="normal-link-new-window">', append_html: '</a></td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Transaction.Amount', input: false, value: transaction.AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Transaction.AppliedBalance', input: false, value: transaction.APPLIED_BALANCE, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_TransactionDetail', { constituent_transaction_id: transaction.CONSTITUENT_TRANSACTION_ID }) }}">...</a></td>
+    {% if transaction.CODE_TYPE == 'P' %}
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path(trans_payment_route, { payment_id: transaction.PAYMENT_ID }) }}">...</a></td>
+    {% else %}
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path(trans_charge_route, { constituent_transaction_id: transaction.CONSTITUENT_TRANSACTION_ID }) }}">...</a></td>
+    {% endif %}
   </tr>
   {% set lastterm = transaction.TERM_ABBREVIATION %}
   {% endfor %}

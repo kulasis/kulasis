@@ -1,0 +1,11 @@
+Core_HEd_Course_Course_Fees:
+  path: /course/course/fees
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreCourseFees:index
+    _navigation: Core.HEd.Course.Course.Fees
+
+Core_HEd_Scheduling_Section_Fees:
+  path: /scheduling/sections/fees
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreCourseFees:sectionFees
+    _navigation: Core.HEd.Scheduling.Section.Fees

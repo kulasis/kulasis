@@ -152,7 +152,7 @@ Core.Billing.Transaction:
       description: "Refund Transaction ID"
       db_column_name: REFUND_TRANSACTION_ID
       db_column_type: serial
-      parent: HEd.Billing.Transaction.ID
+      parent: Core.Billing.Transaction.ID
       db_column_null: true
       column_name: "Refund Transaction ID"
       label_name: "Refund Transaction ID"

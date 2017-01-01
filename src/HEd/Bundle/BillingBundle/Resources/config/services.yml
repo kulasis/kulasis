@@ -1,8 +1,0 @@
-services:
-  kula.HEd.billing.constituent:
-    class: Kula\HEd\Bundle\BillingBundle\Service\ConstituentBillingService
-    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session"]
-
-  kula.HEd.billing.student:
-    class: Kula\HEd\Bundle\BillingBundle\Service\StudentBillingService
-    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session", "@kula.HEd.billing.constituent", "@kula.HEd.scheduling.schedule"]

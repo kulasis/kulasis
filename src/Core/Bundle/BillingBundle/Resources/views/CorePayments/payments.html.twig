@@ -34,6 +34,11 @@ Payments
 </tr>
 </thead>
 <tbody>
+  {% if request.get('_route') == 'Core_Billing_ConstituentBilling_Payments' %}
+    {% set detail_route = 'Core_Billing_ConstituentBilling_PaymentDetail' %}
+  {% else %}
+    {% set detail_route = 'Core_Billing_StudentBilling_PaymentDetail' %}
+  {% endif %}
   {% for payment in payments %}
   <tr>
     {{ kula_field({ delete: true, post_type: 'void', field: 'Core.Billing.Payment.ID', db_row_id: payment.CONSTITUENT_PAYMENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
@@ -46,7 +51,7 @@ Payments
     {{ kula_field({ field: 'Core.Billing.Payment.Amount', input: false, value: payment.AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Payment.Voided', input: false, value: payment.VOIDED, prepend_html: '<td align="center">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Payment.AppliedBalance', input: false, value: payment.APPLIED_BALANCE, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_PaymentDetail', { payment_id: payment.CONSTITUENT_PAYMENT_ID }) }}">...</a></td>
+    <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path(detail_route, { payment_id: payment.CONSTITUENT_PAYMENT_ID }) }}">...</a></td>
   </tr>
   {% endfor %}
 </tbody>

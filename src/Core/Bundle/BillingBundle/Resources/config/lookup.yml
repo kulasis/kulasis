@@ -21,3 +21,7 @@ Core.Billing.Payment.Method:
     - { code: CREDIT, description: "Credit Card" }
     - { code: DEBIT, description: "Debit Card" }
     - { code: ACH, description: "ACH" }
+
+Core.Billing.Fee.Discount:
+  description: "Billing Discounts"
+  allow_update: true

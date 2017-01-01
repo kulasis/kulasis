@@ -14,3 +14,19 @@ services:
   kula.Core.billing.payment.merchant.VirtualMerchant:
     class: Kula\Core\Bundle\BillingBundle\Service\Merchant\VirtualMerchantService
     arguments: ["%virtualmerchant_url%", "%virtualmerchant_merchant_id%", "%virtualmerchant_user_id%", "%virtualmerchant_pin%"]
+
+  kula.Core.billing.constituent:
+    class: Kula\Core\Bundle\BillingBundle\Service\ConstituentBillingService
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session"]
+
+  kula.Core.billing.student:
+    class: Kula\Core\Bundle\BillingBundle\Service\StudentBillingService
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session", "@kula.Core.billing.constituent", "@kula.HEd.scheduling.schedule"]
+
+  kula.HEd.billing.constituent:
+    class: Kula\HEd\Bundle\BillingBundle\Service\ConstituentBillingService
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session"]
+
+  kula.HEd.billing.student:
+    class: Kula\HEd\Bundle\BillingBundle\Service\StudentBillingService
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session", "@kula.HEd.billing.constituent", "@kula.HEd.scheduling.schedule"]

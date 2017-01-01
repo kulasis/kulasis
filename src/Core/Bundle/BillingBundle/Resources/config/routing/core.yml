@@ -72,4 +72,156 @@ Core_Billing_BillingSetup_Codes_Delete:
   path: /setup/codes/delete
   defaults: { _controller: KulaCoreBillingBundle:CoreCodes:delete }
   methods: [POST]
+
+Core_Billing_StudentBilling_Balances:
+  path: /student/balances
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreBilling:balances
+    _navigation: Core.Billing.StudentBilling.Balances
+
+Core_Billing_StudentBilling_AddCharge:
+  path: /student/charges/add
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTransactions:add_charge
+    _navigation: Core.Billing.StudentBilling
+
+Core_Billing_StudentBilling_History:
+  path: /student/history
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTransactions:history
+    _navigation: Core.Billing.StudentBilling.History
+
+Core_Billing_StudentBilling_AddPayment:
+  path: /student/payments/add
+  defaults: 
+    _controller: KulaCoreBillingBundle:CorePayments:addPayment
+    _navigation: Core.Billing.StudentBilling
+
+Core_Billing_StudentBilling_PaymentDetail:
+  path: /student/payments/{payment_id}/detail
+  defaults: { _controller: KulaCoreBillingBundle:CorePayments:payment_detail }
+
+Core_Billing_StudentBilling_Payments_AddTransaction:
+  path: /student/payments/{payment_id}/transactions/add
+  defaults: { _controller: KulaCoreBillingBundle:CoreTransactions:add_payment }
+
+Core_Billing_StudentBilling_Payments_AddAppliedTransaction:
+  path: /student/payments/{payment_id}/transactions/applied/add
+  defaults: { _controller: KulaCoreBillingBundle:CorePayments:addAppliedPayment }
+
+Core_Billing_StudentBilling_Payments:
+  path: /student/payments
+  defaults: 
+    _controller: KulaCoreBillingBundle:CorePayments:payments
+    _navigation: Core.Billing.StudentBilling.Payments
+
+
+
+
+
+Core_Billing_Reports_BillingLedger:
+  path: /reports/billing_ledger
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreBillingConstituentLedgerReport:index
+    _navigation: Core.Billing.Reports.BillingLedger
+  methods: [GET]
+
+Core_Billing_Reports_BillingLedger_Generate:
+  path: /reports/billing_ledger
+  defaults: { _controller: KulaCoreBillingBundle:CoreBillingConstituentLedgerReport:generate }
+  methods: [POST]
+
+Core_Billing_Reports_BillingReceipt:
+  path: /reports/billing_receipt
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreBillingReceiptReport:index
+    _navigation: Core.Billing.Reports.BillingReceipt
+  methods: [GET]
+
+Core_Billing_Reports_BillingReceipt_Generate:
+  path: /reports/billing_receipt
+  defaults: { _controller: KulaCoreBillingBundle:CoreBillingReceiptReport:generate }
+  methods: [POST]
+
+Core_Billing_Reports_BillingStatement:
+  path: /reports/billing_statement
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreBillingStatementReport:index
+    _navigation: Core.Billing.Reports.BillingStatement
+  methods: [GET]
+
+Core_Billing_Reports_BillingStatement_Generate:
+  path: /reports/billing_statement
+  defaults: { _controller: KulaCoreBillingBundle:CoreBillingStatementReport:generate }
+  methods: [POST]
+
+Core_Billing_StudentBilling_TransactionDetail:
+  path: /student/transactions/{constituent_transaction_id}/detail
+  defaults: { _controller: KulaCoreBillingBundle:CoreTransactions:transaction_detail }
+
+Core_Billing_StudentBilling_Transactions:
+  path: /student/transactions
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTransactions:transactions
+    _navigation: Core.Billing.StudentBilling.Transactions
+
+Core_Billing_Billing_Pending:
+    path: /billing/pending
+    defaults: 
+      _controller: KulaCoreBillingBundle:CoreHomeBilling:pending
+      _navigation: Core.Billing.Billing.Pending
+
+Core_Billing_Billing_AllPending:
+    path: /billing/pending/all
+    defaults: 
+      _controller: KulaCoreBillingBundle:CoreHomeBilling:all_pending
+      _navigation: Core.Billing.Billing.AllPending
+
+Core_Billing_Billing_AddCharge:
+  path: /billing/charges/add
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTransactions:add_charge
+    _navigation: Core.Billing.Billing
+
+Core_Billing_Billing_AddPayment:
+  path: /billing/payments/add
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTransactions:add_payment
+    _navigation: Core.Billing.Billing
+
+Core_Billing_Reports_StudentStatement:
+  path: /reports/student_statement
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreStudentStatementReport:index
+    _navigation: Core.Billing.Reports.StudentStatement
+  methods: [GET]
   
+Core_Billing_BillingSetup_TuitionRates:
+  path: /setup/tuition_rates
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTuitionRates:index
+    _navigation: Core.Billing.BillingSetup.TuitionRates
+
+Core_Billing_BillingSetup_TuitionRates_Transactions:
+  path: /setup/tuition_rates/{tuition_rate_id}/transactions
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTuitionRates:transactions
+    _navigation: Core.Billing.BillingSetup.TuitionRates
+
+Core_Billing_BillingSetup_TuitionRates_Students:
+  path: /setup/tuition_rates/{tuition_rate_id}/students
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTuitionRates:students
+    _navigation: Core.Billing.BillingSetup.TuitionRates
+
+Core_Billing_BillingSetup_TuitionRates_Refunds:
+  path: /setup/tuition_rates/{tuition_rate_id}/refunds
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTuitionRates:refunds
+    _navigation: Core.Billing.BillingSetup.TuitionRates
+
+Core_Billing_BillingSetup_TuitionRates_Transactions_Refunds:
+  path: /setup/tuition_rates/{tuition_rate_id}/transactions/{transaction_id}/refunds
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreTuitionRates:transactionRefunds
+    _navigation: Core.Billing.BillingSetup.TuitionRates

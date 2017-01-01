@@ -2,13 +2,18 @@
 
 {% block content %}
 <p>
-<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Billing_ConstituentBilling_PaymentDetail', { payment_id: payment_id }) }}">Back to Payment Detail</a>
+{% if request.get('_route') == 'Core_Billing_ConstituentBilling_PaymentDetail' %}
+  {% set parent_route = 'Core_Billing_ConstituentBilling_PaymentDetail' %}
+{% else %}
+  {% set parent_route = 'Core_Billing_StudentBilling_PaymentDetail' %}
+{% endif %}
+<a class="normal-link"  data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path(parent_route, { payment_id: payment_id }) }}">Back to Payment Detail</a>
 </p>
 
 <div class="group-box">
 <div class="group-box-header">Student</div>
 <div class="group-box-contents group">
-{{ kula_field({add: true, field: 'Core.Billing.Transaction.ConstituentID', field_name_override: 'Constituent', value: kula_core_record.getSelectedRecord.CONSTITUENT_ID, label: true }) }}
+{{ kula_field({ add: true, field: 'Core.Billing.Transaction.ConstituentID', field_name_override: 'Constituent', value: kula_core_record.getSelectedRecord.CONSTITUENT_ID, label: true }) }}
 </div>
 </div>
 <div class="group-box">

@@ -9,7 +9,7 @@ Pending Awards
 <table id="window_window_num_data_table_terms" class="data-table">
 <thead>
   <tr>
-    {{ kula_field_name({ edit: true, field: 'HEd.Billing.Transaction.Posted', field_name_override: 'P', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+    {{ kula_field_name({ edit: true, field: 'Core.Billing.Transaction.Posted', field_name_override: 'P', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   <th class="data-table-cell-row-header">#</th>
   {{ kula_field_name({ field: 'HEd.FAID.Student.AwardYear.Term.OrganizationTermID', field_name_override: 'Org / Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
     {{ kula_field_name({ field: 'Core.Constituent.LastName', field_name_override: 'Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
@@ -22,7 +22,7 @@ Pending Awards
 <tbody>
   {% for award in awards %}
   <tr>
-      {{ kula_field({ delete: true, post_type: 'post', field: 'HEd.Billing.Transaction.ID', db_row_id: award.AWARD_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+      {{ kula_field({ delete: true, post_type: 'post', field: 'Core.Billing.Transaction.ID', db_row_id: award.AWARD_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
     {{ kula_field({ input: false, field: 'HEd.FAID.Student.AwardYear.Term.OrganizationTermID', db_row_id: award.AWARD_ID, value: award.ORGANIZATION_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Constituent.LastName', input: false, value: award.PERMANENT_NUMBER~' '~award.LAST_NAME~', '~award.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}

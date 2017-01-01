@@ -8,7 +8,12 @@ class CorePaymentsController extends Controller {
   
   public function paymentsAction() {
     $this->authorize();
-    $this->setRecordType('Core.HEd.Student');
+
+    if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_Payments') {
+      $this->setRecordType('Core.Constituent');
+    } else {
+      $this->setRecordType('Core.HEd.Student');
+    }
     
     if ($this->request->request->get('void')) {
       $payment_service = $this->get('kula.Core.billing.payment');
@@ -57,7 +62,13 @@ class CorePaymentsController extends Controller {
 
   public function payment_detailAction($payment_id) {
     $this->authorize();
-    $this->setRecordType('Core.HEd.Student');
+
+    if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_PaymentDetail') {
+      $this->setRecordType('Core.Constituent');
+    } else {
+      $this->setRecordType('Core.HEd.Student');
+    }
+
     $this->processForm();
 
     $edit_post = $this->request->get('edit');
@@ -123,7 +134,12 @@ class CorePaymentsController extends Controller {
 
   public function addPaymentAction() {
     $this->authorize();
-    $this->setRecordType('Core.HEd.Student');
+
+    if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPayment') {
+      $this->setRecordType('Core.Constituent');
+    } else {
+      $this->setRecordType('Core.HEd.Student');
+    }
       
     if ($this->record->getSelectedRecordID()) {
       
@@ -131,7 +147,7 @@ class CorePaymentsController extends Controller {
       
         $payment_service = $this->get('kula.Core.billing.payment');
         $add = $this->request->request->get('add');
-        $payment_service->addPayment(
+        $payment_id = $payment_service->addPayment(
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.ConstituentID'], 
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PayeeConstituentID'], 
           'P',
@@ -141,8 +157,28 @@ class CorePaymentsController extends Controller {
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Amount'], 
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Note']
         );
+
+        // Transaction details set
+        if (isset($add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID']) AND 
+          $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'] != '' AND $payment_id != '') {
+
+          $constituent_billing_service = $this->get('kula.Core.billing.transaction');
+          $constituent_billing_service->addTransaction(
+            $this->record->getSelectedRecordID(), 
+            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.OrganizationTermID']['value'], 
+            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'], 
+            $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentDate'], 
+            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Description'], 
+            $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Amount'], 
+            $payment_id
+          );
+        }
       
-        return $this->forward('Core_Billing_ConstituentBilling_Payments', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()));
+        if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPayment') {
+          return $this->forward('Core_Billing_ConstituentBilling_Payments', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()));
+        } else {
+          return $this->forward('Core_Billing_StudentBilling_Payments', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
+        }
       }
     
     }
@@ -152,7 +188,12 @@ class CorePaymentsController extends Controller {
 
   public function addAppliedPaymentAction($payment_id) {
     $this->authorize();
-    $this->setRecordType('Core.HEd.Student');
+    
+    if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_Payments_AddAppliedTransaction') {
+      $this->setRecordType('Core.Constituent');
+    } else {
+      $this->setRecordType('Core.HEd.Student');
+    }
       
     if ($this->record->getSelectedRecordID()) {
       
@@ -167,7 +208,11 @@ class CorePaymentsController extends Controller {
           $add['Core.Billing.Payment.Applied']['new_num']['Core.Billing.Payment.Applied.Note']
         );
       
-        return $this->forward('Core_Billing_ConstituentBilling_PaymentDetail', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('payment_id' => $payment_id));
+        if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_Payments_AddAppliedTransaction') {
+          return $this->forward('Core_Billing_ConstituentBilling_PaymentDetail', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('payment_id' => $payment_id));
+        } else {
+          return $this->forward('Core_Billing_StudentBilling_PaymentDetail', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('payment_id' => $payment_id));
+        }
       }
     
     }
