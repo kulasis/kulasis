@@ -60,16 +60,10 @@ class ControllerListener implements EventSubscriberInterface {
   }
   
   private function processFocusForTeacher() {
-    
-    // If inital login
-    if (!$this->session->getFocus('Teacher.HEd.Section')) {
-      $this->focus->setTeacherOrganizationTermFocus(null, $this->getFromRequest('role_token'));
-      $this->focus->setSectionFocus(null, $this->getFromRequest('role_token'));
-      return;
-    }
-    
+
     if ($this->getFromRequest('focus_school') AND $this->getFromRequest('focus_term')) {
     if ($this->getFromRequest('focus_school') != $this->session->getFocus('organization_id') OR $this->getFromRequest('focus_term') != $this->session->getFocus('term_id')) {
+
       $this->focus->setOrganizationTermFocus($this->getFromRequest('focus_school'), $this->getFromRequest('focus_term'), $this->getFromRequest('role_token'));
       $this->focus->setTeacherOrganizationTermFocus(null, $this->getFromRequest('role_token'));
       $this->focus->setSectionFocus(null, $this->getFromRequest('role_token'));
@@ -87,6 +81,13 @@ class ControllerListener implements EventSubscriberInterface {
     if ($this->getFromRequest('focus_advisee') AND $this->getFromRequest('focus_advisee') != $this->session->getFocus('Teacher.HEd.Advisor.Student')) {
       error_log("changed advisee ".$this->getFromRequest('focus_advisee')."\r\n", 3, "/var/tmp/test-error.log");
       $this->focus->setAdvisorStudentFocus($this->getFromRequest('focus_advisee'), $this->getFromRequest('role_token'));
+    }
+
+    // If inital login
+    if (!$this->session->getFocus('Teacher.HEd.Section')) {
+      $this->focus->setTeacherOrganizationTermFocus(null, $this->getFromRequest('role_token'));
+      $this->focus->setSectionFocus(null, $this->getFromRequest('role_token'));
+      return;
     }
        
   }
