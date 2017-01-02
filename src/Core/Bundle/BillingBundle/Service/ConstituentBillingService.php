@@ -262,8 +262,8 @@ class ConstituentBillingService {
     
     if ($tuition_rate['TUITION_RATE_ID']) {
       // post tuition rate
-      return $this->posterFactory->newPoster()->edit('Core.Student.Status', $student_status_id, array(
-        'Core.Student.Status.TuitionRateID' => $tuition_rate['TUITION_RATE_ID']
+      return $this->posterFactory->newPoster()->edit('HEd.Student.Status', $student_status_id, array(
+        'HEd.Student.Status.TuitionRateID' => $tuition_rate['TUITION_RATE_ID']
       ))->process($options)->getResult();
     }
     
