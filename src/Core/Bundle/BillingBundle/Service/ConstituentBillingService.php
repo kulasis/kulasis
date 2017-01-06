@@ -286,7 +286,19 @@ class ConstituentBillingService {
       ->condition('award.AWARD_ID', $award_id)
       ->execute()->fetch();
     
-    $payment_poster = $this->posterFactory->newPoster()->add('Core.Billing.Transaction', 'new', array(
+    $payment_poster = $this->posterFactory->newPoster()->add('Core.Billing.Payment', 'new', array(
+      'Core.Billing.Payment.ConstituentID' => $award_info['STUDENT_ID'],
+      'Core.Billing.Payment.PayeeConstituentID' => $award_info['STUDENT_ID'],
+      'Core.Billing.Payment.PaymentType' => 'F',
+      'Core.Billing.Payment.PaymentDate' => $award_info['DISBURSEMENT_DATE'] != '' ? $award_info['DISBURSEMENT_DATE'] : date('Y-m-d'),
+      'Core.Billing.Payment.PaymentTimestamp' => $award_info['DISBURSEMENT_DATE'] != '' ? $award_info['DISBURSEMENT_DATE'] : date('Y-m-d'),
+      'Core.Billing.Payment.Amount' => $award_info['NET_AMOUNT'], 
+      'Core.Billing.Payment.OriginalAmount' => $award_info['NET_AMOUNT'],
+      'Core.Billing.Payment.AppliedBalance' => $award_info['NET_AMOUNT'] * -1,
+      'Core.Billing.Payment.Posted' => 0
+    ))->process($this->db_options)->getResult();
+
+    $payment_trans_poster = $this->posterFactory->newPoster()->add('Core.Billing.Transaction', 'new', array(
       'Core.Billing.Transaction.ConstituentID' => $award_info['STUDENT_ID'],
       'Core.Billing.Transaction.OrganizationTermID' => $award_info['ORGANIZATION_TERM_ID'],
       'Core.Billing.Transaction.CodeID' => $award_info['CODE_ID'],
@@ -298,6 +310,7 @@ class ConstituentBillingService {
       'Core.Billing.Transaction.Posted' => 1,
       'Core.Billing.Transaction.ShowOnStatement' => 1,
       'Core.Billing.Transaction.AwardID' => $award_id,
+      'Core.Billing.Transaction.PaymentID' => $payment_poster
     ))->process($this->db_options)->getResult();
     
     $award_poster = $this->posterFactory->newPoster()->edit('Core.FAID.Student.Award', $award_id, array(
@@ -335,8 +348,20 @@ class ConstituentBillingService {
           ->fields('stuawardyr', array('STUDENT_ID'))
           ->condition('award.AWARD_ID', $award_id_total['AWARD_ID'])
           ->execute()->fetch();
+
+        $payment_poster = $this->posterFactory->newPoster()->add('Core.Billing.Payment', 'new', array(
+          'Core.Billing.Payment.ConstituentID' => $award_info['STUDENT_ID'],
+          'Core.Billing.Payment.PayeeConstituentID' => $award_info['STUDENT_ID'],
+          'Core.Billing.Payment.PaymentType' => 'F',
+          'Core.Billing.Payment.PaymentDate' => date('Y-m-d'),
+          'Core.Billing.Payment.PaymentTimestamp' => date('Y-m-d'),
+          'Core.Billing.Payment.Amount' => $adjustment_amt, 
+          'Core.Billing.Payment.OriginalAmount' => $adjustment_amt,
+          'Core.Billing.Payment.AppliedBalance' => $adjustment_amt * -1,
+          'Core.Billing.Payment.Posted' => 0
+        ))->process($this->db_options)->getResult();
         
-        $payment_poster = $this->posterFactory->newPoster()->add('Core.Billing.Transaction', 'new', array(
+        $payment_trans_poster = $this->posterFactory->newPoster()->add('Core.Billing.Transaction', 'new', array(
           'Core.Billing.Transaction.ConstituentID' => $award_info['STUDENT_ID'],
           'Core.Billing.Transaction.OrganizationTermID' => $award_info['ORGANIZATION_TERM_ID'],
           'Core.Billing.Transaction.CodeID' => $award_info['CODE_ID'],
@@ -348,6 +373,7 @@ class ConstituentBillingService {
           'Core.Billing.Transaction.Posted' => 0,
           'Core.Billing.Transaction.ShowOnStatement' => 1,
           'Core.Billing.Transaction.AwardID' => $award_id_total['AWARD_ID'],
+          'Core.Billing.Transaction.PaymentID' => $payment_poster
         ))->process($this->db_options)->getResult();
       }
     }
