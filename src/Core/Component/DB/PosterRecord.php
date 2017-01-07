@@ -150,7 +150,12 @@ class PosterRecord {
 	
   	foreach($this->fields as $fieldName => $field) {
   		$this->originalFields[] = $fieldName;
-  		$old_fields[] = $this->schema->getField($fieldName)->getDBName();
+
+      if ($this->schema->getField($fieldName)) {
+  		  $old_fields[] = $this->schema->getField($fieldName)->getDBName();
+      } else {
+        throw new \Exception('Field does not exist: '.$fieldName);
+      }
   	}
   
     $this->originalRecord = $this->db->db_select($this->schema->getTable($this->table)->getDBName(), 'originalTable')
