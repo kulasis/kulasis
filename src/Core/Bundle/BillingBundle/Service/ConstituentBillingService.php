@@ -313,8 +313,8 @@ class ConstituentBillingService {
       'Core.Billing.Transaction.PaymentID' => $payment_poster
     ))->process($this->db_options)->getResult();
     
-    $award_poster = $this->posterFactory->newPoster()->edit('Core.FAID.Student.Award', $award_id, array(
-      'Core.FAID.Student.Award.AwardStatus' => 'AWAR'
+    $award_poster = $this->posterFactory->newPoster()->edit('HEd.FAID.Student.Award', $award_id, array(
+      'HEd.FAID.Student.Award.AwardStatus' => 'AWAR'
     ))->process($this->db_options)->getResult();
     
     $transaction->commit();
