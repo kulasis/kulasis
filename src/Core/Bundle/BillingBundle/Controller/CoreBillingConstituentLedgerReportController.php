@@ -79,6 +79,11 @@ class CoreBillingConstituentLedgerReportController extends ReportController {
         ->fields('org', array('ORGANIZATION_ABBREVIATION'))
         ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
         ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'));
+        if (isset($record_id) AND $record_id != '' AND $record_type == 'Core.Constituent') {
+          
+        } else {
+          $result = $result->isNotNull('status.STUDENT_STATUS_ID');
+        }
     }
     
     // Add on selected record

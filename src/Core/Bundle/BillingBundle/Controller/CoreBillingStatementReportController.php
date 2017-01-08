@@ -119,10 +119,12 @@ class CoreBillingStatementReportController extends ReportController {
       $terms_with_balances_result = $terms_with_balances_result->condition('transactions.CONSTITUENT_ID', $record_id);
     $terms_with_balances_result = $terms_with_balances_result->execute();
     while ($balance_row = $terms_with_balances_result->fetch()) {
-      $this->student_balances_for_orgterm[$balance_row['CONSTITUENT_ID']][] = $balance_row;
+      if ($balance_row['total_amount'] != 0) {
+      	$this->student_balances_for_orgterm[$balance_row['CONSTITUENT_ID']][] = $balance_row;
+      }
     }
     } 
-    
+
     // Get Data and Load
     $result = $this->db()->db_select('CONS_CONSTITUENT', 'stucon')
       ->fields('stucon', array('CONSTITUENT_ID', 'PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
@@ -153,6 +155,11 @@ class CoreBillingStatementReportController extends ReportController {
         ->fields('org', array('ORGANIZATION_ABBREVIATION'))
         ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
         ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'));
+        if (isset($record_id) AND $record_id != '' AND $record_type == 'Core.Constituent') {
+        	
+        } else {
+          $result = $result->isNotNull('status.STUDENT_STATUS_ID');
+        }
     }
     
     if ($this->show_only_with_balances == 'Y') {
@@ -187,8 +194,6 @@ class CoreBillingStatementReportController extends ReportController {
       ->orderBy('stucon.FIRST_NAME', 'ASC')
       ->orderBy('student.STUDENT_ID', 'ASC');
 
-    //var_dump($result->arguments());
-    //die();
     $result = $result->execute();
     
     while ($row = $result->fetch()) {
