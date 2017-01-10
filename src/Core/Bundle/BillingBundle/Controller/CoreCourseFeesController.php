@@ -58,7 +58,7 @@ class CoreCourseFeesController extends Controller {
       ->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermID())
       ->execute()->fetch();
     
-    return $this->render('KulaHEdBillingBundle:CoreCourseFees:fees_index.html.twig', array('fees' => $fees, 'refund_fees' => $refund_fees, 'organization_term_id' => $this->focus->getOrganizationTermID(), 'organization_term_id_display' => $org_term['TERM_ABBREVIATION'] . ' / ' . $org_term['ORGANIZATION_NAME']));
+    return $this->render('KulaCoreBillingBundle:CoreCourseFees:fees_index.html.twig', array('fees' => $fees, 'refund_fees' => $refund_fees, 'organization_term_id' => $this->focus->getOrganizationTermID(), 'organization_term_id_display' => $org_term['TERM_ABBREVIATION'] . ' / ' . $org_term['ORGANIZATION_NAME']));
     
   }
   
