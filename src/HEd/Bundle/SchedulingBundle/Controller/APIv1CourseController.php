@@ -160,10 +160,6 @@ class APIv1CourseController extends APIController {
       ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', 'stafforgterms.STAFF_ORGANIZATION_TERM_ID = sec.STAFF_ORGANIZATION_TERM_ID')
       ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterms.STAFF_ID')
       ->fields('staff', array('ABBREVIATED_NAME' => 'INSTRUCTOR_ABBREVIATED_NAME'))
-      ->leftJoin('STUD_SECTION_MEETINGS', 'mtg', 'mtg.SECTION_ID = sec.SECTION_ID')
-      ->fields('mtg', array('SECTION_MEETING_ID', 'START_DATE' => 'mtg_START_DATE', 'END_DATE' => 'mtg_END_DATE', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
-      ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = mtg.ROOM_ID')
-      ->fields('rooms', array('ROOM_NUMBER'))
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
       ->condition('term.TERM_ABBREVIATION', $term)
       ->condition($condition_or)
@@ -172,7 +168,45 @@ class APIv1CourseController extends APIController {
     
     if ($row['SECTION_NAME'] == '') $row['SECTION_NAME'] = $row['COURSE_TITLE'];
 
-        // Get fees
+    // Get Meetings
+    $meetings = $this->db()->db_select('STUD_SECTION_MEETINGS', 'mtg')
+      ->fields('mtg', array('SECTION_MEETING_ID', 'START_DATE' => 'mtg_START_DATE', 'END_DATE' => 'mtg_END_DATE', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
+      ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = mtg.ROOM_ID')
+      ->fields('rooms', array('ROOM_NUMBER'))
+      ->condition('mtg.SECTION_ID', $row['SECTION_ID'])
+      ->execute();
+    $j = 0;
+    while ($meeting = $meetings->fetch()) {
+
+      $row['meetings'][$j]['START_TIME'] = $meeting['START_TIME'];
+      $row['meetings'][$j]['END_TIME'] = $meeting['END_TIME'];
+      $row['meetings'][$j]['ROOM_NUMBER'] = $meeting['ROOM_NUMBER'];
+      
+      $row['meetings'][$j]['DAYS'] = array();
+      if ($meeting['MON']) $row['meetings'][$j]['DAYS'][] = 'Mon';
+      if ($meeting['TUE']) $row['meetings'][$j]['DAYS'][] = 'Tue';
+      if ($meeting['WED']) $row['meetings'][$j]['DAYS'][] = 'Wed';
+      if ($meeting['THU']) $row['meetings'][$j]['DAYS'][] = 'Thu';
+      if ($meeting['FRI']) $row['meetings'][$j]['DAYS'][] = 'Fri';
+      if ($meeting['SAT']) $row['meetings'][$j]['DAYS'][] = 'Sat';
+      if ($meeting['SUN']) $row['meetings'][$j]['DAYS'][] = 'Sun';
+      if (count($row['meetings'][$j]['DAYS'])) 
+        $meeting['meetings'][$j]['DAYS'] = implode(' ', $row['meetings'][$j]['DAYS']);
+      else 
+        $meeting['meetings'][$j]['DAYS'] = null;
+        
+      if ($meeting['mtg_START_DATE']) 
+        $row['meetings'][$j]['START_DATE'] = $meeting['mtg_START_DATE']; 
+      else 
+        $row['meetings'][$j]['START_DATE'] = $meeting['START_DATE'];
+      if ($meeting['mtg_END_DATE']) 
+        $row['meetings'][$j]['END_DATE'] = $meeting['mtg_END_DATE']; 
+      else 
+        $row['meetings'][$j]['END_DATE'] = $meeting['END_DATE'];
+      $j++;
+    }
+
+    // Get fees
     $f = 0;
     $row['fees_total'] = 0;
     $fees_result = $this->db()->db_select('BILL_SECTION_FEE', 'secfee')

@@ -116,6 +116,69 @@ class PaymentService {
 
   }
 
+  public function calculatePaymentsForCharge($charge_id) {
+
+    // Get charge
+    $charge = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+      ->fields('trans')
+      ->join('BILL_CODE', 'code', 'code.CODE_ID = trans.CODE_ID')
+      ->condition('code.CODE_TYPE', 'C')
+      ->condition('trans.CONSTITUENT_TRANSACTION_ID', $charge_id)
+      ->execute()->fetch();
+    $balance = $charge['APPLIED_BALANCE'];
+    echo $charge_id.' Starting Balance: '.$balance.'<br />';
+
+    // Find payment that matches charge
+    $payment = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
+      ->fields('payments')
+      ->join('BILL_CONSTITUENT_TRANSACTIONS', 'trans', 'trans.PAYMENT_ID = payments.CONSTITUENT_PAYMENT_ID')
+      ->condition('payments.CONSTITUENT_ID', $charge['CONSTITUENT_ID'])
+      ->condition('payments.APPLIED_BALANCE', $charge['APPLIED_BALANCE']*-1)
+      ->condition('trans.ORGANIZATION_TERM_ID', $charge['ORGANIZATION_TERM_ID'])
+      ->execute()->fetch();
+
+    if ($payment['APPLIED_BALANCE']*-1 == $balance) {
+
+      $this->addAppliedPayment($payment['CONSTITUENT_PAYMENT_ID'], 
+                               $charge['CONSTITUENT_TRANSACTION_ID'], 
+                               $payment['APPLIED_BALANCE'], null, 1);
+
+    } else {
+      // Find oldest payments and loop through, applying payments until charge has no balance
+      $payments_result = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
+        ->fields('payments')
+        ->condition('payments.CONSTITUENT_ID', $charge['CONSTITUENT_ID'])
+        ->condition('payments.APPLIED_BALANCE', 0, '<')
+        ->orderBy('PAYMENT_DATE', 'ASC', 'payments')
+        ->execute();
+      while ($payment_row = $payments_result->fetch()) {
+echo $payment_row['CONSTITUENT_PAYMENT_ID'].' Payment amount to apply: '.$payment_row['APPLIED_BALANCE'].' <br />';
+        $balance_to_apply = null;
+        if ($payment_row['APPLIED_BALANCE']*-1 <= $balance) {
+          $balance_to_apply = $payment_row['APPLIED_BALANCE']*-1;
+    echo $charge_id.' Applied Balance 2: '.$balance_to_apply.'<br />';
+        } else {
+          $balance_to_apply = $balance;
+    echo $charge_id.' Applied Balance 3: '.$balance_to_apply.'<br />';
+        }
+
+
+        if ($balance_to_apply > 0) {
+          $this->addAppliedPayment($payment_row['CONSTITUENT_PAYMENT_ID'], 
+            $charge_id, 
+            $balance_to_apply , null, 1);
+
+          $balance = $balance - $balance_to_apply ;
+        }
+        echo $charge_id.' Remaining Balance: '.$balance.' <br />';
+        if ($balance <= 0) {
+          break;
+        }
+      } // end while loop
+    } // end else for matching payments
+
+  }
+
   public function calculateBalanceForPayment($payment_id) {
 
     $applied_trans_total = 0;
@@ -142,11 +205,7 @@ class PaymentService {
       ->condition('paytrans.PAYMENT_ID', $payment_id)
       ->execute();
     while ($payment_trans_row = $payment_trans_result->fetch()) {
-      if ($applied_trans_total == $payment['AMOUNT']) {
-        $this->updateAppliedBalanceForTransaction($payment_trans_row['CONSTITUENT_TRANSACTION_ID'], 0);
-      } else {
-        $this->updateAppliedBalanceForTransaction($payment_trans_row['CONSTITUENT_TRANSACTION_ID'], $payment['AMOUNT']);
-      }
+        $this->updateAppliedBalanceForTransaction($payment_trans_row['CONSTITUENT_TRANSACTION_ID'], $applied_trans_total + $payment_trans_row['AMOUNT']);
     }
     
     return $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
