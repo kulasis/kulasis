@@ -51,7 +51,7 @@ class PendingService {
         ->fields('code', array('CODE_TYPE'))
         ->condition('trans.CONSTITUENT_ID', $class_list_row['STUDENT_ID'])
         ->condition('trans.STUDENT_CLASS_ID', $class_list_row['STUDENT_CLASS_ID'])
-        ->condition('trans.POSTED', 0)
+        ->condition('trans.APPLIED_BALANCE', 0, '!=')
        // echo $trans;
        // var_dump($trans->arguments());
         ->execute()->fetchAll();

@@ -42,6 +42,7 @@ class APIv1PaymentController extends APIController {
       ->condition('transactions.CONSTITUENT_ID', $currentUser)
       ->condition('transactions.POSTED', 1)
       ->condition('transactions.SHOW_ON_STATEMENT', 1)
+      ->condition('transactions.APPLIED_BALANCE', 0)
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
       ->orderBy('TRANSACTION_DATE', 'DESC', 'transactions')
       ->execute();
