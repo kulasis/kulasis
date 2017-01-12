@@ -98,11 +98,15 @@ class PaymentService {
       ))->process($this->db_options);
     }    
 
-    return $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
+    $result = $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
       'Core.Billing.Payment.Voided' => 1,
       'Core.Billing.Payment.Amount' => 0,
       'Core.Billing.Payment.AppliedBalance' => 0
       ))->process($this->db_options);
+
+    $this->calculateBalanceForPayment($payment_id);
+
+    return $result;
   }
 
   public function applyMerchantResponse($payment_id, $payment_number, $amount, $payment_timestamp, $merchant_response) {
@@ -126,7 +130,7 @@ class PaymentService {
       ->condition('trans.CONSTITUENT_TRANSACTION_ID', $charge_id)
       ->execute()->fetch();
     $balance = $charge['APPLIED_BALANCE'];
-    echo $charge_id.' Starting Balance: '.$balance.'<br />';
+    //echo $charge_id.' Starting Balance: '.$balance.'<br />';
 
     // Find payment that matches charge
     $payment = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
@@ -152,14 +156,14 @@ class PaymentService {
         ->orderBy('PAYMENT_DATE', 'ASC', 'payments')
         ->execute();
       while ($payment_row = $payments_result->fetch()) {
-echo $payment_row['CONSTITUENT_PAYMENT_ID'].' Payment amount to apply: '.$payment_row['APPLIED_BALANCE'].' <br />';
+//echo $payment_row['CONSTITUENT_PAYMENT_ID'].' Payment amount to apply: '.$payment_row['APPLIED_BALANCE'].' <br />';
         $balance_to_apply = null;
         if ($payment_row['APPLIED_BALANCE']*-1 <= $balance) {
           $balance_to_apply = $payment_row['APPLIED_BALANCE']*-1;
-    echo $charge_id.' Applied Balance 2: '.$balance_to_apply.'<br />';
+    //echo $charge_id.' Applied Balance 2: '.$balance_to_apply.'<br />';
         } else {
           $balance_to_apply = $balance;
-    echo $charge_id.' Applied Balance 3: '.$balance_to_apply.'<br />';
+    //echo $charge_id.' Applied Balance 3: '.$balance_to_apply.'<br />';
         }
 
 
@@ -170,7 +174,7 @@ echo $payment_row['CONSTITUENT_PAYMENT_ID'].' Payment amount to apply: '.$paymen
 
           $balance = $balance - $balance_to_apply ;
         }
-        echo $charge_id.' Remaining Balance: '.$balance.' <br />';
+        //echo $charge_id.' Remaining Balance: '.$balance.' <br />';
         if ($balance <= 0) {
           break;
         }

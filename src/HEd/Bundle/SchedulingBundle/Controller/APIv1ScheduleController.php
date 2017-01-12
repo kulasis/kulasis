@@ -190,6 +190,7 @@ class APIv1ScheduleController extends APIController {
       ->condition('trans.CONSTITUENT_ID', $student_id)
       ->condition('trans.STUDENT_CLASS_ID', $class_id)
       ->condition('trans.POSTED', 1)
+      ->condition('trans.APPLIED_BALANCE', 0)
       ->condition('trans.VOIDED', 0)
       ->execute()->fetch();
 
@@ -233,6 +234,7 @@ class APIv1ScheduleController extends APIController {
         ->condition('trans.CONSTITUENT_ID', $student_id)
         ->condition('trans.STUDENT_CLASS_ID', $class_list_row['STUDENT_CLASS_ID'])
         ->condition('trans.POSTED', 1)
+        ->condition('trans.APPLIED_BALANCE', 0)
         ->condition('trans.VOIDED', 0)
         ->execute()->fetch();
 

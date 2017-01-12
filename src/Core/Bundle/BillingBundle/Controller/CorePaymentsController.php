@@ -33,7 +33,7 @@ class CorePaymentsController extends Controller {
       
       foreach($void as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
-          $payment_service->removeTransaction($row_id, $reason, $transaction_date);
+          $payment_service->voidPayment($row_id);
         }
       }
     }
