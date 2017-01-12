@@ -51,7 +51,7 @@ class PaymentService {
 
   }
 
-  public function addAppliedPayment($payment_id, $transaction_id, $amount, $note, $locked = 0) {
+  public function addAppliedPayment($payment_id, $transaction_id, $amount, $note = null, $locked = 0) {
 
     if ($amount < 0) {
       $amount = $amount * -1;
@@ -100,8 +100,7 @@ class PaymentService {
 
     $result = $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
       'Core.Billing.Payment.Voided' => 1,
-      'Core.Billing.Payment.Amount' => 0,
-      'Core.Billing.Payment.AppliedBalance' => 0
+      'Core.Billing.Payment.Amount' => 0
       ))->process($this->db_options);
 
     $this->calculateBalanceForPayment($payment_id);

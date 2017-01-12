@@ -17,7 +17,7 @@ services:
 
   kula.Core.billing.constituent:
     class: Kula\Core\Bundle\BillingBundle\Service\ConstituentBillingService
-    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session"]
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session", "@kula.Core.billing.payment"]
 
   kula.Core.billing.student:
     class: Kula\Core\Bundle\BillingBundle\Service\StudentBillingService
@@ -25,7 +25,7 @@ services:
 
   kula.HEd.billing.constituent:
     class: Kula\Core\Bundle\BillingBundle\Service\ConstituentBillingService
-    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session"]
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record", "@kula.core.session", "@kula.Core.billing.payment"]
 
   kula.HEd.billing.student:
     class: Kula\Core\Bundle\BillingBundle\Service\StudentBillingService

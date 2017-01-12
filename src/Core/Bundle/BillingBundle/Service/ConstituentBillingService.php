@@ -15,16 +15,20 @@ class ConstituentBillingService {
   public function __construct(\Kula\Core\Component\DB\DB $db, 
                               \Kula\Core\Component\DB\PosterFactory $poster_factory,
                               $record = null, 
-                              $session = null) {
+                              $session = null,
+                              $payment_service = null) {
     $this->database = $db;
     $this->record = $record;
     $this->posterFactory = $poster_factory;
     $this->session = $session;
     $this->db_options = array();
+    $this->payment_service = $payment_service;
   }
 
   public function setDBOptions($options = array()) {
     $this->db_options = $options;
+
+    $this->payment_service->setDBOptions($options);
   }
   
   public function addTransaction($constituent_id, $organization_term_id, $transaction_code_id, $transaction_date, $transaction_description, $amount) {
@@ -129,11 +133,16 @@ class ConstituentBillingService {
   
   public function removeCourseFees($student_class_id) {
     $course_fees_transactions = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'constrans')
-      ->fields('constrans', array('CONSTITUENT_TRANSACTION_ID'))
+      ->fields('constrans', array('CONSTITUENT_TRANSACTION_ID', 'PAYMENT_ID'))
       ->condition('constrans.REFUND_TRANSACTION_ID', null)
       ->condition('constrans.STUDENT_CLASS_ID', $student_class_id)
       ->execute();
     while ($course_fees_transaction = $course_fees_transactions->fetch()) {
+
+      if ($course_fees_transaction['PAYMENT_ID'] != '') {
+        $this->payment_service->voidPayment($course_fees_transaction['PAYMENT_ID']);
+      }
+
       $this->removeTransaction($course_fees_transaction['CONSTITUENT_TRANSACTION_ID'], 'Schedule change (auto)', date('Y-m-d'));
     }
   }
