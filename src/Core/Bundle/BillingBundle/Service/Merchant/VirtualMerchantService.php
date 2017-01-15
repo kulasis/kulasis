@@ -55,7 +55,33 @@ class VirtualMerchantService {
     // Send to payment processor
     $virtual_merchant = new Client();
     $result = $virtual_merchant->post($this->url, array('form_params' => $merchant_params))->getBody();
-
+/*
+    $result = "ssl_card_number=41**********1111
+ssl_exp_date=0120
+ssl_amount=".$amount."
+ssl_salestax=0.00
+ssl_invoice_number=1
+ssl_description=
+ssl_company=
+ssl_first_name=John
+ssl_last_name=Doe
+ssl_avs_address=8245 SW Barnes Road
+ssl_address2=
+ssl_city=Portland
+ssl_state=OR
+ssl_avs_zip=97225
+ssl_country=
+ssl_phone=
+ssl_email=mjacobsen@ocac.edu
+ssl_result=0
+ssl_result_message=APPROVAL
+ssl_txn_id=311216B38-4C3E2981-76F8-40ED-B9CA-80CC2B87DAE9
+ssl_approval_code=04680D
+ssl_cvv2_response=M
+ssl_avs_response=Y
+ssl_account_balance=0.00
+ssl_txn_time=12/31/2016 09:40:14 AM";
+*/
     $this->processASCIIResult($result);
 
     return $this->getResult();

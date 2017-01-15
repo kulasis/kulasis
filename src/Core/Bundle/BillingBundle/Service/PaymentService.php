@@ -86,6 +86,12 @@ class PaymentService {
 
   }
 
+  public function postPayment($payment_id) {
+    return $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
+      'Core.Billing.Payment.Posted' => 1
+    ))->process($this->db_options)->getResult();
+  }
+
   public function voidPayment($payment_id) {
     // void applied payments
     $applied_payments = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')

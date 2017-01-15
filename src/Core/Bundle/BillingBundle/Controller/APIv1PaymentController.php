@@ -164,10 +164,16 @@ class APIv1PaymentController extends APIController {
           foreach($pending_charges as $charge) {
             // post pending charges
             $transaction_service->postTransaction($charge['CONSTITUENT_TRANSACTION_ID']);
-            $payment_service->calculateBalanceForCharge($charge['CONSTITUENT_TRANSACTION_ID']);
+            if ($charge['CODE_TYPE'] == 'C') {
+              $payment_service->calculateBalanceForCharge($charge['CONSTITUENT_TRANSACTION_ID']);
+            }
+            if ($charge['PAYMENT_ID'] != '') {
+              $payment_service->postPayment($charge['PAYMENT_ID']);
+            }
           }
 
           // post payment
+          $payment_service->postPayment($payment_id);
           $transaction_service->postTransaction($transaction_payment_id);
 
           // send email
