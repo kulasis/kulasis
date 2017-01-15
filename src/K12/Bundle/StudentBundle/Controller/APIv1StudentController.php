@@ -70,8 +70,8 @@ class APIv1StudentController extends APIController {
     $transaction = $this->db()->db_transaction('update_child');
 
     if ($student_status_id) {
-      $this->newPoster()->edit('Core.Constituent', $student_id, $constituent_data))->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
-      $this->newPoster()->edit('K12.Student.Status', $student_status_id, $status_data))->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+      $this->newPoster()->edit('Core.Constituent', $student_id, $constituent_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+      $this->newPoster()->edit('K12.Student.Status', $student_status_id, $status_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
     }
     
     if ($constituent_id) {
