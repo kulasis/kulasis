@@ -52,4 +52,35 @@ class APIv1StudentController extends APIController {
 
   }
 
+  public function updateChild($student_id, $org_term) {
+
+    // Check for authorized access to constituent
+    $this->authorizeConstituent($student_id);
+
+    $constituent_data = $this->form('edit', 'Core.Constituent', 0);
+    $status_data = $this->form('edit', 'K12.Student.Status', 0);
+
+    // Get student status
+    $student_status_id = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+      ->fields('stustatus', array('STUDENT_STATUS_ID'))
+      ->condition('stustatus.ORGANIZATION_TERM_ID', $org_term)
+      ->condition('stustatus.STUDENT_ID', $student_id)
+      ->execute()->fetch()['STUDENT_STATUS_ID'];
+
+    $transaction = $this->db()->db_transaction('update_child');
+
+    if ($student_status_id) {
+      $this->newPoster()->edit('Core.Constituent', $student_id, $constituent_data))->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+      $this->newPoster()->edit('K12.Student.Status', $student_status_id, $status_data))->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+    }
+    
+    if ($constituent_id) {
+      $transaction->commit();
+      return $this->JSONResponse($constituent_id);
+    } else {
+      $transaction->rollback();
+    }
+
+  }
+
 }
