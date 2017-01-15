@@ -58,7 +58,8 @@ class CoreTransactionsController extends Controller {
         ->fields('crs', array('COURSE_TITLE'))
         ->condition('transactions.CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->condition('transactions.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
-        ->orderBy('TRANSACTION_DATE', 'DESC', 'transactions')
+        ->orderBy('transactions.TRANSACTION_DATE', 'DESC')
+        ->orderBy('transactions.CREATED_TIMESTAMP', 'DESC')
         ->execute()->fetchAll();
       
     }
@@ -113,7 +114,8 @@ class CoreTransactionsController extends Controller {
         ->fields('term', array('TERM_ABBREVIATION'))
         ->condition('transactions.CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->orderBy('term.START_DATE', 'DESC')
-        ->orderBy('transactions.TRANSACTION_DATE', 'DESC')
+        ->orderBy('TRANSACTION_DATE', 'DESC')
+        ->orderBy('transactions.CREATED_TIMESTAMP', 'DESC')
         ->execute()->fetchAll();
       
     }
