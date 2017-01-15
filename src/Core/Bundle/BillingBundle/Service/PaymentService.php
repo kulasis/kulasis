@@ -27,7 +27,7 @@ class PaymentService {
     $this->db_options = $options;
   }
 
-  public function addPayment($constituent_id, $payee_constituent_id, $payment_type, $payment_method, $payment_date, $payment_number, $amount, $note = null) {
+  public function addPayment($constituent_id, $payee_constituent_id, $payment_type, $payment_method, $payment_date, $payment_number, $amount, $note = null, $discount_proof = null) {
 
     if ($amount < 0) {
       $amount = $amount * -1;
@@ -46,6 +46,7 @@ class PaymentService {
       'Core.Billing.Payment.OriginalAmount' => $amount,
       'Core.Billing.Payment.AppliedBalance' => $amount * -1,
       'Core.Billing.Payment.Note' => $note,
+      'Core.Billing.Payment.DiscountProof' => $discount_proof,
       'Core.Billing.Payment.Posted' => 0
     ))->process($this->db_options)->getResult();
 

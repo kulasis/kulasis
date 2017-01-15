@@ -166,6 +166,16 @@ Core.Billing.Payment:
       field_type: textarea
       column_name: "Note"
       label_name: "Note"
+    DiscountProof:
+      description: "Discount Proof"
+      db_column_name: DISCOUNT_PROOF
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Discount Proof"
+      label_name: "Discount Proof"
 
 Core.Billing.Payment.Applied:
   description: "Applied Payments"

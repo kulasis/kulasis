@@ -113,6 +113,7 @@ class APIv1ScheduleController extends APIController {
 
       // Add discount
       $discount_id = $this->request->request->get('discount_id');
+      $discount_proof = $this->request->request->get('discount_proof');
       if ($discount_id != '') {
         $discount_or = $this->db()->db_or();
         $discount_or = $discount_or->condition('disc.END_DATE', date('Y-m-d'), '>=');
@@ -132,7 +133,7 @@ class APIv1ScheduleController extends APIController {
           // Add Discount payment
           $payment_service = $this->get('kula.Core.billing.payment');
           $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
-          $payment_id = $payment_service->addPayment($student_id, $student_id, 'D', null, date('Y-m-d'), null, $discount_info['AMOUNT']);
+          $payment_id = $payment_service->addPayment($student_id, $student_id, 'D', null, date('Y-m-d'), null, $discount_info['AMOUNT'], null, $discount_proof);
 
           // Add discount transaction
           $transaction_service = $this->get('kula.Core.billing.transaction');
@@ -150,8 +151,9 @@ class APIv1ScheduleController extends APIController {
           if ($charge_id['CONSTITUENT_TRANSACTION_ID']) {
             // Calculate applied payment
             $payment_service->addAppliedPayment($payment_id, $charge_id['CONSTITUENT_TRANSACTION_ID'], $discount_info['AMOUNT']);
-            $payment_service->calculateBalanceForPayment($payment_id);
+
             $payment_service->calculateBalanceForCharge($charge_id['CONSTITUENT_TRANSACTION_ID']);
+                        $payment_service->calculateBalanceForPayment($payment_id);
           }
         } else {
          throw new NotFoundHttpException('Invalid discount.');
