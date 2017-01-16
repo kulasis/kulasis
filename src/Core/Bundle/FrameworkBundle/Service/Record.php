@@ -71,6 +71,7 @@ class Record {
         } else {
       
           if ((!isset($selected_record_type) || $selected_record_type == $this->record_type)) {
+
             // if looking for next record ID
             if ($this->request->request->get('scrub') == 'next' || $this->request->query->get('scrub') == 'next') {
               $this->selected_record_id = $this->_getNextRecordID();
@@ -83,10 +84,13 @@ class Record {
           } elseif ($selected_record_type != $this->record_type) {
             if (method_exists($this->delegate, 'getFromDifferentType')) {
               $this->selected_record_id = $this->delegate->getFromDifferentType($selected_record_type, $this->selected_record_id);
+            } elseif ($eager_search_data) {
+              $this->selected_record_id = $this->_search($eager_search_data);
             } else {
               $this->selected_record_id = null;
             }
-         
+          } elseif ($eager_search_data) {
+              $this->selected_record_id = $this->_search($eager_search_data);
           } else {
             $this->selected_record_id = null;
           }
