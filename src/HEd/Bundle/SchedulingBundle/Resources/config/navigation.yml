@@ -242,3 +242,17 @@ Student.HEd.Registration:
   description: "Registration"
   display_name: "Registration"
   route: Student_HEd_Registration
+
+Core.HEd.Course.Course.Fees:
+  description: "Fees"
+  display_name: "Fees"
+  type: tab
+  parent: Core.HEd.Course.Course
+  route: Core_HEd_Course_Course_Fees
+
+Core.HEd.Scheduling.Section.Fees:
+  description: "Fees"
+  display_name: "Fees"
+  type: tab
+  parent: Core.HEd.Scheduling.Section
+  route: Core_HEd_Scheduling_Section_Fees

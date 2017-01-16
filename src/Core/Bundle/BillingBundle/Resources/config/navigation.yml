@@ -151,17 +151,3 @@ Core.Billing.Reports:
       description: "Billing Ledger"
       display_name: "Billing Ledger"
       route: Core_Billing_Reports_BillingLedger
-
-Core.HEd.Course.Course.Fees:
-  description: "Fees"
-  display_name: "Fees"
-  type: tab
-  parent: Core.HEd.Course.Course
-  route: Core_HEd_Course_Course_Fees
-
-Core.HEd.Scheduling.Section.Fees:
-  description: "Fees"
-  display_name: "Fees"
-  type: tab
-  parent: Core.HEd.Scheduling.Section
-  route: Core_HEd_Scheduling_Section_Fees
