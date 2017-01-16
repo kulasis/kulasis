@@ -70,13 +70,15 @@ class Record {
           $this->selected_record_id = $this->_search($post_data);
         } else {
       
-          if (!isset($selected_record_type) || $selected_record_type == $this->record_type) {
+          if ((!isset($selected_record_type) || $selected_record_type == $this->record_type)) {
             // if looking for next record ID
             if ($this->request->request->get('scrub') == 'next' || $this->request->query->get('scrub') == 'next') {
               $this->selected_record_id = $this->_getNextRecordID();
             // if looking for previous record ID
             } elseif ($this->request->request->get('scrub') == 'previous' || $this->request->query->get('scrub') == 'previous') {
               $this->selected_record_id = $this->_getPreviousRecordID();
+            } elseif ($eager_search_data) {
+              $this->selected_record_id = $this->_search($eager_search_data);
             }
           } elseif ($selected_record_type != $this->record_type) {
             if (method_exists($this->delegate, 'getFromDifferentType')) {
@@ -84,9 +86,7 @@ class Record {
             } else {
               $this->selected_record_id = null;
             }
-        
-          } elseif ($eager_search_data) {
-            $this->selected_record_id = $this->_search($eager_search_data);
+         
           } else {
             $this->selected_record_id = null;
           }
@@ -218,6 +218,7 @@ class Record {
   }
   
   private function _search($post_data) {
+
     // get base table
     $base_table = $this->schema->getTable($this->delegate->getBaseTable())->getDBName();
     $base_field = $this->delegate->getBaseKeyFieldName();
@@ -239,11 +240,11 @@ class Record {
         // check for permission
         if ($this->permission->getPermissionForSchemaObject($base_table, $key, Permission::READ)) {
           if (is_array($value)) {  
-            $select_obj = $select_obj->condition($this->schema->getField($key)->getDBName(), $value, 'IN', $base_table);  
+            $select_obj = $select_obj->condition($base_table.'.'.$this->schema->getField($key)->getDBName(), $value, 'IN');  
           } elseif (is_int($value)) { 
-            $select_obj = $select_obj->condition($this->schema->getField($key)->getDBName(), $value, '=', $base_table);  
+            $select_obj = $select_obj->condition($base_table.'.'.$this->schema->getField($key)->getDBName(), $value, '=');  
           } else {
-            $select_obj = $select_obj->condition($this->schema->getField($key)->getDBName(), $value.'%', 'LIKE', $base_table);  
+            $select_obj = $select_obj->condition($base_table.'.'.$this->schema->getField($key)->getDBName(), $value.'%', 'LIKE');  
           }
         } else {
           $this->flash->add('error', 'Searching in ' . $base_table . '.' . $key . ' with no permission.');
@@ -288,7 +289,6 @@ class Record {
     
     
     $select_obj = $select_obj->range(0, 1);
-
     $result = $select_obj->execute()->fetch();
     
     if (isset($result[$this->schema->getField($base_field)->getDBName()])) {

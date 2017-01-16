@@ -52,7 +52,7 @@ class SchoolTermRecord extends Record implements RecordDelegateInterface {
   
   public function modifySearchDBOBject($db_obj) {
     $db_obj =  $db_obj->join('CORE_ORGANIZATION', 'CORE_ORGANIZATION', 'CORE_ORGANIZATION_TERMS.ORGANIZATION_ID = CORE_ORGANIZATION.ORGANIZATION_ID');
-    $db_obj = $db_obj->condition('ORGANIZATION_TYPE', 'SCHL');
+    $db_obj = $db_obj->condition('ORGANIZATION_TYPE', 'S');
     if ($this->focus->getTermID())
       $db_obj = $db_obj->condition('CORE_ORGANIZATION_TERMS.TERM_ID', $this->focus->getTermID());
     $db_obj =  $db_obj->orderBy('ORGANIZATION_NAME', 'ASC', 'CORE_ORGANIZATION');

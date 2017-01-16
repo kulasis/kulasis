@@ -10,9 +10,9 @@ class CoreTuitionRatesController extends Controller {
     $this->authorize();
     $this->processForm();
     $this->setRecordType('Core.Organization.School.Term', null, 
-    array('CORE_ORGANIZATION_TERMS' =>
-      array('ORGANIZATION_ID' => $this->session->get('organization_ids'),
-            'TERM_ID' => $this->session->get('term_id')
+    array('Core.Organization.Term' =>
+      array('Core.Organization.Term.OrganizationID' => $this->focus->getSchoolIDs(),
+            'Core.Organization.Term.TermID' => $this->focus->getTermID()
            )
          )
     );
@@ -36,9 +36,9 @@ class CoreTuitionRatesController extends Controller {
     $this->authorize();
     $this->processForm();
     $this->setRecordType('Core.Organization.School.Term', null, 
-    array('CORE_ORGANIZATION_TERMS' =>
-      array('ORGANIZATION_ID' => $this->session->get('organization_ids'),
-            'TERM_ID' => $this->session->get('term_id')
+    array('Core.Organization.Term' =>
+      array('Core.Organization.Term.OrganizationID' => $this->focus->getSchoolIDs(),
+            'Core.Organization.Term.TermID' => $this->focus->getTermID()
            )
          )
     );
@@ -60,9 +60,9 @@ class CoreTuitionRatesController extends Controller {
     $this->authorize();
     $this->processForm();
     $this->setRecordType('Core.Organization.School.Term', null, 
-    array('CORE_ORGANIZATION_TERMS' =>
-      array('ORGANIZATION_ID' => $this->session->get('organization_ids'),
-            'TERM_ID' => $this->session->get('term_id')
+    array('Core.Organization.Term' =>
+      array('Core.Organization.Term.OrganizationID' => $this->focus->getSchoolIDs(),
+            'Core.Organization.Term.TermID' => $this->focus->getTermID()
            )
          )
     );
@@ -93,9 +93,9 @@ class CoreTuitionRatesController extends Controller {
     $this->authorize();
     $this->processForm();
     $this->setRecordType('Core.Organization.School.Term', null, 
-    array('CORE_ORGANIZATION_TERMS' =>
-      array('ORGANIZATION_ID' => $this->session->get('organization_ids'),
-            'TERM_ID' => $this->session->get('term_id')
+    array('Core.Organization.Term' =>
+      array('Core.Organization.Term.OrganizationID' => $this->focus->getSchoolIDs(),
+            'Core.Organization.Term.TermID' => $this->focus->getTermID()
            )
          )
     );
@@ -117,9 +117,9 @@ class CoreTuitionRatesController extends Controller {
     $this->authorize();
     $this->processForm();
     $this->setRecordType('Core.Organization.School.Term', null, 
-    array('CORE_ORGANIZATION_TERMS' =>
-      array('ORGANIZATION_ID' => $this->session->get('organization_ids'),
-            'TERM_ID' => $this->session->get('term_id')
+    array('Core.Organization.Term' =>
+      array('Core.Organization.Term.OrganizationID' => $this->focus->getSchoolIDs(),
+            'Core.Organization.Term.TermID' => $this->focus->getTermID()
            )
          )
     );
