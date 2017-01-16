@@ -1,0 +1,36 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Sections
+<span class="data-table-header-buttons">
+  {{ kula_table_add('window_window_num_data_table_sections', 'STUD_SECTION_SECTIONS') }}
+</span>
+</div>
+<table id="window_window_num_data_table_sections" class="data-table">
+<thead>
+  {{ kula_field_name({ delete: true, field: 'HEd.Section.Section.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'HEd.Section.Section.SectionID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Section.Section.Optional', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+  {{ kula_display_html({ add: true, field: 'HEd.Section.Section.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
+  {{ kula_field({ add: true, field: 'HEd.Section.Section.SectionID', value: kula_core_record.getSelectedRecord.SECTION_ID, hidden: true }) }}
+  {{ kula_field({ add: true, delete: true, field: 'HEd.Section.Section.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Section.Section.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
+  {{ kula_field({ add: true, field: 'HEd.Section.Section.RelatedSectionID', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Section.Section.Optional', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_display_html({ add: true, field: 'HEd.Section.Section.ID', prepend_html: '</tr>' }) }}
+  {% for section in sections %}
+  <tr>
+    {{ kula_field({ delete: true, field: 'HEd.Section.Section.ID', db_row_id: section.SECTION_SECTION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ field: 'HEd.Section.Section.RelatedSectionID', db_row_id: section.SECTION_SECTION_ID, value: section.RELATED_SECTION_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Section.Section.Optional', db_row_id: section.SECTION_SECTION_ID, value: section.OPTIONAL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

@@ -36,6 +36,19 @@ class CoreSectionController extends Controller {
     
     return $this->render('KulaHEdSchedulingBundle:CoreSection:courses.html.twig', array('courses' => $courses));
   }
+
+  public function sectionsAction() {
+    $this->authorize();
+    $this->processForm();
+    $this->setRecordType('Core.HEd.Section');
+    
+    $sections = $this->db()->db_select('STUD_SECTION_SECTIONS', 'sections')
+      ->fields('sections', array('SECTION_SECTION_ID', 'RELATED_SECTION_ID', 'OPTIONAL'))
+      ->condition('sections.SECTION_ID', $this->record->getSelectedRecordID())
+      ->execute()->fetchAll();
+    
+    return $this->render('KulaHEdSchedulingBundle:CoreSection:sections.html.twig', array('sections' => $sections));
+  }
   
   public function staffAction() {
     $this->authorize();
@@ -399,6 +412,12 @@ class CoreSectionController extends Controller {
     
     return $this->render('KulaHEdSchedulingBundle:CoreSection:contact_info.html.twig', array('students' => $students, 'email_addresses' => $email_addresses));
     
+  }
+
+  public function chooserAction() {
+    $this->authorize();
+    $data = $this->chooser('HEd.Section')->createChooserMenu($this->request->query->get('q'));
+    return $this->JSONResponse($data);
   }
   
 }

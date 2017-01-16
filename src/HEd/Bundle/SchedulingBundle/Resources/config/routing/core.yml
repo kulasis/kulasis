@@ -162,6 +162,12 @@ Core_HEd_Scheduling_Section_Courses:
     _controller: KulaHEdSchedulingBundle:CoreSection:courses
     _navigation: Core.HEd.Scheduling.Section.Course
 
+Core_HEd_Scheduling_Section_Sections:
+  path: /scheduling/sections/sections
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreSection:sections
+    _navigation: Core.HEd.Scheduling.Section.Section
+
 Core_HEd_Scheduling_Section_Staff:
   path: /scheduling/section/staff
   defaults: 
@@ -177,6 +183,10 @@ Core_HEd_Scheduling_Section_ContactInfo:
 Core_HEd_Course_Chooser:
   path: /course/chooser
   defaults: { _controller: KulaHEdSchedulingBundle:CoreCourses:chooser }
+
+Core_HEd_Section_Chooser:
+  path: /sections/chooser
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreSection:chooser }
 
 Core_HEd_Course_Course:
   path: /course/course

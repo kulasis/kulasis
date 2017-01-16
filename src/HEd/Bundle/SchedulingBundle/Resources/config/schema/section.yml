@@ -216,6 +216,48 @@ HEd.Section.Course:
       column_name: "Course ID"
       label_name: "Course ID"
 
+HEd.Section.Section:
+  description: "Section Sections"
+  db_table_name: STUD_SECTION_SECTIONS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: SECTION_SECTION_ID
+      db_column_type: primary_serial
+      column_name: "Section Section ID"
+      label_name: "Section Section ID"
+    SectionID:
+      description: "Section ID"
+      parent: HEd.Section.ID
+      db_column_name: SECTION_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Section ID"
+      label_name: "Section ID"
+    RelatedSectionID:
+      description: "Additional Section ID"
+      parent: HEd.Section.ID
+      db_column_name: RELATED_SECTION_ID
+      db_column_type: serial
+      db_column_null: false
+      field_type: chooser
+      chooser: HEd.Section
+      column_name: "Section ID"
+      label_name: "Section ID"
+    Optional:
+      description: "Optional Enroll"
+      db_column_name: OPTIONAL
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Optional"
+      label_name: "Optional"
+  unique_keys:
+    SectionRelatedSectionID: [ "HEd.Section.Section.SectionID", "HEd.Section.Section.RelatedSectionID" ]
+
 HEd.Section.Meeting:
   description: "Section Meetings"
   db_table_name: STUD_SECTION_MEETINGS

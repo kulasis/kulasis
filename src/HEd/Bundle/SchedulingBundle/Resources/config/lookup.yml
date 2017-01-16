@@ -56,7 +56,7 @@ HEd.Schedule.RegistrationType:
     - { code: MAI, description: "Mail" }
     - { code: PAP, description: "Paper" }
     - { code: FD, description: "Front Desk" }
-    
+
 HEd.Room.Buildings:
   description: "Buildings"
   allow_update: true
@@ -79,3 +79,12 @@ HEd.Room.Buildings:
     - { code: PH, description: "Photography" }
     - { code: DP, description: "Draw/Paint" }
     - { code: GDM, description: "Goodman (PNCA)" }
+
+HEd.Schedule.BillingStatus:
+  description: "Billing Statuses"
+  allow_update: false
+  values:
+    - { code: NPAID, description: "Not Paid" }
+    - { code: PAID, description: "Paid" }
+    - { code: VOID, description: "Voided" } 
+    - { code: REFUN, description: "Refunded" } 

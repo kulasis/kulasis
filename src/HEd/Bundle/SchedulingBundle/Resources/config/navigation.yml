@@ -51,6 +51,10 @@ Core.HEd.Scheduling:
           description: "Course"
           display_name: "Courses"
           route: Core_HEd_Scheduling_Section_Courses
+        Section:
+          description: "Section"
+          display_name: "Sections"
+          route: Core_HEd_Scheduling_Section_Sections
         Staff:
           description: "Staff"
           display_name: "Staff"

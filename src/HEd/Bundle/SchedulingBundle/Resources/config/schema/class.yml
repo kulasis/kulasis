@@ -126,4 +126,15 @@ HEd.Student.Class:
       field_type: lookup
       lookup: HEd.Schedule.RegistrationType
       column_name: "Registration Type"
-      label_name: "Registration Type"
+      label_name: "Registration Type"    
+    BillingStatus:
+      description: "Billing Status"
+      db_column_name: BILLING_STATUS
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Schedule.BillingStatus
+      column_name: "Billing Status"
+      label_name: "Billing Status"
+
