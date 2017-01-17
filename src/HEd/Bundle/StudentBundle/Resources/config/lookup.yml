@@ -150,3 +150,26 @@ HEd.Form.Rule:
   values:
     - { code: ALLSTU, description: All Students }
     - { code: NEWSTU, description: New Students }
+
+HEd.Student.EmergencyContact.Relationship.Type:
+  description: "Emergency Contact Relationship Types"
+  allow_update: true
+  values:
+    - { code: 01, description: "Mother" }
+    - { code: 02, description: "Father" }
+    - { code: 03, description: "Step-Mother" }
+    - { code: 04, description: "Step-Father" }
+    - { code: 05, description: "Foster Mother" }
+    - { code: 06, description: "Foster Father" }
+    - { code: 07, description: "Guardian" }
+    - { code: 08, description: "Other" }
+    - { code: 09, description: "Neighbor" }
+    - { code: 10, description: "Babysitter" }
+    - { code: 11, description: "Brother" }
+    - { code: 12, description: "Sister" }
+    - { code: 13, description: "Grandparent" }
+    - { code: 14, description: "Aunt" }
+    - { code: 15, description: "Uncle" }
+    - { code: 16, description: "Nanny" }
+    - { code: 17, description: "Friend" }
+    - { code: 18, description: "Mentor" }

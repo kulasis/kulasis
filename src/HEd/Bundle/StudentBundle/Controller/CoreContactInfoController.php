@@ -251,7 +251,7 @@ class CoreContactInfoController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       $emergency = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'emergency')
-        ->fields('emergency', array('SORT', 'EMERGENCY_CONTACT_ID', 'EMERGENCY_CONTACT_NAME', 'EMERGENCY_CONTACT_PHONE'))
+        ->fields('emergency', array('SORT', 'EMERGENCY_CONTACT_ID', 'EMERGENCY_CONTACT_NAME', 'EMERGENCY_CONTACT_PHONE', 'EMERGENCY_CONTACT_EMAIL', 'AUTHORIZED_DRIVER', 'EMERGENCY_CONTACT', 'REMOVED'))
         ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
         ->orderBy('SORT')
         ->orderBy('EMERGENCY_CONTACT_NAME')

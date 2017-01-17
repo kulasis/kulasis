@@ -37,6 +37,16 @@ HEd.Student.EmergencyContact:
       field_size: 20
       column_name: "Emergency Contact Name"
       label_name: "Name"
+    Relationship:
+      description: "Relationship"
+      db_column_name: RELATIONSHIP
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.EmergencyContact.Relationship.Type
+      column_name: "Relationship"
+      label_name: "Relationship"
     Phone:
       description: "Emergency Contact Phone"
       db_column_name: EMERGENCY_CONTACT_PHONE
@@ -57,3 +67,48 @@ HEd.Student.EmergencyContact:
       field_size: 25
       column_name: "Emergency Contact Email"
       label_name: "Email"
+    EmergencyContact:
+      description: "Emergency Contact"
+      db_column_name: EMERGENCY_CONTACT
+      db_column_type: bool
+      db_column_null: false
+      db_column_default: 0
+      field_type: checkbox
+      column_name: "Emergency Contact"
+      label_name: "Emergency Contact"
+    AuthorizedDriver:
+      description: "Authorized Driver Phone"
+      db_column_name: AUTHORIZED_DRIVER
+      db_column_type: bool
+      db_column_null: false
+      db_column_default: 0
+      field_type: checkbox
+      column_name: "Authorized Driver"
+      label_name: "Authorized Driver"
+    Removed: 
+      description: "Revmoed"
+      db_column_name: REMOVED
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Removed"
+      label_name: "Revmoed"
+    RemovedUserstamp:
+      description: "Removed Userstamp"
+      parent: Core.User.ID
+      db_column_name: REMOVED_USERSTAMP
+      db_column_type: serial
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Removed Userstamp"
+      label_name: "Revmoed Userstamp"
+    RemovedTimestamp:
+      description: "Removed Timestamp"
+      db_column_name: REMOVED_TIMESTAMP
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      column_name: "Removed Timestamp"
+      label_name: "Removed Timestamp"
