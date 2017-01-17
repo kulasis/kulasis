@@ -1,0 +1,221 @@
+HEd.Form:
+  description: "Forms"
+  db_table_name: STUD_FORM
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: FORM_ID
+      db_column_type: primary_serial
+      column_name: "Form ID"
+      label_name: "Form ID"
+    OrganizationTermID:
+      description: "Organization Term ID"
+      parent: Core.Organization.Term.ID
+      db_column_name: ORGANIZATION_TERM_ID
+      db_column_type: serial
+      db_column_null: false
+      column_name: "Organization Term ID"
+      label_name: "Organization Term ID"
+    Name:
+      description: "Form Name"
+      db_column_name: FORM_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      field_type: text
+      field_size: 20
+      column_name: "Form Name"
+      label_name: "Form Name"
+    Description:
+      description: "Form Description"
+      db_column_name: FORM_DESCRIPTION
+      db_column_type: varchar
+      db_column_length: 200
+      db_column_null: true
+      field_type: textarea
+      field_size: 20
+      column_name: "Form Description"
+      label_name: "Description"
+    Type:
+      description: "Form Type"
+      db_column_name: FORM_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: lookup
+      lookup: HEd.Form.Type
+      column_name: "Form Type"
+      label_name: "Form Type"
+    Optional:
+      description: "Optional"
+      db_column_name: OPTIONAL
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Optional"
+      label_name: "Optional"
+    Rule:
+      description: "Rule"
+      db_column_name: RULE
+      db_column_type: varchar
+      db_column_length: 10
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Form.Rule
+      column_name: "Rule"
+      label_name: "Rule"
+    FormText:
+      description: "Form Text"
+      db_column_name: FORM_TEXT
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      field_size: 20
+      column_name: "Form Text"
+      label_name: "Text"
+
+HEd.Student.Form:
+  description: "Student Forms"
+  db_table_name: STUD_STUDENT_FORMS
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_FORM_ID
+      db_column_type: primary_serial
+      column_name: "Student Form ID"
+      label_name: "Student Form ID"
+    StudentStatusID:
+      description: "Student Status ID"
+      db_column_name: STUDENT_STATUS_ID
+      db_column_type: serial
+      db_column_null: false
+      parent: HEd.Student.Status.ID
+      column_name: "Student Status ID"
+      label_name: "Student Status ID"
+    FormID:
+      description: "Form ID"
+      db_column_name: FORM_ID
+      db_column_type: serial
+      db_column_null: false
+      parent: HEd.Form.ID
+      field_type: select
+      class: Kula\HEd\Bundle\StudentBundle\Field\Form
+      column_name: "Form ID"
+      label_name: "Form"
+    FormText:
+      description: "Form Text"
+      db_column_name: FORM_TEXT
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      field_size: 20
+      column_name: "Form Text"
+      label_name: "Text"
+    Agree:
+      description: "Agree"
+      db_column_name: AGREE
+      db_column_type: bool
+      db_column_null: true
+      field_type: checkbox
+      column_name: "Agree"
+      label_name: "Agree"
+    Completed:
+      description: "Completed"
+      db_column_name: COMPLETED
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Completed"
+      label_name: "Completed"
+    CompletedTimestamp:
+      description: "Completed Timestamp"
+      db_column_name: COMPLETED_TIMESTAMP
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      column_name: "Completed Timestamp"
+      label_name: "Completed Timestamp"
+    CompletedConstituentID:
+      description: "Completed Constituent Stamp"
+      db_column_name: COMPLETED_CONSTITUENT_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Constituent.ID
+      field_type: chooser
+      chooser: Core.Constituent
+      column_name: "Completing Constituent ID"
+      label_name: "Completing Constituent ID"
+    CompletedIP:
+      description: "Completed IP"
+      db_column_name: COMPLETED_IP
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_length: 20
+      column_name: "Completed IP"
+      label_name: "Completed IP"
+
+HEd.Student.Form.Signature:
+  description: "Student Form Signatures"
+  db_table_name: STUD_STUDENT_FORMS_SIGNATURES
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: STUDENT_FORM_SIGN_ID
+      db_column_type: primary_serial
+      column_name: "Student Form Signature ID"
+      label_name: "Student Form Signature ID"
+    StudentFormID:
+      description: "Student Form ID"
+      db_column_name: STUDENT_FORM_ID
+      db_column_type: serial
+      db_column_null: false
+      parent: HEd.Student.Form.ID
+      column_name: "Student Form ID"
+      label_name: "Student Form ID"
+    CompletedConstituentID:
+      description: "Completed Constituent Stamp"
+      db_column_name: COMPLETED_CONSTITUENT_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: Core.Constituent.ID
+      field_type: chooser
+      chooser: Core.Constituent
+      column_name: "Completing Constituent ID"
+      label_name: "Completing Constituent ID"
+    Signature:
+      description: "Signature"
+      db_column_name: SIGNATURE
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_length: 20
+      column_name: "Signature"
+      label_name: "Signature"
+    CompletedTimestamp:
+      description: "Completed Timestamp"
+      db_column_name: COMPLETED_TIMESTAMP
+      db_column_type: datetime
+      db_column_null: true
+      field_type: datetime
+      column_name: "Completed Timestamp"
+      label_name: "Completed Timestamp"
+    CompletedIP:
+      description: "Completed IP"
+      db_column_name: COMPLETED_IP
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_length: 20
+      column_name: "Completed IP"
+      label_name: "Completed IP"

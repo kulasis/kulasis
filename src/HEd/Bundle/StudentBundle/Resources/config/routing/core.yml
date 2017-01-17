@@ -84,6 +84,12 @@ core_HEd_student_holds:
     _controller: KulaHEdStudentBundle:CoreHolds:index
     _navigation: Core.HEd.Holds.StudentHolds
 
+core_HEd_student_forms:
+  path: /student/forms
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreForms:studentForms
+    _navigation: Core.HEd.Forms.StudentForms
+
 core_HEd_student_documents:
   path: /student/documents
   defaults: 
@@ -139,6 +145,12 @@ core_HEd_setup_student_holds:
   defaults: 
     _controller: KulaHEdStudentBundle:CoreHoldsSetup:hold_codes
     _navigation: Core.HEd.Holds.SetupHolds
+
+core_HEd_setup_student_forms:
+  path: /setup/student/forms
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreForms:setup
+    _navigation: Core.HEd.Forms.FormsSetup
 
 core_HEd_home_holds:
   path: /home/holds

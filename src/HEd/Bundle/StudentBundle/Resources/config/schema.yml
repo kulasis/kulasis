@@ -4,6 +4,7 @@ imports:
     - { resource: schema/emergency.yml }
     - { resource: schema/document.yml }
     - { resource: schema/hold.yml }
+    - { resource: schema/form.yml }
     - { resource: schema/school.yml }
 
 HEd.Student.Status:

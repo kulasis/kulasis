@@ -135,3 +135,18 @@ HEd.Document.Status:
     - { code: C, description: "Complete" }
     - { code: A, description: "Approved" }
     - { code: D, description: "Declined" }
+
+HEd.Form.Type:
+  description: "Form Type"
+  allow_update: false
+  values:
+    - { code: FORM, description: Form }
+    - { code: AGREE, description: Agreement (Y/N) }
+    - { code: SIAGR, description: Agreement with Signature }
+
+HEd.Form.Rule:
+  description: "Form Rule"
+  allow_update: false
+  values:
+    - { code: ALLSTU, description: All Students }
+    - { code: NEWSTU, description: New Students }

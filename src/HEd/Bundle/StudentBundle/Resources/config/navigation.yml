@@ -75,6 +75,9 @@ Core.HEd.Student:
     Holds:
       original: Core.HEd.Holds.StudentHolds
       display_name: "Holds"
+    Forms:
+      original: Core.HEd.Forms.StudentForms
+      display_name: "Forms"
 
 Core.HEd.Documents:
   type: dir
@@ -109,6 +112,21 @@ Core.HEd.Holds:
       description: "Holds Setup"
       display_name: "Holds Setup"
       route: core_HEd_setup_student_holds
+
+Core.HEd.Forms:
+  type: dir
+  parent: Core.HEd
+  description: "Forms"
+  display_name: "Forms"
+  forms:
+    StudentForms:
+      description: "Student Forms"
+      display_name: "Student Forms"
+      route: core_HEd_student_forms
+    FormsSetup:
+      description: "Forms Setup"
+      display_name: "Forms Setup"
+      route: core_HEd_setup_student_forms
 
 Core.HEd.Student.Reports:
   type: dir
