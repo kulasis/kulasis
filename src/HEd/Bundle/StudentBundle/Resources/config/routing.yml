@@ -8,4 +8,4 @@ _HEd_teacher:
 
 _HEd_student_api:
     resource: "@KulaHEdStudentBundle/Resources/config/routing/api.yml"
-    prefix: api/HEd
+    prefix: /api/v1

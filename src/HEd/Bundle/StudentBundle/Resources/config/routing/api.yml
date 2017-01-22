@@ -7,3 +7,13 @@ api_v1_children_add:
     path:     /user/current/children/add
     defaults: { _controller: KulaHEdStudentBundle:APIv1Student:createChild }
     methods: [POST]
+
+api_v1_update_student:
+    path:     /student/{student_id}
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Student:updateStudent }
+    methods: [PUT,PATCH]
+
+api_v1_update_student_enrollment:
+    path:     /student/{student_id}/{org}/{term}
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Student:updateStudentEnrollment }
+    methods: [PUT,PATCH]

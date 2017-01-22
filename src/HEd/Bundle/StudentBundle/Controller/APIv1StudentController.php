@@ -52,31 +52,57 @@ class APIv1StudentController extends APIController {
 
   }
 
-  public function updateChild($student_id, $org_term) {
+  public function updateStudentAction($student_id) {
 
     // Check for authorized access to constituent
     $this->authorizeConstituent($student_id);
 
     $constituent_data = $this->form('edit', 'Core.Constituent', 0);
+    $student_data = $this->form('edit', 'HEd.Student', 0);
+
+    $transaction = $this->db()->db_transaction('update_child');
+
+    $changes = $this->newPoster()->edit('Core.Constituent', $student_id, $constituent_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+    $changes += $this->newPoster()->edit('HEd.Student', $student_id, $student_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+    
+    if ($changes) {
+      $transaction->commit();
+      return $this->JSONResponse($changes);
+    } else {
+      $transaction->rollback();
+    }
+
+  }
+
+  public function updateStudentEnrollmentAction($student_id, $org, $term) {
+
+    // Check for authorized access to constituent
+    $this->authorizeConstituent($student_id);
+
     $status_data = $this->form('edit', 'HEd.Student.Status', 0);
 
     // Get student status
     $student_status_id = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
       ->fields('stustatus', array('STUDENT_STATUS_ID'))
-      ->condition('stustatus.ORGANIZATION_TERM_ID', $org_term)
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->condition('stustatus.STUDENT_ID', $student_id)
+      ->condition('org.ORGANIZATION_ABBREVIATION', $org)
+      ->condition('term.TERM_ABBREVIATION', $term)
       ->execute()->fetch()['STUDENT_STATUS_ID'];
 
     $transaction = $this->db()->db_transaction('update_child');
 
+    $changes = null;
+
     if ($student_status_id) {
-      $this->newPoster()->edit('Core.Constituent', $student_id, $constituent_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
-      $this->newPoster()->edit('HEd.Student.Status', $student_status_id, $status_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+      $changes = $this->newPoster()->edit('HEd.Student.Status', $student_status_id, $status_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
     }
     
-    if ($constituent_id) {
+    if ($changes) {
       $transaction->commit();
-      return $this->JSONResponse($constituent_id);
+      return $this->JSONResponse($changes);
     } else {
       $transaction->rollback();
     }

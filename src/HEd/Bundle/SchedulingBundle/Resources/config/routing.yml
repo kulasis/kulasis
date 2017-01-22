@@ -12,4 +12,4 @@ _HEd_scheduling_student:
 
 _HEd_scheduling_api:
     resource: "@KulaHEdSchedulingBundle/Resources/config/routing/api.yml"
-    prefix: api/HEd
+    prefix: /api/v1
