@@ -105,6 +105,16 @@ HEd.Student:
       lookup: HEd.Student.HighSchool.DiplomaType
       column_name: "High School Diploma Type"
       label_name: "HS Diploma Type"
+    School:
+      description: "School"
+      db_column_name: SCHOOL
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "School"
+      label_name: "School"
     GEDDate:
       description: "GED Date"
       db_column_name: GED_DATE
@@ -284,3 +294,11 @@ HEd.Student:
       field_size: 25
       column_name: "Lead Source"
       label_name: "Lead Source"
+    MedicalNotes:
+      description: "Medical Notes"
+      db_column_name: MEDICAL_NOTES
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Medical Notes"
+      label_name: "Medical Notes"

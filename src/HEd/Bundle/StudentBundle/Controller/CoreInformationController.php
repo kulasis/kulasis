@@ -95,8 +95,16 @@ class CoreInformationController extends Controller {
       ->fields('cons', array('NOTES'))
       ->condition('STUDENT_ID', $this->record->getSelectedRecord()['STUDENT_ID'])
       ->execute()->fetch();
+
+    if ($this->record->getSelectedRecordID()) {
     
-    return $this->render('KulaHEdStudentBundle:CoreInformation:other_info.html.twig', array('student' => $student));
+      $student_status = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus')
+        ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecord()['STUDENT_STATUS_ID'])
+        ->execute()->fetch();
+    }
+    
+    return $this->render('KulaHEdStudentBundle:CoreInformation:other_info.html.twig', array('student' => $student, 'student_status' => $student_status));
   }
   
   public function addAction() {
