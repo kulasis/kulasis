@@ -88,6 +88,7 @@ class CoreInformationController extends Controller {
     $this->setRecordType('Core.HEd.Student');
     
     $student = array();
+    $student_status = array();
     
     $student = $this->db()->db_select('STUD_STUDENT', 'STUD_STUDENT')
       ->fields('STUD_STUDENT')
