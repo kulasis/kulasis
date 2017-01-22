@@ -1,4 +1,0 @@
-K12.Course:
-  class: Kula\K12\Bundle\SchedulingBundle\Chooser\CourseChooser
-K12.Room:
-  class: Kula\K12\Bundle\SchedulingBundle\Chooser\RoomChooser

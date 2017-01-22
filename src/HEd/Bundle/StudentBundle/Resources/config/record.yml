@@ -4,6 +4,8 @@ Core.HEd.Student:
   class: Kula\HEd\Bundle\StudentBundle\Record\CoreStudentRecord
 Core.HEd.Student.Status:
   class: Kula\HEd\Bundle\StudentBundle\Record\CoreStudentStatusRecord
+Core.HEd.Parent:
+  class: Kula\HEd\Bundle\StudentBundle\Record\CoreParentRecord
 
 Teacher.HEd.Advisor.Student:
   class: Kula\HEd\Bundle\StudentBundle\Record\TeacherAdvisorStudentRecord

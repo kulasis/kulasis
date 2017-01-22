@@ -161,3 +161,73 @@ core_HEd_home_holds:
 core_HEd_student_chooser:
   path: /student/chooser
   defaults: { _controller: KulaHEdStudentBundle:CoreInformation:chooser }
+
+core_HEd_student_information_parents:
+  path: /student/information/parents
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreParents:studentParents
+    _navigation: Core.HEd.Student.Information.Parents
+
+core_HEd_student_information_parents_add:
+  path: /student/information/parents/add
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreParents:add
+    _navigation: Core.HEd.Student.Information.Parents
+  
+Core_HEd_Student_Parents_Add_Constituent:
+  path: /student/information/parents/add/constituent
+  defaults: { _controller: KulaHEdStudentBundle:CoreParents:add_constituent }
+  methods: [GET]
+
+Core_HEd_Student_Parents_Create_Constituent:
+  path: /student/information/parents/add/constituent
+  defaults: { _controller: KulaHEdStudentBundle:CoreParents:create_constituent }
+  methods: [POST]
+
+
+core_HEd_student_parent_basic:
+  path: /student/parents
+  defaults:
+    _controller: KulaHEdStudentBundle:CoreParent:index
+    _navigation: 
+
+core_HEd_student_parent_children:
+  path: /student/parents/children
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreParent:children
+    _navigation: 
+
+core_HEd_student_parent_delete:
+  path: /student/parent/delete
+  defaults: { _controller: KulaHEdStudentBundle:CoreParent:delete }
+  methods: [POST]
+
+core_HEd_student_parent_addresses:
+  path: /student/parent/addresses
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreParentsContactInfo:addresses
+    _navigation: 
+
+core_HEd_student_parent_addresses_detail:
+  path: /student/parent/{id}/addresses/detail/{sub_id}
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreParentsContactInfo:detail
+    _navigation: 
+
+core_HEd_student_parent_addresses_add:
+  path: /student/parent/addresses/add
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreParentsContactInfo:add_address
+    _navigation: 
+
+core_HEd_student_parent_phones:
+  path: /student/parent/phones
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreParentsContactInfo:phones
+    _navigation: Core.HEd.Student.Parent.Phone
+  
+core_HEd_student_parent_EmailAddresses:
+  path: /student/parent/email_addresses
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreParentsContactInfo:emailAddresses
+    _navigation: Core.HEd.Student.Parent.EmailAddresses

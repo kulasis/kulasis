@@ -62,6 +62,12 @@ Core_HEd_Scheduling_StudentSchedule_WaitList:
     _controller: KulaHEdSchedulingBundle:CoreSchedule:waitlist
     _navigation: Core.HEd.Scheduling.StudentSchedule.WaitList
 
+Core_HEd_Scheduling_SectionQuickPlacement:
+  path: /scheduling/section/quick_placement
+  defaults:
+    _controller: KulaHEdSchedulingBundle:CoreSectionQuickPlacement:index
+    _navigation: Core.HEd.Scheduling.SectionQuickPlacement
+
 Core_HEd_Scheduling_Section:
   path: /scheduling/section
   defaults: 
@@ -257,3 +263,51 @@ Core_HEd_Student_Enrollment_Registration:
   defaults:
     _controller: KulaHEdSchedulingBundle:CoreRegistration:studentRegistration
     _navigation: Core.HEd.Student.Enrollment.Registration
+
+Core_HEd_Scheduling_Reports_ClassRosterSignInOut:
+    path: /scheduling/reports/class_roster_sign_in_out
+    defaults: 
+      _controller: KulaHEdSchedulingBundle:CoreClassRosterSignInOutReport:index
+      _navigation: Core.HEd.Scheduling.Reports.ClassRosterSignInOut
+    methods: [GET]
+
+Core_HEd_Scheduling_Report_ClassRosterSignInOut_Generate:
+  path: /scheduling/reports/class_roster_sign_in_out
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreClassRosterSignInOutReport:generate }
+  methods: [POST]
+  
+Core_HEd_Scheduling_Reports_ClassRoster_AA:
+  path: /scheduling/reports/class_roster/aa
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreAAClassRosterReport:index
+    _navigation: Core.HEd.Scheduling.Reports.AAClassRoster
+  methods: [GET]
+
+Core_HEd_Scheduling_Reports_ClassRoster_AA_Generate:
+  path: /scheduling/reports/class_roster/aa
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreAAClassRosterReport:generate }
+  methods: [POST]
+  
+Core_HEd_Scheduling_Reports_ClassRoster_Labels_AA:
+  path: /scheduling/reports/class_roster_labels/aa
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreAAClassRosterLabelsReport:index
+    _navigation: Core.HEd.Scheduling.Reports.AAClassRosterLabels
+  methods: [GET]
+
+Core_HEd_Scheduling_Reports_ClassRoster_Labels_AA_Generate:
+  path: /scheduling/reports/class_roster_labels/aa
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreAAClassRosterLabelsReport:generate }
+  methods: [POST]
+
+Core_HEd_Scheduling_Reports_MasterRoster_AA:
+  path: /scheduling/reports/master_roster/aa
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreAAMasterRosterReport:index
+    _navigation: Core.HEd.Scheduling.Reports.AAMasterRoster
+  methods: [GET]
+
+Core_HEd_Scheduling_Reports_MasterRoster_AA_Generate:
+  path: /scheduling/reports/master_roster/aa
+  defaults: { _controller: KulaHEdSchedulingBundle:CoreAAMasterRosterReport:generate }
+  methods: [POST]

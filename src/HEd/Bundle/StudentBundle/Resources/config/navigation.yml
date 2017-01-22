@@ -16,6 +16,10 @@ Core.HEd.Student:
           description: "Demographic"
           display_name: "Demographic"
           route: core_HEd_student_information_demographic
+        Parents:
+          description: "Parents"
+          display_name: "Parents"
+          route: core_HEd_student_information_parents
         Addresses:
           description: "Addresses"
           display_name: "Addresses"
@@ -42,9 +46,14 @@ Core.HEd.Student:
         NewAddress:
           description: "New Address"
           display_name: "New Address"
-          divider_before: true
           record_loaded: true
           route: core_HEd_student_information_addresses_add
+        NewParent:
+          description: "New Parent"
+          display_name: "New Parent"
+          divider_before: true
+          record_loaded: true
+          route: core_HEd_student_information_parents_add
     Enrollment:
       description: "Enrollment"
       display_name: "Enrollment"
@@ -69,6 +78,38 @@ Core.HEd.Student:
           description: "Enrollment Verification"
           display_name: "Enrollment Verification"
           route: core_HEd_student_enrollment_reports_enrollmentverification
+    Parent:
+      description: "Parent"
+      display_name: "Parent"
+      tabs:
+        Basic:
+          description: "Basic"
+          display_name: "Basic"
+          route: core_HEd_student_parent_basic
+        Children:
+          description: "Children"
+          display_name: "Children"
+          route: core_HEd_student_parent_children
+        Addresses:
+          description: "Addresses"
+          display_name: "Addresses"
+          route: core_HEd_student_parent_addresses
+        Phones:
+          description: "Phones"
+          display_name: "Phones"
+          route: core_HEd_student_parent_phones
+        EmailAddresses:
+          description: "Email Addresses"
+          display_name: "Email Addresses"
+          route: core_HEd_parent_EmailAddresses
+      menu_actions:
+        NewAddress:
+          description: "New Address"
+          display_name: "New Address"
+          record_loaded: true
+          route: core_HEd_student_parent_addresses_add
+      button_delete:
+        route: core_HEd_student_parent_delete
     Documents:
       original: Core.HEd.Documents.StudentDocuments
       display_name: "Documents"

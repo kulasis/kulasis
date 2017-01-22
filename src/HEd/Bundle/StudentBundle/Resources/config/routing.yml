@@ -5,3 +5,7 @@ _HEd_student:
 _HEd_teacher:
     resource: "@KulaHEdStudentBundle/Resources/config/routing/teacher.yml"
     prefix: teacher/HEd
+
+_HEd_student_api:
+    resource: "@KulaHEdStudentBundle/Resources/config/routing/api.yml"
+    prefix: api/HEd

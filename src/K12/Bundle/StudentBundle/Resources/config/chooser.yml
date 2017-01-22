@@ -1,2 +1,0 @@
-K12.Student:
-  class: Kula\K12\Bundle\StudentBundle\Chooser\StudentChooser

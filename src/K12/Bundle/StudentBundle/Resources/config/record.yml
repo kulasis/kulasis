@@ -1,6 +1,0 @@
-Core.K12.Student:
-  class: Kula\K12\Bundle\StudentBundle\Record\CoreStudentRecord
-Core.K12.Student.Status:
-  class: Kula\K12\Bundle\StudentBundle\Record\CoreStudentStatusRecord
-Core.K12.Parent:
-  class: Kula\K12\Bundle\StudentBundle\Record\CoreParentRecord

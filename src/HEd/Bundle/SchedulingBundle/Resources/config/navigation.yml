@@ -99,6 +99,26 @@ Core.HEd.Scheduling:
           description: "Master Schedule"
           display_name: "Master Schedule"
           route: Core_HEd_Scheduling_Reports_MasterSchedule
+        ClassRosterSignInOut:
+          description: "Class Roster Sign In Out"
+          display_name: "Class Roster Sign In Out"
+          route: Core_HEd_Scheduling_Reports_ClassRosterSignInOut
+        AAClassRoster:
+          description: "AA Class Roster"
+          display_name: "AA Class Roster"
+          route: Core_HEd_Scheduling_Reports_ClassRoster_AA
+        AAMasterRoster:
+          description: "AA Master Roster"
+          display_name: "AA Master Roster"
+          route: Core_HEd_Scheduling_Reports_MasterRoster_AA
+        AAClassRosterLabels:
+          description: "AA Class Roster Labels"
+          display_name: "AA Class Roster Labels"
+          route: Core_HEd_Scheduling_Reports_ClassRoster_Labels_AA
+    SectionQuickPlacement:
+      description: "Section Quick Placement"
+      display_name: "Section Quick Placement"
+      route: Core_HEd_Scheduling_SectionQuickPlacement
 
 Core.HEd.Scheduling.Reports:
   type: dir
@@ -129,6 +149,23 @@ Core.HEd.Scheduling.Reports:
       description: "Master Schedule"
       display_name: "Master Schedule"
       route: Core_HEd_Scheduling_Reports_MasterSchedule
+    ClassRosterSignInOut:
+      description: "Class Roster Sign In Out"
+      display_name: "Class Roster Sign In Out"
+      route: Core_HEd_Scheduling_Reports_ClassRosterSignInOut
+    AAMasterRoster:
+      description: "AA Master Roster"
+      display_name: "AA Master Roster"
+      route: Core_HEd_Scheduling_Reports_MasterRoster_AA
+    AAClassRoster:
+      description: "AA Class Roster"
+      display_name: "AA Class Roster"
+      route: Core_HEd_Scheduling_Reports_ClassRoster_AA
+    AAClassRosterLabels:
+      description: "AA Class Roster Labels"
+      display_name: "AA Class Roster Labels"
+      route: Core_HEd_Scheduling_Reports_ClassRoster_Labels_AA
+    
 
 Core.HEd.Course:
   parent: Core.HEd

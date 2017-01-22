@@ -1,4 +1,0 @@
-Core.K12.Staff:
-  class: Kula\K12\Bundle\SchoolBundle\Record\CoreStaffRecord
-Core.K12.Staff.SchoolTerm:
-  class: Kula\K12\Bundle\SchoolBundle\Record\CoreStaffSchoolTermRecord

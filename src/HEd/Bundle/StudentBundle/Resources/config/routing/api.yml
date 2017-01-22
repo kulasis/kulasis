@@ -1,0 +1,9 @@
+api_v1_children:
+    path:     /user/current/children
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Student:relatedChildren }
+    methods: [GET]
+
+api_v1_children_add:
+    path:     /user/current/children/add
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Student:createChild }
+    methods: [POST]
