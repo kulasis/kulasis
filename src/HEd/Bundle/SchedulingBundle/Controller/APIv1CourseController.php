@@ -134,6 +134,28 @@ class APIv1CourseController extends APIController {
     $d++;
     } // end loop on fees
 
+    // Get related sections
+    $related_sections_result = $this->db()->db_select('STUD_SECTION_SECTIONS', 'secs')
+      ->fields('secs', array('OPTIONAL'))
+      ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = secs.RELATED_SECTION_ID')
+      ->fields('sec')
+      ->join('STUD_COURSE', 'crs', 'crs.COURSE_ID = sec.COURSE_ID')
+      ->fields('crs', array('COURSE_TITLE'))
+      ->condition('secs.SECTION_ID', $row['SECTION_ID'])
+      ->execute();
+    $sec = 0;
+    while ($related_section_row = $related_sections_result->fetch()) {
+
+      $data[$i]['related'][$sec]['ID'] = $related_section_row['SECTION_ID'];
+      if ($related_section_row['SECTION_NAME'] == '') 
+        $data[$i]['related'][$sec]['SECTION_NAME'] = $related_section_row['SECTION_NAME'];
+      else
+        $data[$i]['related'][$sec]['SECTION_NAME'] = $related_section_row['COURSE_TITLE'];
+      $data[$i]['related'][$sec]['OPTIONAL'] = $related_section_row['OPTIONAL'];
+
+    $sec++;
+    }
+
     if ($row['SECTION_ID'] != $last_section_id) { $i++; $j = 0; $last_section_id = $row['SECTION_ID']; } else { $j++; }
     }
     
@@ -242,6 +264,28 @@ class APIv1CourseController extends APIController {
       $row['discounts'][$d]['AMOUNT'] = $discounts_row['AMOUNT'];
     $d++;
     } // end loop on fees
+
+    // Get related sections
+    $related_sections_result = $this->db()->db_select('STUD_SECTION_SECTIONS', 'secs')
+      ->fields('secs', array('OPTIONAL'))
+      ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = secs.RELATED_SECTION_ID')
+      ->fields('sec')
+      ->join('STUD_COURSE', 'crs', 'crs.COURSE_ID = sec.COURSE_ID')
+      ->fields('crs', array('COURSE_TITLE'))
+      ->condition('secs.SECTION_ID', $section_id)
+      ->execute();
+    $sec = 0;
+    while ($related_section_row = $related_sections_result->fetch()) {
+
+      $row['related'][$sec]['ID'] = $related_section_row['SECTION_ID'];
+      if ($related_section_row['SECTION_NAME'] == '') 
+        $row['related'][$sec]['SECTION_NAME'] = $related_section_row['SECTION_NAME'];
+      else
+        $row['related'][$sec]['SECTION_NAME'] = $related_section_row['COURSE_TITLE'];
+      $row['related'][$sec]['OPTIONAL'] = $related_section_row['OPTIONAL'];
+
+    $sec++;
+    }
 
     return $this->JSONResponse($row);
 
