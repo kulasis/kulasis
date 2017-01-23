@@ -147,6 +147,7 @@ class APIv1CourseController extends APIController {
     while ($related_section_row = $related_sections_result->fetch()) {
 
       $data[$i]['related'][$sec]['ID'] = $related_section_row['SECTION_ID'];
+      $data[$i]['related'][$sec]['SECTION_NUMBER'] = $related_section_row['SECTION_NUMBER'];
       if ($related_section_row['SECTION_NAME'] == '') 
         $data[$i]['related'][$sec]['SECTION_NAME'] = $related_section_row['SECTION_NAME'];
       else
@@ -278,6 +279,7 @@ class APIv1CourseController extends APIController {
     while ($related_section_row = $related_sections_result->fetch()) {
 
       $row['related'][$sec]['ID'] = $related_section_row['SECTION_ID'];
+      $row['related'][$sec]['SECTION_NUMBER'] = $related_section_row['SECTION_NUMBER'];
       if ($related_section_row['SECTION_NAME'] == '') 
         $row['related'][$sec]['SECTION_NAME'] = $related_section_row['SECTION_NAME'];
       else
