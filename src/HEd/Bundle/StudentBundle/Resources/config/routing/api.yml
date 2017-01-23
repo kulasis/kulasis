@@ -42,3 +42,8 @@ api_v1_student_emergency_delete:
     path:     /student/{student_id}/emergency_contact/{emergency_contact_id}
     defaults: { _controller: KulaHEdStudentBundle:APIv1Student:deleteEmergencyContact }
     methods: [DELETE]
+
+api_v1_student_agreement:
+    path:     /student/{student_id}/{org}/{term}/agreements/{form_id}
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Student:makeAgreement }
+    methods: [POST]

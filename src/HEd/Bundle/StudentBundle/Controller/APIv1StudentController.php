@@ -227,8 +227,75 @@ class APIv1StudentController extends APIController {
 
   public function makeAgreementAction($student_id, $org, $term, $form_id) {
 
-    
+    // Check for authorized access to constituent
+    $this->authorizeConstituent($student_id);
 
+    $currentUser = $this->authorizeUser();
+    $changes = null;
+
+    $agreement_data = $this->form('add', 'HEd.Student.Form', 0);
+
+    // See if agreement exists
+    $agreement = $this->db()->db_select('STUD_STUDENT_FORMS', 'stuforms')
+      ->fields('form', array('STUDENT_FORM_ID', 'FORM_NAME', 'FORM_TYPE', 'OPTIONAL', 'RULE', 'FORM_TEXT'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterm.ORGANIZATION_TERM_ID = stuforms.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->condition('org.ORGANIZATION_ABBREVIATION', $org)
+      ->condition('term.TERM_ABBREVIATION', $term)
+      ->execute()->fetch();
+
+    // Student Status Info
+    $student_status_id = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+      ->fields('stustatus', array('STUDENT_STATUS_ID'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->condition('stustatus.STUDENT_ID', $student_id)
+      ->condition('org.ORGANIZATION_ABBREVIATION', $org)
+      ->condition('term.TERM_ABBREVIATION', $term)
+      ->execute()->fetch()['STUDENT_STATUS_ID'];    
+
+    // edit existing agreement
+    if ($agreement['STUDENT_FORM_ID']) {
+
+      $changes = $this->newPoster()->edit('HEd.Student.Form', $agreement['STUDENT_FORM_ID'], array(
+        'HEd.Student.Form.Agree' => $agreement_data['HEd.Student.Form.Agree'],
+        'HEd.Student.Form.Completed' => 1,
+        'HEd.Student.Form.CompletedTimestamp' => date('Y-m-d H:i:s'),
+        'HEd.Student.Form.CompletedConstituentID' => $currentUser,
+        'HEd.Student.Form.CompletedIP' => $agreement_data['HEd.Student.Form.CompletedIP']
+      ))->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getResult();
+
+
+    } else { // end if student_form_id
+      // get agreement info
+      $agreement_info = $this->db()->db_select('STUD_FORM', 'form')
+        ->fields('form')
+        ->condition('form.FORM_ID', $form_id)
+        ->execute()->fetch();
+
+      // add agreement
+      $changes = $this->newPoster()->add('HEd.Student.Form', 0, array(
+        'HEd.Student.Form.StudentStatusID' => $student_status_id,
+        'HEd.Student.Form.FormID' => $form_id,
+        'HEd.Student.Form.FormText' => $agreement_info['FORM_TEXT'],
+        'HEd.Student.Form.Agree' => $agreement_data['HEd.Student.Form.Agree'],
+        'HEd.Student.Form.Completed' => 1,
+        'HEd.Student.Form.CompletedTimestamp' => date('Y-m-d H:i:s'),
+        'HEd.Student.Form.CompletedConstituentID' => $currentUser,
+        'HEd.Student.Form.CompletedIP' => $agreement_data['HEd.Student.Form.CompletedIP']
+      ))->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getResult();
+
+    } // 
+
+    if ($changes) {
+      $transaction->commit();
+      return $this->JSONResponse($changes);
+    } else {
+      $transaction->rollback();
+      throw new DisplayException('No changes made.');
+    }
   }
 
   public function updateStudentAction($student_id) {
@@ -239,7 +306,7 @@ class APIv1StudentController extends APIController {
     $constituent_data = $this->form('edit', 'Core.Constituent', 0);
     $student_data = $this->form('edit', 'HEd.Student', 0);
 
-    $transaction = $this->db()->db_transaction('update_child');
+    $transaction = $this->db()->db_transaction();
 
     $changes = $this->newPoster()->edit('Core.Constituent', $student_id, $constituent_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getResult();
     $changes += $this->newPoster()->edit('HEd.Student', $student_id, $student_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getResult();
