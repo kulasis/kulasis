@@ -66,6 +66,12 @@ core_HEd_student_information_otherinfo:
     _controller: KulaHEdStudentBundle:CoreInformation:other_info
     _navigation: Core.HEd.Student.Information.Other
 
+core_HEd_student_information_userinfo:
+  path: /student/information/userinfo
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreInformation:user_info
+    _navigation: Core.HEd.Student.Information.User
+
 core_HEd_student_information_phones:
   path: /student/information/phones
   defaults: 

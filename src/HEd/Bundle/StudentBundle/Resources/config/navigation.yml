@@ -40,6 +40,10 @@ Core.HEd.Student:
           description: "Other Information"
           display_name: "Other Info"
           route: core_HEd_student_information_otherinfo
+        User:
+          description: "User Information"
+          display_name: "User Info"
+          route: core_HEd_student_information_userinfo
       button_add:
         route: core_HEd_student_information_add
       menu_actions:

@@ -107,6 +107,32 @@ class CoreInformationController extends Controller {
     
     return $this->render('KulaHEdStudentBundle:CoreInformation:other_info.html.twig', array('student' => $student, 'student_status' => $student_status));
   }
+
+  public function user_infoAction() {
+    $this->authorize();
+    $this->processForm();
+    $this->setRecordType('Core.HEd.Student');
+    
+    $student = array();
+    $student_status = array();
+    
+    $student = $this->db()->db_select('STUD_STUDENT', 'STUD_STUDENT')
+      ->fields('STUD_STUDENT')
+      ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = STUD_STUDENT.STUDENT_ID')
+      ->fields('cons', array('NOTES'))
+      ->condition('STUDENT_ID', $this->record->getSelectedRecord()['STUDENT_ID'])
+      ->execute()->fetch();
+
+    if ($this->record->getSelectedRecordID()) {
+    
+      $student_status = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus')
+        ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecord()['STUDENT_STATUS_ID'])
+        ->execute()->fetch();
+    }
+    
+    return $this->render('KulaHEdStudentBundle:CoreInformation:user_info.html.twig', array('student' => $student, 'student_status' => $student_status));
+  }
   
   public function addAction() {
     $this->authorize();
