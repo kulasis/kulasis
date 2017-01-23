@@ -54,6 +54,85 @@ class APIv1StudentController extends APIController {
 
   }
 
+  public function getStudentAction($student_id, $org = null, $term = null) {
+
+    $student = array();
+
+    // Check for authorized access to constituent
+    $this->authorizeConstituent($student_id);
+
+    $student = $this->db()->db_select('CONS_CONSTITUENT', 'cons')
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'PERMANENT_NUMBER'))
+      ->join('STUD_STUDENT', 'stu', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
+      ->fields('stu', array('PARENT_GUARDIAN'))
+      ->condition('cons.CONSTITUENT_ID', $student_id)
+      ->execute()->fetch();
+
+    // Get emergency contacts/drivers
+    $student['emergency'] = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'emerg')
+      ->fields('emerg')
+      ->condition('emerg.STUDENT_ID', $student_id)
+      ->condition('emerg.REMOVED', 0)
+      ->execute()->fetchAll();
+
+    if ($org AND $term) {
+
+      // Get student status data
+      $student += $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('STUDENT_STATUS_ID', 'GRADE', 'LEVEL', 'STATUS', 'ENTER_DATE', 'ENTER_CODE', 'GROUP_WITH', 'OFF_CAMPUS', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVORIAL', 'MED_MEN_EMO_SOC_HEALTH', 'MED_INSURANCE', 'MED_PHYSICIAN', 'SCHOOL', 'COMMENTS', 'ORGANIZATION_TERM_ID'))
+        ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+        ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+        ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+        ->condition('stustatus.STUDENT_ID', $student_id)
+        ->condition('org.ORGANIZATION_ABBREVIATION', $org)
+        ->condition('term.TERM_ABBREVIATION', $term)
+        ->execute()->fetch();
+
+      // Get forms
+      $student['agreements'] = array();
+      $a = 0;
+      $forms_result = $this->db()->db_select('STUD_FORM', 'form')
+        ->fields('form', array('FORM_ID', 'FORM_NAME', 'FORM_TYPE', 'OPTIONAL', 'RULE', 'FORM_TEXT'))
+        ->leftJoin('STUD_STUDENT_FORMS', 'stuform', 'stuform.FORM_ID = form.FORM_ID AND stuform.STUDENT_STATUS_ID = '.$student['STUDENT_STATUS_ID'])
+        ->fields('stuform', array('STUDENT_FORM_ID', 'FORM_TEXT', 'AGREE', 'COMPLETED', 'COMPLETED_TIMESTAMP', 'COMPLETED_CONSTITUENT_ID', 'COMPLETED_IP'))
+        ->condition('form.ORGANIZATION_TERM_ID', $student['ORGANIZATION_TERM_ID'])
+        ->execute();
+      while ($form_row = $forms_result->fetch()) {
+
+        $student['agreements'][$a] = [
+          'FORM_ID' => $form_row['FORM_ID'],
+          'FORM_NAME' => $form_row['FORM_NAME'],
+          'FORM_TEXT' => $form_row['FORM_TEXT'],
+          'OPTIONAL' => $form_row['OPTIONAL']
+        ];
+
+        if ($form_row['FORM_TYPE'] == 'AGREE') {
+          $student['agreements'][$a]['options']['AGREE'] = 'I agree.';
+        }
+
+        if ($form_row['OPTIONAL']) {
+          $student['agreements'][$a]['options']['DISAGREE'] = 'I disagree.';
+        }
+
+        $student['agreements'][$a]['STUDENT_FORM_ID'] = $form_row['STUDENT_FORM_ID'];
+        $student['agreements'][$a]['AGREE'] = $form_row['AGREE'];
+        $student['agreements'][$a]['FORM_TEXT'] = $form_row['FORM_TEXT'];
+        $student['agreements'][$a]['COMPLETED'] = $form_row['COMPLETED'];
+        $student['agreements'][$a]['COMPLETED_TIMESTAMP'] = $form_row['COMPLETED_TIMESTAMP'];
+
+        $a++;
+      }
+
+    }
+
+    if (count($student)) {
+      return $this->JSONResponse($student);
+    } else {
+      throw new NotFoundHttpException('Student not found.');
+    }
+
+  }
+
   public function updateStudentAction($student_id) {
 
     // Check for authorized access to constituent
