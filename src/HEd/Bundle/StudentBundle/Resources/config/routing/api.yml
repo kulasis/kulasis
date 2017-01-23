@@ -27,3 +27,18 @@ api_v1_update_student_enrollment:
     path:     /student/{student_id}/{org}/{term}
     defaults: { _controller: KulaHEdStudentBundle:APIv1Student:updateStudentEnrollment }
     methods: [PUT,PATCH]
+
+api_v1_student_emergency_add:
+    path:     /student/{student_id}/emergency_contact
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Student:addEmergencyContact }
+    methods: [POST]
+
+api_v1_student_emergency_edit:
+    path:     /student/{student_id}/emergency_contact/{emergency_contact_id}
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Student:editEmergencyContact }
+    methods: [PUT,PATCH]
+
+api_v1_student_emergency_delete:
+    path:     /student/{student_id}/emergency_contact/{emergency_contact_id}
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Student:deleteEmergencyContact }
+    methods: [DELETE]

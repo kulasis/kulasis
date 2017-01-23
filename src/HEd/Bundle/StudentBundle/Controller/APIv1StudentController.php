@@ -133,6 +133,104 @@ class APIv1StudentController extends APIController {
 
   }
 
+  public function addEmergencyContactAction($student_id) {
+
+    $this->authorizeConstituent($student_id);
+
+    $currentUser = $this->authorizeUser();
+
+    $transaction = $this->db()->db_transaction();
+
+    $emergency_contact_data = $this->form('add', 'HEd.Student.EmergencyContact', 0);
+    $emergency_contact_data['HEd.Student.EmergencyContact.StudentID'] = $student_id;
+    // create constituent relationship
+    $changes = $this->newPoster()->add('HEd.Student.EmergencyContact', 0, $emergency_contact_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+
+    if ($changes) {
+      $transaction->commit();
+      return $this->JSONResponse($changes);
+    } else {
+      $transaction->rollback();
+      throw new DisplayException('Emergency contact not created.');
+    }
+
+  }
+
+  public function editEmergencyContactAction($student_id, $emergency_contact_id) {
+
+    $this->authorizeConstituent($student_id);
+
+    $currentUser = $this->authorizeUser();
+
+    $transaction = $this->db()->db_transaction();
+
+    $emergency_contact_data = $this->form('edit', 'HEd.Student.EmergencyContact', 0);
+
+    // make sure emergency contact exists for student
+    $emergency_contact = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'emerg')
+      ->fields('emerg', array('EMERGENCY_CONTACT_ID'))
+      ->condition('emerg.STUDENT_ID', $student_id)
+      ->condition('emerg.EMERGENCY_CONTACT_ID', $emergency_contact_id)
+      ->execute()->fetch();
+
+    if ($emergency_contact['EMERGENCY_CONTACT_ID']) {
+      // create constituent relationship
+      $changes = $this->newPoster()->edit('HEd.Student.EmergencyContact', $emergency_contact['EMERGENCY_CONTACT_ID'], $emergency_contact_data
+      )->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+
+      if ($changes) {
+        $transaction->commit();
+        return $this->JSONResponse($changes);
+      } else {
+        $transaction->rollback();
+        throw new DisplayException('Emergency contact not updated.');
+      }
+
+    } // end if on emergency contact
+
+  }
+
+  public function deleteEmergencyContactAction($student_id, $emergency_contact_id) {
+
+    $this->authorizeConstituent($student_id);
+
+    $currentUser = $this->authorizeUser();
+
+    $transaction = $this->db()->db_transaction();
+
+    // make sure emergency contact exists for student
+    $emergency_contact = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'emerg')
+      ->fields('emerg', array('EMERGENCY_CONTACT_ID'))
+      ->condition('emerg.STUDENT_ID', $student_id)
+      ->condition('emerg.EMERGENCY_CONTACT_ID', $emergency_contact_id)
+      ->execute()->fetch();
+
+    if ($emergency_contact['EMERGENCY_CONTACT_ID']) {
+      // create constituent relationship
+      $changes = $this->newPoster()->edit('HEd.Student.EmergencyContact', $emergency_contact['EMERGENCY_CONTACT_ID'], array(
+        'HEd.Student.EmergencyContact.Removed' => 1,
+        'HEd.Student.EmergencyContact.RemovedTimestamp' => date('Y-m-d H:i:s'),
+        'HEd.Student.EmergencyContact.RemovedUserstamp' => $currentUser
+      ))->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+
+      if ($changes) {
+        $transaction->commit();
+        return $this->JSONResponse($changes);
+      } else {
+        $transaction->rollback();
+        throw new DisplayException('Emergency contact not removed.');
+      }
+
+    } // end if on emergency contact
+
+  }
+
+  public function makeAgreementAction($student_id, $org, $term, $form_id) {
+
+    
+
+  }
+
   public function updateStudentAction($student_id) {
 
     // Check for authorized access to constituent
@@ -151,6 +249,7 @@ class APIv1StudentController extends APIController {
       return $this->JSONResponse($changes);
     } else {
       $transaction->rollback();
+      throw new DisplayException('No changes made.');
     }
 
   }
