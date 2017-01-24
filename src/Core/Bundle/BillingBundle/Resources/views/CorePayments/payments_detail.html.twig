@@ -2,7 +2,7 @@
 
 {% block content %}
 <p>
-{% if request.get('_route') == 'Core_Billing_ConstituentBilling_Payments_AddTransaction' %}
+{% if request.get('_route') == 'Core_Billing_ConstituentBilling_PaymentDetail' %}
   {% set parent_route = 'Core_Billing_ConstituentBilling_Payments' %}
 {% else %}
   {% set parent_route = 'Core_Billing_StudentBilling_Payments' %}
@@ -129,7 +129,7 @@ Applied Payments
   <tr>
     {{ kula_field({ delete: true, field: 'Core.Billing.Payment.Applied.ID', db_row_id: applied_payment.CONSTITUENT_APPLIED_PAYMENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
-    {{ kula_field({ field: 'Core.Billing.Payment.Applied.TransactionID', input: false, value: applied_payment.CONSTITUENT_TRANSACTION_ID, CONSTITUENT_ID: kula_core_record.getSelectedRecord.STUDENT_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Core.Billing.Payment.Applied.TransactionID', input: false, value: applied_payment.CONSTITUENT_TRANSACTION_ID, CONSTITUENT_ID: kula_core_record.getSelectedRecord.CONSTITUENT_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Billing.Payment.Applied.Amount', db_row_id: applied_payment.CONSTITUENT_APPLIED_PAYMENT_ID, value: applied_payment.AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'Core.Billing.Payment.Applied.OriginalAmount', value: applied_payment.ORIGINAL_AMOUNT, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>

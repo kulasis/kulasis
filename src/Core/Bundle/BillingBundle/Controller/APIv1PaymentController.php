@@ -71,7 +71,7 @@ class APIv1PaymentController extends APIController {
     $transaction_service = $this->get('kula.Core.billing.transaction');
     $transaction_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
 
-    // calculate pennding charges
+    // calculate pending charges
     $pending_service = $this->get('kula.Core.billing.pending');
     $pending_service->calculatePendingCharges($currentUser);
     $pending_classes = $pending_service->getPendingClasses();
@@ -175,6 +175,11 @@ class APIv1PaymentController extends APIController {
           // post payment
           $payment_service->postPayment($payment_id);
           $transaction_service->postTransaction($transaction_payment_id);
+
+          // set class payment status
+          foreach($pending_classes as $class) {
+            $payment_service->updateClassPaidStatus($class['STUDENT_CLASS_ID']);
+          }
 
           // send email
           $message = \Swift_Message::newInstance()

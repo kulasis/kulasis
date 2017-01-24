@@ -58,15 +58,38 @@ class PaymentService {
       $amount = $amount * -1;
     }
 
+    // check if doesn't exist
+    $applied_payment = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+      ->fields('applied', array('CONSTITUENT_APPLIED_PAYMENT_ID'))
+      ->condition('applied.CONSTITUENT_PAYMENT_ID', $payment_id)
+      ->condition('applied.CONSTITUENT_TRANSACTION_ID', $transaction_id)
+      ->execute()->fetch();
+
+    if ($applied_payment['CONSTITUENT_APPLIED_PAYMENT_ID']) {
+
     // Prepare & post payment data    
-    $this->posterFactory->newPoster()->add('Core.Billing.Payment.Applied', 'new', array(
-      'Core.Billing.Payment.Applied.PaymentID' => $payment_id,
-      'Core.Billing.Payment.Applied.TransactionID' => $transaction_id,
-      'Core.Billing.Payment.Applied.Amount' => $amount,
-      'Core.Billing.Payment.Applied.OriginalAmount' => $amount,
-      'Core.Billing.Payment.Applied.Locked' => $locked,
-      'Core.Billing.Payment.Applied.Note' => $note
-    ))->process($this->db_options)->getResult();
+      $this->posterFactory->newPoster()->edit('Core.Billing.Payment.Applied', $applied_payment['CONSTITUENT_APPLIED_PAYMENT_ID'], array(
+        'Core.Billing.Payment.Applied.PaymentID' => $payment_id,
+        'Core.Billing.Payment.Applied.TransactionID' => $transaction_id,
+        'Core.Billing.Payment.Applied.Amount' => $amount,
+        'Core.Billing.Payment.Applied.OriginalAmount' => $amount,
+        'Core.Billing.Payment.Applied.Locked' => $locked,
+        'Core.Billing.Payment.Applied.Note' => $note
+      ))->process($this->db_options)->getResult();
+
+    } else {
+
+      // Prepare & post payment data    
+      $this->posterFactory->newPoster()->add('Core.Billing.Payment.Applied', 'new', array(
+        'Core.Billing.Payment.Applied.PaymentID' => $payment_id,
+        'Core.Billing.Payment.Applied.TransactionID' => $transaction_id,
+        'Core.Billing.Payment.Applied.Amount' => $amount,
+        'Core.Billing.Payment.Applied.OriginalAmount' => $amount,
+        'Core.Billing.Payment.Applied.Locked' => $locked,
+        'Core.Billing.Payment.Applied.Note' => $note
+      ))->process($this->db_options)->getResult();
+    
+    }
 
     $this->calculateBalanceForPayment($payment_id);
 
@@ -136,12 +159,13 @@ class PaymentService {
       ->condition('trans.CONSTITUENT_TRANSACTION_ID', $charge_id)
       ->execute()->fetch();
     $balance = $charge['APPLIED_BALANCE'];
-    //echo $charge_id.' Starting Balance: '.$balance.'<br />';
+    //echo $charge_id.' '.$charge['ORGANIZATION_TERM_ID'].' Starting Balance of charge: '.$balance.'<br />';
 
     // Find payment that matches charge
     $payment = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
       ->fields('payments')
       ->join('BILL_CONSTITUENT_TRANSACTIONS', 'trans', 'trans.PAYMENT_ID = payments.CONSTITUENT_PAYMENT_ID')
+      ->fields('trans', array('ORGANIZATION_TERM_ID'))
       ->condition('payments.CONSTITUENT_ID', $charge['CONSTITUENT_ID'])
       ->condition('payments.APPLIED_BALANCE', $charge['APPLIED_BALANCE']*-1)
       ->condition('trans.ORGANIZATION_TERM_ID', $charge['ORGANIZATION_TERM_ID'])
@@ -153,23 +177,50 @@ class PaymentService {
                                $charge['CONSTITUENT_TRANSACTION_ID'], 
                                $payment['APPLIED_BALANCE'], null, 1);
 
+      //echo $payment['CONSTITUENT_PAYMENT_ID'].' '.$payment['ORGANIZATION_TERM_ID'].' Applied Balance to matching charge: '.$payment['APPLIED_BALANCE'].'<br />';
+
+    } elseif ($payment['AMOUNT'] == $charge['AMOUNT'] AND $charge['ORGANIZATION_TERM_ID'] == $payment['ORGANIZATION_TERM_ID']) {
+
+      // remove all applied payments
+      $applied_trans_result = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+        ->fields('applied', array('CONSTITUENT_APPLIED_PAYMENT_ID', 'CONSTITUENT_TRANSACTION_ID'))
+        ->condition('applied.CONSTITUENT_PAYMENT_ID', $payment['CONSTITUENT_PAYMENT_ID'])
+        ->condition('trans.ORGANIZATION_TERM_ID', $charge['ORGANIZATION_TERM_ID'])
+        ->execute();
+      while ($applied_trans_row = $applied_trans_result->fetch()) {
+        $this->posterFactory->newPoster()->delete('Core.Billing.Payment.Applied', $applied_trans_row['CONSTITUENT_APPLIED_PAYMENT_ID'])->process($this->db_options)->getResult();
+
+        $this->calculateBalanceForCharge($applied_trans_row['CONSTITUENT_TRANSACTION_ID']);
+      }
+
+      $this->addAppliedPayment($payment['CONSTITUENT_PAYMENT_ID'], 
+                               $charge_id, 
+                               $payment['AMOUNT'], null, 1);
+
+      $this->calculateBalanceForPayment($payment_id);
+
+      //echo $payment['CONSTITUENT_PAYMENT_ID'].' '.$payment['ORGANIZATION_TERM_ID'].' Removed existing charges and applied Balance to matching charge: '.$payment['APPLIED_BALANCE'].'<br />';
+
     } else {
       // Find oldest payments and loop through, applying payments until charge has no balance
       $payments_result = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
         ->fields('payments')
+        ->join('BILL_CONSTITUENT_TRANSACTIONS', 'trans', 'trans.PAYMENT_ID = payments.CONSTITUENT_PAYMENT_ID')
+        ->fields('trans', array('ORGANIZATION_TERM_ID'))
         ->condition('payments.CONSTITUENT_ID', $charge['CONSTITUENT_ID'])
         ->condition('payments.APPLIED_BALANCE', 0, '<')
-        ->orderBy('PAYMENT_DATE', 'ASC', 'payments')
+        ->condition('trans.ORGANIZATION_TERM_ID', $charge['ORGANIZATION_TERM_ID'])
+        ->orderBy('payments.PAYMENT_DATE', 'ASC')
         ->execute();
       while ($payment_row = $payments_result->fetch()) {
-//echo $payment_row['CONSTITUENT_PAYMENT_ID'].' Payment amount to apply: '.$payment_row['APPLIED_BALANCE'].' <br />';
+//echo $charge_id.' '.$payment_row['ORGANIZATION_TERM_ID'].' Payment amount to apply: '.$payment_row['APPLIED_BALANCE'].' <br />';
         $balance_to_apply = null;
         if ($payment_row['APPLIED_BALANCE']*-1 <= $balance) {
           $balance_to_apply = $payment_row['APPLIED_BALANCE']*-1;
-    //echo $charge_id.' Applied Balance 2: '.$balance_to_apply.'<br />';
+    //echo $charge_id.' '.$payment_row['ORGANIZATION_TERM_ID'].' Applied Balance 2: '.$balance_to_apply.'<br />';
         } else {
           $balance_to_apply = $balance;
-    //echo $charge_id.' Applied Balance 3: '.$balance_to_apply.'<br />';
+    //echo $charge_id.' '.$payment_row['ORGANIZATION_TERM_ID'].' Applied Balance 3: '.$balance_to_apply.'<br />';
         }
 
 
@@ -180,7 +231,7 @@ class PaymentService {
 
           $balance = $balance - $balance_to_apply ;
         }
-        //echo $charge_id.' Remaining Balance: '.$balance.' <br />';
+        //echo $charge_id.' '.$payment_row['ORGANIZATION_TERM_ID'].' Remaining Balance: '.$balance.' <br />';
         if ($balance <= 0) {
           break;
         }
@@ -219,7 +270,7 @@ class PaymentService {
     }
     
     return $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
-      'Core.Billing.Payment.AppliedBalance' => $applied_trans_total * -1 + $payment['AMOUNT']
+      'Core.Billing.Payment.AppliedBalance' => $applied_trans_total + $payment['AMOUNT'] * -1
     ))->process($this->db_options)->getResult();
 
   }
@@ -247,6 +298,22 @@ class PaymentService {
       'Core.Billing.Transaction.AppliedBalance' => 
         $applied_balance
     ))->process($this->db_options)->getResult();
+  }
+
+  public function updateClassPaidStatus($class_id) {
+
+    $applied_balance = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+      ->expression('SUM(APPLIED_BALANCE)', 'applied_balance')
+      ->condition('trans.STUDENT_CLASS_ID', $class_id)
+      ->condition('trans.AMOUNT', 0, '!=')
+      ->execute()->fetch()['applied_balance'];
+
+    if ($applied_balance == 0) {
+      return $this->posterFactory->newPoster()->edit('HEd.Student.Class', $class_id, array('HEd.Student.Class.Paid' => 1))->process($this->db_options)->getResult();
+    } else {
+      return $this->posterFactory->newPoster()->edit('HEd.Student.Class', $class_id, array('HEd.Student.Class.Paid' => 0))->process($this->db_options)->getResult();
+    }
+    
   }
   
 }
