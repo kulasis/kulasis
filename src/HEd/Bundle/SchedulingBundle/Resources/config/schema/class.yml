@@ -137,4 +137,12 @@ HEd.Student.Class:
       lookup: HEd.Schedule.BillingStatus
       column_name: "Billing Status"
       label_name: "Billing Status"
-
+    Paid:
+      description: "Paid"
+      db_column_name: PAID
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Paid"
+      label_name: "Paid"
