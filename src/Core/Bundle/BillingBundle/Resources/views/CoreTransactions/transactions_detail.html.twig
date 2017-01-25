@@ -61,4 +61,13 @@
 {{ kula_field({ field: 'Core.Billing.Transaction.VoidedTimestamp', value: transaction.VOIDED_TIMESTAMP, label: true }) }}
 </div>
 </div>
+<div class="group-box">
+<div class="group-box-header">Audit</div>
+<div class="group-box-contents group">
+{{ kula_field({ field_name_override: 'Created Username', field: 'Core.Billing.Transaction.CreatedUserstamp', value: transaction.CREATED_USERNAME, label: true }) }}
+{{ kula_field({ field_name_override: 'Created Timestamp', field: 'Core.Billing.Transaction.CreatedTimestamp', value: transaction.CREATED_TIMESTAMP, label: true }) }}
+{{ kula_field({ field_name_override: 'Last Updated Username', field: 'Core.Billing.Transaction.UpdatedUserstamp', value: transaction.UPDATED_USERNAME, label: true }) }}
+{{ kula_field({ field_name_override: 'Last Updated Timestamp', field: 'Core.Billing.Transaction.UpdatedTimestamp', value: transaction.UPDATED_TIMESTAMP, label: true }) }}
+</div>
+</div>
 {% endblock %}

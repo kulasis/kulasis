@@ -151,7 +151,7 @@ class CoreTransactionsController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       $transaction = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
-        ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP', 'SHOW_ON_STATEMENT', 'ORGANIZATION_TERM_ID', 'STUDENT_CLASS_ID'))
+        ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'CONSTITUENT_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'ORIGINAL_AMOUNT', 'VOIDED', 'VOIDED_REASON', 'APPLIED_BALANCE', 'POSTED', 'CODE_ID', 'VOIDED_TIMESTAMP', 'SHOW_ON_STATEMENT', 'ORGANIZATION_TERM_ID', 'STUDENT_CLASS_ID', 'UPDATED_TIMESTAMP', 'CREATED_TIMESTAMP'))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
         ->fields('code', array('CODE_TYPE'))
         ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'transactions.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
@@ -161,6 +161,10 @@ class CoreTransactionsController extends Controller {
         ->fields('term', array('TERM_ABBREVIATION'))
         ->leftJoin('CORE_USER', 'user', 'user.USER_ID = transactions.VOIDED_USERSTAMP')
         ->fields('user', array('USERNAME'))
+        ->leftJoin('CORE_USER', 'created_user', 'created_user.USER_ID = transactions.CREATED_USERSTAMP')
+        ->fields('created_user', array('USERNAME' => 'CREATED_USERNAME'))
+        ->leftJoin('CORE_USER', 'updated_user', 'updated_user.USER_ID = transactions.UPDATED_USERSTAMP')
+        ->fields('updated_user', array('USERNAME' => 'UPDATED_USERNAME'))
         ->condition('transactions.CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
         ->execute()->fetch();
     }
