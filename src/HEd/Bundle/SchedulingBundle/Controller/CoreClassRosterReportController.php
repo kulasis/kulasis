@@ -124,13 +124,17 @@ class CoreClassRosterReportController extends ReportController {
       $student_concentrations = array();
       $student_concentrations_result = $this->db()->db_select('STUD_STUDENT_DEGREES', 'studeg')
         ->fields('studeg')
-        ->join('STUD_STUDENT_DEGREES_CONCENTRATIONS', 'stuconcen', 'studeg.STUDENT_DEGREE_ID = stuconcen.STUDENT_DEGREE_ID')
-        ->join('STUD_DEGREE_CONCENTRATION', 'concen', 'concen.CONCENTRATION_ID = stuconcen.CONCENTRATION_ID')
-        ->fields('concen', array('CONCENTRATION_NAME'))
+        ->join('STUD_STUDENT_DEGREES_AREAS', 'stuareas', 'studeg.STUDENT_DEGREE_ID = stuareas.STUDENT_DEGREE_ID')
+        ->join('STUD_DEGREE_AREA', 'area', 'area.AREA_ID = stuareas.AREA_ID')
+        ->fields('area', array('AREA_NAME'))
+        ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = area.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
+        ->fields('area_types', array('DESCRIPTION' => 'area_type'))
         ->condition('studeg.STUDENT_DEGREE_ID', $row['SEEKING_DEGREE_1_ID'])
+        ->orderBy('area_types.DESCRIPTION', 'ASC')
+        ->orderBy('area.AREA_NAME', 'ASC')
         ->execute();
       while ($student_concentrations_row = $student_concentrations_result->fetch()) {
-        $student_concentrations[] = $student_concentrations_row['CONCENTRATION_NAME'];
+        $student_concentrations[] = $student_concentrations_row['AREA_NAME'];
       }
       $row['concentrations'] = implode(", ", $student_concentrations);
       
