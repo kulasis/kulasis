@@ -64,6 +64,7 @@ class CoreStudentRecord extends Record {
       $result = $result->join('CORE_TERM', 'term', 'term.TERM_ID = orgterm.TERM_ID');
       $result = $result->fields('term', array('TERM_ABBREVIATION'));
       $result = $result->condition('orgterm.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs());
+      $result = $result->orderBy('term.START_DATE', 'DESC');
      // $result = $result->condition('orgterm.TERM_ID', $this->focus->getTermID());
     }
     $result = $result->condition('stu.STUDENT_ID', $record_id);
