@@ -130,6 +130,8 @@ class APIv1ScheduleController extends APIController {
           if ($discount_info['AMOUNT'] < 0) {
             $discount_info['AMOUNT'] = $discount_info['AMOUNT'] * -1;
           }
+
+          if ($schedule) {
           // Add Discount payment
           $payment_service = $this->get('kula.Core.billing.payment');
           $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
@@ -155,6 +157,9 @@ class APIv1ScheduleController extends APIController {
             $payment_service->calculateBalanceForCharge($charge_id['CONSTITUENT_TRANSACTION_ID']);
                         $payment_service->calculateBalanceForPayment($payment_id);
           }
+          } else {
+            throw new DisplayException('Invalid class id sent with discount.');
+          } 
         } else {
          throw new NotFoundHttpException('Invalid discount.');
         }
