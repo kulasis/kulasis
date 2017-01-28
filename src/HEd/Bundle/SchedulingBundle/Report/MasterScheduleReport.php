@@ -6,7 +6,7 @@ use Kula\Core\Bundle\FrameworkBundle\Report\Report as BaseReport;
 
 class MasterScheduleReport extends BaseReport {
   
-  private $width = array(20, 50, 40, 10, 30, 20, 15, 15, 15, 15, 15);
+  private $width = array(20, 50, 40, 10, 30, 20, 15, 15, 15, 15, 15, 15);
   
   private $data;
 
@@ -24,7 +24,7 @@ class MasterScheduleReport extends BaseReport {
 
     $this->SetDrawColor(0,0,0);
     $this->SetLineWidth(.1);
-      $header = array('Section #', 'Course Title', 'Instructor', 'Days', 'Time', 'Room', 'Max', 'Min', 'Enr', 'Left', 'Wait');
+      $header = array('Section #', 'Course Title', 'Instructor', 'Days', 'Time', 'Room', 'Max', 'Min', 'Enr', 'Paid', 'Left', 'Wait');
       for($i=0;$i<count($header);$i++)
           $this->Cell($this->width[$i],6,$header[$i],1,0,'L');
       $this->Ln();
@@ -52,8 +52,9 @@ class MasterScheduleReport extends BaseReport {
     $this->Cell($this->width[6],6,$row['CAPACITY'],'',0,'L',$this->fill);
     $this->Cell($this->width[7],6,$row['MINIMUM'],'',0,'L',$this->fill);
     $this->Cell($this->width[8],6,$row['ENROLLED_TOTAL'],'',0,'L',$this->fill);
-    $this->Cell($this->width[9],6,$row['CAPACITY'] - $row['ENROLLED_TOTAL'],'',0,'L',$this->fill);
-    $this->Cell($this->width[10],6,$row['WAIT_LISTED_TOTAL'],'',0,'L',$this->fill);
+    $this->Cell($this->width[9],6,$row['PAID_TOTAL'],'',0,'L',$this->fill);
+    $this->Cell($this->width[10],6,$row['CAPACITY'] - $row['ENROLLED_TOTAL'],'',0,'L',$this->fill);
+    $this->Cell($this->width[11],6,$row['WAIT_LISTED_TOTAL'],'',0,'L',$this->fill);
     $this->Ln();
     
     if (isset($row['meetings'])) {
@@ -64,7 +65,7 @@ class MasterScheduleReport extends BaseReport {
       $this->Cell($this->width[3],6,$meeting['meets'],'',0,'L',$this->fill);
       $this->Cell($this->width[4],6,$meeting['START_TIME'].' - '.$meeting['END_TIME'],'',0,'L',$this->fill);
       $this->Cell($this->width[5],6,$meeting['ROOM'],'',0,'L',$this->fill);
-      $this->Cell(75,6,'','',0,'L',$this->fill);
+      $this->Cell(90,6,'','',0,'L',$this->fill);
       $this->Ln();
       }
       $count++;

@@ -12,7 +12,7 @@ class CoreSectionController extends Controller {
     $this->setRecordType('Core.HEd.Section');
     
     $section = $this->db()->db_select('STUD_SECTION', 'section')
-      ->fields('section', array('SECTION_ID','CREDITS', 'START_DATE', 'END_DATE', 'CAPACITY', 'MINIMUM', 'ENROLLED_TOTAL', 'WAIT_LISTED_TOTAL', 'MARK_SCALE_ID', 'NO_CLASS_DATES', 'SUPPLIES_REQUIRED', 'SUPPLIES_OPTIONAL', 'SUPPLIES_PRICE', 'OPEN_REGISTRATION', 'CLOSE_REGISTRATION', 'ALLOW_REGISTRATION'))
+      ->fields('section', array('SECTION_ID','CREDITS', 'START_DATE', 'END_DATE', 'CAPACITY', 'MINIMUM', 'ENROLLED_TOTAL', 'PAID_TOTAL', 'WAIT_LISTED_TOTAL', 'MARK_SCALE_ID', 'NO_CLASS_DATES', 'SUPPLIES_REQUIRED', 'SUPPLIES_OPTIONAL', 'SUPPLIES_PRICE', 'OPEN_REGISTRATION', 'CLOSE_REGISTRATION', 'ALLOW_REGISTRATION'))
       ->condition('section.SECTION_ID', $this->record->getSelectedRecordID())
       ->execute()->fetch();
     
@@ -340,6 +340,23 @@ class CoreSectionController extends Controller {
     while ($enrolled_totals_row = $enrolled_totals_result->fetch()) {
       $enrolled_totals[$enrolled_totals_row['SECTION_ID']] = $enrolled_totals_row['enrolled_total'];
     }
+
+    // Get Paid Totals
+    $paid_totals = array();
+    $paid_totals_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
+      ->fields('class', array('SECTION_ID'))
+      ->expression('COUNT(*)', 'paid_total')
+      ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'section.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
+      ->condition('orgterms.ORGANIZATION_ID', $this->focus->getOrganizationID())
+      ->condition('orgterms.TERM_ID', $this->focus->getTermID())
+      ->condition($this->db()->db_or()->condition('DROPPED', null)->condition('DROPPED', 0))
+      ->condition('class.PAID', 1)
+      ->groupBy('SECTION_ID', 'class')
+      ->execute();
+    while ($paid_totals_row = $paid_totals_result->fetch()) {
+      $paid_totals[$paid_totals_row['SECTION_ID']] = $paid_totals_row['paid_total'];
+    }
         
     // Get Wait list Totals
     $waitlist_totals = array();
@@ -367,6 +384,7 @@ class CoreSectionController extends Controller {
 
       $this->newPoster()->edit('HEd.Section', $sections_row['SECTION_ID'], array(
         'HEd.Section.EnrolledTotal' => (isset($enrolled_totals[$sections_row['SECTION_ID']]) AND $enrolled_totals[$sections_row['SECTION_ID']] > 0) ? $enrolled_totals[$sections_row['SECTION_ID']] : 0,
+        'HEd.Section.PaidTotal' => (isset($paid_totals[$sections_row['SECTION_ID']]) AND $paid_totals[$sections_row['SECTION_ID']] > 0) ? $paid_totals[$sections_row['SECTION_ID']] : 0,
         'HEd.Section.WaitListedTotal' => (isset($waitlist_totals[$sections_row['SECTION_ID']]) AND $waitlist_totals[$sections_row['SECTION_ID']] > 0) ? $waitlist_totals[$sections_row['SECTION_ID']] : 0
       ))->process();
       

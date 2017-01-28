@@ -309,11 +309,31 @@ class PaymentService {
       ->execute()->fetch()['applied_balance'];
 
     if ($applied_balance == 0) {
-      return $this->posterFactory->newPoster()->edit('HEd.Student.Class', $class_id, array('HEd.Student.Class.Paid' => 1))->process($this->db_options)->getResult();
+      $status = $this->posterFactory->newPoster()->edit('HEd.Student.Class', $class_id, array('HEd.Student.Class.Paid' => 1))->process($this->db_options)->getResult();
     } else {
-      return $this->posterFactory->newPoster()->edit('HEd.Student.Class', $class_id, array('HEd.Student.Class.Paid' => 0))->process($this->db_options)->getResult();
+      $status = $this->posterFactory->newPoster()->edit('HEd.Student.Class', $class_id, array('HEd.Student.Class.Paid' => 0))->process($this->db_options)->getResult();
     }
+
+    $class_row = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
+      ->fields('class', array('SECTION_ID', 'PAID'))
+      ->condition('class.STUDENT_CLASS_ID', $class_id)
+      ->execute()->fetch();
+
+    $paid_totals_row = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
+      ->fields('class', array('SECTION_ID'))
+      ->expression('COUNT(*)', 'paid_total')
+      ->condition('class.SECTION_ID', $class_row['SECTION_ID'])
+      ->condition($this->database->db_or()->condition('DROPPED', null)->condition('DROPPED', 0))
+      ->condition('class.PAID', 1)
+      ->groupBy('SECTION_ID', 'class')
+      ->execute()->fetch();
+
+    $section_poster = $this->posterFactory->newPoster()->edit('HEd.Section', $class_row['SECTION_ID'], array(
+        'HEd.Section.PaidTotal' => $paid_totals_row['paid_total']
+      ))->process($this->db_options)->getResult();
     
+    return $status;
+
   }
   
 }

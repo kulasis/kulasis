@@ -16,7 +16,7 @@ HEd.Section:
       db_column_type: varchar
       db_column_length: 20
       field_type: text
-      field_size: 10
+      field_size: 20
       column_name: "Section Number"
       label_name: "Section Number"
     Name:
@@ -26,7 +26,7 @@ HEd.Section:
       db_column_length: 100
       db_column_null: true
       field_type: text
-      field_size: 25
+      field_size: 30
       column_name: "Section Name"
       label_name: "Section Name"
     Status:
@@ -129,6 +129,16 @@ HEd.Section:
       field_size: 5
       column_name: "Enrolled Total"
       label_name: "Enrolled Total"
+    PaidTotal:
+      description: "Paid Total"
+      db_column_name: PAID_TOTAL
+      db_column_type: int
+      db_column_size: small
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "Paid Total"
+      label_name: "Paid Total"
     WaitListedTotal:
       description: "Wait Listed Total"
       db_column_name: WAIT_LISTED_TOTAL
