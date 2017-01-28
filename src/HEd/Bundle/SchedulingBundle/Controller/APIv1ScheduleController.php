@@ -111,59 +111,65 @@ class APIv1ScheduleController extends APIController {
     if ($class_count['class_total'] <= $section['CAPACITY']) {
       $schedule = $this->get('kula.HEd.scheduling.schedule')->addClassForStudentStatus($student_status_id, $section_id, date('Y-m-d'), 0, array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
 
-      // Add discount
-      $discount_id = $this->request->request->get('discount_id');
-      $discount_proof = $this->request->request->get('discount_proof');
-      if ($discount_id != '') {
-        $discount_or = $this->db()->db_or();
-        $discount_or = $discount_or->condition('disc.END_DATE', date('Y-m-d'), '>=');
-        $discount_or = $discount_or->isNull('disc.END_DATE');
-        
-        // Get discount code
-        $discount_info = $this->db()->db_select('BILL_SECTION_FEE_DISCOUNT', 'disc')
-          ->fields('disc', array('SECTION_FEE_DISCOUNT_ID', 'SECTION_ID', 'CODE_ID', 'AMOUNT'))
-          ->condition('disc.SECTION_ID', $section_id)
-          ->condition('disc.SECTION_FEE_DISCOUNT_ID', $discount_id)
-          ->condition($discount_or)
-          ->execute()->fetch();
-        if ($discount_info['SECTION_FEE_DISCOUNT_ID'] != '') {
-          if ($discount_info['AMOUNT'] < 0) {
-            $discount_info['AMOUNT'] = $discount_info['AMOUNT'] * -1;
-          }
+      if ($schedule) {
 
-          if ($schedule) {
-          // Add Discount payment
-          $payment_service = $this->get('kula.Core.billing.payment');
-          $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
-          $payment_id = $payment_service->addPayment($student_id, $student_id, 'D', null, date('Y-m-d'), null, $discount_info['AMOUNT'], null, $discount_proof);
-
-          // Add discount transaction
-          $transaction_service = $this->get('kula.Core.billing.transaction');
-          $transaction_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
-          $transaction_service->addDiscount($discount_id, $student_id, $section['ORGANIZATION_TERM_ID'], $schedule, $payment_id);
-
-          // Get largest charge
-          $charge_id = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
-            ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'APPLIED_BALANCE'))
-            ->condition('trans.CONSTITUENT_ID', $student_id)
-            ->condition('trans.STUDENT_CLASS_ID', $schedule)
-            ->orderBy('APPLIED_BALANCE', 'DESC', 'trans')
+        // Add discount
+        $discount_id = $this->request->request->get('discount_id');
+        $discount_proof = $this->request->request->get('discount_proof');
+        if ($discount_id != '') {
+          $discount_or = $this->db()->db_or();
+          $discount_or = $discount_or->condition('disc.END_DATE', date('Y-m-d'), '>=');
+          $discount_or = $discount_or->isNull('disc.END_DATE');
+          
+          // Get discount code
+          $discount_info = $this->db()->db_select('BILL_SECTION_FEE_DISCOUNT', 'disc')
+            ->fields('disc', array('SECTION_FEE_DISCOUNT_ID', 'SECTION_ID', 'CODE_ID', 'AMOUNT'))
+            ->condition('disc.SECTION_ID', $section_id)
+            ->condition('disc.SECTION_FEE_DISCOUNT_ID', $discount_id)
+            ->condition($discount_or)
             ->execute()->fetch();
+          if ($discount_info['SECTION_FEE_DISCOUNT_ID'] != '') {
+            if ($discount_info['AMOUNT'] < 0) {
+              $discount_info['AMOUNT'] = $discount_info['AMOUNT'] * -1;
+            }
 
-          if ($charge_id['CONSTITUENT_TRANSACTION_ID']) {
-            // Calculate applied payment
-            $payment_service->addAppliedPayment($payment_id, $charge_id['CONSTITUENT_TRANSACTION_ID'], $discount_info['AMOUNT']);
+            if ($schedule) {
+            // Add Discount payment
+            $payment_service = $this->get('kula.Core.billing.payment');
+            $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+            $payment_id = $payment_service->addPayment($student_id, $student_id, 'D', null, date('Y-m-d'), null, $discount_info['AMOUNT'], null, $discount_proof);
 
-            $payment_service->calculateBalanceForCharge($charge_id['CONSTITUENT_TRANSACTION_ID']);
-                        $payment_service->calculateBalanceForPayment($payment_id);
-          }
+            // Add discount transaction
+            $transaction_service = $this->get('kula.Core.billing.transaction');
+            $transaction_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+            $transaction_service->addDiscount($discount_id, $student_id, $section['ORGANIZATION_TERM_ID'], $schedule, $payment_id);
+
+            // Get largest charge
+            $charge_id = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+              ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'APPLIED_BALANCE'))
+              ->condition('trans.CONSTITUENT_ID', $student_id)
+              ->condition('trans.STUDENT_CLASS_ID', $schedule)
+              ->orderBy('APPLIED_BALANCE', 'DESC', 'trans')
+              ->execute()->fetch();
+
+              if ($charge_id['CONSTITUENT_TRANSACTION_ID']) {
+                // Calculate applied payment
+                $payment_service->addAppliedPayment($payment_id, $charge_id['CONSTITUENT_TRANSACTION_ID'], $discount_info['AMOUNT']);
+
+                $payment_service->calculateBalanceForCharge($charge_id['CONSTITUENT_TRANSACTION_ID']);
+                            $payment_service->calculateBalanceForPayment($payment_id);
+              }
+            } else {
+              throw new DisplayException('Invalid class id sent with discount.');
+            } 
           } else {
-            throw new DisplayException('Invalid class id sent with discount.');
-          } 
-        } else {
-         throw new NotFoundHttpException('Invalid discount.');
-        }
-      } // close if on discount
+           throw new NotFoundHttpException('Invalid discount.');
+          }
+        } // end if on existance of discount
+      } else {
+        throw new DisplayException('Could not enroll in class.');
+      }
+      
       $transaction->commit();
     } else {
       $transaction->rollback();
@@ -262,20 +268,14 @@ class APIv1ScheduleController extends APIController {
   }
 
   public function getPendingClassesAction() {
-
     // get logged in user
     $currentUser = $this->authorizeUser();
-
     $data = array();
-
     $pending_service = $this->get('kula.Core.billing.pending');
     $pending_service->calculatePendingCharges($currentUser);
-
     $data['classes'] = $pending_service->getPendingClasses();
     $data['billing_total'] = $pending_service->totalAmount();
-
     // return class list
     return $this->jsonResponse($data);
   }
-
 }
