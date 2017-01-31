@@ -27,7 +27,7 @@ class PaymentService {
     $this->db_options = $options;
   }
 
-  public function addPayment($constituent_id, $payee_constituent_id, $payment_type, $payment_method, $payment_date, $payment_number, $amount, $note = null, $discount_proof = null) {
+  public function addPayment($constituent_id, $payee_constituent_id, $payment_type, $payment_method, $payment_date, $payment_number, $amount, $note = null, $discount_proof = null, $refund = false) {
 
     if ($amount < 0) {
       $amount = $amount * -1;
@@ -44,7 +44,7 @@ class PaymentService {
       'Core.Billing.Payment.PaymentNumber' => $payment_number,
       'Core.Billing.Payment.Amount' => $amount, 
       'Core.Billing.Payment.OriginalAmount' => $amount,
-      'Core.Billing.Payment.AppliedBalance' => $amount * -1,
+      'Core.Billing.Payment.AppliedBalance' => ($refund === false) ? $amount * -1 : $amount,
       'Core.Billing.Payment.Note' => $note,
       'Core.Billing.Payment.DiscountProof' => $discount_proof,
       'Core.Billing.Payment.Posted' => 0
@@ -285,11 +285,15 @@ class PaymentService {
 
     // get payment amount
     $charge = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'charge')
-      ->fields('charge', array('AMOUNT'))
+      ->fields('charge', array('AMOUNT', 'REFUND_TRANSACTION_ID'))
       ->condition('charge.CONSTITUENT_TRANSACTION_ID', $charge_id)
       ->execute()->fetch();
 
-    return $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] - $applied_trans['total_applied_balance']);
+    if ($charge['REFUND_TRANSACTION_ID'] != '') {
+      return $this->updateAppliedBalanceForTransaction($charge_id, 0);
+    } else {
+      return $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] - $applied_trans['total_applied_balance']);   
+    }
 
   }
 

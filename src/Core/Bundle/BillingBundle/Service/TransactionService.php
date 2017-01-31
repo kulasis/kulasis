@@ -36,7 +36,7 @@ class TransactionService {
 
   }
 
-  public function addTransaction($constituent_id, $organization_term_id, $transaction_code_id, $transaction_date, $transaction_description, $amount, $payment_id = null, $class_id = null) {
+  public function addTransaction($constituent_id, $organization_term_id, $transaction_code_id, $transaction_date, $transaction_description, $amount, $payment_id = null, $class_id = null, $refund = false) {
     
     // Get transaction code
     $transaction_code = $this->database->db_select('BILL_CODE', 'code')
@@ -49,7 +49,9 @@ class TransactionService {
       $formatted_transaction_description = $transaction_code['CODE_DESCRIPTION'];
     }
     
-    if ($transaction_code['CODE_TYPE'] == 'P')
+    if ($transaction_code['CODE_TYPE'] == 'P' AND $refund === false)
+      $amount = $amount * -1;
+    if ($transaction_code['CODE_TYPE'] == 'P' AND $refund === true AND $amount < -1)
       $amount = $amount * -1;
     
     // Prepare & post payment data    

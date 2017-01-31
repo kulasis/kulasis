@@ -22,6 +22,12 @@ Core_Billing_ConstituentBilling_AddPayment:
     _controller: KulaCoreBillingBundle:CorePayments:addPayment
     _navigation: Core.Billing.ConstituentBilling.Payments
 
+Core_Billing_ConstituentBilling_AddPaymentRefund:
+  path: /constituent/payments/refund/add
+  defaults: 
+    _controller: KulaCoreBillingBundle:CorePayments:addPaymentRefund
+    _navigation: Core.Billing.ConstituentBilling.Payments
+
 Core_Billing_ConstituentBilling_TransactionDetail:
   path: /constituent/transactions/{constituent_transaction_id}/detail
   defaults: { _controller: KulaCoreBillingBundle:CoreTransactions:transaction_detail }
@@ -95,6 +101,12 @@ Core_Billing_StudentBilling_AddPayment:
   path: /student/payments/add
   defaults: 
     _controller: KulaCoreBillingBundle:CorePayments:addPayment
+    _navigation: Core.Billing.StudentBilling
+
+Core_Billing_StudentBilling_AddPaymentRefund:
+  path: /student/payments/refund/add
+  defaults: 
+    _controller: KulaCoreBillingBundle:CorePayments:addPaymentRefund
     _navigation: Core.Billing.StudentBilling
 
 Core_Billing_StudentBilling_PaymentDetail:

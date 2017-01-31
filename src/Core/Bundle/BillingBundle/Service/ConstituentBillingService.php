@@ -435,6 +435,21 @@ class ConstituentBillingService {
       
       $return_payment_affected = $this->posterFactory->newPoster()->add('Core.Billing.Transaction', 'new', $return_payment_data)->process($this->db_options)->getResult();
 
+      // Zero out any applied balances and recalc
+      $applied_trans_result = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied_payments')
+        ->fields('applied_payments', array('CONSTITUENT_APPLIED_PAYMENT_ID', 'CONSTITUENT_PAYMENT_ID'))
+        ->condition('CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
+        ->execute();
+      while ($applied_trans_row = $applied_trans_result->fetch()) {
+        $this->posterFactory->newPoster()->edit('Core.Billing.Payment.Applied', $applied_trans_row['CONSTITUENT_APPLIED_PAYMENT_ID'], array('Core.Billing.Payment.Applied.Amount' => 0.00))->process($this->db_options)->getResult();
+
+        // Recalc applied payments
+        $this->payment_service->calculateBalanceForPayment($applied_trans_row['CONSTITUENT_PAYMENT_ID']);
+      }
+
+      // Recalc applied charges
+      $this->payment_service->calculateBalanceForCharge($constituent_transaction_id);
+
       // set as returned for existing transaction
       $original_transaction_poster = $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $constituent_transaction_id, array(
         'Core.Billing.Transaction.RefundTransactionID' => $return_payment_affected,
@@ -448,7 +463,7 @@ class ConstituentBillingService {
             'Core.FAID.Student.Award.AwardStatus' => 'PEND'
           ))->process($this->db_options)->getResult();
         }
-        
+
       $transaction->commit();
       
       return $return_payment_affected;

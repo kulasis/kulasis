@@ -58,6 +58,11 @@ Core.Billing:
           record_loaded: true
           divider_before: true
           route: Core_Billing_StudentBilling_AddPayment
+        AddPaymentRefund:
+          description: "Add Payment Refund"
+          display_name: "Add Payment Refund"
+          divider_before: true
+          route: Core_Billing_StudentBilling_AddPaymentRefund
       menu_reports:
         BillingStatement:
           description: "Billing Statement"
@@ -103,6 +108,11 @@ Core.Billing:
           record_loaded: true
           divider_before: true
           route: Core_Billing_ConstituentBilling_AddPayment
+        AddPaymentRefund:
+          description: "Add Payment Refund"
+          display_name: "Add Payment Refund"
+          divider_before: true
+          route: Core_Billing_ConstituentBilling_AddPaymentRefund
       menu_reports:
         BillingStatement:
           description: "Billing Statement"

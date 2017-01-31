@@ -195,6 +195,64 @@ class CorePaymentsController extends Controller {
     return $this->render('KulaCoreBillingBundle:CorePayments:payments_add.html.twig');
   }
 
+  public function addPaymentRefundAction() {
+    $this->authorize();
+
+    if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPaymentRefund') {
+      $this->setRecordType('Core.Constituent');
+    } else {
+      $this->setRecordType('Core.HEd.Student');
+    }
+      
+    if ($this->record->getSelectedRecordID()) {
+      
+      if ($this->request->request->get('add')) {
+      
+        $payment_service = $this->get('kula.Core.billing.payment');
+        $add = $this->request->request->get('add');
+        $payment_id = $payment_service->addPayment(
+          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.ConstituentID'], 
+          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PayeeConstituentID'], 
+          'R',
+          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentMethod'], 
+          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentDate'], 
+          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentNumber'], 
+          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Amount'], 
+          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Note'],
+          null,
+          true
+        );
+
+        // Transaction details set
+        if (isset($add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID']) AND 
+          $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'] != '' AND $payment_id != '') {
+
+          $constituent_billing_service = $this->get('kula.Core.billing.transaction');
+          $constituent_billing_service->addTransaction(
+            $this->record->getSelectedRecordID(), 
+            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.OrganizationTermID']['value'], 
+            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'], 
+            $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentDate'], 
+            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Description'], 
+            $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Amount'], 
+            $payment_id,
+            null,
+            true
+          );
+        }
+      
+        if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPaymentRefund') {
+          return $this->forward('Core_Billing_ConstituentBilling_Payments', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()));
+        } else {
+          return $this->forward('Core_Billing_StudentBilling_Payments', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
+        }
+      }
+    
+    }
+    
+    return $this->render('KulaCoreBillingBundle:CorePayments:payments_add.html.twig');
+  }
+
   public function addAppliedPaymentAction($payment_id) {
     $this->authorize();
     
