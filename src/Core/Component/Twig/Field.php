@@ -48,7 +48,7 @@ class Field {
         throw new \Exception('Unable to find table: '.$param['field']);
       }
 
-      if (self::$permission->getPermissionForSchemaObject(self::$schema->getDBTable($field->getTable()), null, Permission::DELETE)) {
+      if (self::$permission->getPermissionForSchemaObject($field->getTable(), null, Permission::DELETE)) {
         if (isset($param['field_name_override'])) {
           $html = $param['field_name_override'];
         } else {
@@ -186,17 +186,17 @@ class Field {
     
     $html = '';
     
-    if ($param['add'] AND !self::$permission->getPermissionForSchemaObject(self::$schema->getDBTable($field->getTable()), null, Permission::ADD)) {
+    if ($param['add'] AND !self::$permission->getPermissionForSchemaObject($field->getTable(), null, Permission::ADD)) {
       return null;
     }
-    
+
     // generate checkboxes for deleting
     $org_term_ids = self::$focus->getOrganizationTermIDs();
     if ($param['delete'] AND 
-    self::$permission->getPermissionForSchemaObject(self::$schema->getDBTable($field->getTable()), null, Permission::DELETE) AND 
+    self::$permission->getPermissionForSchemaObject($field->getTable(), null, Permission::DELETE) AND 
     (!$param['school_term_only'] OR ($param['school_term_only'] AND count($org_term_ids) == 1))) {
       
-      if ($param['add'] AND self::$permission->getPermissionForSchemaObject(self::$schema->getDBTable($field->getTable()), null, Permission::ADD))
+      if ($param['add'] AND self::$permission->getPermissionForSchemaObject($field->getTable(), null, Permission::ADD))
         $param['attributes_html']['class'] = 'form-delete-checkbox-add';
       else   
         $param['attributes_html']['class'] = 'form-delete-checkbox';
