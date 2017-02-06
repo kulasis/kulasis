@@ -9,6 +9,27 @@ class CorePaymentsController extends Controller {
   public function paymentsAction() {
     $this->authorize();
 
+    if ($form_delete = $this->form('delete', 'Core.Billing.Payment')) {
+      $continue = true;
+      $ids = array();
+      foreach($form_delete as $id => $row) {
+        $ids[] = $id;
+      }
+        $payment_delete_row = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
+          ->fields('payments', array('CONSTITUENT_PAYMENT_ID'))
+          ->condition('CONSTITUENT_PAYMENT_ID', $id)
+          ->isNotNull('payments.MERCHANT_RESPONSE')
+          ->execute()
+          ->fetch();
+        if ($payment_delete_row['CONSTITUENT_PAYMENT_ID'] != '') {
+          $continue = false;
+        }
+
+      if ($continue) {
+        $this->processForm();
+      }
+    }
+
     if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_Payments') {
       $this->setRecordType('Core.Constituent');
     } else {
@@ -33,7 +54,25 @@ class CorePaymentsController extends Controller {
       
       foreach($void as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
-          $payment_service->voidPayment($row_id);
+          if (isset($row['Core.Billing.Payment.Voided']['checkbox'])
+          AND $row['Core.Billing.Payment.Voided']['checkbox'] == '1' 
+          AND $row['Core.Billing.Payment.Voided']['checkbox_hidden'] == 0)
+            $payment_service->voidPayment($row_id);
+        }
+      }
+    }
+
+    if ($this->request->request->get('post')) {
+      $payment_service = $this->get('kula.Core.billing.payment');
+      
+      $post = $this->request->request->get('post');
+
+      foreach($post as $table => $row_info) {
+        foreach($row_info as $row_id => $row) {
+          if (isset($row['Core.Billing.Payment.Posted']['checkbox'])
+          AND $row['Core.Billing.Payment.Posted']['checkbox'] == 1 
+          AND $row['Core.Billing.Payment.Posted']['checkbox_hidden'] == 0)
+            $payment_service->postPayment($row_id);
         }
       }
     }
@@ -191,6 +230,8 @@ class CorePaymentsController extends Controller {
       }
     
     }
+    
+    
     
     return $this->render('KulaCoreBillingBundle:CorePayments:payments_add.html.twig');
   }

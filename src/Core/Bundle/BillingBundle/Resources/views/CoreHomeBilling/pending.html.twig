@@ -21,7 +21,7 @@ Pending Transactions
 <thead>
   <tr>
   {{ kula_field_name({ edit: true, field: 'Core.Billing.Transaction.Posted', field_name_override: 'P', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ delete: true, field: 'Core.Billing.Transaction.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ delete: true, field: 'Core.Billing.Transaction.ID', field_name_override: '', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   <th class="data-table-cell-row-header">#</th>
   {{ kula_field_name({ field: 'Core.Term.Abbreviation', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Organization.Abbreviation', field_name_override: 'Organization', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}

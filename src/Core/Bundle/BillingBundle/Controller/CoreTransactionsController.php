@@ -8,6 +8,7 @@ class CoreTransactionsController extends Controller {
   
   public function transactionsAction() {
     $this->authorize();
+    $this->processForm();
 
     if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_Transactions') {
       $this->setRecordType('Core.Constituent');
@@ -33,7 +34,25 @@ class CoreTransactionsController extends Controller {
       
       foreach($void as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
-          $constituent_billing_service->removeTransaction($row_id, $reason, $transaction_date);
+          if (isset($row['Core.Billing.Transaction.Voided']['checkbox'])
+          AND $row['Core.Billing.Transaction.Voided']['checkbox'] == '1' 
+          AND $row['Core.Billing.Transaction.Voided']['checkbox_hidden'] == 0)
+            $constituent_billing_service->removeTransaction($row_id, $reason, $transaction_date);
+        }
+      }
+    }
+
+    if ($this->request->request->get('post')) {
+      $constituent_billing_service = $this->get('kula.Core.billing.constituent');
+      
+      $post = $this->request->request->get('post');
+      
+      foreach($post as $table => $row_info) {
+        foreach($row_info as $row_id => $row) {
+          if (isset($row['Core.Billing.Transaction.Posted']['checkbox'])
+          AND $row['Core.Billing.Transaction.Posted']['checkbox'] == '1' 
+          AND $row['Core.Billing.Transaction.Posted']['checkbox_hidden'] == 0)
+            $constituent_billing_service->postTransaction($row_id);
         }
       }
     }
@@ -69,6 +88,7 @@ class CoreTransactionsController extends Controller {
   
   public function historyAction() {
     $this->authorize();
+    $this->processForm();
 
     if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_History') {
       $this->setRecordType('Core.Constituent');
@@ -94,7 +114,25 @@ class CoreTransactionsController extends Controller {
       
       foreach($void as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
-          $constituent_billing_service->removeTransaction($row_id, $reason, $transaction_date);
+          if (isset($row['Core.Billing.Transaction.Voided']['checkbox'])
+          AND $row['Core.Billing.Transaction.Voided']['checkbox'] == '1' 
+          AND $row['Core.Billing.Transaction.Voided']['checkbox_hidden'] == 0)
+            $constituent_billing_service->removeTransaction($row_id, $reason, $transaction_date);
+        }
+      }
+    }
+
+    if ($this->request->request->get('post')) {
+      $constituent_billing_service = $this->get('kula.Core.billing.constituent');
+      
+      $post = $this->request->request->get('post');
+      
+      foreach($post as $table => $row_info) {
+        foreach($row_info as $row_id => $row) {
+          if (isset($row['Core.Billing.Transaction.Posted']['checkbox'])
+          AND $row['Core.Billing.Transaction.Posted']['checkbox'] == '1' 
+          AND $row['Core.Billing.Transaction.Posted']['checkbox_hidden'] == 0)
+            $constituent_billing_service->postTransaction($row_id);
         }
       }
     }

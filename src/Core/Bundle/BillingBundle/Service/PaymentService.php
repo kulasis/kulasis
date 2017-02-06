@@ -262,11 +262,14 @@ class PaymentService {
 
     // Get payment transactions
     $payment_trans_result = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'paytrans')
-      ->fields('paytrans', array('CONSTITUENT_TRANSACTION_ID', 'AMOUNT'))
+      ->fields('paytrans', array('CONSTITUENT_TRANSACTION_ID', 'AMOUNT', 'STUDENT_CLASS_ID'))
       ->condition('paytrans.PAYMENT_ID', $payment_id)
       ->execute();
     while ($payment_trans_row = $payment_trans_result->fetch()) {
         $this->updateAppliedBalanceForTransaction($payment_trans_row['CONSTITUENT_TRANSACTION_ID'], $applied_trans_total + $payment_trans_row['AMOUNT']);
+        if ($payment_trans_row['STUDENT_CLASS_ID']) {
+          $this->updateClassPaidStatus($payment_trans_row['STUDENT_CLASS_ID']);
+        }
     }
     
     return $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
