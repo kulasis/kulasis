@@ -15,6 +15,7 @@ HEd.FAID.Award.Status:
     - { code: APPR, description: "Approved", sort: 2 }
     - { code: PEND, description: "Pending", sort: 3 }
     - { code: DENI, description: "Denied", sort: 4 }
+    - { code: CANC, description: "Cancelled", sort: 5 }
 
 Core.Integration.Application:
   description: "Applications"
