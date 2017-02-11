@@ -10,7 +10,7 @@ class CoreHomeBillingController extends Controller {
     $this->processForm();
     
     if ($this->request->request->get('void')) {
-      $constituent_billing_service = $this->get('kula.Core.billing.constituent');
+      $constituent_billing_service = $this->get('kula.Core.Billing.constituent');
       
       $void = $this->request->request->get('void');
       $non = $this->request->request->get('non');
@@ -27,11 +27,14 @@ class CoreHomeBillingController extends Controller {
       
       foreach($void as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
-          $constituent_billing_service->removeTransaction($row_id, $reason, $transaction_date);
+          if (isset($row['Core.Billing.Transaction.Voided']['checkbox'])
+          AND $row['Core.Billing.Transaction.Voided']['checkbox'] == '1' 
+          AND $row['Core.Billing.Transaction.Voided']['checkbox_hidden'] == 0)
+            $constituent_billing_service->removeTransaction($row_id, $reason, $transaction_date);
         }
       }
     }
-    
+
     if ($this->request->request->get('post')) {
       $constituent_billing_service = $this->get('kula.Core.billing.constituent');
       
@@ -39,7 +42,10 @@ class CoreHomeBillingController extends Controller {
       
       foreach($post as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
-          $constituent_billing_service->postTransaction($row_id);
+          if (isset($row['Core.Billing.Transaction.Posted']['checkbox'])
+          AND $row['Core.Billing.Transaction.Posted']['checkbox'] == '1' 
+          AND $row['Core.Billing.Transaction.Posted']['checkbox_hidden'] == 0)
+            $constituent_billing_service->postTransaction($row_id);
         }
       }
     }
