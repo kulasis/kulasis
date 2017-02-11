@@ -279,7 +279,7 @@ class PaymentService {
   }
 
   public function calculateBalanceForCharge($charge_id) {
-
+  	$result = null;
     // get applied transactions
     $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
       ->expression('SUM(AMOUNT)', 'total_applied_balance')
@@ -288,16 +288,19 @@ class PaymentService {
 
     // get payment amount
     $charge = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'charge')
-      ->fields('charge', array('AMOUNT', 'REFUND_TRANSACTION_ID'))
+      ->fields('charge', array('AMOUNT', 'REFUND_TRANSACTION_ID', 'STUDENT_CLASS_ID'))
       ->condition('charge.CONSTITUENT_TRANSACTION_ID', $charge_id)
       ->execute()->fetch();
 
     if ($charge['REFUND_TRANSACTION_ID'] != '') {
-      return $this->updateAppliedBalanceForTransaction($charge_id, 0);
+      $result = $this->updateAppliedBalanceForTransaction($charge_id, 0);
     } else {
-      return $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] - $applied_trans['total_applied_balance']);   
+      $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] - $applied_trans['total_applied_balance']);   
     }
-
+    if ($charge['STUDENT_CLASS_ID'] != '') {
+			$this->updateClassPaidStatus($charge['STUDENT_CLASS_ID']);
+    }
+  	return $result;
   }
 
   public function updateAppliedBalanceForTransaction($transaction_id, $applied_balance) {
