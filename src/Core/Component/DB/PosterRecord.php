@@ -144,29 +144,34 @@ class PosterRecord {
     if ($this->crud == self::ADD)
       return false;
 	
-	$old_fields = array();
-	
-	if ($this->fields) {
-	
-  	foreach($this->fields as $fieldName => $field) {
-  		$this->originalFields[] = $fieldName;
+  	if ($this->fields AND $this->crud == self::EDIT) {
+  	   
+      $old_fields = array();
 
-      if ($this->schema->getField($fieldName)) {
-  		  $old_fields[] = $this->schema->getField($fieldName)->getDBName();
-      } else {
-        throw new \Exception('Field does not exist: '.$fieldName);
-      }
-  	}
-  
-    $this->originalRecord = $this->db->db_select($this->schema->getTable($this->table)->getDBName(), 'originalTable')
-      ->fields('originalTable', $old_fields)
-      ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
-      ->execute()->fetch();
-  }
-	$this->originalRecordForValidation = $this->db->db_select($this->schema->getTable($this->table)->getDBName(), 'originalTable')
-      ->fields('originalTable')
-      ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
-      ->execute()->fetch();
+    	foreach($this->fields as $fieldName => $field) {
+    		$this->originalFields[] = $fieldName;
+
+        if ($this->schema->getField($fieldName)) {
+    		  $old_fields[] = $this->schema->getField($fieldName)->getDBName();
+        } else {
+          throw new \Exception('Field does not exist: '.$fieldName);
+        }
+    	}
+    
+      $this->originalRecord = $this->db->db_select($this->schema->getTable($this->table)->getDBName(), 'originalTable')
+        ->fields('originalTable', $old_fields)
+        ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
+        ->execute()->fetch();
+    } 
+  	$this->originalRecordForValidation = $this->db->db_select($this->schema->getTable($this->table)->getDBName(), 'originalTable')
+        ->fields('originalTable')
+        ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
+        ->execute()->fetch();
+
+    if ($this->crud == self::DELETE) {
+      $this->originalRecord = $this->originalRecordForValidation;
+    }
+
   }
   
   private function processConfirmation() {
