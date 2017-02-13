@@ -29,9 +29,9 @@ class PaymentService {
 
   public function addPayment($constituent_id, $payee_constituent_id, $payment_type, $payment_method, $payment_date, $payment_number, $amount, $note = null, $discount_proof = null, $refund = false) {
 
-    if ($amount < 0) {
+    if ($amount < 0 OR ($amount > 0 AND $refund === true)) {
       $amount = $amount * -1;
-    }
+    } 
 
     // Prepare & post payment data    
     return $this->posterFactory->newPoster()->add('Core.Billing.Payment', 'new', array(

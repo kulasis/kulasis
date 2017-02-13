@@ -10,11 +10,11 @@ Core_Billing_ConstituentBilling_AddCharge:
     _controller: KulaCoreBillingBundle:CoreTransactions:add_charge
     _navigation: Core.Billing.ConstituentBilling
 
-Core_Billing_ConstituentBilling_History:
-  path: /constituent/history
+Core_Billing_ConstituentBilling_TransactionHistory:
+  path: /constituent/transaction_history
   defaults: 
     _controller: KulaCoreBillingBundle:CoreTransactions:history
-    _navigation: Core.Billing.ConstituentBilling.History
+    _navigation: Core.Billing.ConstituentBilling.TransactionHistory
 
 Core_Billing_ConstituentBilling_AddPayment:
   path: /constituent/payments/add
@@ -56,6 +56,12 @@ Core_Billing_ConstituentBilling_Payments:
     _controller: KulaCoreBillingBundle:CorePayments:payments
     _navigation: Core.Billing.ConstituentBilling.Payments
 
+Core_Billing_ConstituentBilling_PaymentHistory:
+  path: /constituent/payments/transaction_history
+  defaults: 
+    _controller: KulaCoreBillingBundle:CorePayments:history
+    _navigation: Core.Billing.ConstituentBilling.PaymentHistory
+
 Core_Billing_BillingSetup_Codes:
   path: /setup/codes
   defaults: 
@@ -91,11 +97,17 @@ Core_Billing_StudentBilling_AddCharge:
     _controller: KulaCoreBillingBundle:CoreTransactions:add_charge
     _navigation: Core.Billing.StudentBilling
 
-Core_Billing_StudentBilling_History:
-  path: /student/history
+Core_Billing_StudentBilling_TransactionHistory:
+  path: /student/transaction_history
   defaults: 
     _controller: KulaCoreBillingBundle:CoreTransactions:history
-    _navigation: Core.Billing.StudentBilling.History
+    _navigation: Core.Billing.StudentBilling.TransactionHistory
+
+Core_Billing_StudentBilling_PaymentHistory:
+  path: /student/payments/transaction_history
+  defaults: 
+    _controller: KulaCoreBillingBundle:CorePayments:history
+    _navigation: Core.Billing.StudentBilling.PaymentHistory
 
 Core_Billing_StudentBilling_AddPayment:
   path: /student/payments/add

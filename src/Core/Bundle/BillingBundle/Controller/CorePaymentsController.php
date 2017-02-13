@@ -97,6 +97,7 @@ class CorePaymentsController extends Controller {
         ->fields('sec', array('SECTION_NUMBER', 'SECTION_ID'))
         ->condition('payments.CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->condition('trans.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
+        ->condition('payments.VOIDED', 0)
         ->orderBy('PAYMENT_DATE', 'DESC', 'payments')
         ->orderBy('TRANSACTION_DATE', 'ASC', 'trans')
         ->orderBy('payments.CREATED_TIMESTAMP', 'DESC')
@@ -142,6 +143,7 @@ class CorePaymentsController extends Controller {
     $transactions = array();
     $applied_payments = array();
     $merchant_response = null;
+    $code_type = 'C';
     
     if ($this->record->getSelectedRecordID()) {
       $payment = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
@@ -175,9 +177,13 @@ class CorePaymentsController extends Controller {
         ->condition('applied.CONSTITUENT_PAYMENT_ID', $payment_id)
         ->execute()->fetchAll();
       
+      if ($payment['PAYMENT_TYPE'] == 'R')
+        $code_type = 'P';
+      else
+        $code_type = 'C';
     }
     
-    return $this->render('KulaCoreBillingBundle:CorePayments:payments_detail.html.twig', array('payment' => $payment, 'transactions' => $transactions, 'applied_payments' => $applied_payments, 'merchant_response' => $merchant_response));
+    return $this->render('KulaCoreBillingBundle:CorePayments:payments_detail.html.twig', array('payment' => $payment, 'transactions' => $transactions, 'applied_payments' => $applied_payments, 'merchant_response' => $merchant_response, 'code_type' => $code_type));
   }
 
   public function addPaymentAction() {
@@ -322,10 +328,122 @@ class CorePaymentsController extends Controller {
           return $this->forward('Core_Billing_StudentBilling_PaymentDetail', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('payment_id' => $payment_id));
         }
       }
+
+      // Get payment
+      $payment = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
+        ->fields('payments', array('PAYMENT_TYPE'))
+        ->condition('payments.CONSTITUENT_PAYMENT_ID', $payment_id)
+        ->execute()->fetch();
+
+      if ($payment['PAYMENT_TYPE'] == 'R')
+        $code_type = 'P';
+      else
+        $code_type = 'C';
     
     }
     
-    return $this->render('KulaCoreBillingBundle:CorePayments:payments_add_applied.html.twig', array('payment_id' => $payment_id));
+    return $this->render('KulaCoreBillingBundle:CorePayments:payments_add_applied.html.twig', array('payment_id' => $payment_id, 'code_type' => $code_type));
+  }
+
+  public function historyAction() {
+    $this->authorize();
+
+    if ($form_delete = $this->form('delete', 'Core.Billing.Payment')) {
+      $continue = true;
+      $ids = array();
+      foreach($form_delete as $id => $row) {
+        $ids[] = $id;
+      }
+        $payment_delete_row = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
+          ->fields('payments', array('CONSTITUENT_PAYMENT_ID'))
+          ->condition('CONSTITUENT_PAYMENT_ID', $id)
+          ->isNotNull('payments.MERCHANT_RESPONSE')
+          ->execute()
+          ->fetch();
+        if ($payment_delete_row['CONSTITUENT_PAYMENT_ID'] != '') {
+          $continue = false;
+        }
+
+      if ($continue) {
+        $this->processForm();
+      }
+    }
+
+    if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_PaymentHistory') {
+      $this->setRecordType('Core.Constituent');
+    } else {
+      $this->setRecordType('Core.HEd.Student');
+    }
+    
+    if ($this->request->request->get('void')) {
+      $payment_service = $this->get('kula.Core.billing.payment');
+      
+      $void = $this->request->request->get('void');
+      $non = $this->request->request->get('non');
+        
+      if (isset($non['Core.Billing.Payment']['Core.Billing.Payment.PaymentDate']))
+        $transaction_date = $non['Core.Billing.Payment']['Core.Billing.Payment.PaymentDate'];
+      else 
+        $transaction_date = null;
+      
+      if (isset($non['Core.Billing.Payment']['Core.Billing.Payment.VoidedReason']))
+        $reason = $non['Core.Billing.Payment']['Core.Billing.Payment.VoidedReason'];
+      else 
+        $reason = null;
+      
+      foreach($void as $table => $row_info) {
+        foreach($row_info as $row_id => $row) {
+          if (isset($row['Core.Billing.Payment.Voided']['checkbox'])
+          AND $row['Core.Billing.Payment.Voided']['checkbox'] == '1' 
+          AND $row['Core.Billing.Payment.Voided']['checkbox_hidden'] == 0)
+            $payment_service->voidPayment($row_id);
+        }
+      }
+    }
+
+    if ($this->request->request->get('post')) {
+      $payment_service = $this->get('kula.Core.billing.payment');
+      
+      $post = $this->request->request->get('post');
+
+      foreach($post as $table => $row_info) {
+        foreach($row_info as $row_id => $row) {
+          if (isset($row['Core.Billing.Payment.Posted']['checkbox'])
+          AND $row['Core.Billing.Payment.Posted']['checkbox'] == 1 
+          AND $row['Core.Billing.Payment.Posted']['checkbox_hidden'] == 0)
+            $payment_service->postPayment($row_id);
+        }
+      }
+    }
+  
+    $payments = array();
+    
+    if ($this->record->getSelectedRecordID()) {
+
+      $payments = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
+        ->fields('payments', array('CONSTITUENT_PAYMENT_ID', 'PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_METHOD', 'PAYMENT_NUMBER', 'AMOUNT', 'APPLIED_BALANCE', 'VOIDED', 'POSTED', 'DISCOUNT_PROOF'))
+        ->leftJoin('BILL_CONSTITUENT_TRANSACTIONS', 'trans', "trans.PAYMENT_ID = payments.CONSTITUENT_PAYMENT_ID")
+        ->fields('trans', array('TRANSACTION_DESCRIPTION', 'STUDENT_CLASS_ID'))
+        ->leftJoin('BILL_CODE', 'code', 'code.CODE_ID = trans.CODE_ID')
+        ->fields('code', array('CODE'))
+        ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = trans.ORGANIZATION_TERM_ID')
+        ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+        ->fields('org', array('ORGANIZATION_ABBREVIATION'))
+        ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+        ->fields('term', array('TERM_ABBREVIATION'))
+        ->leftJoin('STUD_STUDENT_CLASSES', 'stuclass', 'stuclass.STUDENT_CLASS_ID = trans.STUDENT_CLASS_ID')
+        ->leftJoin('STUD_SECTION', 'sec', 'sec.SECTION_ID = stuclass.SECTION_ID')
+        ->fields('sec', array('SECTION_NUMBER', 'SECTION_ID'))
+        ->condition('payments.CONSTITUENT_ID', $this->record->getSelectedRecordID())
+        ->orderBy('PAYMENT_DATE', 'DESC', 'payments')
+        ->orderBy('TRANSACTION_DATE', 'ASC', 'trans')
+        ->orderBy('payments.CREATED_TIMESTAMP', 'DESC')
+        ->orderBy('trans.CREATED_TIMESTAMP', 'DESC')
+        ->execute()->fetchAll();
+        
+    }
+    
+    return $this->render('KulaCoreBillingBundle:CorePayments:payments.html.twig', array('payments' => $payments));
   }
   
 }

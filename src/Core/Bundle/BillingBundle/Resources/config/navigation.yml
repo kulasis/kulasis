@@ -42,10 +42,14 @@ Core.Billing:
           description: "Payments"
           display_name: "Payments"
           route: Core_Billing_StudentBilling_Payments
-        History:
-          description: "History"
-          display_name: "History"
-          route: Core_Billing_StudentBilling_History
+        TransactionHistory:
+          description: "Transaction History"
+          display_name: "Transaction History"
+          route: Core_Billing_StudentBilling_TransactionHistory
+        PaymentHistory:
+          description: "Payment History"
+          display_name: "Payment History"
+          route: Core_Billing_StudentBilling_PaymentHistory
       menu_actions:
         AddCharge:
           description: "Add Charge"
@@ -92,10 +96,10 @@ Core.Billing:
           description: "Payments"
           display_name: "Payments"
           route: Core_Billing_ConstituentBilling_Payments
-        History:
-          description: "History"
-          display_name: "History"
-          route: Core_Billing_ConstituentBilling_History
+        TransactionHistory:
+          description: "Transaction History"
+          display_name: "Transaction History"
+          route: Core_Billing_ConstituentBilling_TransactionHistory
       menu_actions:
         AddCharge:
           description: "Add Charge"

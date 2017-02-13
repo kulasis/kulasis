@@ -77,6 +77,7 @@ class CoreTransactionsController extends Controller {
         ->fields('crs', array('COURSE_TITLE'))
         ->condition('transactions.CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->condition('transactions.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
+        ->condition('transactions.VOIDED', 0)
         ->orderBy('transactions.TRANSACTION_DATE', 'DESC')
         ->orderBy('transactions.CREATED_TIMESTAMP', 'DESC')
         ->execute()->fetchAll();

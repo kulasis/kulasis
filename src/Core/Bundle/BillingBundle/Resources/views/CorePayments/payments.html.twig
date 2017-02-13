@@ -46,6 +46,11 @@ Payments
     {% set detail_route = 'Core_Billing_StudentBilling_PaymentDetail' %}
   {% endif %}
   {% for payment in payments %}
+    {% if lastterm != payment.TERM_ABBREVIATION and loop.index > 1 %}
+    <tr>
+      <td colspan="16">&nbsp;</td>
+    </tr>
+  {% endif %}
   <tr>
     {{ kula_field({ delete: true, field: 'Core.Billing.Payment.ID', db_row_id: payment.CONSTITUENT_PAYMENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     {% if payment.POSTED == '0' %}
@@ -69,6 +74,7 @@ Payments
     {{ kula_field({ field: 'Core.Billing.Payment.AppliedBalance', input: false, value: payment.APPLIED_BALANCE, prepend_html: '<td align="right">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path(detail_route, { payment_id: payment.CONSTITUENT_PAYMENT_ID }) }}">...</a></td>
   </tr>
+    {% set lastterm = payment.TERM_ABBREVIATION %}
   {% endfor %}
 </tbody>
 </table>

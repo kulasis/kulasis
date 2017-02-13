@@ -203,7 +203,7 @@ Core.Billing.Payment.Applied:
       db_column_name: CONSTITUENT_TRANSACTION_ID
       db_column_type: serial
       db_column_null: true
-      class: Kula\Core\Bundle\BillingBundle\Field\RelatedConstituentChargeTransaction
+      class: Kula\Core\Bundle\BillingBundle\Field\RelatedConstituentTransaction
       field_type: select
       column_name: "Transaction ID"
       label_name: "Transaction ID"    

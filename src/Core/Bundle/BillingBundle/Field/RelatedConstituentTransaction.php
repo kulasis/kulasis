@@ -4,7 +4,7 @@ namespace Kula\Core\Bundle\BillingBundle\Field;
 
 use Kula\Core\Component\Field\Field;
 
-class RelatedConstituentChargeTransaction extends Field {
+class RelatedConstituentTransaction extends Field {
   
   public function select($schema, $param) {
 
@@ -22,7 +22,7 @@ class RelatedConstituentChargeTransaction extends Field {
       ->leftJoin('CORE_TERM', 'term', 'orgterms.TERM_ID = term.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
       ->condition('transactions.CONSTITUENT_ID', $param['CONSTITUENT_ID'])
-      ->condition('codes.CODE_TYPE', 'C')
+      ->condition('codes.CODE_TYPE', $param['CODE_TYPE'])
       ->orderBy('LAST_NAME', 'ASC', 'cons')
       ->orderBy('FIRST_NAME', 'ASC', 'cons')
       ->orderBy('PERMANENT_NUMBER', 'ASC', 'cons')

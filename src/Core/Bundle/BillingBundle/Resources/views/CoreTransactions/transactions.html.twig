@@ -49,9 +49,7 @@ Transactions
   {% for transaction in transactions %}
   {% if lastterm != transaction.TERM_ABBREVIATION and loop.index > 1 %}
     <tr>
-      <td class="data-table-cell-row-num">&nbsp;</td>
-      <td class="data-table-cell-row-num">&nbsp;</td>
-      <td colspan="9">&nbsp;</td>
+      <td colspan="16">&nbsp;</td>
     </tr>
   {% endif %}
   <tr>
