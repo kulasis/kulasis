@@ -141,7 +141,7 @@ Core.TuitionRate.Students:
       db_column_type: serial
       db_column_null: true
       field_type: select
-      class: Kula\Core\Bundle\GradingBundle\Field\DegreeName
+      class: Kula\HEd\Bundle\GradingBundle\Field\DegreeName
       column_name: "Degree ID"
       label_name: "Degree ID"
 
