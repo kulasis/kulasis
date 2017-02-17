@@ -44,7 +44,7 @@ class PaymentService {
       'Core.Billing.Payment.PaymentNumber' => $payment_number,
       'Core.Billing.Payment.Amount' => $amount, 
       'Core.Billing.Payment.OriginalAmount' => $amount,
-      'Core.Billing.Payment.AppliedBalance' => ($refund === false) ? $amount * -1 : $amount,
+      'Core.Billing.Payment.AppliedBalance' => $amount * -1,
       'Core.Billing.Payment.Note' => $note,
       'Core.Billing.Payment.DiscountProof' => $discount_proof,
       'Core.Billing.Payment.Posted' => 0
@@ -126,12 +126,21 @@ class PaymentService {
       $this->posterFactory->newPoster()->edit('Core.Billing.Payment.Applied', $applied_payment['CONSTITUENT_APPLIED_PAYMENT_ID'], array(
       'Core.Billing.Payment.Applied.Amount' => 0
       ))->process($this->db_options);
-    }    
+    } 
 
-    $result = $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
-      'Core.Billing.Payment.Voided' => 1,
-      'Core.Billing.Payment.Amount' => 0
-      ))->process($this->db_options);
+    // get payment
+    $payment_info = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
+      ->fields('payments', array('POSTED'))
+      ->condition('payments.CONSTITUENT_PAYMENT_ID', $payment_id)
+      ->execute()->fetch();
+
+    $payment_data = array();
+    $payment_data['Core.Billing.Payment.Amount'] = 0;
+    if ($payment_info['POSTED'] == 0) {
+      $payment_data['Core.Billing.Payment.Voided'] = 1;
+    }
+
+    $result = $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, $payment_data)->process($this->db_options);
 
     $this->calculateBalanceForPayment($payment_id);
 
@@ -256,9 +265,13 @@ class PaymentService {
 
     // get payment amount
     $payment = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payment')
-      ->fields('payment', array('AMOUNT'))
+      ->fields('payment', array('AMOUNT', 'PAYMENT_TYPE'))
       ->condition('payment.CONSTITUENT_PAYMENT_ID', $payment_id)
       ->execute()->fetch();
+
+    if ($payment['PAYMENT_TYPE'] == 'R') {
+      $applied_trans_total = $applied_trans_total * -1;
+    } 
 
     // Get payment transactions
     $payment_trans_result = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'paytrans')
