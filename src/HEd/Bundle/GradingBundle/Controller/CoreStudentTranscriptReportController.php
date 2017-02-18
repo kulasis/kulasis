@@ -3,6 +3,7 @@
 namespace Kula\HEd\Bundle\GradingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
+use Kula\Core\Component\Lookup\Lookup;
 
 class CoreStudentTranscriptReportController extends ReportController {
   
@@ -10,9 +11,13 @@ class CoreStudentTranscriptReportController extends ReportController {
     $this->authorize();
     //$this->formAction('sis_HEd_student_coursehistory_reports_studenttranscript_generate');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
+    
+    $lookup_service = $this->get('kula.core.lookup');
+    $levels = $lookup_service->getLookupMenu('HEd.Student.Enrollment.Level', 'D');
+
     if ($this->request->query->get('record_type') == 'Core.HEd.Student' AND $this->request->query->get('record_id') != '')
       $this->setRecordType('Core.HEd.Student');
-    return $this->render('KulaHEdGradingBundle:CoreStudentTranscriptReport:reports_studenttranscript.html.twig');
+    return $this->render('KulaHEdGradingBundle:CoreStudentTranscriptReport:reports_studenttranscript.html.twig', array('levels' => $levels));
   }
   
   public function generateAction()
@@ -48,11 +53,17 @@ class CoreStudentTranscriptReportController extends ReportController {
       ->orderBy('stucon.LAST_NAME', 'ASC')
       ->orderBy('stucon.FIRST_NAME', 'ASC')
       ->orderBy('student.STUDENT_ID', 'ASC')
+      //->range(0, 1)
       ->execute();
     
     while ($row = $result->fetch()) {
 
-      $this->service->loadTranscriptForStudent($row['STUDENT_ID'], $row['LEVEL']);
+      if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
+        $this->service->loadTranscriptForStudent($row['STUDENT_ID'], $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);
+      } else {
+        $this->service->loadTranscriptForStudent($row['STUDENT_ID'], $row['LEVEL']);   
+      }
+
       $data = $this->service->getTranscriptData();
       $current_schedule = $this->service->getCurrentScheduleData();
       $degree_data = $this->service->getDegreeData();

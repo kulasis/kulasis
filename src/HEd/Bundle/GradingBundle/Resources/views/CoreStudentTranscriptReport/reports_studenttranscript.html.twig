@@ -6,7 +6,11 @@
 <div class="group-box">
 <div class="group-box-header">Student Transcript</div>
 <div class="group-box-contents group">
-	Level: {{ kula_field({ non: true, report: true, field: 'HEd.Student.CourseHistory.Level' }) }}
+  <select name="non[HEd.Student.CourseHistory][HEd.Student.CourseHistory.Level][]" id="StudentTranscriptLevels[new_num]" multiple="multiple">
+    {% for level_code, level_desc in levels %}
+    <option value="{{ level_code }}">{{ level_desc }}</option>
+    {% endfor %}
+  </select>
 </div>
 </div>
 

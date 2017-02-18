@@ -15,7 +15,6 @@ class TranscriptService {
   }
   
   public function loadTranscriptForStudent($student_id, $level = null) {
-    
     $this->loadStudentData($student_id, $level);
     $this->loadDegreesAwarded($student_id, $level);
     $this->loadTranscriptData($student_id, $level);
@@ -121,6 +120,24 @@ class TranscriptService {
     }
     
   }
+
+  public function prepareLevel($level) {
+
+    $levels = array();
+  	
+    if (count($level) > 1) {
+
+      foreach($level as $level_code) {
+        $levels[] = "'".$level_code."'";
+      }
+  	} else {
+      $levels = $level;
+    }
+
+    $level_string = implode(", ", $levels);
+
+    return $level_string;
+  }
   
   public function loadTranscriptData($student_id, $level = null) {
     
@@ -129,9 +146,9 @@ class TranscriptService {
     // Add on level
     $level_condition = '';
     if ($level) {
-      $level_condition = ' AND coursehistory.LEVEL = \''.$level.'\'';
+      $level_condition = ' AND coursehistory.LEVEL IN ('.$this->prepareLevel($level).')';
     }
-    
+
     // Get student
     $result = $this->db->db_select('STUD_STUDENT', 'student')
       ->distinct()
@@ -282,7 +299,7 @@ class TranscriptService {
     // Add on level
     $level_condition = '';
     if ($level) {
-      $level_condition = ' AND classes.LEVEL = \''.$level.'\'';
+      $level_condition = ' AND classes.LEVEL IN ('.$this->prepareLevel($level).')';
     }
     
     $schedule_result = $this->db->db_select('STUD_STUDENT', 'student')
