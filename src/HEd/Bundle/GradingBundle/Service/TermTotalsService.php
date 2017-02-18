@@ -80,7 +80,7 @@ class TermTotalsService {
     
       $this->resetTermTotals();
       // Compute Classes in Progress
-      //$coursesInProgress = $this->calculateClassesInProgress($studentID, $term['FINANCIAL_AID_YEAR']);
+      $coursesInProgress = $this->calculateClassesInProgress($studentID, $term['FINANCIAL_AID_YEAR']);
       if ($coursesInProgress) {
         $this->updateDatabase($this->totals);
       }
@@ -93,8 +93,11 @@ class TermTotalsService {
     if ($coursesInProgress === false) {
       // Compute Classes in Progress
       $this->resetTermTotals();
+
       $this->totals['HEd.Student.CourseHistory.Term.StudentStatusID'] = null;
       $coursesInProgressOut = $this->calculateClassesInProgress($studentID, $lastRow['FINANCIAL_AID_YEAR']);
+      // Compute GPA
+      $this->computeGPAs();
       if ($coursesInProgressOut) 
         $this->updateDatabase($this->totals);
     }
@@ -118,11 +121,14 @@ class TermTotalsService {
       ->leftJoin('STUD_STUDENT_COURSE_HISTORY', 'stucoursehistory', 'stucoursehistory.STUDENT_CLASS_ID = classes.STUDENT_CLASS_ID')
       ->condition('stucoursehistory.COURSE_HISTORY_ID', null)
       ->condition('DROPPED', 0)
-      ->condition('student.STUDENT_ID', $studentID)
-      ->condition('classes.STUDENT_STATUS_ID', $this->totals['HEd.Student.CourseHistory.Term.StudentStatusID']);
+      ->condition('student.STUDENT_ID', $studentID);
+    if ($this->totals['HEd.Student.CourseHistory.Term.StudentStatusID']) {
+      $classesInProgress = $classesInProgress->condition('classes.STUDENT_STATUS_ID', $this->totals['HEd.Student.CourseHistory.Term.StudentStatusID']);
+    }
     if ($this->totals['HEd.Student.CourseHistory.Term.Level'] != '') {
       $classesInProgress = $classesInProgress->condition('classes.LEVEL', $this->totals['HEd.Student.CourseHistory.Term.Level']);
     }
+
     $classesInProgress = $classesInProgress->execute();
     while ($class = $classesInProgress->fetch()) {
       if ($financialAidYear != $class['FINANCIAL_AID_YEAR']) {
