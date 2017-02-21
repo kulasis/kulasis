@@ -15,6 +15,7 @@ class TranscriptService {
   }
   
   public function loadTranscriptForStudent($student_id, $level = null) {
+
     $this->loadStudentData($student_id, $level);
     $this->loadDegreesAwarded($student_id, $level);
     $this->loadTranscriptData($student_id, $level);
@@ -39,7 +40,6 @@ class TranscriptService {
   }
 
   private function loadStudentData($student_id, $level = null) {
-    
     $status_info = $this->db->db_select('STUD_STUDENT', 'student')
       ->fields('student', array('STUDENT_ID', 'ORIGINAL_ENTER_DATE', 'HIGH_SCHOOL_GRADUATION_DATE'))
       ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
@@ -124,14 +124,15 @@ class TranscriptService {
   public function prepareLevel($level) {
 
     $levels = array();
-  	
-    if (count($level) > 1) {
 
+    if (count($level) > 1) {
       foreach($level as $level_code) {
         $levels[] = "'".$level_code."'";
       }
-  	} else {
-      $levels = $level;
+  	} elseif (is_array($level)) {
+      $levels[0] = "'".$level[0]."'";
+    } else {
+      $levels[0] = "'".$level."'";
     }
 
     $level_string = implode(", ", $levels);
@@ -147,7 +148,7 @@ class TranscriptService {
     $level_condition = '';
     if ($level) {
       $level_condition = ' AND coursehistory.LEVEL IN ('.$this->prepareLevel($level).')';
-    }
+    } 
 
     // Get student
     $result = $this->db->db_select('STUD_STUDENT', 'student')

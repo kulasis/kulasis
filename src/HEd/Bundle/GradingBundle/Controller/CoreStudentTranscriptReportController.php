@@ -61,7 +61,7 @@ class CoreStudentTranscriptReportController extends ReportController {
       if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
         $this->service->loadTranscriptForStudent($row['STUDENT_ID'], $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);
       } else {
-        $this->service->loadTranscriptForStudent($row['STUDENT_ID'], $row['LEVEL']);   
+        $this->service->loadTranscriptForStudent($row['STUDENT_ID'], null);   
       }
 
       $data = $this->service->getTranscriptData();
