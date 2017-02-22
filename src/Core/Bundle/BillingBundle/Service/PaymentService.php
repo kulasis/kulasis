@@ -251,6 +251,12 @@ class PaymentService {
 
   public function calculateBalanceForPayment($payment_id) {
 
+    // get payment amount
+    $payment = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payment')
+      ->fields('payment', array('AMOUNT', 'PAYMENT_TYPE'))
+      ->condition('payment.CONSTITUENT_PAYMENT_ID', $payment_id)
+      ->execute()->fetch();
+
     $applied_trans_total = 0;
 
     // get applied transactions
@@ -260,14 +266,8 @@ class PaymentService {
       ->execute();
     while ($applied_trans_row = $applied_trans_result->fetch()) {
       $applied_trans_total += $applied_trans_row['AMOUNT'];
-      $this->calculateBalanceForCharge($applied_trans_row['CONSTITUENT_TRANSACTION_ID']);
+      $this->calculateBalanceForCharge($applied_trans_row['CONSTITUENT_TRANSACTION_ID'], $payment['PAYMENT_TYPE']);
     }
-
-    // get payment amount
-    $payment = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payment')
-      ->fields('payment', array('AMOUNT', 'PAYMENT_TYPE'))
-      ->condition('payment.CONSTITUENT_PAYMENT_ID', $payment_id)
-      ->execute()->fetch();
 
     if ($payment['PAYMENT_TYPE'] == 'R') {
       $applied_trans_total = $applied_trans_total * -1;
@@ -291,7 +291,7 @@ class PaymentService {
 
   }
 
-  public function calculateBalanceForCharge($charge_id) {
+  public function calculateBalanceForCharge($charge_id, $payment_type = 'P') {
   	$result = null;
     // get applied transactions
     $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
@@ -308,7 +308,11 @@ class PaymentService {
     if ($charge['REFUND_TRANSACTION_ID'] != '') {
       $result = $this->updateAppliedBalanceForTransaction($charge_id, 0);
     } else {
-      $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] - $applied_trans['total_applied_balance']);   
+      if ($payment_type == 'R') {
+        $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] + $applied_trans['total_applied_balance']);  
+      } else {
+        $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] - $applied_trans['total_applied_balance']);  
+      } 
     }
     if ($charge['STUDENT_CLASS_ID'] != '') {
 			$this->updateClassPaidStatus($charge['STUDENT_CLASS_ID']);
