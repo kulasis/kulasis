@@ -21,6 +21,8 @@ class RelatedConstituentTransaction extends Field {
       ->fields('org', array('ORGANIZATION_ABBREVIATION'))
       ->leftJoin('CORE_TERM', 'term', 'orgterms.TERM_ID = term.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
+      ->leftJoin('BILL_CONSTITUENT_PAYMENTS', 'payment', 'payment.CONSTITUENT_PAYMENT_ID = transactions.PAYMENT_ID')
+      ->fields('payment', array('PAYMENT_TYPE'))
       ->condition('transactions.CONSTITUENT_ID', $param['CONSTITUENT_ID'])
       ->condition('codes.CODE_TYPE', $param['CODE_TYPE'])
       ->orderBy('LAST_NAME', 'ASC', 'cons')
@@ -31,7 +33,15 @@ class RelatedConstituentTransaction extends Field {
       ->orderBy('CODE', 'ASC')
       ->execute();
     while ($row = $result->fetch()) {
-      $menu[$row['CONSTITUENT_TRANSACTION_ID']] = $row['LAST_NAME'].', '.$row['FIRST_NAME'].' '.$row['PERMANENT_NUMBER'].' '.$row['ORGANIZATION_ABBREVIATION'].' '.$row['TERM_ABBREVIATION'].' '.date('m/d/Y', strtotime($row['TRANSACTION_DATE'])).' '.$row['CODE_TYPE'].' '.$row['CODE'].' '.$row['TRANSACTION_DESCRIPTION'].' '.$row['AMOUNT'].' '.$row['APPLIED_BALANCE'];
+      $menu[$row['CONSTITUENT_TRANSACTION_ID']] = $row['LAST_NAME'].', '.$row['FIRST_NAME'].' '.$row['PERMANENT_NUMBER'].' '.$row['ORGANIZATION_ABBREVIATION'].' '.$row['TERM_ABBREVIATION'].' '.date('m/d/Y', strtotime($row['TRANSACTION_DATE'])).' ';
+
+      if ($row['PAYMENT_TYPE'] != '') {
+        $menu[$row['CONSTITUENT_TRANSACTION_ID']] = $menu[$row['CONSTITUENT_TRANSACTION_ID']].$row['PAYMENT_TYPE']; 
+      } else {
+        $menu[$row['CONSTITUENT_TRANSACTION_ID']] = $menu[$row['CONSTITUENT_TRANSACTION_ID']].$row['CODE_TYPE'];
+      }
+
+      $menu[$row['CONSTITUENT_TRANSACTION_ID']] = $menu[$row['CONSTITUENT_TRANSACTION_ID']].' '.$row['CODE'].' '.$row['TRANSACTION_DESCRIPTION'].' '.$row['AMOUNT'].' '.$row['APPLIED_BALANCE'];
     }
     
     return $menu;

@@ -301,7 +301,7 @@ class PaymentService {
 
     // get payment amount
     $charge = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'charge')
-      ->fields('charge', array('AMOUNT', 'REFUND_TRANSACTION_ID', 'STUDENT_CLASS_ID'))
+      ->fields('charge', array('AMOUNT', 'REFUND_TRANSACTION_ID', 'STUDENT_CLASS_ID', 'PAYMENT_ID'))
       ->condition('charge.CONSTITUENT_TRANSACTION_ID', $charge_id)
       ->execute()->fetch();
 
@@ -309,7 +309,9 @@ class PaymentService {
       $result = $this->updateAppliedBalanceForTransaction($charge_id, 0);
     } else {
       if ($payment_type == 'R') {
-        $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] + $applied_trans['total_applied_balance']);  
+        $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] + $applied_trans['total_applied_balance']); 
+
+
       } else {
         $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] - $applied_trans['total_applied_balance']);  
       } 
