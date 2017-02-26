@@ -166,12 +166,21 @@ class ScheduleService {
   }
   
   public function dropClassForStudentStatus($class_id, $drop_date) {
-    
+
+    $class_row = $this->database->db_select('STUD_STUDENT_CLASSES')
+      ->fields('STUD_STUDENT_CLASSES')
+      ->condition('STUDENT_CLASS_ID', $class_id)
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = STUD_STUDENT_CLASSES.STUDENT_STATUS_ID')
+      ->fields('stustatus', array('ORGANIZATION_TERM_ID'))
+      ->leftJoin('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = stustatus.TUITION_RATE_ID')
+      ->fields('tuitionrate', array('BILLING_MODE'))
+      ->execute()->fetch();
+
     // set start date
     $term_info = $this->database->db_select('CORE_TERM')
       ->fields('CORE_TERM', array('START_DATE', 'END_DATE'))
       ->join('CORE_ORGANIZATION_TERMS', 'CORE_ORGANIZATION_TERMS', 'CORE_TERM.TERM_ID = CORE_ORGANIZATION_TERMS.TERM_ID')
-      ->condition('ORGANIZATION_TERM_ID', $this->record->getSelectedRecord()['ORGANIZATION_TERM_ID'])
+      ->condition('ORGANIZATION_TERM_ID', $class_row['ORGANIZATION_TERM_ID'])
       ->execute()->fetch();
     
     if ($term_info['START_DATE'] < date('Y-m-d'))
@@ -180,14 +189,6 @@ class ScheduleService {
       $end_date = null;
         
     $transaction = $this->database->db_transaction();
-
-    $class_row = $this->database->db_select('STUD_STUDENT_CLASSES')
-      ->fields('STUD_STUDENT_CLASSES')
-      ->condition('STUDENT_CLASS_ID', $class_id)
-      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = STUD_STUDENT_CLASSES.STUDENT_STATUS_ID')
-      ->leftJoin('BILL_TUITION_RATE', 'tuitionrate', 'tuitionrate.TUITION_RATE_ID = stustatus.TUITION_RATE_ID')
-      ->fields('tuitionrate', array('BILLING_MODE'))
-      ->execute()->fetch();
     
     $class_data = array(
       'HEd.Student.Class.Dropped' => 1,
