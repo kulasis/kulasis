@@ -29,8 +29,8 @@ class DegreeAuditService {
     $this->req_grp_totals = array();
     $this->degrees = array();
     $this->areas = array();
-    $total_degree_needed = 0;
-    $total_degree_completed = 0;
+    $this->total_degree_needed = 0;
+    $this->total_degree_completed = 0;
   }
   
   public function getDegreeAuditForStudentStatus($student_status_id) {
