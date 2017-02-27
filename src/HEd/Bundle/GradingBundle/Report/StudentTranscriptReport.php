@@ -61,7 +61,7 @@ class StudentTranscriptReport extends BaseReport {
     $this->Cell(196,5,'Program','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
-    $program = $this->data['DEGREE_NAME'];
+    $program = ($this->data['PRINTED_DEGREE_NAME'] != '') ? $this->data['PRINTED_DEGREE_NAME'] : $this->data['DEGREE_NAME'] ;
     if ($this->data['areas'] != '') $program .= ' / '.$this->data['areas'];
     $this->Cell(196,5, $program, 'LBR', 0,'L');
     $program = '';
@@ -143,7 +143,7 @@ class StudentTranscriptReport extends BaseReport {
       $this->minorLabelCalled = true;
       $this->Cell(25,3,'',0,0,'L');
     }
-    $this->Cell(55,3,$row['AREA_NAME'],0,0,'L');
+    $this->Cell(55,3,($row['PRINTED_AREA_NAME'] != '') ? $row['PRINTED_AREA_NAME'] : $row['AREA_NAME'],0,0,'L');
     $this->Ln(3);
   }
 

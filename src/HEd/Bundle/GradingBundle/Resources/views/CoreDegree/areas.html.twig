@@ -14,6 +14,7 @@ Areas
   <th class="data-table-cell-row-header">#</th>
   {{ kula_field_name({ field: 'HEd.Degree.Area.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Degree.Area.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Degree.Area.PrintedName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Degree.Area.EffectiveTermID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Degree.Area.MinimumCredits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Degree.Area.MinimumGPA', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
@@ -27,6 +28,7 @@ Areas
   {{ kula_display_html({ add: true, field: 'HEd.Degree.Area.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
   {{ kula_field({ add: true, field: 'HEd.Degree.Area.Type', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.Degree.Area.Name', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Degree.Area.PrintedName', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.Degree.Area.EffectiveTermID', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.Degree.Area.MinimumCredits', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.Degree.Area.MinimumGPA', prepend_html: '<td>', append_html: '</td>', attributes_html: { class: 'data-table-cell-input' } }) }}
@@ -39,6 +41,7 @@ Areas
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
     {{ kula_field({ edit: true, field: 'HEd.Degree.Area.Type', db_row_id: area.AREA_ID, value: area.AREA_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Degree.Area.Name', db_row_id: area.AREA_ID, value: area.AREA_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Degree.Area.PrintedName', db_row_id: area.AREA_ID, value: area.PRINTED_AREA_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Degree.Area.EffectiveTermID', db_row_id: area.AREA_ID, value: area.EFFECTIVE_TERM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Degree.Area.MinimumCredits', db_row_id: area.AREA_ID, value: area.MINIMUM_CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Degree.Area.MinimumGPA', db_row_id: area.AREA_ID, value: area.MINIMUM_GPA, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}

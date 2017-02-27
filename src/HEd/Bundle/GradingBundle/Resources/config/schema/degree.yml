@@ -16,9 +16,19 @@ HEd.Degree:
       db_column_type: varchar
       db_column_length: 100
       field_type: text
-      field_size: 20
+      field_size: 40
       column_name: "Degree Name"
       label_name: "Degree Name"
+    PrintedName:
+      description: "Printed Degree Name"
+      db_column_name: PRINTED_DEGREE_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      field_type: text
+      field_size: 40
+      column_name: "Printed Degree Name"
+      label_name: "Printed Degree Name"
     Level:
       description: "Level"
       db_column_name: LEVEL
@@ -91,9 +101,19 @@ HEd.Degree.Area:
       db_column_length: 100
       db_column_null: false
       field_type: text
-      field_size: 20
+      field_size: 30
       column_name: "Area Name"
       label_name: "Area Name"
+    PrintedName:
+      description: "Printed Name"
+      db_column_name: PRINTED_AREA_NAME
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Printed Area Name"
+      label_name: "Printed Area Name"
     EffectiveTermID:
       description: "Effective Term ID"
       parent: Core.Term.ID

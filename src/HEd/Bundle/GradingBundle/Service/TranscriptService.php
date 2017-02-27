@@ -50,7 +50,7 @@ class TranscriptService {
       ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
       ->fields('studdegrees', array('STUDENT_DEGREE_ID'))
       ->leftJoin('STUD_DEGREE', 'degree', 'degree.DEGREE_ID = studdegrees.DEGREE_ID')
-      ->fields('degree', array('DEGREE_NAME'))
+      ->fields('degree', array('DEGREE_NAME', 'PRINTED_DEGREE_NAME'))
       ->condition('status.STUDENT_ID', $student_id);
 
     if ($level) {
@@ -59,6 +59,10 @@ class TranscriptService {
     
     $this->student_data = $status_info->orderBy('ENTER_DATE', 'DESC')->execute()->fetch();
 
+    if ($this->student_data['PRINTED_DEGREE_NAME'] != '') {
+      $this->student_data['DEGREE_NAME'] = $this->student_data['PRINTED_DEGREE_NAME'];
+    }
+
     $this->student_data['areas'] = '';
 
     $areas = array();
@@ -66,13 +70,15 @@ class TranscriptService {
     // get areas
     $areas_info = $this->db->db_select('STUD_STUDENT_DEGREES_AREAS', 'stuareas')
       ->join('STUD_DEGREE_AREA', 'area', 'stuareas.AREA_ID = area.AREA_ID')
-      ->fields('area', array('AREA_NAME'))
+      ->fields('area', array('AREA_NAME', 'PRINTED_AREA_NAME'))
       ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = area.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
       ->fields('area_types', array('DESCRIPTION' => 'area_type'))
       ->condition('stuareas.STUDENT_DEGREE_ID', $this->student_data['STUDENT_DEGREE_ID'])
       ->execute();
     while ($areas_row = $areas_info->fetch()) {
-      $areas[] = $areas_row['area_type'].': '.$areas_row['AREA_NAME'];
+      $printed_area = ($areas_row['PRINTED_AREA_NAME'] != '') ? $areas_row['PRINTED_AREA_NAME'] : $areas_row['AREA_NAME'];
+      $areas[] = $areas_row['area_type'].': '.$printed_area;
+      unset($printed_area);
     }
     $this->student_data['areas'] = implode(', ', $areas);
   }
@@ -85,7 +91,7 @@ class TranscriptService {
     $degrees_res = $this->db->db_select('STUD_STUDENT_DEGREES', 'studdegrees')
       ->fields('studdegrees', array('STUDENT_DEGREE_ID', 'DEGREE_AWARDED', 'GRADUATION_DATE', 'CONFERRED_DATE'))
       ->join('STUD_DEGREE', 'degree', 'studdegrees.DEGREE_ID = degree.DEGREE_ID')
-      ->fields('degree', array('DEGREE_NAME', 'LEVEL'))
+      ->fields('degree', array('DEGREE_NAME', 'PRINTED_DEGREE_NAME', 'LEVEL'))
       ->condition('studdegrees.STUDENT_ID', $student_id)
       ->condition('studdegrees.DEGREE_AWARDED', 1);
     if ($level) {
@@ -105,7 +111,7 @@ class TranscriptService {
       $areas_result = $this->db->db_select('STUD_STUDENT_DEGREES_AREAS', 'studarea')
         ->fields('studarea', array('AREA_ID'))
         ->join('STUD_DEGREE_AREA', 'area', 'studarea.AREA_ID = area.AREA_ID')
-        ->fields('area', array('AREA_NAME'))
+        ->fields('area', array('AREA_NAME', 'PRINTED_AREA_NAME'))
         ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = area.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
         ->fields('area_types', array('DESCRIPTION' => 'AREA_TYPE'))
         ->condition('studarea.STUDENT_DEGREE_ID', $degree_row['STUDENT_DEGREE_ID'])
