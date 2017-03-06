@@ -683,8 +683,12 @@ class DB {
    * @param $table
    *   A Schema API table definition array.
    */
-  public function db_create_table($name, $table) {
-    return Database::getConnection('schema')->schema()->createTable($name, $table);
+  public function db_create_table($name, $table, array $options = array()) {
+    if (isset($options['target'])) {
+      return Database::getConnection($options['target'])->schema()->createTable($name, $table);
+    } else {
+      return Database::getConnection('schema')->schema()->createTable($name, $table);
+    }
   }
 
   /**
@@ -699,8 +703,12 @@ class DB {
    * @return
    *   An array of field names.
    */
-  public function db_field_names($fields) {
-    return Database::getConnection('schema')->schema()->fieldNames($fields);
+  public function db_field_names($fields, array $options = array()) {
+    if (isset($options['target'])) {
+      return Database::getConnection($options['target'])->schema()->fieldNames($fields);
+    } else {
+      return Database::getConnection('schema')->schema()->fieldNames($fields);
+    }
   }
 
   /**
@@ -714,8 +722,12 @@ class DB {
    * @return
    *   TRUE if the given index exists, otherwise FALSE.
    */
-  public function db_index_exists($table, $name) {
-    return Database::getConnection('schema')->schema()->indexExists($table, $name);
+  public function db_index_exists($table, $name, array $options = array()) {
+    if (isset($options['target'])) {
+      return Database::getConnection($options['target'])->schema()->indexExists($table, $name);
+    } else {
+      return Database::getConnection('schema')->schema()->indexExists($table, $name);
+    }
   }
 
   /**
@@ -727,9 +739,13 @@ class DB {
    * @return
    *   TRUE if the given table exists, otherwise FALSE.
    */
-  public function db_table_exists($table) {
+  public function db_table_exists($table, array $options = array()) {
     $this->stopLogger();
-    return Database::getConnection('schema')->schema()->tableExists($table);
+    if (isset($options['target'])) {
+      return Database::getConnection($options['target'])->schema()->tableExists($table);
+    } else {
+      return Database::getConnection('schema')->schema()->tableExists($table);
+    }
   }
 
   /**
@@ -743,8 +759,12 @@ class DB {
    * @return
    *   TRUE if the given column exists, otherwise FALSE.
    */
-  public function db_field_exists($table, $field) {
-    return Database::getConnection('schema')->schema()->fieldExists($table, $field);
+  public function db_field_exists($table, $field, array $options = array()) {
+    if (isset($options['target'])) {
+      return Database::getConnection($options['target'])->schema()->fieldExists($table, $field);
+    } else {
+      return Database::getConnection('schema')->schema()->fieldExists($table, $field);
+    }
   }
 
   /**
@@ -1005,8 +1025,12 @@ class DB {
     return Database::getConnection('schema')->schema()->changeField($table, $field, $field_new, $spec, $keys_new);
   }
   
-  public function db_schema() {
-    return Database::getConnection('schema')->schema();
+  public function db_schema(array $options = array()) {
+    if (isset($options['target'])) {
+      return Database::getConnection($options['target'])->schema();
+    } else {
+      return Database::getConnection('schema')->schema();
+    }
   }
 
   /**

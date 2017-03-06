@@ -11,24 +11,30 @@ class Table {
   private $db_Name;
   private $db_Class;
   private $db_Timestamps;
+  private $database;
   
   private $fields;
   
   private $primary;
   private $primaryDB;
 
-  public function __construct($name, $db_id, $db_Name, $db_Class, $db_Timestamps) {
+  public function __construct($name, $db_id, $db_Name, $db_Class, $db_Timestamps, $database = 'default') {
     
     $this->name = $name;
     $this->db_ID = $db_id;
     $this->db_Name = $db_Name;
     $this->db_Class = $db_Class;
     $this->db_Timestamps = $db_Timestamps;
+    $this->database = $database;
     
   }
   
   public function getName() {
     return $this->name;
+  }
+
+  public function getDatabase() {
+    return $this->database;
   }
   
   public function getDBTimestamps() {

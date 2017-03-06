@@ -65,7 +65,8 @@ class SchemaLoader {
                        isset($table['class']) ? $table['class'] : null, 
                        isset($table['qualified']) ? $table['qualified'] : null, 
                        isset($table['timestamps']) ? $table['timestamps'] : null, 
-                       isset($table['unique_keys']) ? $table['unique_keys'] : null);
+                       isset($table['unique_keys']) ? $table['unique_keys'] : null,
+                       isset($table['database']) ? $table['database'] : null);
       
       if (isset($table['fields']) AND count($table['fields']) > 0) {
         
@@ -113,11 +114,11 @@ class SchemaLoader {
     
   }
   
-  private function loadTable($bundlePath, $name, $description, $db_tableName, $class, $qualified, $timestamps, $unique_keys) {
+  private function loadTable($bundlePath, $name, $description, $db_tableName, $class, $qualified, $timestamps, $unique_keys, $database) {
     
     if (!isset($this->schema[$name])) {
     
-      $this->schema[$name] = new TableLoader($bundlePath, $name, $description, $db_tableName, $class, $qualified, $timestamps, $unique_keys);
+      $this->schema[$name] = new TableLoader($bundlePath, $name, $description, $db_tableName, $class, $qualified, $timestamps, $unique_keys, $database);
     
     }
     

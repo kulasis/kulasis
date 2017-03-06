@@ -272,8 +272,8 @@ class FieldLoader {
       $catalogFieldsForDB['CREATED_TIMESTAMP'] = date('Y-m-d H:i:s');
       $db->db_insert('CORE_SCHEMA_FIELDS', array('target' => 'schema'))->fields($catalogFieldsForDB)->execute();
       
-      if (!$db->db_schema()->fieldExists($this->table->getDBName(), $this->getDBColumnName()) AND $this->getDBColumnName() != '') {
-        $db->db_schema()->addField($this->table->getDBName(), $this->getDBColumnName(), array(
+      if (!$db->db_schema(array('target' => $this->table->getDatabase()))->fieldExists($this->table->getDBName(), $this->getDBColumnName()) AND $this->getDBColumnName() != '') {
+        $db->db_schema(array('target' => $this->table->getDatabase()))->addField($this->table->getDBName(), $this->getDBColumnName(), array(
           'description' => $this->getDescription(),
           'type' => $this->getDBColumnType(),
           'size' => $this->getDBColumnSize(),

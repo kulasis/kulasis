@@ -34,6 +34,17 @@ Core.Schema.Table:
       field_size: 30
       column_name: "DB Table Name"
       label_name: "DB Table Name"
+    Database:
+      description: "Database name"
+      db_column_name: DATABASE
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      db_null: true
+      field_type: text
+      field_size: 30
+      column_name: "Database"
+      label_name: "Database"
     Class:
       description: "Class (model) for table"
       db_column_name: SCHEMA_CLASS

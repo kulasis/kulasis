@@ -16,7 +16,7 @@ class TableLoader {
   private $fields = array();
   private $log = array();
   
-  public function __construct($bundlePath, $name, $description, $db_tableName, $class = null, $qualified = array(), $timestamps = null, $uniqueKeys = null) {
+  public function __construct($bundlePath, $name, $description, $db_tableName, $class = null, $qualified = array(), $timestamps = null, $uniqueKeys = null, $database = 'default') {
     
     $this->name = $name;
     $this->description = $description;
@@ -25,12 +25,17 @@ class TableLoader {
     $this->qualified = $qualified;
     $this->timestamps = $timestamps;
     $this->uniqueKeys = $uniqueKeys;
+    $this->database = $database;
     
     $this->log($bundlePath, 'Created table object.');
   }
   
   public function getName() {
     return $this->name;
+  }
+
+  public function getDatabase() {
+    return $this->database;
   }
   
   public function getDBName() {
@@ -135,8 +140,8 @@ class TableLoader {
       
     }  // end foreach on fields
     
-    if (!$db->db_table_exists($this->db_tableName)) {
-      $db->db_create_table($this->db_tableName, $structure);
+    if (!$db->db_table_exists($this->db_tableName, array('target' => $this->database))) {
+      $db->db_create_table($this->db_tableName, $structure, array('target' => $this->database));
     }
     
     if ($db->db_table_exists('CORE_SCHEMA_TABLES') AND $db->db_table_exists('CORE_SCHEMA_FIELDS'))
@@ -211,8 +216,8 @@ class TableLoader {
             'columns' => array($field->getDBColumnName() => $parentField->getDBColumnName()),
         );
         
-        if (!$db->db_schema()->keyExists($this->db_tableName, 'FK_'.$fkTableName.'_'.$field->getDBColumnName())) {
-          $db->db_schema()->addForeignKey($this->db_tableName, 'FK_'.$fkTableName.'_'.$field->getDBColumnName(), $spec);
+        if (!$db->db_schema(array('target' => $this->table->getDatabase()))->keyExists($this->db_tableName, 'FK_'.$fkTableName.'_'.$field->getDBColumnName())) {
+          $db->db_schema(array('target' => $this->getDatabase()))->addForeignKey($this->db_tableName, 'FK_'.$fkTableName.'_'.$field->getDBColumnName(), $spec);
         }
       
         $field->synchronizeDatabaseCatalogParentKeys($db);
@@ -248,8 +253,8 @@ class TableLoader {
             $ukTableName = implode('_', $uniqueKeysForDB);
           }
           
-          if (!$db->db_schema()->indexExists($this->db_tableName, 'UK_'.$ukTableName)) {
-            $db->db_schema()->addUniqueKey($this->db_tableName, 'UK_'.$ukTableName, $uniqueKeysForDB);
+          if (!$db->db_schema(array('target' => $this->getDatabase()))->indexExists($this->db_tableName, 'UK_'.$ukTableName)) {
+            $db->db_schema(array('target' => $this->getDatabase()))->addUniqueKey($this->db_tableName, 'UK_'.$ukTableName, $uniqueKeysForDB);
           }
         
         }
