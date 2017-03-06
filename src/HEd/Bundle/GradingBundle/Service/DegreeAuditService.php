@@ -144,9 +144,10 @@ class DegreeAuditService {
       }
     }
     
+    $this->total_degree_needed += $this->output[$req_id]['CREDITS_REQUIRED'];
+
     if (isset($this->req_grp_totals[$req_id])) {
     
-    $this->total_degree_needed += $this->output[$req_id]['CREDITS_REQUIRED'];
     $this->total_degree_completed +=  $this->req_grp_totals[$req_id];
     
     $this->output[$req_id]['credits_earned'] = sprintf('%0.2f', round($this->req_grp_totals[$req_id], 2, PHP_ROUND_HALF_UP));
