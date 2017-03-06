@@ -133,4 +133,41 @@ HEd.Student.Document:
       field_size: 20
       column_name: "Conversion Document Number"
       label_name: "Conversion Document Number"
-    
+
+Constituent.Uploaded.Document:
+  description: "Student Documents"
+  db_table_name: CONS_DOCUMENTS
+  database: additional
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: CONSTITUENT_DOCUMENT_ID
+      db_column_type: primary_serial
+      column_name: "Constituent Document ID"
+      label_name: "Constituent Document ID"
+    ContentType:
+      description: "Content Type"
+      db_column_name: CONTENT_TYPE
+      db_column_type: varchar
+      db_column_length: 100
+      db_column_null: true
+      column_name: "Content Type"
+      label_name: "Content Type"
+    FileName:
+      description: "File Name"
+      db_column_name: FILE_NAME
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      column_name: "File Name"
+      label_name: "File Name"
+    Contents:
+      description: "Contents"
+      db_column_name: CONTENTS
+      db_column_type: blob
+      db_column_size: normal
+      db_column_null: true
+      column_name: "Contents"
+      label_name: "Contents"
