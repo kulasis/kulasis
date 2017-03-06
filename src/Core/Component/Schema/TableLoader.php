@@ -216,7 +216,7 @@ class TableLoader {
             'columns' => array($field->getDBColumnName() => $parentField->getDBColumnName()),
         );
         
-        if (!$db->db_schema(array('target' => $this->table->getDatabase()))->keyExists($this->db_tableName, 'FK_'.$fkTableName.'_'.$field->getDBColumnName())) {
+        if (!$db->db_schema(array('target' => $this->getDatabase()))->keyExists($this->db_tableName, 'FK_'.$fkTableName.'_'.$field->getDBColumnName())) {
           $db->db_schema(array('target' => $this->getDatabase()))->addForeignKey($this->db_tableName, 'FK_'.$fkTableName.'_'.$field->getDBColumnName(), $spec);
         }
       
