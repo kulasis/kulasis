@@ -80,10 +80,13 @@ class TermTotalsService {
     
       $this->resetTermTotals();
       // Compute Classes in Progress
-      $coursesInProgress = $this->calculateClassesInProgress($studentID, $term['FINANCIAL_AID_YEAR']);
-      if ($coursesInProgress) {
-        $this->updateDatabase($this->totals);
-      }
+      
+      if ($term['FINANCIAL_AID_YEAR']) {
+        $coursesInProgress = $this->calculateClassesInProgress($studentID, $term['FINANCIAL_AID_YEAR']);
+        if ($coursesInProgress) {
+          $this->updateDatabase($this->totals);
+        }
+  	  }
       
       $lastRow = $term;
     }
@@ -131,6 +134,7 @@ class TermTotalsService {
 
     $classesInProgress = $classesInProgress->execute();
     while ($class = $classesInProgress->fetch()) {
+
       if ($financialAidYear != $class['FINANCIAL_AID_YEAR']) {
         $this->resetYTDTotals();
       }
@@ -171,7 +175,7 @@ class TermTotalsService {
       ->condition('coursehistory.TERM', $term)
       ->execute();
     while ($row = $ch->fetch()) {
-      
+
       $this->totals['HEd.Student.CourseHistory.Term.TermCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
       $this->totals['HEd.Student.CourseHistory.Term.TermCreditsEarned'] += $row['CREDITS_EARNED'];
       if ($row['GPA_VALUE'] != '' AND $row['TRANSFER_CREDITS'] == 0)
