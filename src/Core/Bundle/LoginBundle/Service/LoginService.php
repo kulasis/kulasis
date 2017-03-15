@@ -83,9 +83,7 @@ class LoginService {
   
   public function logout() {
     if ($this->session->get('session_id') != '') {
-      try {
-        $this->db->db_update('LOG_SESSION')->fields(array('OUT_TIME' => date('Y-m-d H:i:s')))->condition('SESSION_ID', $this->session->get('session_id'))->execute();
-      } catch (\Exception $e) {  }
+      $this->session->logClosedSession($this->session->get('session_id'));
     }
     
     $this->session->invalidate();
