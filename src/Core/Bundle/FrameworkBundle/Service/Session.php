@@ -185,13 +185,13 @@ class Session {
       'IN_TIME' => date('Y-m-d H:i:s'),
       'IP_ADDRESS' => isset($this->request->getCurrentRequest()->server) ? $this->request->getCurrentRequest()->server->get('REMOTE_ADDR') : null,
     );
-    $session_id = $this->db->db_insert('LOG_SESSION')->fields($session_data)->execute();
+    $session_id = $this->db->db_insert('LOG_SESSION', array('target' => 'additional'))->fields($session_data)->execute();
     return $session_id;
   }
   
-  private function logClosedSession($session_id) {
+  public function logClosedSession($session_id) {
     try {
-      return $this->db->db_update('LOG_SESSION')->fields(array('OUT_TIME' => date('Y-m-d H:i:s')))->condition('SESSION_ID', $session_id)->execute();
+      return $this->db->db_update('LOG_SESSION', array('target' => 'additional'))->fields(array('OUT_TIME' => date('Y-m-d H:i:s')))->condition('SESSION_ID', $session_id)->execute();
     } catch (\Exception $e) {
       return false;
     }

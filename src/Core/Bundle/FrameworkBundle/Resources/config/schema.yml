@@ -1,6 +1,7 @@
 Log.Audit.Changes:
   description: "Audit Change Log"
   db_table_name: LOG_AUDIT_CHANGES
+  database: additional
   timestamps: true
   fields:
     ID:
@@ -15,7 +16,6 @@ Log.Audit.Changes:
       db_column_name: USER_ID
       db_column_type: serial
       db_column_null: false
-      parent: Core.User.ID
       column_name: "User ID"
       label_name: "User ID"
     SessionID:

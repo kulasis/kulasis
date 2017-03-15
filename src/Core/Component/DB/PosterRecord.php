@@ -389,7 +389,7 @@ class PosterRecord {
       }
     }
     
-    $audit = $this->db->db_connection(array('target' => 'write'))->prepare('INSERT INTO '.$this->schema->getTable('Log.Audit.Changes')->getDBName().' (USER_ID, LOG_SESSION_ID, CRUD_OPERATION, TABLE_NAME, RECORD_ID, OLD_RECORD, NEW_RECORD, CREATED_USERSTAMP, CREATED_TIMESTAMP)
+    $audit = $this->db->db_connection(array('target' => 'additional'))->prepare('INSERT INTO '.$this->schema->getTable('Log.Audit.Changes')->getDBName().' (USER_ID, LOG_SESSION_ID, CRUD_OPERATION, TABLE_NAME, RECORD_ID, OLD_RECORD, NEW_RECORD, CREATED_USERSTAMP, CREATED_TIMESTAMP)
         VALUES (:user_id, :session_id, :crud, :table_name, :record_id, :old_record, :new_record, :created_userstamp, :created_timestamp)');
     $data = array(
         'user_id' => $this->session->get('user_id'), 

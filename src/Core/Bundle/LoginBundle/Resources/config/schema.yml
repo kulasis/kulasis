@@ -286,6 +286,7 @@ Core.System.LDAP:
 Log.Session:
   description: "Log Session"
   db_table_name: LOG_SESSION
+  database: additional
   fields:
     ID:
       description: "ID"
@@ -300,7 +301,6 @@ Log.Session:
       description: "User ID"
       db_column_name: USER_ID
       db_column_type: serial
-      parent: Core.User.ID
       field_type: text
       field_size: 5
       column_name: "User ID"
@@ -309,7 +309,7 @@ Log.Session:
       description: "Role ID"
       db_column_name: ROLE_ID
       db_column_type: serial
-      parent: Core.User.Role.ID
+      db_column_null: true
       field_type: text
       field_size: 5
       column_name: "Role ID"
@@ -319,7 +319,6 @@ Log.Session:
       db_column_name: ORGANIZATION_ID
       db_column_type: serial
       db_column_null: true
-      parent: Core.Organization.ID
       column_name: "Organization ID"
       label_name: "Organization ID"
     TermID:
@@ -327,7 +326,6 @@ Log.Session:
       db_column_name: TERM_ID
       db_column_type: serial
       db_column_null: true
-      parent: Core.Term.ID
       column_name: "Term ID"
       label_name: "Term ID"
     InTime:
