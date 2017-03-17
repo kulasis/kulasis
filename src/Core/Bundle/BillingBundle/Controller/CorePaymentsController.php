@@ -201,6 +201,7 @@ class CorePaymentsController extends Controller {
       
         $payment_service = $this->get('kula.Core.billing.payment');
         $add = $this->request->request->get('add');
+        $non = $this->request->request->get('non');
         $payment_id = $payment_service->addPayment(
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.ConstituentID'], 
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PayeeConstituentID'], 
@@ -227,6 +228,23 @@ class CorePaymentsController extends Controller {
             $payment_id
           );
         }
+
+        // Add applied payments
+        if (isset($non['Core.Billing.Payment.Applied']) AND count($non['Core.Billing.Payment.Applied']) > 0) {
+          $payment_service = $this->get('kula.Core.billing.payment');
+
+          foreach($non['Core.Billing.Payment.Applied'] as $transaction_id => $applied_payment) {
+            if (isset($non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount']) AND 
+              $non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount'] > 0) {
+            $payment_service->addAppliedPayment(
+              $payment_id,
+              $transaction_id,
+              $non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount'],
+              null
+            );
+            } // end if on amount greater than zero
+          } // end foreach 
+        } // end if on applied payments
       
         if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPayment') {
           return $this->forward('Core_Billing_ConstituentBilling_Payments', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()));
@@ -237,9 +255,30 @@ class CorePaymentsController extends Controller {
     
     }
     
+    // Get unapplied transactions
+    $applied_trans = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+      ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'APPLIED_BALANCE'))
+      ->join('BILL_CODE', 'codes', 'transactions.CODE_ID = codes.CODE_ID')
+      ->fields('codes', array('CODE', 'CODE_TYPE'))
+      ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = transactions.CONSTITUENT_ID')
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'))
+      ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'transactions.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
+      ->leftJoin('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_ABBREVIATION'))
+      ->leftJoin('CORE_TERM', 'term', 'orgterms.TERM_ID = term.TERM_ID')
+      ->fields('term', array('TERM_ABBREVIATION'))
+      ->condition('transactions.CONSTITUENT_ID', $this->record->getSelectedRecordID())
+      ->condition('transactions.APPLIED_BALANCE', 0, '!=')
+      ->condition('codes.CODE_TYPE', 'C')
+      ->orderBy('LAST_NAME', 'ASC', 'cons')
+      ->orderBy('FIRST_NAME', 'ASC', 'cons')
+      ->orderBy('PERMANENT_NUMBER', 'ASC', 'cons')
+      ->orderBy('START_DATE', 'DESC', 'term')
+      ->orderBy('TRANSACTION_DATE', 'DESC')
+      ->orderBy('CODE', 'ASC')
+      ->execute()->fetchAll();
     
-    
-    return $this->render('KulaCoreBillingBundle:CorePayments:payments_add.html.twig');
+    return $this->render('KulaCoreBillingBundle:CorePayments:payments_add.html.twig', array('applied_payments' => $applied_trans));
   }
 
   public function addPaymentRefundAction() {
@@ -257,6 +296,7 @@ class CorePaymentsController extends Controller {
       
         $payment_service = $this->get('kula.Core.billing.payment');
         $add = $this->request->request->get('add');
+        $non = $this->request->request->get('non');
         $payment_id = $payment_service->addPayment(
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.ConstituentID'], 
           $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PayeeConstituentID'], 
@@ -287,6 +327,24 @@ class CorePaymentsController extends Controller {
             true
           );
         }
+
+
+        // Add applied payments
+        if (isset($non['Core.Billing.Payment.Applied']) AND count($non['Core.Billing.Payment.Applied']) > 0) {
+          $payment_service = $this->get('kula.Core.billing.payment');
+
+          foreach($non['Core.Billing.Payment.Applied'] as $transaction_id => $applied_payment) {
+            if (isset($non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount']) AND 
+              $non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount'] > 0) {
+            $payment_service->addAppliedPayment(
+              $payment_id,
+              $transaction_id,
+              $non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount'],
+              null
+            );
+            } // end if on amount greater than zero
+          } // end foreach 
+        } // end if on applied payments
       
         if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPaymentRefund') {
           return $this->forward('Core_Billing_ConstituentBilling_Payments', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()));
@@ -296,8 +354,31 @@ class CorePaymentsController extends Controller {
       }
     
     }
+
+    // Get unapplied transactions
+    $applied_trans = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+      ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'APPLIED_BALANCE'))
+      ->join('BILL_CODE', 'codes', 'transactions.CODE_ID = codes.CODE_ID')
+      ->fields('codes', array('CODE', 'CODE_TYPE'))
+      ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = transactions.CONSTITUENT_ID')
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'))
+      ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'transactions.ORGANIZATION_TERM_ID = orgterms.ORGANIZATION_TERM_ID')
+      ->leftJoin('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_ABBREVIATION'))
+      ->leftJoin('CORE_TERM', 'term', 'orgterms.TERM_ID = term.TERM_ID')
+      ->fields('term', array('TERM_ABBREVIATION'))
+      ->condition('transactions.CONSTITUENT_ID', $this->record->getSelectedRecordID())
+      ->condition('transactions.APPLIED_BALANCE', 0, '!=')
+      ->condition('codes.CODE_TYPE', 'P')
+      ->orderBy('LAST_NAME', 'ASC', 'cons')
+      ->orderBy('FIRST_NAME', 'ASC', 'cons')
+      ->orderBy('PERMANENT_NUMBER', 'ASC', 'cons')
+      ->orderBy('START_DATE', 'DESC', 'term')
+      ->orderBy('TRANSACTION_DATE', 'DESC')
+      ->orderBy('CODE', 'ASC')
+      ->execute()->fetchAll();
     
-    return $this->render('KulaCoreBillingBundle:CorePayments:payments_add.html.twig');
+    return $this->render('KulaCoreBillingBundle:CorePayments:payments_add.html.twig', array('applied_payments' => $applied_trans));
   }
 
   public function addAppliedPaymentAction($payment_id) {
