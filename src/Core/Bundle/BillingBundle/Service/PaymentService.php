@@ -158,6 +158,70 @@ class PaymentService {
 
   }
 
+  private function calculateAppliedBalanceForPayment($payment_id) {
+
+    // get payment amount
+    $payment = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payment')
+      ->fields('payment', array('AMOUNT', 'PAYMENT_TYPE'))
+      ->condition('payment.CONSTITUENT_PAYMENT_ID', $payment_id)
+      ->execute()->fetch();
+
+    $applied_trans_total = 0;
+
+    // get applied transactions
+    $applied_trans_result = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+      ->fields('applied', array('AMOUNT', 'CONSTITUENT_TRANSACTION_ID'))
+      ->condition('applied.CONSTITUENT_PAYMENT_ID', $payment_id)
+      ->execute();
+    while ($applied_trans_row = $applied_trans_result->fetch()) {
+      $applied_trans_total += $applied_trans_row['AMOUNT'];
+    }
+
+    if ($payment['PAYMENT_TYPE'] == 'R') {
+    // if refund payment, applied_trans_total is POSITIVE + regular payment is NEGATIVE
+      $amount = $payment['AMOUNT'];
+    } else {
+    // if regular payment, applied_trans_total is POSITIVE + regular payment is POSITIVE (change to negative)
+      $amount = $payment['AMOUNT'] * -1;
+    }
+    
+    return $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
+      'Core.Billing.Payment.AppliedBalance' => $applied_trans_total + $amount
+    ))->process($this->db_options)->getResult();
+
+  }
+
+  private function calculateAppliedBalanceForTransaction($transaction_id) {
+
+    $result = null;
+    // get applied transactions
+    $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+      ->expression('SUM(AMOUNT)', 'total_applied_balance')
+      ->condition('applied.CONSTITUENT_TRANSACTION_ID', $transaction_id)
+      ->execute()->fetch();
+
+    // get payment amount
+    $charge = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'charge')
+      ->fields('charge', array('AMOUNT', 'REFUND_TRANSACTION_ID', 'STUDENT_CLASS_ID', 'PAYMENT_ID'))
+      ->leftJoin('BILL_CONSTITUENT_PAYMENTS', 'payment', 'payment.CONSTITUENT_PAYMENT_ID = charge.PAYMENT_ID')
+      ->fields('payment', array('PAYMENT_TYPE'))
+      ->condition('charge.CONSTITUENT_TRANSACTION_ID', $transaction_id)
+      ->execute()->fetch();
+
+      if ($charge['PAYMENT_TYPE'] == 'R') {
+        // -NEGATIVE + POSITIVE
+        $balance = $charge['AMOUNT'] + $applied_trans['total_applied_balance'];
+      } else {
+        // POSITIVE - POSITIVE
+        $balance = $charge['AMOUNT'] - $applied_trans['total_applied_balance'];  
+      } 
+
+      return $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $transaction_id, array(
+        'Core.Billing.Transaction.AppliedBalance' => $balance
+      ))->process($this->db_options)->getResult();
+
+  }
+/*
   public function calculatePaymentsForCharge($charge_id) {
 
     // Get charge
@@ -248,7 +312,7 @@ class PaymentService {
     } // end else for matching payments
 
   }
-
+*/
   public function calculateBalanceForPayment($payment_id) {
 
     // get payment amount
@@ -284,9 +348,23 @@ class PaymentService {
           $this->updateClassPaidStatus($payment_trans_row['STUDENT_CLASS_ID']);
         }
     }
+
+    // get payment transactions with this payment's transaction as constituent transaction id
+    $applied_cons_total = 0;
+    $applied_cons_trans_result = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+      ->fields('applied', array('AMOUNT', 'CONSTITUENT_TRANSACTION_ID'))
+      ->join('BILL_CONSTITUENT_TRANSACTIONS', 'trans', 'trans.CONSTITUENT_TRANSACTION_ID = applied.CONSTITUENT_TRANSACTION_ID')
+      ->join('BILL_CONSTITUENT_PAYMENTS', 'pay', 'pay.CONSTITUENT_PAYMENT_ID = applied.CONSTITUENT_PAYMENT_ID')
+      ->condition('pay.PAYMENT_TYPE', 'R')
+      ->condition('trans.PAYMENT_ID', $payment_id)
+      ->execute();
+    while ($applied_cons_trans_row = $applied_cons_trans_result->fetch()) {
+      $applied_cons_total += $applied_cons_trans_row['AMOUNT'];
+      $this->calculateBalanceForCharge($applied_cons_trans_row['CONSTITUENT_TRANSACTION_ID'], 'R');
+    }
     
     return $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
-      'Core.Billing.Payment.AppliedBalance' => $applied_trans_total + $payment['AMOUNT'] * -1
+      'Core.Billing.Payment.AppliedBalance' => $applied_trans_total + $payment['AMOUNT'] * -1 + $applied_cons_total
     ))->process($this->db_options)->getResult();
 
   }
@@ -309,9 +387,7 @@ class PaymentService {
       $result = $this->updateAppliedBalanceForTransaction($charge_id, 0);
     } else {
       if ($payment_type == 'R') {
-        $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] + $applied_trans['total_applied_balance']); 
-
-
+        $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] + $applied_trans['total_applied_balance']);
       } else {
         $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] - $applied_trans['total_applied_balance']);  
       } 
