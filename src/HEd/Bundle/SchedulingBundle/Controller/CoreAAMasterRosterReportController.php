@@ -65,6 +65,7 @@ class CoreAAMasterRosterReportController extends ReportController {
       ->execute();
     
     $last_section_id = 0;
+    $last_student_id = 0;
     
     while ($row = $result->fetch()) {
       
@@ -157,6 +158,7 @@ class CoreAAMasterRosterReportController extends ReportController {
       $row['phones'] = implode(', ', $phonesStr);
       
       // Get emergency contacts
+      $row['emergency_contacts'] = array();
       $emergencyContacts = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'emr')
         ->fields('emr', array('EMERGENCY_CONTACT_NAME', 'EMERGENCY_CONTACT_PHONE', 'EMERGENCY_CONTACT_EMAIL', 'RELATIONSHIP', 'SORT',  'AUTHORIZED_DRIVER'))
         ->condition('emr.STUDENT_ID', $row['STUDENT_ID'])
