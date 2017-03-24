@@ -11,7 +11,7 @@ class CoreAAMasterRosterReportController extends ReportController {
     if ($this->request->query->get('record_type') == 'Core.HEd.Section' AND $this->request->query->get('record_id') != '')
       $this->setRecordType('Core.HEd.Section');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
-    return $this->render('KulaHEdSchedulingBundle:CoreClassRosterReport:reports_signinout.html.twig');
+    return $this->render('KulaHEdSchedulingBundle:CoreClassRosterReport:reports_classroster.html.twig');
   }
   
   public function generateAction()
