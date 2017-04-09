@@ -86,9 +86,11 @@ class DegreeAuditService {
     // Get Area Requirements
     if (isset($row['areas_ids'])) {
     foreach($row['areas_ids'] as $area_id) {
-    foreach($requirements['area'][$area_id] as $req_id => $req_row) {
-      $this->outputRequirementSet($req_id, $req_row);
-    }
+      if (isset($requirements['area'][$area_id])) {
+      foreach($requirements['area'][$area_id] as $req_id => $req_row) {
+        $this->outputRequirementSet($req_id, $req_row);
+      }
+      }
     }
     }
     
@@ -124,7 +126,7 @@ class DegreeAuditService {
       }
       foreach($this->course_history as $course_id => $row) {
         foreach($row as $row_id => $row_data) {
-        if (!isset($row_data['used']) AND $course_id != 'elective') {
+        if (!isset($row_data['used'])) {
           $this->req_grp_row($req_id, $row_id, $row, 'Y');
         }
         }
@@ -135,9 +137,10 @@ class DegreeAuditService {
         $this->req_grp_row($req_id, $req_crs_id, $req_crs_row);
       }
       }
+      // Get all course history rows that have requirement group set.
       foreach($this->course_history as $course_id => $row) {
         foreach($row as $row_id => $row_data) {
-        if (!isset($row_data['used']) AND $course_id != 'elective' AND $req_id == $row_data['DEGREE_REQ_GRP_ID']) {
+        if (!isset($row_data['used']) AND $req_id == $row_data['DEGREE_REQ_GRP_ID']) {
           $this->req_grp_row($req_id, $row_id, $row, 'Y');
         }
         }
@@ -161,12 +164,11 @@ class DegreeAuditService {
     
     if (!isset($this->req_grp_totals[$req_id])) $this->req_grp_totals[$req_id] = 0;
     
-      // elective
+      // elective or additional rows to requirement group
       if ($elective) {
-        
         foreach($row as $ch_index => $ch) {
           if (!isset($this->course_history[$ch['COURSE_ID']][$ch_index]['used'])) {
-          if ($ch['COURSE_ID']) {
+          if ($ch['DEGREE_REQ_GRP_ID'] == '' OR $req_id == $ch['DEGREE_REQ_GRP_ID']) {
           if (isset($ch['STUDENT_CLASS_ID'])) {
             $ch['status'] = 'In Prog';
             $ch['display_credits'] = $ch['CREDITS'];
