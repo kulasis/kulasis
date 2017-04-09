@@ -260,7 +260,7 @@ class DegreeAuditService {
     $course_history = array();
     $course_history_result = $this->db->db_select('STUD_STUDENT_COURSE_HISTORY', 'ch')
       ->fields('ch', array('COURSE_ID', 'CREDITS_ATTEMPTED', 'CREDITS_EARNED', 'MARK', 'MARK_SCALE_ID', 'TERM', 'COURSE_NUMBER', 'COURSE_TITLE', 'DEGREE_REQ_GRP_ID'))
-      ->expression("CONCAT(LEFT(TERM, 2),'-', RIGHT(TERM, 2))", 'TERM_ABBREVIATION')
+      ->expression("CONCAT(LEFT(UPPER(TERM), 2),'-', RIGHT(TERM, 2))", 'TERM_ABBREVIATION')
       ->condition('STUDENT_ID', $student_id)
       ->condition('LEVEL', $level)
       ->condition('MARK', 'W', '!=')
