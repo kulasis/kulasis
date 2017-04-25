@@ -172,7 +172,7 @@ class BillingConstituentLedgerReport extends Report {
     $this->Cell($this->width[1],6,$row['ORGANIZATION_ABBREVIATION'],1,0,'L',$this->fill);
     $this->Cell($this->width[2],6,$row['TERM_ABBREVIATION'],1,0,'L',$this->fill);
     $this->Cell($this->width[3],6,$row['CODE'],1,0,'L',$this->fill);
-    $this->Cell($this->width[4],6,$row['TRANSACTION_DESCRIPTION'],1,0,'L',$this->fill);
+    $this->Cell($this->width[4],6,substr($row['TRANSACTION_DESCRIPTION'], 0, 55),1,0,'L',$this->fill);
     $this->Cell($this->width[5],6,'$ '.number_format($row['AMOUNT'], 2),1,0,'R',$this->fill);
     $this->Cell($this->width[6],6,'$ '.number_format(bcdiv($this->balance, 100, 2), 2),1,0,'R',$this->fill);
     
