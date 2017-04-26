@@ -914,9 +914,17 @@ class Select extends Query implements SelectInterface {
       }
       else {
         $table_string = $this->connection->escapeTable($table['table']);
+        // REMOVED PREFIX PARSING
         // Do not attempt prefixing cross database / schema queries.
-        if (strpos($table_string, '.') === FALSE) {
-          $table_string = '{' . $table_string . '}';
+        //if (strpos($table_string, '.') === FALSE) {
+        //  $table_string = '{' . $table_string . '}';
+        // }
+        if (isset($table['arguments']['target'])) {
+          // Resolve target to real database name
+          $db_info = Database::getConnectionInfo();
+          $database = $db_info[$table['arguments']['target']]['database'];
+          // Prepend to table name
+          $table_string = $database . '.' . $table_string ;
         }
       }
 
