@@ -118,10 +118,10 @@ class CoreStudentTranscriptReportController extends ReportController {
             $pdf->Ln(260 - $current_y);
           }
 
-          
+          $count_for_orgs_in_term = 0;
           foreach($term['orgs'] as $org) {
 
-            $pdf->term_table_row($term, $org);
+            $pdf->term_table_row($term, $org, ($count_for_orgs_in_term > 0) ? 'N' : null);
 
             foreach($org['courses'] as $course) {
 
@@ -129,7 +129,7 @@ class CoreStudentTranscriptReportController extends ReportController {
 
             } // end foreach on courses
 
-
+          $count_for_orgs_in_term++;
           }
 
           
