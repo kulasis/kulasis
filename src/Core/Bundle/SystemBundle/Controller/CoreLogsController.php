@@ -12,10 +12,10 @@ class CoreLogsController extends Controller {
 
     $sessions = array();
 
-    $sessions = $this->db()->db_select('LOG_SESSION', 'session')
-      ->fields('session', array('SESSION_ID', 'IN_TIME', 'OUT_TIME', 'IP_ADDRESS'))
-      ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = session.USER_ID')
+    $sessions = $this->db()->db_select('CONS_CONSTITUENT', 'constituent')
       ->fields('constituent', array('LAST_NAME', 'FIRST_NAME'))
+      ->join('LOG_SESSION', 'session', 'constituent.CONSTITUENT_ID = session.USER_ID', array('target' => 'additional'))
+      ->fields('session', array('SESSION_ID', 'IN_TIME', 'OUT_TIME', 'IP_ADDRESS'))
       ->join('CORE_USER_ROLES', 'role', 'role.ROLE_ID = session.ROLE_ID')
       ->join('CORE_USERGROUP', 'usergroup', 'usergroup.USERGROUP_ID = role.USERGROUP_ID')
       ->fields('usergroup', array('USERGROUP_NAME'))
