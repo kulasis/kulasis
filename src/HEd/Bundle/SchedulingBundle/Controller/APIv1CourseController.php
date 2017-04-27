@@ -31,10 +31,6 @@ class APIv1CourseController extends APIController {
       ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', 'stafforgterms.STAFF_ORGANIZATION_TERM_ID = sec.STAFF_ORGANIZATION_TERM_ID')
       ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterms.STAFF_ID')
       ->fields('staff', array('ABBREVIATED_NAME' => 'INSTRUCTOR_ABBREVIATED_NAME'))
-      ->leftJoin('STUD_SECTION_MEETINGS', 'mtg', 'mtg.SECTION_ID = sec.SECTION_ID')
-      ->fields('mtg', array('SECTION_MEETING_ID', 'START_DATE' => 'mtg_START_DATE', 'END_DATE' => 'mtg_END_DATE', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
-      ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = mtg.ROOM_ID')
-      ->fields('rooms', array('ROOM_NUMBER'))
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
       ->condition('term.TERM_ABBREVIATION', $term)
       ->condition('sec.STATUS', null);
@@ -70,32 +66,41 @@ class APIv1CourseController extends APIController {
       $data[$i]['SUPPLIES_PRICE'] = $row['SUPPLIES_PRICE'];
       $data[$i]['NO_CLASS_DATES'] = $row['NO_CLASS_DATES'];
       
-      if ($row['SECTION_MEETING_ID']) {
-        $data[$i]['meetings'][$j]['START_TIME'] = $row['START_TIME'];
-        $data[$i]['meetings'][$j]['END_TIME'] = $row['END_TIME'];
-        $data[$i]['meetings'][$j]['ROOM_NUMBER'] = $row['ROOM_NUMBER'];
+      // Get Meetings
+      $meetings = $this->db()->db_select('STUD_SECTION_MEETINGS', 'mtg')
+        ->fields('mtg', array('SECTION_MEETING_ID', 'START_DATE' => 'mtg_START_DATE', 'END_DATE' => 'mtg_END_DATE', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
+        ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = mtg.ROOM_ID')
+        ->fields('rooms', array('ROOM_NUMBER'))
+        ->condition('mtg.SECTION_ID', $row['SECTION_ID'])
+        ->execute();
+      $j = 0;
+      while ($meeting = $meetings->fetch()) {
+        $data[$i]['meetings'][$j]['START_TIME'] = $meeting['START_TIME'];
+        $data[$i]['meetings'][$j]['END_TIME'] = $meeting['END_TIME'];
+        $data[$i]['meetings'][$j]['ROOM_NUMBER'] = $meeting['ROOM_NUMBER'];
         
         $data[$i]['meetings'][$j]['DAYS'] = array();
-        if ($row['MON']) $data[$i]['meetings'][$j]['DAYS'][] = 'Mon';
-        if ($row['TUE']) $data[$i]['meetings'][$j]['DAYS'][] = 'Tue';
-        if ($row['WED']) $data[$i]['meetings'][$j]['DAYS'][] = 'Wed';
-        if ($row['THU']) $data[$i]['meetings'][$j]['DAYS'][] = 'Thu';
-        if ($row['FRI']) $data[$i]['meetings'][$j]['DAYS'][] = 'Fri';
-        if ($row['SAT']) $data[$i]['meetings'][$j]['DAYS'][] = 'Sat';
-        if ($row['SUN']) $data[$i]['meetings'][$j]['DAYS'][] = 'Sun';
+        if ($meeting['MON']) $data[$i]['meetings'][$j]['DAYS'][] = 'Mon';
+        if ($meeting['TUE']) $data[$i]['meetings'][$j]['DAYS'][] = 'Tue';
+        if ($meeting['WED']) $data[$i]['meetings'][$j]['DAYS'][] = 'Wed';
+        if ($meeting['THU']) $data[$i]['meetings'][$j]['DAYS'][] = 'Thu';
+        if ($meeting['FRI']) $data[$i]['meetings'][$j]['DAYS'][] = 'Fri';
+        if ($meeting['SAT']) $data[$i]['meetings'][$j]['DAYS'][] = 'Sat';
+        if ($meeting['SUN']) $data[$i]['meetings'][$j]['DAYS'][] = 'Sun';
         if (count($data[$i]['meetings'][$j]['DAYS'])) 
-          $data[$i]['meetings'][$j]['DAYS'] = implode(' ', $data[$i]['meetings'][$j]['DAYS']);
+          $meeting['meetings'][$j]['DAYS'] = implode(' ', $data[$i]['meetings'][$j]['DAYS']);
         else 
-          $data[$i]['meetings'][$j]['DAYS'] = null;
+          $meeting['meetings'][$j]['DAYS'] = null;
           
-        if ($row['mtg_START_DATE']) 
-          $data[$i]['meetings'][$j]['START_DATE'] = $row['mtg_START_DATE']; 
+        if ($meeting['mtg_START_DATE']) 
+          $data[$i]['meetings'][$j]['START_DATE'] = $meeting['mtg_START_DATE']; 
         else 
-          $data[$i]['meetings'][$j]['START_DATE'] = $row['START_DATE'];
-        if ($row['mtg_END_DATE']) 
-          $data[$i]['meetings'][$j]['END_DATE'] = $row['mtg_END_DATE']; 
+          $data[$i]['meetings'][$j]['START_DATE'] = $meeting['START_DATE'];
+        if ($meeting['mtg_END_DATE']) 
+          $data[$i]['meetings'][$j]['END_DATE'] = $meeting['mtg_END_DATE']; 
         else 
-          $data[$i]['meetings'][$j]['END_DATE'] = $row['END_DATE'];
+          $data[$i]['meetings'][$j]['END_DATE'] = $meeting['END_DATE'];
+        $j++;
       }
      
     // Get fees
@@ -157,7 +162,22 @@ class APIv1CourseController extends APIController {
     $sec++;
     }
 
-    if ($row['SECTION_ID'] != $last_section_id) { $i++; $j = 0; $last_section_id = $row['SECTION_ID']; } else { $j++; }
+    // Get instructors
+    $instructors_result = $this->db()->db_select('STUD_SECTION_STAFF', 'addstaff')
+      ->fields('addstaff', array('PRIMARY_INSTRUCTOR'))
+      ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', 'stafforgterms.STAFF_ORGANIZATION_TERM_ID = addstaff.STAFF_ORGANIZATION_TERM_ID')
+      ->join('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterms.STAFF_ID')
+      ->fields('staff', array('ABBREVIATED_NAME' => 'INSTRUCTOR_ABBREVIATED_NAME'))
+      ->condition('addstaff.SECTION_ID', $row['SECTION_ID'])
+      ->execute();
+    $ins = 0;
+    while ($instructors_row = $instructors_result->fetch()) {
+      $data[$i]['instructors'][$ins]['INSTRUCTOR_ABBREVIATED_NAME'] = $instructors_row['INSTRUCTOR_ABBREVIATED_NAME'];
+      $data[$i]['instructors'][$ins]['PRIMARY_INSTRUCTOR'] = $instructors_row['PRIMARY_INSTRUCTOR'];
+    $ins++;
+    }
+
+    $i++;
     }
     
     return $this->JSONResponse($data);
@@ -245,7 +265,7 @@ class APIv1CourseController extends APIController {
     $f++;
     } // end loop on fees
 
-        // Get discounts
+    // Get discounts
     $discount_or = $this->db()->db_or();
     $discount_or = $discount_or->condition('secdis.END_DATE', date('Y-m-d'), '>=');
     $discount_or = $discount_or->isNull('secdis.END_DATE');
@@ -287,6 +307,21 @@ class APIv1CourseController extends APIController {
       $row['related'][$sec]['OPTIONAL'] = $related_section_row['OPTIONAL'];
 
     $sec++;
+    }
+
+    // Get instructors
+    $instructors_result = $this->db()->db_select('STUD_SECTION_STAFF', 'addstaff')
+      ->fields('addstaff', array('PRIMARY_INSTRUCTOR'))
+      ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', 'stafforgterms.STAFF_ORGANIZATION_TERM_ID = addstaff.STAFF_ORGANIZATION_TERM_ID')
+      ->join('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterms.STAFF_ID')
+      ->fields('staff', array('ABBREVIATED_NAME' => 'INSTRUCTOR_ABBREVIATED_NAME'))
+      ->condition('addstaff.SECTION_ID', $row['SECTION_ID'])
+      ->execute();
+    $ins = 0;
+    while ($instructors_row = $instructors_result->fetch()) {
+      $row['instructors'][$ins]['INSTRUCTOR_ABBREVIATED_NAME'] = $instructors_row['INSTRUCTOR_ABBREVIATED_NAME'];
+      $row['instructors'][$ins]['PRIMARY_INSTRUCTOR'] = $instructors_row['PRIMARY_INSTRUCTOR'];
+    $ins++;
     }
 
     return $this->JSONResponse($row);
