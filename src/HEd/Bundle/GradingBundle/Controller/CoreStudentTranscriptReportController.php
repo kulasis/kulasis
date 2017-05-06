@@ -66,6 +66,7 @@ class CoreStudentTranscriptReportController extends ReportController {
 
       $data = $this->service->getTranscriptData();
       $current_schedule = $this->service->getCurrentScheduleData();
+      $current_schedule_totals = $this->service->getCurrentScheduleTotals();
       $degree_data = $this->service->getDegreeData();
       $student_data = $this->service->getStudentData();
 
@@ -167,7 +168,7 @@ class CoreStudentTranscriptReportController extends ReportController {
           foreach($org_row as $term_name => $term_row) {
 
             // Check how far from bottom
-            $amount_to_check = count($term_row) * 3 + 3 + 3 + 5 + 20;
+            $amount_to_check = count($term_row) * 3 + 3 + 3 + 5 + 20 + 10;
             $current_y = $pdf->GetY();
             if (270 - $current_y < $amount_to_check) {
               $pdf->Ln(270 - $current_y);
@@ -178,13 +179,20 @@ class CoreStudentTranscriptReportController extends ReportController {
             }
             
             $pdf->currentschedule_term_table_row(array('TERM_NAME' => $term_name, 'ORGANIZATION_NAME' => $org_name));
+            $student_status_id = null;
             foreach($term_row as $schedule_row) {
               $pdf->currentschedule_table_row($schedule_row);
+              $student_status_id = $schedule_row['STUDENT_STATUS_ID'];
             }
-            $pdf->Ln(3);
+            if (isset($current_schedule_totals[$student_status_id])) {
+              $pdf->gpa_table_row($current_schedule_totals[$student_status_id]);
+            } else {
+              $pdf->Ln(3);
+            }
             $loop = 1;
           } // end foreach on term
         } // end foreach on organization
+
       } // end foreach on level
 
     } // end while on students

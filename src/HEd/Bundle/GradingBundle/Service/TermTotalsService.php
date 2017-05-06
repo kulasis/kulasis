@@ -79,8 +79,8 @@ class TermTotalsService {
       
     
       $this->resetTermTotals();
-      // Compute Classes in Progress
       
+      // Compute Classes in Progress
       if ($term['FINANCIAL_AID_YEAR']) {
         $coursesInProgress = $this->calculateClassesInProgress($studentID, $term['FINANCIAL_AID_YEAR']);
         if ($coursesInProgress) {
@@ -110,7 +110,9 @@ class TermTotalsService {
   private function calculateClassesInProgress($studentID, $financialAidYear = null) {
     
     $coursesInProgress = false;
-    
+    $laststudentstatusid = null;
+    $lastfinyear = null;
+
     // Check for schedule
     $classesInProgress = $this->db->db_select('STUD_STUDENT', 'student', array('nolog' => true))
       ->fields('student', array('STUDENT_ID'))
@@ -135,9 +137,9 @@ class TermTotalsService {
     $classesInProgress = $classesInProgress->execute();
     while ($class = $classesInProgress->fetch()) {
 
-      if ($financialAidYear != $class['FINANCIAL_AID_YEAR']) {
-        $this->resetYTDTotals();
-      }
+      if (isset($laststudentstatusid) AND $laststudentstatusid != $class['STUDENT_STATUS_ID']) { $this->resetTermTotals(); }
+
+      if ($lastfinyear != $class['FINANCIAL_AID_YEAR'] AND $financialAidYear != $class['FINANCIAL_AID_YEAR']) { $this->resetYTDTotals(); }
       
       $this->totals['HEd.Student.CourseHistory.Term.TermCreditsAttempted'] += $class['CREDITS_ATTEMPTED'];
       $this->totals['HEd.Student.CourseHistory.Term.YTDCreditsAttempted'] += $class['CREDITS_ATTEMPTED'];
@@ -150,6 +152,8 @@ class TermTotalsService {
       $this->totals['HEd.Student.CourseHistory.Term.Term'] = $class['TERM_NAME'];
       $this->totals['HEd.Student.CourseHistory.Term.StudentStatusID'] = $class['STUDENT_STATUS_ID'];
       
+      $lastfinyear = $class['FINANCIAL_AID_YEAR'];
+      $laststudentstatusid = $class['STUDENT_STATUS_ID'];
       $coursesInProgress = true;
     }
     

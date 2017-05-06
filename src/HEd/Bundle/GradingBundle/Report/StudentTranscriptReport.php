@@ -149,7 +149,7 @@ class StudentTranscriptReport extends BaseReport {
 
   public function term_table_row($term, $org, $comments = null) {
     $this->SetFont('Arial', '', 7);
-    if ($org['NON_ORGANIZATION_NAME']) {
+    if (isset($org['NON_ORGANIZATION_NAME']) AND $org['NON_ORGANIZATION_NAME'] != '') {
       $this->Cell(63,3,$org['NON_ORGANIZATION_NAME'],0,0,'L');
       if ($term['CALENDAR_MONTH'] || $term['CALENDAR_YEAR']) 
         $this->Cell(15,3,$term['CALENDAR_MONTH'].'/'.$term['CALENDAR_YEAR'],0,0,'R');
@@ -161,8 +161,8 @@ class StudentTranscriptReport extends BaseReport {
       if ($term['CALENDAR_MONTH'] || $term['CALENDAR_YEAR']) 
         $this->Cell(15,3,$term['CALENDAR_MONTH'].'/'.$term['CALENDAR_YEAR'],0,0,'L');
       else
-        $this->Cell(15,3,'',0,0,'L');  
-      $this->Cell(63,3,$org['ORGANIZATION_NAME'],0,0,'R');
+        $this->Cell(15,3,'',0,0,'L');
+      $this->Cell(63,3,isset($org['ORGANIZATION_NAME']) ? $org['ORGANIZATION_NAME'] : '',0,0,'R');
     }
     $this->Ln(3);
     if ($comments === null) {

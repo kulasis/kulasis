@@ -12,6 +12,7 @@ class TranscriptService {
     $this->current_schedule_data = array();
     $this->degrees_awarded_data = array();
     $this->student_data = array();
+    $this->current_schedule_totals = array();
   }
   
   public function loadTranscriptForStudent($student_id, $level = null) {
@@ -29,6 +30,10 @@ class TranscriptService {
   
   public function getCurrentScheduleData() {
     return $this->current_schedule_data;
+  }
+
+  public function getCurrentScheduleTotals() {
+    return $this->current_schedule_totals;
   }
 
   public function getDegreeData() {
@@ -302,6 +307,7 @@ class TranscriptService {
   private function loadCurrentSchedule($student_id, $level = null) {
     
     $this->current_schedule_data = array();  
+    $student_status_id = array();
 
     // Add on level
     $level_condition = '';
@@ -312,6 +318,7 @@ class TranscriptService {
     $schedule_result = $this->db->db_select('STUD_STUDENT', 'student')
       ->fields('student', array('STUDENT_ID'))
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = student.STUDENT_ID')
+      ->fields('stustatus', array('STUDENT_STATUS_ID'))
       ->join('STUD_STUDENT_CLASSES', 'classes', 'classes.STUDENT_STATUS_ID = stustatus.STUDENT_STATUS_ID '.$level_condition)
       ->fields('classes', array('LEVEL', 'CREDITS_ATTEMPTED'))
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = classes.SECTION_ID')
@@ -336,7 +343,20 @@ class TranscriptService {
     $schedule_result = $schedule_result->execute();
     while ($schedule_row = $schedule_result->fetch()) {
       $this->current_schedule_data[$schedule_row['LEVEL_DESCRIPTION']][$schedule_row['ORGANIZATION_NAME']][$schedule_row['TERM_NAME']][] = $schedule_row; 
+      if (!in_array($schedule_row['STUDENT_STATUS_ID'], $student_status_id)) {
+        $student_status_id[] = $schedule_row['STUDENT_STATUS_ID'];
+      }
     }
+    if (count($student_status_id) > 0) {
+      $schedule_totals_result = $this->db->db_select('STUD_STUDENT_COURSE_HISTORY_TERMS', 'crshisterms')
+        ->fields('crshisterms', array('STUDENT_STATUS_ID', 'COMMENTS', 'TERM_CREDITS_ATTEMPTED', 'TERM_CREDITS_EARNED', 'TERM_HOURS', 'TERM_POINTS', 'TERM_GPA', 'CUM_CREDITS_ATTEMPTED', 'CUM_CREDITS_EARNED', 'CUM_HOURS', 'CUM_POINTS', 'CUM_GPA', 'INST_CREDITS_ATTEMPTED', 'INST_CREDITS_EARNED', 'INST_HOURS' ,'INST_POINTS', 'INST_GPA', 'TRNS_CREDITS_ATTEMPTED', 'TRNS_CREDITS_EARNED', 'TRNS_HOURS', 'TRNS_POINTS', 'TRNS_GPA', 'TOTAL_CREDITS_ATTEMPTED', 'TOTAL_CREDITS_EARNED', 'TOTAL_HOURS', 'TOTAL_POINTS', 'TOTAL_GPA'))
+        ->condition('crshisterms.STUDENT_STATUS_ID', $student_status_id, 'IN')
+        ->execute();
+      while ($schedule_totals_row = $schedule_totals_result->fetch()) {
+        $this->current_schedule_totals[$schedule_totals_row['STUDENT_STATUS_ID']] = $schedule_totals_row;
+      }
+    }
+
   }
 
 }
