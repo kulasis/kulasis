@@ -194,6 +194,8 @@ HEd.Section:
       field_type: text
       column_name: "Available"
       label_name: "Available"
+  unique_keys:
+    SectionNumberOrganizationTermID: [ "HEd.Section.SectionNumber", "HEd.Section.OrganizationTermID" ]
 
 HEd.Section.Course:
   description: "Section Courses"
