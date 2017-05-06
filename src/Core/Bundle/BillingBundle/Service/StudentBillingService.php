@@ -260,14 +260,15 @@ class StudentBillingService {
 
       // If Standard, 
       if ($student_status['BILLING_MODE'] == 'STAND') {
+
         // determine if at flat rate first, total credits attempted can't be null
         if ($student_status['TOTAL_CREDITS_ATTEMPTED'] AND $student_status['TOTAL_CREDITS_ATTEMPTED'] >= $student_status['FULL_TIME_CREDITS']) {
         
           $new_tuition_total = $student_status['FULL_TIME_FLAT_RATE'];
         
           // if over, overage to hourly
-          if ($student_status['TOTAL_CREDITS_ATTEMPTED'] > $student_status['MAX_FULL_TIME_CREDITS']) {
-        
+          if ($student_status['TOTAL_CREDITS_ATTEMPTED'] > $student_status['MAX_FULL_TIME_CREDITS'] AND $student_status['MAX_FULL_TIME_CREDITS'] != '') {
+
             // Determine overage
             $overage_hours = $student_status['TOTAL_CREDITS_ATTEMPTED'] - $student_status['MAX_FULL_TIME_CREDITS'];
             $new_tuition_total += $overage_hours * $student_status['CREDIT_HOUR_RATE'];
