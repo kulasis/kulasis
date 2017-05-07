@@ -10,10 +10,13 @@ class CoreDegreeAuditReportController extends ReportController {
   
   public function indexAction() {
     $this->authorize();
+
+    $lookup_service = $this->get('kula.core.lookup');
+    $levels = $lookup_service->getLookupMenu('HEd.Student.Enrollment.Level', 'D');
     //$this->assign("grade_levels", Kula_Records_GradeLevel::getGradeLevelsForSchoolForMenu($_SESSION['kula']['school']['id'], "Y"));
     if ($this->request->query->get('record_type') == 'Core.HEd.Student' AND $this->request->query->get('record_id') != '')
       $this->setRecordType('Core.HEd.Student');
-    return $this->render('KulaHEdGradingBundle:CoreDegreeAuditReport:reports_degreeaudit.html.twig');
+    return $this->render('KulaHEdGradingBundle:CoreDegreeAuditReport:reports_degreeaudit.html.twig', array('levels' => $levels));
   }
   
   public function generateAction() {  
@@ -59,6 +62,11 @@ class CoreDegreeAuditReportController extends ReportController {
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('stu.STUDENT_ID', $record_id);
+    
+    $non = $this->request->request->get('non');
+    if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
+      $result = $result->condition('status.LEVEL', $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);
+    }
     
     $result = $result->execute();
     while ($students_row = $result->fetch()) {

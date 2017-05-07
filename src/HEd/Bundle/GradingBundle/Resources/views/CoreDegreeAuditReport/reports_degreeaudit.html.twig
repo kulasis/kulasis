@@ -6,12 +6,20 @@
 <div class="group-box">
 <div class="group-box-header">Degree Audit</div>
 <div class="group-box-contents group">
+Level:
+  <select name="non[HEd.Student.CourseHistory][HEd.Student.CourseHistory.Level][]" id="StudentTranscriptLevels[new_num]" multiple="multiple">
+    {% for level_code, level_desc in levels %}
+    <option value="{{ level_code }}">{{ level_desc }}</option>
+    {% endfor %}
+  </select>
+
   Sort: 
   <select name="sort">
     <option value="name">Name</option>
     <option value="degree_name">Degree, Name</option>
     <option value="degree_concentration_name">Degree, Concentration, Name</option>
   </select>
+
 </div>
 </div>
 
