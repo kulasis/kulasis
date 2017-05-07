@@ -296,6 +296,14 @@ HEd.Student.CourseHistory:
       field_type: checkbox
       column_name: "Include in CUM GPA"
       label_name: "Include in CUM GPA"
+    RepeatTagCourseHistoryID:
+      description: "Repeat Tag Course History ID"
+      parent: HEd.Student.CourseHistory.ID
+      db_column_name: REPEAT_TAG_CRS_HIS_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Repeat Tag Course History ID"
+      label_name: "Repeat Tag Course History ID"
     Comments:
       description: "Comments"
       db_column_name: COMMENTS
