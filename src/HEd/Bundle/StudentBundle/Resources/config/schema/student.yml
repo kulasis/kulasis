@@ -267,6 +267,15 @@ HEd.Student:
       field_type: checkbox
       column_name: "Directory Permission"
       label_name: "Directory Permission"
+    FirstGenerationCollege:
+      description: "First Generation College Student"
+      db_column_name: FIRST_GENERATION_COLLEGE
+      db_column_type: bool
+      db_column_null: false
+      db_column_default: 0
+      field_type: checkbox
+      column_name: "First Generation College Student"
+      label_name: "First Generation College Student"
     LastCollegeAttended:
       description: "Last College Attended"
       db_column_name: LAST_COLLEGE_ATTENDED
