@@ -142,6 +142,83 @@ HEd.MarkScale.Mark:
       column_name: "Inactive After"
       label_name: "Inactive After"
 
+HEd.RepeatTag:
+  description: "Repeat Tags"
+  db_table_name: STUD_REPEAT_TAG
+  timestamps: true
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: REPEAT_TAG_ID
+      db_column_type: primary_serial
+      column_name: "Repeat Tag ID"
+      label_name: "Repeat Tag ID"
+    Code:
+      description: "Repeat Tag Code"
+      db_column_name: REPEAT_TAG_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: false
+      field_type: text
+      field_size: 6
+      column_name: "Repeat Tag Code"
+      label_name: "Repeat Tag Code"
+    Name:
+      description: "Repeat Tag Name"
+      db_column_name: REPEAT_TAG_NAME
+      db_column_type: varchar
+      db_column_length: 50
+      db_column_null: false
+      field_type: text
+      field_size: 20
+      column_name: "Repeat Tag Name"
+      label_name: "Repeat Tag Name"
+    InactiveAfter:
+      description: "Inactive After"
+      db_column_name: INACTIVE_AFTER
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Inactive After"
+      label_name: "Inactive After"
+    IncludeCreditsAttempted:
+      description: "Include in Credits Attempted Total"
+      db_column_name: INCLUDE_CREDITS_ATTMPT
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Include Credits Attempted"
+      label_name: "Include Credits Attempted"
+    IncludeCreditsEarned:
+      description: "Include in Credits Earned Total"
+      db_column_name: INCLUDE_CREDITS_EARNED
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Include Credits Earned"
+      label_name: "Include Credits Earned"
+    IncludeTermGPA:
+      description: "Include in Term GPA Calculation"
+      db_column_name: INCLUDE_TERM_GPA
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Include TERM GPA"
+      label_name: "Include TERM GPA"
+    IncludeCumulativeGPA:
+      description: "Include in Cumulative GPA Calculation"
+      db_column_name: INCLUDE_CUM_GPA
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Include CUM GPA"
+      label_name: "Include CUM GPA"
+
 HEd.Course:
   fields:
     MarkScaleID:
@@ -213,6 +290,16 @@ HEd.Student.Class:
       field_type: checkbox
       column_name: "Not For Grade"
       label_name: "Not For Grade"
+    RepeatTagID:
+      description: "Repeat Tag ID"
+      db_column_name: REPEAT_TAG_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: HEd.RepeatTag.ID
+      field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\RepeatTag
+      column_name: "Repeat Tag"
+      label_name: "Repeat Tag"    
 
 HEd.Staff.OrganizationTerm:
   fields:

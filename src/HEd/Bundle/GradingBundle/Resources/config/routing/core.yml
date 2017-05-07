@@ -14,6 +14,12 @@ Core_HEd_Grading_GradingSetup_Standings:
     _controller: KulaHEdGradingBundle:CoreStandingSetup:index
     _navigation: Core.HEd.Grading.GradingSetup.Standings
 
+Core_HEd_Grading_GradingSetup_RepeatTags:
+  path: /grading/setup/repeat_tags
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreGradingSetupRepeatTag:index
+    _navigation: Core.HEd.Grading.GradingSetup.RepeatTags
+
 Core_HEd_Grading_StudentCourseHistory_CourseHistory:
   path: /grading/student_course_history/course_history
   defaults: 

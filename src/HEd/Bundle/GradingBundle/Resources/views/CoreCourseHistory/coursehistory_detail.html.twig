@@ -29,6 +29,7 @@
 <div class="group-box-header">Grading</div>
 <div class="group-box-contents group">
   {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.MarkScaleID', db_row_id: course_history.COURSE_HISTORY_ID, field_name_override: 'Mark Scale', value: course_history.MARK_SCALE_ID, label: true }) }}
+  {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.RepeatTagID', db_row_id: course_history.COURSE_HISTORY_ID, field_name_override: 'Repeat Tag', value: course_history.REPEAT_TAG_ID, label: true }) }}
 </div>
 <div class="group-box-contents group">
   {{ kula_field({ edit: true, field: 'HEd.Student.CourseHistory.Comments', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.COMMENTS, label: true }) }}

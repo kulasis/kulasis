@@ -176,6 +176,16 @@ HEd.Student.CourseHistory:
       field_size: 25
       column_name: "Staff Name"
       label_name: "Staff Name"
+    RepeatTagID:
+      description: "Repeat Tag ID"
+      db_column_name: REPEAT_TAG_ID
+      db_column_type: serial
+      db_column_null: true
+      parent: HEd.RepeatTag.ID
+      field_type: select
+      class: Kula\HEd\Bundle\GradingBundle\Field\RepeatTag
+      column_name: "Repeat Tag"
+      label_name: "Repeat Tag" 
     Mark:
       description: "Mark"
       db_column_name: MARK

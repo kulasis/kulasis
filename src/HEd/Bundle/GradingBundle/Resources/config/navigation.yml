@@ -115,6 +115,10 @@ Core.HEd.Grading.GradingSetup:
       description: "Standings"
       display_name: "Standings"
       route: Core_HEd_Grading_GradingSetup_Standings
+    RepeatTags:
+      description: "Repeat Tags"
+      display_name: "Repeat Tags"
+      route: Core_HEd_Grading_GradingSetup_RepeatTags
 
 Teacher.HEd.Grades:
   parent: Teacher.HEd
