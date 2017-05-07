@@ -246,6 +246,28 @@ HEd.Student.CourseHistory:
       field_size: 8
       column_name: "Quality Points"
       label_name: "Quality Points"
+    CalculatedCreditsAttempted:
+      description: "Calculated Credits Attempted"
+      db_column_name: CALC_CREDITS_ATTEMPTED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Calculated Credits Attempted"
+      label_name: "Calculated Credits Attempted"
+    CalculatedCreditsEarned:
+      description: "Calculated Credits Earned"
+      db_column_name: CALC_CREDITS_EARNED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Calculated Credits Earned"
+      label_name: "Calculated Credits Earned"
     DegreeRequirementGroupID:
       description: "Degree Requirement Group ID"
       db_column_name: DEGREE_REQ_GRP_ID
@@ -256,6 +278,24 @@ HEd.Student.CourseHistory:
       class: Kula\HEd\Bundle\GradingBundle\Field\DegreeRequirementGroup
       column_name: "Degree Requirement Group ID"
       label_name: "Degree Requirement Group ID"
+    IncludeTermGPA:
+      description: "Include in TERM GPA"
+      db_column_name: INCLUDE_TERM_GPA
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Include in TERM GPA"
+      label_name: "Include in TERM GPA"
+    IncludeCumulativeGPA:
+      description: "Include in CUM GPA"
+      db_column_name: INCLUDE_CUM_GPA
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Include in CUM GPA"
+      label_name: "Include in CUM GPA"
     Comments:
       description: "Comments"
       db_column_name: COMMENTS

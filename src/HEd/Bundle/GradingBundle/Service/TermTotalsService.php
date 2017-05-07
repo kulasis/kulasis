@@ -165,7 +165,7 @@ class TermTotalsService {
     $studentStatusID = null;
     
     $ch = $this->db->db_select('STUD_STUDENT_COURSE_HISTORY', 'coursehistory', array('nolog' => true))
-      ->fields('coursehistory', array('ORGANIZATION_ID', 'LEVEL', 'CREDITS_ATTEMPTED', 'CREDITS_EARNED', 'GPA_VALUE', 'QUALITY_POINTS', 'CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'NON_ORGANIZATION_ID', 'TRANSFER_CREDITS'))
+      ->fields('coursehistory', array('ORGANIZATION_ID', 'LEVEL', 'CALC_CREDITS_ATTEMPTED', 'CALC_CREDITS_EARNED', 'GPA_VALUE', 'QUALITY_POINTS', 'CALENDAR_MONTH', 'CALENDAR_YEAR', 'TERM', 'NON_ORGANIZATION_ID', 'TRANSFER_CREDITS', 'INCLUDE_TERM_GPA', 'INCLUDE_CUM_GPA'))
       ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = coursehistory.ORGANIZATION_ID')
       ->fields('org', array('ORGANIZATION_NAME'))
       ->leftJoin('CORE_NON_ORGANIZATION', 'nonorg', 'nonorg.NON_ORGANIZATION_ID = coursehistory.NON_ORGANIZATION_ID')
@@ -180,42 +180,52 @@ class TermTotalsService {
       ->execute();
     while ($row = $ch->fetch()) {
 
-      $this->totals['HEd.Student.CourseHistory.Term.TermCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
-      $this->totals['HEd.Student.CourseHistory.Term.TermCreditsEarned'] += $row['CREDITS_EARNED'];
-      if ($row['GPA_VALUE'] != '' AND $row['TRANSFER_CREDITS'] == 0)
-        $this->totals['HEd.Student.CourseHistory.Term.TermHours'] += $row['CREDITS_ATTEMPTED'];
-      $this->totals['HEd.Student.CourseHistory.Term.TermPoints'] += $row['QUALITY_POINTS'];
-    
-      $this->totals['HEd.Student.CourseHistory.Term.CumCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
-      $this->totals['HEd.Student.CourseHistory.Term.CumCreditsEarned'] += $row['CREDITS_EARNED'];
-      if ($row['GPA_VALUE'] != '' AND $row['TRANSFER_CREDITS'] == 0)
-        $this->totals['HEd.Student.CourseHistory.Term.CumHours'] += $row['CREDITS_ATTEMPTED'];
-      $this->totals['HEd.Student.CourseHistory.Term.CumPoints'] += $row['QUALITY_POINTS'];
-    
-      $this->totals['HEd.Student.CourseHistory.Term.YTDCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
-      $this->totals['HEd.Student.CourseHistory.Term.YTDCreditsEarned'] += $row['CREDITS_EARNED'];
-      if ($row['GPA_VALUE'] != '' AND $row['TRANSFER_CREDITS'] == 0)
-        $this->totals['HEd.Student.CourseHistory.Term.YTDHours'] += $row['CREDITS_ATTEMPTED'];
-      $this->totals['HEd.Student.CourseHistory.Term.YTDPoints'] += $row['QUALITY_POINTS'];
+      $this->totals['HEd.Student.CourseHistory.Term.TermCreditsAttempted'] += $row['CALC_CREDITS_ATTEMPTED'];
+      $this->totals['HEd.Student.CourseHistory.Term.TermCreditsEarned'] += $row['CALC_CREDITS_EARNED'];
+      if ($row['INCLUDE_TERM_GPA'] == 1) {
+        if ($row['GPA_VALUE'] != '' AND $row['TRANSFER_CREDITS'] == 0)
+          $this->totals['HEd.Student.CourseHistory.Term.TermHours'] += $row['CALC_CREDITS_ATTEMPTED'];
+        $this->totals['HEd.Student.CourseHistory.Term.TermPoints'] += $row['QUALITY_POINTS'];
+      }
+
+      $this->totals['HEd.Student.CourseHistory.Term.CumCreditsAttempted'] += $row['CALC_CREDITS_ATTEMPTED'];
+      $this->totals['HEd.Student.CourseHistory.Term.CumCreditsEarned'] += $row['CALC_CREDITS_EARNED'];
+      if ($row['INCLUDE_CUM_GPA'] == 1) {
+        if ($row['GPA_VALUE'] != '' AND $row['TRANSFER_CREDITS'] == 0)
+          $this->totals['HEd.Student.CourseHistory.Term.CumHours'] += $row['CALC_CREDITS_ATTEMPTED'];
+        $this->totals['HEd.Student.CourseHistory.Term.CumPoints'] += $row['QUALITY_POINTS'];
+      }
+
+      $this->totals['HEd.Student.CourseHistory.Term.YTDCreditsAttempted'] += $row['CALC_CREDITS_ATTEMPTED'];
+      $this->totals['HEd.Student.CourseHistory.Term.YTDCreditsEarned'] += $row['CALC_CREDITS_EARNED'];
+      if ($row['INCLUDE_TERM_GPA'] == 1) {
+        if ($row['GPA_VALUE'] != '' AND $row['TRANSFER_CREDITS'] == 0)
+          $this->totals['HEd.Student.CourseHistory.Term.YTDHours'] += $row['CALC_CREDITS_ATTEMPTED'];
+        $this->totals['HEd.Student.CourseHistory.Term.YTDPoints'] += $row['QUALITY_POINTS'];
+      }
     
       if ($row['TRANSFER_CREDITS'] == 1) {
-        $this->totals['HEd.Student.CourseHistory.Term.TrnsCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
-        $this->totals['HEd.Student.CourseHistory.Term.TrnsCreditsEarned'] += $row['CREDITS_EARNED'];
+        $this->totals['HEd.Student.CourseHistory.Term.TrnsCreditsAttempted'] += $row['CALC_CREDITS_ATTEMPTED'];
+        $this->totals['HEd.Student.CourseHistory.Term.TrnsCreditsEarned'] += $row['CALC_CREDITS_EARNED'];
       } elseif ($row['TRANSFER_CREDITS'] == 0) {
-        $this->totals['HEd.Student.CourseHistory.Term.InstCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
-        $this->totals['HEd.Student.CourseHistory.Term.InstCreditsEarned'] += $row['CREDITS_EARNED'];
-        if ($row['GPA_VALUE'] != '') {
-          $this->totals['HEd.Student.CourseHistory.Term.InstHours'] += $row['CREDITS_ATTEMPTED'];
-          $this->totals['HEd.Student.CourseHistory.Term.InstPoints'] += $row['QUALITY_POINTS']; 
+        $this->totals['HEd.Student.CourseHistory.Term.InstCreditsAttempted'] += $row['CALC_CREDITS_ATTEMPTED'];
+        $this->totals['HEd.Student.CourseHistory.Term.InstCreditsEarned'] += $row['CALC_CREDITS_EARNED'];
+        if ($row['INCLUDE_CUM_GPA'] == 1) {
+          if ($row['GPA_VALUE'] != '') {
+            $this->totals['HEd.Student.CourseHistory.Term.InstHours'] += $row['CALC_CREDITS_ATTEMPTED'];
+            $this->totals['HEd.Student.CourseHistory.Term.InstPoints'] += $row['QUALITY_POINTS']; 
+          }
         }
       }
       
-      $this->totals['HEd.Student.CourseHistory.Term.TotalCreditsAttempted'] += $row['CREDITS_ATTEMPTED'];
-      $this->totals['HEd.Student.CourseHistory.Term.TotalCreditsEarned'] += $row['CREDITS_EARNED'];
-      if ($row['GPA_VALUE'] != '' AND $row['TRANSFER_CREDITS'] == 0)
-        $this->totals['HEd.Student.CourseHistory.Term.TotalHours'] += $row['CREDITS_ATTEMPTED'];
-      $this->totals['HEd.Student.CourseHistory.Term.TotalPoints'] += $row['QUALITY_POINTS'];
-
+      $this->totals['HEd.Student.CourseHistory.Term.TotalCreditsAttempted'] += $row['CALC_CREDITS_ATTEMPTED'];
+      $this->totals['HEd.Student.CourseHistory.Term.TotalCreditsEarned'] += $row['CALC_CREDITS_EARNED'];
+      if ($row['INCLUDE_TERM_GPA'] == 1) {
+        if ($row['GPA_VALUE'] != '' AND $row['TRANSFER_CREDITS'] == 0)
+          $this->totals['HEd.Student.CourseHistory.Term.TotalHours'] += $row['CALC_CREDITS_ATTEMPTED'];
+        $this->totals['HEd.Student.CourseHistory.Term.TotalPoints'] += $row['QUALITY_POINTS'];
+      }
+      
       $studentStatusID = $row['STUDENT_STATUS_ID'];
     }
     

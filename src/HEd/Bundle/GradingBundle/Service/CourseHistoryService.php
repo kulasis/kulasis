@@ -68,11 +68,13 @@ class CourseHistoryService {
     $course_history_data['HEd.Student.CourseHistory.TeacherSet'] = $teacher_set;
     
     // Get award data
-    $award_data = $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS']);
-    $course_history_data['HEd.Student.CourseHistory.CreditsEarned'] = $award_data['HEd.Student.CourseHistory.CreditsEarned'];
-    $course_history_data['HEd.Student.CourseHistory.GPAValue'] = $award_data['HEd.Student.CourseHistory.GPAValue'];
-    $course_history_data['HEd.Student.CourseHistory.QualityPoints'] = $award_data['HEd.Student.CourseHistory.QualityPoints'];
-    $course_history_data['HEd.Student.CourseHistory.CreditsAttempted'] = $award_data['HEd.Student.CourseHistory.CreditsAttempted'];
+    $course_history_data += $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS']);
+    unset($course_history_data['COMMENTS']);
+
+    // apply repeat tag
+    if ($course_history_data['HEd.Student.CourseHistory.RepeatTagID'] != '') {
+      $this->calculateRepeatTag($course_history_data['HEd.Student.CourseHistory.RepeatTagID'], $course_history_data['HEd.Student.CourseHistory.CourseID'], $course_history_data['HEd.Student.CourseHistory.Level']);
+    }
     
     return $this->posterFactory->newPoster()->add('HEd.Student.CourseHistory', 'new', $course_history_data)->process()->getResult();
     
@@ -89,7 +91,7 @@ class CourseHistoryService {
       ->execute()->fetch();
 
     // Get award data
-    $award_data = $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS_ATTEMPTED']);
+    $course_history_data += $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS_ATTEMPTED']);
 	
     $course_history_data['HEd.Student.CourseHistory.Mark'] = $mark;
     
@@ -99,12 +101,8 @@ class CourseHistoryService {
       $course_history_data['HEd.Student.CourseHistory.Comments'] = null;
     }
     
-    $course_history_data['HEd.Student.CourseHistory.CreditsEarned'] = $award_data['HEd.Student.CourseHistory.CreditsEarned'];
-    $course_history_data['HEd.Student.CourseHistory.GPAValue'] = $award_data['HEd.Student.CourseHistory.GPAValue'];
-    $course_history_data['HEd.Student.CourseHistory.QualityPoints'] = $award_data['HEd.Student.CourseHistory.QualityPoints'];
-    $course_history_data['HEd.Student.CourseHistory.TeacherSet'] = $teacher_set;
-    $course_history_data['HEd.Student.CourseHistory.CreditsAttempted'] = $award_data['HEd.Student.CourseHistory.CreditsAttempted'];
-    
+    unset($course_history_data['COMMENTS']);
+
     return $this->posterFactory->newPoster()->edit('HEd.Student.CourseHistory', $course_history_id, $course_history_data)->process()->getResult();
   }
   
@@ -130,6 +128,12 @@ class CourseHistoryService {
     
     $data += $this->determineAward($mark_scale_id, $data['HEd.Student.CourseHistory.Mark'], $data['HEd.Student.CourseHistory.CreditsAttempted']);
     unset($data['COMMENTS']);
+
+    // apply repeat tag
+    if (isset($data['HEd.Student.CourseHistory.RepeatTagID']) AND $data['HEd.Student.CourseHistory.RepeatTagID'] != '') {
+      $this->calculateRepeatTag($data['HEd.Student.CourseHistory.RepeatTagID'], $data['HEd.Student.CourseHistory.CourseID'], $data['HEd.Student.CourseHistory.Level'], $id);
+    }
+
     return $this->posterFactory->newPoster()->edit('HEd.Student.CourseHistory', $id, $data)->process()->getResult();
   }
   
@@ -138,27 +142,31 @@ class CourseHistoryService {
     // Get GPA Value
     $mark_info = $this->database->db_select('STUD_MARK_SCALE_MARKS')
       ->fields('STUD_MARK_SCALE_MARKS', array('MARK', 'GETS_CREDIT', 'GPA_VALUE', 'ALLOW_COMMENTS', 'REQUIRE_COMMENTS'))
-	  ->join('STUD_MARK_SCALE', 'STUD_MARK_SCALE', 'STUD_MARK_SCALE.MARK_SCALE_ID = STUD_MARK_SCALE_MARKS.MARK_SCALE_ID')
-	  ->fields('STUD_MARK_SCALE', array('AUDIT'))
+      ->join('STUD_MARK_SCALE', 'STUD_MARK_SCALE', 'STUD_MARK_SCALE.MARK_SCALE_ID = STUD_MARK_SCALE_MARKS.MARK_SCALE_ID')
+      ->fields('STUD_MARK_SCALE', array('AUDIT'))
       ->condition('STUD_MARK_SCALE_MARKS.MARK_SCALE_ID', $mark_scale_id)
       ->condition('MARK', $mark)
       ->execute()->fetch();
     
     if ($mark_info['MARK'] == '')
       $award_data['HEd.Student.CourseHistory.Mark'] = null;
-    
-	if ($mark_info['AUDIT'] == 1) {
-		$award_data['HEd.Student.CourseHistory.CreditsAttempted'] = 0.0;
-	} else {
-		$award_data['HEd.Student.CourseHistory.CreditsAttempted'] = $credits_attempted;
-	}
+      
+  	if ($mark_info['AUDIT'] == 1) {
+  		$award_data['HEd.Student.CourseHistory.CreditsAttempted'] = 0.0;
+  	} else {
+  		$award_data['HEd.Student.CourseHistory.CreditsAttempted'] = $credits_attempted;
+  	}
+
+    $award_data['HEd.Student.CourseHistory.CalculatedCreditsAttempted'] = $award_data['HEd.Student.CourseHistory.CreditsAttempted'];
 	
     // Determine credit
     if ($mark_info['GETS_CREDIT'] == 1)
       $award_data['HEd.Student.CourseHistory.CreditsEarned'] = $credits_attempted;
     else
       $award_data['HEd.Student.CourseHistory.CreditsEarned'] = 0.0;
-    
+
+    $award_data['HEd.Student.CourseHistory.CalculatedCreditsEarned'] = $award_data['HEd.Student.CourseHistory.CreditsEarned'];
+
     $award_data['HEd.Student.CourseHistory.GPAValue'] = $mark_info['GPA_VALUE'];
     $award_data['HEd.Student.CourseHistory.QualityPoints'] = $mark_info['GPA_VALUE'] * $award_data['HEd.Student.CourseHistory.CreditsEarned'];
     
@@ -167,6 +175,41 @@ class CourseHistoryService {
     }
     
     return $award_data;
+  }
+
+  private function calculateRepeatTag($repeat_tag_id, $course_id, $level, $course_history_id = null) {
+
+    $repeat_tag_info = $this->database->db_select('STUD_REPEAT_TAG', 'repeattag')
+      ->fields('repeattag')
+      ->condition('repeattag.REPEAT_TAG_ID', $repeat_tag_id)
+      ->execute()->fetch();
+
+    // Step 1: Find all previous course history records of same course ID and level
+    $previous_course_history = $this->database->db_select('STUD_STUDENT_COURSE_HISTORY', 'crshist')
+      ->fields('crshist', array('COURSE_HISTORY_ID'))
+      ->condition('crshist.COURSE_ID', $course_id)
+      ->condition('crshist.LEVEL', $level);
+    if ($course_history_id) {
+      $previous_course_history = $previous_course_history->condition('crshist.COURSE_HISTORY_ID', $course_history_id, '!=');
+    }
+    $previous_course_history = $previous_course_history->execute();
+    while ($previous_course_history_row = $previous_course_history->fetch()) {
+      
+      $award_data = array();
+
+      // Step 2: Apply repeat tag calculations to them
+      if ($repeat_tag_info['INCLUDE_CREDITS_ATTMPT'] == 0)
+        $award_data['HEd.Student.CourseHistory.CalculatedCreditsAttempted'] = null;
+      if ($repeat_tag_info['INCLUDE_CREDITS_EARNED'] == 0)
+        $award_data['HEd.Student.CourseHistory.CalculatedCreditsEarned'] = null;
+      if ($repeat_tag_info['INCLUDE_TERM_GPA'] == 0)
+        $award_data['HEd.Student.CourseHistory.IncludeTermGPA'] = 0;
+      if ($repeat_tag_info['INCLUDE_CUM_GPA'] == 0)
+        $award_data['HEd.Student.CourseHistory.IncludeCumulativeGPA'] = 0;
+
+      $this->posterFactory->newPoster()->edit('HEd.Student.CourseHistory', $previous_course_history_row['COURSE_HISTORY_ID'], $award_data)->process()->getResult();
+    }
+
   }
   
 }

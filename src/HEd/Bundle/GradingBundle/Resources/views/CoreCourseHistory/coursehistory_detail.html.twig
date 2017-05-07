@@ -41,6 +41,14 @@
 {{ kula_field({ field: 'HEd.Student.CourseHistory.GPAValue', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.GPA_VALUE, label: true }) }}
 {{ kula_field({ field: 'HEd.Student.CourseHistory.QualityPoints', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.QUALITY_POINTS, label: true }) }}
 </div>
+<div class="group-box-contents group">
+{{ kula_field({ field: 'HEd.Student.CourseHistory.CalculatedCreditsAttempted', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.CALC_CREDITS_ATTEMPTED, label: true }) }}
+{{ kula_field({ field: 'HEd.Student.CourseHistory.CalculatedCreditsEarned', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.CALC_CREDITS_EARNED, label: true }) }}
+</div>
+<div class="group-box-contents group">
+{{ kula_field({ field: 'HEd.Student.CourseHistory.IncludeTermGPA', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.INCLUDE_TERM_GPA, label: true }) }}
+{{ kula_field({ field: 'HEd.Student.CourseHistory.IncludeCumulativeGPA', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.INCLUDE_CUM_GPA, label: true }) }}
+</div>
 </div>
 <div class="group-box">
 <div class="group-box-header">Degree Requirement Group</div>
