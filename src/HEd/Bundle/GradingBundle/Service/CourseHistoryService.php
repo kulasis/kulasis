@@ -85,7 +85,7 @@ class CourseHistoryService {
   
   // update course history
   public function updateCourseHistoryForClass($course_history_id, $mark, $comments = null, $teacher_set = 0) {
-    
+
     // Get mark scale id
     $course_info = $this->database->db_select('STUD_STUDENT_COURSE_HISTORY')
       ->fields('STUD_STUDENT_COURSE_HISTORY', array('MARK_SCALE_ID', 'CREDITS_ATTEMPTED', 'TEACHER_SET'))
@@ -93,8 +93,8 @@ class CourseHistoryService {
       ->execute()->fetch();
 
     // Get award data
-    $course_history_data += $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS_ATTEMPTED']);
-	
+    $award_data = $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS_ATTEMPTED']);
+	  $course_history_data = $award_data;
     $course_history_data['HEd.Student.CourseHistory.Mark'] = $mark;
     
     if ((isset($award_data['COMMENTS']) AND $award_data['COMMENTS'] == 'Y' AND $teacher_set == 1) OR $teacher_set == 0) {
