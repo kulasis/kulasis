@@ -69,15 +69,6 @@ class ExceptionListener implements EventSubscriberInterface
         'TwigBundle:Exception:error.json.twig',
           ['status_code' => 500, 'status_text' => $message]
         );
-        // Error message to be displayed, logged, or mailed
-        $error_message = "\nUNCAUGHT EXCEPTION: ".$exception->getMessage()."
-                          \nEXCEPTION CLASS: ". get_class($exception) . "
-                          \nTEXT: ". $exception->getMessage() .
-                         "\nLOCATION: ".$exception->getFile().", line " .
-                           $exception->getLine() .", at " . date('F j, Y, g:i a') .
-                           "\nShowing backtrace:\n".$exception->getTraceAsString()."\n\n" .
-                           "\nAuth Header: " . $request->headers->get('Authorization');
-        error_log($error_message, 1, $this->container->getParameter('exception_to_email'), "From: " . $this->container->getParameter('exception_from_email') . "\r\nTo: " . $this->container->getParameter('exception_to_email'));
       } else {
         if (!$exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException AND
           !$exception instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException AND 
@@ -99,7 +90,14 @@ class ExceptionListener implements EventSubscriberInterface
           $response = new Response($exception->getMessage());
         }
       }
-      
+    
+      if ($request->headers->get('Authorization')) {
+
+        $logger = $this->container->get('kula.core.api_logger');
+        $logger->logAPICall($this->request, $response, true);
+
+      }
+
       if (isset($response))
         $event->setResponse($response);
     }

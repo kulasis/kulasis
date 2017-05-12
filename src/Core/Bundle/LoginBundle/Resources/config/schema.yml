@@ -301,6 +301,7 @@ Log.Session:
       description: "User ID"
       db_column_name: USER_ID
       db_column_type: serial
+      db_column_null: true
       field_type: text
       field_size: 5
       column_name: "User ID"
@@ -321,6 +322,13 @@ Log.Session:
       db_column_null: true
       column_name: "Organization ID"
       label_name: "Organization ID"
+    APIApplicationID:
+      description: "API Application ID"
+      db_column_name: API_APPLICATION_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "API Application ID"
+      label_name: "API Application ID"
     TermID:
       description: "Term ID"
       db_column_name: TERM_ID
@@ -373,3 +381,13 @@ Log.Session:
       db_column_default: 0
       column_name: "Impersonated"
       label_name: "Impersonated"
+    Token:
+      description: "Token"
+      db_column_name: TOKEN
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      field_size: 20
+      column_name: "Token"
+      label_name: "Token"

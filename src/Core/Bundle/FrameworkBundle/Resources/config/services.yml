@@ -29,21 +29,33 @@ services:
     arguments: ["@request_stack", "@kula.core.focus", "@kula.core.session"]
     tags:
       - { name: kernel.event_subscriber }
+
+  kula.core.api:
+    class: Kula\Core\Bundle\FrameworkBundle\EventListener\APIListener
+    arguments: ["@kula.core.db", "@kula.core.session", "@kula.core.api_logger"]
+    tags:
+      - { name: kernel.event_subscriber }
   
   kula.core.db:
     class:        Kula\Core\Component\DB\DB
     arguments:    [ %kernel.root_dir% , %kernel.environment% ]
+
   kula.core.data_collector.database:
     class: Kula\Core\Component\DB\DataCollector\DatabaseDataCollector
     arguments: ["@kula.core.db"]
     priority: 255
     tags:
       - { name: data_collector, template: "KulaCoreFrameworkBundle:Collector:database.html.twig", id: "database" }
+
   kula.core.listener.authenticated_user:
     class: Kula\Core\Bundle\FrameworkBundle\EventListener\AuthenticatedUserListener
     arguments: ["@router", "@service_container"]
     tags:
       - { name: kernel.event_subscriber }
+
+  kula.core.api_logger:
+    class: Kula\Core\Bundle\FrameworkBundle\Service\APILogger
+    arguments: ["@kula.core.db", "@session"]
 
   kula.core.poster_factory:
     class: Kula\Core\Component\DB\PosterFactory

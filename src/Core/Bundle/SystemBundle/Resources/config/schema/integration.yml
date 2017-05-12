@@ -150,3 +150,60 @@ Core.Integration.APIApplications:
       field_size: 20
       column_name: "Last Timestamp Token"
       label_name: "Last Timestamp Token"
+
+Log.API:
+  description: "Log API Calls"
+  db_table_name: LOG_API
+  database: additional
+  fields:
+    ID:
+      description: "ID"
+      primary: true
+      db_column_name: API_CALL_ID
+      db_column_type: primary_serial
+      field_type: text
+      field_size: 5
+      column_name: "API Call ID"
+      label_name: "API Call ID"
+    LogSessionID:
+      description: "Log Session ID"
+      db_column_name: LOG_SESSION_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "User ID"
+      label_name: "User ID"
+    Timestamp:
+      description: "Timestamp"
+      db_column_name: TIMESTAMP
+      db_column_type: datetime
+      db_column_null: false
+      field_type: datetime
+      field_size: 8
+      column_name: "Timestamp"
+      label_name: "Timestamp"
+    Request:
+      description: "Request"
+      db_column_name: REQUEST
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Request"
+      label_name: "Request"
+    Response:
+      description: "Response"
+      db_column_name: RESPONSE
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Response"
+      label_name: "Response"
+    Error:
+      description: "Error"
+      db_column_name: ERROR
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Error"
+      label_name: "Error"
