@@ -47,8 +47,26 @@ class CoreAPILogsController extends Controller {
     return $this->render('KulaCoreSystemBundle:APILogs:requests.html.twig', array('requests' => $requests));
   }
 
-  public function requestAction($request_id) {
+  public function errorRequestsAction() {
+    $this->authorize();
 
+    $requests = array();
+
+    $i = 0;
+    $requests_result = $this->db()->db_select('LOG_API', 'api', array('target' => 'additional'))
+      ->fields('api', array('API_CALL_ID', 'TIMESTAMP', 'REQUEST_METHOD', 'REQUEST_URI', 'RESPONSE_CODE', 'REQUEST', 'RESPONSE', 'ERROR'))
+      ->isNotNull('api.ERROR')
+      ->orderBy('TIMESTAMP', 'DESC', 'api')
+      ->orderBy('API_CALL_ID', 'DESC', 'api')
+      ->range(0, 100)->execute();
+    while ($requests_row = $requests_result->fetch()) {
+      $requests[$i] = $requests_row;
+      $requests[$i]['REQUEST'] = print_r(unserialize($requests_row['REQUEST']), true);
+      $requests[$i]['RESPONSE'] = print_r(unserialize($requests_row['RESPONSE']), true);
+    $i++;
+    }
+    
+    return $this->render('KulaCoreSystemBundle:APILogs:requests.html.twig', array('requests' => $requests));
   }
 
 }

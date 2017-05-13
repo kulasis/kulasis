@@ -16,7 +16,15 @@ Core.System.Monitor.APILogs:
   parent: Core.System.Monitor
   description: "API Logs"
   display_name: "API Logs"
-  route: Core_Logs_API_Session
+  tabs:
+    Sessions:
+      description: "Sessions"
+      display_name: "Sessions"
+      route: Core_Logs_API_Session
+    ErrorRequests:
+      description: "Error Requests"
+      display_name: "Error Requests"
+      route: Core_Logs_API_Session_Requests_Error
 
 Core.System.Setup:
   type: form
