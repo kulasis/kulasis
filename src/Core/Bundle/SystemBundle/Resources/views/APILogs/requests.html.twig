@@ -16,6 +16,7 @@ Requests for Session
   {{ kula_field_name({ field: 'Log.API.ResponseCode', field_name_override: 'Response Code', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Log.API.Request', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Log.API.Response', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.API.Error', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   <!--<th class="data-table-cell-row-header">...</th>-->
 </tr>
 </thead>
@@ -28,6 +29,7 @@ Requests for Session
     {{ kula_field({ input: false, field: 'Log.API.ResponseCode', value: request.RESPONSE_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Log.API.Request', value: request.REQUEST, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Log.API.Response', value: request.RESPONSE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Log.API.Error', value: request.ERROR, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     <!--<td class="data-table-cell-row-detail"><a class="normal-link" href="{# path(trans_charge_route, { constituent_transaction_id: transaction.CONSTITUENT_TRANSACTION_ID }) #}">...</a></td>-->
   </tr>
   {% endfor %}

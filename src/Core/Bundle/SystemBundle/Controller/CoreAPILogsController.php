@@ -41,7 +41,6 @@ class CoreAPILogsController extends Controller {
       $requests[$i] = $requests_row;
       $requests[$i]['REQUEST'] = print_r(unserialize($requests_row['REQUEST']), true);
       $requests[$i]['RESPONSE'] = print_r(unserialize($requests_row['RESPONSE']), true);
-      $requests[$i]['ERROR'] = print_r(unserialize($requests_row['ERROR']), true);
     $i++;
     }
     

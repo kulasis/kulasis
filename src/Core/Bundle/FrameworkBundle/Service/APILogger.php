@@ -16,6 +16,7 @@ class APILogger {
                               $session) {
       $this->db = $db;
       $this->session = $session;
+      $this->error = null;
   }
 
   public function logAPICall($request, $response) {
@@ -35,8 +36,7 @@ class APILogger {
       $response_log['content'] = $response->getContent();
       $response_log = serialize($response_log);
 
-      // Log request and response
-      $this->db->db_insert('LOG_API', array('target' => 'additional'))->fields(array(
+      $log_fields = array(
         'LOG_SESSION_ID' => $this->session->get('session_id'), 
         'TIMESTAMP' => date('Y-m-d H:i:s'), 
         'REQUEST_URI' => $request->server->get('REQUEST_URI'),
@@ -44,8 +44,13 @@ class APILogger {
         'RESPONSE_CODE' => $response->getStatusCode(),
         'REQUEST' => $request_log, 
         'RESPONSE' => $response_log
-      ))
-      ->execute();
+      );
+      if ($this->error) {
+        $log_fields['ERROR'] = $this->error;
+      }
+
+      // Log request and response
+      $this->db->db_insert('LOG_API', array('target' => 'additional'))->fields($log_fields)->execute();
 
     }
 
@@ -62,6 +67,10 @@ class APILogger {
 
     return $data;
 
+  }
+
+  public function setError($error) {
+    $this->error = $error;
   }
   
 }

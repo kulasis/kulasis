@@ -230,3 +230,12 @@ Log.API:
       field_type: textarea
       column_name: "Response"
       label_name: "Response"
+    Error:
+      description: "Error"
+      db_column_name: ERROR
+      db_column_type: blob
+      db_column_size: normal
+      db_column_null: true
+      field_type: textarea
+      column_name: "Error"
+      label_name: "Error"

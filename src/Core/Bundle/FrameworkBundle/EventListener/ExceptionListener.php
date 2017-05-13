@@ -52,7 +52,18 @@ class ExceptionListener implements EventSubscriberInterface
       $request = $event->getRequest();
       $session = $this->container->get('session')->all();
       $templating = $this->container->get('templating');
+      $api_logger = $this->container->get('kula.core.api_logger');
       
+      // Error message to be displayed, logged, or mailed
+      $error_message = "\nUNCAUGHT EXCEPTION: ".$exception->getMessage()."
+                        \nEXCEPTION CLASS: ". get_class($exception) . "
+                        \nTEXT: ". $exception->getMessage() .
+                       "\nLOCATION: ".$exception->getFile().", line " .
+                         $exception->getLine() .", at " . date('F j, Y, g:i a') .
+                         "\nShowing backtrace:\n".$exception->getTraceAsString()."\n\n" .
+                         "\n" . print_r($session, true)  .
+                         "\nAuth Header: " . $request->headers->get('Authorization');
+
       if ($exception instanceof PosterException) { // $exception->getFields()
         $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage(), 'fields' => null), 200, array('X-Status-Code' => 200));
       } elseif ($exception instanceof \PDOException OR $exception instanceof IntegrityConstraintViolationException OR $exception instanceof DatabaseExceptionWrapper) {
@@ -74,21 +85,17 @@ class ExceptionListener implements EventSubscriberInterface
           !$exception instanceof \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException AND 
           !$exception instanceof \Symfony\Component\Routing\Exception\ResourceNotFoundException AND 
           !$exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
-        // Error message to be displayed, logged, or mailed
-        $error_message = "\nUNCAUGHT EXCEPTION: ".$exception->getMessage()."
-                          \nEXCEPTION CLASS: ". get_class($exception) . "
-                          \nTEXT: ". $exception->getMessage() .
-                         "\nLOCATION: ".$exception->getFile().", line " .
-                           $exception->getLine() .", at " . date('F j, Y, g:i a') .
-                           "\nShowing backtrace:\n".$exception->getTraceAsString()."\n\n" .
-                           "\n" . print_r($session, true)  .
-                           "\nAuth Header: " . $request->headers->get('Authorization');
+
         // Email the error details, in case SEND_ERROR_MAIL is true
         if ($this->container->getParameter('exception_send_email') == true)
           error_log($error_message, 1, $this->container->getParameter('exception_to_email'), "From: " . $this->container->getParameter('exception_from_email') . "\r\nTo: " . $this->container->getParameter('exception_to_email'));
         } else {
           $response = new Response($exception->getMessage());
         }
+      }
+
+      if ($request->headers->get('Authorization')) {
+        $api_logger->setError($error_message);
       }
       
       if (isset($response))
