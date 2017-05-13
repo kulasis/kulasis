@@ -6,10 +6,11 @@ class API {
 
 	private $db;
 
-	public function __construct($db, $cache, $auth_local) {
+	public function __construct($db, $cache, $auth_local, $session) {
 		$this->db = $db;
     $this->cache = $cache;
     $this->auth_local = $auth_local;
+    $this->session = $session;
 	}
 
   public function authenticateApplication($app_id, $app_secret, $host, $ip) {
@@ -51,14 +52,7 @@ class API {
           'last_used' => time()
         );
 
-        $application_session_id = $this->db->db_insert('LOG_SESSION', array('target' => 'additional'))->fields(array(
-          'API_APPLICATION_ID' => $app['INTG_API_APP_ID'],
-          'IN_TIME' => date('Y-m-d H:i:s'),
-          'AUTH_METHOD' => 'API',
-          'TOKEN' => $token
-        ))->execute();
-
-        $_SESSION['application_session_id'] = $application_session_id;
+        $this->session->establishAPISession($token, $app['INTG_API_APP_ID']);
 
         // Update last token
         $this->db->db_update('CORE_INTG_API_APPS')->fields(array(
@@ -95,11 +89,7 @@ class API {
 
       $this->intg_api_app_id = $app['INTG_API_APP_ID'];
 
-      $_SESSION['application_session_id'] = $this->db->db_select('LOG_SESSION', 'session', array('target' => 'additional'))
-        ->fields('session', array('SESSION_ID'))
-        ->condition('TOKEN', $token)
-        ->condition('API_APPLICATION_ID', $app['INTG_API_APP_ID'])
-        ->execute()->fetch()['SESSION_ID'];
+      $this->session->checkAPISessionExists($token, $this->intg_api_app_id);
       
       return true;
     }
@@ -144,6 +134,8 @@ class API {
               'token' => $user['LAST_TOKEN']
             );
 
+            $this->session->checkAPISessionExists($user['LAST_TOKEN'], $this->intg_api_app_id, $user['USER_ID']);
+
             return $login;
           } else {
             // Successful login
@@ -156,15 +148,7 @@ class API {
               'token' => $token
             );
 
-            $user_session_id = $this->db->db_insert('LOG_SESSION', array('target' => 'additional'))->fields(array(
-              'USER_ID' => $user['USER_ID'],
-              'IN_TIME' => date('Y-m-d H:i:s'),
-              'AUTH_METHOD' => 'API',
-              'API_APPLICATION_ID' => isset($this->intg_api_app_id) ? $this->intg_api_app_id : null,
-              'TOKEN' => $token
-            ))->execute();
-
-            $_SESSION['user_session_id'] = $user_session_id;
+            $this->session->establishAPISession($token, $this->intg_api_app_id, $user['USER_ID']);
 
             // Update last token
             $this->db->db_update('CORE_USER')->fields(array(
@@ -192,6 +176,8 @@ class API {
             'token' => $user['LAST_TOKEN']
           );
 
+          $this->session->checkAPISessionExists($user['LAST_TOKEN'], $this->intg_api_app_id, $user['USER_ID']);
+
           return $login;
         } else {
 
@@ -205,15 +191,7 @@ class API {
             'token' => $token
           );
 
-          $user_session_id = $this->db->db_insert('LOG_SESSION', array('target' => 'additional'))->fields(array(
-            'USER_ID' => $user['USER_ID'],
-            'IN_TIME' => date('Y-m-d H:i:s'),
-            'AUTH_METHOD' => 'API',
-            'API_APPLICATION_ID' => isset($this->intg_api_app_id) ? $this->intg_api_app_id : null,
-            'TOKEN' => $token
-          ))->execute();
-
-          $_SESSION['user_session_id'] = $user_session_id;
+          $this->session->establishAPISession($token, $this->intg_api_app_id, $user['USER_ID']);
 
           // Update last token
           $this->db->db_update('CORE_USER')->fields(array(
@@ -275,11 +253,7 @@ class API {
       ))->condition('LAST_TOKEN', $token)
       ->execute();
 
-      $_SESSION['user_session_id'] = $this->db->db_select('LOG_SESSION', 'session', array('target' => 'additional'))
-        ->fields('session', array('SESSION_ID'))
-        ->condition('TOKEN', $token)
-        ->condition('USER_ID', $app['USER_ID'])
-        ->execute()->fetch()['SESSION_ID'];
+      $this->session->checkAPISessionExists($token, null, $app['USER_ID']);
 
       return $app['USER_ID'];
     }

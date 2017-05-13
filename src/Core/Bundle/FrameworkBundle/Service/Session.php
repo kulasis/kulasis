@@ -175,7 +175,7 @@ class Session {
   public function invalidate() {
     $this->session->invalidate();
   }
-  
+
   private function logOpenedSession($user_id, $role_id, $organization_id, $term_id = null) {
     $session_data = array(
       'USER_ID' => $user_id,
@@ -189,6 +189,64 @@ class Session {
     return $session_id;
   }
   
+  public function establishAPISession($token, $app_id, $user_id = null) {
+
+    $this->session->set('app_id', $app_id);
+    $this->session->set('app_session_id', $this->logOpenedAPISession($token, $app_id, $user_id));
+
+    if ($user_id) {
+      $this->session->set('user_id', $user_id);
+      $this->session->set('session_id', $this->logOpenedAPISession($token, $app_id, $user_id));
+      
+    } else {
+      $this->session->set('session_id', $this->session->get('app_session_id'));
+    }
+
+  }
+
+  public function checkAPISessionExists($token, $app_id, $user_id = null) {
+
+    if ($user_id) {
+      $user_session = $this->db->db_select('LOG_SESSION', 'session', array('target' => 'additional'))
+        ->fields('session', array('SESSION_ID', 'API_APPLICATION_ID'))
+        ->condition('TOKEN', $token)
+        ->condition('USER_ID', $user_id)
+        ->execute()->fetch();
+
+      $this->session->set('user_id', $user_id);
+      $this->session->set('session_id', $user_session['SESSION_ID']);
+      $app_id = $user_session['API_APPLICATION_ID'];
+
+    } 
+    if ($app_id) {
+      $app_session = $this->db->db_select('LOG_SESSION', 'session', array('target' => 'additional'))
+        ->fields('session', array('SESSION_ID'))
+        ->condition('TOKEN', $token)
+        ->condition('API_APPLICATION_ID', $app_id)
+        ->execute()->fetch()['SESSION_ID'];
+
+      $this->session->set('app_id', $app_id);
+      $this->session->set('app_session_id', $app_session);
+    }
+    if (!$user_id) {
+      $this->session->set('session_id', $app_session);
+    } 
+
+  }
+
+  public function logOpenedAPISession($token, $app_id, $user_id) {
+
+    return $this->db->db_insert('LOG_SESSION', array('target' => 'additional'))->fields(array(
+      'USER_ID' => $user_id,
+      'API_APPLICATION_ID' => $app_id,
+      'IN_TIME' => date('Y-m-d H:i:s'),
+      'AUTH_METHOD' => 'API',
+      'TOKEN' => $token
+    ))->execute();
+
+  }
+
+
   public function logClosedSession($session_id) {
     try {
       return $this->db->db_update('LOG_SESSION', array('target' => 'additional'))->fields(array('OUT_TIME' => date('Y-m-d H:i:s')))->condition('SESSION_ID', $session_id)->execute();

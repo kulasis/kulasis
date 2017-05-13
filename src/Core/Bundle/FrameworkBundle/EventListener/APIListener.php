@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -39,11 +39,11 @@ class APIListener implements EventSubscriberInterface
 
   public static function getSubscribedEvents() {
       return array(
-          KernelEvents::TERMINATE => 'logAPICall',
+          KernelEvents::RESPONSE => 'logAPICall',
       );
   }
 
-  public function logAPICall(PostResponseEvent $event) {
+  public function logAPICall(FilterResponseEvent $event) {
 
     $this->event = $event;
 
@@ -51,7 +51,7 @@ class APIListener implements EventSubscriberInterface
     $this->response = $event->getResponse();
 
     if ($this->request->headers->get('Authorization')) {
-      $this->api_logger->logAPICall($this->request, $this->response);
+      $this->api_logger->logAPICall($this->request, $this->response, null);
     }
     
     return $event;
