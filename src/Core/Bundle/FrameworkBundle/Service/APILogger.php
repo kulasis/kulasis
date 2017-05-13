@@ -27,20 +27,20 @@ class APILogger {
       $request_log['SERVER'] = $request->server->all();
       $request_log['POST'] = $this->cleanRequestData($request->request->all());
       $request_log['GET'] = $this->cleanRequestData($request->query->all());
-      $request_log = print_r($request_log, true);
+      $request_log = serialize($request_log);
 
       if ($error) {
         $response_log = null;
         $error_response = array();
         $error_response['statusCode'] = $response->getStatusCode();
         $error_response['content'] = $response->getContent();
-        $error_response = print_r($error_response, true);
+        $error_response = serialize($error_response);
         $response = null;
       } else {
         $response_log = array();
         $response_log['statusCode'] = $response->getStatusCode();
         $response_log['content'] = $response->getContent();
-        $response_log = print_r($response_log, true);
+        $response_log = serialize($response_log);
         $error_response = null;
       }
 
@@ -48,6 +48,9 @@ class APILogger {
       $this->db->db_insert('LOG_API', array('target' => 'additional'))->fields(array(
         'LOG_SESSION_ID' => $this->session->get('session_id'), 
         'TIMESTAMP' => date('Y-m-d H:i:s'), 
+        'REQUEST_URI' => $request->server->get('REQUEST_URI'),
+        'REQUEST_METHOD' => $request->server->get('REQUEST_METHOD'),
+        'RESPONSE_CODE' => ($response) ? $response->getStatusCode() : null,
         'REQUEST' => $request_log, 
         'RESPONSE' => $response_log,
         'ERROR' => $error_response

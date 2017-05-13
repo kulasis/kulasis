@@ -1,0 +1,33 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Session Log
+</div>
+<table id="window_window_num_data_table_usergroups" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ field: 'Log.Session.ID', field_name_override: 'ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Integration.APIApplications.Application', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.Session.UserID', field_name_override: 'User ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.LastName', field_name_override: 'User', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.Session.InTime', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.Session.IPAddress', field_name_override: 'IP', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">...</th>
+</tr>
+</thead>
+<tbody>
+  {% for session in sessions %}
+  <tr>
+    {{ kula_field({ input: false, field: 'Log.Session.ID', value: session.SESSION_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Integration.APIApplications.Application', value: session.APPLICATION, prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Log.Session.ID', value: session.USER_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.LastName', value: session.LAST_NAME~', '~session.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Log.Session.InTime', value: session.IN_TIME, prepend_html: '<td style= "white-space: nowrap">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Log.Session.IPAddress', value: session.IP_ADDRESS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td class="data-table-cell-row-detail"><a class="normal-link" href="{{ path('Core_Logs_API_Session_Requests', { session_id: session.SESSION_ID }) }}">...</a></td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

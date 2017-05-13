@@ -183,10 +183,40 @@ Log.API:
       field_size: 8
       column_name: "Timestamp"
       label_name: "Timestamp"
+    RequestURI:
+      description: "Request URI"
+      db_column_name: REQUEST_URI
+      db_column_type: text
+      db_column_null: true
+      field_type: text
+      field_size: 50
+      column_name: "Request URI"
+      label_name: "Request URI"
+    RequestMethod:
+      description: "Request Method"
+      db_column_name: REQUEST_METHOD
+      db_column_type: varchar
+      db_column_length: 20
+      db_column_null: true
+      field_type: text
+      field_size: 10
+      column_name: "Request Method"
+      label_name: "Request Method"
+    ResponseCode:
+      description: "Response Code"
+      db_column_name: RESPONSE_CODE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: text
+      field_size: 7
+      column_name: "Response Code"
+      label_name: "Response Code"
     Request:
       description: "Request"
       db_column_name: REQUEST
-      db_column_type: text
+      db_column_type: blob
+      db_column_size: normal
       db_column_null: true
       field_type: textarea
       column_name: "Request"
@@ -194,7 +224,8 @@ Log.API:
     Response:
       description: "Response"
       db_column_name: RESPONSE
-      db_column_type: text
+      db_column_type: blob
+      db_column_size: normal
       db_column_null: true
       field_type: textarea
       column_name: "Response"
@@ -202,7 +233,8 @@ Log.API:
     Error:
       description: "Error"
       db_column_name: ERROR
-      db_column_type: text
+      db_column_type: blob
+      db_column_size: normal
       db_column_null: true
       field_type: textarea
       column_name: "Error"

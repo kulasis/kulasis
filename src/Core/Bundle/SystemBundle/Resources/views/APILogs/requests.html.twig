@@ -1,0 +1,38 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<p>
+  <a class="normal-link" href="{{ path('Core_Logs_API_Session') }}">Back to Session Log</a>
+</p>
+<div class="data-table-header-div">
+Requests for Session
+</div>
+<table id="window_window_num_data_table_usergroups" class="data-table">
+<thead>
+  <tr>
+  {{ kula_field_name({ field: 'Log.API.Timestamp', field_name_override: 'Timestamp', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.API.RequestMethod', field_name_override: 'Method', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.API.RequestURI', field_name_override: 'URI', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.API.ResponseCode', field_name_override: 'Response Code', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.API.Request', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.API.Response', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Log.API.Error', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <!--<th class="data-table-cell-row-header">...</th>-->
+</tr>
+</thead>
+<tbody>
+  {% for request in requests %}
+  <tr>
+    {{ kula_field({ input: false, field: 'Log.API.Timestamp', value: request.TIMESTAMP, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Log.API.RequestMethod', value: request.REQUEST_METHOD, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Log.API.RequestURI', value: request.REQUEST_URI, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Log.API.ResponseCode', value: request.RESPONSE_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Log.API.Request', value: request.REQUEST, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Log.API.Response', value: request.RESPONSE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'Log.API.Error', value: request.ERROR, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <!--<td class="data-table-cell-row-detail"><a class="normal-link" href="{# path(trans_charge_route, { constituent_transaction_id: transaction.CONSTITUENT_TRANSACTION_ID }) #}">...</a></td>-->
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}

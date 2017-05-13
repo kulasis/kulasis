@@ -11,6 +11,13 @@ Core.System.Monitor.Logs:
   display_name: "Logs"
   route: Core_Logs_Session
 
+Core.System.Monitor.APILogs:
+  type: form
+  parent: Core.System.Monitor
+  description: "API Logs"
+  display_name: "API Logs"
+  route: Core_Logs_API_Session
+
 Core.System.Setup:
   type: form
   parent: Core.System

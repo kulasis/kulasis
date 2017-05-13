@@ -14,7 +14,7 @@ class CoreLogsController extends Controller {
 
     $sessions = $this->db()->db_select('CONS_CONSTITUENT', 'constituent')
       ->fields('constituent', array('LAST_NAME', 'FIRST_NAME'))
-      ->join('LOG_SESSION', 'session', 'constituent.CONSTITUENT_ID = session.USER_ID', array('target' => 'additional'))
+      ->join('LOG_SESSION', 'session', 'constituent.CONSTITUENT_ID = session.USER_ID', null, array('target' => 'additional'))
       ->fields('session', array('SESSION_ID', 'IN_TIME', 'OUT_TIME', 'IP_ADDRESS'))
       ->join('CORE_USER_ROLES', 'role', 'role.ROLE_ID = session.ROLE_ID')
       ->join('CORE_USERGROUP', 'usergroup', 'usergroup.USERGROUP_ID = role.USERGROUP_ID')
@@ -29,5 +29,5 @@ class CoreLogsController extends Controller {
     
     return $this->render('KulaCoreSystemBundle:Logs:session.html.twig', array('sessions' => $sessions));
   }
-  
+
 }
