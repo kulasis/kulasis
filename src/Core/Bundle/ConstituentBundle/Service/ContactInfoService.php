@@ -22,7 +22,7 @@ class ContactInfoService {
       ->execute();
 
     // add new address
-    $addressID = $this->poster->newPoster()->add('Core.Constituent.Address', $id, $addressInfo)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getID();
+    $addressID = $this->poster->newPoster()->add('Core.Constituent.Address', $id, $addressInfo)->process(array('VERIFY_PERMISSIONS' => false))->getID();
 
     if ($addressType == 'R') $constituent_addrs['RESIDENCE_ADDRESS_ID'] = $addressID;
     if ($addressType == 'M') $constituent_addrs['MAILING_ADDRESS_ID'] = $addressID;
@@ -50,7 +50,7 @@ class ContactInfoService {
       ->execute();
 
     // add new address
-    $phoneID = $this->poster->newPoster()->add('Core.Constituent.Phone', $id, $addressInfo)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getID();
+    $phoneID = $this->poster->newPoster()->add('Core.Constituent.Phone', $id, $addressInfo)->process(array('VERIFY_PERMISSIONS' => false))->getID();
 
     // set as primary for type
     $this->db->db_update('CONS_CONSTITUENT')
@@ -74,7 +74,7 @@ class ContactInfoService {
       ->execute();
 
     // add new address
-    $emailID = $this->poster->newPoster()->add('Core.Constituent.EmailAddress', $id, $addressInfo)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getID();
+    $emailID = $this->poster->newPoster()->add('Core.Constituent.EmailAddress', $id, $addressInfo)->process(array('VERIFY_PERMISSIONS' => false))->getID();
 
     // set as primary for type
     $this->db->db_update('CONS_CONSTITUENT')

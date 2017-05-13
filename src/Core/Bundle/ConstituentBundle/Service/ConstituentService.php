@@ -15,7 +15,7 @@ class ConstituentService {
     // get next Student Number
     $constituentInfo['Core.Constituent.PermanentNumber'] = $this->sequence->getNextSequenceForKey('PERMANENT_NUMBER');
     // Post data
-    $constituentID = $this->poster->newPoster()->add('Core.Constituent', 0, $constituentInfo)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getID();
+    $constituentID = $this->poster->newPoster()->add('Core.Constituent', 0, $constituentInfo)->process(array('VERIFY_PERMISSIONS' => false))->getID();
     
     // if ssn, update ssn
     if (isset($constituentInfo['Core.Constituent.SocialSecurityNumber']) AND $constituentInfo['Core.Constituent.SocialSecurityNumber'] != '') {
@@ -29,7 +29,7 @@ class ConstituentService {
   public function updateConstituent($constituentID, $constituentInfo) {
 
     // Post data
-    $constituent = $this->poster->newPoster()->edit('Core.Constituent', $constituentID, $constituentInfo)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getResult();
+    $constituent = $this->poster->newPoster()->edit('Core.Constituent', $constituentID, $constituentInfo)->process(array('VERIFY_PERMISSIONS' => false))->getResult();
 
     return $constituent;
 

@@ -59,7 +59,7 @@ class APIv1ScheduleController extends APIController {
          'HEd.Student.Status.EnterCode' => $defaults['DEFAULT_ENTER_CODE'],
          'HEd.Student.Status.EnterTerm' => $section['TERM_ID'],
          'HEd.Student.Status.Resident' => 'C'
-      ), array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false)
+      ), array('VERIFY_PERMISSIONS' => false)
       );
        
     } else {
@@ -89,7 +89,7 @@ class APIv1ScheduleController extends APIController {
         'HEd.Student.Status.EnterDate' => date('Y-m-d'),
         'HEd.Student.Status.EnterCode' => $defaults['DEFAULT_ENTER_CODE'],
         'HEd.Student.Status.Resident' => 'C'
-      ), array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+      ), array('VERIFY_PERMISSIONS' => false));
 
       $student_status_id = $student_enrollment['student_status'];
     } else {
@@ -97,7 +97,7 @@ class APIv1ScheduleController extends APIController {
     }
 
     // Calculate tuition rate
-    $this->get('kula.HEd.billing.constituent')->determineTuitionRate($student_status_id, array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+    $this->get('kula.HEd.billing.constituent')->determineTuitionRate($student_status_id, array('VERIFY_PERMISSIONS' => false));
 
     // Make sure class not full
     $transaction = $this->db()->db_transaction();
@@ -109,7 +109,7 @@ class APIv1ScheduleController extends APIController {
       ->execute()
       ->fetch();
     if ($class_count['class_total'] <= $section['CAPACITY']) {
-      $schedule = $this->get('kula.HEd.scheduling.schedule')->addClassForStudentStatus($student_status_id, $section_id, date('Y-m-d'), 0, array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+      $schedule = $this->get('kula.HEd.scheduling.schedule')->addClassForStudentStatus($student_status_id, $section_id, date('Y-m-d'), 0, array('VERIFY_PERMISSIONS' => false));
 
       if ($schedule) {
 
@@ -136,12 +136,12 @@ class APIv1ScheduleController extends APIController {
             if ($schedule) {
             // Add Discount payment
             $payment_service = $this->get('kula.Core.billing.payment');
-            $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+            $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false));
             $payment_id = $payment_service->addPayment($student_id, $student_id, 'D', null, date('Y-m-d'), null, $discount_info['AMOUNT'], null, $discount_proof);
 
             // Add discount transaction
             $transaction_service = $this->get('kula.Core.billing.transaction');
-            $transaction_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+            $transaction_service->setDBOptions(array('VERIFY_PERMISSIONS' => false));
             $transaction_service->addDiscount($discount_id, $student_id, $section['ORGANIZATION_TERM_ID'], $schedule, $payment_id);
 
             // Get largest charge
@@ -195,7 +195,7 @@ class APIv1ScheduleController extends APIController {
     $this->authorizeConstituent($student_id);
 
     $schedule_service = $this->get('kula.HEd.scheduling.schedule');
-    $schedule_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+    $schedule_service->setDBOptions(array('VERIFY_PERMISSIONS' => false));
 
     // check if paid
     $paid = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')

@@ -43,7 +43,7 @@ class APIv1StudentController extends APIController {
       'Core.Constituent.Relationship.ConstituentID' => $constituent_id,
       'Core.Constituent.Relationship.RelatedConstituentID' => $currentUser,
       'Core.Constituent.Relationship.Relationship' => isset($relationship_data['Core.Constituent.Relationship.Relationship']) ? $relationship_data['Core.Constituent.Relationship.Relationship'] : null
-    ))->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+    ))->process(array('VERIFY_PERMISSIONS' => false));
 
     if ($constituent_id) {
       $transaction->commit();
@@ -144,7 +144,7 @@ class APIv1StudentController extends APIController {
     $emergency_contact_data = $this->form('add', 'HEd.Student.EmergencyContact', 0);
     $emergency_contact_data['HEd.Student.EmergencyContact.StudentID'] = $student_id;
     // create constituent relationship
-    $changes = $this->newPoster()->add('HEd.Student.EmergencyContact', 0, $emergency_contact_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+    $changes = $this->newPoster()->add('HEd.Student.EmergencyContact', 0, $emergency_contact_data)->process(array('VERIFY_PERMISSIONS' => false));
 
     if ($changes) {
       $transaction->commit();
@@ -176,7 +176,7 @@ class APIv1StudentController extends APIController {
     if ($emergency_contact['EMERGENCY_CONTACT_ID']) {
       // create constituent relationship
       $changes = $this->newPoster()->edit('HEd.Student.EmergencyContact', $emergency_contact['EMERGENCY_CONTACT_ID'], $emergency_contact_data
-      )->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+      )->process(array('VERIFY_PERMISSIONS' => false));
 
       if ($changes) {
         $transaction->commit();
@@ -211,7 +211,7 @@ class APIv1StudentController extends APIController {
         'HEd.Student.EmergencyContact.Removed' => 1,
         'HEd.Student.EmergencyContact.RemovedTimestamp' => date('Y-m-d H:i:s'),
         'HEd.Student.EmergencyContact.RemovedUserstamp' => $currentUser
-      ))->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+      ))->process(array('VERIFY_PERMISSIONS' => false));
 
       if ($changes) {
         $transaction->commit();
@@ -265,7 +265,7 @@ class APIv1StudentController extends APIController {
         'HEd.Student.Form.CompletedTimestamp' => date('Y-m-d H:i:s'),
         'HEd.Student.Form.CompletedConstituentID' => $currentUser,
         'HEd.Student.Form.CompletedIP' => $agreement_data['HEd.Student.Form.CompletedIP']
-      ))->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getResult();
+      ))->process(array('VERIFY_PERMISSIONS' => false))->getResult();
 
 
     } else { // end if student_form_id
@@ -285,7 +285,7 @@ class APIv1StudentController extends APIController {
         'HEd.Student.Form.CompletedTimestamp' => date('Y-m-d H:i:s'),
         'HEd.Student.Form.CompletedConstituentID' => $currentUser,
         'HEd.Student.Form.CompletedIP' => $agreement_data['HEd.Student.Form.CompletedIP']
-      ))->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getResult();
+      ))->process(array('VERIFY_PERMISSIONS' => false))->getResult();
 
     } // 
 
@@ -308,8 +308,8 @@ class APIv1StudentController extends APIController {
 
     $transaction = $this->db()->db_transaction();
 
-    $changes = $this->newPoster()->edit('Core.Constituent', $student_id, $constituent_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getResult();
-    $changes += $this->newPoster()->edit('HEd.Student', $student_id, $student_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getResult();
+    $changes = $this->newPoster()->edit('Core.Constituent', $student_id, $constituent_data)->process(array('VERIFY_PERMISSIONS' => false))->getResult();
+    $changes += $this->newPoster()->edit('HEd.Student', $student_id, $student_data)->process(array('VERIFY_PERMISSIONS' => false))->getResult();
     
     if ($changes) {
       $transaction->commit();
@@ -373,7 +373,7 @@ class APIv1StudentController extends APIController {
            'HEd.Student.Status.EnterCode' => $defaults['DEFAULT_ENTER_CODE'],
            'HEd.Student.Status.EnterTerm' => $term_info['TERM_ID'],
            'HEd.Student.Status.Resident' => 'C'
-        ), array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false)
+        ), array('VERIFY_PERMISSIONS' => false)
         );
          
       } else {
@@ -403,7 +403,7 @@ class APIv1StudentController extends APIController {
           'HEd.Student.Status.EnterDate' => date('Y-m-d'),
           'HEd.Student.Status.EnterCode' => $defaults['DEFAULT_ENTER_CODE'],
           'HEd.Student.Status.Resident' => 'C'
-        ), array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+        ), array('VERIFY_PERMISSIONS' => false));
 
         $student_status_id = $student_enrollment['student_status'];
       } else {
@@ -411,7 +411,7 @@ class APIv1StudentController extends APIController {
       }
 
       // Calculate tuition rate
-      $this->get('kula.HEd.billing.constituent')->determineTuitionRate($student_status_id, array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
+      $this->get('kula.HEd.billing.constituent')->determineTuitionRate($student_status_id, array('VERIFY_PERMISSIONS' => false));
 
     }
 
@@ -420,7 +420,7 @@ class APIv1StudentController extends APIController {
     $changes = null;
 
     if ($student_status_id) {
-      $changes = $this->newPoster()->edit('HEd.Student.Status', $student_status_id, $status_data)->process(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false))->getResult();
+      $changes = $this->newPoster()->edit('HEd.Student.Status', $student_status_id, $status_data)->process(array('VERIFY_PERMISSIONS' => false))->getResult();
     }
     
     if ($changes) {
