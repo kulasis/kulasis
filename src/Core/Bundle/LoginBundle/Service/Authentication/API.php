@@ -149,7 +149,6 @@ class API {
             );
 
             $this->session->establishAPISession($token, $this->intg_api_app_id, $user['USER_ID']);
-
             // Update last token
             $this->db->db_update('CORE_USER')->fields(array(
               'LAST_TOKEN' => $token,

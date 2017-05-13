@@ -191,15 +191,15 @@ class Session {
   
   public function establishAPISession($token, $app_id, $user_id = null) {
 
-    $this->session->set('app_id', $app_id);
-    $this->session->set('app_session_id', $this->logOpenedAPISession($token, $app_id, $user_id));
+    if (!$user_id) {
+      $this->session->set('app_id', $app_id);
+      $this->session->set('app_session_id', $this->logOpenedAPISession($token, $app_id, $user_id));
+      $this->session->set('session_id', $this->session->get('app_session_id'));
+    }
 
     if ($user_id) {
       $this->session->set('user_id', $user_id);
       $this->session->set('session_id', $this->logOpenedAPISession($token, $app_id, $user_id));
-      
-    } else {
-      $this->session->set('session_id', $this->session->get('app_session_id'));
     }
 
   }
