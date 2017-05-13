@@ -15,7 +15,7 @@ Log.Audit.Changes:
       description: "User ID"
       db_column_name: USER_ID
       db_column_type: serial
-      db_column_null: false
+      db_column_null: true
       column_name: "User ID"
       label_name: "User ID"
     SessionID:
