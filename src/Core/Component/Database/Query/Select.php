@@ -663,35 +663,35 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function join($table, $alias = NULL, $condition = NULL, $arguments = array()) {
-    return $this->addJoin('INNER', $table, $alias, $condition, $arguments);
+  public function join($table, $alias = NULL, $condition = NULL, $arguments = array(), $options = array()) {
+    return $this->addJoin('INNER', $table, $alias, $condition, $arguments, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function innerJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
-    return $this->addJoin('INNER', $table, $alias, $condition, $arguments);
+  public function innerJoin($table, $alias = NULL, $condition = NULL, $arguments = array(), $options = array()) {
+    return $this->addJoin('INNER', $table, $alias, $condition, $arguments, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function leftJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
-    return $this->addJoin('LEFT OUTER', $table, $alias, $condition, $arguments);
+  public function leftJoin($table, $alias = NULL, $condition = NULL, $arguments = array(), $options = array()) {
+    return $this->addJoin('LEFT OUTER', $table, $alias, $condition, $arguments, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function rightJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
-    return $this->addJoin('RIGHT OUTER', $table, $alias, $condition, $arguments);
+  public function rightJoin($table, $alias = NULL, $condition = NULL, $arguments = array(), $options = array()) {
+    return $this->addJoin('RIGHT OUTER', $table, $alias, $condition, $arguments, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = array()) {
+  public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = array(), $options = array()) {
     if (empty($alias)) {
       if ($table instanceof SelectInterface) {
         $alias = 'subquery';
@@ -718,6 +718,7 @@ class Select extends Query implements SelectInterface {
       'alias' => $alias,
       'condition' => $condition,
       'arguments' => $arguments,
+      'options' => $options
     );
 
     return $this;
@@ -919,10 +920,10 @@ class Select extends Query implements SelectInterface {
         //if (strpos($table_string, '.') === FALSE) {
         //  $table_string = '{' . $table_string . '}';
         // }
-        if (isset($table['arguments']['target'])) {
+        if (isset($table['options']['target'])) {
           // Resolve target to real database name
           $db_info = Database::getConnectionInfo();
-          $database = $db_info[$table['arguments']['target']]['database'];
+          $database = $db_info[$table['options']['target']]['database'];
           // Prepend to table name
           $table_string = $database . '.' . $table_string ;
         }
