@@ -241,7 +241,8 @@ class Session {
       'API_APPLICATION_ID' => $app_id,
       'IN_TIME' => date('Y-m-d H:i:s'),
       'AUTH_METHOD' => 'API',
-      'TOKEN' => $token
+      'TOKEN' => $token,
+      'IP_ADDRESS' => isset($this->request->getCurrentRequest()->server) ? $this->request->getCurrentRequest()->server->get('REMOTE_ADDR') : null
     ))->execute();
 
   }
