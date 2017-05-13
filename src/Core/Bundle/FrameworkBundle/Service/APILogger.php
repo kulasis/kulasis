@@ -24,9 +24,9 @@ class APILogger {
 
       // All request parameters
       $request_log = array();
-      $request_log['SERVER'] = $request->server->all();
       $request_log['POST'] = $this->cleanRequestData($request->request->all());
       $request_log['GET'] = $this->cleanRequestData($request->query->all());
+      $request_log['SERVER'] = $request->server->all();
       $request_log = serialize($request_log);
 
       if ($error) {
