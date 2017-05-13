@@ -18,7 +18,7 @@ class APILogger {
       $this->session = $session;
   }
 
-  public function logAPICall($request, $response, $error = false) {
+  public function logAPICall($request, $response) {
 
     if ($request->headers->get('Authorization')) {
 
@@ -29,20 +29,11 @@ class APILogger {
       $request_log['SERVER'] = $request->server->all();
       $request_log = serialize($request_log);
 
-      if ($error) {
-        $response_log = null;
-        $error_response = array();
-        $error_response['statusCode'] = $response->getStatusCode();
-        $error_response['content'] = $response->getContent();
-        $error_response = serialize($error_response);
-        $response = null;
-      } else {
-        $response_log = array();
-        $response_log['statusCode'] = $response->getStatusCode();
-        $response_log['content'] = $response->getContent();
-        $response_log = serialize($response_log);
-        $error_response = null;
-      }
+
+      $response_log = array();
+      $response_log['statusCode'] = $response->getStatusCode();
+      $response_log['content'] = $response->getContent();
+      $response_log = serialize($response_log);
 
       // Log request and response
       $this->db->db_insert('LOG_API', array('target' => 'additional'))->fields(array(
@@ -50,10 +41,9 @@ class APILogger {
         'TIMESTAMP' => date('Y-m-d H:i:s'), 
         'REQUEST_URI' => $request->server->get('REQUEST_URI'),
         'REQUEST_METHOD' => $request->server->get('REQUEST_METHOD'),
-        'RESPONSE_CODE' => ($response) ? $response->getStatusCode() : null,
+        'RESPONSE_CODE' => $response->getStatusCode(),
         'REQUEST' => $request_log, 
-        'RESPONSE' => $response_log,
-        'ERROR' => $error_response
+        'RESPONSE' => $response_log
       ))
       ->execute();
 

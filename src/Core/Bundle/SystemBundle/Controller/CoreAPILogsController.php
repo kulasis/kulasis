@@ -35,6 +35,7 @@ class CoreAPILogsController extends Controller {
       ->fields('api', array('API_CALL_ID', 'TIMESTAMP', 'REQUEST_METHOD', 'REQUEST_URI', 'RESPONSE_CODE', 'REQUEST', 'RESPONSE', 'ERROR'))
       ->condition('api.LOG_SESSION_ID', $session_id)
       ->orderBy('TIMESTAMP', 'DESC', 'api')
+      ->orderBy('API_CALL_ID', 'DESC', 'api')
       ->range(0, 100)->execute();
     while ($requests_row = $requests_result->fetch()) {
       $requests[$i] = $requests_row;

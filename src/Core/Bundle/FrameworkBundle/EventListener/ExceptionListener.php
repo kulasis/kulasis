@@ -90,14 +90,7 @@ class ExceptionListener implements EventSubscriberInterface
           $response = new Response($exception->getMessage());
         }
       }
-    
-      if ($request->headers->get('Authorization')) {
-
-        $logger = $this->container->get('kula.core.api_logger');
-        $logger->logAPICall($request, $response, true);
-
-      }
-
+      
       if (isset($response))
         $event->setResponse($response);
     }
