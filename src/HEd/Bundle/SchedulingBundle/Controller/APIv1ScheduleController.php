@@ -109,7 +109,7 @@ class APIv1ScheduleController extends APIController {
       ->execute()
       ->fetch();
     if ($class_count['class_total'] <= $section['CAPACITY']) {
-      $schedule = $this->get('kula.HEd.scheduling.schedule')->addClassForStudentStatus($student_status_id, $section_id, date('Y-m-d'), 0, array('VERIFY_PERMISSIONS' => false));
+      $schedule = $this->get('kula.HEd.scheduling.schedule')->addClassForStudentStatus($student_status_id, $section_id, date('Y-m-d'), 0, array('VERIFY_PERMISSIONS' => false), 'ONL');
 
       if ($schedule) {
 

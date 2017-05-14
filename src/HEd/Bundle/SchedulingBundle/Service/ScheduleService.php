@@ -29,7 +29,7 @@ class ScheduleService {
     $this->billing->setDBOptions($options);
   }
   
-  public function addClassForStudentStatus($student_status_id, $section_id, $start_date, $posted = 1, $options = array()) {
+  public function addClassForStudentStatus($student_status_id, $section_id, $start_date, $posted = 1, $options = array(), $add_status = null) {
     
     // Get Section Info
     $section_info = $this->database->db_select('STUD_SECTION')
@@ -62,7 +62,11 @@ class ScheduleService {
     $class_info['HEd.Student.Class.CreditsAttempted'] = $section_info['CREDITS'];
     $class_info['HEd.Student.Class.MarkScaleID'] = $section_info['MARK_SCALE_ID'];
     $class_info['HEd.Student.Class.Level'] = $student_status_info['LEVEL'];
-  
+    
+    if ($add_status) {
+      $class_info['HEd.Student.Class.RegistrationType'] = $add_status;
+    }
+
     if ($section_info['START_DATE'] < $start_date)
       $class_info['HEd.Student.Class.StartDate'] = $start_date;
     else
