@@ -30,6 +30,16 @@ class CoreAPILogsController extends Controller {
 
     $requests = array();
 
+    $session = $this->db()->db_select('LOG_SESSION', 'session', array('target' => 'additional'))
+      ->fields('session', array('SESSION_ID', 'USER_ID', 'IN_TIME', 'OUT_TIME', 'IP_ADDRESS'))
+      ->leftJoin('CORE_INTG_API_APPS', 'app', 'app.INTG_API_APP_ID = session.API_APPLICATION_ID', null, array('target' => 'default'))
+      ->fields('app', array('APPLICATION'))
+      ->leftJoin('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = session.USER_ID', null, array('target' => 'default'))
+      ->fields('constituent', array('LAST_NAME', 'FIRST_NAME'))
+      ->condition('session.AUTH_METHOD', 'API')
+      ->condition('session.SESSION_ID', $session_id)
+      ->execute()->fetch();
+
     $i = 0;
     $requests_result = $this->db()->db_select('LOG_API', 'api', array('target' => 'additional'))
       ->fields('api', array('API_CALL_ID', 'TIMESTAMP', 'REQUEST_METHOD', 'REQUEST_URI', 'RESPONSE_CODE', 'REQUEST', 'RESPONSE', 'ERROR'))
@@ -44,7 +54,7 @@ class CoreAPILogsController extends Controller {
     $i++;
     }
     
-    return $this->render('KulaCoreSystemBundle:APILogs:requests.html.twig', array('requests' => $requests));
+    return $this->render('KulaCoreSystemBundle:APILogs:requests.html.twig', array('requests' => $requests, 'session' => $session));
   }
 
   public function errorRequestsAction() {

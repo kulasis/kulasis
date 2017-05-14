@@ -248,7 +248,6 @@ Core_Logs_API_Session_Requests:
   path: /monitor/logs/api/session/{session_id}/requests
   defaults: 
     _controller: KulaCoreSystemBundle:CoreAPILogs:requestsForSession
-    _navigation: Core.System.Monitor.APILogs.Sessions
 
 Core_Logs_API_Session_Requests_Error:
   path: /monitor/logs/api/requests/error
