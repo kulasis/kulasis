@@ -28,13 +28,13 @@ class APILogger {
       $request_log['POST'] = $this->cleanRequestData($request->request->all());
       $request_log['GET'] = $this->cleanRequestData($request->query->all());
       $request_log['SERVER'] = $request->server->all();
-      $request_log = serialize($request_log);
+      $request_log = base64_encode(serialize($request_log));
 
 
       $response_log = array();
       $response_log['statusCode'] = $response->getStatusCode();
       $response_log['content'] = $response->getContent();
-      $response_log = serialize($response_log);
+      $response_log = base64_encode(serialize($response_log));
 
       $log_fields = array(
         'LOG_SESSION_ID' => $this->session->get('session_id'), 

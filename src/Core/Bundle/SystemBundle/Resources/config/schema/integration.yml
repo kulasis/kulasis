@@ -216,7 +216,7 @@ Log.API:
       description: "Request"
       db_column_name: REQUEST
       db_column_type: blob
-      db_column_size: normal
+      db_column_size: big
       db_column_null: true
       field_type: textarea
       column_name: "Request"
@@ -225,7 +225,7 @@ Log.API:
       description: "Response"
       db_column_name: RESPONSE
       db_column_type: blob
-      db_column_size: normal
+      db_column_size: big
       db_column_null: true
       field_type: textarea
       column_name: "Response"
@@ -234,7 +234,7 @@ Log.API:
       description: "Error"
       db_column_name: ERROR
       db_column_type: blob
-      db_column_size: normal
+      db_column_size: big
       db_column_null: true
       field_type: textarea
       column_name: "Error"

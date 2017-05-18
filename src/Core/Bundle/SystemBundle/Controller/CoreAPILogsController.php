@@ -49,8 +49,8 @@ class CoreAPILogsController extends Controller {
       ->range(0, 100)->execute();
     while ($requests_row = $requests_result->fetch()) {
       $requests[$i] = $requests_row;
-      $requests[$i]['REQUEST'] = print_r(unserialize($requests_row['REQUEST']), true);
-      $requests[$i]['RESPONSE'] = print_r(unserialize($requests_row['RESPONSE']), true);
+      $requests[$i]['REQUEST'] = print_r(unserialize(base64_decode($requests_row['REQUEST'])), true);
+      $requests[$i]['RESPONSE'] = print_r(unserialize(base64_decode($requests_row['RESPONSE'])), true);
     $i++;
     }
     
