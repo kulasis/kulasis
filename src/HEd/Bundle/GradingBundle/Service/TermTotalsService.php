@@ -67,7 +67,6 @@ class TermTotalsService {
       $this->setGPARegardless = false;
       if (isset($term['END_DATE'])) {
         if (strtotime($term['END_DATE']) < time()) {
-          echo $term['END_DATE'].' '.strtotime($term['END_DATE']).' '.time().' | ';
           $this->setGPARegardless = true;
         }
       }
@@ -76,6 +75,8 @@ class TermTotalsService {
       
       // Compute GPA
       $this->computeGPAs();
+
+      $this->setGPARegardless = false;
       
       // Write to database
       $this->totals['HEd.Student.CourseHistory.Term.StudentID'] = $term['STUDENT_ID'];
