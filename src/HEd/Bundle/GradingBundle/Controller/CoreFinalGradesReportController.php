@@ -155,7 +155,7 @@ class CoreFinalGradesReportController extends ReportController {
       ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', 'stafforgterm.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
       ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterm.STAFF_ID')
       ->fields('staff', array('ABBREVIATED_NAME'))
-      ->condition('class.DROPPED', 0)
+      ->isNotNull('stucrshis.MARK')
       ->condition('status.STUDENT_STATUS_ID', $student_status_id)
       ;
     $org_term_ids = $this->focus->getOrganizationTermIDs();
