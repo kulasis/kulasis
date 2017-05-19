@@ -26,7 +26,7 @@ class CourseHistoryService {
     
     // Get course history data
     $course_info = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('START_DATE', 'STUDENT_CLASS_ID', 'LEVEL', 'MARK_SCALE_ID', 'COURSE_FOR_GRADE_ID', 'REPEAT_TAG_ID'))
+      ->fields('class', array('START_DATE', 'STUDENT_CLASS_ID', 'LEVEL', 'MARK_SCALE_ID', 'COURSE_FOR_GRADE_ID', 'REPEAT_TAG_ID', 'DEGREE_REQ_GRP_ID'))
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
       ->fields('section', array('END_DATE', 'CREDITS'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
@@ -65,6 +65,7 @@ class CourseHistoryService {
     $course_history_data['HEd.Student.CourseHistory.MarkScaleID'] = $course_info['MARK_SCALE_ID'];
     $course_history_data['HEd.Student.CourseHistory.RepeatTagID'] = $course_info['REPEAT_TAG_ID'];
     $course_history_data['HEd.Student.CourseHistory.Mark'] = $mark;
+    $course_history_data['HEd.Student.CourseHistory.DegreeRequirementGroupID'] = $course_info['DEGREE_REQ_GRP_ID'];
     $course_history_data['HEd.Student.CourseHistory.TeacherSet'] = $teacher_set;
     
     // Get award data
