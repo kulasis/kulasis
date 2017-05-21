@@ -65,14 +65,17 @@ class CoreAPILogsController extends Controller {
     $i = 0;
     $requests_result = $this->db()->db_select('LOG_API', 'api', array('target' => 'additional'))
       ->fields('api', array('API_CALL_ID', 'TIMESTAMP', 'REQUEST_METHOD', 'REQUEST_URI', 'RESPONSE_CODE', 'REQUEST', 'RESPONSE', 'ERROR'))
+      ->leftJoin('LOG_SESSION', 'session', 'session.SESSION_ID = api.LOG_SESSION_ID')
+      ->leftJoin('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = session.USER_ID', null, array('target' => 'default'))
+      ->fields('constituent', array('LAST_NAME', 'FIRST_NAME'))
       ->isNotNull('api.ERROR')
       ->orderBy('TIMESTAMP', 'DESC', 'api')
       ->orderBy('API_CALL_ID', 'DESC', 'api')
       ->range(0, 100)->execute();
     while ($requests_row = $requests_result->fetch()) {
       $requests[$i] = $requests_row;
-      $requests[$i]['REQUEST'] = print_r(unserialize($requests_row['REQUEST']), true);
-      $requests[$i]['RESPONSE'] = print_r(unserialize($requests_row['RESPONSE']), true);
+      $requests[$i]['REQUEST'] = print_r(unserialize(base64_decode($requests_row['REQUEST'])), true);
+      $requests[$i]['RESPONSE'] = print_r(unserialize(base64_decode($requests_row['RESPONSE'])), true);
     $i++;
     }
     
