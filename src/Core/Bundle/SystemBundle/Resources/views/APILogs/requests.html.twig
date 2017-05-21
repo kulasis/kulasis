@@ -36,7 +36,7 @@ Requests for Session
   {% for request in requests %}
   <tr>
     {{ kula_field({ input: false, field: 'Log.API.Timestamp', value: request.TIMESTAMP, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ input: false, field: 'Core.Constituent.LastName', value: session.LAST_NAME~', '~session.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.LastName', value: request.LAST_NAME~', '~request.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'Log.API.RequestMethod', value: request.REQUEST_METHOD, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'Log.API.RequestURI', value: request.REQUEST_URI, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'Log.API.ResponseCode', value: request.RESPONSE_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
