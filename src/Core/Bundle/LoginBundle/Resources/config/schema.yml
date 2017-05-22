@@ -95,6 +95,16 @@ Core.User:
       field_size: 20
       column_name: "Last Timestamp Token"
       label_name: "Last Timestamp Token"
+    NumberFailedAttempts:
+      description: "Number of failed attempts"
+      db_column_name: FAILED_ATTEMPTS
+      db_column_type: int
+      db_column_size: tiny
+      db_column_null: false
+      db_column_default: 0
+      field_type: text
+      column_name: "Failed Attempts"
+      label_name: "Failed Attempts"
   unique_keys:
     Username: [ 'Core.User.Username' ]
 Core.Usergroup:
