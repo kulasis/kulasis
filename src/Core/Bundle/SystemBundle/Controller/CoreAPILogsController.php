@@ -28,6 +28,10 @@ class CoreAPILogsController extends Controller {
   public function requestsForSessionAction($session_id) {
     $this->authorize();
 
+    if ($this->request->get('_route') == 'Core_Logs_API_Session_User_Requests') {
+      $this->setRecordType('Core.User');
+    } 
+
     $requests = array();
 
     $session = $this->db()->db_select('LOG_SESSION', 'session', array('target' => 'additional'))
@@ -80,6 +84,29 @@ class CoreAPILogsController extends Controller {
     }
     
     return $this->render('KulaCoreSystemBundle:APILogs:requests.html.twig', array('requests' => $requests));
+  }
+
+  public function sessionsForUserAction() {
+    $this->authorize();
+    $this->setRecordType('Core.User');
+
+    $sessions = array();
+
+    if ($this->record->getSelectedRecordID()) {
+      $sessions = $this->db()->db_select('LOG_SESSION', 'session', array('target' => 'additional'))
+        ->fields('session', array('SESSION_ID', 'USER_ID', 'IN_TIME', 'OUT_TIME', 'IP_ADDRESS'))
+        ->leftJoin('CORE_INTG_API_APPS', 'app', 'app.INTG_API_APP_ID = session.API_APPLICATION_ID', null, array('target' => 'default'))
+        ->fields('app', array('APPLICATION'))
+        ->leftJoin('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = session.USER_ID', null, array('target' => 'default'))
+        ->fields('constituent', array('LAST_NAME', 'FIRST_NAME'))
+        ->condition('session.AUTH_METHOD', 'API')
+        ->condition('session.USER_ID', $this->record->getSelectedRecordID())
+        ->orderBy('IN_TIME', 'DESC', 'session')
+        ->range(0, 100);
+      $sessions = $sessions->execute()->fetchAll();
+    }
+
+    return $this->render('KulaCoreSystemBundle:APILogs:session.html.twig', array('sessions' => $sessions));
   }
 
 }

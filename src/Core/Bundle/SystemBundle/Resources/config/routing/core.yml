@@ -255,6 +255,17 @@ Core_Logs_API_Session_Requests_Error:
     _controller: KulaCoreSystemBundle:CoreAPILogs:errorRequests
     _navigation: Core.System.Monitor.APILogs.ErrorRequests
 
+Core_Logs_API_Session_User:
+  path: /monitor/logs/api/session/user
+  defaults: 
+    _controller: KulaCoreSystemBundle:CoreAPILogs:sessionsForUser
+    _navigation: Core.System.Monitor.APILogs.User
+
+Core_Logs_API_Session_User_Requests:
+  path: /monitor/logs/api/session/{session_id}/user/requests
+  defaults: 
+    _controller: KulaCoreSystemBundle:CoreAPILogs:requestsForSession
+
 Core_System_Integration_Databases:
   path: /setup/system/integration/databases
   defaults: 

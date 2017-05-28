@@ -1,6 +1,11 @@
 {% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
+{% if request.get('_route') == 'Core_Logs_API_Session_User' %}
+  {% set parent_route = 'Core_Logs_API_Session_User_Requests' %}
+{% else %}
+  {% set parent_route = 'Core_Logs_API_Session_Requests' %}
+{% endif %}
 <div class="data-table-header-div">
 Session Log
 </div>
@@ -25,7 +30,11 @@ Session Log
     {{ kula_field({ input: false, field: 'Core.Constituent.LastName', value: session.LAST_NAME~', '~session.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'Log.Session.InTime', value: session.IN_TIME, prepend_html: '<td style= "white-space: nowrap">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'Log.Session.IPAddress', value: session.IP_ADDRESS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    <td class="data-table-cell-row-detail"><a class="normal-link" href="{{ path('Core_Logs_API_Session_Requests', { session_id: session.SESSION_ID }) }}">...</a></td>
+{% if request.get('_route') == 'Core_Logs_API_Session_User' %}
+  <td class="data-table-cell-row-detail"><a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path('Core_Logs_API_Session_User_Requests', { session_id: session.SESSION_ID }) }}">...</a></td>
+{% else %}
+  <td class="data-table-cell-row-detail"><a class="normal-link" href="{{ path('Core_Logs_API_Session_Requests', { session_id: session.SESSION_ID }) }}">...</a></td>
+{% endif %}
   </tr>
   {% endfor %}
 </tbody>

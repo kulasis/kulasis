@@ -1,8 +1,13 @@
 {% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
 
 {% block content %}
+{% if request.get('_route') == 'Core_Logs_API_Session_User_Requests' %}
+  {% set parent_route = 'Core_Logs_API_Session_User' %}
+{% else %}
+  {% set parent_route = 'Core_Logs_API_Session' %}
+{% endif %}
 <p>
-  <a class="normal-link" href="{{ path('Core_Logs_API_Session') }}">Back to Session Log</a>
+  <a class="normal-link" data-record-id="{{ kula_core_record.getSelectedRecordID() }}" data-record-type="{{ kula_core_record.getRecordType() }}" href="{{ path(parent_route) }}">Back to Session Log</a>
 </p>
 {% if session.SESSION_ID %}
 <div class="group-box">
