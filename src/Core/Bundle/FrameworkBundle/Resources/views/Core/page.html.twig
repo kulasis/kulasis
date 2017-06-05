@@ -50,6 +50,7 @@
 {% endblock %}
 
 {% macro loadDirectories(directory, open) %}
+{% import _self as kula_page %}
 {# and kula_core_navigation.shouldOpenNode(kula_core_navigation.getCurrentRequestNav(), directory) == false #}
 <li class="parent_li"{% if open == false %} style="display:none;"{% endif %}>
 <span class="closed">{{ kula_core_navigation.getProperty(directory, 'display_name') }}</span>
