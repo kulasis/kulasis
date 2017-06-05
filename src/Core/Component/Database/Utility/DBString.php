@@ -12,7 +12,7 @@ namespace Kula\Core\Component\Database\Utility;
  *
  * @ingroup utility
  */
-class String {
+class DBString {
 
   /**
    * Encodes special characters in a plain-text string for display as HTML.

@@ -8,7 +8,7 @@
 namespace Kula\Core\Component\Database\Install;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\DBString;
 use Kula\Core\Component\Database\Database;
 
 /**
@@ -152,7 +152,7 @@ abstract class Tasks {
     $message = '';
     foreach ($this->results as $result => $success) {
       if (!$success) {
-        $message = SafeMarkup::isSafe($result) ? $result : String::checkPlain($result);
+        $message = SafeMarkup::isSafe($result) ? $result : DBString::checkPlain($result);
       }
     }
     if (!empty($message)) {

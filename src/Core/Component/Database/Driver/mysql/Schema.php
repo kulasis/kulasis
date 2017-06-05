@@ -7,7 +7,7 @@
 
 namespace Kula\Core\Component\Database\Driver\mysql;
 
-use Kula\Core\Component\Database\Utility\String;
+use Kula\Core\Component\Database\Utility\DBString;
 use Kula\Core\Component\Database\Database;
 use Kula\Core\Component\Database\Query\Condition;
 use Kula\Core\Component\Database\SchemaObjectExistsException;
@@ -348,10 +348,10 @@ class Schema extends DatabaseSchema {
    */
   public function copyTable($source, $destination) {
     if (!$this->tableExists($source)) {
-      throw new SchemaObjectDoesNotExistException(String::format("Cannot copy @source to @destination: table @source doesn't exist.", array('@source' => $source, '@destination' => $destination)));
+      throw new SchemaObjectDoesNotExistException(DBString::format("Cannot copy @source to @destination: table @source doesn't exist.", array('@source' => $source, '@destination' => $destination)));
     }
     if ($this->tableExists($destination)) {
-      throw new SchemaObjectExistsException(String::format("Cannot copy @source to @destination: table @destination already exists.", array('@source' => $source, '@destination' => $destination)));
+      throw new SchemaObjectExistsException(DBString::format("Cannot copy @source to @destination: table @destination already exists.", array('@source' => $source, '@destination' => $destination)));
     }
 
     $info = $this->getPrefixInfo($destination);

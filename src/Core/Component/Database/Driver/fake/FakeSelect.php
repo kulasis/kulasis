@@ -7,7 +7,7 @@
 
 namespace Kula\Core\Component\Database\Driver\fake;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\DBString;
 use Kula\Core\Component\Database\Connection;
 use Kula\Core\Component\Database\Query\Condition;
 use Kula\Core\Component\Database\Query\PlaceholderInterface;
@@ -532,7 +532,7 @@ class FakeSelect extends Select {
         $fields = array_keys(reset($this->databaseContents[$table]));
       }
       else {
-        throw new \Exception(String::format('All fields on empty table @table is not supported.', array('@table' => $table)));
+        throw new \Exception(DBString::format('All fields on empty table @table is not supported.', array('@table' => $table)));
       }
     }
     return parent::fields($table_alias, $fields);
