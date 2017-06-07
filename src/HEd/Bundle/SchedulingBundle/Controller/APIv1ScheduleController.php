@@ -34,7 +34,10 @@ class APIv1ScheduleController extends APIController {
     if ($section['ALLOW_REGISTRATION'] == 0) {
       throw new NotFoundHttpException('Section does not allow registration.');
     }
-    if (time() < strtotime($section['OPEN_REGISTRATION']) OR time() > strtotime($section['CLOSE_REGISTRATION'])) {
+    if ($section['OPEN_REGISTRATION'] != '' AND time() < strtotime($section['OPEN_REGISTRATION'])) {
+      throw new NotFoundHttpException('Section not yet open for registration.');
+    }
+    if ($section['CLOSE_REGISTRATION'] != '' AND time() > strtotime($section['CLOSE_REGISTRATION'])) {
       throw new NotFoundHttpException('Section closed from registration.');
     }
 
@@ -167,7 +170,7 @@ class APIv1ScheduleController extends APIController {
           }
         } // end if on existance of discount
       } else {
-        throw new DisplayException('Could not enroll in class.');
+        throw new DisplayException('Already enrolled in class.');
       }
       
       $transaction->commit();
