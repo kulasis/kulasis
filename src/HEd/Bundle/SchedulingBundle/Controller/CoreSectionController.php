@@ -270,7 +270,8 @@ class CoreSectionController extends Controller {
       if ($section_number['SECTION_NUMBER']) {
         // Split section
         $split_section = explode('-', $section_number['SECTION_NUMBER']);
-        $new_number = str_pad($split_section[1] + 1, 2, '0', STR_PAD_LEFT);
+        $token_to_consider = count($split_section) - 1;
+        $new_number = str_pad($split_section[$token_to_consider] + 1, 2, '0', STR_PAD_LEFT);
         $sectionInfo['HEd.Section.SectionNumber'] = $course_info['COURSE_NUMBER'].'-'.$new_number;
       } else {
         $sectionInfo['HEd.Section.SectionNumber'] = $course_info['COURSE_NUMBER'].'-01';
