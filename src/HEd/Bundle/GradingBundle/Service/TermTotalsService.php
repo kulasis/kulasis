@@ -108,7 +108,7 @@ class TermTotalsService {
       $this->resetTermTotals();
 
       $this->totals['HEd.Student.CourseHistory.Term.StudentStatusID'] = null;
-      $coursesInProgressOut = $this->calculateClassesInProgress($studentID, $lastRow['FINANCIAL_AID_YEAR']);
+      $coursesInProgressOut = $this->calculateClassesInProgress($studentID, $lastRow['FINANCIAL_AID_YEAR'], 1);
       // Compute GPA
       $this->computeGPAs();
       if ($coursesInProgressOut) 
@@ -117,7 +117,7 @@ class TermTotalsService {
     
   }
   
-  private function calculateClassesInProgress($studentID, $financialAidYear = null) {
+  private function calculateClassesInProgress($studentID, $financialAidYear = null, $debug = null) {
     
     $coursesInProgress = false;
     $laststudentstatusid = null;
@@ -143,11 +143,16 @@ class TermTotalsService {
     if ($this->totals['HEd.Student.CourseHistory.Term.Level'] != '') {
       $classesInProgress = $classesInProgress->condition('classes.LEVEL', $this->totals['HEd.Student.CourseHistory.Term.Level']);
     }
-
     $classesInProgress = $classesInProgress->execute();
     while ($class = $classesInProgress->fetch()) {
+      if ($debug) {
 
-      if (isset($laststudentstatusid) AND $laststudentstatusid != $class['STUDENT_STATUS_ID']) { $this->resetTermTotals(); }
+      }
+      if (isset($laststudentstatusid) AND $laststudentstatusid != $class['STUDENT_STATUS_ID']) {
+        $this->computeGPAs();
+        $this->updateDatabase($this->totals);
+        $this->resetTermTotals();
+      }
 
       if ($lastfinyear != $class['FINANCIAL_AID_YEAR'] AND $financialAidYear != $class['FINANCIAL_AID_YEAR']) { $this->resetYTDTotals(); }
       
