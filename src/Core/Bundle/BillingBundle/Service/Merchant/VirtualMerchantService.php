@@ -92,7 +92,13 @@ ssl_txn_time=12/31/2016 09:40:14 AM";
       return $this->raw_result['ssl_result_message'];
     } else {
       $this->error = true;
-      return $this->raw_result['errorMessage'];
+      if (isset($this->raw_result['errorMessage']) AND $this->raw_result['errorMessage'] != '') {
+        return $this->raw_result['errorMessage'];
+      }
+      if (isset($this->raw_result['ssl_result_message']) AND $this->raw_result['ssl_result_message'] != '') {
+        return $this->raw_result['ssl_result_message'];
+      }
+      
     }
   }
 
