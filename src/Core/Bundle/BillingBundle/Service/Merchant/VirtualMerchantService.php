@@ -27,10 +27,10 @@ class VirtualMerchantService {
     $this->error = false;
   }
 
-  public function process($amount, $first_name, $last_name, $email, $card_number, $exp_date, $cvv, $avs_address, $avs_city, $avs_state, $avs_zip, $invoice) {
+  public function process($transaction_type, $amount, $first_name, $last_name, $email, $card_number, $exp_date, $cvv, $avs_address, $avs_city, $avs_state, $avs_zip, $invoice) {
 
     $merchant_params = array(
-      'ssl_transaction_type' => 'ccsale',
+      'ssl_transaction_type' => ($transaction_type == 'DEBIT') ? 'dbpurchase' : 'ccsale',
       'ssl_merchant_id' => $this->merchant_id,
       'ssl_user_id' => $this->user_id,
       'ssl_pin' => $this->pin,

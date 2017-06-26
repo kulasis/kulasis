@@ -119,6 +119,7 @@ class APIv1PaymentController extends APIController {
         $merchant_service = $this->get('kula.Core.billing.payment.merchant.VirtualMerchant');
 
         $result = $merchant_service->process(
+          $payment_method,
           $pending_service->totalAmount(), 
           $this->request->request->get('cc_first_name'), 
           $this->request->request->get('cc_last_name'), 
