@@ -116,6 +116,15 @@ Core.Constituent:
       field_type: text
       column_name: "Permanent Number"
       label_name: "Permanent Number"
+    DevelopmentNumber:
+      description: "Development Number"
+      db_column_name: DEVELOPMENT_NUMBER
+      db_column_type: varchar
+      db_column_length: 20
+      db_column_null: true
+      field_type: text
+      column_name: "Development Number"
+      label_name: "Development Number"
     Notes:
       description: "Notes"
       db_column_name: NOTES

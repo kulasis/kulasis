@@ -53,7 +53,7 @@ class CoreStudentRecord extends Record {
     $result = $this->db()->db_select('STUD_STUDENT', 'stu')
       ->fields('stu', array('STUDENT_ID', 'DIRECTORY_PERMISSION'))
       ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = stu.STUDENT_ID')
-      ->fields('constituent', array('CONSTITUENT_ID', 'PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'RACE', 'MAIDEN_NAME', 'PREFERRED_NAME'));
+      ->fields('constituent', array('CONSTITUENT_ID', 'PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'RACE', 'MAIDEN_NAME', 'PREFERRED_NAME', 'DEVELOPMENT_NUMBER'));
     if ($this->focus->getOrganizationTermID()) {
       $result = $result->join('STUD_STUDENT_STATUS', 'stustatus', 'stu.STUDENT_ID = stustatus.STUDENT_ID');
       $result = $result->fields('stustatus', array('STUDENT_STATUS_ID', 'STATUS','GRADE', 'RESIDENT'));
