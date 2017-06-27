@@ -26,7 +26,7 @@ class CourseHistoryService {
     
     // Get course history data
     $course_info = $this->database->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('START_DATE', 'STUDENT_CLASS_ID', 'LEVEL', 'MARK_SCALE_ID', 'COURSE_FOR_GRADE_ID', 'REPEAT_TAG_ID', 'DEGREE_REQ_GRP_ID'))
+      ->fields('class', array('START_DATE', 'STUDENT_CLASS_ID', 'LEVEL', 'MARK_SCALE_ID', 'COURSE_FOR_GRADE_ID', 'REPEAT_TAG_ID', 'DEGREE_REQ_GRP_ID', 'CREDITS_ATTEMPTED'))
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
       ->fields('section', array('END_DATE', 'CREDITS'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
@@ -68,8 +68,14 @@ class CourseHistoryService {
     $course_history_data['HEd.Student.CourseHistory.DegreeRequirementGroupID'] = $course_info['DEGREE_REQ_GRP_ID'];
     $course_history_data['HEd.Student.CourseHistory.TeacherSet'] = $teacher_set;
     
+    if ($course_info['CREDITS_ATTEMPTED'] != '') {
+      $credits_attempted = $course_info['CREDITS_ATTEMPTED'];
+    } else {
+      $credits_attempted = $course_info['CREDITS'];
+    }
+
     // Get award data
-    $course_history_data += $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $course_info['CREDITS']);
+    $course_history_data += $this->determineAward($course_info['MARK_SCALE_ID'], $mark, $credits_attempted);
     unset($course_history_data['COMMENTS']);
 
     $result = $this->posterFactory->newPoster()->add('HEd.Student.CourseHistory', 'new', $course_history_data)->process()->getResult();
