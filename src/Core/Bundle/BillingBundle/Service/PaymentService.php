@@ -387,7 +387,14 @@ class PaymentService {
       $result = $this->updateAppliedBalanceForTransaction($charge_id, 0);
     } else {
       if ($payment_type == 'R') {
-        $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] + $applied_trans['total_applied_balance']);
+        // Gather any transactions attached to original payment
+        $applied_trans_payment = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+          ->expression('SUM(AMOUNT)', 'total_applied_balance')
+          ->condition('applied.CONSTITUENT_PAYMENT_ID', $charge['PAYMENT_ID'])
+          ->execute()->fetch();
+
+        echo $charge_id.' '.$charge['AMOUNT'].' '.$applied_trans['total_applied_balance'].' | '.$applied_trans_payment['total_applied_balance'];
+        $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] + $applied_trans['total_applied_balance'] + $applied_trans_payment['total_applied_balance']);
       } else {
         $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] - $applied_trans['total_applied_balance']);  
       } 
