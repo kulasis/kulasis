@@ -98,7 +98,7 @@ class CoreScheduleController extends Controller {
     $classes = array();
     
     $classes = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED', 'DROP_DATE', 'CREATED_TIMESTAMP'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED', 'DROP_DATE', 'CREATED_TIMESTAMP', 'PAID'))
       ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
       ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'CREDITS'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
@@ -110,7 +110,7 @@ class CoreScheduleController extends Controller {
     $classes_history = array();
     
     $classes_history = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED', 'DROP_DATE', 'CREATED_TIMESTAMP'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED', 'DROP_DATE', 'CREATED_TIMESTAMP', 'PAID'))
       ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
       ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME', 'CREDITS'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
@@ -319,7 +319,7 @@ class CoreScheduleController extends Controller {
     $classes = array();
     
     $classes = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'LEVEL', 'MARK_SCALE_ID', 'CREDITS_ATTEMPTED', 'COURSE_ID'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'LEVEL', 'MARK_SCALE_ID', 'CREDITS_ATTEMPTED', 'COURSE_ID', 'PAID'))
       ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
       ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')

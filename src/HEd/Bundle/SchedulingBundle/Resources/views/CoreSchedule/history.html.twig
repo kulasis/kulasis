@@ -14,6 +14,7 @@ Current Schedule
   {{ kula_field_name({ field: 'HEd.Course.CourseNumber', field_name_override: 'Course', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Course.Title', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Section.Credits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.Paid', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.StartDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.EndDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.Dropped', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
@@ -33,6 +34,7 @@ Current Schedule
       {{ kula_field({ field: 'HEd.Course.Title', input: false, value: class.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {% endif %}
     {{ kula_field({ field: 'HEd.Section.Credits', input: false, value: class.CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Student.Class.Paid', db_row_id: class.STUDENT_CLASS_ID, value: class.PAID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Class.StartDate', db_row_id: class.STUDENT_CLASS_ID, value: class.START_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Class.EndDate', db_row_id: class.STUDENT_CLASS_ID, value: class.END_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Class.Dropped', db_row_id: class.STUDENT_CLASS_ID, value: class.DROPPED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
@@ -57,6 +59,7 @@ Schedule History
   {{ kula_field_name({ field: 'HEd.Section.SectionNumber', field_name_override: 'Section', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Course.CourseNumber', field_name_override: 'Course', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Course.Title', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.Paid', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Section.Credits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.StartDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.EndDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
@@ -83,6 +86,7 @@ Schedule History
     {% else %}
       {{ kula_field({ field: 'HEd.Course.Title', input: false, value: class_history.COURSE_TITLE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
     {% endif %}
+    {{ kula_field({ input: false, field: 'HEd.Student.Class.Paid', value: class_history.PAID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Section.Credits', input: false, value: class_history.CREDITS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Student.Class.StartDate', value: class_history.START_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}
     {{ kula_field({ input: false, field: 'HEd.Student.Class.EndDate', value: class_history.END_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class_history : 'data-table-cell-input' } }) }}

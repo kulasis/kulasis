@@ -28,6 +28,7 @@ Current Schedule
   {{ kula_field_name({ field: 'HEd.Section.Meeting.EndTime', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Room.Name', field_name_override: 'Room', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Staff.AbbreviatedName', field_name_override: 'Instructor', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.Paid', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Section.Credits', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.Level', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.NotForGrade', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
@@ -68,6 +69,7 @@ Current Schedule
     {{ kula_field({ field: 'HEd.Section.Meeting.EndTime', input: false, value: class.END_TIME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Room.Number', input: false, value: class.ROOM_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Staff.AbbreviatedName', input: false, value: class.ABBREVIATED_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ field: 'HEd.Student.Class.Paid', db_row_id: class.STUDENT_CLASS_ID, value: class.PAID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Class.CreditsAttempted', db_row_id: class.STUDENT_CLASS_ID, value: class.CREDITS_ATTEMPTED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Class.Level', db_row_id: class.STUDENT_CLASS_ID, lookup: 'C', value: class.LEVEL, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Class.NotForGrade', db_row_id: class.STUDENT_CLASS_ID, value: class.NOT_FOR_GRADE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}

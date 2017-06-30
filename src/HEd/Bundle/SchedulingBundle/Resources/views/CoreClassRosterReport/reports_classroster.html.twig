@@ -4,8 +4,9 @@
 <input type="hidden" name="record_id" value="{{ request.query.get('record_id') }}" />
 <input type="hidden" name="record_type" value="{{ request.query.get('record_type') }}" />
 <div class="group-box">
-<div class="group-box-header">Section</div>
+<div class="group-box-header">Options</div>
 <div class="group-box-contents group">
+<div class="form-field"><label name="pending">Show Only Paid Students</label><input type="checkbox" name="non[ONLY_PAID]" value="Y"></div>	
 </div>
 </div>
 

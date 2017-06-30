@@ -22,6 +22,8 @@ class CoreClassRosterReportController extends ReportController {
     $pdf = new \Kula\HEd\Bundle\SchedulingBundle\Report\ClassRosterReport("P");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
+
+    $report_settings = $this->request->request->get('non');
     
     $meetings = array();
     // Get meeting data
@@ -95,6 +97,9 @@ class CoreClassRosterReportController extends ReportController {
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('section.SECTION_ID', $record_id);
     
+    if (isset($report_settings['ONLY_PAID']) AND $report_settings['ONLY_PAID'] == 'Y')
+      $result = $result->condition('class.PAID', 1);
+
     $result = $result
       ->orderBy('term.START_DATE', 'ASC')
       ->orderBy('SECTION_NUMBER', 'ASC')
