@@ -21,6 +21,8 @@ class TeacherClassRosterReportController extends CoreClassRosterReportController
     $pdf = new \Kula\HEd\Bundle\SchedulingBundle\Report\ClassRosterReport("P");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
+
+    $report_settings = $this->request->request->get('non');
     
     $meetings = array();
     // Get meeting data
@@ -74,7 +76,7 @@ class TeacherClassRosterReportController extends CoreClassRosterReportController
       ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterm.STAFF_ID')
       ->fields('staff', array('ABBREVIATED_NAME'))
       ->join('STUD_STUDENT_CLASSES', 'class', 'class.SECTION_ID = section.SECTION_ID')
-      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'PAID'))
       ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
       ->fields('status', array('STUDENT_STATUS_ID', 'SEEKING_DEGREE_1_ID'))
       ->leftJoin('CORE_LOOKUP_VALUES', 'grvalue', "grvalue.CODE = status.GRADE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
@@ -93,6 +95,9 @@ class TeacherClassRosterReportController extends CoreClassRosterReportController
     $record_id = $this->record->getSelectedRecordID();
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('section.SECTION_ID', $record_id);
+
+    if (isset($report_settings['ONLY_PAID']) AND $report_settings['ONLY_PAID'] == 'Y')
+      $result = $result->condition('class.PAID', 1);
     
     $result = $result
       ->orderBy('term.START_DATE', 'ASC')
