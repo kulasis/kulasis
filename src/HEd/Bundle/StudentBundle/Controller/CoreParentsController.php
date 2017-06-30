@@ -101,15 +101,24 @@ class CoreParentsController extends Controller {
       ->condition('par.PARENT_ID', $parentID)
       ->execute()->fetch();
     if (!$parentRecord['PARENT_ID']) {
-      $this->newPoster()->add('HEd.Parent', 0, array('HEd.Parent.ID' => $parentID))->process();
+      $this->newPoster()->add('HEd.Parent', 0, array('HEd.Parent.ID' => $parentID))->process()->getID();
     }
     
     // Create relationship in CONS_RELATIONSHIP
-    $relationshipID = $this->newPoster()->add('Core.Constituent.Relationship', 0, array(
-      'Core.Constituent.Relationship.ConstituentID' => $this->record->getSelectedRecordID(),
-      'Core.Constituent.Relationship.RelatedConstituentID' => $parentID,
-      'Core.Constituent.Relationship.Relationship' => $this->form('add', 'Core.Constituent.Relationship', $this->record->getSelectedRecordID(), 'Core.Constituent.Relationship.Relationship')
-    ))->process()->getID();
+    $relationshipRecord = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
+      ->fields('rel', array('RELATIONSHIP_ID'))
+      ->condition('rel.CONSTITUENT_ID', $this->record->getSelectedRecordID())
+      ->condition('rel.RELATED_CONSTITUENT_ID', $parentID)
+      ->execute()->fetch();     
+    if (!$relationshipRecord['RELATIONSHIP_ID']) {
+      $relationshipID = $this->newPoster()->add('Core.Constituent.Relationship', 0, array(
+        'Core.Constituent.Relationship.ConstituentID' => $this->record->getSelectedRecordID(),
+        'Core.Constituent.Relationship.RelatedConstituentID' => $parentID,
+        'Core.Constituent.Relationship.Relationship' => $this->form('add', 'Core.Constituent.Relationship', $this->record->getSelectedRecordID(), 'Core.Constituent.Relationship.Relationship')
+      ))->process()->getID();
+    } else {
+      $relationshipID = $relationshipRecord['RELATIONSHIP_ID'];
+    }
     
     // Create student parent record in STUD_STUDENT_PARENTS
     $studentParentID = $this->newPoster()->add('HEd.Student.Parent', 0, array(
