@@ -393,7 +393,6 @@ class PaymentService {
           ->condition('applied.CONSTITUENT_PAYMENT_ID', $charge['PAYMENT_ID'])
           ->execute()->fetch();
 
-        echo $charge_id.' '.$charge['AMOUNT'].' '.$applied_trans['total_applied_balance'].' | '.$applied_trans_payment['total_applied_balance'];
         $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] + $applied_trans['total_applied_balance'] + $applied_trans_payment['total_applied_balance']);
       } else {
         $result = $this->updateAppliedBalanceForTransaction($charge_id, $charge['AMOUNT'] - $applied_trans['total_applied_balance']);  
