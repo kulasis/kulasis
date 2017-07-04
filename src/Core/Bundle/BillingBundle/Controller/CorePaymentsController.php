@@ -342,9 +342,18 @@ class CorePaymentsController extends Controller {
               $non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount'],
               null
             );
+
             } // end if on amount greater than zero
           } // end foreach 
         } // end if on applied payments
+
+        // Recalculate balance for refunding payment
+        // Get payment_id
+        $original_payment_id = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+          ->fields('trans', array('PAYMENT_ID'))
+          ->condition('trans.CONSTITUENT_TRANSACTION_ID', $transaction_id)
+          ->execute()->fetch();
+        $payment_service->calculateBalanceForPayment($original_payment_id['PAYMENT_ID']);
       
         if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPaymentRefund') {
           return $this->forward('Core_Billing_ConstituentBilling_Payments', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()));
