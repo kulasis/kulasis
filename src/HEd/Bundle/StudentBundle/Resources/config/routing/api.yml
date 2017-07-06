@@ -25,7 +25,7 @@ api_v1_update_student:
 
 api_v1_update_student_enrollment:
     path:     /student/{student_id}/enrollment/{org}/{term}
-    defaults: { _controller: KulaHEdStudentBundle:APIv1Student:updateStudentEnrollment }
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Enrollment:updateStudentEnrollment }
     methods: [PUT,PATCH]
 
 api_v1_student_emergency_add:
@@ -47,3 +47,8 @@ api_v1_student_agreement:
     path:     /student/{student_id}/enrollment/{org}/{term}/agreements/{form_id}
     defaults: { _controller: KulaHEdStudentBundle:APIv1Student:makeAgreement }
     methods: [POST]
+
+api_v1_student_enrollments:
+    path:     /student/{student_id}/enrollments
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Enrollment:getStudentEnrollments }
+    methods: [GET]
