@@ -226,43 +226,108 @@ class APIv1ScheduleController extends APIController {
     $i = 0;
 
     // return class list
-    $class_list_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
-      ->fields('classes', array('STUDENT_CLASS_ID', 'START_DATE', 'CREATED_TIMESTAMP'))
-      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = classes.STUDENT_STATUS_ID')
-      ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = classes.SECTION_ID')
-      ->fields('sec', array('SECTION_NUMBER', 'SECTION_NAME'))
-      ->join('STUD_COURSE', 'course', 'course.COURSE_ID = sec.COURSE_ID')
-      ->fields('course', array('COURSE_TITLE'))
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = sec.ORGANIZATION_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterm.ORGANIZATION_ID')
-      ->fields('org', array('ORGANIZATION_ABBREVIATION'))
-      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterm.TERM_ID')
-      ->fields('term', array('TERM_ABBREVIATION'))
+    $class_list_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
+      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'LEVEL', 'CREDITS_ATTEMPTED', 'PAID'))
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
+      ->fields('stustatus', array('STUDENT_STATUS_ID'))
+      ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
+      ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE'))
+      ->leftJoin('STUD_COURSE', 'course2', 'course2.COURSE_ID = class.COURSE_ID')
+      ->fields('course2', array('COURSE_NUMBER' => 'second_COURSE_NUMBER', 'COURSE_TITLE'  => 'second_COURSE_TITLE'))
+      ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgtrm', 'section.STAFF_ORGANIZATION_TERM_ID = stafforgtrm.STAFF_ORGANIZATION_TERM_ID')
+      ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgtrm.STAFF_ID')
+      ->fields('staff', array('ABBREVIATED_NAME'))
       ->condition('stustatus.STUDENT_ID', $student_id)
-      ->condition('classes.DROPPED', 0)
-      ->condition('classes.START_DATE', date('Y-m-d'), '>=')
-      ->execute();
+      ->condition('class.DROPPED', 0)
+      ->condition('class.START_DATE', date('Y-m-d'), '>=');
+
+    if ($org) {
+      $class_list_result = $class_list_result->condition('org.ORGANIZATION_ABBREVIATION', $org);
+    }
+
+    if ($term) {
+      $class_list_result = $class_list_result->condition('term.TERM_ABBREVIATION', $term);
+    }
+
+    $class_list_result = $class_list_result->execute();
     while ($class_list_row = $class_list_result->fetch()) {
 
-      // check if paid
-      $paid = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
-        ->fields('trans', array('CONSTITUENT_TRANSACTION_ID'))
-        ->condition('trans.CONSTITUENT_ID', $student_id)
-        ->condition('trans.STUDENT_CLASS_ID', $class_list_row['STUDENT_CLASS_ID'])
-        ->condition('trans.POSTED', 1)
-        ->condition('trans.APPLIED_BALANCE', 0)
-        ->condition('trans.VOIDED', 0)
-        ->execute()->fetch();
-
-      if ($paid['CONSTITUENT_TRANSACTION_ID'] != '') {
+      if ($org == 'OCAC-DEG') {
         $data[$i] = $class_list_row;
+ 
+        // Fix course if course override
+        if ($data[$i]['second_COURSE_NUMBER']) {
+          $data[$i]['COURSE_NUMBER'] = $data[$i]['second_COURSE_NUMBER'];
+          $data[$i]['COURSE_TITLE'] = $data[$i]['second_COURSE_TITLE'];
+        }
 
-        if ($class_list_row['SECTION_NAME']) 
-          $data[$i]['SECTION_NAME'] = $class_list_row['SECTION_NAME']; 
-        else 
-          $data[$i]['SECTION_NAME'] = $class_list_row['COURSE_TITLE'];
+        unset($data[$i]['second_COURSE_NUMBER']);
+        unset($data[$i]['second_COURSE_TITLE']);
+
+        // Get Meetings
+        $meetings = $this->db()->db_select('STUD_SECTION_MEETINGS', 'mtg')
+          ->fields('mtg', array('SECTION_MEETING_ID', 'START_DATE' => 'mtg_START_DATE', 'END_DATE' => 'mtg_END_DATE', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN', 'START_TIME', 'END_TIME'))
+          ->leftJoin('STUD_ROOM', 'rooms', 'rooms.ROOM_ID = mtg.ROOM_ID')
+          ->fields('rooms', array('ROOM_NUMBER'))
+          ->condition('mtg.SECTION_ID', $class_list_row['SECTION_ID'])
+          ->execute();
+        $j = 0;
+        while ($meeting = $meetings->fetch()) {
+          $data[$i]['meetings'][$j]['START_TIME'] = $meeting['START_TIME'];
+          $data[$i]['meetings'][$j]['END_TIME'] = $meeting['END_TIME'];
+          $data[$i]['meetings'][$j]['ROOM_NUMBER'] = $meeting['ROOM_NUMBER'];
+          
+          $data[$i]['meetings'][$j]['DAYS'] = array();
+          if ($meeting['MON']) $data[$i]['meetings'][$j]['DAYS'][] = 'Mon';
+          if ($meeting['TUE']) $data[$i]['meetings'][$j]['DAYS'][] = 'Tue';
+          if ($meeting['WED']) $data[$i]['meetings'][$j]['DAYS'][] = 'Wed';
+          if ($meeting['THU']) $data[$i]['meetings'][$j]['DAYS'][] = 'Thu';
+          if ($meeting['FRI']) $data[$i]['meetings'][$j]['DAYS'][] = 'Fri';
+          if ($meeting['SAT']) $data[$i]['meetings'][$j]['DAYS'][] = 'Sat';
+          if ($meeting['SUN']) $data[$i]['meetings'][$j]['DAYS'][] = 'Sun';
+          if (count($data[$i]['meetings'][$j]['DAYS'])) 
+            $meeting['meetings'][$j]['DAYS'] = implode(' ', $data[$i]['meetings'][$j]['DAYS']);
+          else 
+            $meeting['meetings'][$j]['DAYS'] = null;
+            
+          if ($meeting['mtg_START_DATE']) 
+            $data[$i]['meetings'][$j]['START_DATE'] = $meeting['mtg_START_DATE']; 
+          else 
+            $data[$i]['meetings'][$j]['START_DATE'] = $meeting['START_DATE'];
+          if ($meeting['mtg_END_DATE']) 
+            $data[$i]['meetings'][$j]['END_DATE'] = $meeting['mtg_END_DATE']; 
+          else 
+            $data[$i]['meetings'][$j]['END_DATE'] = $meeting['END_DATE'];
+          $j++;
+        }
 
       $i++;
+      } else {
+        // check if paid
+        $paid = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+          ->fields('trans', array('CONSTITUENT_TRANSACTION_ID'))
+          ->condition('trans.CONSTITUENT_ID', $student_id)
+          ->condition('trans.STUDENT_CLASS_ID', $class_list_row['STUDENT_CLASS_ID'])
+          ->condition('trans.POSTED', 1)
+          ->condition('trans.APPLIED_BALANCE', 0)
+          ->condition('trans.VOIDED', 0)
+          ->execute()->fetch();
+
+        if ($paid['CONSTITUENT_TRANSACTION_ID'] != '') {
+          $data[$i] = $class_list_row;
+
+          if ($class_list_row['SECTION_NAME']) 
+            $data[$i]['SECTION_NAME'] = $class_list_row['SECTION_NAME']; 
+          else 
+            $data[$i]['SECTION_NAME'] = $class_list_row['COURSE_TITLE'];
+
+        $i++;
+        }
       }
 
     }
