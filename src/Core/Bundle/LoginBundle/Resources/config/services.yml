@@ -7,19 +7,19 @@ parameters:
 
 services:
   kula.login.auth.googleapi:
-    class:        %kula_login_googleapi.class%
-    arguments:    ["@request_stack", "@router", "@session", %google_client_id%, %google_client_secret%]
+    class:        "%kula_login_googleapi.class%"
+    arguments:    ["@request_stack", "@router", "@session", "%google_client_id%", "%google_client_secret%"]
 
   kula.login.auth.local:
-    class:        %kula_login_local.class%
+    class:        "%kula_login_local.class%"
 
   kula.login.auth.ldap:
-    class:        %kula_login_ldap.class%
+    class:        "%kula_login_ldap.class%"
 
   kula.login:
-    class:        %kula_login.class%
+    class:        "%kula_login.class%"
     arguments:    ["@kula.core.db", "@kula.core.schema", "@kula.core.session", "@kula.login.auth.googleapi", "@kula.login.auth.ldap", "@kula.login.auth.local"]
 
   kula.login.auth.api:
-    class:        %kula_login_api.class%
+    class:        "%kula_login_api.class%"
     arguments:    ["@kula.core.db", "@kula.core.cache.kv", "@kula.login.auth.local", "@kula.core.session"]

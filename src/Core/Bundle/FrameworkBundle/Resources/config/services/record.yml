@@ -11,7 +11,7 @@ services:
   
   kula.core.record_type_store:
     class: Kula\Core\Component\Record\RecordTypesStore
-    arguments: ["@kula.core.db", %kula.record.options.cache_class%, %kernel.cache_dir%, %kernel.debug%, "@kernel"] 
+    arguments: ["@kula.core.db", "%kula.record.options.cache_class%", "%kernel.cache_dir%", "%kernel.debug%", "@kernel"] 
     public: false
     
   kula.core.record_type:

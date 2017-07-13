@@ -13,16 +13,14 @@
 
 namespace Kula\Core\Bundle\BillingBundle\DependencyInjection;
 
-use Symfony\Bundle\FrameworkBundle\DependencyInjection\FrameworkExtension as BaseFrameworkExtension;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 
-class KulaCoreBillingExtension extends BaseFrameworkExtension {
+class KulaCoreBillingExtension extends Extension {
 
   public function load(array $configs, ContainerBuilder $container) {
-      parent::load($configs, $container);
-      
       // Load services files
       $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
       $loader->load('services.yml');

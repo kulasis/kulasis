@@ -24,10 +24,6 @@ class KulaCoreFrameworkBundle extends Bundle {
       parent::build($container);
   }
   
-  public function boot() {
-
-  }
-  
   public function onKernelRequest(\Symfony\Component\HttpKernel\Event\GetResponseEvent $event) {
     $request = $event->getRequest();
 

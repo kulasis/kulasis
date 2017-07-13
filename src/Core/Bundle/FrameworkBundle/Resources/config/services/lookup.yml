@@ -11,7 +11,7 @@ services:
   
   kula.core.lookup_store:
     class: Kula\Core\Component\Lookup\LookupStore
-    arguments: ["@kula.core.db", %kula.lookup.options.cache_class%, %kernel.cache_dir%, %kernel.debug%, "@kernel"] 
+    arguments: ["@kula.core.db", "%kula.lookup.options.cache_class%", "%kernel.cache_dir%", "%kernel.debug%", "@kernel"] 
     public: false
     
   kula.core.lookup:

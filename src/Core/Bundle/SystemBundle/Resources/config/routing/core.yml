@@ -222,16 +222,6 @@ Core_Setup_System_LDAP:
     _controller: KulaCoreSystemBundle:CoreSetup:ldap
     _navigation: Core.System.Setup.LDAP
 
-Core_System_NonOrganization:
-  path: /system/nonorganization
-  defaults: 
-    _controller: KulaCoreSystemBundle:CoreNonOrganization:index
-    _navigation: Core.System.NonOrganization
-
-Core_System_NonOrganization_Chooser:
-  path: /system/nonorganization/chooser
-  defaults: { _controller: KulaCoreSystemBundle:CoreNonOrganization:chooser }
-
 Core_Logs_Session:
   path: /monitor/logs/session
   defaults: 

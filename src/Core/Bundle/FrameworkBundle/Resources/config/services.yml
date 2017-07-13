@@ -38,12 +38,11 @@ services:
   
   kula.core.db:
     class:        Kula\Core\Component\DB\DB
-    arguments:    [ %kernel.root_dir% , %kernel.environment% ]
+    arguments:    [ '%kernel.root_dir%' , '%kernel.environment%' ]
 
   kula.core.data_collector.database:
     class: Kula\Core\Component\DB\DataCollector\DatabaseDataCollector
     arguments: ["@kula.core.db"]
-    priority: 255
     tags:
       - { name: data_collector, template: "KulaCoreFrameworkBundle:Collector:database.html.twig", id: "database" }
 
