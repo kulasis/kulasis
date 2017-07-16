@@ -107,17 +107,17 @@ class APIv1UserController extends APIController {
     $transaction = $this->db()->db_transaction('create_user');
 
     // create constituent
-    $constituent_service = $this->get('Kula.Core.Constituent');
+    $constituent_service = $this->get('kula.Core.Constituent');
     $constituent_data = $this->form('add', 'Core.Constituent', 0);
     $constituent_id = $constituent_service->createConstituent($constituent_data);
 
     // create user
-    $user_service = $this->get('Kula.Core.User');
+    $user_service = $this->get('kula.core.user');
     $user_data = $this->form('add', 'Core.User', 0);
     $user_data['Core.User.ID'] = $constituent_id;
     $user_id = $user_service->createUser($user_data);
     
-    $contactInfo_service = $this->get('Kula.Core.ContactInfo');
+    $contactInfo_service = $this->get('kula.Core.ContactInfo');
     // add address
     $address_data = $this->form('add', 'Core.Constituent.Address');
     if (count($address_data) > 0) {
@@ -175,14 +175,14 @@ class APIv1UserController extends APIController {
     $transaction = $this->db()->db_transaction('update_user');
 
     // update constituent info
-    $constituent_service = $this->get('Kula.Core.Constituent');
+    $constituent_service = $this->get('kula.Core.Constituent');
     $constituent_data = $this->form('edit', 'Core.Constituent', 0);
     if (count($constituent_data) > 0) {
       $constituent_update = $constituent_service->updateConstituent($currentUser, $constituent_data);
     }
 
     // update user info
-    $user_service = $this->get('Kula.Core.User');
+    $user_service = $this->get('kula.core.user');
     $user_data = $this->form('edit', 'Core.User', 0);
     if (count($user_data) > 0) {
       $user_update = $user_service->updateUser($currentUser, $user_data);
