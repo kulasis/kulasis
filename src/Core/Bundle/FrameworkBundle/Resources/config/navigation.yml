@@ -17,13 +17,6 @@ Core.HEd:
   portal: core
   target: HEd
 
-Core.K12:
-  description: "K12"
-  display_name: "K12"
-  type: dir
-  portal: core
-  target: K12
-
 Teacher.HEd:
   description: "Higher Education"
   display_name: "Higher Ed"
