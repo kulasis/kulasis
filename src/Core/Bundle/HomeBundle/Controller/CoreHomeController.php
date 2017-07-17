@@ -32,7 +32,8 @@ class CoreHomeController extends Controller {
       ->condition('STATUS', null)
       ->groupBy('LEVEL')
       ->groupBy('GRADE')
-      ->groupBy('GRADE_code');
+      ->groupBy('GRADE_code')
+      ->groupBy('DESCRIPTION');
     $enrolled = $enrolled->execute();
     while ($enrolled_row = $enrolled->fetch()) {
       
@@ -57,7 +58,8 @@ class CoreHomeController extends Controller {
       ->condition('markscale.AUDIT', '0')
       ->groupBy('stustatus.LEVEL')
       ->groupBy('GRADE')
-      ->groupBy('GRADE_code');
+      ->groupBy('GRADE_code')
+      ->groupBy('DESCRIPTION');
     $total_credits = $total_credits->execute();
     while ($total_credits_row = $total_credits->fetch()) {
       if ($total_credits_row['GRADE'] == '') $total_credits_row['GRADE'] = $total_credits_row['GRADE_code'];
@@ -84,6 +86,8 @@ class CoreHomeController extends Controller {
       ->groupBy('stustatus.LEVEL')
       ->groupBy('GRADE')
       ->groupBy('GRADE_code')
+      ->groupBy('DESCRIPTION')
+      ->groupBy('FTE_FULL_TIME_HOURS')
       ->groupBy('classes.STUDENT_STATUS_ID');
     $full_fte = $full_fte->execute();
     while ($full_fte_row = $full_fte->fetch()) {
