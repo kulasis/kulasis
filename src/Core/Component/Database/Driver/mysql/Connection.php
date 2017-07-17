@@ -86,10 +86,16 @@ class Connection extends DatabaseConnection {
     // certain one has been set; otherwise, MySQL defaults to 'utf8_general_ci'
     // for UTF-8.
     if (!empty($connection_options['collation'])) {
-      $pdo->exec('SET NAMES utf8 COLLATE ' . $connection_options['collation']);
+      if (stripos($connection_options['collation'], 'mb4'))
+      	$pdo->exec('SET NAMES utf8mb4 COLLATE ' . $connection_options['collation']);
+      else
+      	$pdo->exec('SET NAMES utf8 COLLATE ' . $connection_options['collation']);
     }
     else {
-      $pdo->exec('SET NAMES utf8');
+      if (stripos($connection_options['collation'], 'mb4'))
+      	$pdo->exec('SET NAMES utf8mb4');
+      else
+      	$pdo->exec('SET NAMES utf8');
     }
 
     // Set MySQL init_commands if not already defined.  Default Drupal's MySQL
