@@ -30,6 +30,7 @@ class CoreStaffRecord extends Record {
     ->distinct()
     ->fields('staff', array('STAFF_ID' => 'ID'))
     ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = staff.STAFF_ID')
+    ->fields('constituent', array('LAST_NAME', 'FIRST_NAME'))
     ->join('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterms', 'stafforgterms.STAFF_ID = staff.STAFF_ID')
     ->condition('stafforgterms.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
     ->orderBy('LAST_NAME', 'ASC')
