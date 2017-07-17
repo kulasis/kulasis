@@ -11,7 +11,7 @@ services:
   
   kula.core.organization_store:
     class: Kula\Core\Component\Focus\OrganizationStore
-    arguments: ["@kula.core.db", "%kula.organization.options.cache_class%", "%kernel.cache_dir%", "%kernel.debug%", "@kernel", "@request_stack", "@kula.core.cache.kv"] 
+    arguments: ["@kula.core.db", "%kula.organization.options.cache_class%", "%kernel.cache_dir%", "%kernel.debug%", "@kernel", "@request_stack", "@kula.core.cache.kv", "@kula.core.schema"] 
     public: false
     
   kula.core.organization:

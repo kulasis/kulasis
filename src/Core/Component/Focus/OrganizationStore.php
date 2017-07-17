@@ -10,7 +10,7 @@ class OrganizationStore {
   
   private $organization;
   
-  public function __construct($db, $fileName, $cacheDir, $debug, $kernel, $request, $cache) {
+  public function __construct($db, $fileName, $cacheDir, $debug, $kernel, $request, $cache, $schema) {
     $this->db = $db;
     $this->cacheDir = $cacheDir;
     $this->fileName = $fileName;
@@ -18,6 +18,7 @@ class OrganizationStore {
     $this->kernel = $kernel;
     $this->request = $request;
     $this->cache = $cache;
+    $this->schema = $schema;
   }
   
   public function warmUp($cacheDir) {
@@ -26,7 +27,7 @@ class OrganizationStore {
 
     if (!$cache->isDBFresh() OR !$this->cache->verifyCacheLoaded('organization')) {
      
-      $organizationLoader = new OrganizationLoader($this->db, $this->cache);
+      $organizationLoader = new OrganizationLoader($this->db, $this->cache, $this->schema);
       $organization = $organizationLoader->loadOrganization();
       $cache->write(serialize($organization));
       

@@ -8,7 +8,7 @@ class OrganizationLoader {
   private $organizations_top;
   private $schools;
 
-  public function __construct($db, $cache) {
+  public function __construct($db, $cache, $schema) {
     $this->db = $db;
     $this->cache = $cache;
   }
