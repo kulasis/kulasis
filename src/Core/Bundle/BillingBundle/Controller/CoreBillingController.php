@@ -36,17 +36,18 @@ class CoreBillingController extends Controller {
       }
       
       $terms_with_balances = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
-        ->fields('transactions')
         ->expression('SUM(AMOUNT)', 'total_amount')
         ->expression('SUM(APPLIED_BALANCE)', 'total_applied_balance')
         ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
         ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
-        ->fields('org', array('ORGANIZATION_ABBREVIATION'))
+        ->fields('org', array('ORGANIZATION_ABBREVIATION', 'ORGANIZATION_NAME'))
         ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
         ->fields('term', array('TERM_ABBREVIATION'))
         ->condition('transactions.CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->groupBy('ORGANIZATION_NAME')
+        ->groupBy('ORGANIZATION_ABBREVIATION')
         ->groupBy('TERM_ABBREVIATION')
+        ->groupBy('START_DATE')
         ->orderBy('term.START_DATE', 'ASC')
         ->execute()->fetchAll();
       
