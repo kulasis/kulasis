@@ -35,8 +35,8 @@ class PFAIDSService {
     }
       $intgDB = $intgDB->execute()->fetch();
     
-    $connection = new PDO("sqlsrv:Server=".$intgDB['HOST'].";Database=".$intgDB['DATABASE_NAME'], $intgDB['USERNAME'], $intgDB['PASSWORD']);
-    $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $connection = new \PDO("sqlsrv:Server=".$intgDB['HOST'].";Database=".$intgDB['DATABASE_NAME'], $intgDB['USERNAME'], $intgDB['PASSWORD']);
+    $connection->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
     return $connection;
   }
