@@ -35,9 +35,9 @@ class PFAIDSService {
     }
       $intgDB = $intgDB->execute()->fetch();
     
-    $connection = mssql_connect($intgDB['HOST'], $intgDB['USERNAME'], $intgDB['PASSWORD']) or die("Couldn't connect to SQL Server on ".$intgDB['HOST']);
-    mssql_select_db($intgDB['DATABASE_NAME'], $connection) or die("Couldn't open database on SQL Server for ".$intgDB['HOST']);
-    
+    $connection = new PDO("sqlsrv:Server=".$intgDB['HOST'].";Database=".$intgDB['DATABASE_NAME'], $intgDB['USERNAME'], $intgDB['PASSWORD']);
+    $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
     return $connection;
   }
   
@@ -52,8 +52,8 @@ class PFAIDSService {
     if ($awardYearToken AND $ssn)
       $query .= " AND ssn = '".str_replace("'", "''", $ssn)."'";
     
-    mssql_query($query, $connection);
-    return mssql_rows_affected($connection);
+    $result = $connection->query($query);
+    return $result->rowCount();
   }
   
   public function pfaids_addRecords($intgDBID, $awardYearToken, $id = null) {
@@ -233,7 +233,8 @@ class PFAIDSService {
         }
         
         // check if already exists
-        $already_exists = mssql_fetch_array(mssql_query("SELECT ssn, award_year_token FROM external_data WHERE ssn = '".$cleaned_ssn."' AND award_year_token = '".$awardYearToken."'"));
+        $already_exists_result = $connection->query("SELECT ssn, award_year_token FROM external_data WHERE ssn = '".$cleaned_ssn."' AND award_year_token = '".$awardYearToken."'");
+        $already_exists = $already_exists_result->fetch();
         
         if ($already_exists) {
           $inner_sql = array();
@@ -249,7 +250,7 @@ class PFAIDSService {
           $insert_count++;
         }
         //echo $sql.'<br />';
-        mssql_query($sql);
+        $connection->query($sql);
       }
       
       unset($cleaned_ssn, $pf_data);
@@ -269,8 +270,8 @@ class PFAIDSService {
      $query = "SELECT poe_token FROM poe";
      if (isset($faid_award_year)) 
        $query .= " WHERE award_year_token = '".$faid_award_year."'";
-     $poes_result = mssql_query($query);
-     while ($poes_row = mssql_fetch_array($poes_result)) {
+     $poes_result = $connection->query($query);
+     while ($poes_row = $poes_result->fetch()) {
        
        $kula_poe = $this->db->db_select('FAID_PFAID_POE', 'pfaid_poe')
          ->fields('pfaid_poe')->condition('poe_token', $poes_row['poe_token'])
@@ -295,8 +296,8 @@ class PFAIDSService {
     $query = "SELECT * FROM poe";
     if (isset($faid_award_year)) 
       $query .= " WHERE award_year_token = '".$faid_award_year."'";
-    $poes_result = mssql_query($query);
-    while ($poes_row = mssql_fetch_array($poes_result)) {
+    $poes_result = $connection->query($query);
+    while ($poes_row = $poes_result->fetch()) {
       $poe[$poes_row['poe_token']] = $poes_row;
     }
     
@@ -323,8 +324,8 @@ class PFAIDSService {
         $pf_stu_award_query .= " AND alternate_id = '".$permanent_number."'";
       }
 
-    $pf_stu_awards = mssql_query($pf_stu_award_query);
-    while ($pf_stu_award = mssql_fetch_array($pf_stu_awards)) {
+    $pf_stu_awards = $connection->query($pf_stu_award_query);
+    while ($pf_stu_award = $pf_stu_awards->fetch()) {
 
       // check if award year exists
       $award_year = $this->db->db_select('FAID_STUDENT_AWARD_YEAR', 'awardyear', array('nolog' => true))
@@ -376,11 +377,11 @@ class PFAIDSService {
       if ($award_year['AWARD_YEAR_ID']) {
         
         // get POE terms and percentages
-        $pf_stu_award_year_terms = mssql_query("SELECT DISTINCT poe.poe_token, poe_dcycle_seqn, att_pct_yr
+        $pf_stu_award_year_terms = $connection->query("SELECT DISTINCT poe.poe_token, poe_dcycle_seqn, att_pct_yr
           FROM stu_award_transactions
           JOIN poe ON poe.poe_token = stu_award_transactions.poe_token
           WHERE stu_award_transactions.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."' AND scheduled_amount > 0");
-        while ($pf_stu_award_year_term = mssql_fetch_array($pf_stu_award_year_terms)) {
+        while ($pf_stu_award_year_term = $pf_stu_award_year_terms->fetch()) {
 
           // determine org term id
           $organization_term_id = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'orgterms', array('nolog' => true))
@@ -416,12 +417,12 @@ class PFAIDSService {
       } // end if on 2nd level check
       
       // get award year awards
-      $pf_stu_award_year_awards = mssql_query("SELECT sum(actual_amt) AS [actual_amt], fund_ledger_number
+      $pf_stu_award_year_awards = $connection->query("SELECT sum(actual_amt) AS [actual_amt], fund_ledger_number
         FROM stu_award
         JOIN funds ON funds.fund_token = stu_award.fund_ay_token
         WHERE stu_award.stu_award_year_token = '".$pf_stu_award['stu_award_year_token']."'
 		GROUP BY fund_ledger_number");
-      while ($pf_stu_award_year_award = mssql_fetch_array($pf_stu_award_year_awards)) {
+      while ($pf_stu_award_year_award = $pf_stu_award_year_awards->fetch()) {
         
         // check if award year award exists
         $award_year_award = $this->db->db_select('FAID_STUDENT_AWARD_YEAR_AWARDS', 'awardyearaward', array('nolog' => true))
@@ -467,7 +468,7 @@ class PFAIDSService {
       } // end while on award year awards
       
       // get awards for terms
-      $pf_stu_term_awards = mssql_query("SELECT poe.poe_token, poe_dcycle_seqn, fund_ledger_number, max(scheduled_date) as [scheduled_date], 
+      $pf_stu_term_awards = $connection->query("SELECT poe.poe_token, poe_dcycle_seqn, fund_ledger_number, max(scheduled_date) as [scheduled_date], 
 	  max(cod_disbursement_date) AS [cod_disbursement_date], sum(scheduled_amount) AS [scheduled_amount], 
 	  sum(gross_disbursement_amount) as [gross_disbursement_amount], sum(net_disbursement_amount) AS [net_disbursement_amount], stu_award.status
         FROM stu_award_transactions
@@ -478,7 +479,7 @@ class PFAIDSService {
               ((stu_award.status IN ('A','P')) OR (stu_award.status IN ('D')))
 		GROUP BY poe.poe_token, poe_dcycle_seqn, fund_ledger_number, stu_award.status");
     // Original line: ((scheduled_amount > 0 AND stu_award.status IN ('A','P')) OR (stu_award.status IN ('D')))
-      while ($pf_stu_term_award = mssql_fetch_array($pf_stu_term_awards)) {
+      while ($pf_stu_term_award = $pf_stu_term_awards->fetch()) {
       
         // determine org term id
         $organization_term_id = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'orgterms', array('nolog' => true))
