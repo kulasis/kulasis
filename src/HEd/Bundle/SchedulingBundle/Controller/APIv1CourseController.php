@@ -210,6 +210,7 @@ class APIv1CourseController extends APIController {
     $row = $result->execute()->fetch();
     
     if ($row['SECTION_NAME'] == '') $row['SECTION_NAME'] = $row['COURSE_TITLE'];
+    $row['OPEN'] = $row['CAPACITY'] - $row['ENROLLED_TOTAL'];
 
     // Get Meetings
     $meetings = $this->db()->db_select('STUD_SECTION_MEETINGS', 'mtg')
