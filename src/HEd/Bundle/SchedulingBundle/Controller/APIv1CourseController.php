@@ -184,6 +184,7 @@ class APIv1CourseController extends APIController {
   }  
 
   public function courseAction($org, $term, $section_id) {
+    $this->authorize();
 
     $row = array();
 
