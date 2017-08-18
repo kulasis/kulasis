@@ -188,7 +188,7 @@ class APIv1PaymentController extends APIController {
             ->setFrom(['kulasis@ocac.edu' => 'Oregon College of Art and Craft'])
             ->setReplyTo('cmalone@ocac.edu')
             ->setTo($user['USERNAME'])
-            ->setBcc(array('cmalone@ocac.edu', 'mjacobsen@ocac.edu'))
+            ->setBcc(array('cmalone@ocac.edu', 'mjacobsen@ocac.edu', 'jthompson@ocac.edu'))
             ->setBody(
                 $this->renderView(
                     'KulaCoreBillingBundle:CoreEmail:purchase.text.twig',
