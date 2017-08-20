@@ -2,7 +2,7 @@
 
 namespace Kula\Core\Bundle\ConstituentBundle\Service;
 
-class ConstituentFileService {
+class ConstituentDocumentService {
   
   public function __construct($db, $session) {
     $this->db = $db;
@@ -15,7 +15,7 @@ class ConstituentFileService {
       'CONSTITUENT_ID' => $constituent_id,
       'CONTENT_TYPE' => $content_type,
       'FILE_NAME' => $file_name,
-      'CONTENTS' => base64_encode($contents),
+      'CONTENTS' => $contents,
       'CREATED_USERSTAMP' => $this->session->get('user_id'),
       'CREATED_TIMESTAMP' => date('Y-m-d H:i:s')
     ))->execute();
@@ -28,8 +28,6 @@ class ConstituentFileService {
       ->fields('docs', array('CONTENT_TYPE', 'FILE_NAME', 'CONTENTS'))
       ->condition('CONSTITUENT_DOCUMENT_ID', $document_id)
       ->execute()->fetch();
-
-    $doc['CONTENTS'] = base64_decode($doc['CONTENTS']);
 
     return $doc;
   }

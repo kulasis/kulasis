@@ -19,7 +19,7 @@ class CoreDocumentsController extends Controller {
           ->fields('studocs', array('ATTACHED_DOC_ID'))
           ->condition('studocs.STUDENT_DOCUMENT_ID', $id)
           ->execute()->fetch()['ATTACHED_DOC_ID'];
-        $this->get('kula.Core.Constituent.File')->removeDocument($doc_id);
+        $this->get('kula.Core.Constituent.Document')->removeDocument($doc_id);
       }
     }
     
@@ -53,7 +53,7 @@ class CoreDocumentsController extends Controller {
                   $original_name = $file->getClientOriginalName();
                   $file->move($path,$filename); // move the file to a path
 
-                  $id = $this->get('kula.Core.Constituent.File')->addFile(
+                  $id = $this->get('kula.Core.Constituent.Document')->addFile(
                     $this->record->getSelectedRecordID(),
                     $mime,
                     $original_name,
@@ -97,7 +97,7 @@ class CoreDocumentsController extends Controller {
     $this->authorize();
 
     // Get document
-    $file = $this->get('kula.Core.Constituent.File')->getFile($document_id);
+    $file = $this->get('kula.Core.Constituent.Document')->getFile($document_id);
 
     if ($file) {
       // Generate response
@@ -129,12 +129,12 @@ class CoreDocumentsController extends Controller {
     $this->authorize();
 
     // Get document
-    $file = $this->get('kula.Core.Constituent.File')->getFile($document_id);
+    $file = $this->get('kula.Core.Constituent.Document')->getFile($document_id);
 
-    if ($file AND $this->get('kula.Core.Constituent.File')->removeDocument($document_id)) {
-      $response = new Response('File deleted.');
+    if ($file AND $this->get('kula.Core.Constituent.Document')->removeDocument($document_id)) {
+      $response = new Response('Document deleted.');
     } else {
-      $response = new Response('File does not exist.');
+      $response = new Response('Document does not exist.');
     }
 
   }
