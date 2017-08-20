@@ -102,6 +102,12 @@ core_HEd_student_documents:
     _controller: KulaHEdStudentBundle:CoreDocuments:index
     _navigation: Core.HEd.Student.Documents
 
+core_HEd_student_document_getDocument:
+  path: /student/document/{document_id}
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreDocuments:getDocument
+    _navigation: Core.HEd.Student.Documents
+
 core_HEd_student_enrollment_activateinactivate:
   path: /student/enrollment/activateinactivate
   defaults: 

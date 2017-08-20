@@ -16,6 +16,7 @@ Documents
   {{ kula_field_name({ field: 'HEd.Student.Document.Status', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Document.Comments', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Document.CompletedDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Document.AttachedDocumentID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </thead>
 <tbody>
   {{ kula_display_html({ add: true, field: 'HEd.Student.Document.ID', prepend_html: '<tr class="data-table-row-new">' }) }}
@@ -37,6 +38,13 @@ Documents
     {{ kula_field({ edit: true, field: 'HEd.Student.Document.Status', db_row_id: document.STUDENT_DOCUMENT_ID, value: document.DOCUMENT_STATUS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Document.Comments', db_row_id: document.STUDENT_DOCUMENT_ID, value: document.COMMENTS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Document.CompletedDate', db_row_id: document.STUDENT_DOCUMENT_ID, value: document.COMPLETED_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% if document.ATTACHED_DOC_ID %}
+      {% set docpath = path('core_HEd_student_document_getDocument', { document_id: document.ATTACHED_DOC_ID }) %}
+      {% set doc = '<a target="_blank" href="' ~ docpath ~ '">' ~ document.FILE_NAME ~ ' (' ~ document.CONTENT_TYPE ~ ')</a>' %}
+    {% else %}
+      {% set doc = '' %}
+    {% endif %}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Document.AttachedDocumentID', db_row_id: document.STUDENT_DOCUMENT_ID, value: document.ATTACHED_DOC_ID, prepend_html: '<td>' ~ doc, append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
   {% endfor %}
 </tbody>

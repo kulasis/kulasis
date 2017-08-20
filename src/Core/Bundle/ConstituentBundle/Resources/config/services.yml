@@ -10,3 +10,7 @@ services:
   kula.Core.ContactInfo:
     class: Kula\Core\Bundle\ConstituentBundle\Service\ContactInfoService
     arguments: ["@kula.core.db", "@kula.core.poster_factory"]
+
+  kula.Core.Constituent.File:
+    class: Kula\Core\Bundle\ConstituentBundle\Service\ConstituentFileService
+    arguments: ["@kula.core.db", "@kula.core.session"]

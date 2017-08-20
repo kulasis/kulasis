@@ -34,6 +34,11 @@ class GenericField {
     return $field->html();
   }
   
+  public static function file($name, $value = null, $options = array()) {
+    $field = new \Kula\Core\Component\Twig\Form\File($name, $value, $options);
+    return $field->html();
+  }
+
   public static function textArea($name, $value = null, $options = array()) {
     $field = new \Kula\Core\Component\Twig\Form\TextArea($name, $value, $options);
     return $field->html();
