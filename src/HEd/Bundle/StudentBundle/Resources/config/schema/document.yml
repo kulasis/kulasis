@@ -133,6 +133,14 @@ HEd.Student.Document:
       field_size: 20
       column_name: "Conversion Document Number"
       label_name: "Conversion Document Number"
+    AttachedDocumentID:
+      description: "Attached Document ID"
+      db_column_name: ATTACHED_DOC_ID
+      db_column_type: serial
+      db_column_null: true
+      field_type: file
+      column_name: "Attached Document"
+      label_name: "Attached Document"
 
 Constituent.Uploaded.Document:
   description: "Student Documents"
@@ -167,7 +175,7 @@ Constituent.Uploaded.Document:
       description: "Contents"
       db_column_name: CONTENTS
       db_column_type: blob
-      db_column_size: normal
+      db_column_size: long
       db_column_null: true
       column_name: "Contents"
       label_name: "Contents"
