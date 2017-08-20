@@ -108,6 +108,13 @@ core_HEd_student_document_getDocument:
     _controller: KulaHEdStudentBundle:CoreDocuments:getDocument
     _navigation: Core.HEd.Student.Documents
 
+core_HEd_student_document_deleteDocument:
+  path: /student/document/{document_id}
+  methods: [POST]
+  defaults: 
+    _controller: KulaHEdStudentBundle:CoreDocuments:getDocument
+    _navigation: Core.HEd.Student.Documents
+
 core_HEd_student_enrollment_activateinactivate:
   path: /student/enrollment/activateinactivate
   defaults: 
