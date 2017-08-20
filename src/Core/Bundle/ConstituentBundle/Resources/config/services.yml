@@ -11,6 +11,6 @@ services:
     class: Kula\Core\Bundle\ConstituentBundle\Service\ContactInfoService
     arguments: ["@kula.core.db", "@kula.core.poster_factory"]
 
-  kula.Core.Constituent.File:
-    class: Kula\Core\Bundle\ConstituentBundle\Service\ConstituentFileService
+  kula.Core.Constituent.Document:
+    class: Kula\Core\Bundle\ConstituentBundle\Service\ConstituentDocumentService
     arguments: ["@kula.core.db", "@kula.core.session"]
