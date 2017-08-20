@@ -54,6 +54,7 @@ class CoreDocumentsController extends Controller {
                   $file->move($path,$filename); // move the file to a path
 
                   $id = $this->get('kula.Core.Constituent.File')->addFile(
+                    $this->record->getSelectedRecordID(),
                     $mime,
                     $original_name,
                     file_get_contents($path.'/'.$filename)

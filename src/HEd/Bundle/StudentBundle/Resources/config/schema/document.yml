@@ -155,6 +155,13 @@ Constituent.Uploaded.Document:
       db_column_type: primary_serial
       column_name: "Constituent Document ID"
       label_name: "Constituent Document ID"
+    ConstituentID:
+      description: "Constituent ID"
+      db_column_name: CONSTITUENT_ID
+      db_column_type: serial
+      db_column_null: true
+      column_name: "Constituent ID"
+      label_name: "Constituent ID"
     ContentType:
       description: "Content Type"
       db_column_name: CONTENT_TYPE
