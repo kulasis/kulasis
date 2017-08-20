@@ -10,9 +10,35 @@ class CoreDocumentsController extends Controller {
   
   public function indexAction() {
     $this->authorize();
-    $this->processForm();
     $this->setRecordType('Core.HEd.Student');
     
+    if ($delete = $this->form('delete', 'HEd.Student.Document')) {
+      foreach($delete as $id => $record) {
+        // Check if id
+        $doc_id = $this->db()->db_select('STUD_STUDENT_DOCUMENTS', 'studocs')
+          ->fields('studocs', array('ATTACHED_DOC_ID'))
+          ->condition('studocs.STUDENT_DOCUMENT_ID', $id)
+          ->execute()->fetch()['ATTACHED_DOC_ID'];
+        $this->get('kula.Core.Constituent.File')->removeDocument($doc_id);
+      }
+    }
+    
+    $this->processForm();
+    /*
+    if ($edit = $this->form('edit', 'HEd.Student.Document')) {
+      foreach($edit as $id => $table_record) {
+        foreach($table_record as $table => $record) {
+          // Check if id
+          $doc_id = $this->db()->db_select('STUD_STUDENT_DOCUMENTS', 'studocs')
+            ->fields('studocs', array('ATTACHED_DOC_ID'))
+            ->condition('studocs.STUDENT_DOCUMENT_ID', $id)
+            ->execute()->fetch()['ATTACHED_DOC_ID'];
+
+          $this->get('kula.Core.Constituent.File')->removeDocument($doc_id);
+        }
+      }
+    }
+*/
     if ($this->request->files) {
       foreach($this->request->files as $table) {
         foreach($table as $table_name => $id) {
@@ -94,6 +120,20 @@ class CoreDocumentsController extends Controller {
       $response = new Response();
       $response->setContent('No document file.');
       return $response;
+    }
+
+  }
+
+  public function deleteDocumentAction($document_id) {
+    $this->authorize();
+
+    // Get document
+    $file = $this->get('kula.Core.Constituent.File')->getFile($document_id);
+
+    if ($file AND $this->get('kula.Core.Constituent.File')->removeDocument($document_id)) {
+      $response = new Response('File deleted.');
+    } else {
+      $response = new Response('File does not exist.');
     }
 
   }
