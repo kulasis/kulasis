@@ -182,7 +182,7 @@ Constituent.Uploaded.Document:
       description: "File Contents"
       db_column_name: FILE_CONTENTS
       db_column_type: blob
-      db_column_size: large
+      db_column_size: big
       db_column_null: true
       column_name: "File Contents"
       label_name: "File Contents"
