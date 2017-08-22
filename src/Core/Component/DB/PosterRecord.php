@@ -37,6 +37,7 @@ class PosterRecord {
   private $noLog;
 
   private $noAudit;
+  private $target;
   
   const ADD = 'C';
   const EDIT = 'U';
@@ -66,6 +67,10 @@ class PosterRecord {
 
     if (isset($options['AUDIT_LOG']) AND $options['AUDIT_LOG'] === false) {
       $this->audit = false;
+    }
+
+    if (isset($options['target']) AND $options['target'] != '') {
+      $this->target = $options['target'];
     }
 
     if ($this->crud == self::DELETE) {
@@ -423,7 +428,7 @@ class PosterRecord {
 
       if ($this->crud == self::ADD) {
         $transaction = $this->db->db_transaction();
-        $this->id = $this->db->db_insert($this->schema->getTable($this->table)->getDBName(), array('nolog' => $this->noLog))
+        $this->id = $this->db->db_insert($this->schema->getTable($this->table)->getDBName(), array('nolog' => $this->noLog, 'target' => $this->target))
           ->fields($fields)
           ->execute();
         if ($this->audit)
@@ -435,7 +440,7 @@ class PosterRecord {
         $transaction = $this->db->db_transaction();
         $affectedRows = 0;
 
-        $affectedRows = $this->db->db_update($this->schema->getTable($this->table)->getDBName(), array('nolog' => $this->noLog))
+        $affectedRows = $this->db->db_update($this->schema->getTable($this->table)->getDBName(), array('nolog' => $this->noLog, 'target' => $this->target))
           ->fields($fields)
           ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)
           ->execute();
@@ -450,7 +455,7 @@ class PosterRecord {
         $transaction = $this->db->db_transaction();
         $affectedRows = 0;
 
-        $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName(), array('nolog' => $this->noLog))
+        $affectedRows = $this->db->db_delete($this->schema->getTable($this->table)->getDBName(), array('nolog' => $this->noLog, 'target' => $this->target))
           ->condition($this->schema->getDBPrimaryColumnForTable($this->table), $this->id)->execute();
         if ($this->audit)
           $this->auditLog();
