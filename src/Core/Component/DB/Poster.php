@@ -149,6 +149,36 @@ class Poster {
     
     return $ids;
   }
+
+  public function getEditedIDs($table) {
+    $ids = array();
+    if (isset($this->records[$table])) {
+    foreach($this->records[$table] as $id => $record) {
+      
+      if ($record->getCRUD() == PosterRecord::EDIT AND $record->isPosted()) {
+        $ids[] = $record->getID();
+      }
+      
+    }
+    }
+    
+    return $ids;
+  }
+
+  public function getDeletedIDs($table) {
+    $ids = array();
+    if (isset($this->records[$table])) {
+    foreach($this->records[$table] as $id => $record) {
+      
+      if ($record->getCRUD() == PosterRecord::DELETE AND $record->isPosted()) {
+        $ids[] = $record->getID();
+      }
+      
+    }
+    }
+    
+    return $ids;
+  }
   
 }
 
