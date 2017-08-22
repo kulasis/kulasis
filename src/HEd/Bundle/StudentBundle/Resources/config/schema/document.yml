@@ -178,11 +178,11 @@ Constituent.Uploaded.Document:
       db_column_null: true
       column_name: "File Name"
       label_name: "File Name"
-    Contents:
-      description: "Contents"
-      db_column_name: CONTENTS
+    FileContents:
+      description: "File Contents"
+      db_column_name: FILE_CONTENTS
       db_column_type: blob
-      db_column_size: long
+      db_column_size: large
       db_column_null: true
-      column_name: "Contents"
-      label_name: "Contents"
+      column_name: "File Contents"
+      label_name: "File Contents"
