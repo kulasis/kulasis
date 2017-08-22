@@ -22,23 +22,9 @@ class CoreDocumentsController extends Controller {
         $this->get('kula.Core.Constituent.Document')->removeDocument($doc_id);
       }
     }
-    
-    $this->processForm();
-    /*
-    if ($edit = $this->form('edit', 'HEd.Student.Document')) {
-      foreach($edit as $id => $table_record) {
-        foreach($table_record as $table => $record) {
-          // Check if id
-          $doc_id = $this->db()->db_select('STUD_STUDENT_DOCUMENTS', 'studocs')
-            ->fields('studocs', array('ATTACHED_DOC_ID'))
-            ->condition('studocs.STUDENT_DOCUMENT_ID', $id)
-            ->execute()->fetch()['ATTACHED_DOC_ID'];
 
-          $this->get('kula.Core.Constituent.File')->removeDocument($doc_id);
-        }
-      }
-    }
-*/
+    $this->processForm();
+
     if ($this->request->files) {
       foreach($this->request->files as $table) {
         foreach($table as $table_name => $id) {
@@ -62,6 +48,16 @@ class CoreDocumentsController extends Controller {
 
                   if ($id) {
                     unlink($path.'/'.$filename);
+                    // Check if existing exists
+                    $existing_doc_id = $this->db()->db_select('STUD_STUDENT_DOCUMENTS', 'studocs')
+                      ->fields('studocs', array('ATTACHED_DOC_ID'))
+                      ->condition('studocs.STUDENT_DOCUMENT_ID', $record_id)
+                      ->execute()->fetch()['ATTACHED_DOC_ID'];
+
+                    if ($existing_doc_id) {
+                      $this->get('kula.Core.Constituent.Document')->removeDocument($existing_doc_id);
+                    }
+
                     // Link to 
                     $this->newPoster()->edit($table_name, $record_id, array($field_name => $id))->process();
                   }
@@ -114,7 +110,7 @@ class CoreDocumentsController extends Controller {
       // Send headers before outputting anything
       $response->sendHeaders();
     
-      $response->setContent($file['CONTENTS']);
+      $response->setContent($file['FILE_CONTENTS']);
       return $response;
       
     } else {

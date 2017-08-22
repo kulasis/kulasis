@@ -1,5 +1,6 @@
 parameters:
   kula.core.poster_factory.class: Kula\Core\Component\DB\PosterFactory
+  kula.core.document_poster_factory.class: Kula\Core\Component\DB\DocumentPosterFactory
 
 services:
   flash:
