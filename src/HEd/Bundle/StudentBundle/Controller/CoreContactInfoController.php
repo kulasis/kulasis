@@ -179,7 +179,7 @@ class CoreContactInfoController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       $phones = $this->db()->db_select('CONS_PHONE', 'phone')
-        ->fields('phone', array('PHONE_NUMBER_ID', 'EFFECTIVE_DATE', 'PHONE_TYPE', 'PHONE_NUMBER', 'PHONE_EXTENSION', 'PHONE_COUNTRY'))
+        ->fields('phone', array('PHONE_NUMBER_ID', 'EFFECTIVE_DATE', 'PHONE_TYPE', 'PHONE_NUMBER', 'PHONE_EXTENSION', 'PHONE_COUNTRY', 'ALLOW_TEXTING'))
         ->condition('CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->orderBy('PHONE_TYPE')
         ->orderBy('EFFECTIVE_DATE', 'DESC')
