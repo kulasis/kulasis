@@ -15,7 +15,7 @@ Phone Numbers
   {{ kula_field_name({ field: 'Core.Constituent.Phone.EffectiveDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Constituent.Phone.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Constituent.Phone.Number', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'Core.Constituent.Phone.Extension', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Phone.Extension', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}{{ kula_field_name({ field: 'Core.Constituent.Phone.AllowTexting', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Constituent.Phone.Country', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
 </thead>
 <tbody>
@@ -28,6 +28,7 @@ Phone Numbers
   {{ kula_field({ add: true, field: 'Core.Constituent.Phone.Type', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'Core.Constituent.Phone.Number', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'Core.Constituent.Phone.Extension', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'Core.Constituent.Phone.AllowTexting', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'Core.Constituent.Phone.Country', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input', style: 'width:150px;' } }) }}
   {{ kula_display_html({ add: true, field: 'Core.Constituent.Phone.ID', prepend_html: '</tr>' }) }}
   {% for phone in phones %}
@@ -39,6 +40,7 @@ Phone Numbers
     {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.Type', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.Number', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.Extension', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_EXTENSION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.AllowTexting', db_row_id: phone.PHONE_NUMBER_ID, value: phone.ALLOW_TEXTING, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Constituent.Phone.Country', db_row_id: phone.PHONE_NUMBER_ID, value: phone.PHONE_COUNTRY, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input', style: 'width:150px;' } }) }}
   </tr>
   {% endfor %}
