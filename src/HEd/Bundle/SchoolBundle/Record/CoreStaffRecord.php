@@ -65,6 +65,7 @@ class CoreStaffRecord extends Record {
     $db_obj = $db_obj->join('STUD_STAFF_ORGANIZATION_TERMS', null, 'STUD_STAFF.STAFF_ID = STUD_STAFF_ORGANIZATION_TERMS.STAFF_ID');
     $db_obj = $db_obj->condition('ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs());
     $db_obj = $db_obj->distinct();
+    $db_obj = $db_obj->fields('CONS_CONSTITUENT', array('LAST_NAME', 'FIRST_NAME'));
     $db_obj = $db_obj->orderBy('LAST_NAME', 'ASC');
     $db_obj = $db_obj->orderBy('FIRST_NAME', 'ASC');
 
