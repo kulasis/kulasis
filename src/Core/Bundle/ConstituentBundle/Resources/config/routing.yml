@@ -64,3 +64,9 @@ Core_Constituent_delete_constituent:
     _controller: KulaCoreConstituentBundle:Constituent:delete
     _navigation: Core.Constituent.Constituent
   methods: [POST]
+
+Core_Constituent_Constituent_Searcher:
+    path:     /core/constituent/search
+    defaults: 
+      _controller: KulaCoreConstituentBundle:CoreConstituentSearch:index
+      _navigation: Core.Constituent.Searcher
