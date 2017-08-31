@@ -1,0 +1,61 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="group-box">
+<div class="group-box-header">Name</div>
+<div class="group-box-contents group">
+{{ kula_field({ search: true, field: 'Core.Constituent.LastName', value: post_data["Core.Constituent"]["Core.Constituent.LastName"], label: true }) }}
+{{ kula_field({ search: true, field: 'Core.Constituent.FirstName', value: post_data["Core.Constituent"]["Core.Constituent.FirstName"], label: true  }) }}
+{{ kula_field({ search: true, field: 'Core.Constituent.MiddleName', value: post_data["Core.Constituent"]["Core.Constituent.MiddleName"], label: true  }) }}
+{{ kula_field({ search: true, field: 'Core.Constituent.MaidenName', value: post_data["Core.Constituent"]["Core.Constituent.MaidenName"], label: true  }) }}
+{{ kula_field({ search: true, field: 'Core.Constituent.PreferredName', value: post_data["Core.Constituent"]["Core.Constituent.PreferredName"], label: true  }) }}
+</div>
+</div>
+<div class="group-box">
+<div class="group-box-header">Contact Info</div>
+<div class="group-box-contents group">
+{{ kula_field({ search: true, field: 'Core.Constituent.Phone.Number', value: post_data["Core.Constituent.Phone"]["Core.Constituent.Phone.Number"], label: true }) }}
+{{ kula_field({ search: true, field: 'Core.Constituent.EmailAddress.EmailAddress', value: post_data["Core.Constituent.EmailAddress"]["Core.Constituent.EmailAddress.EmailAddress"], label: true  }) }}
+</div>
+</div>
+<div class="data-table-header-div">
+Constituent Results
+</div>
+<table id="window_window_num_data_table_phones" class="data-table">
+<thead>
+<th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'Core.Constituent.PermanentNumber', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.LastName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.FirstName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.MiddleName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.MaidenName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.PreferredName', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Phone.Number', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Phone.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.EmailAddress.EmailAddress', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' })  }}
+  {{ kula_field_name({ field: 'Core.Constituent.EmailAddress.Type', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  <th class="data-table-cell-row-header">...</th>
+</thead>
+<tbody>
+  {% for cons in constituents %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    {{ kula_field({ input: false, field: 'Core.Constituent.PermanentNumber', value: cons.PERMANENT_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.LastName', value: cons.LAST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.FirstName', value: cons.FIRST_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.MiddleName', value: cons.MIDDLE_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.MaidenName', value: cons.MAIDEN_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.PreferredName', value: cons.PREFERRED_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.Number', value: cons.PHONE_NUMBER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.Phone.Type', value: cons.PHONE_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.EmailAddress.EmailAddress', value: cons.EMAIL_ADDRESS, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ input: false, field: 'Core.Constituent.EmailAddress.Type', value: cons.EMAIL_ADDRESS_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    <td><a class="normal-link-new-window" data-record-id="{{ cons.CONSTITUENT_ID }}" data-record-type="Core.Constituent" href="{{ path('Core_Constituent_Constituent') }}">Constituent</a>
+    {% if cons.STUDENT_ID %}
+     | <a class="normal-link-new-window" data-record-id="{{ cons.CONSTITUENT_ID }}" data-record-type="Core.HEd.Student" href="{{ path('core_HEd_student_information_basic') }}">Student</a> | <a class="normal-link-new-window" data-record-id="{{ cons.CONSTITUENT_ID }}" data-record-type="Core.HEd.Student" href="{{ path('core_HEd_student_enrollment_statuses') }}">Enrollment</a>
+    {% endif %}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}
