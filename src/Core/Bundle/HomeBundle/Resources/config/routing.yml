@@ -4,6 +4,12 @@ Core_Home:
       _controller: KulaCoreHomeBundle:CoreHome:home
       _navigation: Core.Home
 
+Core_Home_Schedule:
+    path:     /core/home_schedule
+    defaults: 
+      _controller: KulaCoreHomeBundle:CoreHome:homeSchedule
+      _navigation: Core.Home
+
 Teacher_Home:
     path:     /teacher/home
     defaults: 

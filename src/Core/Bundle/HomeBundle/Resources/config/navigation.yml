@@ -2,9 +2,20 @@ Core.Home:
   description: "Home"
   display_name: "Home"
   type: form
+  portal: core
+
+Core.Home.Enrollment:
+  parent: Core.Home
+  type: tab
+  display_name: "Enrollment"
   route: Core_Home
   first: core
-  portal: core
+
+Core.Home.Schedule:
+  parent: Core.Home
+  type: tab
+  display_name: "Schedule"
+  route: Core_Home_Schedule
 
 Teacher.Home:
   description: "Home"
