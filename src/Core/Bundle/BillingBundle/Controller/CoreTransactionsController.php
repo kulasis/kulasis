@@ -83,6 +83,12 @@ class CoreTransactionsController extends Controller {
         ->execute()->fetchAll();
       
     }
+
+    if (count($transactions) > 0) {
+    foreach($transactions as $transaction_id => $transaction) {
+      $transactions[$transaction_id]['APPLIED_BALANCE'] = money_format('%i', $this->get('kula.Core.billing.transaction')->calculateBalance($transaction['CONSTITUENT_TRANSACTION_ID'], true));
+    }
+    }
     
     return $this->render('KulaCoreBillingBundle:CoreTransactions:transactions.html.twig', array('transactions' => $transactions));
   }
