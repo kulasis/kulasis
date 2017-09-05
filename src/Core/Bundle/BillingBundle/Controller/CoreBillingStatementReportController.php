@@ -166,7 +166,7 @@ class CoreBillingStatementReportController extends ReportController {
           } // end while on financial aid records
 
           // Determine if remove from list
-          if ($student['total_amount'] - $pending_amount < 0) {
+          if ($student['total_amount'] - $pending_amount <= 0) {
             unset($this->student_balances[$student_id]);
           }
 
