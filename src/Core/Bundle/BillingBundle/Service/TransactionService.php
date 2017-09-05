@@ -157,24 +157,45 @@ class TransactionService {
     
   }
 
-  public function calculateBalance($transaction_id) {
-
-    // get applied transactions
-    $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
-      ->expression('SUM(AMOUNT)', 'total_applied_balance')
-      ->condition('applied.CONSTITUENT_TRANSACTION_ID', $transaction_id)
-      ->execute()->fetch();
+  public function calculateBalance($transaction_id, $return_applied_balance = null) {
 
     // get payment amount
     $transaction = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transaction')
-      ->fields('transaction', array('AMOUNT'))
+      ->fields('transaction', array('AMOUNT', 'PAYMENT_ID', 'CONSTITUENT_ID'))
       ->condition('transaction.CONSTITUENT_TRANSACTION_ID', $transaction_id)
       ->execute()->fetch();
 
-    return $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $transaction_id, array(
-      'Core.Billing.Transaction.AppliedBalance' => 
-        $applied_trans['total_applied_balance'] * -1 + $transaction['AMOUNT']
+    if ($transaction['PAYMENT_ID']) {
+      // get applied transactions
+      $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+        ->expression('SUM(applied.AMOUNT)', 'total_applied_balance')
+        ->join('BILL_CONSTITUENT_TRANSACTIONS', 'trans', 'trans.CONSTITUENT_TRANSACTION_ID = applied.CONSTITUENT_TRANSACTION_ID')
+        ->condition('applied.CONSTITUENT_PAYMENT_ID', $transaction['PAYMENT_ID'])
+        ->condition('trans.CONSTITUENT_ID', $transaction['CONSTITUENT_ID'])
+        ->execute()->fetch();     
+    } else {
+      // get applied transactions
+      $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
+        ->expression('SUM(AMOUNT)', 'total_applied_balance')
+        ->condition('applied.CONSTITUENT_TRANSACTION_ID', $transaction_id)
+        ->execute()->fetch();  
+    }
+
+    if ($transaction['PAYMENT_ID']) {
+      $applied_balance = $applied_trans['total_applied_balance'] + $transaction['AMOUNT'];
+    } else {
+      $applied_balance = $applied_trans['total_applied_balance'] * -1 + $transaction['AMOUNT'];
+    }
+
+    $result = $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $transaction_id, array(
+      'Core.Billing.Transaction.AppliedBalance' => $applied_balance
     ))->process($this->db_options)->getResult();
+
+    if ($result > 0 AND $return_applied_balance === true) {
+      return $applied_balance;
+    } else {
+      return $result;
+    }
 
   }
   

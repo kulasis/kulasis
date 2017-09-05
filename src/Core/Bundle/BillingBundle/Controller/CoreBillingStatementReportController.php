@@ -48,36 +48,67 @@ class CoreBillingStatementReportController extends ReportController {
     else
       $this->show_only_with_balances = false;
 
+    if (isset($report_settings['ONLY_BALANCES_FA']) AND $report_settings['ONLY_BALANCES_FA'] == 'Y') {
+      $this->show_only_with_balances = 'Y';
+      $this->show_only_with_balances_fa = $report_settings['ONLY_BALANCES_FA'];
+      $report_settings['ONLY_BALANCES'] = 'Y';
+    } else {
+      $this->show_only_with_balances_fa = false;
+    }
+
+
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
     $record_type = $this->request->request->get('record_type');
     
     // Get current term start date
     $focus_term_info = $this->db()->db_select('CORE_TERM', 'term')
-      ->fields('term', array('START_DATE'))
+      ->fields('term', array('START_DATE', 'END_DATE'))
       ->condition('term.TERM_ID', $this->focus->getTermID())
       ->execute()->fetch();
     
+    // Get students from focus
+    $students_to_consider = array();
+
+    if ($this->focus->getTermID() != '') {
+      $students_to_consider_result = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('STUDENT_ID'));
+      $org_term_ids = $this->focus->getOrganizationTermIDs();
+      if ($this->focus->getTermID() != '' AND isset($org_term_ids) AND count($org_term_ids) > 0) {
+        $students_to_consider_result = $students_to_consider_result->condition('stustatus.ORGANIZATION_TERM_ID', $org_term_ids)
+          ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+          ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+          ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID');
+      }
+      $students_to_consider_result = $students_to_consider_result->execute();
+      while ($students_to_consider_row = $students_to_consider_result->fetch()) {
+        $students_to_consider[] = $students_to_consider_row['STUDENT_ID'];
+      }
+    }  
+
     // Get students with balances
     $students_with_balances_result = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
       ->fields('transactions', array('CONSTITUENT_ID'))
       ->expression('SUM(AMOUNT)', 'total_amount')
       ->groupBy('CONSTITUENT_ID')
       ->orderBy('CONSTITUENT_ID');
-    
+
     if ($this->focus->getTermID() != '') {
-      $org_term_ids = $this->focus->getOrganizationTermIDs();
-      if ($this->focus->getTermID() != '' AND isset($org_term_ids) AND count($org_term_ids) > 0) {
-        $students_with_balances_result = $students_with_balances_result->condition('transactions.ORGANIZATION_TERM_ID', $org_term_ids)
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
-      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID');
-      }
+      $students_with_balances_result = $students_with_balances_result
+        ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
+        ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+        ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+        ->condition('term.END_DATE', $focus_term_info['END_DATE'], '<=')
+        ->condition('org.ORGANIZATION_ID', $this->focus->getOrganizationID());
     }
     
     // Add on selected record
-    if (isset($record_id) AND $record_id != '' AND $record_type == 'Core.HEd.Student')
+    if (isset($record_id) AND $record_id != '' AND $record_type == 'Core.HEd.Student') {
       $students_with_balances_result = $students_with_balances_result->condition('transactions.CONSTITUENT_ID', $record_id);
+    } elseif (count($students_to_consider) > 0) {
+      $students_with_balances_result = $students_with_balances_result->condition('transactions.CONSTITUENT_ID', $students_to_consider);
+    }
+
     $students_with_balances_result = $students_with_balances_result->execute();
     while ($balance_row = $students_with_balances_result->fetch()) {
       if ($balance_row['total_amount'] > 0 AND isset($report_settings['ONLY_BALANCES']) AND $report_settings['ONLY_BALANCES'])
@@ -85,9 +116,63 @@ class CoreBillingStatementReportController extends ReportController {
       elseif ($balance_row['total_amount'] < 0 AND isset($report_settings['ONLY_NEGATIVE_BALANCES']) AND $report_settings['ONLY_NEGATIVE_BALANCES'])
         $this->student_balances[$balance_row['CONSTITUENT_ID']] = $balance_row;
     }
-    
-    //kula_print_r($this->student_balances);
-    //die();
+
+    // Remove FA Balances
+    if (isset($report_settings['ONLY_BALANCES_FA']) AND $report_settings['ONLY_BALANCES_FA'] == 'Y' AND count($this->student_balances) > 0) {
+
+      foreach($this->student_balances as $student_id => $student) {
+
+        $pending_amount = 0;
+        $awards_result = $this->db()->db_select('FAID_STUDENT_AWARDS', 'faidstuawrds')
+          ->fields('faidstuawrds', array('AWARD_ID', 'AWARD_STATUS', 'GROSS_AMOUNT', 'NET_AMOUNT', 'ORIGINAL_AMOUNT', 'SHOW_ON_STATEMENT', 'AWARD_CODE_ID'))
+          ->join('FAID_AWARD_CODE', 'awardcode', 'faidstuawrds.AWARD_CODE_ID = awardcode.AWARD_CODE_ID')
+          ->fields('awardcode', array('AWARD_DESCRIPTION'))
+          ->join('FAID_STUDENT_AWARD_YEAR_TERMS', 'faidstuawrdyrtrm', 'faidstuawrds.AWARD_YEAR_TERM_ID = faidstuawrdyrtrm.AWARD_YEAR_TERM_ID')
+          ->fields('faidstuawrdyrtrm', array('AWARD_YEAR_TERM_ID', 'PERCENTAGE'))
+          ->join('FAID_STUDENT_AWARD_YEAR', 'faidstuawardyr', 'faidstuawrdyrtrm.AWARD_YEAR_ID = faidstuawardyr.AWARD_YEAR_ID')
+          ->fields('faidstuawardyr', array('AWARD_YEAR'))
+          ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = faidstuawrdyrtrm.ORGANIZATION_TERM_ID')
+          ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+          ->fields('org', array('ORGANIZATION_ABBREVIATION'))
+          ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+          ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION'))
+          ->condition('faidstuawardyr.STUDENT_ID', $student_id);
+          if ($this->focus->getTermID()) {
+            $awards_result = $awards_result->condition('term.TERM_ID', $this->focus->getTermID());
+          }
+          $awards_result = $awards_result->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'APPR', 'AWAR'))
+          ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
+          ->condition('faidstuawrds.NET_AMOUNT', 0, '>')
+          ->execute();
+          while ($awards_row = $awards_result->fetch()) {
+
+            if ($awards_row['AWARD_STATUS'] == 'AWAR') {
+
+              // Check if fully awarded on bill
+              $trans_awards = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+                ->expression('SUM(AMOUNT)', 'total_amount')
+                ->condition('transactions.CONSTITUENT_ID', $student_id)
+                ->condition('transactions.AWARD_ID', $awards_row['AWARD_ID'])
+                ->execute()->fetch();
+
+              if (-1 * $trans_awards['total_amount'] < $awards_row['NET_AMOUNT']) {
+                $pending_amount += $awards_row['NET_AMOUNT'] - (-1*$trans_awards['total_amount']);
+              }
+              
+            } else {
+              $pending_amount += $awards_row['NET_AMOUNT'];
+            }
+            
+          } // end while on financial aid records
+
+          // Determine if remove from list
+          if ($student['total_amount'] - $pending_amount <= 0) {
+            unset($this->student_balances[$student_id]);
+          }
+
+        } // end foreach
+
+    } // end if on FA removal
     
     // Get Balances
     $this->student_balances_for_orgterm = array();
@@ -111,9 +196,7 @@ class CoreBillingStatementReportController extends ReportController {
     }
     $terms_with_balances_result = $terms_with_balances_result->groupBy('CONSTITUENT_ID')
       ->orderBy('CONSTITUENT_ID');
-    //echo $terms_with_balances_result->sql();
-    //var_dump($terms_with_balances_result->arguments());
-    //die();
+
     // Add on selected record
     if (isset($record_id) AND $record_id != '' AND ($record_type == 'Core.HEd.Student' OR $record_type == 'Core.Constituent'))
       $terms_with_balances_result = $terms_with_balances_result->condition('transactions.CONSTITUENT_ID', $record_id);
@@ -123,7 +206,7 @@ class CoreBillingStatementReportController extends ReportController {
       	$this->student_balances_for_orgterm[$balance_row['CONSTITUENT_ID']][] = $balance_row;
       }
     }
-    } 
+    }
 
     // Get Data and Load
     $result = $this->db()->db_select('CONS_CONSTITUENT', 'stucon')
@@ -163,7 +246,11 @@ class CoreBillingStatementReportController extends ReportController {
     }
     
     if ($this->show_only_with_balances == 'Y') {
-      $result = $result->condition('stucon.CONSTITUENT_ID', array_keys($this->student_balances));
+      if (count($this->student_balances) > 0) {
+        $result = $result->condition('stucon.CONSTITUENT_ID', array_keys($this->student_balances));
+      } else {
+        return $this->textResponse("No statements to print.");
+      }
     }
     
     if ($report_settings['FROM_ADD_DATE'] != '') {
@@ -354,5 +441,11 @@ class CoreBillingStatementReportController extends ReportController {
       $this->pdf->hold_row($holds_row);
       $first++;
     }
+  }
+
+  public function getStudentsWithBalances() {
+
+
+
   }
 }

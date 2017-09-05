@@ -172,17 +172,20 @@ class CorePaymentsController extends Controller {
         ->orderBy('TRANSACTION_DATE', 'DESC', 'transactions')
         ->execute()->fetchAll();
 
+      if (count($transactions) > 0) {
+      foreach($transactions as $transaction_id => $transaction) {
+        $transactions[$transaction_id]['APPLIED_BALANCE'] = money_format('%i', $this->get('kula.Core.billing.transaction')->calculateBalance($transaction['CONSTITUENT_TRANSACTION_ID'], true));
+      }
+      }
+
       $applied_payments = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
         ->fields('applied', array('CONSTITUENT_APPLIED_PAYMENT_ID', 'CONSTITUENT_PAYMENT_ID', 'CONSTITUENT_TRANSACTION_ID', 'AMOUNT', 'ORIGINAL_AMOUNT'))
         ->condition('applied.CONSTITUENT_PAYMENT_ID', $payment_id)
         ->execute()->fetchAll();
-      
-      if ($payment['PAYMENT_TYPE'] == 'R')
-        $code_type = 'P';
-      else
-        $code_type = 'C';
+
+        $code_type = array('C', 'P');
     }
-    
+
     return $this->render('KulaCoreBillingBundle:CorePayments:payments_detail.html.twig', array('payment' => $payment, 'transactions' => $transactions, 'applied_payments' => $applied_payments, 'merchant_response' => $merchant_response, 'code_type' => $code_type));
   }
 
