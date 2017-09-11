@@ -138,13 +138,13 @@ class CourseHistoryService {
     $data += $this->determineAward($mark_scale_id, $data['HEd.Student.CourseHistory.Mark'], $data['HEd.Student.CourseHistory.CreditsAttempted']);
     unset($data['COMMENTS']);
 
+    $poster = $this->posterFactory->newPoster()->edit('HEd.Student.CourseHistory', $id, $data)->process();
+    $poster_record = $poster->getPosterRecord('HEd.Student.CourseHistory', $id);
+
     // apply repeat tag
     if (isset($data['HEd.Student.CourseHistory.RepeatTagID']) AND $data['HEd.Student.CourseHistory.RepeatTagID'] != '') {
       $this->calculateRepeatTag($id);
     }
-
-    $poster = $this->posterFactory->newPoster()->edit('HEd.Student.CourseHistory', $id, $data)->process();
-    $poster_record = $poster->getPosterRecord('HEd.Student.CourseHistory', $id);
 
     // if repeat tag removed
     if ($poster_record->getOriginalField('REPEAT_TAG_ID') != '' AND isset($data['HEd.Student.CourseHistory.RepeatTagID']) AND $data['HEd.Student.CourseHistory.RepeatTagID'] == '') {
