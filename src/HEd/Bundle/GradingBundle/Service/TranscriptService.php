@@ -175,6 +175,8 @@ class TranscriptService {
       ->fields('org', array('ORGANIZATION_NAME'))
       ->leftJoin('CORE_NON_ORGANIZATION', 'nonorg', 'nonorg.NON_ORGANIZATION_ID = coursehistory.NON_ORGANIZATION_ID')
       ->fields('nonorg', array('NON_ORGANIZATION_NAME'))
+      ->leftJoin('STUD_REPEAT_TAG', 'repeattag', 'repeattag.REPEAT_TAG_ID = coursehistory.REPEAT_TAG_CRS_HIS_ID')
+      ->fields('repeattag', array('REPEAT_TAG_CODE'))
       ->leftJoin('STUD_STUDENT_COURSE_HISTORY_TERMS', 'crshisterms', 'crshisterms.STUDENT_ID = coursehistory.STUDENT_ID AND (crshisterms.CALENDAR_YEAR = coursehistory.CALENDAR_YEAR OR (crshisterms.CALENDAR_YEAR IS NULL AND coursehistory.CALENDAR_YEAR IS NULL))
         AND (crshisterms.CALENDAR_MONTH = coursehistory.CALENDAR_MONTH OR (crshisterms.CALENDAR_MONTH IS NULL AND coursehistory.CALENDAR_YEAR IS NULL))
         AND (crshisterms.TERM = coursehistory.TERM OR (crshisterms.TERM IS NULL AND coursehistory.TERM IS NULL))
@@ -249,7 +251,11 @@ class TranscriptService {
       
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['COURSE_NUMBER'] = $row['COURSE_NUMBER'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['COURSE_TITLE'] = $row['COURSE_TITLE'];
-      $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['MARK'] = $row['MARK'];
+      if ($row['REPEAT_TAG_CODE']) {
+        $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['MARK'] = $row['MARK'].' ('.$row['REPEAT_TAG_CODE'].')';
+      } else {
+        $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['MARK'] = $row['MARK'];
+      }
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['MARK_SCALE_ID'] = $row['MARK_SCALE_ID'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['CREDITS_ATTEMPTED'] = $row['CREDITS_ATTEMPTED'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['CREDITS_EARNED'] = $row['CREDITS_EARNED'];
