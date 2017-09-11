@@ -74,12 +74,10 @@ class ControllerListener implements EventSubscriberInterface {
 
     // If changing term school or term
     if ($this->getFromRequest('focus_section') AND $this->getFromRequest('focus_section') != $this->session->getFocus('Teacher.HEd.Section')) {
-      error_log("changed section ".$this->getFromRequest('focus_section')."\r\n", 3, "/var/tmp/test-error.log");
       $this->focus->setSectionFocus($this->getFromRequest('focus_section'), $this->getFromRequest('role_token'));
     }
     
     if ($this->getFromRequest('focus_advisee') AND $this->getFromRequest('focus_advisee') != $this->session->getFocus('Teacher.HEd.Advisor.Student')) {
-      error_log("changed advisee ".$this->getFromRequest('focus_advisee')."\r\n", 3, "/var/tmp/test-error.log");
       $this->focus->setAdvisorStudentFocus($this->getFromRequest('focus_advisee'), $this->getFromRequest('role_token'));
     }
 
@@ -101,17 +99,18 @@ class ControllerListener implements EventSubscriberInterface {
       
       $this->focus->setTeacherStaffFocusFromStaff($this->session->getFocus('admin_focus_organization'), $this->session->getFocus('admin_focus_term'), $this->session->getFocus('admin_focus_teacher'));
       $this->focus->setSectionFocus(null, $this->getFromRequest('role_token'));
+      $this->focus->setAdvisorStudentFocus(null, $this->getFromRequest('role_token'));
     } elseif (($this->getFromRequest('focus_school') OR $this->getFromRequest('focus_term') AND $this->request->get('_route') != 'focus_usergroup_change')) {
       $this->focus->setTeacherOrganizationTermFocus(null, $this->getFromRequest('role_token'));
       $this->focus->setSectionFocus($this->getFromRequest('focus_section'), $this->getFromRequest('role_token')); 
-      
+      $this->focus->setAdvisorStudentFocus(null, $this->getFromRequest('role_token'));      
     } elseif ($this->getFromRequest('focus_advisee') AND $this->getFromRequest('focus_advisee') != $this->session->getFocus('Teacher.HEd.Advisor.Student')) {
-      error_log("changed advisee ".$this->getFromRequest('focus_advisee')."\r\n", 3, "/var/tmp/test-error.log");
       $this->focus->setAdvisorStudentFocus($this->getFromRequest('focus_advisee'), $this->getFromRequest('role_token'));
-
     } else {
       // initial load
-      $this->focus->setTeacherStaffFocusFromStaff($this->session->getFocus('organization_id'), $this->session->getFocus('term_id'));
+      if ($this->session->getFocus('Teacher.Staff.OrgTerm') == '') {
+        $this->focus->setTeacherStaffFocusFromStaff($this->session->getFocus('organization_id'), $this->session->getFocus('term_id'));
+      }
       $this->focus->setSectionFocus(null, $this->getFromRequest('role_token'));
       $this->focus->setAdvisorStudentFocus(null, $this->getFromRequest('role_token'));
     }
