@@ -105,10 +105,15 @@ class ControllerListener implements EventSubscriberInterface {
       $this->focus->setTeacherOrganizationTermFocus(null, $this->getFromRequest('role_token'));
       $this->focus->setSectionFocus($this->getFromRequest('focus_section'), $this->getFromRequest('role_token')); 
       
+    } elseif ($this->getFromRequest('focus_advisee') AND $this->getFromRequest('focus_advisee') != $this->session->getFocus('Teacher.HEd.Advisor.Student')) {
+      error_log("changed advisee ".$this->getFromRequest('focus_advisee')."\r\n", 3, "/var/tmp/test-error.log");
+      $this->focus->setAdvisorStudentFocus($this->getFromRequest('focus_advisee'), $this->getFromRequest('role_token'));
+
     } else {
       // initial load
       $this->focus->setTeacherStaffFocusFromStaff($this->session->getFocus('organization_id'), $this->session->getFocus('term_id'));
       $this->focus->setSectionFocus(null, $this->getFromRequest('role_token'));
+      $this->focus->setAdvisorStudentFocus(null, $this->getFromRequest('role_token'));
     }
     
    
