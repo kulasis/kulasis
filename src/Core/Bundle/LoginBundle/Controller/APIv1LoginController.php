@@ -21,7 +21,7 @@ class APIv1LoginController extends APIController {
     if ($login_info) {
       return $this->JSONResponse(array('token' => $login_info['token']));
     } else {
-      throw new UnauthorizedHttpException('Invalid API Key, Host, and IP combination. IP: '.$this->getRequest()->getClientIp().' Host: '.gethostbyaddr($this->getRequest()->getClientIp()));
+      throw new UnauthorizedHttpException('Invalid API Key, Host, and IP combination. IP: '.$ip.' Host: '.$host);
     }
     
   }

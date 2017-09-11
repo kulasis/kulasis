@@ -41,3 +41,10 @@ Core.Constituent.Combiner:
       description: "Constituent Combiner"
       display_name: "Constituent"
       route: Core_Constituent_Combiner
+
+Core.Constituent.Searcher:
+  type: form
+  parent: Core.Constituent
+  description: "Searcher"
+  display_name: "Searcher"
+  route: Core_Constituent_Constituent_Searcher

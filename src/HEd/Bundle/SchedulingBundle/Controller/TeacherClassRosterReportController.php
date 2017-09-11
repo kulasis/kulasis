@@ -71,7 +71,7 @@ class TeacherClassRosterReportController extends CoreClassRosterReportController
       ->join('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
       ->fields('org', array('ORGANIZATION_NAME'))
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
-      ->fields('term', array('TERM_ABBREVIATION'))
+      ->fields('term', array('TERM_ABBREVIATION', 'START_DATE'))
       ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', 'stafforgterm.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
       ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterm.STAFF_ID')
       ->fields('staff', array('ABBREVIATED_NAME'))

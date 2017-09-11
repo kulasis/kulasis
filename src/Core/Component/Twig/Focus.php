@@ -58,7 +58,7 @@ class Focus {
       
       $term_results = $db->db_select('CORE_TERM', 'terms')
         ->distinct()
-        ->fields('terms', array('TERM_ID', 'TERM_ABBREVIATION', 'TERM_NAME'))
+        ->fields('terms', array('TERM_ID', 'TERM_ABBREVIATION', 'TERM_NAME', 'START_DATE', 'END_DATE'))
         ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.TERM_ID = terms.TERM_ID')
         ->condition('orgterm.ORGANIZATION_ID', $focus->getOrganizationID());
       if ($administrator == '0') {
@@ -80,7 +80,7 @@ class Focus {
       
       $term_results = $db->db_select('CORE_TERM', 'terms')
         ->distinct()
-        ->fields('terms', array('TERM_ID', 'TERM_ABBREVIATION', 'TERM_NAME'))
+        ->fields('terms', array('TERM_ID', 'TERM_ABBREVIATION', 'TERM_NAME', 'START_DATE', 'END_DATE'))
         ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.TERM_ID = terms.TERM_ID')
         ->condition('orgterm.ORGANIZATION_ID', $focus->getOrganizationID());
       if ($administrator == '0') {

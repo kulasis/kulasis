@@ -521,6 +521,15 @@ Core.Constituent.Phone:
       lookup: Constituent.Address.Country
       column_name: "Phone Country"
       label_name: "Phone Country"
+    AllowTexting:
+      description: "Allow Texting"
+      db_column_name: ALLOW_TEXTING
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Allow Texting"
+      label_name: "Allow Texting"
       
 Core.Constituent.Relationship:
   description: "Constituent relationships"

@@ -31,16 +31,17 @@ class APIController extends BaseController {
     
     $auth_header = $this->getRequest()->headers->get('Authorization');
     $token = substr($auth_header, strpos($auth_header, 'Bearer ') + 7, strlen($auth_header));
+    $ip = $this->getRequest()->getClientIp();
+    $host = gethostbyaddr($this->getRequest()->getClientIp());
 
     if ($auth_api_service->verifyApplicationToken(
         $token, 
-        gethostbyaddr($this->getRequest()->getClientIp()), 
-        $this->getRequest()->getClientIp()
-        )
+        $host, 
+        $ip)
     ) {
       return true;
     } else {
-      throw new UnauthorizedHttpException('Invalid API Key, Host, and IP combination. IP: '.$this->getRequest()->getClientIp().' Host: '.gethostbyaddr($this->getRequest()->getClientIp()));
+      throw new UnauthorizedHttpException('Invalid API Key, Host, and IP combination. IP: '.$ip.' Host: '.$host);
     }
       
   }

@@ -261,6 +261,10 @@ class Field {
     if ($field->getFieldType() == 'select') {
       $html .= self::_select($param);
     }
+
+    if ($field->getFieldType() == 'file') {
+      $html .= self::_file($param);
+    }
     
     if ($field->getFieldType() == '') {
       $html .= $param['value'];
@@ -319,6 +323,36 @@ class Field {
         $param['value'] = $class->calculate($param['value']);
       }
       return GenericField::text(null, $param['value'], $param['attributes_html']);
+    }
+  }
+
+  private static function _file($param) {
+
+    if (self::_displayField($param)) {
+      $schema = self::getFieldInfo($param['field']);
+      $field_name = self::getNameForField($param);
+      $param['attributes_html']['size'] = $schema->getFieldSize();
+      $class = $schema->getClass();
+      if (class_exists($class) AND $class = new $class(self::$container)) {
+        $param['value'] = $class->calculate($param['value']);
+      }
+      return GenericField::file($field_name, $param['value'], $param['attributes_html']);
+    } elseif (self::_displayValue($param) AND !$param['input']) {
+      $schema = self::getFieldInfo($param['field']);
+      $class = $schema->getClass();
+      if (class_exists($class) AND $class = new $class(self::$container)) {
+        $param['value'] = $class->calculate($param['value']);
+      }
+      return $param['value'];
+    } elseif (self::_displayValue($param)) {
+      $schema = self::getFieldInfo($param['field']);
+      $param['attributes_html']['size'] = $schema->getFieldSize();
+      $param['attributes_html']['disabled'] = 'disabled';
+      $class = $schema->getClass();
+      if (class_exists($class) AND $class = new $class(self::$container)) {
+        $param['value'] = $class->calculate($param['value']);
+      }
+      return GenericField::file(null, $param['value'], $param['attributes_html']);
     }
   }
   

@@ -222,16 +222,26 @@ function processForm(form, url, partial, divToLoad, options, onsuccess, onerrorf
 	var record_id = $('.record_bar_tab_menu_data').data('record-id'); // #' + activeTabID + '_content > 
 	var record_type = $('.record_bar_tab_menu_data').data('record-type'); // #' + activeTabID + '_content > 
 	
-	var form_data = form.serialize();
-	form_data += "&focus_org=" + encodeURIComponent($('#window_bar > ul > .active').data('focus-org'));
-  form_data += "&focus_term=" + encodeURIComponent($('#window_bar > ul > .active').data('focus-term'));
-	form_data += "&record_type=" + encodeURIComponent(record_type);
-	form_data += "&record_id=" + encodeURIComponent(record_id);
+	if (window.FormData) {
+    	var form_data = new FormData(form[0]);
+    	form_data.append('focus_org', encodeURIComponent($('#window_bar > ul > .active').data('focus-org')));
+    	form_data.append('focus_term', encodeURIComponent($('#window_bar > ul > .active').data('focus-term')));
+    	form_data.append('record_type', encodeURIComponent(record_type));
+    	form_data.append('record_id', encodeURIComponent(record_id));
+    } else {
+    	var form_data = form.serialize();
+		form_data += "&focus_org=" + encodeURIComponent($('#window_bar > ul > .active').data('focus-org'));
+  		form_data += "&focus_term=" + encodeURIComponent($('#window_bar > ul > .active').data('focus-term'));
+		form_data += "&record_type=" + encodeURIComponent(record_type);
+		form_data += "&record_id=" + encodeURIComponent(record_id);
+    }
 		   
   $.ajax({
 		type: 'POST',
 		url: urlToRequest,
 		data: form_data,
+   		processData: false,
+    	contentType: false,
 		error: function(msg) {
 			
 			  // update url & history

@@ -34,6 +34,11 @@
 <thead>
   <td colspan="4">{{ term.COMMENTS }}</td>
 </thead>
+{% endif %} 
+{% if term.standings != '' %}
+<thead>
+  <td colspan="4">{{ term.standings|join(', ') }}</td>
+</thead>
 {% endif %}
 <thead>
   {{ kula_field_name({ field: 'HEd.Student.CourseHistory.CourseNumber', field_name_override: 'Course ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}

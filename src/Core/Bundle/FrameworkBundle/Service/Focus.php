@@ -77,7 +77,6 @@ class Focus {
         ->orderBy('SECTION_NUMBER', 'ASC')
         ->range(0, 1)
         ->execute()->fetch();
-
       $section_id = $section['SECTION_ID'];
       
     } 
@@ -170,6 +169,7 @@ class Focus {
         $student = $student->range(0, 1);
       }
       $student = $student->execute()->fetch();
+
       // Only if student status returns set new focused student
       $this->setOrganizationTermFocus($organization_id, $term_id, $role_token);
       $this->session->setFocus('Teacher.Staff', $student['STAFF_ID'], $role_token);
