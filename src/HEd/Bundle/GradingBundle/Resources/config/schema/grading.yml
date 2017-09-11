@@ -182,24 +182,42 @@ HEd.RepeatTag:
       field_type: date
       column_name: "Inactive After"
       label_name: "Inactive After"
-    IncludeCreditsAttempted:
-      description: "Include in Credits Attempted Total"
-      db_column_name: INCLUDE_CREDITS_ATTMPT
+    IncludeTermCreditsAttempted:
+      description: "Include in Term Credits Attempted Total"
+      db_column_name: INCLUDE_TERM_CREDITS_ATTMPT
       db_column_type: bool
       db_column_default: 1
       db_column_null: false
       field_type: checkbox
-      column_name: "Include Credits Attempted"
-      label_name: "Include Credits Attempted"
-    IncludeCreditsEarned:
+      column_name: "Include Term Credits Attempted"
+      label_name: "Include Term Credits Attempted"
+    IncludeTermCreditsEarned:
+      description: "Include in Term Credits Earned Total"
+      db_column_name: INCLUDE_TERM_CREDITS_EARNED
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Include Term Credits Earned"
+      label_name: "Include Term Credits Earned"
+    IncludeCumulativeCreditsAttempted:
+      description: "Include in Cumulative Credits Attempted Total"
+      db_column_name: INCLUDE_CUM_CREDITS_ATTMPT
+      db_column_type: bool
+      db_column_default: 1
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Include Cumulative Credits Attempted"
+      label_name: "Include Cumulative Credits Attempted"
+    IncludeCumulativeCreditsEarned:
       description: "Include in Credits Earned Total"
-      db_column_name: INCLUDE_CREDITS_EARNED
+      db_column_name: INCLUDE_CUM_CREDITS_EARNED
       db_column_type: bool
       db_column_default: 1
       db_column_null: false
       field_type: checkbox
-      column_name: "Include Credits Earned"
-      label_name: "Include Credits Earned"
+      column_name: "Include Cumulative Credits Earned"
+      label_name: "Include Cumulative Credits Earned"
     IncludeTermGPA:
       description: "Include in Term GPA Calculation"
       db_column_name: INCLUDE_TERM_GPA

@@ -42,8 +42,12 @@
 {{ kula_field({ field: 'HEd.Student.CourseHistory.QualityPoints', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.QUALITY_POINTS, label: true }) }}
 </div>
 <div class="group-box-contents group">
-{{ kula_field({ field: 'HEd.Student.CourseHistory.CalculatedCreditsAttempted', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.CALC_CREDITS_ATTEMPTED, label: true }) }}
-{{ kula_field({ field: 'HEd.Student.CourseHistory.CalculatedCreditsEarned', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.CALC_CREDITS_EARNED, label: true }) }}
+{{ kula_field({ field: 'HEd.Student.CourseHistory.CalculatedTermCreditsAttempted', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.CALC_TERM_CREDITS_ATTEMPTED, label: true }) }}
+{{ kula_field({ field: 'HEd.Student.CourseHistory.CalculatedTermCreditsEarned', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.CALC_TERM_CREDITS_EARNED, label: true }) }}
+</div>
+<div class="group-box-contents group">
+{{ kula_field({ field: 'HEd.Student.CourseHistory.CalculatedCumulativeCreditsAttempted', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.CALC_CUM_CREDITS_ATTEMPTED, label: true }) }}
+{{ kula_field({ field: 'HEd.Student.CourseHistory.CalculatedCumulativeCreditsEarned', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.CALC_CUM_CREDITS_EARNED, label: true }) }}
 </div>
 <div class="group-box-contents group">
 {{ kula_field({ field: 'HEd.Student.CourseHistory.IncludeTermGPA', db_row_id: course_history.COURSE_HISTORY_ID, value: course_history.INCLUDE_TERM_GPA, label: true }) }}

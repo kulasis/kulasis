@@ -15,8 +15,10 @@ Repeat Tags
   {{ kula_field_name({ field: 'HEd.RepeatTag.Code', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.RepeatTag.Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.RepeatTag.InactiveAfter', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'HEd.RepeatTag.IncludeCreditsAttempted', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'HEd.RepeatTag.IncludeCreditsEarned', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.RepeatTag.IncludeTermCreditsAttempted', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.RepeatTag.IncludeTermCreditsEarned', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.RepeatTag.IncludeCumulativeCreditsAttempted', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.RepeatTag.IncludeCumulativeCreditsEarned', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.RepeatTag.IncludeTermGPA', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.RepeatTag.IncludeCumulativeGPA', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   </tr>
@@ -28,8 +30,10 @@ Repeat Tags
   {{ kula_field({ add: true, field: 'HEd.RepeatTag.Code', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.RepeatTag.Name', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.RepeatTag.InactiveAfter', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-  {{ kula_field({ add: true, field: 'HEd.RepeatTag.IncludeCreditsAttempted', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
-  {{ kula_field({ add: true, field: 'HEd.RepeatTag.IncludeCreditsEarned', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.RepeatTag.IncludeTermCreditsAttempted', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.RepeatTag.IncludeTermCreditsEarned', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.RepeatTag.IncludeCumulativeCreditsAttempted', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.RepeatTag.IncludeCumulativeCreditsEarned', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.RepeatTag.IncludeTermGPA', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_field({ add: true, field: 'HEd.RepeatTag.IncludeCumulativeGPA', prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_display_html({ add: true, field: 'HEd.RepeatTag.ID', prepend_html: '</tr>' }) }}
@@ -40,8 +44,10 @@ Repeat Tags
     {{ kula_field({ edit: true, field: 'HEd.RepeatTag.Code', db_row_id: repeattag.REPEAT_TAG_ID, value: repeattag.REPEAT_TAG_CODE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.RepeatTag.Name', db_row_id: repeattag.REPEAT_TAG_ID, value: repeattag.REPEAT_TAG_NAME, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.RepeatTag.InactiveAfter', db_row_id: repeattag.REPEAT_TAG_ID, value: repeattag.INACTIVE_AFTER, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'HEd.RepeatTag.IncludeCreditsAttempted', db_row_id: repeattag.REPEAT_TAG_ID, value: repeattag.INCLUDE_CREDITS_ATTMPT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ edit: true, field: 'HEd.RepeatTag.IncludeCreditsEarned', db_row_id: repeattag.REPEAT_TAG_ID, value: repeattag.INCLUDE_CREDITS_EARNED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.RepeatTag.IncludeTermCreditsAttempted', db_row_id: repeattag.REPEAT_TAG_ID, value: repeattag.INCLUDE_TERM_CREDITS_ATTMPT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.RepeatTag.IncludeTermCreditsEarned', db_row_id: repeattag.REPEAT_TAG_ID, value: repeattag.INCLUDE_TERM_CREDITS_EARNED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+      {{ kula_field({ edit: true, field: 'HEd.RepeatTag.IncludeCumulativeCreditsAttempted', db_row_id: repeattag.REPEAT_TAG_ID, value: repeattag.INCLUDE_CUM_CREDITS_ATTMPT, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'HEd.RepeatTag.IncludeCumulativeCreditsEarned', db_row_id: repeattag.REPEAT_TAG_ID, value: repeattag.INCLUDE_CUM_CREDITS_EARNED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.RepeatTag.IncludeTermGPA', db_row_id: repeattag.REPEAT_TAG_ID, value: repeattag.INCLUDE_TERM_GPA, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'HEd.RepeatTag.IncludeCumulativeGPA', db_row_id: repeattag.REPEAT_TAG_ID, value: repeattag.INCLUDE_CUM_GPA, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>

@@ -174,7 +174,8 @@ class CourseHistoryService {
   		$award_data['HEd.Student.CourseHistory.CreditsAttempted'] = $credits_attempted;
   	}
 
-    $award_data['HEd.Student.CourseHistory.CalculatedCreditsAttempted'] = $award_data['HEd.Student.CourseHistory.CreditsAttempted'];
+    $award_data['HEd.Student.CourseHistory.CalculatedTermCreditsAttempted'] = $award_data['HEd.Student.CourseHistory.CreditsAttempted'];
+    $award_data['HEd.Student.CourseHistory.CalculatedCumulativeCreditsAttempted'] = $award_data['HEd.Student.CourseHistory.CreditsAttempted'];
 	
     // Determine credit
     if ($mark_info['GETS_CREDIT'] == 1)
@@ -182,7 +183,8 @@ class CourseHistoryService {
     else
       $award_data['HEd.Student.CourseHistory.CreditsEarned'] = 0.0;
 
-    $award_data['HEd.Student.CourseHistory.CalculatedCreditsEarned'] = $award_data['HEd.Student.CourseHistory.CreditsEarned'];
+    $award_data['HEd.Student.CourseHistory.CalculatedTermCreditsEarned'] = $award_data['HEd.Student.CourseHistory.CreditsEarned'];
+    $award_data['HEd.Student.CourseHistory.CalculatedCumulativeCreditsEarned'] = $award_data['HEd.Student.CourseHistory.CreditsEarned'];
 
     $award_data['HEd.Student.CourseHistory.GPAValue'] = $mark_info['GPA_VALUE'];
     $award_data['HEd.Student.CourseHistory.QualityPoints'] = $mark_info['GPA_VALUE'] * $award_data['HEd.Student.CourseHistory.CreditsEarned'];
@@ -218,10 +220,14 @@ class CourseHistoryService {
       $award_data = array();
 
       // Step 2: Apply repeat tag calculations to them
-      if ($course_history['INCLUDE_CREDITS_ATTMPT'] == 0)
-        $award_data['HEd.Student.CourseHistory.CalculatedCreditsAttempted'] = null;
-      if ($course_history['INCLUDE_CREDITS_EARNED'] == 0)
-        $award_data['HEd.Student.CourseHistory.CalculatedCreditsEarned'] = null;
+      if ($course_history['INCLUDE_TERM_CREDITS_ATTMPT'] == 0)
+        $award_data['HEd.Student.CourseHistory.CalculatedTermCreditsAttempted'] = null;
+      if ($course_history['INCLUDE_TERM_CREDITS_EARNED'] == 0)
+        $award_data['HEd.Student.CourseHistory.CalculatedTermCreditsEarned'] = null;
+      if ($course_history['INCLUDE_CUM_CREDITS_ATTMPT'] == 0)
+        $award_data['HEd.Student.CourseHistory.CalculatedCumulativeCreditsAttempted'] = null;
+      if ($course_history['INCLUDE_CUM_CREDITS_EARNED'] == 0)
+        $award_data['HEd.Student.CourseHistory.CalculatedCumulativeCreditsEarned'] = null;
       if ($course_history['INCLUDE_TERM_GPA'] == 0)
         $award_data['HEd.Student.CourseHistory.IncludeTermGPA'] = 0;
       if ($course_history['INCLUDE_CUM_GPA'] == 0)
@@ -245,8 +251,10 @@ class CourseHistoryService {
     while ($previous_course_history_row = $previous_course_history->fetch()) {
       $award_data = array();
 
-      $award_data['HEd.Student.CourseHistory.CalculatedCreditsAttempted'] = $previous_course_history_row['CREDITS_ATTEMPTED'];
-      $award_data['HEd.Student.CourseHistory.CalculatedCreditsEarned'] = $previous_course_history_row['CREDITS_EARNED'];
+      $award_data['HEd.Student.CourseHistory.CalculatedTermCreditsAttempted'] = $previous_course_history_row['CREDITS_ATTEMPTED'];
+      $award_data['HEd.Student.CourseHistory.CalculatedTermCreditsEarned'] = $previous_course_history_row['CREDITS_EARNED'];
+      $award_data['HEd.Student.CourseHistory.CalculatedCumulativeCreditsAttempted'] = $previous_course_history_row['CREDITS_ATTEMPTED'];
+      $award_data['HEd.Student.CourseHistory.CalculatedCumulativeCreditsEarned'] = $previous_course_history_row['CREDITS_EARNED'];
       $award_data['HEd.Student.CourseHistory.IncludeTermGPA'] = 1;
       $award_data['HEd.Student.CourseHistory.IncludeCumulativeGPA'] = 1;
 
