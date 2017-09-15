@@ -31,6 +31,8 @@ class PendingService {
       ->fields('stustatus', array('STUDENT_ID', 'ORGANIZATION_TERM_ID'))
       ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = classes.SECTION_ID')
       ->fields('sec', array('SECTION_NUMBER', 'SECTION_NAME'))
+      ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID')
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = sec.COURSE_ID')
       ->fields('course', array('COURSE_TITLE'))
       ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = sec.ORGANIZATION_TERM_ID')

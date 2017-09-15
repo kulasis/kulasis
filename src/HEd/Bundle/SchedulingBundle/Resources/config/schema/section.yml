@@ -194,6 +194,15 @@ HEd.Section:
       field_type: text
       column_name: "Available"
       label_name: "Available"
+    ParentEnroll:
+      description: "Parent Must Enroll"
+      db_column_name: PARENT_ENROLL
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Parent Must Enroll"
+      label_name: "Parent Must Enroll"
   unique_keys:
     SectionNumberOrganizationTermID: [ "HEd.Section.SectionNumber", "HEd.Section.OrganizationTermID" ]
 

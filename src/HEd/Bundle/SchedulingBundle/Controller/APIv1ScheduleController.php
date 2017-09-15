@@ -339,8 +339,20 @@ class APIv1ScheduleController extends APIController {
     // get logged in user
     $currentUser = $this->authorizeUser();
     $data = array();
+
+
+    $related_constituents = array();
+    $related_constituent_results = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
+      ->fields('rel', array('CONSTITUENT_ID'))
+      ->condition('rel.CONSTITUENT_ID', $currentUser)
+      ->execute();
+    while ($related_constituent_row = $related_constituent_results->fetch()) {
+      $related_constituents[] = $related_constituent_row['CONSTITUENT_ID'];
+    }
+    $related_constituents[] = $currentUser;
+
     $pending_service = $this->get('kula.Core.billing.pending');
-    $pending_service->calculatePendingCharges($currentUser);
+    $pending_service->calculatePendingCharges($related_constituents);
     $data['classes'] = $pending_service->getPendingClasses();
     $data['billing_total'] = $pending_service->totalAmount();
     // return class list
