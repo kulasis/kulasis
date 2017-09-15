@@ -68,12 +68,22 @@ class APIv1PaymentController extends APIController {
       ->condition('user.USER_ID', $currentUser)
       ->execute()->fetch();
 
+    $related_constituents = array();
+    $related_constituent_results = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
+      ->fields('rel', array('CONSTITUENT_ID'))
+      ->condition('rel.CONSTITUENT_ID', $currentUser)
+      ->execute();
+    while ($related_constituent_row = $related_constituent_results->fetch()) {
+      $related_constituents[] = $related_constituent_row['CONSTITUENT_ID'];
+    }
+    $related_constituents[] = $currentUser;
+
     $transaction_service = $this->get('kula.Core.billing.transaction');
     $transaction_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
 
     // calculate pending charges
     $pending_service = $this->get('kula.Core.billing.pending');
-    $pending_service->calculatePendingCharges($currentUser);
+    $pending_service->calculatePendingCharges($related_constituents);
     $pending_classes = $pending_service->getPendingClasses();
     
     if ($pending_service->totalAmount() > 0 AND $pending_service->totalAmount() <= 2000) {
@@ -188,7 +198,7 @@ class APIv1PaymentController extends APIController {
             ->setFrom(['kulasis@ocac.edu' => 'Oregon College of Art and Craft'])
             ->setReplyTo('cmalone@ocac.edu')
             ->setTo($user['USERNAME'])
-            ->setBcc(array('cmalone@ocac.edu', 'mjacobsen@ocac.edu', 'jthompson@ocac.edu'))
+            ->setBcc(array('mjacobsen@ocac.edu', 'alex@acreative.io')) // 'cmalone@ocac.edu', 'mjacobsen@ocac.edu', 'jthompson@ocac.edu'
             ->setBody(
                 $this->renderView(
                     'KulaCoreBillingBundle:CoreEmail:purchase.text.twig',
