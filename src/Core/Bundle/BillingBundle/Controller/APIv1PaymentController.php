@@ -71,7 +71,7 @@ class APIv1PaymentController extends APIController {
     $related_constituents = array();
     $related_constituent_results = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
       ->fields('rel', array('CONSTITUENT_ID'))
-      ->condition('rel.CONSTITUENT_ID', $currentUser)
+      ->condition('rel.RELATED_CONSTITUENT_ID', $currentUser)
       ->execute();
     while ($related_constituent_row = $related_constituent_results->fetch()) {
       $related_constituents[] = $related_constituent_row['CONSTITUENT_ID'];

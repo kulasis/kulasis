@@ -39,11 +39,28 @@ class APIv1StudentController extends APIController {
     $constituent_id = $constituent_service->createConstituent($constituent_data);
 
     // create constituent relationship
-    $this->newPoster()->add('Core.Constituent.Relationship', 0, array(
+    $relationship_id = $this->newPoster()->add('Core.Constituent.Relationship', 0, array(
       'Core.Constituent.Relationship.ConstituentID' => $constituent_id,
       'Core.Constituent.Relationship.RelatedConstituentID' => $currentUser,
       'Core.Constituent.Relationship.Relationship' => isset($relationship_data['Core.Constituent.Relationship.Relationship']) ? $relationship_data['Core.Constituent.Relationship.Relationship'] : null
-    ))->process(array('VERIFY_PERMISSIONS' => false));
+    ))->process(array('VERIFY_PERMISSIONS' => false))->getID();
+
+    // add parent record if it doesn't exist
+    $existing_parent_id = $this->db()->db_select('STUD_PARENT', 'parent')
+      ->fields('parent', array('PARENT_ID'))
+      ->condition('parent.PARENT_ID', $currentUser)
+      ->execute()->fetch();
+
+    if (!$existing_parent_id['PARENT_ID']) {
+      $parent_id = $this->newPoster()->add('HEd.Parent', 0, array(
+        'HEd.Parent.ID' => $currentUser
+      ))->process(array('VERIFY_PERMISSIONS' => false))->getID();      
+    }
+
+    // add student parent relationship record
+    $student_parent_id = $this->newPoster()->add('HEd.Student.Parent', 0, array(
+      'HEd.Student.Parent.ID' => $relationship_id
+    ))->process(array('VERIFY_PERMISSIONS' => false))->getID();
 
     if ($constituent_id) {
       $transaction->commit();
