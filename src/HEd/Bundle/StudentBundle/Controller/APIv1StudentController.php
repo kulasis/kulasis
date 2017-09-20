@@ -79,7 +79,7 @@ class APIv1StudentController extends APIController {
     $this->authorizeConstituent($student_id);
 
     $student = $this->db()->db_select('CONS_CONSTITUENT', 'cons')
-      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'PERMANENT_NUMBER'))
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'PERMANENT_NUMBER', 'GENDER'))
       ->join('STUD_STUDENT', 'stu', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
       ->fields('stu', array('PARENT_GUARDIAN'))
       ->condition('cons.CONSTITUENT_ID', $student_id)
@@ -96,7 +96,7 @@ class APIv1StudentController extends APIController {
 
       // Get student status data
       $student += $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
-        ->fields('stustatus', array('STUDENT_STATUS_ID', 'GRADE', 'LEVEL', 'STATUS', 'ENTER_DATE', 'ENTER_CODE', 'GROUP_WITH', 'OFF_CAMPUS', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVORIAL', 'MED_MEN_EMO_SOC_HEALTH', 'MED_INSURANCE', 'MED_PHYSICIAN', 'SCHOOL', 'COMMENTS', 'ORGANIZATION_TERM_ID'))
+        ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL', 'STATUS', 'GRADE', 'ENTER_DATE', 'ENTER_CODE', 'GROUP_WITH', 'OFF_CAMPUS', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVIORAL', 'MED_MEN_EMO_SOC_HEALTH', 'MED_INSURANCE', 'MED_PHYSICIAN', 'SCHOOL', 'COMMENTS', 'ORGANIZATION_TERM_ID'))
         ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
         ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
         ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
