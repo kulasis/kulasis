@@ -79,7 +79,7 @@ class APIv1StudentController extends APIController {
     $this->authorizeConstituent($student_id);
 
     $student = $this->db()->db_select('CONS_CONSTITUENT', 'cons')
-      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'PERMANENT_NUMBER', 'GENDER'))
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'PERMANENT_NUMBER', 'GENDER', 'BIRTH_DATE'))
       ->join('STUD_STUDENT', 'stu', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
       ->fields('stu', array('PARENT_GUARDIAN'))
       ->condition('cons.CONSTITUENT_ID', $student_id)
