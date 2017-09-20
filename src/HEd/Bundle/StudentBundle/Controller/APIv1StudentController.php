@@ -247,14 +247,28 @@ class APIv1StudentController extends APIController {
     // Check for authorized access to constituent
     $this->authorizeConstituent($student_id);
 
+    $currentUser = $this->authorizeUser();
+
     $constituent_data = $this->form('edit', 'Core.Constituent', 0);
     $student_data = $this->form('edit', 'HEd.Student', 0);
+    $relationship_data = $this->form('edit', 'Core.Constituent.Relationship', 0);
 
     $transaction = $this->db()->db_transaction();
 
     $changes = $this->newPoster()->edit('Core.Constituent', $student_id, $constituent_data)->process(array('VERIFY_PERMISSIONS' => false))->getResult();
     $changes += $this->newPoster()->edit('HEd.Student', $student_id, $student_data)->process(array('VERIFY_PERMISSIONS' => false))->getResult();
     
+    // get constituent relationship
+    $relationship = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
+      ->fields('rel', array('RELATIONSHIP_ID'))
+      ->condition('rel.RELATED_CONSTITUENT_ID', $currentUser)
+      ->condition('rel.CONSTITUENT_ID', $student_id)
+      ->execute()->fetch();
+
+    if ($relationship['RELATIONSHIP_ID']) {
+      $changes += $this->newPoster()->edit('Core.Constituent.Relationship', $relationship['RELATIONSHIP_ID'], $relationship_data)->process(array('VERIFY_PERMISSIONS' => false))->getResult();
+    }
+
     if ($changes) {
       $transaction->commit();
       return $this->JSONResponse($changes);
