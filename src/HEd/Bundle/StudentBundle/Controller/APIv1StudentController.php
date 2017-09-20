@@ -79,12 +79,10 @@ class APIv1StudentController extends APIController {
 
       // Get student status data
       $student += $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
-        ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL', 'STATUS', 'ENTER_DATE', 'ENTER_CODE', 'GROUP_WITH', 'OFF_CAMPUS', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVIORAL', 'MED_MEN_EMO_SOC_HEALTH', 'MED_INSURANCE', 'MED_PHYSICIAN', 'SCHOOL', 'COMMENTS', 'ORGANIZATION_TERM_ID'))
+        ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL', 'STATUS', 'GRADE', 'ENTER_DATE', 'ENTER_CODE', 'GROUP_WITH', 'OFF_CAMPUS', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVIORAL', 'MED_MEN_EMO_SOC_HEALTH', 'MED_INSURANCE', 'MED_PHYSICIAN', 'SCHOOL', 'COMMENTS', 'ORGANIZATION_TERM_ID'))
         ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
         ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
         ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
-        ->leftJoin('CORE_LOOKUP_VALUES', 'value', "value.CODE = STUD_STUDENT_STATUS.GRADE AND value.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = '".$this->focus->getOrganizationTarget().".Student.Enrollment.Grade')")
-        ->fields('value', array('DESCRIPTION' => 'GRADE'))
         ->condition('stustatus.STUDENT_ID', $student_id)
         ->condition('org.ORGANIZATION_ABBREVIATION', $org)
         ->condition('term.TERM_ABBREVIATION', $term)
