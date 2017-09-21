@@ -46,7 +46,7 @@ api_v1_student_emergency_delete:
 api_v1_get_agreements:
     path:     /user/current/agreements/pending
     defaults: { _controller: KulaHEdStudentBundle:APIv1Form:getAgreements }
-    methods: [POST]
+    methods: [GET]
 
 api_v1_student_sign_agreement:
     path:     /student/{student_id}/enrollment/{org}/{term}/agreements/{form_id}
