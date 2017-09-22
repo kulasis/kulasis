@@ -25,6 +25,20 @@ class APIv1FormController extends APIController {
       $related_constituents[] = $related_constituent_row['CONSTITUENT_ID'];
     }
 
+    // find pending students
+    $pending_constituents = array();
+    $pending_results = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = classes.STUDENT_STATUS_ID')
+      ->fields('stustatus', array('STUDENT_ID'))
+      ->condition('stustatus.STUDENT_ID', $related_constituents, 'IN')
+      ->condition('classes.DROPPED', 0)
+      ->condition('classes.START_DATE', date('Y-m-d'), '>=')
+      ->condition('classes.REGISTRATION_TYPE', 'ONL')
+      ->execute();
+    while ($pending_row = $pending_results->fetch()) {
+      $pending_constituents[] = $pending_row['STUDENT_ID'];
+    }
+
     $data = array();
     // find enrollments for related constituents
     $forms_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
@@ -41,7 +55,7 @@ class APIv1FormController extends APIController {
       ->leftJoin('STUD_STUDENT_FORMS', 'stuforms', 'stuforms.FORM_ID = form.FORM_ID AND stuforms.STUDENT_STATUS_ID = stustatus.STUDENT_STATUS_ID AND stuforms.COMPLETED = 1')
       ->fields('stuforms', array('AGREE', 'COMPLETED', 'COMPLETED_TIMESTAMP'))
       ->condition('class.DROPPED', 0)
-      ->condition('stustatus.STUDENT_ID', $related_constituents, 'IN')
+      ->condition('stustatus.STUDENT_ID', $pending_constituents, 'IN')
       ->orderBy('LAST_NAME', 'ASC', 'cons')
       ->orderBy('FIRST_NAME', 'ASC', 'cons')
       ->execute();
