@@ -109,7 +109,7 @@ class APIv1EnrollmentController extends APIController {
         $student_enrollment = $this->get('kula.HEd.student')->enrollStudent(array(
           'StudentID' => $student_id,
           'OrganizationTermID' => $term_info['ORGANIZATION_TERM_ID'],
-          'HEd.Student.Status.Grade' => $defaults['DEFAULT_GRADE'],
+          'HEd.Student.Status.Grade' => isset($status_data['HEd.Student.Status.Grade']) ? $status_data['HEd.Student.Status.Grade'] : $defaults['DEFAULT_GRADE'],
           'HEd.Student.Status.Level' => $defaults['DEFAULT_LEVEL'],
           'HEd.Student.Status.EnterDate' => date('Y-m-d'),
           'HEd.Student.Status.EnterCode' => $defaults['DEFAULT_ENTER_CODE'],

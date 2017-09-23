@@ -86,14 +86,14 @@ HEd.Student.EmergencyContact:
       column_name: "Authorized Driver"
       label_name: "Authorized Driver"
     Removed: 
-      description: "Revmoed"
+      description: "Removed"
       db_column_name: REMOVED
       db_column_type: bool
       db_column_default: 0
       db_column_null: false
       field_type: checkbox
       column_name: "Removed"
-      label_name: "Revmoed"
+      label_name: "Removed"
     RemovedUserstamp:
       description: "Removed Userstamp"
       parent: Core.User.ID

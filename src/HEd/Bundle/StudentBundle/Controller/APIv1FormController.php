@@ -19,10 +19,24 @@ class APIv1FormController extends APIController {
     $related_constituents = array();
     $related_constituent_results = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
       ->fields('rel', array('CONSTITUENT_ID'))
-      ->condition('rel.CONSTITUENT_ID', $user_id)
+      ->condition('rel.RELATED_CONSTITUENT_ID', $currentUser)
       ->execute();
     while ($related_constituent_row = $related_constituent_results->fetch()) {
       $related_constituents[] = $related_constituent_row['CONSTITUENT_ID'];
+    }
+
+    // find pending students
+    $pending_constituents = array();
+    $pending_results = $this->db()->db_select('STUD_STUDENT_CLASSES', 'classes')
+      ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = classes.STUDENT_STATUS_ID')
+      ->fields('stustatus', array('STUDENT_ID'))
+      ->condition('stustatus.STUDENT_ID', $related_constituents, 'IN')
+      ->condition('classes.DROPPED', 0)
+      ->condition('classes.START_DATE', date('Y-m-d'), '>=')
+      ->condition('classes.REGISTRATION_TYPE', 'ONL')
+      ->execute();
+    while ($pending_row = $pending_results->fetch()) {
+      $pending_constituents[] = $pending_row['STUDENT_ID'];
     }
 
     $data = array();
@@ -31,17 +45,17 @@ class APIv1FormController extends APIController {
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
       ->fields('stustatus', array('STUDENT_ID'))
       ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID')
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterm.ORGANIZATION_TERM_ID = stuforms.ORGANIZATION_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterm.ORGANIZATION_ID')
       ->fields('org', array('ORGANIZATION_ABBREVIATION'))
-      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterm.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
-      ->join('STUD_FORM', 'form', 'orgterms.ORGANIZATION_TERM_ID = form.ORGANIZATION_TERM_ID')
+      ->join('STUD_FORM', 'form', 'orgterm.ORGANIZATION_TERM_ID = form.ORGANIZATION_TERM_ID')
       ->fields('form', array('FORM_ID', 'FORM_TEXT', 'OPTIONAL', 'FORM_NAME'))
       ->leftJoin('STUD_STUDENT_FORMS', 'stuforms', 'stuforms.FORM_ID = form.FORM_ID AND stuforms.STUDENT_STATUS_ID = stustatus.STUDENT_STATUS_ID AND stuforms.COMPLETED = 1')
       ->fields('stuforms', array('AGREE', 'COMPLETED', 'COMPLETED_TIMESTAMP'))
       ->condition('class.DROPPED', 0)
-      ->condition('stustatus.STUDENT_ID', $related_constituents, 'IN')
+      ->condition('stustatus.STUDENT_ID', $pending_constituents, 'IN')
       ->orderBy('LAST_NAME', 'ASC', 'cons')
       ->orderBy('FIRST_NAME', 'ASC', 'cons')
       ->execute();
@@ -78,9 +92,9 @@ class APIv1FormController extends APIController {
     // See if agreement exists
     $agreement = $this->db()->db_select('STUD_STUDENT_FORMS', 'stuforms')
       ->fields('form', array('STUDENT_FORM_ID', 'FORM_NAME', 'FORM_TYPE', 'OPTIONAL', 'RULE', 'FORM_TEXT'))
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterm.ORGANIZATION_TERM_ID = stuforms.ORGANIZATION_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
-      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = stuforms.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterm.ORGANIZATION_ID')
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterm.TERM_ID')
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
       ->condition('term.TERM_ABBREVIATION', $term)
       ->execute()->fetch();
@@ -88,9 +102,9 @@ class APIv1FormController extends APIController {
     // Student Status Info
     $student_status_id = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
       ->fields('stustatus', array('STUDENT_STATUS_ID'))
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
-      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterm.ORGANIZATION_ID')
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterm.TERM_ID')
       ->condition('stustatus.STUDENT_ID', $student_id)
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
       ->condition('term.TERM_ABBREVIATION', $term)
