@@ -90,9 +90,9 @@ class APIv1FormController extends APIController {
     $agreement_data = $this->form('add', 'HEd.Student.Form', 0);
 
     // See if agreement exists
-    $agreement = $this->db()->db_select('STUD_STUDENT_FORMS', 'stuforms')
+    $agreement = $this->db()->db_select('STUD_FORMS', 'forms')
       ->fields('form', array('STUDENT_FORM_ID', 'FORM_NAME', 'FORM_TYPE', 'OPTIONAL', 'RULE', 'FORM_TEXT'))
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = stuforms.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = forms.ORGANIZATION_TERM_ID')
       ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterm.ORGANIZATION_ID')
       ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterm.TERM_ID')
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
