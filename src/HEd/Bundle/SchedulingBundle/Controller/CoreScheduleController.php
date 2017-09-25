@@ -11,6 +11,56 @@ class CoreScheduleController extends Controller {
     $this->processForm();
     $this->setRecordType('Core.HEd.Student.Status');
     
+
+    if ($discount_data = $this->request->request->get('discount')) {
+
+      foreach($discount_data['HEd.Student.Class'] as $student_class_id => $field) {
+
+        // Get discount info
+        $discount_info = $this->db()->db_select('BILL_SECTION_FEE_DISCOUNT', 'discount')
+          ->fields('discount', array('AMOUNT'))
+          ->condition('discount.SECTION_FEE_DISCOUNT_ID', $field['HEd.Student.Class.Discount'])
+          ->execute()->fetch();
+
+        // Get class info
+        $class_info = $this->db()->db_select('STUD_STUDENT_CLASSES', 'stuclass')
+          ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = stuclass.SECTION_ID')
+          ->fields('sec', array('SECTION_ID', 'ORGANIZATION_TERM_ID'))
+          ->condition('stuclass.STUDENT_CLASS_ID', $student_class_id)
+          ->execute()->fetch();
+
+        // Add Discount payment
+        $payment_service = $this->get('kula.Core.billing.payment');
+        $payment_id = $payment_service->addPayment($this->record->getSelectedRecord()['STUDENT_ID'], $this->record->getSelectedRecord()['STUDENT_ID'], 'D', null, date('Y-m-d'), null, $discount_info['AMOUNT'], null, $field['HEd.Student.Class.DiscountProof']);
+
+        // Add discount transaction
+        $transaction_service = $this->get('kula.Core.billing.transaction');
+        $transaction_id = $transaction_service->addDiscount($field['HEd.Student.Class.Discount'], $this->record->getSelectedRecord()['STUDENT_ID'], $class_info['ORGANIZATION_TERM_ID'], $student_class_id, $payment_id);
+
+        // Get largest charge
+        $charge_id = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+          ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'APPLIED_BALANCE'))
+          ->condition('trans.CONSTITUENT_ID', $this->record->getSelectedRecord()['STUDENT_ID'])
+          ->condition('trans.STUDENT_CLASS_ID', $student_class_id)
+          ->orderBy('APPLIED_BALANCE', 'DESC', 'trans')
+          ->execute()->fetch();
+
+          if ($charge_id['CONSTITUENT_TRANSACTION_ID']) {
+            // Calculate applied payment
+            $payment_service->addAppliedPayment($payment_id, $charge_id['CONSTITUENT_TRANSACTION_ID'], $discount_info['AMOUNT']);
+
+            $payment_service->calculateBalanceForCharge($charge_id['CONSTITUENT_TRANSACTION_ID']);
+                        $payment_service->calculateBalanceForPayment($payment_id);
+          }
+
+        // Post discount
+        $payment_service->postPayment($payment_id);
+        $transaction_service->postTransaction($transaction_id);
+
+      } // end foreach
+     
+    }
+
     // set start date
     $term_info = $this->db()->db_select('CORE_TERM')
       ->fields('CORE_TERM', array('START_DATE', 'END_DATE'))
@@ -134,11 +184,11 @@ class CoreScheduleController extends Controller {
     $this->authorize();
     $this->processForm();
     $this->setRecordType('Core.HEd.Student.Status');
-      
+
     $class = array();
     
     $class = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'CHANGE_REASON', 'CHANGE_NOTES', 'DEGREE_REQ_GRP_ID', 'COURSE_ID', 'REPEAT_TAG_ID', 'REGISTRATION_TYPE'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'CHANGE_REASON', 'CHANGE_NOTES', 'DEGREE_REQ_GRP_ID', 'COURSE_ID', 'REPEAT_TAG_ID', 'REGISTRATION_TYPE', 'SECTION_ID'))
       ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
       ->condition('STUDENT_CLASS_ID', $id)
       ->execute()->fetch();
