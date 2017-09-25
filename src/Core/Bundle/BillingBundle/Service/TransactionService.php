@@ -32,7 +32,7 @@ class TransactionService {
       ->execute()->fetch();
 
     // Add transaction
-    $this->addTransaction($constituent_id, $organization_term_id, $discount_info['CODE_ID'], date('Y-m-d'), null, $discount_info['AMOUNT'] * -1, $payment_id, $class_id);
+    return $this->addTransaction($constituent_id, $organization_term_id, $discount_info['CODE_ID'], date('Y-m-d'), null, $discount_info['AMOUNT'] * -1, $payment_id, $class_id);
 
   }
 
