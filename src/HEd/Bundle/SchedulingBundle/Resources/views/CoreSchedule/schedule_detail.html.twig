@@ -2,6 +2,13 @@
 
 {% block detail %}
 <div class="group-box">
+<div class="group-box-header">Add Discount</div>
+<div class="group-box-contents group">
+{{ kula_field({ add: true, post_type: 'discount', field: 'HEd.Student.Class.Discount', SECTION_ID: class.SECTION_ID, db_row_id: class.STUDENT_CLASS_ID, value: null, label: true }) }}
+{{ kula_field({ add: true, post_type: 'discount', field: 'HEd.Student.Class.DiscountProof', db_row_id: class.STUDENT_CLASS_ID, value: null, label: true }) }}
+</div>
+</div>
+<div class="group-box">
 <div class="group-box-header">Registration</div>
 <div class="group-box-contents group">
 {{ kula_field({ edit: true, field: 'HEd.Student.Class.Priority', db_row_id: class.STUDENT_CLASS_ID, value: class.PRIORITY, label: true }) }}

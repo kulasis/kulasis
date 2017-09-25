@@ -146,3 +146,15 @@ HEd.Student.Class:
       field_type: checkbox
       column_name: "Paid"
       label_name: "Paid"
+    Discount:
+      description: "Discount"
+      field_type: select
+      class: Kula\Core\Bundle\BillingBundle\Field\SectionDiscount
+      column_name: "Discount"
+      label_name: "Discount"
+    DiscountProof:
+      description: "Discount Proof"
+      field_type: text
+      field_size: 15
+      column_name: "Discount Proof"
+      label_name: "Discount Proof"
