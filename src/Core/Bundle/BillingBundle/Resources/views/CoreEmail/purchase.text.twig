@@ -4,11 +4,13 @@ Permanent Number: {{ user.PERMANENT_NUMBER }}
 Order #: {{ payment_id }}
 
 {% for class in pending %}
+Student Name: {{ class.LAST_NAME }}, {{ class.FIRST_NAME }} ({{ class.PERMANENT_NUMBER }})
 {{ class.ORGANIZATION_ABBREVIATION }} / {{ class.TERM_ABBREVIATION }}
 {{ class.SECTION_NUMBER }} {{ class.SECTION_NAME }}
 {% for charge in class.billing %}
 {{ charge.TRANSACTION_DESCRIPTION }} ${{ charge.AMOUNT }}
 {% endfor %}
+
 {% endfor %}
 
 Paid Amount: ${{ merchant.ssl_amount }}
