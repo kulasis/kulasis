@@ -99,8 +99,8 @@ class APIv1PaymentController extends APIController {
       $payment_service = $this->get('kula.Core.billing.payment');
       $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
       $payment_id = $payment_service->addPayment(
-        $currentUser, 
         null, 
+        $currentUser,
         'P',
         $payment_method, 
         date('Y-m-d'), 
