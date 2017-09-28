@@ -111,6 +111,7 @@ class APIv1FormController extends APIController {
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
       ->condition('term.TERM_ABBREVIATION', $term)
       ->condition('forms.STUDENT_STATUS_ID', $student_status_id)
+      ->condition('forms.FORM_ID', $form_id)
       ->execute()->fetch();   
 
     // edit existing agreement
