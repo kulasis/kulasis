@@ -99,8 +99,8 @@ class APIv1PaymentController extends APIController {
       $payment_service = $this->get('kula.Core.billing.payment');
       $payment_service->setDBOptions(array('VERIFY_PERMISSIONS' => false, 'AUDIT_LOG' => false));
       $payment_id = $payment_service->addPayment(
-        $currentUser, 
-        $currentUser, 
+        null, 
+        $currentUser,
         'P',
         $payment_method, 
         date('Y-m-d'), 
@@ -110,6 +110,7 @@ class APIv1PaymentController extends APIController {
       $organization_term_id = (count($pending_service->getPendingClasses()) > 0) ? $pending_service->getPendingClasses()[0]['ORGANIZATION_TERM_ID'] : null;
       // loop through pending charges
       $pending_charges = $pending_service->getPendingCharges();
+      $constituent_transaction_totals = array();
       foreach($pending_charges as $charge) {
         if ($charge['CODE_TYPE'] == 'C') {
           // apply charge to payment
@@ -120,9 +121,28 @@ class APIv1PaymentController extends APIController {
             null,
             1
           );
+          // sum total
+          if (!isset($constituent_transaction_totals[$charge['CONSTITUENT_ID']])) {
+            $constituent_transaction_totals[$charge['CONSTITUENT_ID']] = 0.0;
+          }
+          $constituent_transaction_totals[$charge['CONSTITUENT_ID']] += $charge['APPLIED_BALANCE'];
         } // if on code type of charge 
       } // end loop on pending charges
 
+      // Loop through each applied payment total
+      $transaction_payment_ids = array();
+      foreach($constituent_transaction_totals as $student_id => $amount) {
+        // Add payment transaction 
+        $transaction_payment_ids[] = $transaction_service->addTransaction(
+          $student_id, 
+          $organization_term_id, 
+          122, 
+          date('Y-m-d'), 
+          null, 
+          $amount, 
+          $payment_id
+        );
+      }
 
       if (($payment_method == 'CREDIT' OR $payment_method == 'DEBIT')) {
         // Send payment to processor
@@ -155,16 +175,6 @@ class APIv1PaymentController extends APIController {
 
         // Only if amounts are the same
         if ($merchant_service->getResultAmount() == $pending_service->totalAmount() AND !$merchant_service->getError()) {
-          // Add payment transaction 
-          $transaction_payment_id = $transaction_service->addTransaction(
-            $currentUser, 
-            $organization_term_id, 
-            122, 
-            date('Y-m-d'), 
-            null, 
-            $merchant_service->getResultAmount(), 
-            $payment_id
-          );
 
           // lock all transactions
           $payment_service->lockAppliedPayments($payment_id);
@@ -185,7 +195,9 @@ class APIv1PaymentController extends APIController {
 
           // post payment
           $payment_service->postPayment($payment_id);
-          $transaction_service->postTransaction($transaction_payment_id);
+          foreach($transaction_payment_ids as $transaction_payment_id) {
+            $transaction_service->postTransaction($transaction_payment_id);
+          }
 
           // set class payment status
           foreach($pending_classes as $class) {
@@ -198,7 +210,7 @@ class APIv1PaymentController extends APIController {
             ->setFrom(['kulasis@ocac.edu' => 'Oregon College of Art and Craft'])
             ->setReplyTo('cmalone@ocac.edu')
             ->setTo($user['USERNAME'])
-            ->setBcc(array('mjacobsen@ocac.edu', 'cmalone@ocac.edu', 'mjacobsen@ocac.edu', 'jthompson@ocac.edu', 'alex@acreative.io')) // 
+            ->setBcc(array('mjacobsen@ocac.edu', 'cmalone@ocac.edu', 'jthompson@ocac.edu', 'alex@acreative.io')) // 
             ->setBody(
                 $this->renderView(
                     'KulaCoreBillingBundle:CoreEmail:purchase.text.twig',

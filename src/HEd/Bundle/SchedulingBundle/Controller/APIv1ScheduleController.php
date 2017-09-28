@@ -227,7 +227,7 @@ class APIv1ScheduleController extends APIController {
 
     // return class list
     $class_list_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'LEVEL', 'CREDITS_ATTEMPTED', 'PAID'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'LEVEL', 'CREDITS_ATTEMPTED', 'PAID', 'CREATED_TIMESTAMP'))
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
       ->fields('stustatus', array('STUDENT_STATUS_ID'))
       ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
