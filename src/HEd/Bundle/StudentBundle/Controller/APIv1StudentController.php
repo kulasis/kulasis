@@ -39,11 +39,28 @@ class APIv1StudentController extends APIController {
     $constituent_id = $constituent_service->createConstituent($constituent_data);
 
     // create constituent relationship
-    $this->newPoster()->add('Core.Constituent.Relationship', 0, array(
+    $relationship_id = $this->newPoster()->add('Core.Constituent.Relationship', 0, array(
       'Core.Constituent.Relationship.ConstituentID' => $constituent_id,
       'Core.Constituent.Relationship.RelatedConstituentID' => $currentUser,
       'Core.Constituent.Relationship.Relationship' => isset($relationship_data['Core.Constituent.Relationship.Relationship']) ? $relationship_data['Core.Constituent.Relationship.Relationship'] : null
-    ))->process(array('VERIFY_PERMISSIONS' => false));
+    ))->process(array('VERIFY_PERMISSIONS' => false))->getID();
+
+    // add parent record if it doesn't exist
+    $existing_parent_id = $this->db()->db_select('STUD_PARENT', 'parent')
+      ->fields('parent', array('PARENT_ID'))
+      ->condition('parent.PARENT_ID', $currentUser)
+      ->execute()->fetch();
+
+    if (!$existing_parent_id['PARENT_ID']) {
+      $parent_id = $this->newPoster()->add('HEd.Parent', 0, array(
+        'HEd.Parent.ID' => $currentUser
+      ))->process(array('VERIFY_PERMISSIONS' => false))->getID();      
+    }
+
+    // add student parent relationship record
+    $student_parent_id = $this->newPoster()->add('HEd.Student.Parent', 0, array(
+      'HEd.Student.Parent.ID' => $relationship_id
+    ))->process(array('VERIFY_PERMISSIONS' => false))->getID();
 
     if ($constituent_id) {
       $transaction->commit();
@@ -62,7 +79,7 @@ class APIv1StudentController extends APIController {
     $this->authorizeConstituent($student_id);
 
     $student = $this->db()->db_select('CONS_CONSTITUENT', 'cons')
-      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'PERMANENT_NUMBER'))
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'PERMANENT_NUMBER', 'GENDER', 'BIRTH_DATE'))
       ->join('STUD_STUDENT', 'stu', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
       ->fields('stu', array('PARENT_GUARDIAN'))
       ->condition('cons.CONSTITUENT_ID', $student_id)
@@ -79,7 +96,7 @@ class APIv1StudentController extends APIController {
 
       // Get student status data
       $student += $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
-        ->fields('stustatus', array('STUDENT_STATUS_ID', 'GRADE', 'LEVEL', 'STATUS', 'ENTER_DATE', 'ENTER_CODE', 'GROUP_WITH', 'OFF_CAMPUS', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVORIAL', 'MED_MEN_EMO_SOC_HEALTH', 'MED_INSURANCE', 'MED_PHYSICIAN', 'SCHOOL', 'COMMENTS', 'ORGANIZATION_TERM_ID'))
+        ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL', 'STATUS', 'GRADE', 'ENTER_DATE', 'ENTER_CODE', 'GROUP_WITH', 'OFF_CAMPUS', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVIORAL', 'MED_MEN_EMO_SOC_HEALTH', 'MED_INSURANCE', 'MED_PHYSICIAN', 'SCHOOL', 'COMMENTS', 'ORGANIZATION_TERM_ID'))
         ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
         ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
         ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
@@ -225,92 +242,33 @@ class APIv1StudentController extends APIController {
 
   }
 
-  public function makeAgreementAction($student_id, $org, $term, $form_id) {
-
-    // Check for authorized access to constituent
-    $this->authorizeConstituent($student_id);
-
-    $currentUser = $this->authorizeUser();
-    $changes = null;
-
-    $agreement_data = $this->form('add', 'HEd.Student.Form', 0);
-
-    // See if agreement exists
-    $agreement = $this->db()->db_select('STUD_STUDENT_FORMS', 'stuforms')
-      ->fields('form', array('STUDENT_FORM_ID', 'FORM_NAME', 'FORM_TYPE', 'OPTIONAL', 'RULE', 'FORM_TEXT'))
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterm.ORGANIZATION_TERM_ID = stuforms.ORGANIZATION_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
-      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
-      ->condition('org.ORGANIZATION_ABBREVIATION', $org)
-      ->condition('term.TERM_ABBREVIATION', $term)
-      ->execute()->fetch();
-
-    // Student Status Info
-    $student_status_id = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
-      ->fields('stustatus', array('STUDENT_STATUS_ID'))
-      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
-      ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
-      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
-      ->condition('stustatus.STUDENT_ID', $student_id)
-      ->condition('org.ORGANIZATION_ABBREVIATION', $org)
-      ->condition('term.TERM_ABBREVIATION', $term)
-      ->execute()->fetch()['STUDENT_STATUS_ID'];    
-
-    // edit existing agreement
-    if ($agreement['STUDENT_FORM_ID']) {
-
-      $changes = $this->newPoster()->edit('HEd.Student.Form', $agreement['STUDENT_FORM_ID'], array(
-        'HEd.Student.Form.Agree' => $agreement_data['HEd.Student.Form.Agree'],
-        'HEd.Student.Form.Completed' => 1,
-        'HEd.Student.Form.CompletedTimestamp' => date('Y-m-d H:i:s'),
-        'HEd.Student.Form.CompletedConstituentID' => $currentUser,
-        'HEd.Student.Form.CompletedIP' => $agreement_data['HEd.Student.Form.CompletedIP']
-      ))->process(array('VERIFY_PERMISSIONS' => false))->getResult();
-
-
-    } else { // end if student_form_id
-      // get agreement info
-      $agreement_info = $this->db()->db_select('STUD_FORM', 'form')
-        ->fields('form')
-        ->condition('form.FORM_ID', $form_id)
-        ->execute()->fetch();
-
-      // add agreement
-      $changes = $this->newPoster()->add('HEd.Student.Form', 0, array(
-        'HEd.Student.Form.StudentStatusID' => $student_status_id,
-        'HEd.Student.Form.FormID' => $form_id,
-        'HEd.Student.Form.FormText' => $agreement_info['FORM_TEXT'],
-        'HEd.Student.Form.Agree' => $agreement_data['HEd.Student.Form.Agree'],
-        'HEd.Student.Form.Completed' => 1,
-        'HEd.Student.Form.CompletedTimestamp' => date('Y-m-d H:i:s'),
-        'HEd.Student.Form.CompletedConstituentID' => $currentUser,
-        'HEd.Student.Form.CompletedIP' => $agreement_data['HEd.Student.Form.CompletedIP']
-      ))->process(array('VERIFY_PERMISSIONS' => false))->getResult();
-
-    } // 
-
-    if ($changes) {
-      $transaction->commit();
-      return $this->JSONResponse($changes);
-    } else {
-      $transaction->rollback();
-      throw new DisplayException('No changes made.');
-    }
-  }
-
   public function updateStudentAction($student_id) {
 
     // Check for authorized access to constituent
     $this->authorizeConstituent($student_id);
 
+    $currentUser = $this->authorizeUser();
+
     $constituent_data = $this->form('edit', 'Core.Constituent', 0);
     $student_data = $this->form('edit', 'HEd.Student', 0);
+    $relationship_data = $this->form('edit', 'Core.Constituent.Relationship', 0);
 
     $transaction = $this->db()->db_transaction();
 
     $changes = $this->newPoster()->edit('Core.Constituent', $student_id, $constituent_data)->process(array('VERIFY_PERMISSIONS' => false))->getResult();
     $changes += $this->newPoster()->edit('HEd.Student', $student_id, $student_data)->process(array('VERIFY_PERMISSIONS' => false))->getResult();
     
+    // get constituent relationship
+    $relationship = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
+      ->fields('rel', array('RELATIONSHIP_ID'))
+      ->condition('rel.RELATED_CONSTITUENT_ID', $currentUser)
+      ->condition('rel.CONSTITUENT_ID', $student_id)
+      ->execute()->fetch();
+
+    if ($relationship['RELATIONSHIP_ID']) {
+      $changes += $this->newPoster()->edit('Core.Constituent.Relationship', $relationship['RELATIONSHIP_ID'], $relationship_data)->process(array('VERIFY_PERMISSIONS' => false))->getResult();
+    }
+
     if ($changes) {
       $transaction->commit();
       return $this->JSONResponse($changes);

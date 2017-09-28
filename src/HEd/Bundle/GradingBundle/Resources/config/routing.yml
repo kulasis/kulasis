@@ -1,3 +1,7 @@
+_HEd_grading_api:
+    resource: "@KulaHEdGradingBundle/Resources/config/routing/api.yml"
+    prefix: api/v1
+
 _sis_HEd_grading:
     resource: "@KulaHEdGradingBundle/Resources/config/routing/core.yml"
     prefix: core/HEd

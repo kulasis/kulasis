@@ -31,6 +31,8 @@ class PendingService {
       ->fields('stustatus', array('STUDENT_ID', 'ORGANIZATION_TERM_ID'))
       ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = classes.SECTION_ID')
       ->fields('sec', array('SECTION_NUMBER', 'SECTION_NAME'))
+      ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID')
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'))
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = sec.COURSE_ID')
       ->fields('course', array('COURSE_TITLE'))
       ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = sec.ORGANIZATION_TERM_ID')
@@ -46,7 +48,7 @@ class PendingService {
 
       // Get charges and payments for class not posted
       $trans = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
-        ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'APPLIED_BALANCE', 'PAYMENT_ID'))
+        ->fields('trans', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'APPLIED_BALANCE', 'PAYMENT_ID', 'CONSTITUENT_ID'))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = trans.CODE_ID')
         ->fields('code', array('CODE_TYPE'))
         ->condition('trans.CONSTITUENT_ID', $class_list_row['STUDENT_ID'])

@@ -231,12 +231,12 @@ HEd.Student.Status:
       column_name: "Medications"
       label_name: "Medications"
     MedicalBehavioral:
-      description: "Behavorial"
-      db_column_name: MED_BEHAVORIAL
+      description: "Behavioral"
+      db_column_name: MED_BEHAVIORAL
       db_column_type: text
       db_column_null: true
       field_type: textarea
-      column_name: "Behavorial"
+      column_name: "Behavioral"
       label_name: "Behavioral"
     MedicalMentalEmotionalSocialHealth:
       description: "Mental, Emotional, and Social Health"

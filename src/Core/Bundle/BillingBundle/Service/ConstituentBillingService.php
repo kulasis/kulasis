@@ -459,8 +459,8 @@ class ConstituentBillingService {
         
         // Has an FA award.  Need to set back to pending
         if ($transaction_row['AWARD_ID']) {
-          $fa_poster = $this->posterFactory->newPoster()->edit('Core.FAID.Student.Award', $transaction_row['AWARD_ID'], array(
-            'Core.FAID.Student.Award.AwardStatus' => 'PEND'
+          $fa_poster = $this->posterFactory->newPoster()->edit('HEd.FAID.Student.Award', $transaction_row['AWARD_ID'], array(
+            'HEd.FAID.Student.Award.AwardStatus' => 'PEND'
           ))->process($this->db_options)->getResult();
         }
 

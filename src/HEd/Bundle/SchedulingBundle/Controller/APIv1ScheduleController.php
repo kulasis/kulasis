@@ -227,7 +227,7 @@ class APIv1ScheduleController extends APIController {
 
     // return class list
     $class_list_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'LEVEL', 'CREDITS_ATTEMPTED', 'PAID'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'LEVEL', 'CREDITS_ATTEMPTED', 'PAID', 'CREATED_TIMESTAMP'))
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
       ->fields('stustatus', array('STUDENT_STATUS_ID'))
       ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
@@ -339,8 +339,20 @@ class APIv1ScheduleController extends APIController {
     // get logged in user
     $currentUser = $this->authorizeUser();
     $data = array();
+
+
+    $related_constituents = array();
+    $related_constituent_results = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
+      ->fields('rel', array('CONSTITUENT_ID'))
+      ->condition('rel.RELATED_CONSTITUENT_ID', $currentUser)
+      ->execute();
+    while ($related_constituent_row = $related_constituent_results->fetch()) {
+      $related_constituents[] = $related_constituent_row['CONSTITUENT_ID'];
+    }
+    $related_constituents[] = $currentUser;
+
     $pending_service = $this->get('kula.Core.billing.pending');
-    $pending_service->calculatePendingCharges($currentUser);
+    $pending_service->calculatePendingCharges($related_constituents);
     $data['classes'] = $pending_service->getPendingClasses();
     $data['billing_total'] = $pending_service->totalAmount();
     // return class list

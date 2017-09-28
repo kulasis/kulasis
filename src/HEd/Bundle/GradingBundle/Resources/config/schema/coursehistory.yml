@@ -246,28 +246,50 @@ HEd.Student.CourseHistory:
       field_size: 8
       column_name: "Quality Points"
       label_name: "Quality Points"
-    CalculatedCreditsAttempted:
-      description: "Calculated Credits Attempted"
-      db_column_name: CALC_CREDITS_ATTEMPTED
+    CalculatedTermCreditsAttempted:
+      description: "Calculated Term Credits Attempted"
+      db_column_name: CALC_TERM_CREDITS_ATTEMPTED
       db_column_type: numeric
       db_column_length: 10
       db_column_precision: 3
       db_column_null: true
       field_type: text
       field_size: 6
-      column_name: "Calculated Credits Attempted"
-      label_name: "Calculated Credits Attempted"
-    CalculatedCreditsEarned:
-      description: "Calculated Credits Earned"
-      db_column_name: CALC_CREDITS_EARNED
+      column_name: "Calculated Term Credits Attempted"
+      label_name: "Calculated Term Credits Attempted"
+    CalculatedTermCreditsEarned:
+      description: "Calculated Term Credits Earned"
+      db_column_name: CALC_TERM_CREDITS_EARNED
       db_column_type: numeric
       db_column_length: 10
       db_column_precision: 3
       db_column_null: true
       field_type: text
       field_size: 6
-      column_name: "Calculated Credits Earned"
-      label_name: "Calculated Credits Earned"
+      column_name: "Calculated Term Credits Earned"
+      label_name: "Calculated Term Credits Earned"
+    CalculatedCumulativeCreditsAttempted:
+      description: "Calculated Cumulative Credits Attempted"
+      db_column_name: CALC_CUM_CREDITS_ATTEMPTED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Calculated Cumulative Credits Attempted"
+      label_name: "Calculated Cumulative Credits Attempted"
+    CalculatedCumulativeCreditsEarned:
+      description: "Calculated Cumulative Credits Earned"
+      db_column_name: CALC_CUM_CREDITS_EARNED
+      db_column_type: numeric
+      db_column_length: 10
+      db_column_precision: 3
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Calculated Cumulative Credits Earned"
+      label_name: "Calculated Cumulative Credits Earned"
     DegreeRequirementGroupID:
       description: "Degree Requirement Group ID"
       db_column_name: DEGREE_REQ_GRP_ID

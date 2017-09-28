@@ -43,9 +43,14 @@ api_v1_student_emergency_delete:
     defaults: { _controller: KulaHEdStudentBundle:APIv1Student:deleteEmergencyContact }
     methods: [DELETE]
 
-api_v1_student_agreement:
+api_v1_get_pending_agreements:
+    path:     /user/current/agreements/pending
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Form:getPendingAgreements }
+    methods: [GET]
+
+api_v1_student_sign_agreement:
     path:     /student/{student_id}/enrollment/{org}/{term}/agreements/{form_id}
-    defaults: { _controller: KulaHEdStudentBundle:APIv1Student:makeAgreement }
+    defaults: { _controller: KulaHEdStudentBundle:APIv1Form:makeAgreement }
     methods: [POST]
 
 api_v1_student_enrollments:
