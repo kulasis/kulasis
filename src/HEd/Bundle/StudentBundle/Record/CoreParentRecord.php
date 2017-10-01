@@ -39,7 +39,7 @@ class CoreParentRecord extends Record {
     $result = $this->db()->db_select('STUD_PARENT', 'par')
       ->fields('par', array('PARENT_ID'))
       ->join('CONS_CONSTITUENT', 'constituent', 'constituent.CONSTITUENT_ID = par.PARENT_ID')
-      ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'RACE', 'MAIDEN_NAME', 'PREFERRED_NAME'));
+      ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'IDENTIFIED_GENDER', 'GENDER', 'RACE', 'MAIDEN_NAME', 'PREFERRED_NAME'));
     $result = $result->condition('par.PARENT_ID', $record_id);
     $result = $result->execute()->fetch();
     

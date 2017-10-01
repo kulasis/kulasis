@@ -50,6 +50,16 @@ Core.Constituent:
       lookup: Constituent.Gender
       column_name: "Gender"
       label_name: "Gender"
+    IdentifiedGender:
+      description: "Identified Gender"
+      db_column_name: IDENTIFIED_GENDER
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: Constituent.IdentifiedGender
+      column_name: "Identified Gender"
+      label_name: "Identified Gender"
     BirthDate:
       description: "Birth Date"
       db_column_name: BIRTH_DATE
