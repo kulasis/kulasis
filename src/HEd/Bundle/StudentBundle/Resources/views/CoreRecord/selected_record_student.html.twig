@@ -17,7 +17,7 @@
 {{ kula_field({ field: 'Core.Constituent.PreferredName', db_row_id: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, value: '"'~kula_core_record.getSelectedRecord.PREFERRED_NAME~'"', input: false }) }}
 </li>
 {% endif %}
-<li>{{ kula_field({ field: 'Core.Constituent.Gender', db_row_id: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, value: kula_core_record.getSelectedRecord.GENDER, lookup: 'C', input: false }) }}</li>
+<li>{{ kula_field({ field: 'Core.Constituent.Gender', db_row_id: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, value: kula_core_record.getSelectedRecord.GENDER, lookup: 'C', input: false }) }} {{ kula_field({ field: 'Core.Constituent.IdentifiedGender', db_row_id: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, value: " / "~kula_core_record.getSelectedRecord.IDENTIFIED_GENDER, lookup: 'D', input: false }) }}</li>
 {% if kula_core_record.getSelectedRecord.GRADE %}
 <li>{{ kula_field({ field: 'HEd.Student.Status.Grade', db_row_id: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, value: kula_core_record.getSelectedRecord.GRADE, input: false }) }}</li>
 <li>{{ kula_field({ field: 'HEd.Student.Status.Resident', db_row_id: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, value: kula_core_record.getSelectedRecord.RESIDENT, lookup: 'C', input: false }) }}</li>
