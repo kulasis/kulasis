@@ -5,6 +5,13 @@ Constituent.Gender:
     - { code: F, description: "Female" }
     - { code: M, description: "Male" }
 
+Constituent.IdentifiedGender:
+  description: "Identified Genders"
+  allow_update: true
+  values:
+    - { code: F, description: "Female" }
+    - { code: M, description: "Male" }
+
 Constituent.Race:
   description: "Race"
   allow_update: true
