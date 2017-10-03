@@ -146,7 +146,7 @@ class APIv1FormController extends APIController {
 
         $i++;
         }
-      // end if more than zero pending constituents
+      } // end if more than zero pending constituents
     } // end if more than zero related constituents
 
     return $this->JSONResponse($data);
