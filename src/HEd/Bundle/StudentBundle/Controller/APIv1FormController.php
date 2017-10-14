@@ -39,6 +39,8 @@ class APIv1FormController extends APIController {
       $pending_constituents[] = $pending_row['STUDENT_ID'];
     }
 
+    $pending_constituents[] = $currentUser;
+
     $data = array();
     // find enrollments for related constituents
     $forms_result = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
@@ -108,6 +110,8 @@ class APIv1FormController extends APIController {
       while ($pending_row = $pending_results->fetch()) {
         $pending_constituents[] = $pending_row['STUDENT_ID'];
       }
+
+      $pending_constituents[] = $currentUser;
 
       if (count($pending_constituents) > 0) {
         // find enrollments for related constituents
