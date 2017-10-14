@@ -297,8 +297,12 @@ class StudentBillingService {
           ->condition('CONSTITUENT_ID', $student_status['STUDENT_ID'])
           ->condition('ORGANIZATION_TERM_ID', $student_status['ORGANIZATION_TERM_ID'])
           ->condition('CODE_ID', $tuition_code)
-          ->condition('TRANSACTION_DESCRIPTION', '%REFUND%', 'NOT LIKE')
+        //  ->condition('TRANSACTION_DESCRIPTION', '%REFUND%', 'NOT LIKE')
           ->execute()->fetch()['billed_amount'];
+
+        $debug = array();
+        $debug['billed tuition'] = $billed_tuition;
+        $debug['new tuition'] = $new_tuition_total;
 
         // Determine difference to post
         $amount_to_post = $new_tuition_total - $billed_tuition;
@@ -324,8 +328,15 @@ class StudentBillingService {
           ->condition('END_DATE', $drop_date, '>=')
           ->orderBy('END_DATE', 'ASC')
           ->execute()->fetch()['REFUND_PERCENTAGE'];
+
+        $debug['pre amount to post'] = $amount_to_post;
+        $debug['refund percentage'] = $refund_percentage;
         
         $amount_to_post = $amount_to_post * $refund_percentage * .01;
+
+        $debug['amount to post'] = $amount_to_post;
+
+        //throw new \Exception(print_r($debug, true));
       
         }
         // Post transaction
