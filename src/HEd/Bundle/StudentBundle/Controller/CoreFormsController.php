@@ -63,7 +63,7 @@ class CoreFormsController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       $forms = $this->db()->db_select('STUD_STUDENT_FORMS', 'stuforms')
-        ->fields('stuforms', array('STUDENT_FORM_ID', 'FORM_ID'))
+        ->fields('stuforms', array('STUDENT_FORM_ID', 'FORM_ID', 'AGREE', 'COMPLETED'))
         ->join('STUD_FORM', 'form', 'stuforms.FORM_ID = form.FORM_ID')
         ->fields('form', array('FORM_NAME'))
         ->condition('stuforms.STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
