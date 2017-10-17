@@ -29,3 +29,8 @@ api_v1_user_current_update:
     path:    /user/current
     defaults: { _controller: KulaCoreSystemBundle:APIv1User:updateCurrentUser }
     methods: [PATCH, PUT]
+
+api_v1_lookups:
+    path:     /lookup/{lookup_table}
+    defaults: { _controller: KulaCoreSystemBundle:APIv1Lookup:getLookupTable }
+    methods: [GET]
