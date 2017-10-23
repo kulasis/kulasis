@@ -16,7 +16,7 @@ class TeacherTranscriptController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
       $transcript_service = $this->get('kula.HEd.grading.transcript');
-      $transcript_service->loadTranscriptForStudent($this->record->getSelectedRecordID());
+      $transcript_service->loadTranscriptForStudent($this->record->getSelectedRecord()['STUDENT_ID']);
       $transcript_data = $transcript_service->getTranscriptData();
       $transcript_schedule = $transcript_service->getCurrentScheduleData();
       $transcript_degree = $transcript_service->getDegreeData();
