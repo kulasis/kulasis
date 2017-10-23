@@ -157,6 +157,8 @@ class CorePaymentsController extends Controller {
         ->fields('transactions', array('CONSTITUENT_TRANSACTION_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'POSTED', 'VOIDED', 'APPLIED_BALANCE', ))
         ->join('BILL_CODE', 'code', 'code.CODE_ID = transactions.CODE_ID')
         ->fields('code', array('CODE_TYPE', 'CODE'))
+        ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = transactions.CONSTITUENT_ID')
+        ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'))
         ->leftJoin('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = transactions.ORGANIZATION_TERM_ID')
         ->leftJoin('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
         ->fields('org', array('ORGANIZATION_ABBREVIATION'))
@@ -167,7 +169,7 @@ class CorePaymentsController extends Controller {
         ->fields('sec', array('SECTION_NUMBER', 'SECTION_ID'))
         ->leftJoin('STUD_COURSE', 'crs', 'crs.COURSE_ID = sec.COURSE_ID')
         ->fields('crs', array('COURSE_TITLE'))
-        ->condition('transactions.CONSTITUENT_ID', $this->record->getSelectedRecordID())
+        //->condition('transactions.CONSTITUENT_ID', $this->record->getSelectedRecordID())
         ->condition('transactions.PAYMENT_ID', $payment_id)
         ->orderBy('TRANSACTION_DATE', 'DESC', 'transactions')
         ->execute()->fetchAll();
