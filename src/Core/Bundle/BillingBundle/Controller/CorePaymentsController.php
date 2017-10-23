@@ -81,6 +81,10 @@ class CorePaymentsController extends Controller {
     
     if ($this->record->getSelectedRecordID()) {
 
+      $db_or = $this->db()->db_or()
+        ->condition('payments.CONSTITUENT_ID', $this->record->getSelectedRecordID())
+        ->condition('trans.CONSTITUENT_ID', $this->record->getSelectedRecordID());
+
       $payments = $this->db()->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
         ->fields('payments', array('CONSTITUENT_PAYMENT_ID', 'PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_METHOD', 'PAYMENT_NUMBER', 'AMOUNT', 'APPLIED_BALANCE', 'VOIDED', 'POSTED', 'DISCOUNT_PROOF'))
         ->leftJoin('BILL_CONSTITUENT_TRANSACTIONS', 'trans', "trans.PAYMENT_ID = payments.CONSTITUENT_PAYMENT_ID")
@@ -95,7 +99,7 @@ class CorePaymentsController extends Controller {
         ->leftJoin('STUD_STUDENT_CLASSES', 'stuclass', 'stuclass.STUDENT_CLASS_ID = trans.STUDENT_CLASS_ID')
         ->leftJoin('STUD_SECTION', 'sec', 'sec.SECTION_ID = stuclass.SECTION_ID')
         ->fields('sec', array('SECTION_NUMBER', 'SECTION_ID'))
-        ->condition('payments.CONSTITUENT_ID', $this->record->getSelectedRecordID())
+        ->condition($db_or)
         ->condition('trans.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
         ->condition('payments.VOIDED', 0)
         ->orderBy('PAYMENT_DATE', 'DESC', 'payments')
