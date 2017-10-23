@@ -142,6 +142,13 @@ Teacher.HEd.Advisee.DegreeAudit:
   display_name: "Degree Audit"
   route: teacher_HEd_student_degreeaudit
 
+Teacher.HEd.Advisee.Transcript:
+  parent: Teacher.HEd.Advisee
+  type: tab
+  description: "Transcript"
+  display_name: "Transcript"
+  route: teacher_HEd_student_transcript
+
 Student.HEd.Grades:
   description: "Grades"
   display_name: "Grades"

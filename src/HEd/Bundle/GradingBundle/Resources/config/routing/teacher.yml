@@ -15,3 +15,9 @@ teacher_HEd_student_degreeaudit:
   defaults: 
     _controller: KulaHEdGradingBundle:TeacherDegreeAudit:index
     _navigation: Teacher.HEd.Advisee.DegreeAudit
+
+teacher_HEd_student_transcript:
+  path: /student/transcript
+  defaults: 
+    _controller: KulaHEdGradingBundle:TeacherTranscript:index
+    _navigation: Teacher.HEd.Advisee.Transcript
