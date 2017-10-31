@@ -22,7 +22,10 @@ class RelatedConstituentTransaction extends Field {
       ->leftJoin('CORE_TERM', 'term', 'orgterms.TERM_ID = term.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
       ->leftJoin('BILL_CONSTITUENT_PAYMENTS', 'payment', 'payment.CONSTITUENT_PAYMENT_ID = transactions.PAYMENT_ID')
-      ->fields('payment', array('PAYMENT_TYPE'));
+      ->fields('payment', array('PAYMENT_TYPE'))
+      ->leftJoin('STUD_STUDENT_CLASSES', 'class', 'class.STUDENT_CLASS_ID = transactions.STUDENT_CLASS_ID')
+      ->leftJoin('STUD_SECTION', 'section', 'section.SECTION_ID = class.SECTION_ID')
+      ->fields('section', array('SECTION_NUMBER'));
 
     if (isset($param['value']) AND $param['value'] != '') {
       $result = $result->condition('transactions.CONSTITUENT_TRANSACTION_ID', $param['value']);
@@ -31,10 +34,10 @@ class RelatedConstituentTransaction extends Field {
     }
 
     $result = $result->condition('codes.CODE_TYPE', $param['CODE_TYPE'])
-      ->orderBy('LAST_NAME', 'ASC', 'cons')
-      ->orderBy('FIRST_NAME', 'ASC', 'cons')
-      ->orderBy('PERMANENT_NUMBER', 'ASC', 'cons')
-      ->orderBy('START_DATE', 'DESC', 'term')
+      ->orderBy('cons.LAST_NAME', 'ASC')
+      ->orderBy('cons.FIRST_NAME', 'ASC')
+      ->orderBy('cons.PERMANENT_NUMBER', 'ASC')
+      ->orderBy('term.START_DATE', 'DESC')
       ->orderBy('TRANSACTION_DATE', 'DESC')
       ->orderBy('CODE', 'ASC')
       ->execute();
@@ -47,7 +50,7 @@ class RelatedConstituentTransaction extends Field {
         $menu[$row['CONSTITUENT_TRANSACTION_ID']] = $menu[$row['CONSTITUENT_TRANSACTION_ID']].$row['CODE_TYPE'];
       }
 
-      $menu[$row['CONSTITUENT_TRANSACTION_ID']] = $menu[$row['CONSTITUENT_TRANSACTION_ID']].' '.$row['CODE'].' '.$row['TRANSACTION_DESCRIPTION'].' '.$row['AMOUNT'].' '.$row['APPLIED_BALANCE'];
+      $menu[$row['CONSTITUENT_TRANSACTION_ID']] = $menu[$row['CONSTITUENT_TRANSACTION_ID']].' '.$row['CODE'].' '.$row['TRANSACTION_DESCRIPTION'].' '.$row['SECTION_NUMBER'].' '.$row['AMOUNT'].' '.$row['APPLIED_BALANCE'];
     }
     
     return $menu;
