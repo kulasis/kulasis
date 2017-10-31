@@ -22,9 +22,15 @@ class RelatedConstituentTransaction extends Field {
       ->leftJoin('CORE_TERM', 'term', 'orgterms.TERM_ID = term.TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION'))
       ->leftJoin('BILL_CONSTITUENT_PAYMENTS', 'payment', 'payment.CONSTITUENT_PAYMENT_ID = transactions.PAYMENT_ID')
-      ->fields('payment', array('PAYMENT_TYPE'))
-      ->condition('transactions.CONSTITUENT_ID', $param['CONSTITUENT_ID'])
-      ->condition('codes.CODE_TYPE', $param['CODE_TYPE'])
+      ->fields('payment', array('PAYMENT_TYPE'));
+
+    if (isset($param['value']) AND $param['value'] != '') {
+      $result = $result->condition('transactions.CONSTITUENT_TRANSACTION_ID', $param['value']);
+    } else {
+      $result = $result->condition('transactions.CONSTITUENT_ID', $param['CONSTITUENT_ID']);
+    }
+
+    $result = $result->condition('codes.CODE_TYPE', $param['CODE_TYPE'])
       ->orderBy('LAST_NAME', 'ASC', 'cons')
       ->orderBy('FIRST_NAME', 'ASC', 'cons')
       ->orderBy('PERMANENT_NUMBER', 'ASC', 'cons')
