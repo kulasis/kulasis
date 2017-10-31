@@ -78,7 +78,7 @@ class TranscriptService {
       ->fields('area', array('AREA_NAME', 'PRINTED_AREA_NAME'))
       ->join('CORE_LOOKUP_VALUES', 'area_types', "area_types.CODE = area.AREA_TYPE AND area_types.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Grading.Degree.AreaTypes')")
       ->fields('area_types', array('DESCRIPTION' => 'area_type'))
-      ->condition('stuareas.STUDENT_DEGREE_ID', $this->student_data['STUDENT_DEGREE_ID'])
+      ->condition('stuareas.STUDENT_DEGREE_ID', isset($this->student_data['STUDENT_DEGREE_ID']) ? $this->student_data['STUDENT_DEGREE_ID'] : null)
       ->execute();
     while ($areas_row = $areas_info->fetch()) {
       $printed_area = ($areas_row['PRINTED_AREA_NAME'] != '') ? $areas_row['PRINTED_AREA_NAME'] : $areas_row['AREA_NAME'];
