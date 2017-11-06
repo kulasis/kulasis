@@ -4,8 +4,6 @@ namespace Kula\HEd\Bundle\StudentBundle\Service;
 
 class StudentService {
   
-  
-  
   public function __construct($db, $sequence, $poster) {
     $this->db = $db;
     $this->sequence = $sequence;
