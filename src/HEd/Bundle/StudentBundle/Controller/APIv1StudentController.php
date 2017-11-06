@@ -62,6 +62,12 @@ class APIv1StudentController extends APIController {
       'HEd.Student.Parent.ID' => $relationship_id
     ))->process(array('VERIFY_PERMISSIONS' => false))->getID();
 
+    // add any contact information of user to child
+    $contact_info_service = $this->get('kula.Core.ContactInfo');
+    $contact_info_service->syncCurrentEmail($currentUser, $constituent_id);
+    $contact_info_service->syncCurrentPhone($currentUser, $constituent_id);
+    $contact_info_service->syncCurrentAddresses($currentUser, $constituent_id);
+
     if ($constituent_id) {
       $transaction->commit();
       return $this->JSONResponse($constituent_id);
