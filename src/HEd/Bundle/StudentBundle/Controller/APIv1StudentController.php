@@ -95,7 +95,7 @@ class APIv1StudentController extends APIController {
     if ($org AND $term) {
 
       // Get student status data
-      $student += $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+      $student_enrollment = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
         ->fields('stustatus', array('STUDENT_STATUS_ID', 'LEVEL', 'STATUS', 'GRADE', 'ENTER_DATE', 'ENTER_CODE', 'GROUP_WITH', 'OFF_CAMPUS', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVIORAL', 'MED_MEN_EMO_SOC_HEALTH', 'MED_INSURANCE', 'MED_PHYSICIAN', 'SCHOOL', 'COMMENTS', 'ORGANIZATION_TERM_ID'))
         ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
         ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
@@ -104,6 +104,7 @@ class APIv1StudentController extends APIController {
         ->condition('org.ORGANIZATION_ABBREVIATION', $org)
         ->condition('term.TERM_ABBREVIATION', $term)
         ->execute()->fetch();
+      $student += $student_enrollment;
 
       // Get forms
       $student['agreements'] = array();
