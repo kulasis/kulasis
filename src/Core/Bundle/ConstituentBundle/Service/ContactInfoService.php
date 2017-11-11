@@ -85,7 +85,7 @@ class ContactInfoService {
     return $emailID;
   }
 
-  public function syncCurrentEmail($sync_source_id, $sync_destination_id) {
+  public function syncCurrentEmail($sync_source_id, $sync_destination_id, $parent = true) {
 
     // Get active email address info from source
     $source_email = $this->db->db_select('CONS_EMAIL_ADDRESS', 'email')
@@ -108,7 +108,7 @@ class ContactInfoService {
     // if not the same, insert the addresses into the destination.
     if ($source_email['EMAIL_ADDRESS'] != $destination_email['EMAIL_ADDRESS']) {
       $addressInfo = array(
-        'Core.Constituent.EmailAddress.Type' => $source_email['EMAIL_ADDRESS_TYPE'],
+        'Core.Constituent.EmailAddress.Type' => ($parent) ? 'PAR' : $source_email['EMAIL_ADDRESS_TYPE'],
         'Core.Constituent.EmailAddress.EmailAddress' => $source_email['EMAIL_ADDRESS'],
         'Core.Constituent.EmailAddress.ConstituentID' => $sync_destination_id,
         'Core.Constituent.EmailAddress.EffectiveDate' => $source_email['EFFECTIVE_DATE']
