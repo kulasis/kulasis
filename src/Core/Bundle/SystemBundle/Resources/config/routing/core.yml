@@ -177,6 +177,12 @@ Core_System_Users_Add:
     _controller: KulaCoreSystemBundle:CoreUsers:add
     _navigation: Core.System.Users.Add
 
+Core_System_Users_ResetLoginAttempts:
+  path: /system/users/add/resetLoginAttempts
+  defaults:
+    _controller: KulaCoreSystemBundle:CoreUsers:resetFailedLoginAttempts
+    _navigation: Core.System.Users.Information
+
 Core_System_Users_Add_Constituent:
   path: /system/users/add/constituent
   defaults:

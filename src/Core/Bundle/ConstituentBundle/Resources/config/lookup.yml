@@ -11,6 +11,8 @@ Constituent.IdentifiedGender:
   values:
     - { code: F, description: "Female" }
     - { code: M, description: "Male" }
+    - { code: O, description: "Other" }
+    - { code: P, description: "Prefer Not To Say" }
 
 Constituent.Race:
   description: "Race"
@@ -390,6 +392,7 @@ Constituent.EmailAddress.Type:
     - { code: SCH, description: "School" }
     - { code: PER, description: "Personal" }
     - { code: WRK, description: "Work" }
+    - { code: PAR, description: "Parent" }
 
 Constituent.Phone.Type:
   description: "Phone Types"
