@@ -243,8 +243,10 @@ class APIv1ScheduleController extends APIController {
       ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgtrm.STAFF_ID')
       ->fields('staff', array('ABBREVIATED_NAME'))
       ->condition('stustatus.STUDENT_ID', $student_id)
-      ->condition('class.DROPPED', 0)
-      ->condition('class.START_DATE', date('Y-m-d'), '>=');
+      ->condition('class.DROPPED', 0);
+    if (!$org AND !$term) {
+      $class_list_result = $class_list_result->condition('class.START_DATE', date('Y-m-d'), '>=');
+    }
 
     if ($org) {
       $class_list_result = $class_list_result->condition('org.ORGANIZATION_ABBREVIATION', $org);
