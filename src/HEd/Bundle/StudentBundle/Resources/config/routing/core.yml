@@ -250,3 +250,13 @@ core_HEd_student_parent_EmailAddresses:
   defaults: 
     _controller: KulaHEdStudentBundle:CoreParentsContactInfo:emailAddresses
     _navigation: Core.HEd.Student.Parent.EmailAddresses
+
+Core_Constituent_Combiner_StudentStatus_HEd: 
+    path:     /constituent/combiner/student_status
+    defaults: 
+      _controller: KulaHEdStudentBundle:CoreEnrollment:combine
+      _navigation: Core.Constituent.Combiner.StudentStatusHEd
+
+core_HEd_Student_Status_Chooser:
+  path: /student/status/chooser
+  defaults: { _controller: KulaHEdStudentBundle:CoreEnrollment:chooser }
