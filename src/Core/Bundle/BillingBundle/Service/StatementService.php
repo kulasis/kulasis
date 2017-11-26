@@ -46,7 +46,7 @@ class StatementService {
     return $this->statements;
   }
 
-  public function generateStatements($students = array()) {
+  public function generateStatements($students) {
 
     // Get current term start date
     $this->focus_term_info = $this->db->db_select('CORE_TERM', 'term')
@@ -55,10 +55,10 @@ class StatementService {
       ->execute()->fetch();
 
     // Get students to consider
-    if (!is_array($students) OR count($students) == 0) {
-      $this->determineStudents();
-    } else {
+    if (is_array($students) AND count($students) > 0 AND $students[0] != '') {
       $this->students = $students;
+    } else {
+      $this->determineStudents();
     }
 
     // Calculate students with balances
@@ -235,6 +235,7 @@ class StatementService {
       $this->statement_balance += $this->student_balances_for_orgterm[$student_id];
       
     }
+    $this->addStudent($student_id);
     $this->addStudentAddresses($student_id);
     $this->addStudentStatus($student_id);
     $this->addTransactionsForStudent($student_id);
@@ -253,6 +254,17 @@ class StatementService {
       
   }
 
+  public function addStudent($student_id) {
+    // Get Data and Load
+    $result = $this->db->db_select('CONS_CONSTITUENT', 'stucon')
+      ->fields('stucon', array('CONSTITUENT_ID', 'PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
+      ->join('STUD_STUDENT', 'student', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+      ->fields('student', array('STUDENT_ID'))
+      ->condition('student.STUDENT_ID', $student_id)
+      ->execute()->fetch();
+    $this->statements[$student_id]['student'] = $result;
+  }
+
   public function addStudentAddresses($student_id) {
     // Get Data and Load
     $result = $this->db->db_select('CONS_CONSTITUENT', 'stucon')
@@ -268,9 +280,6 @@ class StatementService {
       ->leftJoin('CONS_ADDRESS', 'residenceaddr', 'residenceaddr.ADDRESS_ID = stucon.RESIDENCE_ADDRESS_ID AND residenceaddr.UNDELIVERABLE = 0')
       ->fields('residenceaddr', array('THOROUGHFARE' => 'residence_ADDRESS', 'LOCALITY' => 'residence_CITY', 'ADMINISTRATIVE_AREA' => 'residence_STATE', 'POSTAL_CODE' => 'residence_ZIPCODE', 'COUNTRY' => 'residence_COUNTRY'))
       ->condition('student.STUDENT_ID', $student_id)
-      ->orderBy('stucon.LAST_NAME', 'ASC')
-      ->orderBy('stucon.FIRST_NAME', 'ASC')
-      ->orderBy('student.STUDENT_ID', 'ASC')
       ->execute();
     while ($row = $result->fetch()) {
       $this->statements[$student_id]['addresses'][] = $row;
@@ -359,13 +368,15 @@ class StatementService {
 
         if (-1 * $trans_awards['total_amount'] < $awards_row['NET_AMOUNT']) {
           $awards_row['NET_AMOUNT'] = $awards_row['NET_AMOUNT'] - (-1*$trans_awards['total_amount']);
+          $awards_row['amount'] = $awards_row['NET_AMOUNT'] * -1;
           $this->statements[$student_id]['pending_fa'][] = $awards_row;
-          $this->statement_balance += $awards_row['NET_AMOUNT'];
+          $this->statement_balance += $awards_row['amount'];
         }
         
       } else {
+        $awards_row['amount'] = $awards_row['NET_AMOUNT'] * -1;
         $this->statements[$student_id]['pending_fa'][] = $awards_row;
-        $this->statement_balance += $awards_row['NET_AMOUNT'];
+        $this->statement_balance += $awards_row['amount'];
       }
       
     }
