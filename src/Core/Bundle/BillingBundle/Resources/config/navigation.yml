@@ -72,6 +72,10 @@ Core.Billing:
           description: "Billing Statement"
           display_name: "Billing Statement"
           route: Core_Billing_Reports_BillingStatement
+        BillingEmailStatement:
+          description: "Billing Email Statement"
+          display_name: "Billing Email Statement"
+          route: Core_Billing_Reports_BillingStatementEmail
         BillingReceipt:
           description: "Billing Receipt"
           display_name: "Billing Receipt"
