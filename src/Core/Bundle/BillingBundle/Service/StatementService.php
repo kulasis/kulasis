@@ -57,6 +57,8 @@ class StatementService {
     // Get students to consider
     if (!is_array($students) OR count($students) == 0) {
       $this->determineStudents();
+    } else {
+      $this->students = $students;
     }
 
     // Calculate students with balances
@@ -212,7 +214,7 @@ class StatementService {
       $terms_with_balances_result = $terms_with_balances_result->execute();
       while ($balance_row = $terms_with_balances_result->fetch()) {
         if ($balance_row['total_amount'] != 0) {
-          $this->student_balances_for_orgterm[$balance_row['CONSTITUENT_ID']][] = $balance_row;
+          $this->student_balances_for_orgterm[$balance_row['CONSTITUENT_ID']] = $balance_row['total_amount'];
         }
       } // end while
     } // end if on order_terms
@@ -220,7 +222,7 @@ class StatementService {
   }
 
   protected function createStatement($student_id) {
-    
+
     if (isset($this->student_balances_for_orgterm[$student_id])) {
       $this->statements[$student_id]['transactions'][] = array(
         'TRANSACTION_DATE' => '',
@@ -229,7 +231,9 @@ class StatementService {
         'TRANSACTION_DESCRIPTION' => 'Previous Balance',
         'AMOUNT' => $this->student_balances_for_orgterm[$student_id]
       );
+      $this->statements[$student_id]['previous_balance'] = $this->student_balances_for_orgterm[$student_id];
       $this->statement_balance += $this->student_balances_for_orgterm[$student_id];
+      
     }
     $this->addStudentAddresses($student_id);
     $this->addStudentStatus($student_id);
@@ -240,7 +244,9 @@ class StatementService {
     ) {
       // determine last term id
       $last_transaction = end($this->statements[$student_id]['transactions']);
-      $this->getPendingFinancialAid($student_id, $last_transaction['TERM_ID']);
+      if (isset($last_transaction['TERM_ID'])) {
+        $this->getPendingFinancialAid($student_id, $last_transaction['TERM_ID']);
+      }
     } // end if on showing pending FA
     $this->statements[$student_id]['balance'] = $this->statement_balance;
     $this->addHolds($student_id);
@@ -354,12 +360,12 @@ class StatementService {
         if (-1 * $trans_awards['total_amount'] < $awards_row['NET_AMOUNT']) {
           $awards_row['NET_AMOUNT'] = $awards_row['NET_AMOUNT'] - (-1*$trans_awards['total_amount']);
           $this->statements[$student_id]['pending_fa'][] = $awards_row;
-          $this->statement_balance += $row['NET_AMOUNT'];
+          $this->statement_balance += $awards_row['NET_AMOUNT'];
         }
         
       } else {
         $this->statements[$student_id]['pending_fa'][] = $awards_row;
-        $this->statement_balance += $row['NET_AMOUNT'];
+        $this->statement_balance += $awards_row['NET_AMOUNT'];
       }
       
     }

@@ -37,9 +37,9 @@ class CoreBillingStatementEmailReportController extends ReportController {
     $record_id = $this->request->request->get('record_id');
     $record_type = $this->request->request->get('record_type');
 
-    $statement_service->generateStatements($record_id);
+    $statement_service->generateStatements(array($record_id));
     $statements = $statement_service->getStatements();
-
+echo "<pre>";
     print_r($statements);
     return $this->textResponse("End.");
     /*
