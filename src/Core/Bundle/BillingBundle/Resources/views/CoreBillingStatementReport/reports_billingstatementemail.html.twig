@@ -30,7 +30,11 @@
 <div class="group-box">
 <div class="group-box-header">Email Statement</div>
 <div class="group-box-contents group">
-<div class="form-field"><label name="dont_send_emails">Don't send emails</label><input type="checkbox" name="non[DONT_SEND_EMAILS]" value="Y"></div>	
+<div class="form-field"><label name="dont_send_emails">Don't send emails</label><input type="checkbox" name="non[DONT_SEND_EMAILS]" value="Y"></div>
+<div class="form-field"><label name="use_email_to">Send Emails To</label><input type="checkbox" name="non[SEND_EMAILS_TO]" value="Y"></div>
+<div class="form-field"><label name="email_to">Send Emails To Email</label><input type="text" name="non[EMAIL_TO]" size="30" value="{{ session.get('username') }}"></div>
+</div>
+<div class="group-box-contents group">
 <div class="form-field"><label name="email_message">Message</label><textarea name="non[email_message]" rows="15" cols="60"></textarea></div>
 </div>
 </div>

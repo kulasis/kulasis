@@ -1,3 +1,6 @@
+{% if email_message %}
+<p>{{ email_message }}</p>
+{% endif %}
 <p>Billing Statement</p>
 <p>
 Student Name: {{ data.student.FIRST_NAME }} {{ data.student.LAST_NAME }}<br />

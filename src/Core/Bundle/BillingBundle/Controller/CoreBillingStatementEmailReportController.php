@@ -39,21 +39,32 @@ class CoreBillingStatementEmailReportController extends ReportController {
 
       // send email
       $message = \Swift_Message::newInstance()
-      ->setSubject('Billing Statement for '.$statement['student']['FIRST_NAME'].' '.$statement['student']['LAST_NAME'].' ('.$statement['student']['PERMANENT_NUMBER'].')')
-      ->setFrom(['kulasis@ocac.edu' => 'Oregon College of Art and Craft'])
-      ->setReplyTo('bursar@ocac.edu')
-      ->setTo('mjacobsen@ocac.edu')
-      //->setBcc(array('mjacobsen@ocac.edu', 'cmalone@ocac.edu', 'jthompson@ocac.edu', 'alex@acreative.io')) // 
-      ->setBody(
-          $this->renderView(
-              'KulaCoreBillingBundle:CoreEmail:statement.html.twig',
-              array('data' => $statement, 
-                    'institution_name' => $this->getParameter('report_institution_name'), 
-                    'institution_address_1' => $this->getParameter('report_institution_address_line1'), 
-                    'institution_address_2' => $this->getParameter('report_institution_address_line2')
-                  )
-          ),
-          'text/html');
+        ->setSubject('Billing Statement for '.$statement['student']['FIRST_NAME'].' '.$statement['student']['LAST_NAME'].' ('.$statement['student']['PERMANENT_NUMBER'].')')
+        ->setFrom(['kulasis@ocac.edu' => 'Oregon College of Art and Craft'])
+        ->setReplyTo('bursar@ocac.edu')
+        ->setBcc(array('mjacobsen@ocac.edu'));
+
+      if (isset($non['SEND_EMAILS_TO']) AND $non['SEND_EMAILS_TO'] == 'Y') {
+        $message = $message->setTo($non['EMAIL_TO']);
+      } else {
+        $emails = array();
+        foreach($statement['email_addresses'] as $email_info) {
+          $emails[] = $email_info['FIRST_NAME'].' '.$email_info['LAST_NAME'].' <'.$email_info['EMAIL_ADDRESS'].'>';
+        }
+        //$message = $message->setTo($emails);
+      }
+
+      $message = $message->setBody(
+        $this->renderView(
+          'KulaCoreBillingBundle:CoreEmail:statement.html.twig',
+          array('data' => $statement, 
+                'institution_name' => $this->getParameter('report_institution_name'), 
+                'institution_address_1' => $this->getParameter('report_institution_address_line1'), 
+                'institution_address_2' => $this->getParameter('report_institution_address_line2'),
+                'email_message' => ($non['email_message'] != '') ? $non['email_message'] : null,
+              )
+        ),
+      'text/html');
       if (!isset($non['DONT_SEND_EMAILS']) OR $non['DONT_SEND_EMAILS'] != 'Y') {
         $this->get('mailer')->send($message);
       }
