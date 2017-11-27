@@ -1,5 +1,8 @@
 Core.HEd.Student:
   class: Kula\HEd\Bundle\StudentBundle\Chooser\StudentChooser
 
+Core.HEd.StudentStatus:
+  class: Kula\HEd\Bundle\StudentBundle\Chooser\StudentStatusChooser
+
 Teacher.HEd.Student:
   class: Kula\HEd\Bundle\StudentBundle\Chooser\StudentChooser

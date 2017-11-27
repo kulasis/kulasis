@@ -179,6 +179,18 @@ Core_Billing_Reports_BillingStatement_Generate:
   defaults: { _controller: KulaCoreBillingBundle:CoreBillingStatementReport:generate }
   methods: [POST]
 
+Core_Billing_Reports_BillingStatementEmail:
+  path: /reports/billing_statement/email
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreBillingStatementEmailReport:index
+    _navigation: Core.Billing.Reports.BillingEmailStatement
+  methods: [GET]
+
+Core_Billing_Reports_BillingStatementEmail_Generate:
+  path: /reports/billing_statement/email
+  defaults: { _controller: KulaCoreBillingBundle:CoreBillingStatementEmailReport:generate }
+  methods: [POST]
+
 Core_Billing_StudentBilling_TransactionDetail:
   path: /student/transactions/{constituent_transaction_id}/detail
   defaults: { _controller: KulaCoreBillingBundle:CoreTransactions:transaction_detail }

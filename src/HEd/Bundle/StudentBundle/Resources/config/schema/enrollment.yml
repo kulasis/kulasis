@@ -11,6 +11,8 @@ HEd.Student.Status:
       db_column_type: primary_serial
       column_name: "Student Status ID"
       label_name: "Student Status ID"
+      field_type: chooser
+      chooser: Core.HEd.StudentStatus
     StudentID:
       description: "Student ID"
       parent: HEd.Student.ID
