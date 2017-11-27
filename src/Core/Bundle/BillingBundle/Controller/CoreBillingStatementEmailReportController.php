@@ -19,9 +19,11 @@ class CoreBillingStatementEmailReportController extends ReportController {
   public function generateAction() {  
     $this->authorize();
 
+    $non = $this->request->request->get('non');
+
     // Get statement service
     $statement_service = $this->get('kula.Core.billing.statement');
-    $statement_service->setConfiguration($this->request->request->get('non'));
+    $statement_service->setConfiguration($non);
 
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
@@ -52,7 +54,9 @@ echo "<pre>";
           ),
           'text/html');
       $messageText .= $message->toString();
-      //$this->get('mailer')->send($message);
+      if (isset($non['DONT_SEND_EMAILS']) AND $non['DONT_SEND_EMAILS'] == 'Y') {
+        //$this->get('mailer')->send($message);
+      }
 
     } // end foreach on statements
     } // end if on count of statements

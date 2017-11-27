@@ -237,6 +237,7 @@ class StatementService {
     }
     $this->addStudent($student_id);
     $this->addStudentAddresses($student_id);
+    $this->addStudentEmailAddresses($student_id);
     $this->addStudentStatus($student_id);
     $this->addTransactionsForStudent($student_id);
     if ($this->show_pending_fa AND 
@@ -249,7 +250,7 @@ class StatementService {
         $this->getPendingFinancialAid($student_id, $last_transaction['TERM_ID']);
       }
     } // end if on showing pending FA
-    $this->statements[$student_id]['balance'] = $this->statement_balance;
+    $this->statements[$student_id]['balance'] = number_format(bcdiv($this->statement_balance, 100), 2);
     $this->addHolds($student_id);
       
   }
@@ -284,6 +285,22 @@ class StatementService {
     while ($row = $result->fetch()) {
       $this->statements[$student_id]['addresses'][] = $row;
     }
+  }
+
+  public function addStudentEmailAddresses($student_id) {
+    // Get student email addresses
+    $result = $this->db->db_select('CONS_CONSTITUENT', 'stucon')
+    ->fields('stucon', array('CONSTITUENT_ID', 'LAST_NAME', 'FIRST_NAME'))
+    ->join('STUD_STUDENT', 'student', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+    ->fields('student', array('STUDENT_ID'))
+    ->join('CONS_EMAIL_ADDRESS', 'email', 'email.CONSTITUENT_ID = stucon.CONSTITUENT_ID')
+    ->fields('email', array('EMAIL_ADDRESS'))
+    ->condition('student.STUDENT_ID', $student_id)
+    ->condition('email.UNDELIVERABLE', 0)
+    ->execute();
+  while ($row = $result->fetch()) {
+    $this->statements[$student_id]['email_addresses'][] = $row;
+  }
   }
 
   public function addStudentStatus($student_id) {
@@ -330,8 +347,10 @@ class StatementService {
       ->orderBy('transactions.TRANSACTION_DATE', 'ASC')
       ->execute();
     while ($row = $result->fetch()) {
+      $this->statement_balance += intval(bcmul($row['AMOUNT'], 100));
+      $row['AMOUNT'] = number_format($row['AMOUNT'], 2);
+      $row['balance'] = number_format(bcdiv($this->statement_balance, 100), 2);
       $this->statements[$student_id]['transactions'][] = $row;
-      $this->statement_balance += $row['AMOUNT'];
     }
   }
   
@@ -369,14 +388,18 @@ class StatementService {
         if (-1 * $trans_awards['total_amount'] < $awards_row['NET_AMOUNT']) {
           $awards_row['NET_AMOUNT'] = $awards_row['NET_AMOUNT'] - (-1*$trans_awards['total_amount']);
           $awards_row['amount'] = $awards_row['NET_AMOUNT'] * -1;
+          $this->statement_balance += intval(bcmul($awards_row['amount'], 100));
+          $awards_row['amount'] = number_format($awards_row['amount'], 2);
+          $awards_row['balance'] = number_format(bcdiv($this->statement_balance, 100), 2);
           $this->statements[$student_id]['pending_fa'][] = $awards_row;
-          $this->statement_balance += $awards_row['amount'];
         }
         
       } else {
         $awards_row['amount'] = $awards_row['NET_AMOUNT'] * -1;
+        $this->statement_balance += intval(bcmul($awards_row['amount'], 100));
+        $awards_row['amount'] = number_format($awards_row['amount'], 2);
+        $awards_row['balance'] = number_format(bcdiv($this->statement_balance, 100), 2);
         $this->statements[$student_id]['pending_fa'][] = $awards_row;
-        $this->statement_balance += $awards_row['amount'];
       }
       
     }
