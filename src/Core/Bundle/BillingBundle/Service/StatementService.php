@@ -261,6 +261,8 @@ class StatementService {
       ->fields('stucon', array('CONSTITUENT_ID', 'PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
       ->join('STUD_STUDENT', 'student', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
       ->fields('student', array('STUDENT_ID'))
+      ->leftJoin('CONS_PHONE', 'phone', 'phone.PHONE_NUMBER_ID = stucon.PRIMARY_PHONE_ID')
+      ->fields('phone', array('PHONE_NUMBER'))
       ->condition('student.STUDENT_ID', $student_id)
       ->execute()->fetch();
     $this->statements[$student_id]['student'] = $result;
@@ -272,8 +274,6 @@ class StatementService {
       ->fields('stucon', array('CONSTITUENT_ID', 'PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
       ->join('STUD_STUDENT', 'student', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
       ->fields('student', array('STUDENT_ID'))
-      ->leftJoin('CONS_PHONE', 'phone', 'phone.PHONE_NUMBER_ID = stucon.PRIMARY_PHONE_ID')
-      ->fields('phone', array('PHONE_NUMBER'))
       ->leftJoin('CONS_ADDRESS', 'billaddr', 'billaddr.ADDRESS_ID = student.BILLING_ADDRESS_ID AND billaddr.UNDELIVERABLE = 0')
       ->fields('billaddr', array('THOROUGHFARE' => 'bill_ADDRESS', 'LOCALITY' => 'bill_CITY', 'ADMINISTRATIVE_AREA' => 'bill_STATE', 'POSTAL_CODE' => 'bill_ZIPCODE', 'COUNTRY' => 'bill_COUNTRY'))
       ->leftJoin('CONS_ADDRESS', 'mailaddr', 'mailaddr.ADDRESS_ID = stucon.MAILING_ADDRESS_ID AND mailaddr.UNDELIVERABLE = 0')
@@ -307,7 +307,7 @@ class StatementService {
 
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if ($this->focus->getTermID() != '' AND isset($org_term_ids) AND count($org_term_ids) > 0) {
-      $this->statements[$student_id]['status'][] = $this->db->db_select('STUD_STUDENT_STATUS', 'status')
+      $this->statements[$student_id]['status'] = $this->db->db_select('STUD_STUDENT_STATUS', 'status')
         ->fields('status', array('PAYMENT_PLAN'))
         ->leftJoin('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
         ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
@@ -323,7 +323,8 @@ class StatementService {
         ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'))
         ->condition('orgterms.ORGANIZATION_TERM_ID', $org_term_ids, 'IN')
         ->condition('status.STUDENT_ID', $student_id)
-        ->execute()->fetchAll();
+        ->orderBy('term.START_DATE', 'DESC')
+        ->execute()->fetch();
     }
 
   }

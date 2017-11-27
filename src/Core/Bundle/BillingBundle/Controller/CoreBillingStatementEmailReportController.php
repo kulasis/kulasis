@@ -32,17 +32,14 @@ class CoreBillingStatementEmailReportController extends ReportController {
     $statement_service->generateStatements(array($record_id));
     $statements = $statement_service->getStatements();
 
-    $messageText = 'End.';
-
-echo "<pre>";
-    print_r($statements);
+    $messageText = '';
 
     if (count($statements) > 0) {
     foreach($statements as $statement) {
 
       // send email
       $message = \Swift_Message::newInstance()
-      ->setSubject('OCAC Billing Statement for '.$statement['student']['FIRST_NAME'].' '.$statement['student']['LAST_NAME'].' ('.$statement['student']['PERMANENT_NUMBER'].')')
+      ->setSubject('Billing Statement for '.$statement['student']['FIRST_NAME'].' '.$statement['student']['LAST_NAME'].' ('.$statement['student']['PERMANENT_NUMBER'].')')
       ->setFrom(['kulasis@ocac.edu' => 'Oregon College of Art and Craft'])
       ->setReplyTo('bursar@ocac.edu')
       ->setTo('mjacobsen@ocac.edu')
@@ -50,13 +47,17 @@ echo "<pre>";
       ->setBody(
           $this->renderView(
               'KulaCoreBillingBundle:CoreEmail:statement.html.twig',
-              array('data' => $statement)
+              array('data' => $statement, 
+                    'institution_name' => $this->getParameter('report_institution_name'), 
+                    'institution_address_1' => $this->getParameter('report_institution_address_line1'), 
+                    'institution_address_2' => $this->getParameter('report_institution_address_line2')
+                  )
           ),
           'text/html');
-      $messageText .= $message->toString();
-      if (isset($non['DONT_SEND_EMAILS']) AND $non['DONT_SEND_EMAILS'] == 'Y') {
-        //$this->get('mailer')->send($message);
+      if (!isset($non['DONT_SEND_EMAILS']) OR $non['DONT_SEND_EMAILS'] != 'Y') {
+        $this->get('mailer')->send($message);
       }
+      $messageText .= $message->toString();
 
     } // end foreach on statements
     } // end if on count of statements
