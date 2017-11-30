@@ -17,9 +17,7 @@ jQuery(document).ajaxComplete(function($) {
   form_submitButton();
 });
 
-// Save Form
-jQuery(window).keypress(function(event) {
-  if (!(event.which == 115 && (event.ctrlKey || event.metaKey)) && !(event.which == 19)) return true;
+function submitFormWithKeys(event) {
   // Get current window number
   var windowNum = $('#window_bar > ul > .active').data('window');
   windowNum = windowNum || '';
@@ -31,6 +29,24 @@ jQuery(window).keypress(function(event) {
   }
 
   formSubmission(event, $(elementToFind + '_form'));
-  
-  return false;
+}
+
+// Save Form
+jQuery(document).keypress(function(event) {
+  if (event.which == 115 && (event.ctrlKey||event.metaKey)|| (event.which == 19)) {
+    event.preventDefault();
+
+    submitFormWithKeys(event);
+
+    return false;
+  }
+  return true;
+});
+
+$(document).bind('keydown', function(e) {
+  if(e.ctrlKey && (e.which == 83)) {
+    e.preventDefault();
+    submitFormWithKeys(e);
+    return false;
+  }
 });
