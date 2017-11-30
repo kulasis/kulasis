@@ -158,6 +158,11 @@ Core.System.Users:
       description: "Roles"
       display_name: "Roles"
       route: Core_System_Users_Usergroups
+  menu_actions:
+    ResetFailedLoginAttempts:
+      description: "Reset Failed Logins"
+      display_name: "Reset Failed Logins"
+      route: Core_System_Users_ResetLoginAttempts
   button_add:
     route: Core_System_Users_Add
   button_delete:

@@ -53,12 +53,15 @@ function form_submitButton() {
 	
 }
 
-function formSubmission(event) {
-	if ($(this).data('navigation-type') != 'report' && $(this).data('navigation-type') != 'menu_report') {
+function formSubmission(event, form_obj) {
+	if (form_obj == null) {
+    form_obj = $(this);
+	}
+	if (form_obj.data('navigation-type') != 'report' && form_obj.data('navigation-type') != 'menu_report') {
 	event.preventDefault();
-	thisurl = $(this).prop('action');
+	thisurl = form_obj.prop('action');
 	
-	var idOfForm = $(this).prop('id');
+	var idOfForm = form_obj.prop('id');
 	idOfForm = navigation_replaceAllWindowIDPlaceholders(idOfForm, 1);
 	idOfDiv = idOfForm.replace(/\_form/g, '');
 
@@ -72,7 +75,7 @@ function formSubmission(event) {
 	$('#nav_bar_status > span').hide();
 	$('#nav_bar_status_loading').show();
 	
-	processForm($(this), thisurl, 'window', idOfDiv, options, function(msg, options) {
+	processForm(form_obj, thisurl, 'window', idOfDiv, options, function(msg, options) {
 		msg = navigation_replaceAllWindowIDPlaceholders(msg, $('#' + idOfDiv).data('window'));
 		navigation_updateWindow($('#' + idOfDiv).data('window'), msg, '', thisurl);
 		// disable submit and loading buttons

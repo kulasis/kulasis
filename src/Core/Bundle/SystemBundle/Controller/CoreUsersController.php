@@ -18,6 +18,21 @@ class CoreUsersController extends Controller {
     
     return $this->render('KulaCoreSystemBundle:Users:index.html.twig', array('user' => $user));
   }
+
+  public function resetFailedLoginAttemptsAction() {
+    $this->authorize();
+    $this->setRecordType('Core.User');
+    
+    $constituentPoster = $this->newPoster();
+    $constituentPoster->edit('Core.User', $this->record->getSelectedRecordID(), array(
+      'Core.User.NumberFailedAttempts' => 0
+    ));
+    $constituentPoster->process();
+
+    $this->addFlash('success', 'Login attempts resetted.');
+
+    return $this->forward('Core_System_Users', array('record_type' => 'Core.User', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.User', 'record_id' => $this->record->getSelectedRecordID()));
+  }
   
   public function user_groupsAction() {
     $this->authorize();

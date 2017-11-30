@@ -406,6 +406,29 @@ class CoreEnrollmentController extends Controller {
         
     return $this->render('KulaHEdStudentBundle:CoreEnrollment:edit.html.twig', array('status' => $status, 'effective_date' => $effective_date));
   }
+
+  public function chooserAction() {
+    $this->authorize();
+    $data = $this->chooser('Core.HEd.StudentStatus')->createChooserMenu($this->request->query->get('q'));
+    return $this->JSONResponse($data);
+  }
+  
+  public function combineAction() {
+    $this->authorize();
+    
+    $combine = $this->request->request->get('non');
+    if (isset($combine['HEd.Student.Status']['delete']['HEd.Student.Status.ID']['value']) AND isset($combine['HEd.Student.Status']['keep']['HEd.Student.Status.ID']['value'])) {
+      
+      if ($result = $this->get('kula.Core.Combine')->combine('STUD_STUDENT_STATUS', $combine['HEd.Student.Status']['delete']['HEd.Student.Status.ID']['value'], $combine['HEd.Student.Status']['keep']['HEd.Student.Status.ID']['value'])) {
+        $this->addFlash('success', 'Combined student statuses.');
+      } else {
+        $this->addFlash('error', 'Unable to combined student statuses.');
+      }
+      
+    }
+
+    return $this->render('KulaHEdStudentBundle:CoreEnrollment:combine.html.twig');
+  }
   
 }
 

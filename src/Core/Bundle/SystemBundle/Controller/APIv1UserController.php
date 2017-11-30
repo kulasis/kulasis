@@ -224,8 +224,11 @@ class APIv1UserController extends APIController {
       }
     }
 
+    // Update any dependents
+
     if ($constituent_update OR $user_update OR $address_id OR $phone_id OR $email_id) {
       $transaction->commit();
+      $contactInfo_service->synContactInfoForDependents($currentUser);
       return $this->JSONResponse('Updated.');
     } else {
       $transaction->rollback();

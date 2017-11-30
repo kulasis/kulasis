@@ -161,9 +161,11 @@ class TransactionService {
 
     // get payment amount
     $transaction = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transaction')
-      ->fields('transaction', array('AMOUNT', 'PAYMENT_ID', 'CONSTITUENT_ID'))
+      ->fields('transaction', array('AMOUNT', 'PAYMENT_ID', 'CONSTITUENT_ID', 'REFUND_TRANSACTION_ID'))
       ->condition('transaction.CONSTITUENT_TRANSACTION_ID', $transaction_id)
       ->execute()->fetch();
+
+    $refund_transaction_amount = 0.0;
 
     if ($transaction['PAYMENT_ID']) {
       // get applied transactions
@@ -174,6 +176,14 @@ class TransactionService {
         ->condition('trans.CONSTITUENT_ID', $transaction['CONSTITUENT_ID'])
         ->execute()->fetch();     
     } else {
+      if ($transaction['REFUND_TRANSACTION_ID']) {
+        // get refund transaction ID
+        $refunded_transaction = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transaction')
+          ->fields('transaction', array('AMOUNT'))
+          ->condition('transaction.CONSTITUENT_TRANSACTION_ID', $transaction['REFUND_TRANSACTION_ID'])
+          ->execute()->fetch();
+        $refund_transaction_amount = $refunded_transaction['AMOUNT'];
+      }
       // get applied transactions
       $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
         ->expression('SUM(AMOUNT)', 'total_applied_balance')
@@ -182,9 +192,9 @@ class TransactionService {
     }
 
     if ($transaction['PAYMENT_ID']) {
-      $applied_balance = $applied_trans['total_applied_balance'] + $transaction['AMOUNT'];
+      $applied_balance = $applied_trans['total_applied_balance'] + $transaction['AMOUNT'] + $refund_transaction_amount;
     } else {
-      $applied_balance = $applied_trans['total_applied_balance'] * -1 + $transaction['AMOUNT'];
+      $applied_balance = $applied_trans['total_applied_balance'] * -1 + $transaction['AMOUNT'] + $refund_transaction_amount;
     }
 
     $result = $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $transaction_id, array(

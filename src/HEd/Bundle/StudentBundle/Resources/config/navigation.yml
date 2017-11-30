@@ -183,3 +183,11 @@ Core.HEd.Student.Reports:
       description: "Enrollment Verification"
       display_name: "Enrollment Verification"
       route: core_HEd_student_enrollment_reports_enrollmentverification
+
+Core.Constituent.Combiner.StudentStatusHEd:
+  parent: Core.Constituent.Combiner
+  type: tab
+  target: HEd
+  description: "Student Status Combiner"
+  display_name: "Student Status"
+  route: Core_Constituent_Combiner_StudentStatus_HEd
