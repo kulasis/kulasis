@@ -78,7 +78,7 @@ core_HEd_school_staff_addresses:
     _navigation: Core.HEd.Staff.Staff.Addresses
 
 core_HEd_school_staff_addresses_detail:
-  path: /staff/addresses/detail/{sub_id}
+  path: /staff/{id}/addresses/detail/{sub_id}
   defaults: 
     _controller: KulaHEdSchoolBundle:CoreContactInfo:detail
     _navigation: Core.HEd.Staff.Staff.Addresses
