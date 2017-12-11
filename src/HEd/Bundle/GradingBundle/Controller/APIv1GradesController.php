@@ -18,7 +18,7 @@ class APIv1GradesController extends APIController {
 
     $data = array();
 
-        // Determine if grades released
+    // Determine if grades released
     $grades_released = $this->db()->db_select('STUD_SCHOOL_TERM', 'schoolterm')
       ->fields('schoolterm', array('STUDENT_GRADES_RELEASE'))
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.ORGANIZATION_TERM_ID = schoolterm.SCHOOL_TERM_ID')
