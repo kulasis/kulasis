@@ -158,6 +158,7 @@ HEd.Student:
       db_column_name: CITIZENSHIP_COUNTRY
       db_column_type: varchar
       db_column_length: 2
+      db_column_default: "US"
       db_column_null: true
       field_type: lookup
       lookup: Constituent.Address.Country
