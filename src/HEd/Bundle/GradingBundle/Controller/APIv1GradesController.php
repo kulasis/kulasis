@@ -18,7 +18,7 @@ class APIv1GradesController extends APIController {
 
     $data = array();
 
-        // Determine if grades released
+    // Determine if grades released
     $grades_released = $this->db()->db_select('STUD_SCHOOL_TERM', 'schoolterm')
       ->fields('schoolterm', array('STUDENT_GRADES_RELEASE'))
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.ORGANIZATION_TERM_ID = schoolterm.SCHOOL_TERM_ID')
@@ -30,9 +30,9 @@ class APIv1GradesController extends APIController {
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
       ->condition('term.TERM_ABBREVIATION', $term)
       ->execute()->fetch();
-    
+
     if ($grades_released['STUDENT_GRADES_RELEASE'] != '' AND strtotime($grades_released['STUDENT_GRADES_RELEASE']) < time()) {
-    
+
       $classes = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
         ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'MARK_SCALE_ID', 'CREDITS_ATTEMPTED', 'DROPPED', 'DROP_DATE'))
         ->join('STUD_SECTION', 'section', 'class.SECTION_ID = section.SECTION_ID')
@@ -58,12 +58,12 @@ class APIv1GradesController extends APIController {
         ->orderBy('LEVEL', 'ASC')
         ->orderBy('CALENDAR_YEAR', 'ASC')
         ->orderBy('CALENDAR_MONTH', 'ASC')
-        ->execute()->fetchAll(); 
+        ->execute()->fetchAll();
 
-      return $data = array('classes' => $classes, 'gpa' => $gpa);
+      $data = array('classes' => $classes, 'gpa' => $gpa);
     } else {
       // Grades not released
-      return $data = 'Grades not released.';
+      $data = 'Grades not released.';
     }
 
     return $this->JSONResponse($data);
