@@ -13,7 +13,7 @@ class CoreBilling1098TStudentReportController extends ReportController {
   public function indexAction() {
     $this->authorize();
 
-    return $this->render('KulaCoreBillingBundle:CoreBillingStatementReport:reports_billingstatement.html.twig');
+    return $this->render('KulaCoreBillingBundle:CoreBilling1098TReport:student.html.twig');
   }
   
   public function generateAction() {
