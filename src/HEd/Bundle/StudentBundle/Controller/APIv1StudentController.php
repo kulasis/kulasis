@@ -16,14 +16,26 @@ class APIv1StudentController extends APIController {
     $currentUser = $this->authorizeUser();
 
     $data = array();
-
-    $data = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
+    $i = 0;
+    $data_result = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
       ->fields('rel', array('CONSTITUENT_ID'))
       ->condition('rel.RELATED_CONSTITUENT_ID', $currentUser)
       ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = rel.CONSTITUENT_ID')
-      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'))
-      ->execute()->fetchAll();
+      ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER', 'GENDER', 'BIRTH_DATE'))
+      ->execute();
+    while ($data = $data_result->fetch()) {
+      $student[$i] = $data;
 
+      // Get emergency contacts/drivers
+      $student[$i]['emergency'] = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'emerg')
+        ->fields('emerg')
+        ->condition('emerg.STUDENT_ID', $student_id)
+        ->condition('emerg.REMOVED', 0)
+        ->execute()->fetchAll();
+
+    $i++;
+    }
+    
     return $this->JSONResponse($data);
   }
 

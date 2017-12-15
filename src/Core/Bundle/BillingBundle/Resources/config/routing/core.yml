@@ -261,3 +261,15 @@ Core_Billing_BillingSetup_TuitionRates_Transactions_Refunds:
   defaults: 
     _controller: KulaCoreBillingBundle:CoreTuitionRates:transactionRefunds
     _navigation: Core.Billing.BillingSetup.TuitionRates
+
+Core_Billing_Reports_1098T_Student:
+  path: /reports/billing/1098T
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreBilling1098TStudentReport:index
+    _navigation: Core.Billing.Reports.1098TStudent
+  methods: [GET]
+
+Core_Billing_Reports_1098T_Student_Generate:
+  path: /reports/billing/1098T
+  defaults: { _controller: KulaCoreBillingBundle:CoreBilling1098TStudentReport:generate }
+  methods: [POST]
