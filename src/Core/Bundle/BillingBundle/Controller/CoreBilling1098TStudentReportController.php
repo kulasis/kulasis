@@ -54,10 +54,6 @@ class CoreBilling1098TStudentReportController extends ReportController {
       ->condition('trans.TRANSACTION_DATE', $end_date, '<=')
       ->leftJoin('CONS_ADDRESS', 'addr', 'addr.ADDRESS_ID = stucon.RESIDENCE_ADDRESS_ID')
       ->fields('addr', array('THOROUGHFARE' => 'ADDRESS', 'LOCALITY' => 'CITY', 'ADMINISTRATIVE_AREA' => 'STATE', 'POSTAL_CODE' => 'ZIPCODE'));
-    if ($this->focus->getTermID() != '' AND isset($org_term_ids) AND count($org_term_ids) > 0) {
-      $result = $result->condition('trans.ORGANIZATION_TERM_ID', $org_term_ids);
-    }
-
     if (isset($record_id) AND $record_id != '' AND ($record_type == 'Core.HEd.Student' OR $record_type == 'Core.Constituent')) {
       $result = $result->condition('stucon.CONSTITUENT_ID', $record_id);
     }
