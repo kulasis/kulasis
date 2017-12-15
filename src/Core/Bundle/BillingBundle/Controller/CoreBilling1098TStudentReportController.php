@@ -43,7 +43,7 @@ class CoreBilling1098TStudentReportController extends ReportController {
     $pdf = new Fpdi\Fpdi();
     $pdf->SetFont('Arial', '', 10);
 
-    $org_term_ids = $this->focus->getOrganizationTermIDs();
+    $org_term_ids = $this->focus->getOrganizationID();
     // Get students
     // Get Data and Load
     $result = $this->db()->db_select('CONS_CONSTITUENT', 'stucon')
@@ -54,9 +54,20 @@ class CoreBilling1098TStudentReportController extends ReportController {
       ->condition('trans.TRANSACTION_DATE', $end_date, '<=')
       ->leftJoin('CONS_ADDRESS', 'addr', 'addr.ADDRESS_ID = stucon.RESIDENCE_ADDRESS_ID')
       ->fields('addr', array('THOROUGHFARE' => 'ADDRESS', 'LOCALITY' => 'CITY', 'ADMINISTRATIVE_AREA' => 'STATE', 'POSTAL_CODE' => 'ZIPCODE'));
+<<<<<<< HEAD
+    if ($this->focus->getTermID() != '' AND isset($org_term_ids) AND count($org_term_ids) > 0) {
+      $result = $result->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = stucon.CONSTITUENT_ID')
+        ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID')
+        ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
+        ->condition('org.ORGANIZATION_ID', $org_term_ids);
+    }
+
+=======
+>>>>>>> 6b2b8bc70b83053e35162bcd4bbb3e2921041380
     if (isset($record_id) AND $record_id != '' AND ($record_type == 'Core.HEd.Student' OR $record_type == 'Core.Constituent')) {
       $result = $result->condition('stucon.CONSTITUENT_ID', $record_id);
     }
+    $result = $result->orderBy('stucon.LAST_NAME')->orderBy('stucon.FIRST_NAME');
     $result = $result->execute();
     while ($row = $result->fetch()) {
 
@@ -109,10 +120,16 @@ class CoreBilling1098TStudentReportController extends ReportController {
       $pdf->SetLeftMargin(107);
       $pdf->setY(21);
       // Get Box 1
-      $pdf->Cell(20,5, $this->getBoxNumber($row['CONSTITUENT_ID'], $start_date, $end_date, 1), '', 0,'L'); 
+      if ($box_1 = $this->getBoxNumber($row['CONSTITUENT_ID'], $start_date, $end_date, 1))
+        $pdf->Cell(20,5, round($box_1), '', 0,'L'); 
+      else 
+        $pdf->Cell(20,5, '', '', 0,'L'); 
       $pdf->Ln(12.6);
       // Get Box 2
-      $pdf->Cell(20,5, $this->getBoxNumber($row['CONSTITUENT_ID'], $start_date, $end_date, 2), '', 0,'L'); 
+      if ($box_2 = $this->getBoxNumber($row['CONSTITUENT_ID'], $start_date, $end_date, 2))
+      	$pdf->Cell(20,5, round($box_2), '', 0,'L'); 
+      else
+        $pdf->Cell(20,5, '', '', 0,'L');
       $pdf->Ln(45.8);
 
       // Get Box 9
@@ -131,10 +148,13 @@ class CoreBilling1098TStudentReportController extends ReportController {
       $pdf->SetLeftMargin(142);
       $pdf->setY(54.5);
       // Get Box 5
-      $pdf->Cell(20,5, $this->getBoxNumber($row['CONSTITUENT_ID'], $start_date, $end_date, 5), '', 0,'L'); 
+      if ($box_5 = $this->getBoxNumber($row['CONSTITUENT_ID'], $start_date, $end_date, 5))
+        $pdf->Cell(20,5, round($box_5*-1), '', 0,'L'); 
+      else
+        $pdf->Cell(20,5, '', '', 0,'L');
 
 
-
+     unset($box_1, $box_2, $box_5);
     } // end while looping through students
 
     // Closing line
