@@ -179,14 +179,14 @@ class CoreStudentScheduleBillReportController extends ReportController {
       }
 
       if ($last_student_status_id != $row['STUDENT_STATUS_ID']) {
-        
-        $this->pdf->billing_header();
-        if (isset($this->student_balances_for_orgterm[$last_id]))
-          $this->pdf->billing_previous_balances($this->student_balances_for_orgterm[$last_id]);
-        $this->getTransactionsForStudent($last_id);
-        $this->pdf->billing_total_balance();
-        $this->pdf->supply_list_row();
-        
+        if ($last_student_status_id != 0) {
+          $this->pdf->billing_header();
+          if (isset($this->student_balances_for_orgterm[$last_id]))
+            $this->pdf->billing_previous_balances($this->student_balances_for_orgterm[$last_id]);
+          $this->getTransactionsForStudent($last_id);
+          $this->pdf->billing_total_balance();
+          $this->pdf->supply_list_row();
+        }
         
         $this->pdf->setData($row);
         $this->pdf->row_count = 1;
