@@ -25,7 +25,7 @@
         "symfony/symfony": "3.3.*",
         "symfony/assetic-bundle": "2.*",
         "twig/twig": "^1.0||^2.0",
-        "itbz/fpdf": "1.*",
+        "setasign/fpdi-fpdf": "^2.0",
         "google/apiclient": "1.*",
         "guzzlehttp/guzzle": "6.*"
     },

@@ -2,7 +2,7 @@
 
 namespace Kula\Core\Bundle\FrameworkBundle\Report;
 
-class Report extends \fpdf\FPDF {
+class Report extends \FPDF {
   
   protected $report_title;
   protected $school_name;
@@ -152,37 +152,43 @@ class Report extends \fpdf\FPDF {
   
   
   // create a new page group; call this before calling AddPage()
-      public function StartPageGroup()
-      {
-          $this->NewPageGroup=true;
-      }
+  public function StartPageGroup()
+  {
+      $this->NewPageGroup=true;
+  }
 
-      // current page in the group
-      public function GroupPageNo()
-      {
-          return $this->PageGroups[$this->CurrPageGroup];
-      }
+  // current page in the group
+  public function GroupPageNo()
+  {
+      return $this->PageGroups[$this->CurrPageGroup];
+  }
 
-      // alias of the current page group -- will be replaced by the total number of pages in this group
-      public function PageGroupAlias()
-      {
-          return $this->CurrPageGroup;
-      }
+  // alias of the current page group -- will be replaced by the total number of pages in this group
+  public function PageGroupAlias()
+  {
+      return $this->CurrPageGroup;
+  }
 
-      public function _beginpage($orientation, $size)
-      {
-          parent::_beginpage($orientation, $size);
-          if($this->NewPageGroup)
-          {
-              // start a new group
-              $n = sizeof($this->PageGroups)+1;
-              $alias = "{nb$n}";
-              $this->PageGroups[$alias] = 1;
-              $this->CurrPageGroup = $alias;
-              $this->NewPageGroup=false;
-          }
-          elseif($this->CurrPageGroup)
-              $this->PageGroups[$this->CurrPageGroup]++;
-      }
+  public function _beginpage($orientation, $size, $rotation)
+  {
+    parent::_beginpage($orientation, $size, $rotation);
+    if ($this->NewPageGroup) {
+      // start a new group
+      $n = sizeof($this->PageGroups)+1;
+      $alias = "{nb$n}";
+      $this->PageGroups[$alias] = 1;
+      $this->CurrPageGroup = $alias;
+      $this->NewPageGroup=false;
+    } elseif ($this->CurrPageGroup)
+      $this->PageGroups[$this->CurrPageGroup]++;
+  }
+
+  public function Image($file, $x=null, $y=null, $w=0, $h=0, $type='', $link='') {
+    if (file_exists($file)) {
+      parent::Image($file, $x=null, $y=null, $w=0, $h=0, $type='', $link='');
+    } else {
+      return '';
+    }
+  }
   
 }

@@ -123,6 +123,88 @@ Core.HEd.Student:
     Forms:
       original: Core.HEd.Forms.StudentForms
       display_name: "Forms"
+    Schedule:
+      description: "Schedule"
+      display_name: "Schedule"
+      tabs:
+        CurrentSchedule:
+          description: "Current Schedule"
+          display_name: "Current Schedule"
+          route: Core_HEd_Scheduling_StudentSchedule
+        History:
+          description: "History"
+          display_name: "History"
+          route: Core_HEd_Scheduling_StudentSchedule_History
+        WaitList:
+          description: "Wait List"
+          display_name: "Wait List"
+          route: Core_HEd_Scheduling_StudentSchedule_WaitList
+      menu_actions:
+        AddClasses:
+          description: "Add Classes"
+          display_name: "Add Classes"
+          record_loaded: true
+          route: Core_HEd_Scheduling_StudentSchedule_Add
+        CalculateFTEAndTuition:
+          description: "Calculate FTE and Tuition"
+          display_name: "Calculate FTE & Tuition"
+          divider_before: true
+          route: Core_HEd_Scheduling_StudentSchedule_CalculateTotals
+      menu_reports:
+        StudentSchedule:
+          description: "Student Schedule"
+          display_name: "Student Schedule"
+          route: Core_HEd_Scheduling_Reports_StudentSchedule
+        StudentScheduleBill:
+          description: "Student Schedule & Bill"
+          display_name: "Student Schedule & BIll"
+          route: Core_HEd_Scheduling_Reports_StudentScheduleBill
+    CourseHistory:
+      description: "Course History"
+      display_name: "Course History"
+      tabs:
+        CourseHistory:
+          description: "Course History"
+          display_name: "Course History"
+          route: Core_HEd_Grading_StudentCourseHistory_CourseHistory
+        Degrees:
+          description: "Degrees"
+          display_name: "Degrees"
+          route: Core_HEd_Grading_StudentCourseHistory_Degrees
+        Standings:
+          description: "Standings"
+          display_name: "Standings"
+          route: Core_HEd_Grading_StudentCourseHistory_Standings
+        TranscriptComments:
+          description: "Transcript Comments"
+          display_name: "Transcript Comments"
+          route: Core_HEd_Grading_StudentCourseHistory_TranscriptComments
+        Terms:
+          description: "Terms"
+          display_name: "Terms"
+          route: Core_HEd_Grading_StudentCourseHistory_Terms
+        Transcript:
+          description: "Transcript"
+          display_name: "Transcript"
+          route: Core_HEd_Grading_StudentCourseHistory_Transcript
+        DegreeAudit:
+          description: "Degree Audit"
+          display_name: "Degree Audit"
+          route: Core_HEd_Grading_StudentCourseHistory_DegreeAudit
+      menu_actions:
+        RecalculateTermTotals:
+          description: "Calculate Term Totals"
+          display_name: "Calculate Term Totals"
+          route: Core_HEd_Grading_StudentCourseHistory_CalculateTermTotals
+      menu_reports:
+        StudentTranscript:
+          description: "Student Transcript"
+          display_name: "Student Transcript"
+          route: Core_HEd_Grading_Reports_StudentTranscript
+        DegreeAuditReport:
+          description: "Degree Audit"
+          display_name: "Degree Audit"
+          route: Core_HEd_Grading_Reports_DegreeAudit
 
 Core.HEd.Documents:
   type: dir
