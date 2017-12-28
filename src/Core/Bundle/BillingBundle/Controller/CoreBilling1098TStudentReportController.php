@@ -109,6 +109,20 @@ class CoreBilling1098TStudentReportController extends ReportController {
       $pdf->Ln(9);
       $pdf->Cell(20,5, $row['CITY'].', '.$row['STATE'].' '.$row['ZIPCODE'], '', 0,'L');
 
+      // Get Box 8
+      $half_time_status = $this->db()->db_select('STUD_STUDENT_STATUS', 'stustatus')
+        ->fields('stustatus', array('TOTAL_CREDITS_ATTEMPTED'))
+        ->leftJoin('STUD_SCHOOL_TERM_LEVEL', 'school_term_level', 'school_term_level.ORGANIZATION_TERM_ID = stustatus.ORGANIZATION_TERM_ID AND school_term_level.LEVEL = stustatus.LEVEL')
+        ->fields('school_term_level', array('MIN_PART_TIME_HOURS'))
+        ->condition('ENTER_DATE', $start_date, '>=')
+        ->condition('ENTER_DATE', $end_date, '<=')
+        ->condition('STUDENT_ID', $row['CONSTITUENT_ID'])
+        ->execute()->fetch();
+      if ($half_time_status['TOTAL_CREDITS_ATTEMPTED'] >= $half_time_status['MIN_PART_TIME_HOURS']) {
+        $pdf->Ln(8.5);
+        $pdf->Cell(84.4,5, 'X', '', 0,'R'); 
+      } 
+
       // Second Column
       $pdf->SetLeftMargin(107);
       $pdf->setY(21);
