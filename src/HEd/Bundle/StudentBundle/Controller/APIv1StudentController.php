@@ -17,17 +17,17 @@ class APIv1StudentController extends APIController {
 
     $data = array();
     $i = 0;
-    $data_result = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
+    $student_result = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
       ->fields('rel', array('CONSTITUENT_ID'))
       ->condition('rel.RELATED_CONSTITUENT_ID', $currentUser)
       ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = rel.CONSTITUENT_ID')
       ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER', 'GENDER', 'BIRTH_DATE'))
       ->execute();
-    while ($data = $data_result->fetch()) {
-      $student[$i] = $data;
+    while ($student = $student_result->fetch()) {
+      $data[$i] = $student;
 
       // Get emergency contacts/drivers
-      $student[$i]['emergency'] = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'emerg')
+      $data[$i]['emergency'] = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'emerg')
         ->fields('emerg')
         ->condition('emerg.STUDENT_ID', $student_id)
         ->condition('emerg.REMOVED', 0)
