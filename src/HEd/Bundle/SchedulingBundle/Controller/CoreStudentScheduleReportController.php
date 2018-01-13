@@ -161,8 +161,11 @@ class CoreStudentScheduleReportController extends ReportController {
       $pdf->row_total_count++;
     }
     
-    $pdf->credit_row($credit_total);
-    
+
+    if ($last_student_status_id != 0) {    
+      $pdf->credit_row($credit_total);
+    }
+      
     // Closing line
     return $this->pdfResponse($pdf->Output('','S'));
   
