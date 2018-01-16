@@ -42,16 +42,19 @@ class CoreBillingStatementEmailReportController extends ReportController {
         ->setSubject('Billing Statement for '.$statement['student']['FIRST_NAME'].' '.$statement['student']['LAST_NAME'].' ('.$statement['student']['PERMANENT_NUMBER'].')')
         ->setFrom(['kulasis@ocac.edu' => 'Oregon College of Art and Craft'])
         ->setReplyTo('bursar@ocac.edu')
-        ->setBcc(array('mjacobsen@ocac.edu'));
+        ->setBcc(array('mjacobsen@ocac.edu', 'bursar@ocac.edu'));
 
       if (isset($non['SEND_EMAILS_TO']) AND $non['SEND_EMAILS_TO'] == 'Y') {
-        $message = $message->setTo($non['EMAIL_TO']);
+        $bursted_addresses = explode(',', $non['SEND_EMAILS_TO']);
+        foreach($bursted_addresses as $email_address) {
+          $message = $message->addTo($non['email_address']);
+        }
       } else {
         $emails = array();
         foreach($statement['email_addresses'] as $email_info) {
-          $emails[] = $email_info['FIRST_NAME'].' '.$email_info['LAST_NAME'].' <'.$email_info['EMAIL_ADDRESS'].'>';
+          $emails[] = array($email_info['EMAIL_ADDRESS'] => $email_info['FIRST_NAME'].' '.$email_info['LAST_NAME']);
         }
-        //$message = $message->setTo($emails);
+        $message = $message->setTo($emails);
       }
 
       $message = $message->setBody(

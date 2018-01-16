@@ -29,7 +29,7 @@ class APIv1StudentController extends APIController {
       // Get emergency contacts/drivers
       $data[$i]['emergency'] = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'emerg')
         ->fields('emerg')
-        ->condition('emerg.STUDENT_ID', $student_id)
+        ->condition('emerg.STUDENT_ID', $data['CONSTITUENT_ID'])
         ->condition('emerg.REMOVED', 0)
         ->execute()->fetchAll();
 

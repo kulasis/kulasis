@@ -19,7 +19,7 @@ class CourseChooser extends Chooser {
       ->fields('course', array('COURSE_ID', 'COURSE_NUMBER', 'COURSE_TITLE'))
       ->condition($query_conditions)
       ->orderBy('COURSE_NUMBER', 'ASC');
-    $search = $search  ->execute();
+    $search = $search->execute();
     while ($row = $search->fetch()) {
       $this->addToChooserMenu($row['COURSE_ID'], $row['COURSE_NUMBER'].' / '.$row['COURSE_TITLE']);
     }
