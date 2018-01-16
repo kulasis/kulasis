@@ -19,6 +19,20 @@ class APIv1PaymentController extends APIController {
     // get logged in user
     $currentUser = $this->authorizeUser();
 
+    // Get related constituents
+    $related_constituents_result = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
+      ->fields('rel', array('CONSTITUENT_ID'))
+      ->condition('rel.RELATED_CONSTITUENT_ID', $currentUser)
+      ->execute();
+    while ($related_constituent = $related_constituents_result->fetch()) {
+      $related_constituents[] = $related_constituent['CONSTITUENT_ID'];
+    }
+    $related_constituents[] = $currentUser;
+
+    $constituent_conditions_or = $this->db()->db_or();
+    $constituent_conditions_or->condition('transactions.CONSTITUENT_ID', $currentUser);
+    $constituent_conditions_or->condition('payments.PAYEE_CONSTITUENT_ID', $currentUser);
+
     $data = array();
 
     $data['total'] = 0;
@@ -39,7 +53,7 @@ class APIv1PaymentController extends APIController {
       ->fields('crs', array('COURSE_TITLE'))
       ->leftJoin('BILL_CONSTITUENT_PAYMENTS', 'payments', 'payments.CONSTITUENT_PAYMENT_ID = transactions.PAYMENT_ID')
       ->fields('payments', array('PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_NUMBER'))
-      ->condition('transactions.CONSTITUENT_ID', $currentUser)
+      ->condition($constituent_conditions_or)
       ->condition('transactions.POSTED', 1)
       ->condition('transactions.APPLIED_BALANCE', 0)
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
