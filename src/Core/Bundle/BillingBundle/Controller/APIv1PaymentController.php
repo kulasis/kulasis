@@ -40,7 +40,7 @@ class APIv1PaymentController extends APIController {
       ->leftJoin('BILL_CONSTITUENT_PAYMENTS', 'payments', 'payments.CONSTITUENT_PAYMENT_ID = transactions.PAYMENT_ID')
       ->fields('payments', array('PAYMENT_TYPE', 'PAYMENT_DATE', 'PAYMENT_NUMBER'))
       ->condition('transactions.CONSTITUENT_ID', $currentUser)
-      ->condition('transactions.POSTED', 1)\
+      ->condition('transactions.POSTED', 1)
       ->condition('transactions.APPLIED_BALANCE', 0)
       ->condition('org.ORGANIZATION_ABBREVIATION', $org)
       ->orderBy('TRANSACTION_DATE', 'DESC', 'transactions')
