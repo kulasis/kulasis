@@ -143,7 +143,9 @@ class CoreStudentScheduleReportController extends ReportController {
         $row = array_merge($row, $meetings[$row['SECTION_ID']]);
       }
       if ($last_student_status_id != $row['STUDENT_STATUS_ID']) {
-        $pdf->credit_row($credit_total);
+        if ($last_student_status_id != 0) {
+          $pdf->credit_row($credit_total);
+        }
         $pdf->setData($row);
         $pdf->row_count = 1;
         $credit_total = 0;
