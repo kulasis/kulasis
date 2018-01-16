@@ -213,7 +213,9 @@ class PosterRecord {
   
   private function processBlankValues() {
     foreach($this->fields as $fieldName => $field) {
-      if ((!is_array($field) AND trim($field) == '') OR $this->fields[$fieldName] == '(blank)') {
+      echo $fieldName.' '.$this->fields[$fieldName].' | ';
+      if ((!is_array($field) AND trim($field) == '') OR $this->fields[$fieldName] === '(blank)') { // 
+
         $this->fields[$fieldName] = null;
       }
     }
