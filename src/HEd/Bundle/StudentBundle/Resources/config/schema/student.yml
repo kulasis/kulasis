@@ -416,16 +416,6 @@ HEd.Student:
       field_size: 25
       column_name: "Medical Physician"
       label_name: "Medical Physician"
-    School:
-      description: "School"
-      db_column_name: SCHOOL
-      db_column_type: varchar
-      db_column_length: 255
-      db_column_null: true
-      field_type: text
-      field_size: 20
-      column_name: "School"
-      label_name: "School"
     Comments:
       description: "Comments"
       db_column_name: COMMENTS
