@@ -173,3 +173,15 @@ HEd.Student.EmergencyContact.Relationship.Type:
     - { code: 16, description: "Nanny" }
     - { code: 17, description: "Friend" }
     - { code: 18, description: "Mentor" }
+
+HEd.Student.ShirtSize:
+  description: "T-shirt Sizes"
+  allow_update: true
+  values:
+    - { code: YS, description: "Youth Small" }
+    - { code: YM, description: "Youth Medium" }
+    - { code: YL, description: "Youth Large" }
+    - { code: YXL, description: "Youth X-Large" }
+    - { code: AS, description: "Adult Small" }
+    - { code: AM, description: "Adult Medium" }
+    - { code: AL, description: "Adult Large" }
