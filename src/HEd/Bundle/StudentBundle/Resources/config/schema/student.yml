@@ -349,6 +349,16 @@ HEd.Student:
       field_size: 5
       column_name: "Age"
       label_name: "Age"
+    Grade:
+      description: "Grade"
+      db_column_name: GRADE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.Grade
+      column_name: "Grade"
+      label_name: "Grade"
     MedicalFoodAllergies:
       description: "Food Allergies"
       db_column_name: MED_FOOD_ALLERGIES
