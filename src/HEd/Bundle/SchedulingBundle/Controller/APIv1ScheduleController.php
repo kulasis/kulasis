@@ -43,7 +43,7 @@ class APIv1ScheduleController extends APIController {
 
     // Find student; if doesn't exist, create student record
     $student = $this->db()->db_select('STUD_STUDENT', 'stu')
-      ->fields('stu', array('STUDENT_ID'))
+      ->fields('stu', array('STUDENT_ID', 'GRADE'))
       ->condition('stu.STUDENT_ID', $student_id)
       ->execute()->fetch();
 
@@ -87,7 +87,7 @@ class APIv1ScheduleController extends APIController {
       $student_enrollment = $this->get('kula.HEd.student')->enrollStudent(array(
         'StudentID' => $student_id,
         'OrganizationTermID' => $section['ORGANIZATION_TERM_ID'],
-        'HEd.Student.Status.Grade' => $defaults['DEFAULT_GRADE'],
+        'HEd.Student.Status.Grade' => ($student['GRADE'] != '') ? $student['GRADE'] : $defaults['DEFAULT_GRADE'],
         'HEd.Student.Status.Level' => $defaults['DEFAULT_LEVEL'],
         'HEd.Student.Status.EnterDate' => date('Y-m-d'),
         'HEd.Student.Status.EnterCode' => $defaults['DEFAULT_ENTER_CODE'],
