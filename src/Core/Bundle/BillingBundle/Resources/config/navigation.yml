@@ -185,3 +185,7 @@ Core.Billing.Reports:
       description: "1098-T Student"
       display_name: "1098-T Student"
       route: Core_Billing_Reports_1098T_Student
+    1098TFire:
+      description: "1098-T Fire"
+      display_name: "1098-T Fire"
+      route: Core_Billing_Reports_1098T_Fire

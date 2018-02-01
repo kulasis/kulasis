@@ -154,7 +154,6 @@ class StatementService {
           $awards_result = $awards_result->condition('term.TERM_ID', $this->focus->getTermID());
         }
         $awards_result = $awards_result->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'APPR', 'AWAR'))
-          ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
           ->condition('faidstuawrds.NET_AMOUNT', 0, '>')
           ->execute();
         while ($awards_row = $awards_result->fetch()) {
@@ -337,8 +336,7 @@ class StatementService {
       ->fields('org', array('ORGANIZATION_ABBREVIATION'))
       ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'))
-      ->condition('transactions.CONSTITUENT_ID', $student_id)
-      ->condition('transactions.SHOW_ON_STATEMENT', 1);
+      ->condition('transactions.CONSTITUENT_ID', $student_id);
     
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0)
@@ -372,8 +370,8 @@ class StatementService {
       ->condition('faidstuawardyr.STUDENT_ID', $student_id)
       ->condition('term.TERM_ID', $term_id)
       ->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'APPR', 'AWAR'))
-      ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
       ->condition('faidstuawrds.NET_AMOUNT', 0, '>')
+      ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
       ->execute();
     while ($awards_row = $awards_result->fetch()) {
 

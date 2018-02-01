@@ -273,3 +273,15 @@ Core_Billing_Reports_1098T_Student_Generate:
   path: /reports/billing/1098T
   defaults: { _controller: KulaCoreBillingBundle:CoreBilling1098TStudentReport:generate }
   methods: [POST]
+
+Core_Billing_Reports_1098T_Fire:
+  path: /reports/billing/1098T-FIRE
+  defaults: 
+    _controller: KulaCoreBillingBundle:CoreBilling1098TFireReport:index
+    _navigation: Core.Billing.Reports.1098TFire
+  methods: [GET]
+
+Core_Billing_Reports_1098T_Fire_Generate:
+  path: /reports/billing/1098T-FIRE
+  defaults: { _controller: KulaCoreBillingBundle:CoreBilling1098TFireReport:generate }
+  methods: [POST]

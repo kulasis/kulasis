@@ -15,7 +15,7 @@ class CoreScheduleController extends Controller {
     if ($discount_data = $this->request->request->get('discount')) {
 
       foreach($discount_data['HEd.Student.Class'] as $student_class_id => $field) {
-
+        if ($field['HEd.Student.Class.Discount'] != '') {
         // Get discount info
         $discount_info = $this->db()->db_select('BILL_SECTION_FEE_DISCOUNT', 'discount')
           ->fields('discount', array('AMOUNT'))
@@ -56,7 +56,7 @@ class CoreScheduleController extends Controller {
         // Post discount
         $payment_service->postPayment($payment_id);
         $transaction_service->postTransaction($transaction_id);
-
+        } // end if on discount info 
       } // end foreach
      
     }

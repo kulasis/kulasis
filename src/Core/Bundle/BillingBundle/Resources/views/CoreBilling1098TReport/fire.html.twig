@@ -1,0 +1,13 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<input type="hidden" name="record_id" value="{{ request.query.get('record_id') }}" />
+<input type="hidden" name="record_type" value="{{ request.query.get('record_type') }}" />
+<div class="group-box">
+<div class="group-box-header">Dates</div>
+<div class="group-box-contents group">
+<div class="form-field"><label name="pending">Start Date</label><input type="text" name="non[START_DATE]" value="{{ start_date }}" size="15" /></div>
+<div class="form-field"><label name="pending">End Date</label><input type="text" name="non[END_DATE]" value="{{ end_date }}" size="15" /></div>
+</div>
+</div>
+{% endblock %}

@@ -35,7 +35,7 @@ abstract class Chooser {
   }
   
   public function createChooserMenu($search_string) {
-    
+    $this->addToChooserMenu('(blank)', ('(Blank)'));
     if ($search_string) {
       $this->search($search_string);
     }

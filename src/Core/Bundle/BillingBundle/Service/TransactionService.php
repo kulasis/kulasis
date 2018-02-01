@@ -2,6 +2,8 @@
 
 namespace Kula\Core\Bundle\BillingBundle\Service;
 
+use Kula\Core\Bundle\FrameworkBundle\Exception\DisplayException;
+
 class TransactionService {
   
   protected $database;
@@ -53,6 +55,11 @@ class TransactionService {
       $amount = $amount * -1;
     if ($transaction_code['CODE_TYPE'] == 'P' AND $refund === true AND $amount < -1)
       $amount = $amount * -1;
+
+    // Cancel transactions that are old. 
+    if (date('Y-m-d', strtotime($transaction_date)) < date('Y-m-d')) {
+      throw new DisplayException($transaction_date . ' is backdated.');
+    }
     
     // Prepare & post payment data    
     return $this->posterFactory->newPoster()->add('Core.Billing.Transaction', 'new', array(

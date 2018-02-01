@@ -67,7 +67,7 @@ class ExceptionListener implements EventSubscriberInterface
       if ($exception instanceof PosterException) { // $exception->getFields()
         $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage(), 'fields' => null), 200, array('X-Status-Code' => 200));
       } elseif ($exception instanceof \PDOException OR $exception instanceof IntegrityConstraintViolationException OR $exception instanceof DatabaseExceptionWrapper) {
-        $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage()), 200, array('X-Status-Code' => 200));
+        $response = new JsonResponse(array('type' => 'form_error', 'message' => $exception->getMessage().' | '.$exception->getTraceAsString()), 200, array('X-Status-Code' => 200));
       } elseif ($exception instanceof NotAuthorizedException) {
         $response = new RedirectResponse('/login');
       } elseif ($exception instanceof DisplayException) {

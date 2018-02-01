@@ -224,10 +224,12 @@ function navigation_updateWindow(num, html, title, url) {
 	   var quest_pos = url.indexOf('?');
 		 url = url.substring(0, quest_pos);
 	 } 
-	
-  // Update window url
-	$('#windowTitle_' + num).data('window-url', url);
-	$('#window_' + num).data('window-url', url);
+   // if URL contains 'detail', don't set the window-url to that since searching should never load to a detail window
+	 if (url.indexOf('detail') == -1) {
+    // Update window url
+  	$('#windowTitle_' + num).data('window-url', url);
+  	$('#window_' + num).data('window-url', url);
+	 }
 	}
 	
 	navigation_windowListeners(num);
