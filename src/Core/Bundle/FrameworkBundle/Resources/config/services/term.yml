@@ -2,6 +2,8 @@ parameters:
   kula.term.options.cache_class: kula%kernel.environment%TermCache
 
 services:
+  _defaults: { public: true }
+  
   kula.core.term.cache:
     class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\TermCacheWarmer
     public: false

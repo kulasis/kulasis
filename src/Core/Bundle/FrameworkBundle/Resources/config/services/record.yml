@@ -2,6 +2,8 @@ parameters:
   kula.record.options.cache_class: kula%kernel.environment%RecordCache
 
 services:
+  _defaults: { public: true }
+  
   kula.core.record_type.cache:
     class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\RecordTypeCacheWarmer
     public: false

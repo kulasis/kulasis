@@ -1,4 +1,6 @@
 services:
+  _defaults: { public: true }
+  
   kula.HEd.grading.coursehistory:
     class: Kula\HEd\Bundle\GradingBundle\Service\CourseHistoryService
     arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.core.record"]

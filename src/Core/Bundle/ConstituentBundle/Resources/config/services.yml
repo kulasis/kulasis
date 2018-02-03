@@ -1,4 +1,6 @@
 services:
+  _defaults: { public: true }
+  
   kula.Core.Combine:
     class: Kula\Core\Bundle\ConstituentBundle\Service\CombineService
     arguments: ["@kula.core.db"]
