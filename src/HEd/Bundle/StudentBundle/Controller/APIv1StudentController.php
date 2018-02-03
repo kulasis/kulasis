@@ -17,17 +17,17 @@ class APIv1StudentController extends APIController {
 
     $data = array();
     $i = 0;
-    $data_result = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
+    $student_result = $this->db()->db_select('CONS_RELATIONSHIP', 'rel')
       ->fields('rel', array('CONSTITUENT_ID'))
       ->condition('rel.RELATED_CONSTITUENT_ID', $currentUser)
       ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = rel.CONSTITUENT_ID')
       ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER', 'GENDER', 'BIRTH_DATE'))
       ->execute();
-    while ($data = $data_result->fetch()) {
-      $student[$i] = $data;
+    while ($student = $student_result->fetch()) {
+      $data[$i] = $student;
 
       // Get emergency contacts/drivers
-      $student[$i]['emergency'] = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'emerg')
+      $data[$i]['emergency'] = $this->db()->db_select('STUD_STUDENT_EMERGENCY_CONTACT', 'emerg')
         ->fields('emerg')
         ->condition('emerg.STUDENT_ID', $data['CONSTITUENT_ID'])
         ->condition('emerg.REMOVED', 0)
@@ -99,7 +99,7 @@ class APIv1StudentController extends APIController {
     $student = $this->db()->db_select('CONS_CONSTITUENT', 'cons')
       ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'PERMANENT_NUMBER', 'GENDER', 'BIRTH_DATE'))
       ->join('STUD_STUDENT', 'stu', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
-      ->fields('stu', array('PARENT_GUARDIAN', 'GROUP_WITH', 'OFF_CAMPUS', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVIORAL', 'MED_MEN_EMO_SOC_HEALTH', 'MED_INSURANCE', 'MED_PHYSICIAN', 'SCHOOL', 'COMMENTS', 'CREATED_TIMESTAMP', 'UPDATED_TIMESTAMP'))
+      ->fields('stu', array('PARENT_GUARDIAN', 'GRADE', 'GROUP_WITH', 'OFF_CAMPUS', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVIORAL', 'MED_MEN_EMO_SOC_HEALTH', 'MED_INSURANCE', 'MED_PHYSICIAN', 'SCHOOL', 'COMMENTS', 'CREATED_TIMESTAMP', 'UPDATED_TIMESTAMP'))
       ->condition('cons.CONSTITUENT_ID', $student_id)
       ->execute()->fetch();
 
