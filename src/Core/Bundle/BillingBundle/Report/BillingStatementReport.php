@@ -13,6 +13,7 @@ class BillingStatementReport extends Report {
   private $before_holds_y;
   
   public $due_date;
+  public $address;
 
   public function __construct($orientation='P', $unit='mm', $size='Letter') {
     parent::__construct($orientation, $unit, $size);
@@ -72,65 +73,58 @@ class BillingStatementReport extends Report {
     $y_pos = $this->GetY();
     $this->SetLeftMargin(20);
     $this->SetFont('Arial', '', 10);
-    $middle_initial = substr($this->data['MIDDLE_NAME'], 0, 1);
+    $middle_initial = substr($this->data['student']['MIDDLE_NAME'], 0, 1);
     if ($middle_initial) $middle_initial = $middle_initial.'.';
+  
+    if (isset($this->address['type']) AND $this->address['type'] == 'bill') {
     
-    if ($this->data['address'] == 'bill') {
-    
-      if ($this->data['billing_address']['RECIPIENT'] != '') {
-        $this->Cell(0,5, $this->data['billing_address']['RECIPIENT'], '', 0,'L');
+      if ($this->address['recipient'] != '') {
+        $this->Cell(0,5, $this->address['recipient'], '', 0,'L');
         $this->Ln(4);
       }
     
     }
+  
     $name_line = '';
-    if (isset($this->data['billing_address']['RECIPIENT']) AND $this->data['address'] == 'bill') $name_line = 'Re: ';
-    $name_line = $name_line . $this->data['LAST_NAME'].', '.$this->data['FIRST_NAME'].' '.$middle_initial;
+    if (isset($this->address['recipient']) AND $this->address['type'] == 'bill') $name_line = 'Re: ';
+    $name_line = $name_line . $this->data['student']['LAST_NAME'].', '.$this->data['student']['FIRST_NAME'].' '.$middle_initial;
     $this->Cell(0,5, $name_line, '', 0,'L');
     $this->Ln(4);
 
     // Address
-    if ($this->data['address'] == 'bill')
-      $this->address($this->data['billing_address']['THOROUGHFARE'], $this->data['billing_address']['LOCALITY'], $this->data['billing_address']['ADMINISTRATIVE_AREA'], $this->data['billing_address']['POSTAL_CODE']);
-    else {
-      if ($this->data['mail_ADDRESS'] != '')
-        $this->address($this->data['mail_ADDRESS'], $this->data['mail_CITY'], $this->data['mail_STATE'], $this->data['mail_ZIPCODE']);
-      elseif ($this->data['residence_ADDRESS'] != '')
-        $this->address($this->data['residence_ADDRESS'], $this->data['residence_CITY'], $this->data['residence_STATE'], $this->data['residence_ZIPCODE']);
+    if (isset($this->address['address'])) {
+      $this->Cell(0,5, $this->address['address'], '', 0,'L');
+      $this->Ln(4);
+      $this->Cell(0,5, $this->address['city'].', '.$this->address['state'].' '.$this->address['zipcode'], '', 0,'L');
+      $this->Ln(4);
     }
+  
     $this->SetFont('Arial', '', 8);
     // Student Info
     $this->SetLeftMargin(120);
     $this->SetY($y_pos);
     
     $this->Cell(30,5, 'Student ID:', '', 0,'R');
-    $this->Cell(30,5, $this->data['PERMANENT_NUMBER'], '', 0, 'L');
+    $this->Cell(30,5, $this->data['student']['PERMANENT_NUMBER'], '', 0, 'L');
     $this->Ln(4);
     $this->Cell(30,5, 'Phone:', '', 0,'R');
-    $this->Cell(30,5, $this->data['PHONE_NUMBER'], '', 0, 'L');
+    $this->Cell(30,5, $this->data['student']['PHONE_NUMBER'], '', 0, 'L');
     $this->Ln(4);
-    if (isset($this->data['GRADE'])) {
+    if (isset($this->data['status']['GRADE'])) {
     $this->Cell(30,5, 'Grade:', '', 0,'R');
-    $this->Cell(30,5, $this->data['GRADE'].' / '.$this->data['ENTER_CODE'], '', 0, 'L');
+    $this->Cell(30,5, $this->data['status']['GRADE'].' / '.$this->data['status']['ENTER_CODE'], '', 0, 'L');
     $this->Ln(4);
     }
-    if (isset($this->data['DEGREE_NAME'])) {
+    if (isset($this->data['status']['DEGREE_NAME'])) {
     $this->Cell(30,5, 'Degree Program:', '', 0,'R');
-    $this->Cell(30,5, $this->data['DEGREE_NAME'], '', 0, 'L');
+    $this->Cell(30,5, $this->data['status']['DEGREE_NAME'], '', 0, 'L');
     $this->Ln(4);
     }
     $this->Cell(30,5, 'Payment Plan:', '', 0,'R');
-    $this->Cell(30,5, $this->data['PAYMENT_PLAN'] == '1' ? 'Yes' : 'No', '', 0, 'L');
+    $this->Cell(30,5, $this->data['status']['PAYMENT_PLAN'] == '1' ? 'Yes' : 'No', '', 0, 'L');
     $this->Ln(4);
     $this->SetLeftMargin(15);
     $this->Ln(10);
-  }
-  
-  public function address($address, $city, $state, $zipcode) {
-    $this->Cell(0,5, $address, '', 0,'L');
-    $this->Ln(4);
-    $this->Cell(0,5, $city.', '.$state.' '.$zipcode, '', 0,'L');
-    $this->Ln(4);
   }
   
   public function previous_balances($balances) {
@@ -181,26 +175,12 @@ class BillingStatementReport extends Report {
     if ($previous_balances == 'Y')
       $this->Cell($this->width[0],6,'',1,0,'L', $this->fill);
     else
-      $this->Cell($this->width[0],6, ($row['TRANSACTION_DATE'] != '' AND $row['POSTED'] == '1') ? date("m/d/Y", strtotime($row['TRANSACTION_DATE'])) : 'Pending',1,0,'L', $this->fill);
+      $this->Cell($this->width[0],6, $row['TRANSACTION_DATE'],1,0,'L', $this->fill);
     $this->Cell($this->width[1],6,$row['ORGANIZATION_ABBREVIATION'],1,0,'L',$this->fill);
     $this->Cell($this->width[2],6,$row['TERM_ABBREVIATION'],1,0,'L',$this->fill);
     $this->Cell($this->width[3],6,substr($row['TRANSACTION_DESCRIPTION'], 0, 65),1,0,'L',$this->fill);
     $this->Cell($this->width[4],6,'$ '.number_format($row['AMOUNT'], 2),1,0,'R',$this->fill);
-    $this->Cell($this->width[5],6,'$ '.number_format(bcdiv($this->balance, 100, 2), 2),1,0,'R',$this->fill);
-    
-    $this->Ln();
-    $this->fill = !$this->fill;
-  }
-  
-  public function fa_table_row($row) {
-    $amount = intval(bcmul($row['NET_AMOUNT'], -100, 2));
-    $this->balance += $amount;
-    $this->Cell($this->width[0],6, 'Pending',1,0,'L', $this->fill);
-    $this->Cell($this->width[1],6,$row['ORGANIZATION_ABBREVIATION'],1,0,'L',$this->fill);
-    $this->Cell($this->width[2],6,$row['TERM_ABBREVIATION'],1,0,'L',$this->fill);
-    $this->Cell($this->width[3],6,substr($row['AWARD_DESCRIPTION'], 0, 65),1,0,'L',$this->fill);
-    $this->Cell($this->width[4],6,'$ '.number_format(bcdiv($amount, 100, 2), 2),1,0,'R',$this->fill);
-    $this->Cell($this->width[5],6,'$ '.number_format(bcdiv($this->balance, 100, 2), 2),1,0,'R',$this->fill);
+    $this->Cell($this->width[5],6,'$ '.number_format(bcdiv($row['balance'], 100, 2), 2),1,0,'R',$this->fill);
     
     $this->Ln();
     $this->fill = !$this->fill;
