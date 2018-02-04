@@ -2,6 +2,8 @@ parameters:
   kula.lookup.options.cache_class: kula%kernel.environment%LookupCache
 
 services:
+  _defaults: { public: true }
+  
   kula.core.lookup.cache:
     class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\RecordTypeCacheWarmer
     public: false

@@ -2,6 +2,8 @@ parameters:
   kula.organization.options.cache_class: kula%kernel.environment%OrganizationCache
 
 services:
+  _defaults: { public: true }
+  
   kula.core.organization.cache:
     class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\OrganizationCacheWarmer
     public: false

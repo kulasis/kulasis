@@ -3,6 +3,8 @@ parameters:
   kula.core.document_poster_factory.class: Kula\Core\Component\DB\DocumentPosterFactory
 
 services:
+  _defaults: { public: true }
+  
   flash:
     class: Symfony\Component\HttpFoundation\Session\Flash\FlashBag
     factory: ["@session", "getFlashBag"]

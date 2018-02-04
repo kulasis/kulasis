@@ -14,7 +14,7 @@ Core_HEd_FinancialAid_StudentFinancialAid_Billing:
   path: /core/financial_aid/student/billing
   defaults: 
     _controller: KulaHEdFinancialAidBundle:CoreAwards:billing
-    _navigation: Core.HEd.FinancialAid.StudentFinancialAid.Awards
+    _navigation: Core.HEd.FinancialAid.StudentFinancialAid.Billing
   methods: [GET]
 
 Core_HEd_FinancialAid_StudentFinancialAid_Billing_History:

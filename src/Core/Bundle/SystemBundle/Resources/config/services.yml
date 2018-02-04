@@ -2,6 +2,8 @@ parameters:
   kula.core.poster_factory.class: Kula\Core\Component\DB\PosterFactory
 
 services:
+  _defaults: { public: true }
+  
   kula.core.user:
     class: Kula\Core\Bundle\SystemBundle\Service\UserService
     arguments: ["@kula.core.db", "@kula.core.poster_factory"]

@@ -22,7 +22,7 @@ function focus_term_change(event) {
   urlToUse = currentURL;
 
 	// Get current active tab 
-	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .tabs > .active > a').prop('id');
+	var activeTabID = $('#window_' + windowNumber + '_tab_bar > .nav-tabs > .active > a').prop('id');
 	
 	if (activeTabID == undefined) {
 		// not in tab

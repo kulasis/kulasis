@@ -35,6 +35,10 @@ class DatabaseDataCollector extends DataCollector implements LateDataCollectorIn
     public function collect(Request $request, Response $response, \Exception $exception = null) {
     }
 
+    public function reset() {
+      
+    }
+
     /**
      * {@inheritdoc}
      */
