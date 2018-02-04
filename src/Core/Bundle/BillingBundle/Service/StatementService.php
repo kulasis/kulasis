@@ -91,6 +91,9 @@ class StatementService {
           ->join('CORE_ORGANIZATION', 'org', 'org.ORGANIZATION_ID = orgterms.ORGANIZATION_ID')
           ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID');
       }
+      $students_to_consider_result = $students_to_consider_result->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stustatus.STUDENT_ID')
+        ->orderBy('cons.LAST_NAME', 'ASC')
+        ->orderBy('cons.FIRST_NAME', 'ASC');
       $students_to_consider_result = $students_to_consider_result->execute();
       while ($students_to_consider_row = $students_to_consider_result->fetch()) {
         $this->students[] = $students_to_consider_row['STUDENT_ID'];
@@ -228,7 +231,8 @@ class StatementService {
         'ORGANIZATION_ABBREVIATION' => '',
         'TERM_ABBREVIATION' => '',
         'TRANSACTION_DESCRIPTION' => 'Previous Balance',
-        'AMOUNT' => $this->student_balances_for_orgterm[$student_id]
+        'AMOUNT' => $this->student_balances_for_orgterm[$student_id],
+        'balance' => $this->student_balances_for_orgterm[$student_id]
       );
       $this->statements[$student_id]['previous_balance'] = $this->student_balances_for_orgterm[$student_id];
       $this->statement_balance += $this->student_balances_for_orgterm[$student_id];

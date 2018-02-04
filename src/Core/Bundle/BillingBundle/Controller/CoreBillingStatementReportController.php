@@ -102,9 +102,18 @@ class CoreBillingStatementReportController extends ReportController {
     if (isset($statement['previous_balance']))
       $this->pdf->previous_balances($statement['previous_balance']);
     
+    if (isset($statement['transactions'])) {
     foreach($statement['transactions'] as $row) {
       $this->pdf->table_row($row);
     }
+    }
+
+    if (isset($statement['pending_fa'])) {
+    foreach($statement['pending_fa'] as $fa_row) {
+      $this->pdf->fa_table_row($fa_row);
+    }
+    }
+    
     $this->pdf->total_balance();
 
     if (isset($statement['holds'])) {

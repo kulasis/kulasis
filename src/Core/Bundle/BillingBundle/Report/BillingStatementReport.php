@@ -127,24 +127,24 @@ class BillingStatementReport extends Report {
     $this->Ln(10);
   }
   
-  public function previous_balances($balances) {
+  public function previous_balances($balance) {
     
-    foreach($balances as $balance) {
       //if ($balance['TERM_ID'] != $this->session->get('term_id')) {
       $data_row['TRANSACTION_DATE'] = '';
       $data_row['ORGANIZATION_ABBREVIATION'] = ''; //$balance['ORGANIZATION_ABBREVIATION'];
       $data_row['TERM_ABBREVIATION'] = ''; //$balance['TERM_ABBREVIATION'];
       $data_row['TRANSACTION_DESCRIPTION'] = 'Previous Balance';
-      $data_row['AMOUNT'] = $balance['total_amount'];
+      $data_row['AMOUNT'] = $balance;
+      $data_row['balance'] = $balance;
       
-      if ($balance['total_amount'] != 0)
+      if ($balance != 0)
         $this->SetFont('Arial', 'B', 8);
       else
         $this->SetFont('Arial', '', 8);
         
       $this->table_row($data_row, 'Y');
       unset($data_row);
-    }
+
     $this->SetFont('Arial', '', 8);
     //}
   }
@@ -171,21 +171,33 @@ class BillingStatementReport extends Report {
   }
   
   public function table_row($row, $previous_balances = null) {
-    $this->balance += intval(bcmul($row['AMOUNT'], 100));
+
     if ($previous_balances == 'Y')
       $this->Cell($this->width[0],6,'',1,0,'L', $this->fill);
     else
-      $this->Cell($this->width[0],6, $row['TRANSACTION_DATE'],1,0,'L', $this->fill);
+      $this->Cell($this->width[0],6, date("m/d/Y", strtotime($row['TRANSACTION_DATE'])),1,0,'L', $this->fill);
     $this->Cell($this->width[1],6,$row['ORGANIZATION_ABBREVIATION'],1,0,'L',$this->fill);
     $this->Cell($this->width[2],6,$row['TERM_ABBREVIATION'],1,0,'L',$this->fill);
     $this->Cell($this->width[3],6,substr($row['TRANSACTION_DESCRIPTION'], 0, 65),1,0,'L',$this->fill);
-    $this->Cell($this->width[4],6,'$ '.number_format($row['AMOUNT'], 2),1,0,'R',$this->fill);
-    $this->Cell($this->width[5],6,'$ '.number_format(bcdiv($row['balance'], 100, 2), 2),1,0,'R',$this->fill);
+    $this->Cell($this->width[4],6,'$ '.$row['AMOUNT'],1,0,'R',$this->fill);
+    $this->Cell($this->width[5],6,'$ '.$row['balance'],1,0,'R',$this->fill);
     
     $this->Ln();
     $this->fill = !$this->fill;
   }
-  
+
+  public function fa_table_row($row) {
+    $this->Cell($this->width[0],6, 'Pending',1,0,'L', $this->fill);
+    $this->Cell($this->width[1],6,$row['ORGANIZATION_ABBREVIATION'],1,0,'L',$this->fill);
+    $this->Cell($this->width[2],6,$row['TERM_ABBREVIATION'],1,0,'L',$this->fill);
+    $this->Cell($this->width[3],6,substr($row['AWARD_DESCRIPTION'], 0, 65),1,0,'L',$this->fill);
+    $this->Cell($this->width[4],6,'$ '.$row['amount'],1,0,'R',$this->fill);
+    $this->Cell($this->width[5],6,'$ '.$row['balance'],1,0,'R',$this->fill);
+    
+    $this->Ln();
+    $this->fill = !$this->fill;
+  }
+
   public function holds_header() {
     if ($this->GetY() > 250) {
       $this->Ln($this->GetY() - 250);
