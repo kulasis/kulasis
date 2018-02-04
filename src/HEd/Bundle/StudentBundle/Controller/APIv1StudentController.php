@@ -80,6 +80,9 @@ class APIv1StudentController extends APIController {
     $contact_info_service->syncCurrentPhone($currentUser, $constituent_id);
     $contact_info_service->syncCurrentAddresses($currentUser, $constituent_id);
 
+    // add student record
+    $student_data = $this->newPoster()->add('HEd.Student', 0, array('HEd.Student.ID' => $constituent_id))->process(array('VERIFY_PERMISSIONS' => false));
+
     if ($constituent_id) {
       $transaction->commit();
       return $this->JSONResponse($constituent_id);
@@ -98,7 +101,7 @@ class APIv1StudentController extends APIController {
 
     $student = $this->db()->db_select('CONS_CONSTITUENT', 'cons')
       ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'PERMANENT_NUMBER', 'GENDER', 'BIRTH_DATE'))
-      ->join('STUD_STUDENT', 'stu', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
+      ->leftJoin('STUD_STUDENT', 'stu', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
       ->fields('stu', array('PARENT_GUARDIAN', 'GRADE', 'GROUP_WITH', 'OFF_CAMPUS', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVIORAL', 'MED_MEN_EMO_SOC_HEALTH', 'MED_INSURANCE', 'MED_PHYSICIAN', 'SCHOOL', 'COMMENTS', 'CREATED_TIMESTAMP', 'UPDATED_TIMESTAMP'))
       ->condition('cons.CONSTITUENT_ID', $student_id)
       ->execute()->fetch();
