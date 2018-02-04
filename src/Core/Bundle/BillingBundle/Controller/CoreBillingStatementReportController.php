@@ -141,6 +141,7 @@ class CoreBillingStatementReportController extends ReportController {
             $awards_result = $awards_result->condition('term.TERM_ID', $this->focus->getTermID());
           }
           $awards_result = $awards_result->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'APPR', 'AWAR'))
+          ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
           ->condition('faidstuawrds.NET_AMOUNT', 0, '>')
           ->execute();
           while ($awards_row = $awards_result->fetch()) {
@@ -395,6 +396,7 @@ class CoreBillingStatementReportController extends ReportController {
       ->condition('faidstuawardyr.STUDENT_ID', $student_id)
       ->condition('term.TERM_ID', $term_id)
       ->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'APPR', 'AWAR'))
+      ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
       ->condition('faidstuawrds.NET_AMOUNT', 0, '>')
       ->execute();
     while ($awards_row = $awards_result->fetch()) {
