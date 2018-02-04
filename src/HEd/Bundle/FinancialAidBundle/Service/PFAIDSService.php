@@ -24,7 +24,7 @@ class PFAIDSService {
     $this->ssn_key = $ssn_key;
   }
   
-  private function pfaids_connect($application, $id = null) {
+  public function pfaids_connect($application, $id = null) {
     
     // Get database connection parameters
     $intgDB = $this->db->db_select('CORE_INTG_DATABASE')
@@ -304,8 +304,11 @@ class PFAIDSService {
     return $poe;
   }
   
-  public function synchronizeStudentAwardInfo($faid_award_year = null, $permanent_number = null) {
+  public function synchronizeStudentAwardInfo($faid_award_year = null, $permanent_number = null, $organization_id = null) {
     $connection = $this->pfaids_connect('PFAIDR');
+    if (!$organization_id) {
+      $organization_id = $this->focus->getOrganizationID();
+    }
     
     if ($connection) {
     
@@ -333,7 +336,7 @@ class PFAIDSService {
         ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = awardyear.STUDENT_ID')
         ->condition('cons.PERMANENT_NUMBER', $pf_stu_award['alternate_id'])
         ->condition('awardyear.AWARD_YEAR', $pf_stu_award['award_year_token'])
-        ->condition('awardyear.ORGANIZATION_ID', $this->focus->getOrganizationID())
+        ->condition('awardyear.ORGANIZATION_ID', $organization_id)
         ->execute()->fetch();
       
       if ($award_year['AWARD_YEAR_ID']) {
@@ -360,7 +363,7 @@ class PFAIDSService {
           $award_year['AWARD_YEAR_ID'] = $this->posterFactory->newPoster()->noLog()->add('HEd.FAID.Student.AwardYear', 'new', array(
             'HEd.FAID.Student.AwardYear.StudentID' => $student_id['CONSTITUENT_ID'],
             'HEd.FAID.Student.AwardYear.AwardYear' => $pf_stu_award['award_year_token'],
-            'HEd.FAID.Student.AwardYear.OrganizationID' => $this->focus->getOrganizationID(),
+            'HEd.FAID.Student.AwardYear.OrganizationID' => $organization_id,
             'HEd.FAID.Student.AwardYear.PrimaryEFC' => $pf_stu_award['primary_efc'],
             'HEd.FAID.Student.AwardYear.SecondaryEFC' => $pf_stu_award['secondary_efc'],
             'HEd.FAID.Student.AwardYear.TotalIncome' => $pf_stu_award['fisap_income'],
@@ -387,7 +390,7 @@ class PFAIDSService {
           $organization_term_id = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'orgterms', array('nolog' => true))
             ->fields('orgterms', array('ORGANIZATION_TERM_ID'))
             ->join('FAID_PFAID_POE', 'poe', 'poe.TERM_ID = orgterms.TERM_ID')
-            ->condition('orgterms.ORGANIZATION_ID', $this->focus->getOrganizationID())
+            ->condition('orgterms.ORGANIZATION_ID', $organization_id)
             ->condition('poe.poe_token', $pf_stu_award_year_term['poe_token'])
 			->range(0, 1)
 			->execute()->fetch();
@@ -401,7 +404,7 @@ class PFAIDSService {
             ->execute()->fetch();
           
           // check if award term exists
-          if (!$award_year_term['AWARD_YEAR_TERM_ID']) {
+          if (!$award_year_term['AWARD_YEAR_TERM_ID'] AND $organization_term_id['ORGANIZATION_TERM_ID'] != '') {
             
             $this->posterFactory->newPoster()->noLog()->add('HEd.FAID.Student.AwardYear.Term', 'new', array(
               'HEd.FAID.Student.AwardYear.Term.AwardYearID' => $award_year['AWARD_YEAR_ID'],
@@ -485,7 +488,7 @@ class PFAIDSService {
         $organization_term_id = $this->db->db_select('CORE_ORGANIZATION_TERMS', 'orgterms', array('nolog' => true))
           ->fields('orgterms', array('ORGANIZATION_TERM_ID'))
           ->join('FAID_PFAID_POE', 'poe', 'poe.TERM_ID = orgterms.TERM_ID')
-          ->condition('orgterms.ORGANIZATION_ID', $this->focus->getOrganizationID())
+          ->condition('orgterms.ORGANIZATION_ID', $organization_id)
           ->condition('poe.poe_token', $pf_stu_term_award['poe_token'])
           ->execute()->fetch();
         
