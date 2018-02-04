@@ -254,6 +254,7 @@ class StatementService {
       }
     } // end if on showing pending FA
     $this->statements[$student_id]['balance'] = number_format(bcdiv($this->statement_balance, 100), 2);
+    $this->statements[$student_id]['due_date'] = $this->due_date;
     $this->addHolds($student_id);
       
   }

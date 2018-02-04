@@ -99,12 +99,15 @@ class CoreBillingStatementReportController extends ReportController {
     $this->pdf->StartPageGroup();
     $this->pdf->AddPage();
     
-    if (isset($statement['previous_balance']))
-      $this->pdf->previous_balances($statement['previous_balance']);
     
     if (isset($statement['transactions'])) {
     foreach($statement['transactions'] as $row) {
-      $this->pdf->table_row($row);
+      if ($row['TRANSACTION_DESCRIPTION'] == 'Previous Balance') {
+        $this->pdf->previous_balances($statement['previous_balance']);
+      } else {
+        $this->pdf->table_row($row);
+      }
+      
     }
     }
 
@@ -114,7 +117,7 @@ class CoreBillingStatementReportController extends ReportController {
     }
     }
     
-    $this->pdf->total_balance();
+    $this->pdf->total_balance($statement['balance'], $statement['due_date']);
 
     if (isset($statement['holds'])) {
       $first = 0;

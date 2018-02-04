@@ -59,6 +59,8 @@ class BillingStatementReport extends Report {
     $image1 = KULA_ROOT . $this->reportLogo;
     $this->Cell(1,0, $this->Image($image1, 15, 20), 0, 0, 'L');
     
+    $original_y = $this->GetY();
+    $this->SetY(23);
     // College Information
     $this->Cell(0,5, $this->reportInstitutionName, '', 0,'C');
     $this->Ln(4);
@@ -69,6 +71,7 @@ class BillingStatementReport extends Report {
     $this->Cell(0,5, $this->reportPhoneLine1, '', 0,'C');
     $this->Ln(25);
     
+    $this->SetY($original_y + 7);
     // Student Name
     $y_pos = $this->GetY();
     $this->SetLeftMargin(20);
@@ -149,12 +152,12 @@ class BillingStatementReport extends Report {
     //}
   }
   
-  public function total_balance() {
+  public function total_balance($balance, $due_date) {
     
     $balance_desc = 'Balance Due';
     
-    if ($this->due_date AND $this->balance > 0) {
-      $balance_desc .= ' by '.$this->due_date;
+    if ($due_date AND $balance > 0) {
+      $balance_desc .= ' by '.$due_date;
     }
     
     $this->SetFont('Arial', 'B', 8);
@@ -164,7 +167,7 @@ class BillingStatementReport extends Report {
     $this->Cell($this->width[2],6,'',1,0,'L', true);
     $this->Cell($this->width[3],6,$balance_desc,1,0,'R', true);
     $this->Cell($this->width[4],6,'',1,0,'R', true);
-    $this->Cell($this->width[5],6,'$ '.number_format(bcdiv($this->balance, 100, 2), 2),1,0,'R', true);
+    $this->Cell($this->width[5],6,'$ '.$balance,1,0,'R', true);
     $this->Ln();
     $this->SetFillColor(245,245,245);
     $this->SetFont('Arial', '', 8);
