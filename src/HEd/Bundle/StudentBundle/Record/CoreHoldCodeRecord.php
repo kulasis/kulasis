@@ -22,7 +22,7 @@ class CoreHoldCodeRecord extends Record {
     
     $result = $this->db()->db_select('STUD_HOLD', 'hold')
     ->distinct()
-    ->fields('hold', array('HOLD_ID' => 'ID'))
+    ->fields('hold', array('HOLD_ID' => 'ID', 'HOLD_CODE'))
     ->condition('INACTIVE', 0)
     ->orderBy('HOLD_CODE')
     ->execute()->fetchAll();

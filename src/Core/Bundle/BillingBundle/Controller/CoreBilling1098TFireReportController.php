@@ -3,6 +3,7 @@
 namespace Kula\Core\Bundle\BillingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
+use Kula\Core\Bundle\ConstituentBundle\Field\SocialSecurityNumber;
 
 class CoreBilling1098TFireReportController extends ReportController {
   
