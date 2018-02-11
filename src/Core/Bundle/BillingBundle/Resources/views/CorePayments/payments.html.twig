@@ -20,13 +20,11 @@ Payments
 <table id="window_window_num_data_table_terms" class="data-table">
 <thead>
   <tr>
-  {{ kula_field_name({ edit: true, field: 'Core.Billing.Transaction.Posted', field_name_override: 'P', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ edit: true, field: 'Core.Billing.Payment.Voided', field_name_override: 'V', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   <th class="data-table-cell-row-header">#</th>
   {{ kula_field_name({ field: 'Core.Organization.Abbreviation', field_name_override: 'Org', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Term.Abbreviation', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Payment.PaymentDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'Core.Billing.Payment.Posted', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Payment.Voided', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Payment.PaymentType', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Payment.PaymentMethod', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
@@ -51,17 +49,11 @@ Payments
     </tr>
   {% endif %}
   <tr>
-    {% if payment.POSTED == '0' %}
-      {{ kula_field({ edit: true, post_type: 'post', field: 'Core.Billing.Payment.Posted', db_row_id: payment.CONSTITUENT_PAYMENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-    {% else %}
-      {{ kula_field_name({ edit: true, field: 'Core.Billing.Payment.Posted', field_name_override: '&nbsp;', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
-    {% endif %}
     {{ kula_field({ edit: true, post_type: 'void', field: 'Core.Billing.Payment.Voided', db_row_id: payment.CONSTITUENT_PAYMENT_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
     {{ kula_field({ field: 'Core.Organization.Abbreviation', input: false, value: payment.ORGANIZATION_ABBREVIATION, prepend_html: '<td nowrap="nowrap">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Term.Abbreviation', input: false, value: payment.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Payment.PaymentDate', input: false, value: payment.PAYMENT_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ field: 'Core.Billing.Payment.Posted', input: false, value: payment.POSTED, prepend_html: '<td align="center">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Payment.Voided', input: false, value: payment.VOIDED, prepend_html: '<td align="center">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Payment.PaymentType', input: false, value: payment.PAYMENT_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Payment.PaymentMethod', input: false, value: payment.PAYMENT_METHOD, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
