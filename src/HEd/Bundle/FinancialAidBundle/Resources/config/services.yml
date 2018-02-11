@@ -1,4 +1,6 @@
 services:
+  _defaults: { public: true }
+  
   kula.HEd.FAID:
     class: Kula\HEd\Bundle\FinancialAidBundle\Service\FinancialAidService
     arguments: ["@kula.core.db", "@kula.core.poster", "@kula.core.record", "@kula.core.session"]

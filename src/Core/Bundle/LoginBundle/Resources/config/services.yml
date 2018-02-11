@@ -6,6 +6,8 @@ parameters:
   kula_login_api.class:      Kula\Core\Bundle\LoginBundle\Service\Authentication\API
 
 services:
+  _defaults: { public: true }
+  
   kula.login.auth.googleapi:
     class:        "%kula_login_googleapi.class%"
     arguments:    ["@request_stack", "@router", "@session", "%google_client_id%", "%google_client_secret%"]

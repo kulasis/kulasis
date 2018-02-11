@@ -2,6 +2,8 @@ parameters:
   kula.schema.options.cache_class: kula%kernel.environment%SchemaCache
 
 services:
+  _defaults: { public: true }
+
   kula.core.schema.cache:
     class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\SchemaCacheWarmer
     public: false

@@ -2,6 +2,8 @@ parameters:
   kula.chooser.options.cache_class: kula%kernel.environment%ChooserCache
 
 services:
+  _defaults: { public: true }
+  
   kula.core.chooser.cache:
     class: Kula\Core\Bundle\FrameworkBundle\CacheWarmer\ChooserCacheWarmer
     public: false
