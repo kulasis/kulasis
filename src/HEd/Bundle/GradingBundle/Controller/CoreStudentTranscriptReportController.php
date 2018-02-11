@@ -83,10 +83,8 @@ class CoreStudentTranscriptReportController extends ReportController {
         $pdf->Ln(260 - $current_y);
       }
 
-      // Load 
+      // Load levels for degrees
       foreach($data['levels'] as $levelcode => $level) {
-
-        if ($levelcode != '') {
 
         // load degrees
         if (isset($degree_data[$levelcode])) {
@@ -101,6 +99,13 @@ class CoreStudentTranscriptReportController extends ReportController {
            $pdf->Ln(3);
         }
         }
+
+      }
+
+      // Load 
+      foreach($data['levels'] as $levelcode => $level) {
+
+        if ($levelcode != '') {
 
         $pdf->add_header(strtoupper($level['level_description']).' COURSEWORK');
 

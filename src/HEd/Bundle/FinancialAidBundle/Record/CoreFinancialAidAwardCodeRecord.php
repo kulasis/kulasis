@@ -22,7 +22,7 @@ class CoreFinancialAidAwardCodeRecord extends Record {
     
     $result = $this->db()->db_select('FAID_AWARD_CODE', 'code')
     ->distinct()
-    ->fields('code', array('AWARD_CODE_ID' => 'ID'))
+    ->fields('code', array('AWARD_CODE_ID' => 'ID', 'AWARD_CODE'))
     ->condition('INACTIVE', '0')
     ->orderBy('AWARD_CODE')
     ->execute()->fetchAll();

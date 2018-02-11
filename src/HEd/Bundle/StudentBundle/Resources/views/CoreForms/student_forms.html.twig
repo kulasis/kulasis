@@ -20,13 +20,13 @@ Forms
   {{ kula_field({ add: true, field: 'HEd.Student.Form.StudentStatusID', value: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, hidden: true }) }}
   {{ kula_field({ add: true, delete: true, field: 'HEd.Student.Form.ID', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
   {{ kula_display_html({ add: true, field: 'HEd.Student.Form.ID', prepend_html: '<td class="data-table-cell-row-num">#</td>' }) }}
-  {{ kula_field({ add: true, field: 'HEd.Student.Form.FormID', ORGANIZATION_TERMS: kula_core_focus.getOrganizationTermIDs(), prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
+  {{ kula_field({ add: true, field: 'HEd.Student.Form.FormID', ORGANIZATION_TERMS: focus.getOrganizationTermIDs(), prepend_html: '<td>', append_html: '</td>', attributes_html : { class : 'data-table-cell-input' } }) }}
   {{ kula_display_html({ add: true, field: 'HEd.Student.Form.ID', prepend_html: '</tr>' }) }}
   {% for form in forms %}
   <tr>
     {{ kula_field({ delete: true, field: 'HEd.Student.Form.ID', db_row_id: form.STUDENT_FORM_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     <td class="data-table-cell-row-num">{{ loop.index }}</td>
-    {{ kula_field({ edit: true, field: 'HEd.Student.Form.FormID', ORGANIZATION_TERMS: kula_core_focus.getOrganizationTermIDs(), db_row_id: form.STUDENT_FORM_ID, value: form.FORM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input'} }) }}
+    {{ kula_field({ edit: true, field: 'HEd.Student.Form.FormID', ORGANIZATION_TERMS: focus.getOrganizationTermIDs(), db_row_id: form.STUDENT_FORM_ID, value: form.FORM_ID, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input'} }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Form.Agree', db_row_id: form.STUDENT_FORM_ID, value: form.AGREE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input'} }) }}
     {{ kula_field({ edit: true, field: 'HEd.Student.Form.Completed', db_row_id: form.STUDENT_FORM_ID, value: form.COMPLETED, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input'} }) }}
   </tr>

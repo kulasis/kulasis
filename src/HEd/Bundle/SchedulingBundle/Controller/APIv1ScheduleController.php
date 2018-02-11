@@ -170,7 +170,7 @@ class APIv1ScheduleController extends APIController {
           }
         } // end if on existance of discount
       } else {
-        throw new DisplayException('Already enrolled in class.');
+        throw new DisplayException('Already added to cart or enrolled in class.');
       }
       
       $transaction->commit();

@@ -37,22 +37,33 @@ class CoreTransactionsController extends Controller {
           if (isset($row['Core.Billing.Transaction.Voided']['checkbox'])
           AND $row['Core.Billing.Transaction.Voided']['checkbox'] == '1' 
           AND $row['Core.Billing.Transaction.Voided']['checkbox_hidden'] == 0)
-            $constituent_billing_service->removeTransaction($row_id, $reason, $transaction_date);
+            $constituent_billing_service->voidTransaction($row_id, $reason, $transaction_date);
         }
       }
     }
 
-    if ($this->request->request->get('post')) {
-      $constituent_billing_service = $this->get('kula.Core.billing.constituent');
+    if ($this->request->request->get('refund')) {
+      $constituent_billing_service = $this->get('kula.Core.Billing.constituent');
       
-      $post = $this->request->request->get('post');
+      $refund = $this->request->request->get('refund');
+      $non = $this->request->request->get('non');
+        
+      if (isset($non['Core.Billing.Transaction']['Core.Billing.Transaction.TransactionDate']))
+        $transaction_date = $non['Core.Billing.Transaction']['Core.Billing.Transaction.TransactionDate'];
+      else 
+        $transaction_date = null;
       
-      foreach($post as $table => $row_info) {
+      if (isset($non['Core.Billing.Transaction']['Core.Billing.Transaction.VoidedReason']))
+        $reason = $non['Core.Billing.Transaction']['Core.Billing.Transaction.VoidedReason'];
+      else 
+        $reason = null;
+      
+      foreach($refund as $table => $row_info) {
         foreach($row_info as $row_id => $row) {
-          if (isset($row['Core.Billing.Transaction.Posted']['checkbox'])
-          AND $row['Core.Billing.Transaction.Posted']['checkbox'] == '1' 
-          AND $row['Core.Billing.Transaction.Posted']['checkbox_hidden'] == 0)
-            $constituent_billing_service->postTransaction($row_id);
+          if (isset($row['Core.Billing.Transaction.Voided']['checkbox'])
+          AND $row['Core.Billing.Transaction.Voided']['checkbox'] == '1' 
+          AND $row['Core.Billing.Transaction.Voided']['checkbox_hidden'] == 0)
+            $constituent_billing_service->refundTransaction($row_id, $reason, $transaction_date);
         }
       }
     }
