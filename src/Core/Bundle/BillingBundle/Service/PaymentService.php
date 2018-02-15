@@ -129,16 +129,22 @@ class PaymentService {
     } 
 
     // get payment
+    /*
     $payment_info = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
       ->fields('payments', array('POSTED'))
       ->condition('payments.CONSTITUENT_PAYMENT_ID', $payment_id)
       ->execute()->fetch();
 
     $payment_data = array();
+    */
     $payment_data['Core.Billing.Payment.Amount'] = 0;
+    /*
     if ($payment_info['POSTED'] == 0) {
+      */
       $payment_data['Core.Billing.Payment.Voided'] = 1;
+    /*
     }
+    */
 
     $result = $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, $payment_data)->process($this->db_options);
 
