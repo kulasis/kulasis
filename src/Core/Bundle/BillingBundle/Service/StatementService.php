@@ -341,6 +341,7 @@ class StatementService {
       ->fields('org', array('ORGANIZATION_ABBREVIATION'))
       ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'))
+      ->condition('transactions.SHOW_ON_STATEMENT', 1)
       ->condition('transactions.CONSTITUENT_ID', $student_id);
     
     $org_term_ids = $this->focus->getOrganizationTermIDs();

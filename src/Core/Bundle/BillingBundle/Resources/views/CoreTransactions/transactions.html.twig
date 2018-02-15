@@ -20,6 +20,7 @@ Transactions
 <table id="window_window_num_data_table_terms" class="data-table">
 <thead>
   <tr>
+  {{ kula_field_name({ delete: true, field: 'Core.Billing.Transaction.ID', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ edit: true, field: 'Core.Billing.Transaction.Posted', field_name_override: 'P', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ edit: true, field: 'Core.Billing.Transaction.ID', field_name_override: 'V', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   <th class="data-table-cell-row-header">#</th>
@@ -52,6 +53,7 @@ Transactions
     </tr>
   {% endif %}
   <tr>
+    {{ kula_field({ delete: true, field: 'Core.Billing.Transaction.ID', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     {% if transaction.POSTED == '0' %}
       {{ kula_field({ edit: true, post_type: 'post', field: 'Core.Billing.Transaction.Posted', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     {% else %}
