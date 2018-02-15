@@ -231,12 +231,12 @@ class StatementService {
         'ORGANIZATION_ABBREVIATION' => '',
         'TERM_ABBREVIATION' => '',
         'TRANSACTION_DESCRIPTION' => 'Previous Balance',
-        'AMOUNT' => $this->student_balances_for_orgterm[$student_id],
-        'balance' => $this->student_balances_for_orgterm[$student_id]
+        'AMOUNT' => number_format($this->student_balances_for_orgterm[$student_id], 2),
+        'balance' => number_format($this->student_balances_for_orgterm[$student_id], 2)
       );
+
       $this->statements[$student_id]['previous_balance'] = $this->student_balances_for_orgterm[$student_id];
-      $this->statement_balance += $this->student_balances_for_orgterm[$student_id];
-      
+      $this->statement_balance += intval(bcmul($this->student_balances_for_orgterm[$student_id], 100));           
     }
     $this->addStudent($student_id);
     $this->addStudentAddresses($student_id);

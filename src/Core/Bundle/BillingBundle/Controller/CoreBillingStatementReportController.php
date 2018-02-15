@@ -103,7 +103,7 @@ class CoreBillingStatementReportController extends ReportController {
     if (isset($statement['transactions'])) {
     foreach($statement['transactions'] as $row) {
       if ($row['TRANSACTION_DESCRIPTION'] == 'Previous Balance') {
-        $this->pdf->previous_balances($statement['previous_balance']);
+        $this->pdf->previous_balances($row);
       } else {
         $this->pdf->table_row($row);
       }

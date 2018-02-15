@@ -131,25 +131,9 @@ class BillingStatementReport extends Report {
   }
   
   public function previous_balances($balance) {
-    
-      //if ($balance['TERM_ID'] != $this->session->get('term_id')) {
-      $data_row['TRANSACTION_DATE'] = '';
-      $data_row['ORGANIZATION_ABBREVIATION'] = ''; //$balance['ORGANIZATION_ABBREVIATION'];
-      $data_row['TERM_ABBREVIATION'] = ''; //$balance['TERM_ABBREVIATION'];
-      $data_row['TRANSACTION_DESCRIPTION'] = 'Previous Balance';
-      $data_row['AMOUNT'] = $balance;
-      $data_row['balance'] = $balance;
-      
-      if ($balance != 0)
-        $this->SetFont('Arial', 'B', 8);
-      else
-        $this->SetFont('Arial', '', 8);
-        
-      $this->table_row($data_row, 'Y');
-      unset($data_row);
-
+    $this->SetFont('Arial', 'B', 8);
+    $this->table_row($balance, 'Y');
     $this->SetFont('Arial', '', 8);
-    //}
   }
   
   public function total_balance($balance, $due_date) {
