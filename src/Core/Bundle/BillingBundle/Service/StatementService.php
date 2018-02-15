@@ -253,7 +253,7 @@ class StatementService {
         $this->getPendingFinancialAid($student_id, $last_transaction['TERM_ID']);
       }
     } // end if on showing pending FA
-    $this->statements[$student_id]['balance'] = number_format(bcdiv($this->statement_balance, 100), 2);
+    $this->statements[$student_id]['balance'] = number_format(bcdiv($this->statement_balance, 100, 2), 2);
     $this->statements[$student_id]['due_date'] = $this->due_date;
     $this->addHolds($student_id);
       
@@ -354,7 +354,7 @@ class StatementService {
     while ($row = $result->fetch()) {
       $this->statement_balance += intval(bcmul($row['AMOUNT'], 100));
       $row['AMOUNT'] = number_format($row['AMOUNT'], 2);
-      $row['balance'] = number_format(bcdiv($this->statement_balance, 100), 2);
+      $row['balance'] = number_format(bcdiv($this->statement_balance, 100, 2), 2);
       $this->statements[$student_id]['transactions'][] = $row;
     }
   }
