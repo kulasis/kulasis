@@ -491,6 +491,105 @@ class ConstituentBillingService {
     
   }
 
+  public function voidTransaction($constituent_transaction_id, $voided_reason, $transaction_date) {
+    
+    $transaction = $this->database->db_transaction();
+
+    // Get transaction info
+    $transaction_row = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+      ->fields('transactions', array('VOIDED_REASON'))
+      ->condition('CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
+      ->execute()->fetch();
+
+    // Void payment
+    if ($transaction_row['VOIDED_REASON'] != '')
+      $voided_reason = $transaction_row['VOIDED_REASON']. ' | '.$voided_reason;
+    
+    $voided_transaction_result = $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $constituent_transaction_id, array(
+      'Core.Billing.Transaction.Amount' => 0.00, 
+      'Core.Billing.Transaction.AppliedBalance' => 0.00, 
+      'Core.Billing.Transaction.Voided' => 1, 
+      'Core.Billing.Transaction.VoidedReason' => $voided_reason, 
+      'Core.Billing.Transaction.VoidedUserstamp' => $this->session->get('user_id'), 
+      'Core.Billing.Transaction.VoidedTimestamp' => date('Y-m-d H:i:s')
+    ))->process($this->db_options)->getResult();
+
+    $transaction->commit();
+    
+    return $voided_transaction_result;
+    
+  }
+
+  public function refundTransaction($constituent_transaction_id, $voided_reason, $transaction_date) {
+    
+    $transaction = $this->database->db_transaction();
+
+    // Get transaction info
+    $transaction_row = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')
+      ->fields('transactions', array('POSTED', 'CODE_ID', 'CONSTITUENT_ID', 'ORGANIZATION_TERM_ID', 'TRANSACTION_DATE', 'TRANSACTION_DESCRIPTION', 'AMOUNT', 'VOIDED_REASON', 'STUDENT_CLASS_ID', 'AWARD_ID'))
+      ->condition('CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
+      ->execute()->fetch();
+    
+      $new_amount = $transaction_row['AMOUNT'] * -1;
+      
+      if ($new_amount < 0)
+        $transaction_description = 'REFUND '.$transaction_row['TRANSACTION_DESCRIPTION'];
+      else
+        $transaction_description = 'PAYBACK '.$transaction_row['TRANSACTION_DESCRIPTION'];
+      
+      // create return payment
+      $return_payment_data = array(
+        'Core.Billing.Transaction.ConstituentID' => $transaction_row['CONSTITUENT_ID'],
+        'Core.Billing.Transaction.OrganizationTermID' => $transaction_row['ORGANIZATION_TERM_ID'],
+        'Core.Billing.Transaction.CodeID' => $transaction_row['CODE_ID'],
+        'Core.Billing.Transaction.TransactionDate' => $transaction_date,
+        'Core.Billing.Transaction.Description' => $transaction_description,
+        'Core.Billing.Transaction.Amount' => $new_amount, 
+        'Core.Billing.Transaction.OriginalAmount' => $new_amount,
+        'Core.Billing.Transaction.AppliedBalance' => 0,
+        'Core.Billing.Transaction.RefundTransactionID' => $constituent_transaction_id,
+        'Core.Billing.Transaction.VoidedReason' => $voided_reason
+      );
+      
+      if ($transaction_row['STUDENT_CLASS_ID']) $return_payment_data['Core.Billing.Transaction.StudentClassID'] = $transaction_row['STUDENT_CLASS_ID'];
+      if ($transaction_row['AWARD_ID']) $return_payment_data['Core.Billing.Transaction.AwardID'] = $transaction_row['AWARD_ID'];
+      
+      $return_payment_affected = $this->posterFactory->newPoster()->add('Core.Billing.Transaction', 'new', $return_payment_data)->process($this->db_options)->getResult();
+
+      // Zero out any applied balances and recalc
+      $applied_trans_result = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied_payments')
+        ->fields('applied_payments', array('CONSTITUENT_APPLIED_PAYMENT_ID', 'CONSTITUENT_PAYMENT_ID'))
+        ->condition('CONSTITUENT_TRANSACTION_ID', $constituent_transaction_id)
+        ->execute();
+      while ($applied_trans_row = $applied_trans_result->fetch()) {
+        $this->posterFactory->newPoster()->edit('Core.Billing.Payment.Applied', $applied_trans_row['CONSTITUENT_APPLIED_PAYMENT_ID'], array('Core.Billing.Payment.Applied.Amount' => 0.00))->process($this->db_options)->getResult();
+
+        // Recalc applied payments
+        $this->payment_service->calculateBalanceForPayment($applied_trans_row['CONSTITUENT_PAYMENT_ID']);
+      }
+
+      // Recalc applied charges
+      $this->payment_service->calculateBalanceForCharge($constituent_transaction_id);
+
+      // set as returned for existing transaction
+      $original_transaction_poster = $this->posterFactory->newPoster()->edit('Core.Billing.Transaction', $constituent_transaction_id, array(
+        'Core.Billing.Transaction.RefundTransactionID' => $return_payment_affected,
+        'Core.Billing.Transaction.AppliedBalance' => 0
+      ))->process($this->db_options)->getResult();
+        
+        // Has an FA award.  Need to set back to pending
+        if ($transaction_row['AWARD_ID']) {
+          $fa_poster = $this->posterFactory->newPoster()->edit('HEd.FAID.Student.Award', $transaction_row['AWARD_ID'], array(
+            'HEd.FAID.Student.Award.AwardStatus' => 'PEND'
+          ))->process($this->db_options)->getResult();
+        }
+
+      $transaction->commit();
+      
+      return $return_payment_affected;
+    
+  }
+
   public function addPayment($constituent_id, $payment_type, $payment_method, $payment_date, $payment_number, $amount) {
     // create payment data
     $payment_id = $this->posterFactory->newPoster()->add('Core.Billing.Payment', 0, array(

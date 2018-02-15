@@ -27,7 +27,6 @@ Payments
   {{ kula_field_name({ field: 'Core.Organization.Abbreviation', field_name_override: 'Org', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Term.Abbreviation', field_name_override: 'Term', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Payment.PaymentDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
-  {{ kula_field_name({ field: 'Core.Billing.Payment.Posted', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Payment.Voided', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Payment.PaymentType', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'Core.Billing.Payment.PaymentMethod', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
@@ -63,7 +62,6 @@ Payments
     {{ kula_field({ field: 'Core.Organization.Abbreviation', input: false, value: payment.ORGANIZATION_ABBREVIATION, prepend_html: '<td nowrap="nowrap">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Term.Abbreviation', input: false, value: payment.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Payment.PaymentDate', input: false, value: payment.PAYMENT_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
-    {{ kula_field({ field: 'Core.Billing.Payment.Posted', input: false, value: payment.POSTED, prepend_html: '<td align="center">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Payment.Voided', input: false, value: payment.VOIDED, prepend_html: '<td align="center">', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Payment.PaymentType', input: false, value: payment.PAYMENT_TYPE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'Core.Billing.Payment.PaymentMethod', input: false, value: payment.PAYMENT_METHOD, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
