@@ -256,7 +256,6 @@ class StatementService {
     $this->statements[$student_id]['balance'] = number_format(bcdiv($this->statement_balance, 100, 2), 2);
     $this->statements[$student_id]['due_date'] = $this->due_date;
     $this->addHolds($student_id);
-      
   }
 
   public function addStudent($student_id) {
@@ -342,6 +341,7 @@ class StatementService {
       ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'))
       ->condition('transactions.SHOW_ON_STATEMENT', 1)
+      ->condition('transactions.POSTED', 1)
       ->condition('transactions.CONSTITUENT_ID', $student_id);
     
     $org_term_ids = $this->focus->getOrganizationTermIDs();
