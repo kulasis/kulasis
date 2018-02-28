@@ -4,6 +4,28 @@ Core.Billing:
   type: dir
   portal: core
   forms:
+    Billing:    
+      description: "Billing"    
+      display_name: "Billing"   
+      tabs:   
+        Pending:    
+          description: "Pending"    
+          display_name: "Pending"   
+          route: Core_Billing_Billing_Pending   
+        AllPending:   
+          description: "All Pending"    
+          display_name: "All Pending"   
+          route: Core_Billing_Billing_AllPending    
+      menu_actions:   
+        AddCharge:    
+          description: "Add Charge"   
+          display_name: "Add Charge"    
+          route: Core_Billing_Billing_AddCharge   
+        AddPayment:   
+          description: "Add Payment"    
+          display_name: "Add Payment"   
+          divider_before: true    
+          route: Core_Billing_Billing_AddPayment
     StudentBilling:
       description: "Student Billing"
       display_name: "Student Billing"
