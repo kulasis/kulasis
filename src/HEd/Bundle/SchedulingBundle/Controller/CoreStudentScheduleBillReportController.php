@@ -236,7 +236,8 @@ class CoreStudentScheduleBillReportController extends ReportController {
       ->fields('org', array('ORGANIZATION_ABBREVIATION'))
       ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'))
-      ->condition('transactions.CONSTITUENT_ID', $student_id);
+      ->condition('transactions.CONSTITUENT_ID', $student_id)
+      ->condition('transactions.SHOW_ON_STATEMENT', 1);
     
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0)

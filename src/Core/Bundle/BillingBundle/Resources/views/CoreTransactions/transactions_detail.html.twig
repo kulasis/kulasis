@@ -36,6 +36,7 @@
 </div>
 <div class="group-box-contents group">
 {{ kula_field({ field: 'Core.Billing.Transaction.Posted', value: transaction.POSTED, label: true }) }}
+{{ kula_field({ edit: true, field: 'Core.Billing.Transaction.ShowOnStatement', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.SHOW_ON_STATEMENT, label: true }) }}
 {% if transaction.POSTED != '1' and transaction.VOIDED != '1' %}
 {{ kula_field({ edit: true, field: 'Core.Billing.Transaction.Amount', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, value: transaction.AMOUNT, label: true }) }}
 {% else %}
