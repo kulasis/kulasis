@@ -342,6 +342,7 @@ class StatementService {
       ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'))
       ->condition('transactions.SHOW_ON_STATEMENT', 1)
+      ->condition('transactions.POSTED', 1)
       ->condition('transactions.CONSTITUENT_ID', $student_id);
     
     $org_term_ids = $this->focus->getOrganizationTermIDs();
@@ -378,7 +379,11 @@ class StatementService {
       ->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'APPR', 'AWAR'))
       ->condition('faidstuawrds.NET_AMOUNT', 0, '>')
       ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
+
+      //echo $awards_result;
+      //print_r($awards_result->arguments());
       ->execute();
+      //die();
     while ($awards_row = $awards_result->fetch()) {
 
       if ($awards_row['AWARD_STATUS'] == 'AWAR') {
