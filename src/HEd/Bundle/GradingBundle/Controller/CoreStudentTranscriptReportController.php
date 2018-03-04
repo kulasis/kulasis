@@ -162,10 +162,46 @@ class CoreStudentTranscriptReportController extends ReportController {
           $pdf->Cell(98, 5, $level['COMMENTS'], '', 0, 'L');
         }
 
+        // Check if current schedule exists
+        if (isset($current_schedule[$level['level_description']])) {
+
+          $loop = 0;
+          foreach($current_schedule[$level['level_description']] as $org_name => $org_row) {
+            foreach($org_row as $term_name => $term_row) {
+
+              // Check how far from bottom
+              $amount_to_check = count($term_row) * 3 + 3 + 3 + 5 + 20 + 10;
+              $current_y = $pdf->GetY();
+              if (270 - $current_y < $amount_to_check) {
+                $pdf->Ln(270 - $current_y);
+              }
+
+              if ($loop == 0) {
+                $pdf->add_header(strtoupper($level['level_description']).' COURSES IN PROGRESS');
+              }
+              
+              $pdf->currentschedule_term_table_row(array('TERM_NAME' => $term_name, 'ORGANIZATION_NAME' => $org_name));
+              $student_status_id = null;
+              foreach($term_row as $schedule_row) {
+                $pdf->currentschedule_table_row($schedule_row);
+                $student_status_id = $schedule_row['STUDENT_STATUS_ID'];
+              }
+              if (isset($current_schedule_totals[$student_status_id])) {
+                $pdf->gpa_table_row($current_schedule_totals[$student_status_id]);
+              } else {
+                $pdf->Ln(3);
+              }
+              $loop = 1;
+              
+            } // end foreach on term
+          } // end foreach on organization
+
+        } // end output on current schedule
+
         } // end if on level
 
       } // end foreach on level
-
+/*
       // Add on current schedule
       foreach($current_schedule as $level => $level_row) {
         $loop = 0;
@@ -199,7 +235,7 @@ class CoreStudentTranscriptReportController extends ReportController {
         } // end foreach on organization
 
       } // end foreach on level
-
+*/
     } // end while on students
 
     // Closing line
