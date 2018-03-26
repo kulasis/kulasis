@@ -378,7 +378,11 @@ class StatementService {
       ->condition('faidstuawrds.AWARD_STATUS', array('PEND', 'APPR', 'AWAR'))
       ->condition('faidstuawrds.NET_AMOUNT', 0, '>')
       ->condition('faidstuawrds.SHOW_ON_STATEMENT', 1)
+
+      //echo $awards_result;
+      //print_r($awards_result->arguments());
       ->execute();
+      //die();
     while ($awards_row = $awards_result->fetch()) {
 
       if ($awards_row['AWARD_STATUS'] == 'AWAR') {

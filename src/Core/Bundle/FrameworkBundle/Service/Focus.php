@@ -110,6 +110,10 @@ class Focus {
 
     $this->session->setFocus('Teacher.HEd.Advisor.Student', $student_status_id);
   }
+
+  public function getFocus($key) {
+    return $this->session->getFocus($key);
+  }
   
   public function getSectionID() {
     $session_focus = $this->session->get('focus');

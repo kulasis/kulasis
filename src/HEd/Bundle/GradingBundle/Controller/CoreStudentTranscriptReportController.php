@@ -4,6 +4,7 @@ namespace Kula\HEd\Bundle\GradingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 use Kula\Core\Component\Lookup\Lookup;
+use Kula\Core\Bundle\FrameworkBundle\Exception\DisplayException;
 
 class CoreStudentTranscriptReportController extends ReportController {
   
@@ -32,29 +33,33 @@ class CoreStudentTranscriptReportController extends ReportController {
     // Get Data and Load
     $result = $this->db()->db_select('STUD_STUDENT', 'student')
       ->fields('student', array('STUDENT_ID'))
-      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID');
-    $org_term_ids = $this->focus->getOrganizationTermIDs();
-    if (isset($org_term_ids) AND count($org_term_ids) > 0) {
-      $result = $result->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID');
-      $result = $result->fields('status', array('LEVEL'));
-      $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids);
+      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+      ->orderBy('stucon.LAST_NAME', 'ASC')
+      ->orderBy('stucon.FIRST_NAME', 'ASC')
+      ->orderBy('student.STUDENT_ID', 'ASC');
+
+    if ($this->focus->getFocus('term_id') != 'ALL') {
+      $org_term_ids = $this->focus->getOrganizationTermIDs();
+      if (isset($org_term_ids) AND count($org_term_ids) > 0) {
+        $result = $result->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID');
+        $result = $result->fields('status', array('LEVEL'));
+        $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids);
+      }
     }
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
-    if (isset($record_id) AND $record_id != '')
+    if (isset($record_id) AND $record_id != '') {
       $result = $result->condition('student.STUDENT_ID', $record_id);
+    } elseif ($this->focus->getFocus('term_id') == 'ALL') {
+      throw new DisplayException('Must select a student when processing transcripts from the ALL term focus.');
+    }
 
     $non = $this->request->request->get('non');
     if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
       $result = $result->condition('status.LEVEL', $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);
     }
 
-    $result = $result
-      ->orderBy('stucon.LAST_NAME', 'ASC')
-      ->orderBy('stucon.FIRST_NAME', 'ASC')
-      ->orderBy('student.STUDENT_ID', 'ASC')
-      //->range(0, 1)
-      ->execute();
+    $result = $result->execute();
     
     while ($row = $result->fetch()) {
 
@@ -162,41 +167,43 @@ class CoreStudentTranscriptReportController extends ReportController {
           $pdf->Cell(98, 5, $level['COMMENTS'], '', 0, 'L');
         }
 
+        // Check if current schedule exists
+        if (isset($current_schedule[$level['level_description']])) {
+
+          $loop = 0;
+          foreach($current_schedule[$level['level_description']] as $org_name => $org_row) {
+            foreach($org_row as $term_name => $term_row) {
+
+              // Check how far from bottom
+              $amount_to_check = count($term_row) * 3 + 3 + 3 + 5 + 20 + 10;
+              $current_y = $pdf->GetY();
+              if (270 - $current_y < $amount_to_check) {
+                $pdf->Ln(270 - $current_y);
+              }
+
+              if ($loop == 0) {
+                $pdf->add_header(strtoupper($level['level_description']).' COURSES IN PROGRESS');
+              }
+              
+              $pdf->currentschedule_term_table_row(array('TERM_NAME' => $term_name, 'ORGANIZATION_NAME' => $org_name));
+              $student_status_id = null;
+              foreach($term_row as $schedule_row) {
+                $pdf->currentschedule_table_row($schedule_row);
+                $student_status_id = $schedule_row['STUDENT_STATUS_ID'];
+              }
+              if (isset($current_schedule_totals[$student_status_id])) {
+                $pdf->gpa_table_row($current_schedule_totals[$student_status_id]);
+              } else {
+                $pdf->Ln(3);
+              }
+              $loop = 1;
+              
+            } // end foreach on term
+          } // end foreach on organization
+
+        } // end output on current schedule
+
         } // end if on level
-
-      } // end foreach on level
-
-      // Add on current schedule
-      foreach($current_schedule as $level => $level_row) {
-        $loop = 0;
-        foreach($level_row as $org_name => $org_row) {
-          foreach($org_row as $term_name => $term_row) {
-
-            // Check how far from bottom
-            $amount_to_check = count($term_row) * 3 + 3 + 3 + 5 + 20 + 10;
-            $current_y = $pdf->GetY();
-            if (270 - $current_y < $amount_to_check) {
-              $pdf->Ln(270 - $current_y);
-            }
-
-            if ($loop == 0) {
-              $pdf->add_header(strtoupper($level).' COURSES IN PROGRESS');
-            }
-            
-            $pdf->currentschedule_term_table_row(array('TERM_NAME' => $term_name, 'ORGANIZATION_NAME' => $org_name));
-            $student_status_id = null;
-            foreach($term_row as $schedule_row) {
-              $pdf->currentschedule_table_row($schedule_row);
-              $student_status_id = $schedule_row['STUDENT_STATUS_ID'];
-            }
-            if (isset($current_schedule_totals[$student_status_id])) {
-              $pdf->gpa_table_row($current_schedule_totals[$student_status_id]);
-            } else {
-              $pdf->Ln(3);
-            }
-            $loop = 1;
-          } // end foreach on term
-        } // end foreach on organization
 
       } // end foreach on level
 
