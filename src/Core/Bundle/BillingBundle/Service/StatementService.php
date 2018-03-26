@@ -253,10 +253,9 @@ class StatementService {
         $this->getPendingFinancialAid($student_id, $last_transaction['TERM_ID']);
       }
     } // end if on showing pending FA
-    $this->statements[$student_id]['balance'] = number_format(bcdiv($this->statement_balance, 100), 2);
+    $this->statements[$student_id]['balance'] = number_format(bcdiv($this->statement_balance, 100, 2), 2);
     $this->statements[$student_id]['due_date'] = $this->due_date;
     $this->addHolds($student_id);
-      
   }
 
   public function addStudent($student_id) {
@@ -341,8 +340,9 @@ class StatementService {
       ->fields('org', array('ORGANIZATION_ABBREVIATION'))
       ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
       ->fields('term', array('TERM_ID', 'TERM_ABBREVIATION', 'START_DATE', 'END_DATE'))
-      ->condition('transactions.CONSTITUENT_ID', $student_id)
-      ->condition('transactions.VOIDED', 0);
+      ->condition('transactions.SHOW_ON_STATEMENT', 1)
+      ->condition('transactions.POSTED', 1)
+      ->condition('transactions.CONSTITUENT_ID', $student_id);
     
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0)
@@ -354,7 +354,7 @@ class StatementService {
     while ($row = $result->fetch()) {
       $this->statement_balance += intval(bcmul($row['AMOUNT'], 100));
       $row['AMOUNT'] = number_format($row['AMOUNT'], 2);
-      $row['balance'] = number_format(bcdiv($this->statement_balance, 100), 2);
+      $row['balance'] = number_format(bcdiv($this->statement_balance, 100, 2), 2);
       $this->statements[$student_id]['transactions'][] = $row;
     }
   }
