@@ -200,7 +200,7 @@ class CorePaymentsController extends Controller {
 
     if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPayment') {
       $this->setRecordType('Core.Constituent');
-    } else {
+    } elseif ($this->request->get('_route') == 'Core_Billing_StudentBilling_AddPayment') {
       $this->setRecordType('Core.HEd.Student');
     }
       
