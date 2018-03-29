@@ -1,0 +1,47 @@
+{% extends 'KulaCoreFrameworkBundle::core.html.twig' %}
+
+{% block content %}
+<div class="data-table-header-div">
+Direct Relationships
+</div>
+<table id="window_window_num_data_table_emergency" class="data-table">
+<thead>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'Core.Constituent.LastName', field_name_override: 'Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Gender', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Relationship.Relationship', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+  {% for rel in related %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    <td><a href="{{ path('Core_Constituent_Constituent') }}" data-record-type="Core.Constituent" data-record-id="{{ rel.CONSTITUENT_ID }}" class="normal-link-new-window">{{ kula_field({ input: false, field: 'Core.Constituent.LastName', db_row_id: rel.RELATIONSHIP_ID, value: rel.LAST_NAME~', '~rel.FIRST_NAME }) }}</a></td>
+     <td>{{ kula_field({ input: false, field: 'Core.Constituent.Gender', db_row_id: rel.RELATIONSHIP_ID, value: rel.GENDER }) }}</td>
+    {{ kula_field({ input: false, field: 'Core.Constituent.Relationship.Relationship', db_row_id: rel.RELATIONSHIP_ID, value: rel.RELATIONSHIP, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+
+<div class="data-table-header-div">
+Siblings
+</div>
+<table id="window_window_num_data_table_emergency" class="data-table">
+<thead>
+  <th class="data-table-cell-row-header">#</th>
+  {{ kula_field_name({ field: 'Core.Constituent.LastName', field_name_override: 'Name', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.Gender', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'Core.Constituent.PermanentNumber', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+</thead>
+<tbody>
+  {% for sibling in siblings %}
+  <tr>
+    <td class="data-table-cell-row-num">{{ loop.index }}</td>
+    <td><a href="{{ path('Core_Constituent_Constituent') }}" data-record-type="Core.Constituent" data-record-id="{{ sibling.CONSTITUENT_ID }}" class="normal-link-new-window">{{ kula_field({ input: false, field: 'Core.Constituent.LastName', db_row_id: sibling.RELATIONSHIP_ID, value: sibling.LAST_NAME~', '~sibling.FIRST_NAME }) }}</a></td>
+     <td>{{ kula_field({ input: false, field: 'Core.Constituent.Gender', db_row_id: sibling.RELATIONSHIP_ID, value: sibling.GENDER }) }}</td>
+    <td>{{ kula_field({ input: false, field: 'Core.Constituent.PermanentNumber', db_row_id: sibling.RELATIONSHIP_ID, value: sibling.PERMANENT_NUMBER }) }}</td>
+  </tr>
+  {% endfor %}
+</tbody>
+</table>
+{% endblock %}
