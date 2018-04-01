@@ -70,3 +70,9 @@ Core_Constituent_Constituent_Searcher:
     defaults: 
       _controller: KulaCoreConstituentBundle:CoreConstituentSearch:index
       _navigation: Core.Constituent.Searcher
+
+Core_Constituent_relationships:
+  path: /core/constituent/relationships
+  defaults: 
+    _controller: KulaCoreConstituentBundle:Constituent:relationships
+    _navigation: Core.Constituent.Constituent.Relationships

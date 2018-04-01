@@ -200,69 +200,74 @@ class CorePaymentsController extends Controller {
 
     if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPayment') {
       $this->setRecordType('Core.Constituent');
-    } else {
+    } elseif ($this->request->get('_route') == 'Core_Billing_StudentBilling_AddPayment') {
       $this->setRecordType('Core.HEd.Student');
     }
       
-    if ($this->record->getSelectedRecordID()) {
-      
-      if ($this->request->request->get('add')) {
-      
-        $payment_service = $this->get('kula.Core.billing.payment');
-        $add = $this->request->request->get('add');
-        $non = $this->request->request->get('non');
-        $payment_id = $payment_service->addPayment(
-          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.ConstituentID'], 
-          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PayeeConstituentID'], 
-          'P',
-          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentMethod'], 
-          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentDate'], 
-          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentNumber'], 
-          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Amount'], 
-          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Note']
-        );
-
-        // Transaction details set
-        if (isset($add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID']) AND 
-          $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'] != '' AND $payment_id != '') {
-
-          $constituent_billing_service = $this->get('kula.Core.billing.transaction');
-          $constituent_billing_service->addTransaction(
-            $this->record->getSelectedRecordID(), 
-            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.OrganizationTermID']['value'], 
-            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'], 
-            $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentDate'], 
-            $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Description'], 
-            $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Amount'], 
-            $payment_id
-          );
-        }
-
-        // Add applied payments
-        if (isset($non['Core.Billing.Payment.Applied']) AND count($non['Core.Billing.Payment.Applied']) > 0) {
-          $payment_service = $this->get('kula.Core.billing.payment');
-
-          foreach($non['Core.Billing.Payment.Applied'] as $transaction_id => $applied_payment) {
-            if (isset($non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount']) AND 
-              $non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount'] > 0) {
-            $payment_service->addAppliedPayment(
-              $payment_id,
-              $transaction_id,
-              $non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount'],
-              null
-            );
-            } // end if on amount greater than zero
-          } // end foreach 
-        } // end if on applied payments
-      
-        if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPayment') {
-          return $this->forward('Core_Billing_ConstituentBilling_Payments', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()));
-        } else {
-          return $this->forward('Core_Billing_StudentBilling_Payments', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()));
-        }
-      }
+    if ($this->request->request->get('add')) {
     
-    }
+      $payment_service = $this->get('kula.Core.billing.payment');
+      $add = $this->request->request->get('add');
+      $non = $this->request->request->get('non');
+
+      if ($this->record->getSelectedRecordID()) {
+        $constituent_id = $this->record->getSelectedRecordID();
+      } else {
+        $constituent_id = $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.ConstituentID']['value'];
+      }
+
+      $payment_id = $payment_service->addPayment(
+        $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.ConstituentID'], 
+        $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PayeeConstituentID'], 
+        'P',
+        $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentMethod'], 
+        $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentDate'], 
+        $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentNumber'], 
+        $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Amount'], 
+        $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Note']
+      );
+
+      // Transaction details set
+      if (isset($add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID']) AND 
+        $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'] != '' AND $payment_id != '') {
+
+        $constituent_billing_service = $this->get('kula.Core.billing.transaction');
+        $constituent_billing_service->addTransaction(
+          $constituent_id, 
+          $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.OrganizationTermID']['value'], 
+          $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.CodeID'], 
+          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.PaymentDate'], 
+          $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.Description'], 
+          $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.Amount'], 
+          $payment_id
+        );
+      }
+
+      // Add applied payments
+      if (isset($non['Core.Billing.Payment.Applied']) AND count($non['Core.Billing.Payment.Applied']) > 0) {
+        $payment_service = $this->get('kula.Core.billing.payment');
+
+        foreach($non['Core.Billing.Payment.Applied'] as $transaction_id => $applied_payment) {
+          if (isset($non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount']) AND 
+            $non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount'] > 0) {
+          $payment_service->addAppliedPayment(
+            $payment_id,
+            $transaction_id,
+            $non['Core.Billing.Payment.Applied'][$transaction_id]['Core.Billing.Payment.Applied.Amount'],
+            null
+          );
+          } // end if on amount greater than zero
+        } // end foreach 
+      } // end if on applied payments
+    
+      if ($this->request->get('_route') == 'Core_Billing_ConstituentBilling_AddPayment') {
+        return $this->forward('Core_Billing_ConstituentBilling_Payments', array('record_type' => 'Core.Constituent', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.Constituent', 'record_id' => $constituent_id));
+      } elseif ($this->request->get('_route') == 'Core_Billing_StudentBilling_AddPayment') {
+        return $this->forward('Core_Billing_StudentBilling_Payments', array('record_type' => 'Core.HEd.Student', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Student', 'record_id' => $constituent_id));
+      } else {
+        return $this->forward('Core_Billing_Billing_Pending');
+      }
+    } // end if on add payment
     
     // Get unapplied transactions
     $applied_trans = $this->db()->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'transactions')

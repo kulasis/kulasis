@@ -87,6 +87,7 @@ class CoreDegreeAuditReportController extends ReportController {
     $this->pdf->total_degree_needed = $this->service->getTotalDegreeNeeded();
     $this->pdf->total_degree_completed = $this->service->getTotalDegreeCompleted();
     $this->pdf->total_degree_remaining = $this->service->getTotalDegreeRemaining();
+    $this->pdf->total_upper_division = $this->service->getTotalUpperDivision();
     
     $this->pdf->setData($row);
     $this->pdf->row_count = 1;

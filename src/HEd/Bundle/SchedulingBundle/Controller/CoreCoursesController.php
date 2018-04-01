@@ -101,6 +101,25 @@ class CoreCoursesController extends Controller {
     $data = $this->chooser('HEd.Course')->createChooserMenu($this->request->query->get('q'));
     return $this->JSONResponse($data);
   }
+
+  public function inactivateAction() {
+    $this->authorize();
+    $this->setRecordType('Core.HEd.Course');
+    
+    if ($this->record->getSelectedRecord()['STATUS'] == 'I') {
+      $rows_affected = $this->newPoster()->edit('HEd.Course', $this->record->getSelectedRecordID(), array('HEd.Course.Status' => null, 'HEd.Course.InactivatedDate' => null))->process()->getResult();
+      $success_message = 'Activated course.';
+    } else {
+      $rows_affected = $this->newPoster()->edit('HEd.Course', $this->record->getSelectedRecordID(), array('HEd.Course.Status' => 'I', 'HEd.Course.InactivatedDate' => date('m/d/Y')))->process()->getResult();
+      $success_message = 'Inactivated course.';
+    }
+    
+    if ($rows_affected == 1) {
+      $this->addFlash('success', $success_message);
+      
+      return $this->forward('Core_HEd_Course_Course', array('record_type' => 'Core.HEd.Course', 'record_id' => $this->record->getSelectedRecordID()), array('record_type' => 'Core.HEd.Course', 'record_id' => $this->record->getSelectedRecordID()));
+    }
+  }
   
   public function combineAction() {
     $this->authorize();

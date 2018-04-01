@@ -18,6 +18,8 @@ class DegreeAuditService {
   protected $total_degree_needed;
   protected $total_degree_completed;
 
+  protected $total_upper_division;
+
   public function __construct(\Kula\Core\Component\DB\DB $db) {
     $this->db = $db;
     $this->resetTotals();
@@ -31,6 +33,7 @@ class DegreeAuditService {
     $this->areas = array();
     $this->total_degree_needed = 0;
     $this->total_degree_completed = 0;
+    $this->total_upper_division = 0;
   }
   
   public function getDegreeAuditForStudentStatus($student_status_id) {
@@ -175,6 +178,9 @@ class DegreeAuditService {
           } else {
             $ch['status'] = 'Comp';
             $ch['display_credits'] = $ch['CREDITS_EARNED'];
+            if (isset($ch['UPPER_DIVISION']) AND $ch['UPPER_DIVISION'] == 1) {
+              $this->total_upper_division += $row['CREDITS'];
+            }
           }
           $this->output[$req_id]['courses'][] = $ch;
         
@@ -204,6 +210,9 @@ class DegreeAuditService {
              $ch['status'] = 'Comp';
              $ch['display_credits'] = $ch['CREDITS_EARNED'];
              $this->req_grp_totals[$req_id] += $ch['CREDITS_EARNED'];
+             if (isset($ch['UPPER_DIVISION']) AND $ch['UPPER_DIVISION'] == 1) {
+              $this->total_upper_division += $row['CREDITS'];
+             }
            }
            $this->output[$req_id]['courses'][] = $ch;
            
@@ -224,6 +233,9 @@ class DegreeAuditService {
           $this->req_grp_totals[$req_id] += $ch['CREDITS_EARNED'];
           $this->output[$req_id]['courses'][$row_id]['display_credits'] = $ch['CREDITS_EARNED'];
           $this->course_history[$ch['COURSE_ID']][$ch_index]['used'] = 'Y';
+          if (isset($ch['UPPER_DIVISION']) AND $ch['UPPER_DIVISION'] == 1) {
+            $this->total_upper_division += $row['CREDITS'];
+          }
         }
         }
         
@@ -238,6 +250,9 @@ class DegreeAuditService {
           $this->output[$req_id]['courses'][$row_id]['display_credits'] = $ch['CREDITS_EARNED'];
           $this->course_history[$ch_course['COURSE_ID']][$ch_index]['used'] = 'Y';
           $this->req_grp_totals[$req_id] += $row['CREDITS_EARNED'];
+          if (isset($ch['UPPER_DIVISION']) AND $ch['UPPER_DIVISION'] == 1) {
+            $this->total_upper_division += $row['CREDITS'];
+          }
         }
         }
         
@@ -261,9 +276,11 @@ class DegreeAuditService {
     $course_history_result = $this->db->db_select('STUD_STUDENT_COURSE_HISTORY', 'ch')
       ->fields('ch', array('COURSE_ID', 'CREDITS_ATTEMPTED', 'CREDITS_EARNED', 'MARK', 'MARK_SCALE_ID', 'TERM', 'COURSE_NUMBER', 'COURSE_TITLE', 'DEGREE_REQ_GRP_ID'))
       ->expression("CONCAT(LEFT(UPPER(TERM), 2),'-', RIGHT(TERM, 2))", 'TERM_ABBREVIATION')
-      ->condition('STUDENT_ID', $student_id)
-      ->condition('LEVEL', $level)
-      ->condition('MARK', 'W', '!=')
+      ->join('STUD_COURSE', 'crs', 'crs.COURSE_ID = ch.COURSE_ID')
+      ->fields('crs', array('UPPER_DIVISION'))
+      ->condition('ch.STUDENT_ID', $student_id)
+      ->condition('ch.LEVEL', $level)
+      ->condition('ch.MARK', 'W', '!=')
       ->execute();
     while ($course_history_row = $course_history_result->fetch()) {
       if ($course_history_row['COURSE_ID'] != '')
@@ -391,6 +408,10 @@ class DegreeAuditService {
   
   public function getTotalDegreeRemaining() {
     return sprintf('%0.2f', round($this->total_degree_needed - $this->total_degree_completed, 2, PHP_ROUND_HALF_UP));
+  }
+
+  public function getTotalUpperDivision() {
+    return sprintf('%0.2f', round($this->total_upper_division, 2, PHP_ROUND_HALF_UP));
   }
   
 }

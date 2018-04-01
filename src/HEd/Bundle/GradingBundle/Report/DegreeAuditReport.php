@@ -11,6 +11,7 @@ class DegreeAuditReport extends BaseReport {
   public $req_grp_totals;
   public $total_degree_needed;
   public $total_degree_completed;
+  public $total_upper_division;
   
   // Current column
   private $col = 0;
@@ -186,6 +187,8 @@ class DegreeAuditReport extends BaseReport {
     $this->Cell(30,3,'Total Credits Completed: '.sprintf('%0.2f', round($this->total_degree_completed, 2, PHP_ROUND_HALF_UP)),0,0,'L');
     $this->Ln(3);
     $this->Cell(20,3,'Total Credits Remaining: '.sprintf('%0.2f', round($this->total_degree_remaining, 2, PHP_ROUND_HALF_UP)),0,0,'L');
+    $this->Ln(3);
+    $this->Cell(30,3,'Total Upper Division Credits: '.sprintf('%0.2f', round($this->total_upper_division, 2, PHP_ROUND_HALF_UP)),0,0,'L');
     $this->Ln(7);
   }
   
