@@ -200,6 +200,13 @@ Core_HEd_Course_Course:
     _controller: KulaHEdSchedulingBundle:CoreCourses:index
     _navigation: Core.HEd.Course.Course.Information
 
+Core_HEd_Course_Course_Inactivate:
+  path: /course/course/inactivate
+  defaults: 
+    _controller: KulaHEdSchedulingBundle:CoreCourses:inactivate
+    _navigation: Core.HEd.Scheduling.Course.ActivateInactive
+  methods: [POST]
+
 Core_HEd_Course_Course_Add:
   path: /course/course/add
   defaults: 

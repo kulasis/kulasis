@@ -197,6 +197,12 @@ Core.HEd.Course:
         route: Core_HEd_Course_Course_Add
       button_delete:
         route: Core_HEd_Course_Course_Delete
+      menu_actions:
+        ActivateInactive:
+          description: "Activate/Inactivate"
+          display_name: "Activate/Inactivate"
+          route: Core_HEd_Course_Course_Inactivate
+          record_loaded: true
         
 Core.HEd.Setup.Rooms:
   parent: Core.HEd.Setup
