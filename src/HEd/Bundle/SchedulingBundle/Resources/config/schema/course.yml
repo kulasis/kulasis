@@ -40,6 +40,14 @@ HEd.Course:
       field_size: 15
       column_name: "Short Title"
       label_name: "Short Title"
+    Status:
+      description: "Status"
+      db_column_name: STATUS
+      db_column_type: char
+      db_column_length: 1
+      db_column_null: true
+      column_name: "Status"
+      label_name: "Status"
     ConversionCourseNumber:
       description: "Conversion Course Number"
       db_column_name: CONV_COURSE_NUMBER
@@ -111,6 +119,31 @@ HEd.Course:
       lookup: HEd.Student.Enrollment.Level
       column_name: "Level"
       label_name: "Level"
+    ApprovalDate:
+      description: "Approval Date"
+      db_column_name: APPROVAL_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Approval Date"
+      label_name: "Approval Date"
+    InactivatedDate:
+      description: "Inactivated Date"
+      db_column_name: INACTIVATED_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Inactivated Date"
+      label_name: "Inactivated Date"
+    UpperDivision:
+      description: "Upper Division"
+      db_column_name: UPPER_DIVISION
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Upper Division"
+      label_name: "Upper Division"
 HEd.Course.Book:
   description: "Courses"
   db_table_name: STUD_COURSE_BOOK

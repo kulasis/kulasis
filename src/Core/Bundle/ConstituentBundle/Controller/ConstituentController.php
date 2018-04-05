@@ -20,6 +20,53 @@ class ConstituentController extends Controller {
     
     return $this->render('KulaCoreConstituentBundle:Constituent:index.html.twig', array('constituent' => $constituent));
   }
+
+  public function relationshipsAction() {
+    $this->authorize();
+    $this->processForm();
+    $this->setRecordType('Core.Constituent');
+
+    $related = array();
+    $siblings = array();
+    
+    if ($this->record->getSelectedRecordID()) {
+
+      $db_or = $this->db()->db_or()
+        ->condition('conrel.CONSTITUENT_ID', $this->record->getSelectedRecord()['CONSTITUENT_ID'])
+        ->condition('conrel.RELATED_CONSTITUENT_ID', $this->record->getSelectedRecord()['CONSTITUENT_ID']);
+    
+      $related = $this->db()->db_select('CONS_RELATIONSHIP', 'conrel')
+        ->fields('conrel', array('RELATIONSHIP', 'RELATIONSHIP_ID'))
+        ->join('CONS_CONSTITUENT', 'con', 'con.CONSTITUENT_ID = conrel.RELATED_CONSTITUENT_ID OR con.CONSTITUENT_ID = conrel.CONSTITUENT_ID')
+        ->fields('con', array('LAST_NAME', 'FIRST_NAME', 'GENDER', 'CONSTITUENT_ID'))
+        ->condition($db_or)
+        ->condition('con.CONSTITUENT_ID', $this->record->getSelectedRecord()['CONSTITUENT_ID'], '!=')
+        ->execute()->fetchAll();
+
+      // Get siblings
+      // Get parents
+      $parents = array();
+      $parents_result = $this->db()->db_select('CONS_RELATIONSHIP', 'conrel')
+        ->fields('conrel', array('RELATED_CONSTITUENT_ID'))
+        ->condition('conrel.CONSTITUENT_ID', $this->record->getSelectedRecord()['CONSTITUENT_ID'])
+        ->execute();
+      while ($parent_row = $parents_result->fetch()) {
+        $parents[] = $parent_row['RELATED_CONSTITUENT_ID'];
+      }
+
+      // Get related children
+      if (count($parents) > 0) {
+      $siblings = $this->db()->db_select('CONS_CONSTITUENT', 'cons')
+        ->fields('cons', array('LAST_NAME', 'FIRST_NAME', 'CONSTITUENT_ID', 'PERMANENT_NUMBER', 'GENDER'))
+        ->join('CONS_RELATIONSHIP', 'conrel', 'conrel.CONSTITUENT_ID = cons.CONSTITUENT_ID')
+        ->condition('conrel.RELATED_CONSTITUENT_ID', $parents)
+        ->condition('conrel.CONSTITUENT_ID', $this->record->getSelectedRecord()['CONSTITUENT_ID'], '!=')
+        ->execute()->fetchAll();
+      }
+    }
+    
+    return $this->render('KulaCoreConstituentBundle:Constituent:relationships.html.twig', array('related' => $related, 'siblings' => $siblings));
+  }
   
   public function combineAction() {
     $this->authorize();

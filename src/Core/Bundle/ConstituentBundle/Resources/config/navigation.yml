@@ -20,6 +20,10 @@ Core.Constituent.Constituent:
       description: "Email Addresses"
       display_name: "Email Addresses"
       route: Core_Constituent_emailaddress
+    Relationships:
+      description: "Relationships"
+      display_name: "Relationships"
+      route: Core_Constituent_relationships
   menu_actions:
     NewAddress:
       description: "New Address"

@@ -27,7 +27,7 @@ class CoreCourseRecord extends Record {
   public function get($record_id) {
     
     $result = $this->db()->db_select('STUD_COURSE', 'course')
-    ->fields('course', array('COURSE_ID', 'COURSE_NUMBER', 'COURSE_TITLE', 'SHORT_TITLE', 'CONV_COURSE_NUMBER', 'COURSE_TYPE', 'CREDITS', 'DEPARTMENT', 'LEVEL', 'MARK_SCALE_ID'))
+    ->fields('course', array('COURSE_ID', 'COURSE_NUMBER', 'COURSE_TITLE', 'SHORT_TITLE', 'CONV_COURSE_NUMBER', 'COURSE_TYPE', 'CREDITS', 'DEPARTMENT', 'LEVEL', 'MARK_SCALE_ID', 'STATUS'))
     ->condition('course.COURSE_ID', $record_id)
     ->execute()->fetch();
     return $result;
