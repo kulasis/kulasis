@@ -179,7 +179,7 @@ class DegreeAuditService {
             $ch['status'] = 'Comp';
             $ch['display_credits'] = $ch['CREDITS_EARNED'];
             if (isset($ch['UPPER_DIVISION']) AND $ch['UPPER_DIVISION'] == 1) {
-              $this->total_upper_division += $row['CREDITS'];
+              $this->total_upper_division += $ch['CREDITS_EARNED'];
             }
           }
           $this->output[$req_id]['courses'][] = $ch;
@@ -211,7 +211,7 @@ class DegreeAuditService {
              $ch['display_credits'] = $ch['CREDITS_EARNED'];
              $this->req_grp_totals[$req_id] += $ch['CREDITS_EARNED'];
              if (isset($ch['UPPER_DIVISION']) AND $ch['UPPER_DIVISION'] == 1) {
-              $this->total_upper_division += $row['CREDITS'];
+              $this->total_upper_division += $ch['CREDITS_EARNED'];
              }
            }
            $this->output[$req_id]['courses'][] = $ch;
@@ -234,7 +234,7 @@ class DegreeAuditService {
           $this->output[$req_id]['courses'][$row_id]['display_credits'] = $ch['CREDITS_EARNED'];
           $this->course_history[$ch['COURSE_ID']][$ch_index]['used'] = 'Y';
           if (isset($ch['UPPER_DIVISION']) AND $ch['UPPER_DIVISION'] == 1) {
-            $this->total_upper_division += $row['CREDITS'];
+            $this->total_upper_division += $ch['CREDITS_EARNED'];
           }
         }
         }
@@ -251,7 +251,7 @@ class DegreeAuditService {
           $this->course_history[$ch_course['COURSE_ID']][$ch_index]['used'] = 'Y';
           $this->req_grp_totals[$req_id] += $row['CREDITS_EARNED'];
           if (isset($ch['UPPER_DIVISION']) AND $ch['UPPER_DIVISION'] == 1) {
-            $this->total_upper_division += $row['CREDITS'];
+            $this->total_upper_division += $ch['CREDITS_EARNED'];
           }
         }
         }

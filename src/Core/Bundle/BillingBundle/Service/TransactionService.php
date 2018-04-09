@@ -148,7 +148,7 @@ class TransactionService {
         'Core.Billing.Transaction.ShowOnStatement' => 0, 
         'Core.Billing.Transaction.Voided' => 1, 
         'Core.Billing.Transaction.VoidedReason' => $voided_reason, 
-        'Core.Billing.Transaction.VoidedUserstamp' => $this->session->get('user_id'), 
+        'Core.Billing.Transaction.VoidedUserstamp' => (isset($this->session)) ? $this->session->get('user_id') : null, 
         'Core.Billing.Transaction.VoidedTimestamp' => date('Y-m-d H:i:s')
       ))->process($this->db_options)->getResult();
 
