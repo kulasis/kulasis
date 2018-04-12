@@ -99,9 +99,9 @@ class TranscriptService {
       ->fields('degree', array('DEGREE_NAME', 'PRINTED_DEGREE_NAME', 'LEVEL'))
       ->condition('studdegrees.STUDENT_ID', $student_id)
       ->condition('studdegrees.DEGREE_AWARDED', 1);
-    if ($level) {
-      $degrees_res = $degrees_res->condition('degree.LEVEL', $level);
-    }
+    //if ($level) {
+    //  $degrees_res = $degrees_res->condition('degree.LEVEL', $level);
+    //}
       $degrees_res = $degrees_res->execute();
     while ($degree_row = $degrees_res->fetch()) {
       
