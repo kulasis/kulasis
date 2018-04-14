@@ -12,15 +12,15 @@ class PaymentService {
   
   protected $session;
   
+  protected $transaction_service;
+
   public function __construct(\Kula\Core\Component\DB\DB $db, 
                               \Kula\Core\Component\DB\PosterFactory $poster_factory,
-                              $record = null, 
-                              $session = null) {
+                              $transaction_service) {
     $this->database = $db;
-    $this->record = $record;
     $this->posterFactory = $poster_factory;
-    $this->session = $session;
     $this->db_options = array();
+    $this->transaction_service = $transaction_service;
   }
 
   public function setDBOptions($options = array()) {
@@ -128,23 +128,21 @@ class PaymentService {
       ))->process($this->db_options);
     } 
 
-    // get payment
-    /*
-    $payment_info = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS', 'payments')
-      ->fields('payments', array('POSTED'))
-      ->condition('payments.CONSTITUENT_PAYMENT_ID', $payment_id)
-      ->execute()->fetch();
+    // void payment transactions
+    $trans_payments = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+      ->fields('trans', array('CONSTITUENT_TRANSACTION_ID'))
+      ->condition('trans.PAYMENT_ID', $payment_id)
+      ->execute();
+    while ($trans_payment = $trans_payments->fetch()) {
 
-    $payment_data = array();
-    */
+      // Void transaction service
+      $this->transaction_service->removeTransaction($trans_payment['CONSTITUENT_TRANSACTION_ID'], 'Payment voided.', date('Y-m-d'));
+    } 
+
+
     $payment_data['Core.Billing.Payment.Amount'] = 0;
-    /*
-    if ($payment_info['POSTED'] == 0) {
-      */
-      $payment_data['Core.Billing.Payment.Voided'] = 1;
-    /*
-    }
-    */
+    $payment_data['Core.Billing.Payment.Voided'] = 1;
+    $payment_data['Core.Billing.Payment.Posted'] = 1;
 
     $result = $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, $payment_data)->process($this->db_options);
 
@@ -376,7 +374,7 @@ class PaymentService {
   }
 
   public function calculateBalanceForCharge($charge_id, $payment_type = 'P') {
-  	$result = null;
+    $result = null;
     // get applied transactions
     $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
       ->expression('SUM(AMOUNT)', 'total_applied_balance')
@@ -405,9 +403,9 @@ class PaymentService {
       } 
     }
     if ($charge['STUDENT_CLASS_ID'] != '') {
-			$this->updateClassPaidStatus($charge['STUDENT_CLASS_ID']);
+      $this->updateClassPaidStatus($charge['STUDENT_CLASS_ID']);
     }
-  	return $result;
+    return $result;
   }
 
   public function updateAppliedBalanceForTransaction($transaction_id, $applied_balance) {

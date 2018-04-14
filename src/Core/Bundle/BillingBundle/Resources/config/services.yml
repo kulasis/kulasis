@@ -7,7 +7,7 @@ services:
 
   kula.Core.billing.payment:
     class: Kula\Core\Bundle\BillingBundle\Service\PaymentService
-    arguments: ["@kula.core.db", "@kula.core.poster_factory"]
+    arguments: ["@kula.core.db", "@kula.core.poster_factory", "@kula.Core.billing.transaction"]
 
   kula.Core.billing.pending:
     class: Kula\Core\Bundle\BillingBundle\Service\PendingService

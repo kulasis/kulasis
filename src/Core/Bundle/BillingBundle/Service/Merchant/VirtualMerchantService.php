@@ -47,7 +47,7 @@ class VirtualMerchantService {
       'ssl_avs_city' => $avs_city,
       'ssl_avs_state' => $avs_state,
       'ssl_avs_zip' => $avs_zip,
-      'ssl_avs_address' => $avs_address,
+      'ssl_avs_address' => substr($avs_address, 0, 30),
       'ssl_cvv2cvc2' => $cvv,
       'ssl_amount' => $amount
     );
