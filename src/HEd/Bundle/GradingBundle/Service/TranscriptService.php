@@ -88,7 +88,7 @@ class TranscriptService {
     $this->student_data['areas'] = implode(', ', $areas);
   }
   
-  public function loadDegreesAwarded($student_id, $level = null) {
+public function loadDegreesAwarded($student_id, $level = null) {
 
     $this->degrees_awarded_data = array();
 
