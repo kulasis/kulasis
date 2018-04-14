@@ -136,12 +136,13 @@ class PaymentService {
     while ($trans_payment = $trans_payments->fetch()) {
 
       // Void transaction service
-      $this->transaction_service->removeTransaction($trans_payment['CONSTITUENT_TRANSACTION_ID'], 'Payment failed.', date('Y-m-d'));
+      $this->transaction_service->removeTransaction($trans_payment['CONSTITUENT_TRANSACTION_ID'], 'Payment voided.', date('Y-m-d'));
     } 
 
 
     $payment_data['Core.Billing.Payment.Amount'] = 0;
     $payment_data['Core.Billing.Payment.Voided'] = 1;
+    $payment_data['Core.Billing.Payment.Posted'] = 1;
 
     $result = $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, $payment_data)->process($this->db_options);
 
