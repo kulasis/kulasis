@@ -88,13 +88,10 @@ class CoreStudentTranscriptReportController extends ReportController {
         $pdf->Ln(260 - $current_y);
       }
 
-      // Load levels for degrees
-      foreach($data['levels'] as $levelcode => $level) {
-
-        // load degrees
-        if (isset($degree_data[$levelcode])) {
-        foreach($degree_data[$levelcode] as $degree) {
-           $pdf->degree_row($degree);
+      // Load degrees
+      foreach($degree_data as $levelcode => $degree_level) {
+        foreach($degree_level as $degree) {
+          $pdf->degree_row($degree);
 
            if (isset($degree['areas'])) {
            foreach($degree['areas'] as $area) {
@@ -103,8 +100,6 @@ class CoreStudentTranscriptReportController extends ReportController {
            }
            $pdf->Ln(3);
         }
-        }
-
       }
 
       // Load 

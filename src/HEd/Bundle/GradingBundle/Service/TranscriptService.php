@@ -88,7 +88,7 @@ class TranscriptService {
     $this->student_data['areas'] = implode(', ', $areas);
   }
   
-  public function loadDegreesAwarded($student_id, $level = null) {
+public function loadDegreesAwarded($student_id, $level = null) {
 
     $this->degrees_awarded_data = array();
 
@@ -99,9 +99,9 @@ class TranscriptService {
       ->fields('degree', array('DEGREE_NAME', 'PRINTED_DEGREE_NAME', 'LEVEL'))
       ->condition('studdegrees.STUDENT_ID', $student_id)
       ->condition('studdegrees.DEGREE_AWARDED', 1);
-    if ($level) {
-      $degrees_res = $degrees_res->condition('degree.LEVEL', $level);
-    }
+    //if ($level) {
+    //  $degrees_res = $degrees_res->condition('degree.LEVEL', $level);
+    //}
       $degrees_res = $degrees_res->execute();
     while ($degree_row = $degrees_res->fetch()) {
       
