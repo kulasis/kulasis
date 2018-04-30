@@ -101,7 +101,6 @@ class CorePaymentsController extends Controller {
         ->fields('sec', array('SECTION_NUMBER', 'SECTION_ID'))
         ->condition($db_or)
         ->condition('trans.ORGANIZATION_TERM_ID', $this->focus->getOrganizationTermIDs())
-        ->condition('payments.VOIDED', 0)
         ->orderBy('PAYMENT_DATE', 'DESC', 'payments')
         ->orderBy('TRANSACTION_DATE', 'ASC', 'trans')
         ->orderBy('payments.CREATED_TIMESTAMP', 'DESC')
