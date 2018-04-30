@@ -54,7 +54,9 @@ class CoreBillingStatementEmailReportController extends ReportController {
         foreach($statement['email_addresses'] as $email_info) {
           $emails[] = array($email_info['EMAIL_ADDRESS'] => $email_info['FIRST_NAME'].' '.$email_info['LAST_NAME']);
         }
-        $message = $message->setTo($emails);
+        if (count($emails) > 0) {
+        	$message = $message->setTo($emails);
+        }
       }
 
       $message = $message->setBody(
