@@ -29,6 +29,15 @@ HEd.Student.Enrollment.LeaveCode:
     - { code: "06", description: "CLOSED" }
     - { code: "07", description: "Forfeit Acceptance" }
 
+HEd.Student.Enrollment.LeaveReason:
+  description: "Enrollment Leave Reasons"
+  allow_update: true
+  values: 
+    - { code: "01", description: "Health" }
+    - { code: "02", description: "Financial" }
+    - { code: "03", description: "Change in Educational Goals" }
+    - { code: "04", description: "Transferring to Another Institution" }
+
 HEd.Student.HighSchool.DiplomaType:
   description: "High School Diploma Types"
   allow_update: true

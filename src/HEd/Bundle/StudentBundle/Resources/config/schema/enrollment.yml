@@ -94,6 +94,16 @@ HEd.Student.Status:
       lookup: HEd.Student.Enrollment.LeaveCode
       column_name: "Leave Code"
       label_name: "Leave Code"
+    LeaveReason:
+      description: "Leave Reason"
+      db_column_name: LEAVE_REASON
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.Enrollment.LeaveReason
+      column_name: "Leave Reason"
+      label_name: "Leave Reason"
     Resident:
       description: "Resident"
       db_column_name: RESIDENT
