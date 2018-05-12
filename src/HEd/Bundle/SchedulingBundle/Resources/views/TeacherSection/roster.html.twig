@@ -16,6 +16,7 @@ Roster
   {{ kula_field_name({ field: 'HEd.Student.Status.Grade', field_name_override: 'Grade Level', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Status.EnterCode', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Degree.Area.AreaID', field_name_override: 'Area', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ field: 'HEd.Student.Class.CreditsAttempted', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.StartDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.EndDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ field: 'HEd.Student.Class.Paid', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
@@ -46,6 +47,12 @@ Roster
     {{ kula_field({ field: 'HEd.Student.Status.Grade', db_row_id: student.STUDENT_CLASS_ID, value: student.GRADE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Student.Status.EnterCode', db_row_id: student.STUDENT_CLASS_ID, value: student.ENTER_CODE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Student.Degree.Area.AreaID', value: student.AREA_ID, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {% if student.class_CREDITS_ATTEMPTED != '' %}
+      {% set students_credits_attempted = student.class_CREDITS_ATTEMPTED %}
+    {% else %}
+      {% set students_credits_attempted = student.CREDITS %}
+    {% endif %}
+    {{ kula_field({ input: false, field: 'HEd.Student.Class.CreditsAttempted', db_row_id: student.STUDENT_CLASS_ID, value: students_credits_attempted, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Student.Class.StartDate', value: student.START_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Student.Class.EndDate', value: student.END_DATE, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ field: 'HEd.Student.Class.Paid', value: student.PAID, input: false, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
