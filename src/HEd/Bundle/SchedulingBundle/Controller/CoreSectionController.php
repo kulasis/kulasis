@@ -247,10 +247,10 @@ class CoreSectionController extends Controller {
       
       // Get Course
       $course_info = $this->db()->db_select('STUD_COURSE', 'course')
-        ->fields('course', array('MARK_SCALE_ID', 'COURSE_NUMBER'))
+        ->fields('course', array('MARK_SCALE_ID', 'COURSE_NUMBER', 'CREDITS'))
         ->condition('course.COURSE_ID', $sectionInfo['HEd.Section.CourseID'])
         ->execute()->fetch();
-		
+
 	  // Get term start and end date
 	  $term_dates = $this->db()->db_select('CORE_TERM', 'term')
 		->fields('term', array('START_DATE', 'END_DATE'))
@@ -277,6 +277,7 @@ class CoreSectionController extends Controller {
         $sectionInfo['HEd.Section.SectionNumber'] = $course_info['COURSE_NUMBER'].'-01';
       }
       $sectionInfo['HEd.Section.MarkScaleID'] = $course_info['MARK_SCALE_ID'];
+      $sectionInfo['HEd.Section.Credits'] = $course_info['CREDITS'];
       
       $sectionID = $this->newPoster()->add('HEd.Section', 0, $sectionInfo)->process()->getResult();
       

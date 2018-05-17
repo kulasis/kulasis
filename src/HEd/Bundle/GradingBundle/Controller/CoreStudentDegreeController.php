@@ -17,6 +17,7 @@ class CoreStudentDegreeController extends Controller {
     $degrees = $this->db()->db_select('STUD_STUDENT_DEGREES')
       ->fields('STUD_STUDENT_DEGREES', array('STUDENT_DEGREE_ID', 'EFFECTIVE_DATE', 'DEGREE_ID', 'DEGREE_AWARDED', 'EXPECTED_COMPLETION_TERM_ID', 'GRADUATION_DATE', 'CONFERRED_DATE'))
       ->condition('STUDENT_ID', $this->record->getSelectedRecordID())
+      ->orderBy('EFFECTIVE_DATE', 'DESC')
       ->execute()->fetchAll();    
     }
 

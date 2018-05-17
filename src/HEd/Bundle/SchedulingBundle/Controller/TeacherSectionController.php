@@ -13,9 +13,11 @@ class TeacherSectionController extends Controller {
     $students = array();
     
     $students = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED', 'PAID'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED', 'PAID', 'CREDITS_ATTEMPTED'))
       ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
       ->fields('status', array('STUDENT_STATUS_ID', 'LEVEL', 'GRADE', 'ENTER_CODE'))
+      ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = class.SECTION_ID')
+      ->fields('sec', array('CREDITS'))
       ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
       ->join('CONS_CONSTITUENT', 'constituent', 'student.STUDENT_ID = constituent.CONSTITUENT_ID')
       ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
@@ -39,8 +41,10 @@ class TeacherSectionController extends Controller {
     
     $students = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE', 'DROPPED'))
-      ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
+      ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID', 'CREDITS_ATTEMPTED')
       ->fields('status', array('STUDENT_STATUS_ID', 'LEVEL', 'GRADE', 'ENTER_CODE'))
+      ->join('STUD_SECTION', 'sec', 'sec.SECTION_ID = class.SECTION_ID')
+      ->fields('sec', array('CREDITS'))
       ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
       ->join('CONS_CONSTITUENT', 'constituent', 'student.STUDENT_ID = constituent.CONSTITUENT_ID')
       ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))

@@ -377,6 +377,14 @@ class Focus {
       return $this->term->getCurrentTermID();
     }
   }
+
+  public function getTermStartDate($admin = false) {
+    $session_focus = $this->session->get('focus');
+    
+    $term_id = $this->getTermID($admin);
+
+    return $this->term->getStartDate($term_id);
+  }
   
   public function getTermIDForMenu() {
     $session_focus = $this->session->get('focus');
