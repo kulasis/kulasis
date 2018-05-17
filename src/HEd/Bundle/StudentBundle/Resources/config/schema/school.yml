@@ -30,3 +30,13 @@ HEd.School:
       lookup: HEd.Student.Enrollment.Grade
       column_name: "Default Grade"
       label_name: "Default Grade"
+    DefaultEnterDateAction:
+      description: "Default Enter Date Action"
+      db_column_name: DEFAULT_ENTER_DATE_ACTION
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: select
+      class: Kula\HEd\Bundle\SchoolBundle\Field\DefaultEnterDateAction
+      column_name: "Default Enter Date Action"
+      label_name: "Default Enter Date Action"

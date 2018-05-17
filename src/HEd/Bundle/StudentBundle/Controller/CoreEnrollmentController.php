@@ -148,7 +148,7 @@ class CoreEnrollmentController extends Controller {
         ->join('CORE_ORGANIZATION', 'org', 'orgterm.ORGANIZATION_ID = org.ORGANIZATION_ID')
         ->fields('org', array('ORGANIZATION_NAME'))
         ->join('CORE_TERM', 'term', 'orgterm.TERM_ID = term.TERM_ID')
-        ->fields('term', array('TERM_ABBREVIATION'))
+        ->fields('term', array('TERM_ABBREVIATION', 'START_DATE'))
         ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
         ->orderBy('term.START_DATE', 'ASC')
         ->orderBy('stustatus.ENTER_DATE', 'ASC')
@@ -245,8 +245,20 @@ class CoreEnrollmentController extends Controller {
           
         }
         
+        // Get enter date to use
+        $sch_info = $this->db()->db_select('STUD_SCHOOL', 'sch')
+          ->fields('sch', array('DEFAULT_ENTER_DATE_ACTION'))
+          ->condition('sch.SCHOOL_ID', $this->focus->getOrganizationID())
+          ->execute()->fetch();
+
+        if ($sch_info['DEFAULT_ENTER_DATE_ACTION'] == 'TERM' AND $this->focus->getTermStartDate() > date('Y-m-d')) {
+          $default_enter_date = $this->focus->getTermStartDate();
+        } else {
+          $default_enter_date = date('m/d/Y');
+        }
+
         // want to activate student
-        return $this->render('KulaHEdStudentBundle:CoreEnrollment:activate.html.twig', array('status' => $status));
+        return $this->render('KulaHEdStudentBundle:CoreEnrollment:activate.html.twig', array('status' => $status, 'default_enter_date' => $default_enter_date));
       }
       
     } 
