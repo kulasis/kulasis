@@ -250,7 +250,7 @@ class CoreSectionController extends Controller {
         ->fields('course', array('MARK_SCALE_ID', 'COURSE_NUMBER', 'CREDITS'))
         ->condition('course.COURSE_ID', $sectionInfo['HEd.Section.CourseID'])
         ->execute()->fetch();
-		print_r($course_info);
+
 	  // Get term start and end date
 	  $term_dates = $this->db()->db_select('CORE_TERM', 'term')
 		->fields('term', array('START_DATE', 'END_DATE'))
