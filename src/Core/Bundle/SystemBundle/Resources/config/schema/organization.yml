@@ -127,6 +127,14 @@ Core.Term:
       field_length: 6
       column_name: "Financial Aid Year"
       label_name: "Financial Aid Year"
+    CensusDate:
+      description: "Census Date"
+      db_column_name: CENSUS_DATE
+      db_column_type: date
+      db_column_null: true
+      field_type: date
+      column_name: "Census Date"
+      label_name: "Census Date"
     ConversionTermNumber:
       description: "Conversion Term Number"
       db_column_name: CONV_TERM_NUMBER

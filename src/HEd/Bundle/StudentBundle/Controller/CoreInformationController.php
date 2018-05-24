@@ -165,8 +165,14 @@ class CoreInformationController extends Controller {
       ->fields('STUD_SCHOOL')
       ->condition('SCHOOL_ID', $this->focus->getOrganizationID())
       ->execute()->fetch();
+
+    if ($defaults['DEFAULT_ENTER_DATE_ACTION'] == 'TERM' AND $this->focus->getTermStartDate() > date('Y-m-d')) {
+      $default_enter_date = $this->focus->getTermStartDate();
+    } else {
+      $default_enter_date = date('m/d/Y');
+    }
     
-    return $this->render('KulaHEdStudentBundle:CoreInformation:add.html.twig', array('constituents' => $constituents, 'defaults' => $defaults));
+    return $this->render('KulaHEdStudentBundle:CoreInformation:add.html.twig', array('constituents' => $constituents, 'defaults' => $defaults, 'default_enter_date' => $default_enter_date));
   }
   
   public function add_constituentAction() {
@@ -177,8 +183,14 @@ class CoreInformationController extends Controller {
       ->fields('STUD_SCHOOL')
       ->condition('SCHOOL_ID', $this->focus->getOrganizationID())
       ->execute()->fetch();
+
+    if ($defaults['DEFAULT_ENTER_DATE_ACTION'] == 'TERM' AND $this->focus->getTermStartDate() > date('Y-m-d')) {
+      $default_enter_date = $this->focus->getTermStartDate();
+    } else {
+      $default_enter_date = date('m/d/Y');
+    }
     
-    return $this->render('KulaHEdStudentBundle:CoreInformation:add_constituent.html.twig', array('defaults' => $defaults));
+    return $this->render('KulaHEdStudentBundle:CoreInformation:add_constituent.html.twig', array('defaults' => $defaults, 'default_enter_date' => $default_enter_date));
   }
   
   public function create_constituentAction() {

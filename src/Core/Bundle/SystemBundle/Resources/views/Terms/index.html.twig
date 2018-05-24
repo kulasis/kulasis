@@ -16,6 +16,7 @@ Terms
   {{ kula_field_name({ edit: true, field: 'Core.Term.Abbreviation', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ edit: true, field: 'Core.Term.StartDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ edit: true, field: 'Core.Term.EndDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
+  {{ kula_field_name({ edit: true, field: 'Core.Term.CensusDate', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   {{ kula_field_name({ edit: true, field: 'Core.Term.FinancialAidYear', prepend_html: '<th class="data-table-cell-row-header">', append_html: '</th>' }) }}
   </tr>
 </thead>
@@ -27,6 +28,7 @@ Terms
     {{ kula_field({ add: true, field: 'Core.Term.Abbreviation', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ add: true, field: 'Core.Term.StartDate', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ add: true, field: 'Core.Term.EndDate', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ add: true, field: 'Core.Term.CensusDate', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ add: true, field: 'Core.Term.FinancialAidYear', prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   {{ kula_display_html({ add: true, field: 'Core.Term.ID', prepend_html: '</tr>' }) }}
   {% for term in terms %}
@@ -37,6 +39,7 @@ Terms
     {{ kula_field({ edit: true, field: 'Core.Term.Abbreviation', db_row_id: term.TERM_ID, value: term.TERM_ABBREVIATION, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Term.StartDate', db_row_id: term.TERM_ID, value: term.START_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Term.EndDate', db_row_id: term.TERM_ID, value: term.END_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
+    {{ kula_field({ edit: true, field: 'Core.Term.CensusDate', db_row_id: term.TERM_ID, value: term.CENSUS_DATE, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
     {{ kula_field({ edit: true, field: 'Core.Term.FinancialAidYear', db_row_id: term.TERM_ID, value: term.FINANCIAL_AID_YEAR, prepend_html: '<td>', append_html: '</td>', attributes_html: { class : 'data-table-cell-input' } }) }}
   </tr>
   {% endfor %}
