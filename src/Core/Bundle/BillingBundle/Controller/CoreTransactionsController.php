@@ -288,7 +288,7 @@ class CoreTransactionsController extends Controller {
       if ($this->record->getSelectedRecordID()) {
       	$constituent_id = $this->record->getSelectedRecordID();
       } else {
-      	$constituent_id = $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.ConstituentID']['value'];
+      	$constituent_id = $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.ConstituentID']['value'];
       }
 
       $constituent_billing_service->addTransaction(
