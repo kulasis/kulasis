@@ -169,7 +169,7 @@ class TransactionService {
 
     $refund_transaction_amount = 0.0;
 
-    if ($transaction['PAYMENT_ID']) {
+    if ($transaction['PAYMENT_ID'] AND !$transaction['REFUND_TRANSACTION_ID']) {
       // get applied transactions
       $applied_trans = $this->database->db_select('BILL_CONSTITUENT_PAYMENTS_APPLIED', 'applied')
         ->expression('SUM(applied.AMOUNT)', 'total_applied_balance')
