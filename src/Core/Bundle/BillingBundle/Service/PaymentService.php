@@ -111,6 +111,17 @@ class PaymentService {
   }
 
   public function postPayment($payment_id) {
+
+    // post applied transactions for payment
+    $transactions_payments = $this->database->db_select('BILL_CONSTITUENT_TRANSACTIONS', 'trans')
+      ->fields('trans', array('CONSTITUENT_TRANSACTION_ID'))
+      ->condition('trans.PAYMENT_ID', $payment_id)
+      ->execute();
+    while ($transaction_payment = $transactions_payments->fetch()) {
+      $this->transaction_service->postTransaction($transaction_payment['CONSTITUENT_TRANSACTION_ID']);
+    }
+
+    // post payment
     return $this->posterFactory->newPoster()->edit('Core.Billing.Payment', $payment_id, array(
       'Core.Billing.Payment.Posted' => 1
     ))->process($this->db_options)->getResult();
