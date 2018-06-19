@@ -439,7 +439,7 @@ class PFAIDSService {
           
           // update award
           $this->posterFactory->newPoster()->noLog()->edit('HEd.FAID.Student.AwardYear.Award', $award_year_award['AWARD_YEAR_AWARD_ID'], array(
-            'HEd.FAID.Student.AwardYear.Award.GrossAmount' => $pf_stu_award_year_award['actual_amt']
+            'HEd.FAID.Student.AwardYear.Award.GrossAmount' => sprintf("%.2f", $pf_stu_award_year_award['actual_amt'])
           ))->process()->getResult();
           
         } else {
@@ -458,7 +458,7 @@ class PFAIDSService {
               $this->posterFactory->newPoster()->noLog()->add('HEd.FAID.Student.AwardYear.Award', 'new', array(
                 'HEd.FAID.Student.AwardYear.Award.AwardYearID' => $award_year['AWARD_YEAR_ID'],
                 'HEd.FAID.Student.AwardYear.Award.AwardCodeID' => $award_code_id['AWARD_CODE_ID'],
-                'HEd.FAID.Student.AwardYear.Award.GrossAmount' => $pf_stu_award_year_award['actual_amt']
+                'HEd.FAID.Student.AwardYear.Award.GrossAmount' => sprintf("%.2f", $pf_stu_award_year_award['actual_amt'])
               ))->process()->getResult();
             
             }
@@ -531,8 +531,10 @@ class PFAIDSService {
 			  $this->posterFactory->newPoster()->noLog()->edit('HEd.FAID.Student.Award', $award['AWARD_ID'], array(
 				'HEd.FAID.Student.Award.AwardStatus' => ($award_status != '') ? $award_status : null,
 				'HEd.FAID.Student.Award.DisbursementDate' => ($pf_stu_term_award['cod_disbursement_date'] != '') ? date('Y-m-d', strtotime($pf_stu_term_award['cod_disbursement_date'])) : null,
-				'HEd.FAID.Student.Award.GrossAmount' => $pf_stu_term_award['scheduled_amount'],
-				'HEd.FAID.Student.Award.NetAmount' => ($pf_stu_term_award['net_disbursement_amount'] > 0) ? $pf_stu_term_award['net_disbursement_amount'] : $pf_stu_term_award['scheduled_amount']
+				'HEd.FAID.Student.Award.GrossAmount' => sprintf("%.2f", $pf_stu_term_award['scheduled_amount']),
+				'HEd.FAID.Student.Award.NetAmount' => ($pf_stu_term_award['net_disbursement_amount'] > 0) ? 
+          sprintf("%.2f", $pf_stu_term_award['net_disbursement_amount']) : 
+          sprintf("%.2f", $pf_stu_term_award['scheduled_amount'])
 			  ))->process()->getResult();
 			}
           

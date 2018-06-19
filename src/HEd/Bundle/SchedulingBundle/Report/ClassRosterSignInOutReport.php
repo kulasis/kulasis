@@ -64,7 +64,7 @@ class ClassRosterSignInOutReport extends BaseReport {
     $this->Ln(5);
     
     $this->Cell(20, 8, 'Drivers:', '', 0, 'L');
-    $this->Cell(115, 8,$row['authorized_drivers'],'',0,'L',$this->fill);
+    $this->Cell(115, 8,implode(', ', $row['authorized_drivers'][0]),'',0,'L',$this->fill);
 
     $this->Ln(3);
     $this->Cell(136, 8, '', '', 0, 'L');
@@ -74,6 +74,23 @@ class ClassRosterSignInOutReport extends BaseReport {
     $this->Cell(40,4,'Parent/Driver Sign Out','T',0,'C',$this->fill);
     $this->SetFont('Arial','',8);
     
+    if (count($row['authorized_drivers']) > 1) {
+
+      $this->Ln(1);
+
+      for($i = 1; $i < count($row['authorized_drivers']); $i++) {
+
+        $this->Cell(20, 8, '', '', 0, 'L');
+        $this->Cell(115, 8,implode(', ', $row['authorized_drivers'][$i]),'',0,'L',$this->fill);
+
+        if ($i >= 1 AND $i != count($row['authorized_drivers'])-1) {
+          $this->Ln(3);
+        }
+
+      } // end for loop
+
+    }
+
     $this->SetDrawColor(0,0,0);
     $this->SetLineWidth(.1);
     $this->Line(196, $this->GetY()-10, 196, $this->GetY());

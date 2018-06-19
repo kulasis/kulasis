@@ -100,7 +100,7 @@ class APIv1PaymentController extends APIController {
     $pending_service->calculatePendingCharges($related_constituents);
     $pending_classes = $pending_service->getPendingClasses();
     
-    if ($pending_service->totalAmount() > 0 AND $pending_service->totalAmount() <= 2000) {
+    if ($pending_service->totalAmount() > 0 AND $pending_service->totalAmount() <= 5000) {
 
       // Get payment type
       $payment_method = 
