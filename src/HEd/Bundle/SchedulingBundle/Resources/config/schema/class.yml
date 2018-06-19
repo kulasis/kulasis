@@ -158,3 +158,22 @@ HEd.Student.Class:
       field_size: 15
       column_name: "Discount Proof"
       label_name: "Discount Proof"
+    MarketingReferrer:
+      description: "Marketing Referrer"
+      db_column_name: MKTG_REFERRER
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Schedule.MarketingReferrer
+      column_name: "Marketing Referrer"
+      label_name: "Marketing Referrer"
+    MarketingReferrerOther:
+      description: "Marketing Referrer Other"
+      db_column_name: MKTG_REFERRER_OTHER
+      db_column_type: varchar
+      db_column_length: 255
+      db_column_null: true
+      field_type: text
+      column_name: "Marketing Referrer Other"
+      label_name: "Marketing Referrer Other"

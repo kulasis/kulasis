@@ -18,7 +18,7 @@ class StudentScheduleReport extends BaseReport {
   {
     $this->setReportTitle('STUDENT SCHEDULE');
     $this->school_name = $this->data['ORGANIZATION_NAME'];
-    $this->term_name = $this->data['TERM_ABBREVIATION'];
+    $this->term_name = $this->data['TERM_NAME'];
     parent::Header();
     
 

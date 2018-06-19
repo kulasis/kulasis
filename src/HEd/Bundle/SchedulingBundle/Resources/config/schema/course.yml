@@ -18,7 +18,7 @@ HEd.Course:
       db_column_type: varchar
       db_column_length: 15
       field_type: text
-      field_size: 8
+      field_size: 15
       column_name: "Course Number"
       label_name: "Course Number"
     Title:
@@ -27,7 +27,7 @@ HEd.Course:
       db_column_type: varchar
       db_column_length: 100
       field_type: text
-      field_size: 25
+      field_size: 30
       column_name: "Course Title"
       label_name: "Course Title"
     ShortTitle:
@@ -37,7 +37,7 @@ HEd.Course:
       db_column_length: 20
       db_column_null: true
       field_type: text
-      field_size: 15
+      field_size: 20
       column_name: "Short Title"
       label_name: "Short Title"
     Status:
@@ -144,6 +144,26 @@ HEd.Course:
       field_type: checkbox
       column_name: "Upper Division"
       label_name: "Upper Division"
+    Capacity:
+      description: "Capacity"
+      db_column_name: CAPACITY
+      db_column_type: int
+      db_column_size: small
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "Capacity"
+      label_name: "Capacity"
+    Minimum:
+      description: "Minimum"
+      db_column_name: MINIMUM
+      db_column_type: int
+      db_column_size: small
+      db_column_null: true
+      field_type: text
+      field_size: 5
+      column_name: "Minimum"
+      label_name: "Minimum"
 HEd.Course.Book:
   description: "Courses"
   db_table_name: STUD_COURSE_BOOK

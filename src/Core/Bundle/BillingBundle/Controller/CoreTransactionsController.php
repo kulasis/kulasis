@@ -68,6 +68,21 @@ class CoreTransactionsController extends Controller {
       }
     }
 
+    if ($this->request->request->get('post')) {
+      $constituent_billing_service = $this->get('kula.Core.billing.constituent');
+      
+      $post = $this->request->request->get('post');
+      
+      foreach($post as $table => $row_info) {
+        foreach($row_info as $row_id => $row) {
+          if (isset($row['Core.Billing.Transaction.Posted']['checkbox'])
+          AND $row['Core.Billing.Transaction.Posted']['checkbox'] == '1' 
+          AND $row['Core.Billing.Transaction.Posted']['checkbox_hidden'] == 0)
+            $constituent_billing_service->postTransaction($row_id);
+        }
+      }
+    }
+
     $transactions = array();
     
     if ($this->record->getSelectedRecordID()) {
@@ -288,7 +303,7 @@ class CoreTransactionsController extends Controller {
       if ($this->record->getSelectedRecordID()) {
       	$constituent_id = $this->record->getSelectedRecordID();
       } else {
-      	$constituent_id = $add['Core.Billing.Payment']['new_num']['Core.Billing.Payment.ConstituentID']['value'];
+      	$constituent_id = $add['Core.Billing.Transaction']['new_num']['Core.Billing.Transaction.ConstituentID']['value'];
       }
 
       $constituent_billing_service->addTransaction(

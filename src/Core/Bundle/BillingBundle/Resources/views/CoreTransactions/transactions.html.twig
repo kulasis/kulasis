@@ -54,7 +54,7 @@ Transactions
   <tr>
     {{ kula_field({ delete: true, field: 'Core.Billing.Transaction.ID', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     {% if transaction.POSTED == '0' %}
-      {{ kula_field({ edit: true, post_type: 'post', field: 'Core.Billing.Transaction.Posted', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
+      {{ kula_field({ edit: true, field: 'Core.Billing.Transaction.Posted', db_row_id: transaction.CONSTITUENT_TRANSACTION_ID, prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     {% else %}
       {{ kula_field_name({ edit: true, field: 'Core.Billing.Transaction.Posted', field_name_override: '&nbsp;', prepend_html: '<td class="data-table-cell-row-delete">', append_html: '</td>' }) }}
     {% endif %}

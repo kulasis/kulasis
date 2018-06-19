@@ -119,10 +119,20 @@ class CoreClassRosterSignInOutReportController extends ReportController {
         ->condition('drivers.STUDENT_ID', $row['STUDENT_ID'])
         ->condition('drivers.AUTHORIZED_DRIVER', 1)
         ->execute();
+	  $authorizedDriversChunkCount = 0;
+      $authorizedDriversCount = 0;
       while ($authorizedDriver = $authorizedDrivers->fetch()) {
-        $authorizeDriverStr[] = $authorizedDriver['EMERGENCY_CONTACT_NAME'];
+
+      	if ($authorizedDriversCount == 5) {
+      		$authorizedDriversCount = 0;
+      		$authorizedDriversChunkCount++;
+      	}
+        $authorizeDriverStr[$authorizedDriversChunkCount][] = $authorizedDriver['EMERGENCY_CONTACT_NAME'];
+      	
+      	$authorizedDriversCount++;
       }
-      $row['authorized_drivers'] = implode(', ', $authorizeDriverStr);
+
+      $row['authorized_drivers'] = $authorizeDriverStr;
       
       $pdf->table_row($row);
       $last_section_id = $row['SECTION_ID'];

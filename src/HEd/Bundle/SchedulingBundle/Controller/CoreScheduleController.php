@@ -188,7 +188,7 @@ class CoreScheduleController extends Controller {
     $class = array();
     
     $class = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
-      ->fields('class', array('STUDENT_CLASS_ID', 'CHANGE_REASON', 'CHANGE_NOTES', 'DEGREE_REQ_GRP_ID', 'COURSE_ID', 'REPEAT_TAG_ID', 'REGISTRATION_TYPE', 'SECTION_ID'))
+      ->fields('class', array('STUDENT_CLASS_ID', 'CHANGE_REASON', 'CHANGE_NOTES', 'DEGREE_REQ_GRP_ID', 'COURSE_ID', 'REPEAT_TAG_ID', 'REGISTRATION_TYPE', 'SECTION_ID', 'MKTG_REFERRER', 'MKTG_REFERRER_OTHER'))
       ->condition('STUDENT_STATUS_ID', $this->record->getSelectedRecordID())
       ->condition('STUDENT_CLASS_ID', $id)
       ->execute()->fetch();

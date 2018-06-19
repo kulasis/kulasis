@@ -113,7 +113,11 @@ class LookupLoader {
             $lookupTableValueFields['CONVERSION'] = (isset($value['conversion'])) ? $value['conversion'] : null;
           if (count($lookupTableValueFields) > 0) {
             $lookupTableValueFields['UPDATED_TIMESTAMP'] = date('Y-m-d H:i:s');
-            $db->db_update('CORE_LOOKUP_VALUES', array('target' => 'schema'))->fields($lookupTableValueFields)->condition('CODE', $value['code'])->execute();
+            $db->db_update('CORE_LOOKUP_VALUES', array('target' => 'schema'))
+              ->fields($lookupTableValueFields)
+              ->condition('LOOKUP_TABLE_ID', $lookupTableID)
+              ->condition('CODE', $value['code'])
+              ->execute();
           }
         } else {
           

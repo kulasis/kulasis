@@ -247,7 +247,7 @@ class CoreSectionController extends Controller {
       
       // Get Course
       $course_info = $this->db()->db_select('STUD_COURSE', 'course')
-        ->fields('course', array('MARK_SCALE_ID', 'COURSE_NUMBER', 'CREDITS'))
+        ->fields('course', array('MARK_SCALE_ID', 'COURSE_NUMBER', 'CREDITS', 'CAPACITY', 'MINIMUM'))
         ->condition('course.COURSE_ID', $sectionInfo['HEd.Section.CourseID'])
         ->execute()->fetch();
 
@@ -278,6 +278,8 @@ class CoreSectionController extends Controller {
       }
       $sectionInfo['HEd.Section.MarkScaleID'] = $course_info['MARK_SCALE_ID'];
       $sectionInfo['HEd.Section.Credits'] = $course_info['CREDITS'];
+      $sectionInfo['HEd.Section.Capacity'] = $course_info['CAPACITY'];
+      $sectionInfo['HEd.Section.Minimum'] = $course_info['MINIMUM'];
       
       $sectionID = $this->newPoster()->add('HEd.Section', 0, $sectionInfo)->process()->getResult();
       
