@@ -87,4 +87,18 @@ HEd.Schedule.BillingStatus:
     - { code: NPAID, description: "Not Paid" }
     - { code: PAID, description: "Paid" }
     - { code: VOID, description: "Voided" } 
-    - { code: REFUN, description: "Refunded" } 
+    - { code: REFUN, description: "Refunded" }
+
+HEd.Schedule.MarketingReferrer:
+  description: "Marketing Referrer"
+  allow_update: true
+  values:
+    - { code: "01", description: "Mailing to my homePostcard/Brochure at store or businessInternet Search" }
+    - { code: "02", description: "OCAC e-Newsletter" }
+    - { code: "03", description: "Social Media (Facebook, Twitter, etc.)" }
+    - { code: "04", description: "Portland Mercury/True Parent" }
+    - { code: "05", description: "Willamette Week" }
+    - { code: "06", description: "NW Kids Magazine/Website" }
+    - { code: "07", description: "Lawn Sign or Banner" }
+    - { code: "07", description: "Word of Mouth" }
+    - { code: "07", description: "Other" }

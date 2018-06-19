@@ -29,7 +29,7 @@ class ScheduleService {
     $this->billing->setDBOptions($options);
   }
   
-  public function addClassForStudentStatus($student_status_id, $section_id, $start_date, $posted = 1, $options = array(), $add_status = null) {
+  public function addClassForStudentStatus($student_status_id, $section_id, $start_date, $posted = 1, $options = array(), $add_status = null, $marketing_referrer = null, $marketing_referrer_other = null) {
     
     // Get Section Info
     $section_info = $this->database->db_select('STUD_SECTION')
@@ -65,6 +65,14 @@ class ScheduleService {
     
     if ($add_status) {
       $class_info['HEd.Student.Class.RegistrationType'] = $add_status;
+    }
+
+    if ($marketing_referrer) {
+      $class_info['HEd.Student.Class.MarketingReferrer'] = $marketing_referrer;
+    }
+
+    if ($marketing_referrer_other) {
+      $class_info['HEd.Student.Class.MarketingReferrerOther'] = $marketing_referrer_other;
     }
 
     if ($section_info['START_DATE'] < $start_date)

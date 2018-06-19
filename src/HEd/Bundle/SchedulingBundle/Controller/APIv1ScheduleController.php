@@ -105,6 +105,9 @@ class APIv1ScheduleController extends APIController {
     // Make sure class not full
     $transaction = $this->db()->db_transaction();
 
+    $marketing_referrer  = $this->request->request->get('marketing_referrer');
+    $marketing_referrer_other = $this->request->request->get('marketing_referrer_other');
+
     $class_count = $this->db()->db_select('STUD_STUDENT_CLASSES', 'class')
       ->expression('COUNT(*)', 'class_total')
       ->condition('class.SECTION_ID', $section_id)
@@ -112,7 +115,7 @@ class APIv1ScheduleController extends APIController {
       ->execute()
       ->fetch();
     if ($class_count['class_total'] <= $section['CAPACITY']) {
-      $schedule = $this->get('kula.HEd.scheduling.schedule')->addClassForStudentStatus($student_status_id, $section_id, date('Y-m-d'), 0, array('VERIFY_PERMISSIONS' => false), 'ONL');
+      $schedule = $this->get('kula.HEd.scheduling.schedule')->addClassForStudentStatus($student_status_id, $section_id, date('Y-m-d'), 0, array('VERIFY_PERMISSIONS' => false), 'ONL', $marketing_referrer, $marketing_referrer_other);
 
       if ($schedule) {
 
