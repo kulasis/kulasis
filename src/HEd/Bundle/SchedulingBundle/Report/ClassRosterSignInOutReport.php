@@ -43,6 +43,9 @@ class ClassRosterSignInOutReport extends BaseReport {
   
   public function table_row($row)
   {
+    if ($this->GetY() > 170) {
+      $this->Ln($this->GetY() - 170);
+    }
     $middle_initial = substr($row['MIDDLE_NAME'], 0, 1);
     if ($middle_initial) $middle_initial = $middle_initial.'.';
     $this->Cell(20, 8, 'Student Name:', '', 0, 'L');
