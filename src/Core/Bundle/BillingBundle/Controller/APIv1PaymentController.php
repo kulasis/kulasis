@@ -100,7 +100,7 @@ class APIv1PaymentController extends APIController {
     $pending_service->calculatePendingCharges($related_constituents);
     $pending_classes = $pending_service->getPendingClasses();
     
-    if ($pending_service->totalAmount() > 0 AND $pending_service->totalAmount() <= 5000) {
+    if ($pending_service->totalAmount() > 0 AND $pending_service->totalAmount() <= 10000) {
 
       // Get payment type
       $payment_method = 
@@ -263,7 +263,7 @@ class APIv1PaymentController extends APIController {
         throw new DisplayException('Invalid payment method.  Payment method is '. $payment_method);
       }
     } else { // end if on greater than zero total
-        throw new DisplayException('0.00 or greater than 2000.00 amount.  Amount is '.$pending_service->totalAmount().'.');
+        throw new DisplayException('0.00 or greater than 10000.00 amount.  Amount is '.$pending_service->totalAmount().'.');
     }
   }
 
