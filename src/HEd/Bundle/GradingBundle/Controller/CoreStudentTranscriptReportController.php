@@ -118,7 +118,7 @@ class CoreStudentTranscriptReportController extends ReportController {
           } else {
             $height_for_rows = 0;
           }
-          $total_height = $height_for_rows + 4 + 4 + 4 + 2 + 4 + 4;
+          $total_height = $height_for_rows + 4 + 4 + 4 + 2 + 4 + 4 + 16;
 
           if (260 - $current_y < $total_height) {
             $pdf->Ln(260 - $current_y);

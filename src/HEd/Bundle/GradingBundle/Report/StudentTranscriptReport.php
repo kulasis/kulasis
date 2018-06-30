@@ -43,22 +43,14 @@ class StudentTranscriptReport extends BaseReport {
     $this->Ln(5);
     $this->SetFont('Arial', '', 8);
     $this->Cell(30,5,'Student ID ','LTR',0,'L');
-    $this->Cell(30,5,'Grade ','LTR',0,'L');
-    $this->Ln(4);
-    $this->SetFont('Arial', '', 10);
-    $this->Cell(30,5, $this->data['PERMANENT_NUMBER'],'LBR',0,'L');
-    $this->Cell(30,5, $this->data['GRADE'],'LBR',0,'L');
-    $this->Ln(5);
-    $this->SetFont('Arial', '', 8);
-    $this->Cell(30,5,'Gender ','LTR',0,'L');
     $this->Cell(30,5,'Date of Birth ','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
-    $this->Cell(30,5, $this->data['GENDER'],'LBR',0,'L');
+    $this->Cell(30,5, $this->data['PERMANENT_NUMBER'],'LBR',0,'L');
     $this->Cell(30,5, date('m/d', strtotime($this->data['BIRTH_DATE'])),'LBR',0,'L');
     $this->Ln(5);
     $this->SetFont('Arial', '', 8);
-    $this->Cell(196,5,'Program','LTR',0,'L');
+    $this->Cell(196,5,'Current Program','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
     $program = ($this->data['PRINTED_DEGREE_NAME'] != '') ? $this->data['PRINTED_DEGREE_NAME'] : $this->data['DEGREE_NAME'] ;
@@ -71,21 +63,8 @@ class StudentTranscriptReport extends BaseReport {
     $y_start_ch = $this->GetY();
 
     $this->SetY(12);
-    $this->Cell(0, 5, 'Student Transcript', 0, 0, 'C');
+    $this->Cell(0, 5, 'Academic Transcript', 0, 0, 'C');
     $this->Ln(10);
-    
-    $this->SetLeftMargin(70);
-    $this->SetX(70);
-    if ($this->data['HIGH_SCHOOL_GRADUATION_DATE']) {
-      $this->Cell(40,5,'High School Graduation Date: ','',0,'L');
-      $this->Cell(10,5,date('m/d/Y', strtotime($this->data['HIGH_SCHOOL_GRADUATION_DATE'])),'',0,'L');
-      $this->Ln(4);
-    }
-    if ($this->data['ORIGINAL_ENTER_DATE']) {
-      $this->Cell(40,5,'Original Enter Date: ','',0,'L');
-      $this->Cell(10,5,date('m/d/Y', strtotime($this->data['ORIGINAL_ENTER_DATE'])),'',0,'L');
-      $this->Ln(4);
-    }
     
     $this->SetLeftMargin(147);
     $this->SetX(147);
