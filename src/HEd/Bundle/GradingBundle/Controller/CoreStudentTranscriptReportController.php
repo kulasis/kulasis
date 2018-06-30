@@ -29,6 +29,8 @@ class CoreStudentTranscriptReportController extends ReportController {
     $pdf = new \Kula\HEd\Bundle\GradingBundle\Report\StudentTranscriptReport("P");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
+    $form = $this->request->request->get('form');
+    $pdf->transcript_type = $form['TranscriptType'];
     
     // Get Data and Load
     $result = $this->db()->db_select('STUD_STUDENT', 'student')
