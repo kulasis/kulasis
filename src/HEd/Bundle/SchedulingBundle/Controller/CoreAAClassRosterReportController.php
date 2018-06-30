@@ -40,15 +40,15 @@ class CoreAAClassRosterReportController extends ReportController {
       ->join('STUD_STUDENT_CLASSES', 'class', 'class.SECTION_ID = section.SECTION_ID')
       ->fields('class', array('STUDENT_CLASS_ID', 'START_DATE', 'END_DATE'))
       ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
-      ->fields('status', array('STUDENT_STATUS_ID', 'AGE', 'SHIRT_SIZE'))
+      ->fields('status', array('STUDENT_STATUS_ID', 'AGE'))
       ->leftJoin('CORE_LOOKUP_VALUES', 'grvalue', "grvalue.CODE = status.GRADE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
       ->fields('grvalue', array('DESCRIPTION' => 'GRADE'))
       ->leftJoin('CORE_LOOKUP_VALUES', 'entercodevalue', "entercodevalue.CODE = status.ENTER_CODE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.EnterCode')")
       ->fields('entercodevalue', array('DESCRIPTION' => 'ENTER_CODE'))
       ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
-      ->fields('student', array('STUDENT_ID', 'MEDICAL_NOTES'))
+      ->fields('student', array('STUDENT_ID', 'MEDICAL_NOTES', 'SHIRT_SIZE', 'MED_FOOD_ALLERGIES', 'MED_ALLERGIES', 'MED_LIMITATIONS', 'MED_MEDICATIONS', 'MED_BEHAVIORAL', 'MED_MEN_EMO_SOC_HEALTH', 'COMMENTS' ))
       ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
-      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'NOTES'))
+      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'IDENTIFIED_GENDER', 'NOTES', 'BIRTH_DATE'))
       ->condition('DROPPED', '0');
     $org_term_ids = $this->focus->getOrganizationTermIDs();
     if (isset($org_term_ids) AND count($org_term_ids) > 0)
@@ -56,8 +56,9 @@ class CoreAAClassRosterReportController extends ReportController {
     
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
-    if (isset($record_id) AND $record_id != '')
+    if (isset($record_id) AND $record_id != '') {
       $result = $result->condition('section.SECTION_ID', $record_id);
+    }
     
 	  if (isset($form['section_number']) AND $form['section_number'] != '') {
 		  $result = $result->condition('section.SECTION_NUMBER', $form['section_number'], 'LIKE');
@@ -127,7 +128,7 @@ class CoreAAClassRosterReportController extends ReportController {
       
       // Check how far from bottom
       $current_y = $pdf->GetY();
-      if (300 - $current_y < 100) {
+      if (300 - $current_y < 120) {
         $pdf->Ln(300 - $current_y);
       }
       
