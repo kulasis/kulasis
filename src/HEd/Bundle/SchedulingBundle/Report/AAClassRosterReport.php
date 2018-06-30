@@ -38,11 +38,15 @@ class AAClassRosterReport extends BaseReport {
     $this->Cell(10,6,'Grade:','L',0,'L',false);
     $this->Cell(30,6,$row['GRADE'],'',0,'L',false);
     $this->Cell(10,6,'Age:','',0,'L',false);
-    $this->Cell(30,6,$row['AGE'],'',0,'L',false);
+    $birthdate_unix = strtotime($row['BIRTH_DATE']);
+    $age = (date("md", date("U", $birthdate_unix)) > date("md"))
+    ? ((date("Y") - date("Y", $birthdate_unix)) - 1)
+    : (date("Y") - date("Y", $birthdate_unix));
+    $this->Cell(30,6,$age,'',0,'L',false);
     $this->Cell(15,6,'Shirt Size:','',0,'L',false);
     $this->Cell(30,6,$row['SHIRT_SIZE'],'',0,'L',false);
-	$this->Cell(15,6,'Gender:','',0,'L',false);
-    $this->Cell(30,6,$row['GENDER'],'',0,'L',false);
+	  $this->Cell(30,6,'Gender / Identified:','',0,'L',false);
+    $this->Cell(15,6,$row['GENDER'].' / '.$row['IDENTIFIED_GENDER'],'',0,'L',false);
     $this->Cell(7, 6, '', 'R', 0, 'L', false);
     $this->Ln();
     $this->Cell(20,6,'Parents:','L',0,'L',false);
@@ -51,26 +55,30 @@ class AAClassRosterReport extends BaseReport {
     $this->Cell(20,6,'Phones:','L',0,'L',false);
     $this->Cell(157,6,$row['phones'],'R',0,'L',false);
     $this->Ln();
-    $this->Cell(88.5,6,'Health Info:','L',0,'L',false);
+    $this->Cell(88.5,6,'Registration Info:','L',0,'L',false);
     $this->Cell(88.5,6,'Notes:','R',0,'L',false);
     $this->Ln();
     $x = $this->GetX();
     $y = $this->GetY();
+
+    $medical_notes = 'Food: '.$row['MED_FOOD_ALLERGIES'].' | Allergies: '.$row['MED_ALLERGIES'].' | Limitations: '.$row['MED_LIMITATIONS'].' | Medications: '.$row['MED_MEDICATIONS'].' | Behavioral: '.$row['MED_BEHAVIORAL'].' | Social/Emotional: '.$row['MED_MEN_EMO_SOC_HEALTH'].' | Comments: '.$row['COMMENTS'];
     
+    $notes = $row['MEDICAL_NOTES'].' '.$row['NOTES'];
+
     $height_of_cell = 0;
-    $notes_height = $this->getHeightOfCell($row['NOTES'], 6);
-    $medical_notes_height = $this->getHeightOfCell($row['MEDICAL_NOTES'], 6);
+    $notes_height = $this->getHeightOfCell($notes, 6);
+    $medical_notes_height = $this->getHeightOfCell($medical_notes, 6);
     if ($notes_height > $medical_notes_height) {
       $height_of_cell = $notes_height;
     } else {
       $height_of_cell = $medical_notes_height;
     }
     
-    $this->MultiCell(88.5, 6, trim($row['MEDICAL_NOTES']), 'L', 'L');
+    $this->MultiCell(88.5, 6, trim($medical_notes), 'L', 'L');
     $this->SetX($x + 88.5);
     $this->SetLeftMargin($x + 88.5);
     $this->SetY($y);
-    $this->MultiCell(88.5, 6, trim($row['NOTES']), 'R', 'L');
+    $this->MultiCell(88.5, 6, trim($notes), 'R', 'L');
     
     $this->SetLeftMargin($x);
     // Draw closing right line
