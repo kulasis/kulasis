@@ -6,7 +6,7 @@ use Kula\Core\Bundle\FrameworkBundle\Report\Report as BaseReport;
 
 class GradeRosterReport extends BaseReport {
   
-  private $width = array(6, 15, 40, 30, 25, 30, 15);
+  private $width = array(5, 23, 45, 35, 25, 30, 15);
   
   private $data;
 
