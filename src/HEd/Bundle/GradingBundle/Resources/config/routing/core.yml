@@ -76,6 +76,18 @@ Core_HEd_Grading_Reports_StudentTranscript:
     _navigation: Core.HEd.Grading.Reports.StudentTranscript
   methods: [GET]
 
+Core_HEd_Grading_Reports_GradeRoster_Generate:
+  path: /grading/reports/grade_roster
+  defaults: { _controller: KulaHEdGradingBundle:CoreGradeRosterReport:generate }
+  methods: [POST]
+
+Core_HEd_Grading_Reports_GradeRoster:
+  path: /grading/reports/grade_roster
+  defaults: 
+    _controller: KulaHEdGradingBundle:CoreGradeRosterReport:index
+    _navigation: Core.HEd.Grading.Reports.GradeRoster
+  methods: [GET]
+
 Core_HEd_Grading_Reports_DegreeAudit:
   path: /grading/reports/degree_audit
   defaults: 
