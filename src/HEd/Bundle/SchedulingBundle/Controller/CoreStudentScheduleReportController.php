@@ -81,7 +81,7 @@ class CoreStudentScheduleReportController extends ReportController {
       ->fields('advisor', array('ABBREVIATED_NAME' => 'advisor_ABBREVIATED_NAME'))
       ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
       ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
-      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
+      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'PREFERRED_NAME'))
       ->leftJoin('CONS_ADDRESS', 'res_address', 'res_address.ADDRESS_ID = stucon.RESIDENCE_ADDRESS_ID')
       ->fields('res_address', array('THOROUGHFARE' => 'res_ADDRESS', 'LOCALITY' => 'res_CITY', 'ADMINISTRATIVE_AREA' => 'res_STATE', 'POSTAL_CODE' => 'res_ZIPCODE'))
       ->leftJoin('CONS_ADDRESS', 'mail_address', 'mail_address.ADDRESS_ID = stucon.MAILING_ADDRESS_ID')

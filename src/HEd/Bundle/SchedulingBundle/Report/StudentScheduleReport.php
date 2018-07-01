@@ -16,10 +16,24 @@ class StudentScheduleReport extends BaseReport {
   
   public function Header()
   {
-    $this->setReportTitle('STUDENT SCHEDULE');
-    $this->school_name = $this->data['ORGANIZATION_NAME'];
-    $this->term_name = $this->data['TERM_NAME'];
-    parent::Header();
+      $this->SetFont('Arial','B',8);
+      if ($this->show_logo) {
+        // School Logo
+        $image1 = KULA_ROOT . $this->reportLogo;
+        if ($this->DefOrientation == 'L') {
+          $this->Cell(1,0, $this->Image($image1, 10, 7), 0, 0, 'L');
+        } else {
+          $this->Cell(1,0, $this->Image($image1, 15, 15), 0, 0, 'L');
+        }
+      }
+      // Report Title
+      $this->Cell(0,0, 'Student Schedule: '.$this->data['TERM_NAME'], 0, 0,'C');
+      // Date Generated
+      // Next Line
+      $this->Ln(4);
+
+      // Next Line
+      $this->Ln(5);
     
 
     $middle_initial = substr($this->data['MIDDLE_NAME'], 0, 1);
@@ -28,31 +42,24 @@ class StudentScheduleReport extends BaseReport {
     // Student Information
     $this->Ln(20);
     $this->SetFont('Arial', 'B', 8);
-    $this->Cell(40,0, $this->data['LAST_NAME'].', '.$this->data['FIRST_NAME'] . ' ' . $middle_initial, 0, 0,'L');
+    if ($this->data['PREFERRED_NAME'] != '') {
+      $this->Cell(40,0, $this->data['LAST_NAME'].', '.$this->data['PREFERRED_NAME'], 0, 0,'L');
+    } else {
+      $this->Cell(40,0, $this->data['LAST_NAME'].', '.$this->data['FIRST_NAME'] . ' ' . $middle_initial, 0, 0,'L');
+    }
     $this->SetFont('Arial', '', 8);
     $this->Cell(100,0,'Student ID: ',0,0,'R');
     $this->Cell(0,0, $this->data['PERMANENT_NUMBER'],0,0,'L');
     $this->Ln(5);
     $this->Cell(30, 0, $this->data['address']['address'], 0, 0, 'L');
-    $this->Cell(110,0,'Phone: ',0,0,'R');
-    $this->Cell(30, 0, $this->data['PHONE_NUMBER'], 0, 0, 'L');
     $this->Ln(5);
     $this->Cell(30, 0, $this->data['address']['city'].', '.$this->data['address']['state'].' '.$this->data['address']['zipcode'], 0, 0, 'L');
     $this->Ln(20);
-    $this->Cell(25,0,'Grade: ',0,0,'R');
-    $this->Cell(30,0, $this->data['GRADE'],0,0,'L');
-    $this->Ln(5);
-    $this->Cell(25,0,'Degree Program: ',0,0,'R');
-    $this->Cell(30,0, $this->data['DEGREE_NAME'],0,0,'L');
-    $this->Ln(5);
-    $this->Cell(25,0,'Advisor: ',0,0,'R');
-    $this->Cell(30,0, $this->data['advisor_ABBREVIATED_NAME'],0,0,'L');
-    $this->Ln(7);
     
     // Column headings
     $this->SetDrawColor(0,0,0);
     $this->SetLineWidth(.1);
-      $header = array('#', 'Section ID', 'Course Title', 'Instructor', 'Mark Scale', 'Credits');
+      $header = array('#', 'Section ID', 'Course Title', 'Instructor', 'Grade Scale', 'Credits');
       for($i=0;$i<count($header);$i++)
           $this->Cell($this->width[$i],6,$header[$i],1,0,'L');
       $this->Ln();

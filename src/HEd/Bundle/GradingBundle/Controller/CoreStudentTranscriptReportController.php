@@ -29,6 +29,8 @@ class CoreStudentTranscriptReportController extends ReportController {
     $pdf = new \Kula\HEd\Bundle\GradingBundle\Report\StudentTranscriptReport("P");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
+    $form = $this->request->request->get('form');
+    $pdf->transcript_type = $form['TranscriptType'];
     
     // Get Data and Load
     $result = $this->db()->db_select('STUD_STUDENT', 'student')
@@ -118,7 +120,7 @@ class CoreStudentTranscriptReportController extends ReportController {
           } else {
             $height_for_rows = 0;
           }
-          $total_height = $height_for_rows + 4 + 4 + 4 + 2 + 4 + 4;
+          $total_height = $height_for_rows + 4 + 4 + 4 + 2 + 4 + 4 + 16;
 
           if (260 - $current_y < $total_height) {
             $pdf->Ln(260 - $current_y);

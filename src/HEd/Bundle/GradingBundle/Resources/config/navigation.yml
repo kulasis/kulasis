@@ -93,6 +93,10 @@ Core.HEd.Grading.Reports:
       description: "Degree Audit"
       display_name: "Degree Audit"
       route: Core_HEd_Grading_Reports_DegreeAudit
+    GradeRoster:
+      description: "Grade Roster"
+      display_name: "Grade Roster"
+      route: Core_HEd_Grading_Reports_GradeRoster
 
 Core.HEd.Scheduling.Section.Grades:
   type: tab
@@ -100,7 +104,14 @@ Core.HEd.Scheduling.Section.Grades:
   description: "Grades"
   display_name: "Grades"
   route: Core_HEd_Scheduling_Section_Grades
-    
+
+Core.HEd.Scheduling.Section:
+  menu_reports:
+    GradeRoster:
+      description: "Grade Roster"
+      display_name: "Grade Roster"
+      route: Core_HEd_Grading_Reports_GradeRoster
+
 Core.HEd.Grading.GradingSetup:
   description: "Grading Setup"
   display_name: "Grading Setup"
