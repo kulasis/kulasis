@@ -34,7 +34,12 @@ class CoreDegreeAuditReportController extends ReportController {
       ->fields('stu', array('STUDENT_ID'))
       ->join('CONS_CONSTITUENT', 'cons', 'cons.CONSTITUENT_ID = stu.STUDENT_ID')
       ->fields('cons', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
-      ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = stu.STUDENT_ID')
+      ->orderBy('cons.LAST_NAME', 'ASC')
+      ->orderBy('cons.FIRST_NAME', 'ASC');
+
+    if ($this->focus->getFocus('term_id') != 'ALL') {
+
+      $result = $result->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = stu.STUDENT_ID')
       ->fields('status', array('LEVEL', 'STUDENT_STATUS_ID'))
       ->join('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
       ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
@@ -43,33 +48,52 @@ class CoreDegreeAuditReportController extends ReportController {
       ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = studeg.EXPECTED_COMPLETION_TERM_ID')
       ->fields('term', array('TERM_ABBREVIATION' => 'expected_completion_term'));
     
-    if ($this->request->request->get('sort') == 'degree_name') {
-      $result = $result->orderBy('deg.DEGREE_NAME', 'ASC');
-    } elseif ($this->request->request->get('sort') == 'degree_concentration_name') {
-      $result = $result->orderBy('deg.DEGREE_NAME', 'ASC');
-      $result = $result->orderBy('degconcentration.CONCENTRATION_NAME', 'ASC');
-    }
+      if ($this->request->request->get('sort') == 'degree_name') {
+        $result = $result->orderBy('deg.DEGREE_NAME', 'ASC');
+      } elseif ($this->request->request->get('sort') == 'degree_concentration_name') {
+        $result = $result->orderBy('deg.DEGREE_NAME', 'ASC');
+        $result = $result->orderBy('degconcentration.CONCENTRATION_NAME', 'ASC');
+      }
     
-    $result = $result
-      ->orderBy('cons.LAST_NAME', 'ASC')
-      ->orderBy('cons.FIRST_NAME', 'ASC');
-      
-    $org_term_ids = $this->focus->getOrganizationTermIDs();
-    if (isset($org_term_ids) AND count($org_term_ids) > 0) {
-      $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids);
+      $org_term_ids = $this->focus->getOrganizationTermIDs();
+      if (isset($org_term_ids) AND count($org_term_ids) > 0) {
+        $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids);
+      }
+
+      $non = $this->request->request->get('non');
+      if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
+        $result = $result->condition('status.LEVEL', $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);
+      }
     }
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '')
       $result = $result->condition('stu.STUDENT_ID', $record_id);
-    
-    $non = $this->request->request->get('non');
-    if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
-      $result = $result->condition('status.LEVEL', $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);
-    }
-    
+  
     $result = $result->execute();
     while ($students_row = $result->fetch()) {
+
+      // if term is all, need to get most recent enrollment
+      if ($this->focus->getFocus('term_id') == 'ALL') {
+
+        $student_status = $this->db()->db_select('STUD_STUDENT_STATUS', 'status')
+          ->fields('status', array('LEVEL', 'STUDENT_STATUS_ID'))
+          ->join('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
+          ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
+          ->join('STUD_STUDENT_DEGREES', 'studeg', 'studeg.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
+          ->fields('studeg', array('STUDENT_DEGREE_ID', 'EXPECTED_GRADUATION_DATE'))
+          ->join('CORE_ORGANIZATION_TERMS', 'orgterm', 'orgterm.ORGANIZATION_TERM_ID = status.ORGANIZATION_TERM_ID')
+          ->join('CORE_TERM', 'oterm', 'oterm.TERM_ID = orgterm.TERM_ID')
+          ->leftJoin('CORE_TERM', 'term', 'term.TERM_ID = studeg.EXPECTED_COMPLETION_TERM_ID')
+          ->fields('term', array('TERM_ABBREVIATION' => 'expected_completion_term'))
+          ->condition('status.STUDENT_ID', $students_row['STUDENT_ID'])
+          ->orderBy('oterm.START_DATE', 'DESC')
+          ->execute()->fetch();
+
+        $students_row = array_merge($students_row, $student_status);
+
+      } // end if on all term operations
+
       // Add Page
       $this->page($students_row);
     }
