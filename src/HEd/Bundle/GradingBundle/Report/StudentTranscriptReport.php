@@ -77,6 +77,8 @@ class StudentTranscriptReport extends BaseReport {
 
     $this->SetY(12);
     $this->Cell(0, 5, 'Academic Transcript', 0, 0, 'C');
+    $this->Ln(5);
+    $this->Cell(0, 5, 'Issue Date: '.date("m/d/y"), 0, 0, 'C');
     $this->Ln(10);
     
     $this->SetLeftMargin(147);
