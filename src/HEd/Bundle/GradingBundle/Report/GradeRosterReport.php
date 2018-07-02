@@ -71,7 +71,11 @@ class GradeRosterReport extends BaseReport {
     $this->Cell($this->width[4],6,$row['GRADE'],'',0,'L',$this->fill);
     $this->Cell($this->width[5],6,$row['ENTER_CODE'],'',0,'L',$this->fill);
     //$this->Cell($this->width[5],6,'','LRTB',0,'L',$this->fill);
-    $this->Cell($this->width[6],6,"",'B',0,'L',$this->fill);
+    if ($row['MARK'] != '') {
+      $this->Cell($this->width[6],6,$row['MARK'],'',0,'L',$this->fill);
+    } else {
+      $this->Cell($this->width[6],6,"",'B',0,'L',$this->fill);
+    }
     $this->Ln();
     $this->fill = !$this->fill;
   }
