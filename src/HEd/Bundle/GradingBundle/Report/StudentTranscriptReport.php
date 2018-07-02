@@ -38,7 +38,7 @@ class StudentTranscriptReport extends BaseReport {
       //Put the watermark
       $this->SetFont('Arial','B',80);
       $this->SetTextColor(255,192,203);
-      $this->RotatedText(35,190,'U N O F F I C A L',45);
+      $this->RotatedText(35,190,'U N O F F I C I A L',45);
     }
 
     $this->SetTextColor(0,0,0);
