@@ -8,12 +8,16 @@ class StudentTranscriptReport extends BaseReport {
   
   private $data;
   
+  public $angle = 0;
+
   // Current column
   private $col = 0;
   // Ordinate of column start
   private $y0;
   
   public $minorLabelCalled;
+
+  public $transcript_type = 'unofficial';
   
   public function __construct($orientation='P', $unit='mm', $size='Letter') {
     parent::__construct($orientation, $unit, $size);
@@ -30,6 +34,15 @@ class StudentTranscriptReport extends BaseReport {
   {
     // School Logo
     //$image1 = KULA_ROOT . "/core/images/ocaclogo_vertical.png";
+    if ($this->transcript_type == 'unofficial') {
+      //Put the watermark
+      $this->SetFont('Arial','B',80);
+      $this->SetTextColor(255,192,203);
+      $this->RotatedText(35,190,'U N O F F I C I A L',45);
+    }
+
+    $this->SetTextColor(0,0,0);
+    $this->SetFont('Arial', '', 8);
 
     $middle_initial = substr($this->data['MIDDLE_NAME'], 0, 1);
     if ($middle_initial) $middle_initial = $middle_initial.'.';
@@ -43,22 +56,14 @@ class StudentTranscriptReport extends BaseReport {
     $this->Ln(5);
     $this->SetFont('Arial', '', 8);
     $this->Cell(30,5,'Student ID ','LTR',0,'L');
-    $this->Cell(30,5,'Grade ','LTR',0,'L');
-    $this->Ln(4);
-    $this->SetFont('Arial', '', 10);
-    $this->Cell(30,5, $this->data['PERMANENT_NUMBER'],'LBR',0,'L');
-    $this->Cell(30,5, $this->data['GRADE'],'LBR',0,'L');
-    $this->Ln(5);
-    $this->SetFont('Arial', '', 8);
-    $this->Cell(30,5,'Gender ','LTR',0,'L');
     $this->Cell(30,5,'Date of Birth ','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
-    $this->Cell(30,5, $this->data['GENDER'],'LBR',0,'L');
+    $this->Cell(30,5, $this->data['PERMANENT_NUMBER'],'LBR',0,'L');
     $this->Cell(30,5, date('m/d', strtotime($this->data['BIRTH_DATE'])),'LBR',0,'L');
     $this->Ln(5);
     $this->SetFont('Arial', '', 8);
-    $this->Cell(196,5,'Program','LTR',0,'L');
+    $this->Cell(196,5,'Current Program','LTR',0,'L');
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
     $program = ($this->data['PRINTED_DEGREE_NAME'] != '') ? $this->data['PRINTED_DEGREE_NAME'] : $this->data['DEGREE_NAME'] ;
@@ -71,21 +76,10 @@ class StudentTranscriptReport extends BaseReport {
     $y_start_ch = $this->GetY();
 
     $this->SetY(12);
-    $this->Cell(0, 5, 'Student Transcript', 0, 0, 'C');
+    $this->Cell(0, 5, 'Academic Transcript', 0, 0, 'C');
+    $this->Ln(5);
+    $this->Cell(0, 5, 'Issue Date: '.date("m/d/y"), 0, 0, 'C');
     $this->Ln(10);
-    
-    $this->SetLeftMargin(70);
-    $this->SetX(70);
-    if ($this->data['HIGH_SCHOOL_GRADUATION_DATE']) {
-      $this->Cell(40,5,'High School Graduation Date: ','',0,'L');
-      $this->Cell(10,5,date('m/d/Y', strtotime($this->data['HIGH_SCHOOL_GRADUATION_DATE'])),'',0,'L');
-      $this->Ln(4);
-    }
-    if ($this->data['ORIGINAL_ENTER_DATE']) {
-      $this->Cell(40,5,'Original Enter Date: ','',0,'L');
-      $this->Cell(10,5,date('m/d/Y', strtotime($this->data['ORIGINAL_ENTER_DATE'])),'',0,'L');
-      $this->Ln(4);
-    }
     
     $this->SetLeftMargin(147);
     $this->SetX(147);
@@ -329,14 +323,31 @@ class StudentTranscriptReport extends BaseReport {
     $this->SetRightMargin(10);
     $this->SetX(10);
     
-    $this->MultiCell(0,3,'The Family Educational Rights and Privacy Act of 1974 (as amended) prohibits the release of this information without the student\'s written consent. An official transcript must include the signature of the registrar, printing on watermarked paper, and the embossed seal of the college or university. This document reports academic information only.');
-    $this->Ln(5);
-    // Page number
-    $this->Cell(90,4,'Page '.$this->GroupPageNo().' of '.$this->PageGroupAlias(),0,0,'L');
-    $this->Cell(85,4,'School Official\'s Signature: _______________________________________',0,0,'L');
-    $this->Cell(20,4,'Date: ' . date("m/d/y") ,0,0,'R');
+    if ($this->transcript_type == 'official') {
+      $this->MultiCell(0,3,'The Family Educational Rights and Privacy Act of 1974 (as amended) prohibits the release of this information without the student\'s written consent. An official transcript must include the signature of the registrar, printing on watermarked paper, and the embossed seal of the college or university. This document reports academic information only.');
+      $this->Ln(5);
+      // Page number
+      $this->Cell(90,4,'Page '.$this->GroupPageNo().' of '.$this->PageGroupAlias(),0,0,'L');
+      $this->Cell(85,4,'School Official\'s Signature: _______________________________________',0,0,'L');
+      $this->Cell(20,4,'Date: ' . date("m/d/y") ,0,0,'R');
+    }
+
+    if ($this->transcript_type == 'unofficial') {
+      $this->MultiCell(0,3,'The Family Educational Rights and Privacy Act of 1974 (as amended) prohibits the release of this information without the student\'s written consent. An official transcript would be printed on security paper and bear the signature of the registrar. This document reports academic information only.');
+      $this->Ln(5);
+      // Page number
+      $this->Cell(90,4,'Page '.$this->GroupPageNo().' of '.$this->PageGroupAlias(),0,0,'L');
+    }
   }
   
-  
+  public function _endpage()
+{
+    if($this->angle!=0)
+    {
+        $this->angle=0;
+        $this->_out('Q');
+    }
+    parent::_endpage();
+}
   
 }

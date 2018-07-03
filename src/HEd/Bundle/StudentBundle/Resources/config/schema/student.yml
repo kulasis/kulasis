@@ -77,6 +77,14 @@ HEd.Student:
       field_type: textarea
       column_name: "Diploma Name"
       label_name: "Diploma Name"
+    DiplomaAddress:
+      description: "Diploma Address"
+      db_column_name: DIPLOMA_ADDRESS
+      db_column_type: text
+      db_column_null: true
+      field_type: textarea
+      column_name: "Diploma Address"
+      label_name: "Diploma Address"
     HighSchoolGraduationDate:
       description: "High School Graduation Date"
       db_column_name: HIGH_SCHOOL_GRADUATION_DATE
