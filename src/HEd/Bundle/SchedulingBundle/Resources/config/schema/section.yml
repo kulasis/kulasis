@@ -80,6 +80,15 @@ HEd.Section:
       field_type: date
       column_name: "End Date"
       label_name: "End Date"
+    VariableCredit:
+      description: "Variable Credit"
+      db_column_name: VARIABLE_CREDIT
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Variable Credit"
+      label_name: "Variable Credit"
     Credits:
       description: "Credits"
       db_column_name: CREDITS
@@ -89,6 +98,15 @@ HEd.Section:
       field_size: 6
       column_name: "Credits"
       label_name: "Credits"
+    MaximumCredits:
+      description: "Maximum Credits"
+      db_column_name: MAX_CREDITS
+      db_column_type: float
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Max Credits"
+      label_name: "Max Credits"
     ConversionSectionNumber:
       description: "Conversion Section Number"
       db_column_name: CONV_SECTION_NUMBER
