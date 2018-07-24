@@ -23,6 +23,8 @@ class TeacherSectionController extends Controller {
       ->fields('constituent', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
       ->leftJoin('STUD_STUDENT_DEGREES_AREAS', 'stuareas', 'stuareas.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
       ->fields('stuareas', array('AREA_ID'))
+      ->leftJoin('CONS_EMAIL_ADDRESS', 'email', 'email.CONSTITUENT_ID = constituent.CONSTITUENT_ID AND email.EMAIL_ADDRESS_ID = constituent.PRIMARY_EMAIL_ID')
+      ->fields('email', array('EMAIL_ADDRESS', 'EMAIL_ADDRESS_TYPE'))
       ->condition('class.SECTION_ID', $this->record->getSelectedRecordID())
       ->condition('class.DROPPED', 0)
       ->orderBy('DROPPED', 'ASC')
