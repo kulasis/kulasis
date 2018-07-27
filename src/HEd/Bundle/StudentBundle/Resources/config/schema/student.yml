@@ -442,3 +442,42 @@ HEd.Student:
       field_type: textarea
       column_name: "Comments"
       label_name: "Comments"
+    IPEDSCohortYear:
+      description: "IPEDS Cohort Year"
+      db_column_name: IPEDS_COHORT_YEAR
+      db_column_type: int
+      db_column_size: small
+      db_column_null: true
+      field_type: text
+      field_size: 8
+      column_name: "IPEDS Cohort Year"
+      label_name: "IPEDS Cohort Year"
+    IPEDSCohortType:
+      description: "IPEDS Cohort Type"
+      db_column_name: IPEDS_COHORT_TYPE
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.IPEDS.CohortType
+      column_name: "IPEDS Cohort Type"
+      label_name: "IPEDS Cohort Type"
+    IPEDSFullTimePartTime:
+      description: "IPEDS Full Time Part Time"
+      db_column_name: IPEDS_FTPT
+      db_column_type: varchar
+      db_column_length: 5
+      db_column_null: true
+      field_type: lookup
+      lookup: HEd.Student.IPEDS.FTPT
+      column_name: "IPEDS FTPT"
+      label_name: "IPEDS FTPT"
+    IPEDSPell:
+      description: "IPEDS Pell"
+      db_column_name: IPEDS_PELL
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "IPEDS Pell"
+      label_name: "IPEDS Pell"
