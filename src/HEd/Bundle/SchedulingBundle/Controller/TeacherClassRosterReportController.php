@@ -4,6 +4,10 @@ namespace Kula\HEd\Bundle\SchedulingBundle\Controller;
 
 use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 class TeacherClassRosterReportController extends CoreClassRosterReportController {
   
   public function indexAction() {
@@ -18,6 +22,120 @@ class TeacherClassRosterReportController extends CoreClassRosterReportController
     $this->authorize();
     $this->setRecordType('Teacher.HEd.Section');
     
+    $report_settings = $this->request->request->get('non');
+
+    if ($report_settings['OUTPUT_TYPE'] == 'csv') {
+      return $this->generateCSV();
+    } else {
+      return $this->generatePDF();
+    }
+  
+  }
+
+  private function generateCSV() {
+
+    $non = $this->request->request->get('non');
+    
+    $output = '';
+
+    // Get Data and Load
+    $results = $this->db()->db_select('STUD_SECTION', 'section')
+      ->fields('section', array('SECTION_ID', 'SECTION_NUMBER', 'SECTION_NAME'))
+      ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
+      ->fields('course', array('COURSE_TITLE'))
+      ->join('CORE_ORGANIZATION_TERMS', 'orgterms', 'orgterms.ORGANIZATION_TERM_ID = section.ORGANIZATION_TERM_ID')
+      ->join('CORE_ORGANIZATION', 'org', 'orgterms.ORGANIZATION_ID = org.ORGANIZATION_ID')
+      ->fields('org', array('ORGANIZATION_NAME'))
+      ->join('CORE_TERM', 'term', 'term.TERM_ID = orgterms.TERM_ID')
+      ->fields('term', array('TERM_ABBREVIATION', 'START_DATE'))
+      ->leftJoin('STUD_STAFF_ORGANIZATION_TERMS', 'stafforgterm', 'stafforgterm.STAFF_ORGANIZATION_TERM_ID = section.STAFF_ORGANIZATION_TERM_ID')
+      ->leftJoin('STUD_STAFF', 'staff', 'staff.STAFF_ID = stafforgterm.STAFF_ID')
+      ->fields('staff', array('ABBREVIATED_NAME'))
+      ->join('STUD_STUDENT_CLASSES', 'class', 'class.SECTION_ID = section.SECTION_ID')
+      ->fields('class', array('START_DATE', 'END_DATE', 'PAID'))
+      ->join('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_STATUS_ID = class.STUDENT_STATUS_ID')
+      ->leftJoin('CORE_LOOKUP_VALUES', 'grvalue', "grvalue.CODE = status.GRADE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
+      ->fields('grvalue', array('DESCRIPTION' => 'GRADE'))
+      ->leftJoin('CORE_LOOKUP_VALUES', 'entercodevalue', "entercodevalue.CODE = status.ENTER_CODE AND grvalue.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.EnterCode')")
+      ->fields('entercodevalue', array('DESCRIPTION' => 'ENTER_CODE'))
+      ->join('STUD_STUDENT', 'student', 'status.STUDENT_ID = student.STUDENT_ID')
+      ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+      ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER'))
+      ->leftJoin('CONS_EMAIL_ADDRESS', 'email', 'email.CONSTITUENT_ID = stucon.CONSTITUENT_ID AND email.EMAIL_ADDRESS_ID = stucon.PRIMARY_EMAIL_ID')
+      ->fields('email', array('EMAIL_ADDRESS', 'EMAIL_ADDRESS_TYPE'))
+      ->condition('DROPPED', '0');
+    $org_term_ids = $this->focus->getOrganizationTermIDs();
+    if (isset($org_term_ids) AND count($org_term_ids) > 0)
+      $results = $results->condition('section.ORGANIZATION_TERM_ID', $org_term_ids);
+    
+    // Add on selected record
+    $record_id = $this->record->getSelectedRecordID();
+    if (isset($record_id) AND $record_id != '')
+      $results = $results->condition('section.SECTION_ID', $record_id);
+
+    if (isset($report_settings['ONLY_PAID']) AND $report_settings['ONLY_PAID'] == 'Y')
+      $results = $results->condition('class.PAID', 1);
+    
+    $results = $results
+      ->orderBy('term.START_DATE', 'ASC')
+      ->orderBy('SECTION_NUMBER', 'ASC')
+      ->orderBy('SECTION_ID', 'ASC')
+      ->orderBy('stucon.LAST_NAME', 'ASC')
+      ->orderBy('stucon.FIRST_NAME', 'ASC')
+      ->execute()->fetchAll();
+    
+    if ($results) {
+      // Generate response
+      $response = new Response();
+
+      // Set headers
+      $response->headers->set('Cache-Control', 'private');
+      $response->headers->set('Pragma', 'private');
+      $response->headers->set('Content-Type', 'text/csv');
+      //$response->headers->set('Content-Type', 'application/octet-stream');
+      $response->headers->set('Content-Disposition', 'attachment; filename=export'.date("YmdHis").'.csv;');
+      $response->headers->set('Expires', '0');
+
+      // Send headers before outputting anything
+      $response->sendHeaders();
+      
+      $first_column = true;
+      
+      if ($columns = array_keys($results[0])) {
+        foreach($columns as $column) {
+          if ($first_column === true) {
+            $output .= '"'.$column.'"';
+            $first_column = false;
+          } else
+            $output .= ',"'.$column.'"';
+        }
+        $output .= "\r\n";
+      }
+    
+      foreach($results as $row => $row_data) {
+        
+        foreach($row_data as $key => $value) {
+          $row_data[$key] = '"'.$value.'"';
+        }
+        
+        $output .= implode(',', $row_data)."\r\n";
+      }
+    
+      $response->setContent($output);
+      return $response;
+      
+    } else {
+      $response = new Response();
+      $response->setContent('No records found.');
+      return $response;
+    }
+
+  }
+
+  private function generatePDF() {
+    
+    $output = '';
+
     $pdf = new \Kula\HEd\Bundle\SchedulingBundle\Report\ClassRosterReport("P");
     $pdf->SetFillColor(245,245,245);
     $pdf->row_count = 0;
@@ -148,6 +266,6 @@ class TeacherClassRosterReportController extends CoreClassRosterReportController
     }
     // Closing line
     return $this->pdfResponse($pdf->Output('','S'));
-  
+
   }
 }
