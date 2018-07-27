@@ -3,9 +3,11 @@
   FERPA Block
 </div>
 {% endif %}
+{% if kula_core_record.getSelectedRecord.holds != '' %}
 <div class="student-alert" style="background-color:#FF0000;padding:4px;font-weight:bold;color:white;">
   {{ kula_core_record.getSelectedRecord.holds }}
 </div>
+{% endif %}
 <div id="window_window_num_selected_record_bar_left" class="window_selected_record_bar_left" style="width: 70%;">
 <ul>
 {% if kula_core_record.getSelectedRecord.ORGANIZATION_NAME %}

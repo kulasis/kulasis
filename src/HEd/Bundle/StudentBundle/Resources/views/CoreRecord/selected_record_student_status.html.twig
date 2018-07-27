@@ -3,9 +3,11 @@
   FERPA Block
 </div>
 {% endif %}
+{% if kula_core_record.getSelectedRecord.holds != '' %}
 <div class="student-alert" style="background-color:#FF0000;padding:4px;font-weight:bold;color:white;">
   {{ kula_core_record.getSelectedRecord.holds }}
 </div>
+{% endif %}
 <div id="window_window_num_selected_record_bar_left" class="window_selected_record_bar_left">
 <ul>
 <li>{{ kula_field({ field: 'Core.Organization.Name', db_row_id: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, value: kula_core_record.getSelectedRecord.ORGANIZATION_NAME, input: false }) }}</li>
