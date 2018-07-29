@@ -23,7 +23,7 @@
         "symfony/swiftmailer-bundle": "^2.6.4",
         "sensio/generator-bundle": "^3.0",
         "symfony/symfony": "3.4.*",
-        "symfony/webpack-encore-pack": "3.*",
+        "symfony/webpack-encore-pack": "1.*",
         "twig/twig": "^1.0||^2.0",
         "setasign/fpdi-fpdf": "^2.0",
         "google/apiclient": "1.*",
