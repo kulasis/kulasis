@@ -78,6 +78,23 @@ class AAClassRosterReport extends BaseReport {
     $this->SetX($x + 88.5);
     $this->SetLeftMargin($x + 88.5);
     $this->SetY($y);
+
+
+    if (count($row['forms']) > 0) {
+      foreach($row['forms'] as $form) {
+        $form_agree = ($form['AGREE'] == 1) ? 'Y' : 'N';
+        if ($form['AGREE'] != 1) {
+          $this->SetFont('Arial','B',8);
+        }
+        $this->Cell(88.5, 6, $form['FORM_NAME'].': '.$form_agree, '', 'L');
+        if ($form['AGREE'] != 1) {
+          $this->SetFont('Arial','',8);
+        }
+        $this->Ln(3);
+        unset($form_agree);
+      } 
+    }
+
     $this->MultiCell(88.5, 6, trim($notes), 'R', 'L');
     
     $this->SetLeftMargin($x);

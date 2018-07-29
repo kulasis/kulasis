@@ -125,7 +125,18 @@ class CoreAAClassRosterReportController extends ReportController {
         unset($phonesStrElement);
       }
       $row['phones'] = implode(', ', $phonesStr);
-      
+
+      // Get Forms
+      $forms = array();
+      $forms = $this->db()->db_select('STUD_STUDENT_FORMS', 'stuforms')
+        ->fields('stuforms', array('STUDENT_FORM_ID', 'FORM_ID', 'AGREE', 'COMPLETED'))
+        ->join('STUD_FORM', 'form', 'stuforms.FORM_ID = form.FORM_ID')
+        ->fields('form', array('FORM_NAME'))
+        ->condition('stuforms.STUDENT_STATUS_ID', $row['STUDENT_STATUS_ID'])
+        ->orderBy('form.FORM_NAME', 'ASC')
+        ->execute()->fetchAll();
+      $row['forms'] = $forms;
+
       // Check how far from bottom
       $current_y = $pdf->GetY();
       if (300 - $current_y < 120) {
