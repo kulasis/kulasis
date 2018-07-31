@@ -278,6 +278,8 @@ class CoreSectionController extends Controller {
       }
       $sectionInfo['HEd.Section.MarkScaleID'] = $course_info['MARK_SCALE_ID'];
       $sectionInfo['HEd.Section.Credits'] = $course_info['CREDITS'];
+      $sectionInfo['HEd.Section.MaximumCredits'] = $course_info['MAX_CREDITS'];
+      $sectionInfo['HEd.Section.VariableCredit'] = $course_info['VARIABLE_CREDIT'];
       $sectionInfo['HEd.Section.Capacity'] = $course_info['CAPACITY'];
       $sectionInfo['HEd.Section.Minimum'] = $course_info['MINIMUM'];
       
