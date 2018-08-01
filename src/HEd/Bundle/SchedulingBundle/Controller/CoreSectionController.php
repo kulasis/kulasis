@@ -12,7 +12,7 @@ class CoreSectionController extends Controller {
     $this->setRecordType('Core.HEd.Section');
     
     $section = $this->db()->db_select('STUD_SECTION', 'section')
-      ->fields('section', array('SECTION_ID','CREDITS', 'START_DATE', 'END_DATE', 'CAPACITY', 'MINIMUM', 'ENROLLED_TOTAL', 'PAID_TOTAL', 'WAIT_LISTED_TOTAL', 'MARK_SCALE_ID', 'NO_CLASS_DATES', 'SUPPLIES_REQUIRED', 'SUPPLIES_OPTIONAL', 'SUPPLIES_PRICE', 'OPEN_REGISTRATION', 'CLOSE_REGISTRATION', 'ALLOW_REGISTRATION', 'PARENT_ENROLL'))
+      ->fields('section')
       ->condition('section.SECTION_ID', $this->record->getSelectedRecordID())
       ->execute()->fetch();
     
@@ -278,6 +278,8 @@ class CoreSectionController extends Controller {
       }
       $sectionInfo['HEd.Section.MarkScaleID'] = $course_info['MARK_SCALE_ID'];
       $sectionInfo['HEd.Section.Credits'] = $course_info['CREDITS'];
+      $sectionInfo['HEd.Section.MaximumCredits'] = $course_info['MAX_CREDITS'];
+      $sectionInfo['HEd.Section.VariableCredit'] = $course_info['VARIABLE_CREDIT'];
       $sectionInfo['HEd.Section.Capacity'] = $course_info['CAPACITY'];
       $sectionInfo['HEd.Section.Minimum'] = $course_info['MINIMUM'];
       

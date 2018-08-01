@@ -1,3 +1,13 @@
+{% if kula_core_record.getSelectedRecord.DIRECTORY_PERMISSION == '0' %}
+<div class="student-alert" style="background-color:#FFFF00;padding:4px;font-weight:bold;font-size:14px;color:black;text-align:center;">
+  FERPA Block
+</div>
+{% endif %}
+{% if kula_core_record.getSelectedRecord.holds != '' %}
+<div class="student-alert" style="background-color:#FF0000;padding:4px;font-weight:bold;color:white;">
+  {{ kula_core_record.getSelectedRecord.holds }}
+</div>
+{% endif %}
 <div id="window_window_num_selected_record_bar_left" class="window_selected_record_bar_left" style="width: 70%;">
 <ul>
 {% if kula_core_record.getSelectedRecord.ORGANIZATION_NAME %}
@@ -25,14 +35,4 @@
 <li>{{ kula_field({ field: 'Core.Constituent.PermanentNumber', db_row_id: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, value: kula_core_record.getSelectedRecord.PERMANENT_NUMBER, input: false }) }}</li>
 <li>{{ kula_field({ field: 'Core.Constituent.DevelopmentNumber', db_row_id: kula_core_record.getSelectedRecord.STUDENT_STATUS_ID, value: kula_core_record.getSelectedRecord.DEVELOPMENT_NUMBER, input: false }) }}</li>
 </ul>
-</div>
-<div id="window_window_num_selected_record_bar_right" class="window_selected_record_bar_right">
-  {% if kula_core_record.getSelectedRecord.DIRECTORY_PERMISSION == '0' %}
-  <div class="student-alert" style="background-color:#F5B800;padding:4px;font-weight:bold;color:black;">
-    Directory
-  </div>
-  {% endif %}
-  <div class="student-alert">
-    {{ kula_core_record.getSelectedRecord.holds }}
-  </div>
 </div>

@@ -194,3 +194,18 @@ HEd.Student.ShirtSize:
     - { code: AS, description: "Adult Small" }
     - { code: AM, description: "Adult Medium" }
     - { code: AL, description: "Adult Large" }
+
+HEd.Student.IPEDS.CohortType:
+  description: "IPEDS Cohort Type"
+  allow_update: false
+  values:
+    - { code: 01, description: Freshman }
+    - { code: 02, description: Transfer-In }
+
+HEd.Student.IPEDS.FTPT:
+  description: "IPEDS Full Time Part Time"
+  allow_update: false
+  values:
+    - { code: FT, description: Full Time }
+    - { code: PT, description: Part Time }
+

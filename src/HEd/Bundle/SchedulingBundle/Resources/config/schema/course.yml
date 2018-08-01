@@ -88,6 +88,15 @@ HEd.Course:
       field_rows: 15
       column_name: "Prerequisite Description"
       label_name: "Prerequisite Description"
+    VariableCredit:
+      description: "Variable Credit"
+      db_column_name: VARIABLE_CREDIT
+      db_column_type: bool
+      db_column_default: 0
+      db_column_null: false
+      field_type: checkbox
+      column_name: "Variable Credit"
+      label_name: "Variable Credit"
     Credits:
       description: "Credits"
       db_column_name: CREDITS
@@ -99,6 +108,15 @@ HEd.Course:
       field_size: 5
       column_name: "Credits"
       label_name: "Credits"
+    MaximumCredits:
+      description: "Maximum Credits"
+      db_column_name: MAX_CREDITS
+      db_column_type: float
+      db_column_null: true
+      field_type: text
+      field_size: 6
+      column_name: "Max Credits"
+      label_name: "Max Credits"
     Department:
       description: "Department"
       db_column_name: DEPARTMENT
