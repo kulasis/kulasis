@@ -247,7 +247,7 @@ class CoreSectionController extends Controller {
       
       // Get Course
       $course_info = $this->db()->db_select('STUD_COURSE', 'course')
-        ->fields('course', array('MARK_SCALE_ID', 'COURSE_NUMBER', 'CREDITS', 'CAPACITY', 'MINIMUM'))
+        ->fields('course', array('MARK_SCALE_ID', 'COURSE_NUMBER', 'CREDITS', 'CAPACITY', 'MINIMUM', 'VARIABLE_CREDIT', 'MAX_CREDITS'))
         ->condition('course.COURSE_ID', $sectionInfo['HEd.Section.CourseID'])
         ->execute()->fetch();
 
