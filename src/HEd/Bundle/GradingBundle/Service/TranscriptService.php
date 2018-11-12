@@ -183,6 +183,7 @@ public function loadDegreesAwarded($student_id, $level = null) {
         AND (crshisterms.LEVEL = coursehistory.LEVEL OR (crshisterms.LEVEL IS NULL AND coursehistory.LEVEL IS NULL))')
       ->fields('crshisterms', array('COMMENTS', 'TERM_CREDITS_ATTEMPTED', 'TERM_CREDITS_EARNED', 'TERM_HOURS', 'TERM_POINTS', 'TERM_GPA', 'CUM_CREDITS_ATTEMPTED', 'CUM_CREDITS_EARNED', 'CUM_HOURS', 'CUM_POINTS', 'CUM_GPA', 'INST_CREDITS_ATTEMPTED', 'INST_CREDITS_EARNED', 'INST_HOURS' ,'INST_POINTS', 'INST_GPA', 'TRNS_CREDITS_ATTEMPTED', 'TRNS_CREDITS_EARNED', 'TRNS_HOURS', 'TRNS_POINTS', 'TRNS_GPA', 'TOTAL_CREDITS_ATTEMPTED', 'TOTAL_CREDITS_EARNED', 'TOTAL_HOURS', 'TOTAL_POINTS', 'TOTAL_GPA'));
     $result = $result->condition('student.STUDENT_ID', $student_id);
+    $result = $result->condition('coursehistory.ORGANIZATION_ID', array(4, 5), 'NOT IN');
 
     $result = $result
       ->orderBy('stucon.LAST_NAME', 'ASC')
@@ -341,6 +342,7 @@ public function loadDegreesAwarded($student_id, $level = null) {
       ->condition('stucoursehistory.COURSE_HISTORY_ID', null)
       ->condition('DROPPED', 0)
       ->condition('student.STUDENT_ID', $student_id)
+      ->condition('org.ORGANIZATION_ID', array(4, 5), 'NOT IN')
       ->orderBy('student.STUDENT_ID', 'ASC')
       ->orderBy('level_values.DESCRIPTION', 'ASC')
       ->orderBy('term.START_DATE', 'ASC')
