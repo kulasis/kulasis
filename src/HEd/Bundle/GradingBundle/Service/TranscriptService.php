@@ -161,6 +161,10 @@ public function loadDegreesAwarded($student_id, $level = null) {
       $level_condition = ' AND coursehistory.LEVEL IN ('.$this->prepareLevel($level).')';
     } 
 
+    $or_condition = $this->db->db_or();
+    $or_condition = $or_condition->condition('coursehistory.ORGANIZATION_ID', array(4, 5), 'NOT IN');
+    $or_condition = $or_condition->isNull('coursehistory.ORGANIZATION_ID');
+
     // Get student
     $result = $this->db->db_select('STUD_STUDENT', 'student')
       ->distinct()
@@ -183,7 +187,7 @@ public function loadDegreesAwarded($student_id, $level = null) {
         AND (crshisterms.LEVEL = coursehistory.LEVEL OR (crshisterms.LEVEL IS NULL AND coursehistory.LEVEL IS NULL))')
       ->fields('crshisterms', array('COMMENTS', 'TERM_CREDITS_ATTEMPTED', 'TERM_CREDITS_EARNED', 'TERM_HOURS', 'TERM_POINTS', 'TERM_GPA', 'CUM_CREDITS_ATTEMPTED', 'CUM_CREDITS_EARNED', 'CUM_HOURS', 'CUM_POINTS', 'CUM_GPA', 'INST_CREDITS_ATTEMPTED', 'INST_CREDITS_EARNED', 'INST_HOURS' ,'INST_POINTS', 'INST_GPA', 'TRNS_CREDITS_ATTEMPTED', 'TRNS_CREDITS_EARNED', 'TRNS_HOURS', 'TRNS_POINTS', 'TRNS_GPA', 'TOTAL_CREDITS_ATTEMPTED', 'TOTAL_CREDITS_EARNED', 'TOTAL_HOURS', 'TOTAL_POINTS', 'TOTAL_GPA'));
     $result = $result->condition('student.STUDENT_ID', $student_id);
-    $result = $result->condition('coursehistory.ORGANIZATION_ID', array(4, 5), 'NOT IN');
+    $result = $result->condition($or_condition);
 
     $result = $result
       ->orderBy('stucon.LAST_NAME', 'ASC')
@@ -321,7 +325,7 @@ public function loadDegreesAwarded($student_id, $level = null) {
     if ($level) {
       $level_condition = ' AND classes.LEVEL IN ('.$this->prepareLevel($level).')';
     }
-    
+
     $schedule_result = $this->db->db_select('STUD_STUDENT', 'student')
       ->fields('student', array('STUDENT_ID'))
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = student.STUDENT_ID')
