@@ -63,14 +63,14 @@ class CoreStudentTranscriptReportController extends ReportController {
       ->orderBy('stucon.FIRST_NAME', 'ASC')
       ->orderBy('student.STUDENT_ID', 'ASC');
 
-    if ($this->focus->getFocus('term_id') != 'ALL') {
+    //if ($this->focus->getFocus('term_id') != 'ALL') {
       $org_term_ids = $this->focus->getOrganizationTermIDs();
       if (isset($org_term_ids) AND count($org_term_ids) > 0) {
         $result = $result->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID');
         $result = $result->fields('status', array('LEVEL'));
         $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids);
       }
-    }
+    //}
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '') {
