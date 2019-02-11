@@ -13,15 +13,20 @@ class TranscriptService {
     $this->degrees_awarded_data = array();
     $this->student_data = array();
     $this->current_schedule_totals = array();
+    $this->has_transcript_data = false;
   }
   
   public function loadTranscriptForStudent($student_id, $level = null) {
-
+    $this->has_transcript_data = false;
     $this->loadStudentData($student_id, $level);
     $this->loadDegreesAwarded($student_id, $level);
     $this->loadTranscriptData($student_id, $level);
     $this->loadCurrentSchedule($student_id, $level);
 
+  }
+
+  public function hasTranscriptData() {
+    return $this->has_transcript_data;
   }
   
   public function getTranscriptData() {
@@ -250,6 +255,10 @@ public function loadDegreesAwarded($student_id, $level = null) {
 
   	  }
 
+      if ($row['COURSE_HISTORY_ID'] > 0) {
+        $this->has_transcript_data = true;
+      }
+
       
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['COURSE_NUMBER'] = $row['COURSE_NUMBER'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['COURSE_TITLE'] = $row['COURSE_TITLE'];
@@ -328,7 +337,7 @@ public function loadDegreesAwarded($student_id, $level = null) {
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = student.STUDENT_ID')
       ->fields('stustatus', array('STUDENT_STATUS_ID'))
       ->join('STUD_STUDENT_CLASSES', 'classes', 'classes.STUDENT_STATUS_ID = stustatus.STUDENT_STATUS_ID '.$level_condition)
-      ->fields('classes', array('LEVEL', 'CREDITS_ATTEMPTED'))
+      ->fields('classes', array('STUDENT_CLASS_ID', 'LEVEL', 'CREDITS_ATTEMPTED'))
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = classes.SECTION_ID')
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
       ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE'))
@@ -350,6 +359,9 @@ public function loadDegreesAwarded($student_id, $level = null) {
       
     $schedule_result = $schedule_result->execute();
     while ($schedule_row = $schedule_result->fetch()) {
+      //if ($schedule_row['STUDENT_CLASS_ID'] > 0) {
+      //  $this->has_transcript_data = true;
+      //}
       $this->current_schedule_data[$schedule_row['LEVEL_DESCRIPTION']][$schedule_row['ORGANIZATION_NAME']][$schedule_row['TERM_NAME']][] = $schedule_row; 
       if (!in_array($schedule_row['STUDENT_STATUS_ID'], $student_status_id)) {
         $student_status_id[] = $schedule_row['STUDENT_STATUS_ID'];
