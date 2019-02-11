@@ -28,8 +28,10 @@ class CoreStudentTranscriptReportController extends ReportController {
   {  
     $this->authorize();
     $this->service = $this->get('kula.HEd.grading.transcript');
+    $this->termTotalsService = $this->get('kula.HEd.grading.termtotals');
     $form = $this->request->request->get('form');
     $generate_transcripts = (isset($form['generateIndividualFiles']) AND $form['generateIndividualFiles'] == 'Y') ? 'Y' : 'N';
+    $calculate_term_totals = (isset($form['calculateTermTotals']) AND $form['calculateTermTotals'] == 'Y') ? 'Y' : 'N';
 
     if ($generate_transcripts != "Y") {
       $pdf = new \Kula\HEd\Bundle\GradingBundle\Report\StudentTranscriptReport("P");
@@ -91,6 +93,10 @@ class CoreStudentTranscriptReportController extends ReportController {
         $pdf->SetFillColor(245,245,245);
         $pdf->row_count = 0;
         $pdf->transcript_type = $form['TranscriptType'];
+      }
+
+      if ($calculate_term_totals == "Y") {
+        $this->termTotalsService->calculateTermTotals($row['STUDENT_ID']);
       }
 
       if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
