@@ -50,18 +50,20 @@ class TranscriptService {
       ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
       ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'BIRTH_DATE'))
       ->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID')
-      ->join('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
+      ->leftJoin('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
       ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
       ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
       ->fields('studdegrees', array('STUDENT_DEGREE_ID'))
       ->leftJoin('STUD_DEGREE', 'degree', 'degree.DEGREE_ID = studdegrees.DEGREE_ID')
       ->fields('degree', array('DEGREE_NAME', 'PRINTED_DEGREE_NAME'))
-      ->condition('status.STUDENT_ID', $student_id);
+      ->condition('student.STUDENT_ID', $student_id);
 
     if ($level) {
      $status_info = $status_info->condition('status.LEVEL', $level);  
     }
-    
+    $status_info = $status_info->orderBy('ENTER_DATE', 'DESC');
+    //echo $status_info;
+    //var_dump($status_info->arguments());
     $this->student_data = $status_info->orderBy('ENTER_DATE', 'DESC')->execute()->fetch();
 
     if ($this->student_data['PRINTED_DEGREE_NAME'] != '') {

@@ -32,6 +32,7 @@ class CoreStudentTranscriptReportController extends ReportController {
     $form = $this->request->request->get('form');
     $generate_transcripts = (isset($form['generateIndividualFiles']) AND $form['generateIndividualFiles'] == 'Y') ? 'Y' : 'N';
     $calculate_term_totals = (isset($form['calculateTermTotals']) AND $form['calculateTermTotals'] == 'Y') ? 'Y' : 'N';
+    $last_name_filter = (isset($form['lastNameFilter']) AND $form['lastNameFilter'] != '') ? $form['lastNameFilter'] : '';
 
     if ($generate_transcripts != "Y") {
       $pdf = new \Kula\HEd\Bundle\GradingBundle\Report\StudentTranscriptReport("P");
@@ -63,14 +64,14 @@ class CoreStudentTranscriptReportController extends ReportController {
       ->orderBy('stucon.FIRST_NAME', 'ASC')
       ->orderBy('student.STUDENT_ID', 'ASC');
 
-    //if ($this->focus->getFocus('term_id') != 'ALL') {
+    if ($this->focus->getFocus('term_id') != 'ALL') {
       $org_term_ids = $this->focus->getOrganizationTermIDs();
       if (isset($org_term_ids) AND count($org_term_ids) > 0) {
         $result = $result->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID');
         $result = $result->fields('status', array('LEVEL'));
         $result = $result->condition('status.ORGANIZATION_TERM_ID', $org_term_ids);
       }
-    //}
+    }
     // Add on selected record
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '') {
@@ -82,6 +83,10 @@ class CoreStudentTranscriptReportController extends ReportController {
     $non = $this->request->request->get('non');
     if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
       $result = $result->condition('status.LEVEL', $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);
+    }
+
+    if ($last_name_filter != "") {
+      $result = $result->condition('stucon.LAST_NAME', $last_name_filter, 'LIKE');
     }
 
     $result = $result->execute();
