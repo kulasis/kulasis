@@ -6,6 +6,9 @@ use Kula\Core\Bundle\FrameworkBundle\Controller\ReportController;
 use Kula\Core\Component\Lookup\Lookup;
 use Kula\Core\Bundle\FrameworkBundle\Exception\DisplayException;
 
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+
 class CoreStudentTranscriptReportController extends ReportController {
   
   public function indexAction() {
@@ -25,17 +28,35 @@ class CoreStudentTranscriptReportController extends ReportController {
   {  
     $this->authorize();
     $this->service = $this->get('kula.HEd.grading.transcript');
-
-    $pdf = new \Kula\HEd\Bundle\GradingBundle\Report\StudentTranscriptReport("P");
-    $pdf->SetFillColor(245,245,245);
-    $pdf->row_count = 0;
     $form = $this->request->request->get('form');
-    $pdf->transcript_type = $form['TranscriptType'];
+    $generate_transcripts = (isset($form['generateIndividualFiles']) AND $form['generateIndividualFiles'] == 'Y') ? 'Y' : 'N';
+
+    if ($generate_transcripts != "Y") {
+      $pdf = new \Kula\HEd\Bundle\GradingBundle\Report\StudentTranscriptReport("P");
+      $pdf->SetFillColor(245,245,245);
+      $pdf->row_count = 0;
+      $pdf->transcript_type = $form['TranscriptType'];
+    } else {
+      $logOutput = "Transcripts Generated:";
+      $files = array();
+      $reportOutputDirectory = $this->getParameter("kernel.cache_dir").'/ReportOutput/StudentTranscript';
+      $fileSystem = new Filesystem();
+      
+      try {
+        // Create ReportOutput directory if it doesn't exist
+        if (!$fileSystem->exists($reportOutputDirectory))
+          $fileSystem->mkdir($reportOutputDirectory);
+      } catch (IOExceptionInterface $exception) {
+          echo "An error occurred while creating your directory at ".$exception->getPath();
+      }
+      
+    }
     
     // Get Data and Load
     $result = $this->db()->db_select('STUD_STUDENT', 'student')
       ->fields('student', array('STUDENT_ID'))
       ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
+      ->fields('stucon', array('LAST_NAME', 'FIRST_NAME', 'PERMANENT_NUMBER'))
       ->orderBy('stucon.LAST_NAME', 'ASC')
       ->orderBy('stucon.FIRST_NAME', 'ASC')
       ->orderBy('student.STUDENT_ID', 'ASC');
@@ -64,6 +85,12 @@ class CoreStudentTranscriptReportController extends ReportController {
     $result = $result->execute();
     
     while ($row = $result->fetch()) {
+
+      if ($generate_transcripts == "Y") {
+        $pdf = new \Kula\HEd\Bundle\GradingBundle\Report\StudentTranscriptReport("P");
+        $pdf->SetFillColor(245,245,245);
+        $pdf->row_count = 0;
+      }
 
       if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
         $this->service->loadTranscriptForStudent($row['STUDENT_ID'], $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']);
@@ -204,10 +231,48 @@ class CoreStudentTranscriptReportController extends ReportController {
 
       } // end foreach on level
 
+      if ($generate_transcripts == "Y") {
+        // File name for each pdf = last_name first_name permanent_number (e.g. Hyatt Gwen 022854)
+        $fileName = $row['LAST_NAME'].' '.$row['FIRST_NAME'].' ' .$row['PERMANENT_NUMBER'];
+        $filePath = $reportOutputDirectory.'/'.$fileName.'.pdf';
+        $files[] = array('filePath' => $filePath, 'fileName' => $fileName);
+        try {
+          // Create ReportOutput directory if it doesn't exist
+          if ($fileSystem->exists($filePath)) {
+            $fileSystem->remove([$filePath]);
+          }
+            $fileSystem->dumpFile($filePath, $pdf->Output('','S'));
+            $logOutput .= "\n".$fileName;
+        } catch (IOExceptionInterface $exception) {
+            echo "An error occurred while creating file at ".$exception->getPath();
+        }
+        
+        
+      }
+
     } // end while on students
 
     // Closing line
-    return $this->pdfResponse($pdf->Output('','S'));
+    if ($generate_transcripts != "Y") {
+      return $this->pdfResponse($pdf->Output('','S'));
+    } else {
+      $timestamp = mktime();
+      $zipname = $reportOutputDirectory. '/student_transcripts_'.$timestamp.'.zip';
+      $zip = new \ZipArchive;
+      $zip->open($zipname, \ZipArchive::CREATE);
+      foreach ($files as $file) {
+        $zip->addFile($file['filePath'], 'Student_Transcripts_'.$timestamp.'/'.$file['fileName'].'.pdf');
+      }
+      $zip->close();
+
+      ///Then download the zipped file.
+      header('Content-Type: application/zip');
+      header('Content-disposition: attachment; filename='.$zipname);
+      header('Content-Length: ' . filesize($zipname));
+      readfile($zipname);
+
+      return $this->textResponse($logOutput);
+    }
   
   }
 }
