@@ -75,9 +75,9 @@ class CoreStudentTranscriptReportController extends ReportController {
     $record_id = $this->request->request->get('record_id');
     if (isset($record_id) AND $record_id != '') {
       $result = $result->condition('student.STUDENT_ID', $record_id);
-    } elseif ($this->focus->getFocus('term_id') == 'ALL') {
-      throw new DisplayException('Must select a student when processing transcripts from the ALL term focus.');
-    }
+    } //elseif ($this->focus->getFocus('term_id') == 'ALL') {
+      //throw new DisplayException('Must select a student when processing transcripts from the ALL term focus.');
+    //}
 
     $non = $this->request->request->get('non');
     if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
