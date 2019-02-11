@@ -90,6 +90,7 @@ class CoreStudentTranscriptReportController extends ReportController {
         $pdf = new \Kula\HEd\Bundle\GradingBundle\Report\StudentTranscriptReport("P");
         $pdf->SetFillColor(245,245,245);
         $pdf->row_count = 0;
+        $pdf->transcript_type = $form['TranscriptType'];
       }
 
       if (isset($non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level']) AND $non['HEd.Student.CourseHistory']['HEd.Student.CourseHistory.Level'] != '') {
