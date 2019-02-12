@@ -13,15 +13,20 @@ class TranscriptService {
     $this->degrees_awarded_data = array();
     $this->student_data = array();
     $this->current_schedule_totals = array();
+    $this->has_transcript_data = false;
   }
   
   public function loadTranscriptForStudent($student_id, $level = null) {
-
+    $this->has_transcript_data = false;
     $this->loadStudentData($student_id, $level);
     $this->loadDegreesAwarded($student_id, $level);
     $this->loadTranscriptData($student_id, $level);
     $this->loadCurrentSchedule($student_id, $level);
 
+  }
+
+  public function hasTranscriptData() {
+    return $this->has_transcript_data;
   }
   
   public function getTranscriptData() {
@@ -50,18 +55,20 @@ class TranscriptService {
       ->join('CONS_CONSTITUENT', 'stucon', 'student.STUDENT_ID = stucon.CONSTITUENT_ID')
       ->fields('stucon', array('PERMANENT_NUMBER', 'LAST_NAME', 'FIRST_NAME', 'MIDDLE_NAME', 'GENDER', 'BIRTH_DATE'))
       ->leftJoin('STUD_STUDENT_STATUS', 'status', 'status.STUDENT_ID = student.STUDENT_ID')
-      ->join('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
+      ->leftJoin('CORE_LOOKUP_VALUES', 'grade_values', "grade_values.CODE = status.GRADE AND grade_values.LOOKUP_TABLE_ID = (SELECT LOOKUP_TABLE_ID FROM CORE_LOOKUP_TABLES WHERE LOOKUP_TABLE_NAME = 'HEd.Student.Enrollment.Grade')")
       ->fields('grade_values', array('DESCRIPTION' => 'GRADE'))
       ->leftJoin('STUD_STUDENT_DEGREES', 'studdegrees', 'studdegrees.STUDENT_DEGREE_ID = status.SEEKING_DEGREE_1_ID')
       ->fields('studdegrees', array('STUDENT_DEGREE_ID'))
       ->leftJoin('STUD_DEGREE', 'degree', 'degree.DEGREE_ID = studdegrees.DEGREE_ID')
       ->fields('degree', array('DEGREE_NAME', 'PRINTED_DEGREE_NAME'))
-      ->condition('status.STUDENT_ID', $student_id);
+      ->condition('student.STUDENT_ID', $student_id);
 
     if ($level) {
      $status_info = $status_info->condition('status.LEVEL', $level);  
     }
-    
+    $status_info = $status_info->orderBy('ENTER_DATE', 'DESC');
+    //echo $status_info;
+    //var_dump($status_info->arguments());
     $this->student_data = $status_info->orderBy('ENTER_DATE', 'DESC')->execute()->fetch();
 
     if ($this->student_data['PRINTED_DEGREE_NAME'] != '') {
@@ -253,6 +260,10 @@ public function loadDegreesAwarded($student_id, $level = null) {
 
   	  }
 
+      if ($row['COURSE_HISTORY_ID'] > 0) {
+        $this->has_transcript_data = true;
+      }
+
       
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['COURSE_NUMBER'] = $row['COURSE_NUMBER'];
       $this->course_history_data['levels'][$row['LEVEL']]['terms'][$term_counter]['orgs'][$organization_counter]['courses'][$course_counter]['COURSE_TITLE'] = $row['COURSE_TITLE'];
@@ -331,7 +342,7 @@ public function loadDegreesAwarded($student_id, $level = null) {
       ->join('STUD_STUDENT_STATUS', 'stustatus', 'stustatus.STUDENT_ID = student.STUDENT_ID')
       ->fields('stustatus', array('STUDENT_STATUS_ID'))
       ->join('STUD_STUDENT_CLASSES', 'classes', 'classes.STUDENT_STATUS_ID = stustatus.STUDENT_STATUS_ID '.$level_condition)
-      ->fields('classes', array('LEVEL', 'CREDITS_ATTEMPTED'))
+      ->fields('classes', array('STUDENT_CLASS_ID', 'LEVEL', 'CREDITS_ATTEMPTED'))
       ->join('STUD_SECTION', 'section', 'section.SECTION_ID = classes.SECTION_ID')
       ->join('STUD_COURSE', 'course', 'course.COURSE_ID = section.COURSE_ID')
       ->fields('course', array('COURSE_NUMBER', 'COURSE_TITLE'))
@@ -354,6 +365,9 @@ public function loadDegreesAwarded($student_id, $level = null) {
       
     $schedule_result = $schedule_result->execute();
     while ($schedule_row = $schedule_result->fetch()) {
+      //if ($schedule_row['STUDENT_CLASS_ID'] > 0) {
+      //  $this->has_transcript_data = true;
+      //}
       $this->current_schedule_data[$schedule_row['LEVEL_DESCRIPTION']][$schedule_row['ORGANIZATION_NAME']][$schedule_row['TERM_NAME']][] = $schedule_row; 
       if (!in_array($schedule_row['STUDENT_STATUS_ID'], $student_status_id)) {
         $student_status_id[] = $schedule_row['STUDENT_STATUS_ID'];

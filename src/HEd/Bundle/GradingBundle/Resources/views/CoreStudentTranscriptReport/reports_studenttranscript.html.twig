@@ -7,16 +7,24 @@
 <div class="group-box-header">Student Transcript</div>
 <div class="group-box-contents group">
   Type: <select name="form[TranscriptType]" id="StudentTranscriptType[new_num]">
-    <option value="unofficial">Unoffical</option>
-    <option value="official">Offical</option>
-    <option value="official_parchment">Offical Parchment</option>
+    <option value="unofficial">Unofficial</option>
+    <option value="official">Official</option>
+    <option value="official_parchment">Official Parchment</option>
   </select>
   Levels: <select name="non[HEd.Student.CourseHistory][HEd.Student.CourseHistory.Level][]" id="StudentTranscriptLevels[new_num]" multiple="multiple">
     {% for level_code, level_desc in levels %}
     <option value="{{ level_code }}">{{ level_desc }}</option>
     {% endfor %}
   </select>
+  <input type="checkbox" name="form[calculateTermTotals]" value="Y" /> Calculate Term Totals
+  <input type="checkbox" name="form[generateIndividualFiles]" value="Y" /> Generate Individual Files
+  <input type="checkbox" name="form[generateStudentsWithCourseHistory]" value="Y" /> Generate Transcripts for Students with Course History
 </div>
 </div>
-
+<div class="group-box">
+<div class="group-box-header">Filters</div>
+<div class="group-box-contents group">
+  Last Name Filter: <input type="text" name="form[lastNameFilter]" placeholder="a%" />
+</div>
+</div>
 {% endblock %}
