@@ -60,7 +60,7 @@ class StudentTranscriptReport extends BaseReport {
     $this->Ln(4);
     $this->SetFont('Arial', '', 10);
     $this->Cell(30,5, $this->data['PERMANENT_NUMBER'],'LBR',0,'L');
-    $this->Cell(30,5, date('m/d', strtotime($this->data['BIRTH_DATE'])),'LBR',0,'L');
+    $this->Cell(30,5, ($this->data['BIRTH_DATE'] != '') ? date('m/d', strtotime($this->data['BIRTH_DATE'])) : '','LBR',0,'L');
     $this->Ln(5);
     $this->SetFont('Arial', '', 8);
     $this->Cell(196,5,'Current Program','LTR',0,'L');
