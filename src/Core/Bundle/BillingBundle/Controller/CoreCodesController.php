@@ -17,7 +17,8 @@ class CoreCodesController extends Controller {
 	    $code = $this->db()->db_select('BILL_CODE')
 	      ->fields('BILL_CODE')
 	      ->condition('CODE_ID', $this->record->getSelectedRecordID())
-	      ->execute()->fetchAll();
+	      ->execute()->fetch();
+ 
     }
     
     return $this->render('KulaCoreBillingBundle:CoreCodes:codes.html.twig', array('code' => $code));
